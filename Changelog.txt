@@ -1,5 +1,4 @@
 1.2 - 
-* New ModelBinder implementation in the ASP.NET MVC Integration project.
 * Model Binder now works with empty prefixes
 * Added Adam Schroder xVal integration in the new FluentValidation.xValIntegration project. 
 * Allow the validator cascade mode to be set globally. The existing behaviour is the default (Continue). It can now also be set to StopOnFirstFailure:
@@ -12,8 +11,9 @@
 * Added ExactLengthValidator (error message needs localising...)
 * Patch - Swedish language resources 
 * Added WithPropertyName
-* Added FluentValidationModelBinderDecorator so the FV/ModelBinder integration can be used with custom model binders.
 * Patch - InclusiveBetween/ExclusiveBetween validators.
+* Added FluentValidationModelValidator / FluentValidationModelValidatorProvider
+* Removed the FluentValidationModelBinder in favour of using ASP.NET MVC's DefaultModelBinder with the FluentValidationModelValidatorProvider.
 
 1.1 - Jul 17 2009
 * Spanish resource translations.

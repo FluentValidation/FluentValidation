@@ -22,7 +22,7 @@ namespace FluentValidation.Mvc {
 	using Validators;
 	using Internal;
 
-	public interface IAttributeMetadataValidator {
+	internal interface IAttributeMetadataValidator {
 		Attribute ToAttribute();
 	}
 

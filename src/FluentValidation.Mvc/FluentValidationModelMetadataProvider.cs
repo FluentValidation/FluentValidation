@@ -27,7 +27,7 @@ namespace FluentValidation.Mvc {
 	using Validators;
 
 	public class FluentValidationModelMetadataProvider : DataAnnotationsModelMetadataProvider {
-		IValidatorFactory factory;
+		readonly IValidatorFactory factory;
 
 		public FluentValidationModelMetadataProvider(IValidatorFactory factory) {
 			this.factory = factory;

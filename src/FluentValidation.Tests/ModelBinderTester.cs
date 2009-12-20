@@ -26,11 +26,21 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class ModelBinderTester {
-		FluentValidationModelBinder binder;
+		IModelBinder binder;
+		FluentValidationModelValidatorProvider provider;
 
 		[SetUp]
 		public void Setup() {
-			binder = new FluentValidationModelBinder(new AttributedValidatorFactory());
+			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
+			binder = new DefaultModelBinder();
+
+			ModelValidatorProviders.Providers.Add(provider);
+		}
+
+		[TearDown]
+		public void Teardown() {
+			//Cleanup
+			ModelValidatorProviders.Providers.Remove(provider);
 		}
 
 		[Test]
