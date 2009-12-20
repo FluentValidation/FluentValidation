@@ -43,64 +43,31 @@ namespace FluentValidation.Mvc {
 				var validator = CreateValidator(bindingContext);
 
 				if (validator != null) {
-					PerformValidation(boundInstance, validator, bindingContext);
+					PerformValidation(boundInstance, validator, bindingContext, controllerContext);
 				}
 			}
 
 			return boundInstance;
 		}
 
-		protected virtual void PerformValidation(object instance, IValidator validator, ModelBindingContext context) {
-			string modelName = WasFallbackPerformed(context) ? string.Empty : context.ModelName;
+		protected virtual void PerformValidation(object instance, IValidator validator, ModelBindingContext context, ControllerContext controllerContext) {
+			string modelName = WasFallbackPerformed(controllerContext, context) ? string.Empty : context.ModelName;
 			var result = validator.Validate(instance);
 			result.AddToModelState(context.ModelState, modelName);
 		}
 
 		protected virtual IValidator CreateValidator(ModelBindingContext context) {
-			return validatorFactory.GetValidator(context.ModelType);
+			return validatorFactory.GetValidator(context.ModelMetadata.ModelType);
 		}
 
-		protected bool WasFallbackPerformed(ModelBindingContext context) {
+		protected bool WasFallbackPerformed(ControllerContext controllerContext, ModelBindingContext context) {
 			if (!string.IsNullOrEmpty(context.ModelName)
-				&& !DoesAnyKeyHavePrefix(context.ValueProvider, context.ModelName)
+				&& !context.ValueProvider.ContainsPrefix(context.ModelName)
 				&& context.FallbackToEmptyPrefix) {
 				return true;
 			}
 
 			return false;
-		}
-
-		//From the internal DictionaryHelpers class in the ASP.NET MVC 1.0 source code
-		private static bool DoesAnyKeyHavePrefix<TValue>(IDictionary<string, TValue> dictionary, string prefix) {
-			return FindKeysWithPrefix(dictionary, prefix).Any();
-		}
-
-		//From the internal DictionaryHelpers class in the ASP.NET MVC 1.0 source code
-		private static IEnumerable<KeyValuePair<string, TValue>> FindKeysWithPrefix<TValue>(IDictionary<string, TValue> dictionary, string prefix) {
-			TValue exactMatchValue;
-			if (dictionary.TryGetValue(prefix, out exactMatchValue)) {
-				yield return new KeyValuePair<string, TValue>(prefix, exactMatchValue);
-			}
-
-			foreach (var entry in dictionary) {
-				string key = entry.Key;
-
-				if (key.Length <= prefix.Length) {
-					continue;
-				}
-
-				if (!key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) {
-					continue;
-				}
-
-				char charAfterPrefix = key[prefix.Length];
-				switch (charAfterPrefix) {
-					case '[':
-					case '.':
-						yield return entry;
-						break;
-				}
-			}
 		}
 	}
 }

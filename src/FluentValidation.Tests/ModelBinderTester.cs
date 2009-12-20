@@ -40,13 +40,13 @@ namespace FluentValidation.Tests {
 			};
 			var bindingContext = new ModelBindingContext {
 				ModelName = "test",
-				ModelType = typeof(TestModel),
+				ModelMetadata = CreateMetaData(typeof(TestModel)),
 				ModelState = new ModelStateDictionary(),
 				FallbackToEmptyPrefix = true,
 				ValueProvider = form.ToValueProvider()
 			};
 
-			binder.BindModel(null, bindingContext);
+			binder.BindModel(new ControllerContext(), bindingContext);
 
 			bindingContext.ModelState["test.Name"].Errors.Single().ErrorMessage.ShouldEqual("Validation Failed");
 		}
@@ -59,13 +59,13 @@ namespace FluentValidation.Tests {
 
 			var bindingContext = new ModelBindingContext {
 				ModelName = "foo",
-				ModelType = typeof(TestModel),
+				ModelMetadata = CreateMetaData(typeof(TestModel)),
 				ModelState = new ModelStateDictionary(),
 				FallbackToEmptyPrefix = true,
 				ValueProvider = form.ToValueProvider()
 			};
 
-			binder.BindModel(null, bindingContext);
+			binder.BindModel(new ControllerContext(), bindingContext);
 			bindingContext.ModelState["Name"].Errors.Count().ShouldEqual(1);
 		}
 
@@ -73,13 +73,18 @@ namespace FluentValidation.Tests {
 		public void Should_not_fail_when_no_validator_can_be_found() {
 			var bindingContext = new ModelBindingContext {
 				ModelName = "test",
-				ModelType = typeof(TestModel2),
+				ModelMetadata = CreateMetaData(typeof(TestModel2)),
+
 				ModelState = new ModelStateDictionary(),
 				FallbackToEmptyPrefix = true,
 				ValueProvider = new FormCollection().ToValueProvider()
 			};
 
-			binder.BindModel(null, bindingContext).ShouldNotBeNull();
+			binder.BindModel(new ControllerContext(), bindingContext).ShouldNotBeNull();
+		}
+
+		private ModelMetadata CreateMetaData(Type type) {
+			return new ModelMetadata(new EmptyModelMetadataProvider(), null, null, type, null);
 		}
 
 		public class TestModel2 {

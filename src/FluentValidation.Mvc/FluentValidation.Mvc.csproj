@@ -8,7 +8,7 @@
     <ProjectGuid>{F781D265-EB91-4876-BF8E-E7E482E7F0BE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FluentValidation</RootNamespace>
+    <RootNamespace>FluentValidation.Mvc</RootNamespace>
     <AssemblyName>FluentValidation.Mvc</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
