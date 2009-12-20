@@ -16,20 +16,29 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation {
+namespace FluentValidation.Mvc {
 	using System;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Reflection;
+	using Results;
 	using Validators;
+	using Internal;
 
-	public interface IValidatorDescriptor<T> : IValidatorDescriptor {
-		string GetName(Expression<Func<T, object>> propertyExpression);
+	public interface IAttributeMetadataValidator {
+		Attribute ToAttribute();
 	}
 
-	public interface IValidatorDescriptor {
-		string GetName(string property);
-		ILookup<MemberInfo, IPropertyValidator> GetMembersWithValidators();
-		ILookup<string, IPropertyValidator> GetMemberNamesWithValidators();
+	internal class AttributeMetadataValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IAttributeMetadataValidator {
+		readonly Attribute attribute;
+
+		public AttributeMetadataValidator(Attribute attributeConverter) {
+			attribute = attributeConverter;
+		}
+
+		public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
+			return PropertyValidatorResult.Success();
+		}
+
+		public Attribute ToAttribute() {
+			return attribute;
+		}
 	}
 }

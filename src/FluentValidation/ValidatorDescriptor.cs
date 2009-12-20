@@ -46,6 +46,12 @@ namespace FluentValidation {
 					.ToLookup(x => x.Member, x => (IPropertyValidator)x.Validator);
 		}
 
+
+		public ILookup<string, IPropertyValidator> GetMemberNamesWithValidators() {
+			return Rules.OfType<ISimplePropertyRule<T>>()
+				.ToLookup(x => x.Member.Name, x => (IPropertyValidator)x.Validator);
+		}
+
 		public string GetName(Expression<Func<T, object>> propertyExpression) {
 			var member = propertyExpression.GetMember();
 

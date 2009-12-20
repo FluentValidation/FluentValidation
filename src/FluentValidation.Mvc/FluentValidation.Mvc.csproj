@@ -35,6 +35,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -56,8 +59,11 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AttributeMetadataValidator.cs" />
     <Compile Include="FluentValidationModelBinder.cs" />
     <Compile Include="FluentValidationModelBinderDecorator.cs" />
+    <Compile Include="FluentValidationModelMetadataProvider.cs" />
+    <Compile Include="MetadataExtensions.cs" />
     <Compile Include="ValidationResultExtension.cs" />
   </ItemGroup>
   <ItemGroup>

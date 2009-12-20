@@ -44,6 +44,9 @@
       <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -96,6 +99,7 @@
     <Compile Include="CustomFailureActionTester.cs" />
     <Compile Include="ExactLengthValidatorTester.cs" />
     <Compile Include="ExclusiveBetweenValidatorTests.cs" />
+    <Compile Include="FluentValidationModelMetadataProviderTester.cs" />
     <Compile Include="InclusiveBetweenValidatorTests.cs" />
     <Compile Include="MessageFormatterTests.cs" />
     <Compile Include="ModelBinderTester.cs" />
