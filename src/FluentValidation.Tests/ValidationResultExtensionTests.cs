@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Web.Mvc;
+	using Mvc;
 	using NUnit.Framework;
 	using Results;
 

@@ -16,7 +16,7 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation {
+namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Web.Mvc;
@@ -38,16 +38,6 @@ namespace FluentValidation {
 					modelState.SetModelValue(key, new ValueProviderResult(error.AttemptedValue ?? "", (error.AttemptedValue ?? "").ToString(), CultureInfo.CurrentCulture));
 				}
 			}
-		}
-
-		/// <summary>
-		/// Stores the errors in a ValidationResult object to the specified modelstate dictionary.
-		/// </summary>
-		/// <param name="failures">The failures to store</param>
-		/// <param name="modelState">The ModelStateDictionary to store the errors in.</param>
-		/// <param name="prefix">An optional prefix. If ommitted, the property names will be the keys. If specified, the prefix will be concatenatd to the property name with a period. Eg "user.Name"</param>
-		public static void AddToModelState(this IEnumerable<ValidationFailure> failures, ModelStateDictionary modelState, string prefix) {
-			
 		}
 	}
 }
