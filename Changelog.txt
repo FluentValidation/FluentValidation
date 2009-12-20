@@ -1,0 +1,83 @@
+1.2 - 
+* New ModelBinder implementation in the ASP.NET MVC Integration project.
+* Model Binder now works with empty prefixes
+* Added Adam Schroder xVal integration in the new FluentValidation.xValIntegration project. 
+* Allow the validator cascade mode to be set globally. The existing behaviour is the default (Continue). It can now also be set to StopOnFirstFailure:
+    ValidationOptions.CascadeMode = ValidatorCascadeMode.StopOnFirstFailure
+* Allow the validator cascade mode to be set at the rule level (overrides the global option):
+	RuleFor(x => x.Surname).Cascade().StopOnFirstFailure()
+* User state can be stored along side validation failures.
+* Updated Silverlight project for Silverlight 3.
+* Added the OnAnyFailure method. This delegate will be invoked if any rule attached to a particular RuleBuilder fails.
+* Added ExactLengthValidator (error message needs localising...)
+* Patch - Swedish language resources 
+* Added WithPropertyName
+* Added FluentValidationModelBinderDecorator so the FV/ModelBinder integration can be used with custom model binders.
+* Patch - InclusiveBetween/ExclusiveBetween validators.
+
+1.1 - Jul 17 2009
+* Spanish resource translations.
+* French resource translations.
+* EmailValidator now uses regex from http://hexillion.com/samples/#Regex
+
+1.1 beta 3 - Jun 15 2009
+* Patch - Dutch language resources
+* Deleting the deprecated 'And' operator
+* Major refactoring of the fluent interface.
+* Adding an additional overload of Validate to IValidator<T> that takes an IValidatorSelector. 
+* Removing the IValidatorOfProperties interface
+* Moved the methods that were on IValidatorOfProperties to extension methods on IValidator 
+* AbstractValidator now holds a collection of PropertyRules directly, rather than storing the intermediate RuleBuilders.
+* Introduced the PropertyModel
+* Marking AbstractValidator.CreateDescriptor as virtual.
+* Adding a protected Rules property to ValidatorDescriptor.
+* Allow a custom message to be definied in the ValidationMessageAttribute in addition to a resource key. 
+
+1.1 beta 2 - Jun 10 2009
+* Added support for validating nested collections
+* Implemented issue #4446: Additional property values can be accessed from within custom validation messages. 
+* *Breaking Change* Validation messages now use custom placeholders such as {PropertyName} rather than {0}, {1} etc. This means that custom validation messages arguments now start at 0.
+* Added a ValidationMessage attribute which can be applied to property validator classes to specify the resource key to use when looking up the error message from the DefaultResourceManager.
+* Now using a more comprehensive regular expression in the EmailValidator.
+
+1.1 beta 1 - May 26 2009
+* Validators can now be chained together: RuleFor(person => person.Address).SetValidator(new AddressValidator());
+* Marked the 'And' property as obsolete. It is now possible to chain validators without it. This will be removed in the next release.
+* Introduced ValidatorSelectors which allow certain validators to be excluded/excluded when validation occurs.
+* Initial work on the metadata API (added ValidatorDescriptor).
+* Added some additional marker interfaces to make obtaining metadata easier.
+* Added FluentValidation Model Binder for use with ASP.NET MVC.
+* Added ValidatorAttribute and AttributedValidatorFactory.
+* Added the ability to use a custom ResourceManager in place of the DefaultResourceManager.
+* Assemblies now marked as CLS Compliant.
+* Public fields can now be validated.
+* Made AbstractValidator.AddRuleBuilder public.
+* Added overload for AbstractValidator.Custom that can return multiple ValidationFailures.
+* Fixed issue #4236 - Error message for the 'Equals' validator showed the value entered not what the value should be.
+* Fixed issue with AddToModelState - empty string prefix should be treated the same as a null prefix.
+* Fixed issue with AddToModelState - SetModelValue should be called to ensure ASP.NET MVC's built-in HTML Helpers do not throw NullReferenceExceptions.
+* Fixed issue with email address regex - plus character should be allowed.
+* Fixed issue in Silverlight project - the Resource files were in the wrong namespace.
+
+1.0 - Mar 27 2009
+* Support for multiple validators on a single property by using 'And' RuleFor(person => person.Surname).NotNull().And.NotEqual("Foo");
+* Added EqualValidator
+* Custom validation messages are now formatted in the same way as the default messages
+* Assemblies are now signed
+
+0.3 - Jan 21 2009
+* Added ShouldNotHaveValidationErrorFor extension method for testing
+* Can now validate specified properties in addition to all properties (eg validator.Validate(person, x => x.Surname, x => x.Forename)
+* New validators (RegularExpressionValidator and EmailValidator) contributed by Liam McLennan
+* German localisation of validation messages contributed by Philipp Sumi
+* Additional overload to 'Must' that takes a Func<T, TProperty, bool>
+
+0.2 - Dec 29 2008
+* Added Silverlight compatibility
+* Moved support for the CommonServiceLocator into a separate assembly (FluentValidation.CommonServiceLocator.dll)
+* Adding additional interfaces for some of the validators (ILengthValidator, INotNullValidator)
+* AbstractValidator now implements IEnumerable<IRuleBuilder<T>>
+* Added ShouldHaveValidationError extension method for testing validators
+
+0.1 - Nov 1 2008 
+* First public preview

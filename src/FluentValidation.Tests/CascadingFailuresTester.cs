@@ -1,0 +1,78 @@
+#region License
+// Copyright 2008-2009 Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at http://www.codeplex.com/FluentValidation
+#endregion
+
+namespace FluentValidation.Tests {
+	using NUnit.Framework;
+
+	[TestFixture]
+	public class CascadingFailuresTester {
+		TestValidator validator;
+
+		[SetUp]
+		public void Setup() {
+			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			validator = new TestValidator();
+		}
+
+		[TearDown]
+		public void Teardown() {
+			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+		}
+
+		[Test]
+		public void Validation_continues_on_failure() {
+			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
+			var results = validator.Validate(new Person());
+			results.Errors.Count.ShouldEqual(2);
+		}
+
+		[Test]
+		public void Validation_stops_on_first_failure() {
+			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+
+			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
+			var results = validator.Validate(new Person());
+			results.Errors.Count.ShouldEqual(1);
+		}
+
+		[Test]
+		public void Validation_continues_on_failure_when_set_to_Stop_globally_and_overriden_at_rule_level() {
+			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+
+			validator.RuleFor(x => x.Surname).Cascade().Continue().NotNull().Equal("Foo");
+			var results = validator.Validate(new Person());
+			results.Errors.Count.ShouldEqual(2);
+		}
+
+		[Test]
+		public void Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level() {
+			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			validator.RuleFor(x => x.Surname).Cascade().StopOnFirstFailure().NotNull().Equal("Foo");
+			var results = validator.Validate(new Person());
+			results.Errors.Count.ShouldEqual(1);
+		}
+
+		[Test]
+		public void Validation_continues_to_second_validator_when_first_validator_succeeds_and_cascade_set_to_stop() {
+			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+			validator.RuleFor(x => x.Surname).NotNull().Length(2, 10);
+			var result = validator.Validate(new Person() {Surname = "x"});
+			result.IsValid.ShouldBeFalse();
+		}
+	}
+}

@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E353A6E3-5404-4E1E-B33D-4C7BAE646752}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FluentValidation.Tests</RootNamespace>
+    <AssemblyName>FluentValidation.Tests</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\csl\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq, Version=2.6.1014.1, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.5.0.8189, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\mvc\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xVal, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\xval\xVal.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FluentValidation.CommonServiceLocator\FluentValidation.CommonServiceLocator.csproj">
+      <Project>{11771E5C-4E71-4DEF-8204-9C08735DA238}</Project>
+      <Name>FluentValidation.CommonServiceLocator</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FluentValidation.Mvc\FluentValidation.Mvc.csproj">
+      <Project>{F781D265-EB91-4876-BF8E-E7E482E7F0BE}</Project>
+      <Name>FluentValidation.Mvc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FluentValidation.xValIntegration\FluentValidation.xValIntegration.csproj">
+      <Project>{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}</Project>
+      <Name>FluentValidation.xValIntegration</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
+      <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
+      <Name>FluentValidation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AttributedValidatorFactoryTester.cs" />
+    <Compile Include="CascadingFailuresTester.cs" />
+    <Compile Include="ChainingValidatorsTester.cs" />
+    <Compile Include="CollectionValidatorTests.cs" />
+    <Compile Include="ComplexValidationTester.cs" />
+    <Compile Include="ConditionTests.cs" />
+    <Compile Include="CustomFailureActionTester.cs" />
+    <Compile Include="ExactLengthValidatorTester.cs" />
+    <Compile Include="ExclusiveBetweenValidatorTests.cs" />
+    <Compile Include="InclusiveBetweenValidatorTests.cs" />
+    <Compile Include="MessageFormatterTests.cs" />
+    <Compile Include="ModelBinderTester.cs" />
+    <Compile Include="CustomValidatorTester.cs" />
+    <Compile Include="DefaultResouceManagerTester.cs" />
+    <Compile Include="DefaultValidatorExtensionTester.cs" />
+    <Compile Include="EmailValidatorTests.cs" />
+    <Compile Include="EqualValidatorTests.cs" />
+    <Compile Include="ExtensionTester.cs" />
+    <Compile Include="AbstractValidatorTester.cs" />
+    <Compile Include="GreaterThanOrEqualToValidatorTester.cs" />
+    <Compile Include="GreaterThanValidatorTester.cs" />
+    <Compile Include="LengthValidatorTests.cs" />
+    <Compile Include="LessThanOrEqualToValidatorTester.cs" />
+    <Compile Include="LessThanValidatorTester.cs" />
+    <Compile Include="LocalisedMessagesTester.cs" />
+    <Compile Include="NotEmptyTester.cs" />
+    <Compile Include="NotEqualValidatorTests.cs" />
+    <Compile Include="NotNullTester.cs" />
+    <Compile Include="Person.cs" />
+    <Compile Include="PredicateValidatorTester.cs" />
+    <Compile Include="PropertyChainTests.cs" />
+    <Compile Include="RegularExpressionValidatorTests.cs" />
+    <Compile Include="RuleBuilderTests.cs" />
+    <Compile Include="TestExtensions.cs" />
+    <Compile Include="TestMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestMessages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="TestValidator.cs" />
+    <Compile Include="CustomMessageFormatTester.cs" />
+    <Compile Include="UserStateTester.cs" />
+    <Compile Include="ValidationMessageAttributeTests.cs" />
+    <Compile Include="ValidationResultExtensionTests.cs" />
+    <Compile Include="ValidationResultTests.cs" />
+    <Compile Include="ValidatorDescriptorTester.cs" />
+    <Compile Include="ValidatorFactoryTester.cs" />
+    <Compile Include="ValidatorSelectorTests.cs" />
+    <Compile Include="ValidatorTesterTester.cs" />
+    <Compile Include="xValRuleProviderTester.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestMessages.fr.resx" />
+    <EmbeddedResource Include="TestMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

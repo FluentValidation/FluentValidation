@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FluentValidation</RootNamespace>
+    <AssemblyName>FluentValidation</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\FluentValidation.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\FluentValidation.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AbstractValidator.cs" />
+    <Compile Include="Attributes\AttributedValidatorFactory.cs" />
+    <Compile Include="Attributes\ValidationMessageAttribute.cs" />
+    <Compile Include="Attributes\ValidatorAttribute.cs" />
+    <Compile Include="DefaultRuleBuilderExtensions.cs" />
+    <Compile Include="DefaultValidatorExtensions.cs" />
+    <Compile Include="DefaultValidatorOptions.cs" />
+    <Compile Include="Internal\ComplexPropertyRule.cs" />
+    <Compile Include="Internal\DefaultValidatorSelector.cs" />
+    <Compile Include="Internal\DelegateValidator.cs" />
+    <Compile Include="Internal\Extensions.cs" />
+    <Compile Include="Internal\IConfigurable.cs" />
+    <Compile Include="Internal\IFluentInterface.cs" />
+    <Compile Include="Internal\IFluentInterfaceMarker.cs" />
+    <Compile Include="Internal\IPropertyRule.cs" />
+    <Compile Include="Internal\IValidationRuleCollection.cs" />
+    <Compile Include="Internal\PropertyModel.cs" />
+    <Compile Include="Internal\SimpleRuleBuilder.cs" />
+    <Compile Include="IValidationRule.cs" />
+    <Compile Include="Internal\MemberNameValidatorSelector.cs" />
+    <Compile Include="Internal\MemberValidatorSelector.cs" />
+    <Compile Include="Internal\MessageFormatter.cs" />
+    <Compile Include="Internal\NestedCollectionValidator.cs" />
+    <Compile Include="Internal\PropertyChain.cs" />
+    <Compile Include="Internal\PropertyRule.cs" />
+    <Compile Include="Internal\ValidationContext.cs" />
+    <Compile Include="Internal\IValidatorSelector.cs" />
+    <Compile Include="Syntax.cs" />
+    <Compile Include="Internal\RuleBuilder.cs" />
+    <Compile Include="IValidator.cs" />
+    <Compile Include="IValidatorDescriptor.cs" />
+    <Compile Include="IValidatorFactory.cs" />
+    <Compile Include="Resources\DefaultResourceManager.cs" />
+    <Compile Include="TestHelper\ValidationTestException.cs" />
+    <Compile Include="TestHelper\ValidatorTester.cs" />
+    <Compile Include="TestHelper\ValidatorTestExtensions.cs" />
+    <Compile Include="ValidatorOptions.cs" />
+    <Compile Include="CascadeMode.cs" />
+    <Compile Include="ValidatorDescriptor.cs" />
+    <Compile Include="Validators\AbstractComparisonValidator.cs" />
+    <Compile Include="Validators\EmailValidator.cs" />
+    <Compile Include="Validators\EqualValidator.cs" />
+    <Compile Include="Validators\ExclusiveBetweenValidator.cs" />
+    <Compile Include="Validators\GreaterThanOrEqualValidator.cs" />
+    <Compile Include="Validators\GreaterThanValidator.cs" />
+    <Compile Include="Validators\InclusiveBetweenValidator.cs" />
+    <Compile Include="Validators\LessThanOrEqualValidator.cs" />
+    <Compile Include="Validators\LessThanValidator.cs" />
+    <Compile Include="Validators\PredicateValidator.cs" />
+    <Compile Include="Results\PropertyValidatorResult.cs" />
+    <Compile Include="Results\ValidationFailure.cs" />
+    <Compile Include="Results\ValidationResult.cs" />
+    <Compile Include="Validators\IPropertyValidator.cs" />
+    <Compile Include="Validators\LengthValidator.cs" />
+    <Compile Include="Validators\NotEmptyValidator.cs" />
+    <Compile Include="Validators\NotEqualValidator.cs" />
+    <Compile Include="Validators\NotNullValidator.cs" />
+    <Compile Include="Validators\DelegatingValidator.cs" />
+    <Compile Include="Validators\PropertyValidatorContext.cs" />
+    <Compile Include="Validators\RegularExpressionValidator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Messages.de.resx" />
+    <EmbeddedResource Include="Resources\Messages.es.resx" />
+    <EmbeddedResource Include="Resources\Messages.fr.resx" />
+    <EmbeddedResource Include="Resources\Messages.nl.resx" />
+    <EmbeddedResource Include="Resources\Messages.pt.resx" />
+    <EmbeddedResource Include="Resources\Messages.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.sv.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\FluentValidation.snk">
+      <Link>FluentValidation.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
