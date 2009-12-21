@@ -93,6 +93,25 @@ namespace FluentValidation.Tests {
 			binder.BindModel(new ControllerContext(), bindingContext).ShouldNotBeNull();
 		}
 
+		[Test, Ignore("This test will always fail as the DefaultModelBinder does not allow for the default 'required' validation to be disabled. One day I'm hoping this will be changed...")]
+		public void Should_not_add_default_message_to_modelstate() {
+			var form = new FormCollection {
+				{ "Id", "" }
+			};
+
+			var bindingContext = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(TestModel3)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider()
+			};
+
+			binder.BindModel(new ControllerContext(), bindingContext);
+
+			bindingContext.ModelState["Id"].Errors[0].ErrorMessage.ShouldEqual("Validation failed");
+		}
+
 		private ModelMetadata CreateMetaData(Type type) {
 			return new ModelMetadata(new EmptyModelMetadataProvider(), null, null, type, null);
 		}
@@ -108,6 +127,17 @@ namespace FluentValidation.Tests {
 		public class TestModelValidator : AbstractValidator<TestModel> {
 			public TestModelValidator() {
 				RuleFor(x => x.Name).NotNull().WithMessage("Validation Failed");
+			}
+		}
+
+		[Validator(typeof(TestModelValidator3))]
+		public class TestModel3 {
+			public int Id { get; set; }
+		}
+
+		public class TestModelValidator3:AbstractValidator<TestModel3> {
+			public TestModelValidator3() {
+				RuleFor(x => x.Id).NotEmpty().WithMessage("Validation failed");
 			}
 		}
 	}
