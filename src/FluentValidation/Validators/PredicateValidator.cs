@@ -25,9 +25,11 @@ namespace FluentValidation.Validators {
 
 	[ValidationMessage(Key=DefaultResourceManager.PredicateError)]
 	public class PredicateValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IPredicateValidator {
-		private readonly Func<T, TProperty, bool> predicate;
+		public delegate bool Predicate(object instanceToValidate, object propertyValue);
 
-		public PredicateValidator(Func<T, TProperty, bool> predicate) {
+		private readonly Predicate predicate;
+
+		public PredicateValidator(Predicate predicate) {
 			predicate.Guard("A predicate must be specified.");
 			this.predicate = predicate;
 		}

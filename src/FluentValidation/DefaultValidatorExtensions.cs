@@ -252,7 +252,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		                                                                   Func<T, TProperty, bool> predicate) {
-			return ruleBuilder.SetValidator(new PredicateValidator<T, TProperty>(predicate));
+			return ruleBuilder.SetValidator(new PredicateValidator<T, TProperty>((instance, property) => predicate((T)instance, (TProperty)property)));
 		}
 
 		/// <summary>
@@ -416,7 +416,7 @@ namespace FluentValidation {
 		/// <param name="from">The lowest allowed value</param>
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty> {
+		public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
 			return ruleBuilder.SetValidator(new InclusiveBetweenValidator<T, TProperty>(from, to));
 		}
 
@@ -430,7 +430,7 @@ namespace FluentValidation {
 		/// <param name="from">The lowest allowed value</param>
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty> {
+		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
 			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator<T, TProperty>(from, to));
 		}
 	}

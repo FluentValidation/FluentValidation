@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	[ValidationMessage(Key = DefaultResourceManager.InclusiveBetweenValidatorError)]
-	public class InclusiveBetweenValidator<TInstance, TType> : IPropertyValidator<TInstance, TType>, IBetweenValidator<TType> where TType : IComparable<TType> {
+	public class InclusiveBetweenValidator<TInstance, TType> : IPropertyValidator<TInstance, TType>, IBetweenValidator<TType> where TType : IComparable<TType>, IComparable {
 		public InclusiveBetweenValidator(TType from, TType to) {
 			To = to;
 			From = from;
@@ -38,7 +38,9 @@ namespace FluentValidation.Validators {
 		public TType To { get; private set; }
 
 		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TType> context) {
-			if (context.PropertyValue.CompareTo(From) < 0 || context.PropertyValue.CompareTo(To) > 0) {
+			var propertyValue = (IComparable)context.PropertyValue;
+
+			if (propertyValue.CompareTo(From) < 0 || propertyValue.CompareTo(To) > 0) {
 				
 				var formatter = new MessageFormatter()
 					.AppendProperyName(context.PropertyDescription)

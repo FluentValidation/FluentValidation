@@ -25,6 +25,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public abstract class AbstractComparisonValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IComparisonValidator where TProperty : IComparable<TProperty> {
+
 		readonly Func<T, TProperty> valueToCompareFunc;
 
 		protected AbstractComparisonValidator(Expression<Func<T, TProperty>> valueToCompareFunc) {
@@ -42,9 +43,9 @@ namespace FluentValidation.Validators {
 		}
 
 		public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
-			var value = valueToCompareFunc(context.Instance);
+			var value = valueToCompareFunc((T)context.Instance);
 
-			if (context.PropertyValue == null || !IsValid(context.PropertyValue, value)) {
+			if (context.PropertyValue == null || !IsValid((TProperty)context.PropertyValue, value)) {
 				var formatter = new MessageFormatter()
 					.AppendProperyName(context.PropertyDescription)
 					.AppendArgument("ComparisonValue", value);

@@ -37,7 +37,7 @@ namespace FluentValidation.Validators {
 		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, string> context) {
 			if (context.PropertyValue == null) return PropertyValidatorResult.Success();
 
-			if (!regex.IsMatch(context.PropertyValue)) {
+			if (!regex.IsMatch((string)context.PropertyValue)) {
 				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);
 				string error = context.GetFormattedErrorMessage(typeof(EmailValidator<TInstance>), formatter);
 				return PropertyValidatorResult.Failure(error);

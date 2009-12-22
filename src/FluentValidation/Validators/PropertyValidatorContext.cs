@@ -26,17 +26,36 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	public class PropertyValidatorContext<T, TProperty> {
-		private readonly Func<T, TProperty> propertyValueFunc;
-		private bool propertyValueSet;
-		private TProperty propertyValue;
-		private IEnumerable<Func<T, object>> customFormatArgs;
+	public class PropertyValidatorContext {
+		protected PropertySelector propertyValueFunc;
+		protected bool propertyValueSet;
+		protected object propertyValue;
+
+		public string PropertyDescription { get; protected set; }
+		public string CustomError { get; protected set; }
+		protected IEnumerable<Func<object, object>> customFormatArgs;
+
+		public object Instance { get; protected set; }
+
+
+		public string GetFormattedErrorMessage(Type type, MessageFormatter formatter) {
+			string error = CustomError ?? ValidationMessageAttribute.GetMessage(type);
+
+			if (customFormatArgs != null) {
+				formatter.AppendAdditionalArguments(
+					customFormatArgs.Select(func => func(Instance)).ToArray()
+				);
+			}
+
+			return formatter.BuildMessage(error);
+		}
+
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
-		public TProperty PropertyValue {
+		public object PropertyValue {
 			get {
-				if (! propertyValueSet) {
+				if (!propertyValueSet) {
 					propertyValue = propertyValueFunc(Instance);
 					propertyValueSet = true;
 				}
@@ -45,15 +64,11 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public string PropertyDescription { get; private set; }
-		public T Instance { get; private set; }
-		public string CustomError { get; private set; }
-
-		public PropertyValidatorContext(string propertyDescription, T instance, Func<T, TProperty> propertyValueFunc)
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc)
 			: this(propertyDescription, instance, propertyValueFunc, null, null) {
 		}
 
-		public PropertyValidatorContext(string propertyDescription, T instance, Func<T, TProperty> propertyValueFunc, string customError, IEnumerable<Func<T, object>> customFormatArgs) {
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string customError, IEnumerable<Func<object, object>> customFormatArgs) {
 			propertyValueFunc.Guard("propertyValueFunc cannot be null");
 			PropertyDescription = propertyDescription;
 			Instance = instance;
@@ -62,17 +77,13 @@ namespace FluentValidation.Validators {
 			this.propertyValueFunc = propertyValueFunc;
 		}
 
+	}
 
-		public string GetFormattedErrorMessage(Type type, MessageFormatter formatter) {
-			string error = CustomError ?? ValidationMessageAttribute.GetMessage(type);
+	public class PropertyValidatorContext<T, TProperty> : PropertyValidatorContext {
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc) : base(propertyDescription, instance, propertyValueFunc) {
+		}
 
-			if (customFormatArgs != null) {
-				formatter.AppendAdditionalArguments(
-					customFormatArgs.Select(func => func(Instance)).ToArray()	
-				);
-			}
-
-			return formatter.BuildMessage(error);
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string customError, IEnumerable<Func<object, object>> customFormatArgs) : base(propertyDescription, instance, propertyValueFunc, customError, customFormatArgs) {
 		}
 	}
 }

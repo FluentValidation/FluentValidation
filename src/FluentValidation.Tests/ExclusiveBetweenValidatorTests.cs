@@ -204,7 +204,7 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set_for_doubles() {
 			var validator = new ExclusiveBetweenValidator<object, double>(1.2, 10.9);
 			var result =
-				validator.Validate(new PropertyValidatorContext<object, double>("Value", null, x => 0));
+				validator.Validate(new PropertyValidatorContext<object, double>("Value", null, x => 0.0));
 			result.Error.ShouldEqual("'Value' must be between 1.2 and 10.9 (exclusive). You entered 0.");
 		}
 

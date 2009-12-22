@@ -87,7 +87,7 @@ namespace FluentValidation.Internal {
 			string propertyName = BuildPropertyName(context);
 
 			if (context.Selector.CanExecute(this, propertyName)) {
-				var validationContext = new PropertyValidatorContext<T, TProperty>(model.PropertyDescription, context.InstanceToValidate, model.PropertyFunc, CustomValidationMessage, formatArgs);
+				var validationContext = new PropertyValidatorContext<T, TProperty>(model.PropertyDescription, context.InstanceToValidate, x => model.PropertyFunc((T)x), CustomValidationMessage, ConvertGenericFormatArgsToNonGenericFormatArgs());
 				var propertyValidatorResult = Validator.Validate(validationContext);
 
 				if (propertyValidatorResult != null && !propertyValidatorResult.IsValid) {
@@ -101,6 +101,11 @@ namespace FluentValidation.Internal {
 					yield return failure;
 				}
 			}
+		}
+
+		//TODO: Remove this when the code sucks less...
+		IEnumerable<Func<object, object>> ConvertGenericFormatArgsToNonGenericFormatArgs() {
+			return formatArgs.Select(func => new Func<object, object>(x => func((T)x)));
 		}
 
 		private string BuildPropertyName(ValidationContext<T> context) {

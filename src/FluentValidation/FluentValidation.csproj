@@ -68,6 +68,7 @@
     <Compile Include="Internal\IPropertyRule.cs" />
     <Compile Include="Internal\IValidationRuleCollection.cs" />
     <Compile Include="Internal\PropertyModel.cs" />
+    <Compile Include="Internal\PropertySelector.cs" />
     <Compile Include="Internal\SimpleRuleBuilder.cs" />
     <Compile Include="IValidationRule.cs" />
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Validators\NotEqualValidator.cs" />
     <Compile Include="Validators\NotNullValidator.cs" />
     <Compile Include="Validators\DelegatingValidator.cs" />
+    <Compile Include="Validators\PropertyValidator.cs" />
     <Compile Include="Validators\PropertyValidatorContext.cs" />
     <Compile Include="Validators\RegularExpressionValidator.cs" />
   </ItemGroup>
