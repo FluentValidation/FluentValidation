@@ -19,37 +19,19 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
-	using System.Globalization;
 	using System.Linq;
-	using System.Resources;
 	using Attributes;
 	using Internal;
-	using Resources;
 
 	public class PropertyValidatorContext {
-		protected PropertySelector propertyValueFunc;
-		protected bool propertyValueSet;
-		protected object propertyValue;
+		private readonly PropertySelector propertyValueFunc;
+		private readonly IEnumerable<Func<object, object>> customFormatArgs;
+		private bool propertyValueSet;
+		private object propertyValue;
 
 		public string PropertyDescription { get; protected set; }
 		public string CustomError { get; protected set; }
-		protected IEnumerable<Func<object, object>> customFormatArgs;
-
-		public object Instance { get; protected set; }
-
-
-		public string GetFormattedErrorMessage(Type type, MessageFormatter formatter) {
-			string error = CustomError ?? ValidationMessageAttribute.GetMessage(type);
-
-			if (customFormatArgs != null) {
-				formatter.AppendAdditionalArguments(
-					customFormatArgs.Select(func => func(Instance)).ToArray()
-				);
-			}
-
-			return formatter.BuildMessage(error);
-		}
-
+		public object Instance { get; private set; }
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
@@ -77,5 +59,16 @@ namespace FluentValidation.Validators {
 			this.propertyValueFunc = propertyValueFunc;
 		}
 
+		public string GetFormattedErrorMessage(Type type, MessageFormatter formatter) {
+			string error = CustomError ?? ValidationMessageAttribute.GetMessage(type);
+
+			if (customFormatArgs != null) {
+				formatter.AppendAdditionalArguments(
+					customFormatArgs.Select(func => func(Instance)).ToArray()
+				);
+			}
+
+			return formatter.BuildMessage(error);
+		}
 	}
 }
