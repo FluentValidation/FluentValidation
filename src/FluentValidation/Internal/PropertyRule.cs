@@ -33,7 +33,7 @@ namespace FluentValidation.Internal {
 		readonly PropertyModel<T, TProperty> model;
 		private List<Func<T, object>> formatArgs = new List<Func<T, object>>();
 
-		public PropertyRule(PropertyModel<T, TProperty> propertyModel, IPropertyValidator<T, TProperty> validator) {
+		public PropertyRule(PropertyModel<T, TProperty> propertyModel, IPropertyValidator validator) {
 			this.model = propertyModel;
 			Validator = validator;
 		}
@@ -43,7 +43,7 @@ namespace FluentValidation.Internal {
 			get { return formatArgs; }
 		}
 
-		public IPropertyValidator<T, TProperty> Validator { get; set; }
+		public IPropertyValidator Validator { get; set; }
 
 
 		public Action<T> OnFailure {
@@ -53,7 +53,7 @@ namespace FluentValidation.Internal {
 
 		public Func<T, object> CustomStateProvider { get; set; }
 
-		IPropertyValidator<T> ISimplePropertyRule<T>.Validator { get { return Validator; } }
+		IPropertyValidator ISimplePropertyRule<T>.Validator { get { return Validator; } }
 
 		public string CustomPropertyName {
 			get { return model.CustomPropertyName; }

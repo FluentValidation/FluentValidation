@@ -20,12 +20,6 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public interface IPropertyValidator {
-	}
-
-	public interface IPropertyValidator<T> : IPropertyValidator {
-	}
-
-	public interface IPropertyValidator<TInstance, TProperty> : IPropertyValidator<TInstance> {
 		PropertyValidatorResult Validate(PropertyValidatorContext context);
 	}
 }

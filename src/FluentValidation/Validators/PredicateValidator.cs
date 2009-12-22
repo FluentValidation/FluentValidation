@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	[ValidationMessage(Key=DefaultResourceManager.PredicateError)]
-	public class PredicateValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IPredicateValidator {
+	public class PredicateValidator<T, TProperty> : IPropertyValidator, IPredicateValidator {
 		public delegate bool Predicate(object instanceToValidate, object propertyValue);
 
 		private readonly Predicate predicate;

@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	public abstract class AbstractComparisonValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IComparisonValidator where TProperty : IComparable<TProperty> {
+	public abstract class AbstractComparisonValidator<T, TProperty> : IPropertyValidator, IComparisonValidator where TProperty : IComparable<TProperty> {
 
 		readonly Func<T, TProperty> valueToCompareFunc;
 

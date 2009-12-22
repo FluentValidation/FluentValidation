@@ -20,11 +20,11 @@ namespace FluentValidation.Validators {
 	using System;
 	using Results;
 
-	public class DelegatingValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IDelegatingValidator {
+	public class DelegatingValidator<T, TProperty> : IPropertyValidator, IDelegatingValidator {
 		private readonly Func<object, bool> condition;
-		public IPropertyValidator<T, TProperty> InnerValidator { get; private set; }
+		public IPropertyValidator InnerValidator { get; private set; }
 
-		public DelegatingValidator(Func<object, bool> condition, IPropertyValidator<T, TProperty> innerValidator) {
+		public DelegatingValidator(Func<object, bool> condition, IPropertyValidator innerValidator) {
 			this.condition = condition;
 			InnerValidator = innerValidator;
 		}

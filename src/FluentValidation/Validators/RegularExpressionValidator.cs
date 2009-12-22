@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	[ValidationMessage(Key=DefaultResourceManager.RegexError)]
-	public class RegularExpressionValidator<TInstance> : IPropertyValidator<TInstance, string>, IRegularExpressionValidator {
+	public class RegularExpressionValidator<TInstance> : IPropertyValidator, IRegularExpressionValidator {
 		readonly string expression;
 		readonly Regex regex;
 

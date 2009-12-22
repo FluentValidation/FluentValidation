@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	[ValidationMessage(Key=DefaultResourceManager.LengthValidatorError)]
-	public class LengthValidator<TInstance> : IPropertyValidator<TInstance, string>, ILengthValidator {
+	public class LengthValidator<TInstance> : IPropertyValidator, ILengthValidator {
 		public int Min { get; private set; }
 		public int Max { get; private set; }
 

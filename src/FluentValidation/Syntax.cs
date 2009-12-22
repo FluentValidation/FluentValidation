@@ -41,7 +41,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="validator">The validator to set</param>
 		/// <returns></returns>
-		IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator<T, TProperty> validator);
+		IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator validator);
 
 
 		/// <summary>

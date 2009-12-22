@@ -73,7 +73,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Should_throw_if_validator_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((IPropertyValidator<Person, string>)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((IPropertyValidator)null));
 		}
 
 		[Test]
@@ -114,7 +114,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Calling_validate_should_delegate_to_underlying_validator() {
 			var person = new Person {Surname = "Foo"};
-			var validator = new Mock<IPropertyValidator<Person, string>>();
+			var validator = new Mock<IPropertyValidator>();
 			builder.SetValidator(validator.Object);
 
 			builder.Single().Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
@@ -184,7 +184,7 @@ namespace FluentValidation.Tests {
 			results.Single().PropertyName.ShouldEqual("Foo");
 		}
 
-		class TestPropertyValidator : IPropertyValidator<Person, string> {
+		class TestPropertyValidator : IPropertyValidator {
 			public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 				return null;
 			}

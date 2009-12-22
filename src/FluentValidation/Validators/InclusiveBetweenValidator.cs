@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	[ValidationMessage(Key = DefaultResourceManager.InclusiveBetweenValidatorError)]
-	public class InclusiveBetweenValidator<TInstance, TType> : IPropertyValidator<TInstance, TType>, IBetweenValidator<TType> where TType : IComparable<TType>, IComparable {
+	public class InclusiveBetweenValidator<TInstance, TType> : IPropertyValidator, IBetweenValidator<TType> where TType : IComparable<TType>, IComparable {
 		public InclusiveBetweenValidator(TType from, TType to) {
 			To = to;
 			From = from;

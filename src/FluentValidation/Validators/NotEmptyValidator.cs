@@ -23,7 +23,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	[ValidationMessage(Key=DefaultResourceManager.NotEmpty)]
-	public class NotEmptyValidator<TInstance, TProperty> : IPropertyValidator<TInstance, TProperty>, INotEmptyValidator {
+	public class NotEmptyValidator<TInstance, TProperty> : IPropertyValidator, INotEmptyValidator {
 		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			if (context.PropertyValue == null || context.PropertyValue.Equals(string.Empty) ||
 			    Equals(context.PropertyValue, default(TProperty))) {

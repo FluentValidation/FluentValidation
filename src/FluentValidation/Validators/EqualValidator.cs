@@ -27,7 +27,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	[ValidationMessage(Key=DefaultResourceManager.Equal)]
-	public class EqualValidator<TInstance, TProperty> : IPropertyValidator<TInstance, TProperty>, IComparisonValidator {
+	public class EqualValidator<TInstance, TProperty> : IPropertyValidator, IComparisonValidator {
 		readonly Func<TInstance, TProperty> func;
 		IEqualityComparer<TProperty> comparer;
 
