@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 
 	[ValidationMessage(Key=DefaultResourceManager.NotNull)]
 	public class NotNullValidator<TInstance, TProperty> : IPropertyValidator<TInstance, TProperty>, INotNullValidator {
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TProperty> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) {
 				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);
 				string error = context.GetFormattedErrorMessage(typeof(NotNullValidator<TInstance, TProperty>), formatter);

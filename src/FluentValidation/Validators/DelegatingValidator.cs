@@ -29,7 +29,7 @@ namespace FluentValidation.Validators {
 			InnerValidator = innerValidator;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			if (condition(context.Instance)) {
 				return InnerValidator.Validate(context);
 			}

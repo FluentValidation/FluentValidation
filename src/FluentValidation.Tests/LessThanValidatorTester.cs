@@ -37,25 +37,25 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Should_fail_when_greater_than_input() {
-			var result = validator.Validate(new PropertyValidatorContext<Person, int>(null, null, x => 2));
+			var result = validator.Validate(new PropertyValidatorContext(null, null, x => 2));
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void Should_succeed_when_less_than_input() {
-			var result = validator.Validate(new PropertyValidatorContext<Person, int>(null, null, x => 0));
+			var result = validator.Validate(new PropertyValidatorContext(null, null, x => 0));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void Should_fail_when_equal_to_input() {
-			var result = validator.Validate(new PropertyValidatorContext<Person, int>(null, null, x => value));
+			var result = validator.Validate(new PropertyValidatorContext(null, null, x => value));
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void Should_set_default_validation_message_when_validation_fails() {
-			var result = validator.Validate(new PropertyValidatorContext<Person, int>("Discount", new Person(), x => 2));
+			var result = validator.Validate(new PropertyValidatorContext("Discount", new Person(), x => 2));
 			result.Error.ShouldEqual("'Discount' must be less than '1'.");
 		}
 

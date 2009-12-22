@@ -37,7 +37,7 @@ namespace FluentValidation.Validators {
 		public TProperty From { get; private set; }
 		public TProperty To { get; private set; }
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TProperty> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			var propertyValue = (IComparable)context.PropertyValue;
 
 			if (propertyValue.CompareTo(From) <= 0 || propertyValue.CompareTo(To) >= 0) {

@@ -36,21 +36,21 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_objects_are_equal_validation_should_succeed() {
 			var person = new Person { Forename = "Foo"};
-			var result = validator.Validate(new PropertyValidatorContext<Person, string>(null, person, x => "Foo", null, null));
+			var result = validator.Validate(new PropertyValidatorContext(null, person, x => "Foo", null, null));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_objects_are_not_equal_validation_should_fail() {
 			var person = new Person() { Forename = "Bar" };
-			var result = validator.Validate(new PropertyValidatorContext<Person, string>(null, person, x => "Foo", null, null));
+			var result = validator.Validate(new PropertyValidatorContext(null, person, x => "Foo", null, null));
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_validation_fails_the_error_should_be_set() {
 			var person = new Person() {Forename = "Bar"};
-			var result = validator.Validate(new PropertyValidatorContext<Person, string>("Forename", person, x => "Foo", null, null));
+			var result = validator.Validate(new PropertyValidatorContext("Forename", person, x => "Foo", null, null));
 			result.Error.ShouldEqual("'Forename' should be equal to 'Bar'.");
 		}
 
@@ -76,7 +76,7 @@ namespace FluentValidation.Tests {
 		public void Should_succeed_on_case_insensitive_comparison() {
 			var person = new Person { Surname = "foo" };
 			var validator = new EqualValidator<Person, string>(x => x.Surname, StringComparer.OrdinalIgnoreCase);
-			var context = new PropertyValidatorContext<Person, string>("Surname", person, x => "FOO", null, null);
+			var context = new PropertyValidatorContext("Surname", person, x => "FOO", null, null);
 
 			var result = validator.Validate(context);
 			result.IsValid.ShouldBeTrue();

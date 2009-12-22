@@ -34,7 +34,7 @@ namespace FluentValidation.Tests {
 		public void When_the_text_is_an_exact_length_the_validator_should_pass() {
 			string text = "test";
 			var validator = new ExactLengthValidator<object>(4);
-			var result = validator.Validate(new PropertyValidatorContext<object, string>(null, new object(), x => text));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -42,7 +42,7 @@ namespace FluentValidation.Tests {
 		public void When_the_text_length_is_smaller_the_validator_should_fail() {
 			string text = "test";
 			var validator = new ExactLengthValidator<object>(10);
-			var result = validator.Validate(new PropertyValidatorContext<object, string>(null, new object(), x => text));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -50,7 +50,7 @@ namespace FluentValidation.Tests {
 		public void When_the_text_length_is_larger_the_validator_should_fail() {
 			string text = "test";
 			var validator = new ExactLengthValidator<object>(1);
-			var result = validator.Validate(new PropertyValidatorContext<object, string>(null, new object(), x => text));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -58,7 +58,7 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new ExactLengthValidator<object>(2);
 			var result =
-				validator.Validate(new PropertyValidatorContext<object, string>("Forename", null, x => "Gire and gimble in the wabe"));
+				validator.Validate(new PropertyValidatorContext("Forename", null, x => "Gire and gimble in the wabe"));
 			result.Error.ShouldEqual("'Forename' must be 2 characters in length. You entered 27 characters.");
 		}
 

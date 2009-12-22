@@ -119,7 +119,7 @@ namespace FluentValidation.Tests {
 
 			builder.Single().Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
 
-			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext<Person, string>>(c => c.PropertyValue == "Foo")));
+			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => c.PropertyValue == "Foo")));
 		}
 
 		[Test]
@@ -185,7 +185,7 @@ namespace FluentValidation.Tests {
 		}
 
 		class TestPropertyValidator : IPropertyValidator<Person, string> {
-			public PropertyValidatorResult Validate(PropertyValidatorContext<Person, string> context) {
+			public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 				return null;
 			}
 		}

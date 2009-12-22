@@ -43,21 +43,21 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Should_use_custom_resource_manager() {
-			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext<Person, string>(null, null, x => null, null, null));
+			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext(null, null, x => null, null, null));
 			result.Error.ShouldEqual("Localised Error");
 		}
 
 		[Test]
 		public void Should_use_localised_resources() {
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
-			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext<Person, string>(null, null, x => null, null, null));
+			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext(null, null, x => null, null, null));
 			result.Error.ShouldEqual("Localised Error (FR)");
 		}
 
 		[Test]
 		public void Should_fall_back_to_default_resources() {
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("ru-RU");
-			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext<Person, string>(null, null, x => null, null, null));
+			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext(null, null, x => null, null, null));
 			result.Error.ShouldEqual("Localised Error");
 		}
 	}

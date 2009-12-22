@@ -42,7 +42,7 @@ namespace FluentValidation.Validators {
 			this.valueToCompareFunc = valueToCompareFunc.Compile();
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			var value = valueToCompareFunc((T)context.Instance);
 
 			if (context.PropertyValue == null || !IsValid((TProperty)context.PropertyValue, value)) {

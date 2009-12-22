@@ -37,7 +37,7 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, string> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			int length = context.PropertyValue == null ? 0 : context.PropertyValue.ToString().Length;
 
 			if (length < Min || length > Max) {

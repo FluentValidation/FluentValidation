@@ -33,7 +33,7 @@ namespace FluentValidation.Validators {
 			regex = new Regex(expression);
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, string> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) return PropertyValidatorResult.Success();
 			if (!regex.IsMatch((string)context.PropertyValue)) {
 				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);

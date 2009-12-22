@@ -34,7 +34,7 @@ namespace FluentValidation.Validators {
 			this.predicate = predicate;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 
 			if (! predicate(context.Instance, context.PropertyValue)) {
 				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);

@@ -78,12 +78,4 @@ namespace FluentValidation.Validators {
 		}
 
 	}
-
-	public class PropertyValidatorContext<T, TProperty> : PropertyValidatorContext {
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc) : base(propertyDescription, instance, propertyValueFunc) {
-		}
-
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string customError, IEnumerable<Func<object, object>> customFormatArgs) : base(propertyDescription, instance, propertyValueFunc, customError, customFormatArgs) {
-		}
-	}
 }

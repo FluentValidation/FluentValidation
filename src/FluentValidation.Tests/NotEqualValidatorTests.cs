@@ -33,21 +33,21 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_objects_are_equal_then_the_validator_should_fail() {
 			var validator = new NotEqualValidator<Person, string>(person => person.Forename);
-			var result = validator.Validate(new PropertyValidatorContext<Person, string>(null, new Person {Forename = "Foo"}, x => "Foo", null, null));
+			var result = validator.Validate(new PropertyValidatorContext(null, new Person {Forename = "Foo"}, x => "Foo", null, null));
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_objects_are_not_equal_then_the_validator_should_pass() {
 			var validator = new NotEqualValidator<Person, string>(person => person.Forename);
-			var result = validator.Validate(new PropertyValidatorContext<Person, string>(null, new Person {Forename = "Foo"}, x => "Bar", null, null));
+			var result = validator.Validate(new PropertyValidatorContext(null, new Person {Forename = "Foo"}, x => "Bar", null, null));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new NotEqualValidator<Person, string>(person => person.Forename);
-			var result = validator.Validate(new PropertyValidatorContext<Person, string>("Forename", new Person {Forename = "Foo"}, x => "Foo", null, null));
+			var result = validator.Validate(new PropertyValidatorContext("Forename", new Person {Forename = "Foo"}, x => "Foo", null, null));
 			result.Error.ShouldEqual("'Forename' should not be equal to 'Foo'.");
 		}
 
@@ -73,7 +73,7 @@ namespace FluentValidation.Tests {
 		public void Should_not_be_valid_for_case_insensitve_comparison() {
 			var validator = new NotEqualValidator<Person, string>(x => x.Surname, StringComparer.OrdinalIgnoreCase);
 			var person = new Person { Surname = "foo" };
-			var context = new PropertyValidatorContext<Person, string>("Surname", person, x => "FOO", null, null);
+			var context = new PropertyValidatorContext("Surname", person, x => "FOO", null, null);
 
 			var result = validator.Validate(context);
 			result.IsValid.ShouldBeFalse();

@@ -33,21 +33,21 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_there_is_a_value_then_the_validator_should_pass() {
 			var validator = new NotEmptyValidator<object, string>();
-			var result = validator.Validate(new PropertyValidatorContext<object, string>(null, new object(), x => "Farf"));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => "Farf"));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_value_is_null_validator_should_fail() {
 			var validator = new NotEmptyValidator<object, string>();
-			var result = validator.Validate(new PropertyValidatorContext<object, string>(null, new object(), x => null));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => null));
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_value_is_empty_string_validator_should_fail() {
 			var validator = new NotEmptyValidator<object, string>();
-			var result = validator.Validate(new PropertyValidatorContext<object, string>(null, new object(), x => ""));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => ""));
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -55,24 +55,24 @@ namespace FluentValidation.Tests {
 		public void When_value_is_Default_for_type_validator_should_fail_datetime() {
 			var defaultValue = default(DateTime);
 			var validator = new NotEmptyValidator<object, DateTime>();
-			var result = validator.Validate(new PropertyValidatorContext<object, DateTime>(null, new object(), x => defaultValue));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => defaultValue));
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_value_is_Default_for_type_validator_should_fail_int() {
 			var validator = new NotEmptyValidator<object, int>();
-			var result = validator.Validate(new PropertyValidatorContext<object, int>(null, new object(), x => 0));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => 0));
 			result.IsValid.ShouldBeFalse();
 
-			var result1 = validator.Validate(new PropertyValidatorContext<object, int>(null, new object(), x => 1));
+			var result1 = validator.Validate(new PropertyValidatorContext(null, new object(), x => 1));
 			result1.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_validation_fails_error_should_be_set() {
 			var validator = new NotEmptyValidator<object, string>();
-			var result = validator.Validate(new PropertyValidatorContext<object, string>("name", null, x => null));
+			var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
 			result.Error.ShouldEqual("'name' should not be empty.");
 		}
 	}

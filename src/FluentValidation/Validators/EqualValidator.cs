@@ -46,7 +46,7 @@ namespace FluentValidation.Validators {
 			this.comparer = comparer;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TProperty> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			var comparisonValue = func((TInstance)context.Instance);
 			bool success = Compare(comparisonValue, (TProperty)context.PropertyValue);
 
