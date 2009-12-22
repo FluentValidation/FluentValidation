@@ -19,13 +19,11 @@
 namespace FluentValidation.Validators {
 	using System;
 	using Attributes;
-	using Internal;
 	using Resources;
-	using Results;
 
 	[ValidationMessage(Key = DefaultResourceManager.ExclusiveBetweenValidatorError)]
-	public class ExclusiveBetweenValidator<TInstance, TProperty> : IPropertyValidator, IBetweenValidator<TProperty> where TProperty : IComparable<TProperty>, IComparable {
-		public ExclusiveBetweenValidator(TProperty from, TProperty to) {
+	public class ExclusiveBetweenValidator<TInstance, TProperty> : PropertyValidator, IBetweenValidator {
+		public ExclusiveBetweenValidator(IComparable from, IComparable to) {
 			To = to;
 			From = from;
 
@@ -34,24 +32,23 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public TProperty From { get; private set; }
-		public TProperty To { get; private set; }
+		public IComparable From { get; private set; }
+		public IComparable To { get; private set; }
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
+
+		protected override bool IsValid(PropertyValidatorContext context) {
 			var propertyValue = (IComparable)context.PropertyValue;
 
 			if (propertyValue.CompareTo(From) <= 0 || propertyValue.CompareTo(To) >= 0) {
 
-				var formatter = new MessageFormatter()
-					.AppendProperyName(context.PropertyDescription)
+				context.MessageFormatter
 					.AppendArgument("From", From)
 					.AppendArgument("To", To)
 					.AppendArgument("Value", context.PropertyValue);
 
-				string error = context.GetFormattedErrorMessage(GetType(), formatter);
-				return PropertyValidatorResult.Failure(error);
+				return false;
 			}
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 	}
 }

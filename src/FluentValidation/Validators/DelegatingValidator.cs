@@ -20,7 +20,7 @@ namespace FluentValidation.Validators {
 	using System;
 	using Results;
 
-	public class DelegatingValidator<T, TProperty> : IPropertyValidator, IDelegatingValidator {
+	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
 		private readonly Func<object, bool> condition;
 		public IPropertyValidator InnerValidator { get; private set; }
 

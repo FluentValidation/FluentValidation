@@ -47,7 +47,7 @@ namespace FluentValidation.Validators {
 
 			if (context.PropertyValue == null || !IsValid((TProperty)context.PropertyValue, value)) {
 				var formatter = new MessageFormatter()
-					.AppendProperyName(context.PropertyDescription)
+					.AppendPropertyName(context.PropertyDescription)
 					.AppendArgument("ComparisonValue", value);
 
 				string error = context.GetFormattedErrorMessage(GetType(), formatter);

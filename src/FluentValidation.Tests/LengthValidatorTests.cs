@@ -33,7 +33,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_between_the_range_specified_then_the_validator_should_pass() {
 			string text = "Test";
-			var validator = new LengthValidator<object>(1, 10);
+			var validator = new LengthValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -41,7 +41,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_smaller_than_the_range_then_the_validator_should_fail() {
 			string text = "Test";
-			var validator = new LengthValidator<object>(5, 10);
+			var validator = new LengthValidator(5, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -49,7 +49,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_larger_than_the_range_then_the_validator_should_fail() {
 			string text = "Test";
-			var validator = new LengthValidator<object>(1, 2);
+			var validator = new LengthValidator(1, 2);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -57,7 +57,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_exactly_the_size_of_the_upper_bound_then_the_validator_should_pass() {
 			string text = "Test";
-			var validator = new LengthValidator<object>(1, 4);
+			var validator = new LengthValidator(1, 4);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -65,19 +65,19 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_exactly_the_size_of_the_lower_bound_then_the_validator_should_pass() {
 			string text = "Test";
-			var validator = new LengthValidator<object>(4, 5);
+			var validator = new LengthValidator(4, 5);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_max_is_smaller_than_the_min_then_the_validator_should_throw() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new LengthValidator<object>(2, 1));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new LengthValidator(2, 1));
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
-			var validator = new LengthValidator<object>(1, 2);
+			var validator = new LengthValidator(1, 2);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Forename", null, x => "Gire and gimble in the wabe"));
 			result.Error.ShouldEqual("'Forename' must be between 1 and 2 characters. You entered 27 characters.");
@@ -85,7 +85,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Min_and_max_properties_should_be_set() {
-			var validator = new LengthValidator<object>(1, 5);
+			var validator = new LengthValidator(1, 5);
 			validator.Min.ShouldEqual(1);
 			validator.Max.ShouldEqual(5);
 		}

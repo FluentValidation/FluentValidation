@@ -105,9 +105,9 @@ namespace FluentValidation.Tests {
 		public void Calling_when_should_replace_current_validator_with_predicate_validator() {
 			var validator = new TestPropertyValidator();
 			builder.SetValidator(validator).When(x => true);
-			builder.Cast<ISimplePropertyRule<Person>>().Single().Validator.ShouldBe<DelegatingValidator<Person, string>>();
+			builder.Cast<ISimplePropertyRule<Person>>().Single().Validator.ShouldBe<DelegatingValidator>();
 
-			var predicateValidator = (DelegatingValidator<Person, string>)builder.Cast<ISimplePropertyRule<Person>>().Single().Validator;
+			var predicateValidator = (DelegatingValidator)builder.Cast<ISimplePropertyRule<Person>>().Single().Validator;
 			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
 		}
 

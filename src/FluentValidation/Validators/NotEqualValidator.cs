@@ -26,8 +26,9 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
+	//TODO: PV Remove generics
 	[ValidationMessage(Key=DefaultResourceManager.NotEqual)]
-	public class NotEqualValidator<TInstance, TProperty> : IPropertyValidator, IComparisonValidator {
+	public class NotEqualValidator<TInstance, TProperty> : PropertyValidator, IComparisonValidator {
 		readonly IEqualityComparer<TProperty> comparer;
 		readonly Func<TInstance, TProperty> func;
 
@@ -46,20 +47,16 @@ namespace FluentValidation.Validators {
 			this.comparer = comparer;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext context) {
 			var comparisonValue = func((TInstance)context.Instance);
 			bool success = !Compare(comparisonValue, (TProperty)context.PropertyValue);
 
 			if (!success) {
-				var formatter = new MessageFormatter()
-					.AppendProperyName(context.PropertyDescription)
-					.AppendArgument("PropertyValue", context.PropertyValue);
-
-				string error = context.GetFormattedErrorMessage(typeof(NotEqualValidator<TInstance, TProperty>), formatter);
-				return PropertyValidatorResult.Failure(error);
+				context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+				return false;
 			}
 
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 
 		public Comparison Comparison {

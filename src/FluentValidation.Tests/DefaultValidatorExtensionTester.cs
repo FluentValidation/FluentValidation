@@ -34,19 +34,19 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void NotNull_should_create_NotNullValidator() {
 			validator.RuleFor(x => x.Surname).NotNull();
-			AssertValidator<NotNullValidator<Person, string>>();
+			AssertValidator<NotNullValidator>();
 		}
 
 		[Test]
 		public void NotEmpty_should_create_NotEmptyValidator() {
 			validator.RuleFor(x => x.Surname).NotEmpty();
-			AssertValidator<NotEmptyValidator<Person, string>>();
+			AssertValidator<NotEmptyValidator>();
 		}
 
 		[Test]
 		public void Length_should_create_LengthValidator() {
 			validator.RuleFor(x => x.Surname).Length(1, 20);
-			AssertValidator<LengthValidator<Person>>();
+			AssertValidator<LengthValidator>();
 		}
 
 		[Test]
@@ -82,13 +82,13 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Must_should_create_PredicteValidator() {
 			validator.RuleFor(x => x.Surname).Must(x => true);
-			AssertValidator<PredicateValidator<Person, string>>();
+			AssertValidator<PredicateValidator>();
 		}
 
 		[Test]
 		public void Must_should_create_PredicateValidator_with_context() {
 			validator.RuleFor(x => x.Surname).Must((x, val) => true);
-			AssertValidator<PredicateValidator<Person, string>>();
+			AssertValidator<PredicateValidator>();
 		}
 
 		[Test]

@@ -19,12 +19,10 @@
 namespace FluentValidation.Validators {
 	using System;
 	using Attributes;
-	using Internal;
 	using Resources;
-	using Results;
 
 	[ValidationMessage(Key=DefaultResourceManager.LengthValidatorError)]
-	public class LengthValidator<TInstance> : IPropertyValidator, ILengthValidator {
+	public class LengthValidator : PropertyValidator, ILengthValidator {
 		public int Min { get; private set; }
 		public int Max { get; private set; }
 
@@ -37,27 +35,24 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext context) {
 			int length = context.PropertyValue == null ? 0 : context.PropertyValue.ToString().Length;
 
 			if (length < Min || length > Max) {
-				var formatter = new MessageFormatter()
-					.AppendProperyName(context.PropertyDescription)
+				context.MessageFormatter
 					.AppendArgument("MinLength", Min)
 					.AppendArgument("MaxLength", Max)
 					.AppendArgument("TotalLength", length);
 
-				string error = context.GetFormattedErrorMessage(GetType(), formatter);
-
-				return PropertyValidatorResult.Failure(error);
+				return false;
 			}
 
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 	}
 
 	[ValidationMessage(Key = DefaultResourceManager.ExactLengthValidatorError)]
-	public class ExactLengthValidator<TInstance> : LengthValidator<TInstance> {
+	public class ExactLengthValidator<TInstance> : LengthValidator {
 		public ExactLengthValidator(int length) : base(length,length) {
 			
 		}

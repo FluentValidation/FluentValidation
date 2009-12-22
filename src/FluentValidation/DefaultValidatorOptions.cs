@@ -88,7 +88,7 @@ namespace FluentValidation {
 
 			return rule.Configure(config => {
 				var originalValidator = config.Validator;
-				config.Validator = new DelegatingValidator<T, TProperty>(x => predicate((T)x), originalValidator);
+				config.Validator = new DelegatingValidator(x => predicate((T)x), originalValidator);
 			});
 		}
 

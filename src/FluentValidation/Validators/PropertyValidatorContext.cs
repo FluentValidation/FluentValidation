@@ -24,6 +24,7 @@ namespace FluentValidation.Validators {
 	using Internal;
 
 	public class PropertyValidatorContext {
+		private readonly MessageFormatter messageFormatter;
 		private readonly PropertySelector propertyValueFunc;
 		private readonly IEnumerable<Func<object, object>> customFormatArgs;
 		private bool propertyValueSet;
@@ -32,6 +33,10 @@ namespace FluentValidation.Validators {
 		public string PropertyDescription { get; protected set; }
 		public string CustomError { get; protected set; }
 		public object Instance { get; private set; }
+
+		public MessageFormatter MessageFormatter {
+			get { return messageFormatter; }
+		}
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
@@ -55,6 +60,7 @@ namespace FluentValidation.Validators {
 			PropertyDescription = propertyDescription;
 			Instance = instance;
 			CustomError = customError;
+			messageFormatter = new MessageFormatter();
 			this.customFormatArgs = customFormatArgs;
 			this.propertyValueFunc = propertyValueFunc;
 		}

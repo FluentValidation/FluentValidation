@@ -26,7 +26,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="name">The name of the property</param>
 		/// <returns></returns>
-		public MessageFormatter AppendProperyName(string name) {
+		public MessageFormatter AppendPropertyName(string name) {
 			return AppendArgument(PropertyName, name);
 		}
 

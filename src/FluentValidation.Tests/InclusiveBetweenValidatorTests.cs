@@ -38,7 +38,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_between_the_range_specified_then_the_validator_should_pass() {
 			int value = 5;
-			var validator = new InclusiveBetweenValidator<object, int>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -46,7 +46,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_smaller_than_the_range_then_the_validator_should_fail() {
 			int value = 0;
-			var validator = new InclusiveBetweenValidator<object, int>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -54,7 +54,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_larger_than_the_range_then_the_validator_should_fail() {
 			int value = 11;
-			var validator = new InclusiveBetweenValidator<object, int>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -62,7 +62,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_upper_bound_then_the_validator_should_pass() {
 			int value = 10;
-			var validator = new InclusiveBetweenValidator<object, int>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -70,19 +70,19 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_lower_bound_then_the_validator_should_pass() {
 			int value = 1;
-			var validator = new InclusiveBetweenValidator<object, int>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator<object, int>(10, 1));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator(10, 1));
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
-			var validator = new InclusiveBetweenValidator<object, int>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Value", null, x => 0));
 			result.Error.ShouldEqual("'Value' must be between 1 and 10. You entered 0.");
@@ -90,7 +90,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void To_and_from_properties_should_be_set() {
-			var validator = new InclusiveBetweenValidator<object, int>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			validator.From.ShouldEqual(1);
 			validator.To.ShouldEqual(10);
 		}
@@ -98,7 +98,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_between_the_range_specified_then_the_validator_should_pass_for_strings() {
 			string value = "bbb";
-			var validator = new InclusiveBetweenValidator<object, string>("aa", "zz");
+			var validator = new InclusiveBetweenValidator("aa", "zz");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -106,7 +106,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_smaller_than_the_range_then_the_validator_should_fail_for_strings() {
 			string value = "aaa";
-			var validator = new InclusiveBetweenValidator<object, string>("bbb", "zz");
+			var validator = new InclusiveBetweenValidator("bbb", "zz");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -114,7 +114,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_larger_than_the_range_then_the_validator_should_fail_for_strings() {
 			string value = "zzz";
-			var validator = new InclusiveBetweenValidator<object, string>("aaa", "bbb");
+			var validator = new InclusiveBetweenValidator("aaa", "bbb");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -122,7 +122,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_upper_bound_then_the_validator_should_pass_for_strings() {
 			string value = "aa";
-			var validator = new InclusiveBetweenValidator<object, string>("aa", "zz");
+			var validator = new InclusiveBetweenValidator("aa", "zz");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -130,27 +130,27 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_lower_bound_then_the_validator_should_pass_for_strings() {
 			string value = "zz";
-			var validator = new InclusiveBetweenValidator<object, string>("aa", "zz");
+			var validator = new InclusiveBetweenValidator("aa", "zz");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_strings() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator<object, string>("ccc", "aaa"));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator("ccc", "aaa"));
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set_for_strings() {
 			string value = "aaa";
-			var validator = new InclusiveBetweenValidator<object, string>("bbb", "zzz");
+			var validator = new InclusiveBetweenValidator("bbb", "zzz");
 			var result = validator.Validate(new PropertyValidatorContext("Value", null, x => value));
 			result.Error.ShouldEqual("'Value' must be between bbb and zzz. You entered aaa.");
 		}
 
 		[Test]
 		public void To_and_from_properties_should_be_set_for_strings() {
-			var validator = new InclusiveBetweenValidator<object, string>("a", "c");
+			var validator = new InclusiveBetweenValidator("a", "c");
 			validator.From.ShouldEqual("a");
 			validator.To.ShouldEqual("c");
 		}
@@ -158,7 +158,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_between_the_range_specified_then_the_validator_should_pass_for_doubles() {
 			double value = 5.0;
-			var validator = new InclusiveBetweenValidator<object, double>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -166,7 +166,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_smaller_than_the_range_then_the_validator_should_fail_for_doubles() {
 			double value = 0.9;
-			var validator = new InclusiveBetweenValidator<object, double>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -174,7 +174,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_larger_than_the_range_then_the_validator_should_fail_for_doubles() {
 			double value = 10.1;
-			var validator = new InclusiveBetweenValidator<object, double>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -182,7 +182,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_upper_bound_then_the_validator_should_pass_for_doubles() {
 			double value = 10.0;
-			var validator = new InclusiveBetweenValidator<object, double>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -190,19 +190,19 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_lower_bound_then_the_validator_should_pass_for_doubles() {
 			double value = 1.0;
-			var validator = new InclusiveBetweenValidator<object, double>(1, 10);
+			var validator = new InclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_doubles() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator<object, double>(10, 1));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator(10, 1));
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set_for_doubles() {
-			var validator = new InclusiveBetweenValidator<object, double>(1.2, 10.9);
+			var validator = new InclusiveBetweenValidator(1.2, 10.9);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Value", null, x => 0.0));
 			result.Error.ShouldEqual("'Value' must be between 1.2 and 10.9. You entered 0.");
@@ -210,7 +210,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void To_and_from_properties_should_be_set_for_doubles() {
-			var validator = new InclusiveBetweenValidator<object, double>(1.1, 10.1);
+			var validator = new InclusiveBetweenValidator(1.1, 10.1);
 			validator.From.ShouldEqual(1.1);
 			validator.To.ShouldEqual(10.1);
 		}
@@ -218,7 +218,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_between_the_range_specified_then_the_validator_should_pass_for_dates() {
 			DateTime value = new DateTime(2009, 9, 9);
-			var validator = new InclusiveBetweenValidator<object, DateTime>(fromDate, toDate);
+			var validator = new InclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -226,7 +226,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_smaller_than_the_range_then_the_validator_should_fail_for_dates() {
 			DateTime value = new DateTime(2008, 1, 1);
-			var validator = new InclusiveBetweenValidator<object, DateTime>(fromDate, toDate);
+			var validator = new InclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -234,7 +234,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_larger_than_the_range_then_the_validator_should_fail_for_dates() {
 			DateTime value = new DateTime(2010, 1, 1);
-			var validator = new InclusiveBetweenValidator<object, DateTime>(fromDate, toDate);
+			var validator = new InclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -242,7 +242,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_upper_bound_then_the_validator_should_pass_for_dates() {
 			DateTime value = new DateTime(2009, 12, 31);
-			var validator = new InclusiveBetweenValidator<object, DateTime>(fromDate, toDate);
+			var validator = new InclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -250,20 +250,20 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_lower_bound_then_the_validator_should_pass_for_dates() {
 			DateTime value = new DateTime(2009, 1, 1);
-			var validator = new InclusiveBetweenValidator<object, DateTime>(fromDate, toDate);
+			var validator = new InclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_dates() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator<object, DateTime>(toDate, fromDate));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator(toDate, fromDate));
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set_for_dates() {
 			DateTime value = new DateTime(2008, 1, 1);
-			var validator = new InclusiveBetweenValidator<object, DateTime>(fromDate, toDate);
+			var validator = new InclusiveBetweenValidator(fromDate, toDate);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Value", null, x => value));
 			result.Error.ShouldEqual("'Value' must be between 1/1/2009 12:00:00 AM and 12/31/2009 12:00:00 AM. You entered 1/1/2008 12:00:00 AM.");
@@ -271,7 +271,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void To_and_from_properties_should_be_set_for_dates() {
-			var validator = new InclusiveBetweenValidator<object, DateTime>(fromDate, toDate);
+			var validator = new InclusiveBetweenValidator(fromDate, toDate);
 			validator.From.ShouldEqual(fromDate);
 			validator.To.ShouldEqual(toDate);
 		}

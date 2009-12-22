@@ -25,12 +25,12 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class PredicateValidatorTester {
-		private PredicateValidator<Person, string> validator;
+		private PredicateValidator validator;
 
 		[SetUp]
 		public void Setup() {
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-			validator = new PredicateValidator<Person, string>((person, forename) => forename == "Jeremy");
+			validator = new PredicateValidator((person, forename) => forename == "Jeremy");
 		}
 
 		[Test]
@@ -47,7 +47,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Should_throw_when_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => new PredicateValidator<Person, string>(null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => new PredicateValidator(null));
 		}
 
 		[Test]

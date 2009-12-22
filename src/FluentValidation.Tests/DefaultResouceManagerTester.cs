@@ -31,11 +31,11 @@ namespace FluentValidation.Tests {
 
 		private IEnumerable<Type> PropertyValidatorTypes {
 			get {
-				return from type in typeof(NotNullValidator<,>).Assembly.GetExportedTypes()
+				return from type in typeof(NotNullValidator).Assembly.GetExportedTypes()
 					   where typeof(IPropertyValidator).IsAssignableFrom(type)
 					   where !type.IsAbstract
 					   where !type.IsInterface
-					   where type != typeof(DelegatingValidator<,>) //DelegatingValidator does not create a validation message.
+					   where type != typeof(DelegatingValidator) //DelegatingValidator does not create a validation message.
 					   select type;
 			}
 		}

@@ -26,7 +26,7 @@ namespace FluentValidation.Validators {
 
 	//Email regex from http://hexillion.com/samples/#Regex
 	[ValidationMessage(Key=DefaultResourceManager.Email)]
-	public class EmailValidator<TInstance> : IPropertyValidator, IRegularExpressionValidator, IEmailValidator {
+	public class EmailValidator : PropertyValidator, IRegularExpressionValidator, IEmailValidator {
 		private readonly Regex regex;
 		const string expression = @"^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$";
 
@@ -34,15 +34,15 @@ namespace FluentValidation.Validators {
 			regex = new Regex(expression, RegexOptions.IgnoreCase);
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
-			if (context.PropertyValue == null) return PropertyValidatorResult.Success();
+
+		protected override bool IsValid(PropertyValidatorContext context) {
+			if (context.PropertyValue == null) return true;
 
 			if (!regex.IsMatch((string)context.PropertyValue)) {
-				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);
-				string error = context.GetFormattedErrorMessage(typeof(EmailValidator<TInstance>), formatter);
-				return PropertyValidatorResult.Failure(error);
+				return false;
 			}
-			return PropertyValidatorResult.Success();
+
+			return true;
 		}
 
 		public string Expression {

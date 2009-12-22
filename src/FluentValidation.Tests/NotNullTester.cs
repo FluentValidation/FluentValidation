@@ -31,28 +31,28 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void NotNullValidator_should_pass_if_value_has_value() {
-			var validator = new NotNullValidator<object, string>();
+			var validator = new NotNullValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => "Jeremy"));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void NotNullValidator_should_fail_if_value_is_null() {
-			var validator = new NotNullValidator<object, string>();
+			var validator = new NotNullValidator();
 			var result = validator.Validate(new PropertyValidatorContext("name", new object(), x => null));
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
-			var validator = new NotNullValidator<object, string>();
+			var validator = new NotNullValidator();
 			var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
 			result.Error.ShouldEqual("'name' must not be empty.");
 		}
 
 		[Test]
 		public void Not_null_validator_should_work_ok_with_non_nullable_value_type() {
-			var validator = new NotNullValidator<object, int>();
+			var validator = new NotNullValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => 3));
 			result.IsValid.ShouldBeTrue();
 		}

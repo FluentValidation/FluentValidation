@@ -45,7 +45,7 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotNull<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
-			return ruleBuilder.SetValidator(new NotNullValidator<T, TProperty>());
+			return ruleBuilder.SetValidator(new NotNullValidator());
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEmpty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
-			return ruleBuilder.SetValidator(new NotEmptyValidator<T, TProperty>());
+			return ruleBuilder.SetValidator(new NotEmptyValidator(default(TProperty)));
 		}
 
 		/// <summary>
@@ -68,7 +68,7 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, int min, int max) {
-			return ruleBuilder.SetValidator(new LengthValidator<T>(min, max));
+			return ruleBuilder.SetValidator(new LengthValidator(min, max));
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace FluentValidation {
 		/// <param name="expression">The regular expression to check the value against.</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, string expression) {
-			return ruleBuilder.SetValidator(new RegularExpressionValidator<T>(expression));
+			return ruleBuilder.SetValidator(new RegularExpressionValidator(expression));
 		}
 
 		/// <summary>
@@ -102,7 +102,7 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> EmailAddress<T>(this IRuleBuilder<T, string> ruleBuilder) {
-			return ruleBuilder.SetValidator(new EmailValidator<T>());
+			return ruleBuilder.SetValidator(new EmailValidator());
 		}
 
 		/// <summary>
@@ -252,7 +252,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		                                                                   Func<T, TProperty, bool> predicate) {
-			return ruleBuilder.SetValidator(new PredicateValidator<T, TProperty>((instance, property) => predicate((T)instance, (TProperty)property)));
+			return ruleBuilder.SetValidator(new PredicateValidator((instance, property) => predicate((T)instance, (TProperty)property)));
 		}
 
 		/// <summary>
@@ -417,7 +417,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new InclusiveBetweenValidator<T, TProperty>(from, to));
+			return ruleBuilder.SetValidator(new InclusiveBetweenValidator(from, to));
 		}
 
 		/// <summary>

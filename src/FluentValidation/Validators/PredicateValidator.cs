@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	[ValidationMessage(Key=DefaultResourceManager.PredicateError)]
-	public class PredicateValidator<T, TProperty> : IPropertyValidator, IPredicateValidator {
+	public class PredicateValidator : PropertyValidator, IPredicateValidator {
 		public delegate bool Predicate(object instanceToValidate, object propertyValue);
 
 		private readonly Predicate predicate;
@@ -34,15 +34,12 @@ namespace FluentValidation.Validators {
 			this.predicate = predicate;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
-
-			if (! predicate(context.Instance, context.PropertyValue)) {
-				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);
-				string error = context.GetFormattedErrorMessage(typeof(PredicateValidator<T, TProperty>), formatter);
-				return PropertyValidatorResult.Failure(error);
+		protected override bool IsValid(PropertyValidatorContext context) {
+			if (!predicate(context.Instance, context.PropertyValue)) {
+				return false;
 			}
 
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 	}
 

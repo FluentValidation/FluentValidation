@@ -41,7 +41,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Adds_PropertyName_to_message() {
 			string result = formatter
-				.AppendProperyName("foo")
+				.AppendPropertyName("foo")
 				.BuildMessage("{PropertyName}");
 
 			result.ShouldEqual("foo");

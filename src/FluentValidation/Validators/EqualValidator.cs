@@ -52,7 +52,7 @@ namespace FluentValidation.Validators {
 
 			if (! success) {
 				var formatter = new MessageFormatter()
-					.AppendProperyName(context.PropertyDescription)
+					.AppendPropertyName(context.PropertyDescription)
 					.AppendArgument("PropertyValue", comparisonValue);
 
 				string error = context.GetFormattedErrorMessage(typeof(EqualValidator<TInstance, TProperty>), formatter);
