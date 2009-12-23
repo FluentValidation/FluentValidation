@@ -53,8 +53,6 @@ namespace FluentValidation.Validators {
 		protected virtual PropertyValidatorResult CreateValidationError(PropertyValidatorContext context) {
 			string error = CustomValidationMessage ?? ValidationMessageAttribute.GetMessage(GetType());
 
-			context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
-
 			context.MessageFormatter.AppendAdditionalArguments(
 				customFormatArgs.Select(func => func(context.Instance)).ToArray()
 			);

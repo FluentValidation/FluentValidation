@@ -26,12 +26,10 @@ namespace FluentValidation.Validators {
 	public class PropertyValidatorContext {
 		private readonly MessageFormatter messageFormatter;
 		private readonly PropertySelector propertyValueFunc;
-		private readonly IEnumerable<Func<object, object>> customFormatArgs;
 		private bool propertyValueSet;
 		private object propertyValue;
 
 		public string PropertyDescription { get; protected set; }
-		public string CustomError { get; protected set; }
 		public object Instance { get; private set; }
 
 		public MessageFormatter MessageFormatter {
@@ -51,30 +49,12 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc)
-			: this(propertyDescription, instance, propertyValueFunc, null) {
-		}
-
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string customError) {
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc) {
 			propertyValueFunc.Guard("propertyValueFunc cannot be null");
 			PropertyDescription = propertyDescription;
 			Instance = instance;
-			CustomError = customError;
 			messageFormatter = new MessageFormatter();
-			this.customFormatArgs = customFormatArgs;
 			this.propertyValueFunc = propertyValueFunc;
-		}
-
-		public string GetFormattedErrorMessage(Type type, MessageFormatter formatter) {
-			string error = CustomError ?? ValidationMessageAttribute.GetMessage(type);
-
-			if (customFormatArgs != null) {
-				formatter.AppendAdditionalArguments(
-					customFormatArgs.Select(func => func(Instance)).ToArray()
-				);
-			}
-
-			return formatter.BuildMessage(error);
 		}
 	}
 }
