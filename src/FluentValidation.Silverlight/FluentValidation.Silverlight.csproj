@@ -75,14 +75,23 @@
     <Compile Include="..\FluentValidation\Internal\IValidationRuleCollection.cs">
       <Link>IValidationRuleCollection.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Internal\PropertySelector.cs">
+      <Link>PropertySelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\ResourceHelper.cs">
+      <Link>ResourceHelper.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Internal\SimpleRuleBuilder.cs">
       <Link>SimpleRuleBuilder.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Resources\Messages.Designer.cs">
+      <Link>Resources\Messages.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\ValidatorFactoryBase.cs">
+      <Link>ValidatorFactoryBase.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\ValidatorOptions.cs">
       <Link>ValidatorOptions.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Attributes\ValidationMessageAttribute.cs">
-      <Link>ValidationMessageAttribute.cs</Link>
     </Compile>
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
@@ -150,9 +159,6 @@
     <Compile Include="..\FluentValidation\IValidatorFactory.cs">
       <Link>IValidatorFactory.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Resources\DefaultResourceManager.cs">
-      <Link>DefaultResourceManager.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Results\PropertyValidatorResult.cs">
       <Link>PropertyValidatorResult.cs</Link>
     </Compile>
@@ -182,6 +188,9 @@
     </Compile>
     <Compile Include="..\FluentValidation\Validators\InclusiveBetweenValidator.cs">
       <Link>InclusiveBetweenValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\PropertyValidator.cs">
+      <Link>PropertyValidator.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Validators\RegularExpressionValidator.cs">
       <Link>RegularExpressionValidator.cs</Link>
