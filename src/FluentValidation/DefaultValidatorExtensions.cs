@@ -18,6 +18,7 @@
 
 namespace FluentValidation {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using Internal;
@@ -116,8 +117,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		                                                                       TProperty toCompare) {
-			var lambda = Extensions.GetConstantExpresionFromConstant<T, TProperty>(toCompare);
-			return ruleBuilder.SetValidator(new NotEqualValidator<T, TProperty>(lambda));
+			return ruleBuilder.SetValidator(new NotEqualValidator(toCompare));
 		}
 
 		/// <summary>
@@ -127,11 +127,13 @@ namespace FluentValidation {
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-		/// <param name="func">A lambda expression to provide the comparison value</param>
+		/// <param name="expression">A lambda expression to provide the comparison value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		                                                                       Expression<Func<T, TProperty>> func) {
-			return ruleBuilder.SetValidator(new NotEqualValidator<T, TProperty>(func));
+		                                                                       Expression<PropertySelector<T, TProperty>> expression) {
+			var func = expression.Compile();
+			PropertySelector propertySelector = x => func((T)x);
+			return ruleBuilder.SetValidator(new NotEqualValidator(propertySelector, expression.GetMember()));
 		}
 
 		/// <summary>
@@ -145,9 +147,8 @@ namespace FluentValidation {
 		/// <param name="comparer">Equality comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-																			   TProperty toCompare, IEqualityComparer<TProperty> comparer) {
-			var lambda = Extensions.GetConstantExpresionFromConstant<T, TProperty>(toCompare);
-			return ruleBuilder.SetValidator(new NotEqualValidator<T, TProperty>(lambda, comparer));
+																			   TProperty toCompare, IEqualityComparer comparer) {
+			return ruleBuilder.SetValidator(new NotEqualValidator(toCompare, comparer));
 		}
 
 		/// <summary>
@@ -157,12 +158,14 @@ namespace FluentValidation {
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-		/// <param name="func">A lambda expression to provide the comparison value</param>
+		/// <param name="expression">A lambda expression to provide the comparison value</param>
 		/// <param name="comparer">Equality Comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-																			   Expression<Func<T, TProperty>> func, IEqualityComparer<TProperty> comparer) {
-			return ruleBuilder.SetValidator(new NotEqualValidator<T, TProperty>(func, comparer));
+																			   Expression<PropertySelector<T, TProperty>> expression, IEqualityComparer<TProperty> comparer) {
+			var func = expression.Compile();
+			PropertySelector selector = x => func((T)x);
+			return ruleBuilder.SetValidator(new NotEqualValidator(selector, expression.GetMember()));
 		}
 
 		/// <summary>
@@ -175,8 +178,8 @@ namespace FluentValidation {
 		/// <param name="toCompare">The value to compare</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare) {
-			var lambda = Extensions.GetConstantExpresionFromConstant<T, TProperty>(toCompare);
-			return ruleBuilder.SetValidator(new EqualValidator<T, TProperty>(lambda));
+			//return ruleBuilder.SetValidator(new EqualValidator<T, TProperty>(lambda));
+			throw new NotImplementedException();
 		}
 
 		/// <summary>

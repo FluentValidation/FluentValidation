@@ -58,13 +58,13 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void NotEqual_should_create_NotEqualValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).NotEqual("Foo");
-			AssertValidator<NotEqualValidator<Person, string>>();
+			AssertValidator<NotEqualValidator>();
 		}
 
 		[Test]
 		public void NotEqual_should_create_NotEqualValidator_with_lambda() {
 			validator.RuleFor(x => x.Surname).NotEqual(x => "Foo");
-			AssertValidator<NotEqualValidator<Person, string>>();
+			AssertValidator<NotEqualValidator>();
 		}
 
 		[Test]

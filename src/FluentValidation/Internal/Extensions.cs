@@ -36,6 +36,16 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		public static MemberInfo GetMember(this LambdaExpression expression) {
+			var memberExp = RemoveUnary(expression.Body);
+
+			if (memberExp == null) {
+				return null;
+			}
+
+			return memberExp.Member;
+		}
+
 		public static MemberInfo GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
 			var memberExp = RemoveUnary(expression.Body);
 

@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Reflection;
@@ -28,28 +29,33 @@ namespace FluentValidation.Validators {
 
 	//TODO: PV Remove generics
 	[ValidationMessage(Key=DefaultResourceManager.NotEqual)]
-	public class NotEqualValidator<TInstance, TProperty> : PropertyValidator, IComparisonValidator {
-		readonly IEqualityComparer<TProperty> comparer;
-		readonly Func<TInstance, TProperty> func;
+	public class NotEqualValidator : PropertyValidator, IComparisonValidator {
+		readonly IEqualityComparer comparer;
+		readonly PropertySelector func;
 
-		public NotEqualValidator(Expression<Func<TInstance, TProperty>> expression) {
-			func = expression.Compile();
-
-			MemberToCompare = expression.GetMember();
-			
-			if (MemberToCompare == null && expression.Body.NodeType == ExpressionType.Constant) {
-				var constant = expression.Body as ConstantExpression;
-				ValueToCompare = constant != null ? (TProperty)constant.Value : default(TProperty);
-			}
+		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare) {
+			this.func = func;
+			MemberToCompare = memberToCompare;
 		}
 
-		public NotEqualValidator(Expression<Func<TInstance, TProperty>> expression, IEqualityComparer<TProperty> comparer) : this(expression) {
-			this.comparer = comparer;
+		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare, IEqualityComparer equalityComparer) {
+			this.func = func;
+			this.comparer = equalityComparer;
+			MemberToCompare = memberToCompare;
+		}
+
+		public NotEqualValidator(object comparisonValue) {
+			ValueToCompare = comparisonValue;
+		}
+
+		public NotEqualValidator(object comparisonValue, IEqualityComparer equalityComparer) {
+			ValueToCompare = comparisonValue;
+			comparer = equalityComparer;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			var comparisonValue = func((TInstance)context.Instance);
-			bool success = !Compare(comparisonValue, (TProperty)context.PropertyValue);
+			var comparisonValue = func(context.Instance);
+			bool success = !Compare(comparisonValue, context.PropertyValue);
 
 			if (!success) {
 				context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
@@ -66,7 +72,7 @@ namespace FluentValidation.Validators {
 		public MemberInfo MemberToCompare { get; private set; }
 		public object ValueToCompare { get; private set; }
 
-		protected bool Compare(TProperty comparisonValue, TProperty propertyValue) {
+		protected bool Compare(object comparisonValue, object propertyValue) {
 			if(comparer != null) {
 				return comparer.Equals(comparisonValue, propertyValue);
 			}
