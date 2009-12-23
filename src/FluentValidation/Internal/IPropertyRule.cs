@@ -31,14 +31,8 @@ namespace FluentValidation.Internal {
 	}
 	
 	public interface ISimplePropertyRule<T> : IPropertyRule<T> {
-		string CustomValidationMessage { get; set; }
-		IList<Func<T, object>> CustomMessageFormatArguments { get; }
-		IPropertyValidator Validator { get; }
+		IPropertyValidator Validator { get; set; }
 		Func<T, object> CustomStateProvider { get; set; }
 		Action<T> OnFailure { get; set; }
-	}
-
-	public interface ISimplePropertyRule<T, TProperty> : ISimplePropertyRule<T>  {
-		new IPropertyValidator Validator { get; set; }
 	}
 }

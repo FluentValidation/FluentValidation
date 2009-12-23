@@ -52,10 +52,10 @@ namespace FluentValidation.Validators {
 		}
 
 		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc)
-			: this(propertyDescription, instance, propertyValueFunc, null, null) {
+			: this(propertyDescription, instance, propertyValueFunc, null) {
 		}
 
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string customError, IEnumerable<Func<object, object>> customFormatArgs) {
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string customError) {
 			propertyValueFunc.Guard("propertyValueFunc cannot be null");
 			PropertyDescription = propertyDescription;
 			Instance = instance;

@@ -71,8 +71,11 @@ namespace FluentValidation {
 			errorMessage.Guard("A message must be specified when calling WithMessage.");
 
 			return rule.Configure(config => {
-				config.CustomValidationMessage = errorMessage;
-				funcs.ForEach(config.CustomMessageFormatArguments.Add);
+				config.Validator.CustomValidationMessage = errorMessage;
+
+				funcs
+					.Select(func => new Func<object, object>(x => func((T)x)))
+					.ForEach(config.Validator.CustomMessageFormatArguments.Add);
 			});
 		}
 

@@ -158,7 +158,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_between_the_range_specified_then_the_validator_should_pass_for_doubles() {
 			double value = 5.0;
-			var validator = new ExclusiveBetweenValidator(1, 10);
+			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeTrue();
 		}
@@ -166,7 +166,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_smaller_than_the_range_then_the_validator_should_fail_for_doubles() {
 			double value = 0.9;
-			var validator = new ExclusiveBetweenValidator(1, 10);
+			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -174,7 +174,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_text_is_larger_than_the_range_then_the_validator_should_fail_for_doubles() {
 			double value = 10.1;
-			var validator = new ExclusiveBetweenValidator(1, 10);
+			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -182,7 +182,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_upper_bound_then_the_validator_should_fail_for_doubles() {
 			double value = 10.0;
-			var validator = new ExclusiveBetweenValidator(1, 10);
+			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}
@@ -190,7 +190,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_the_value_is_exactly_the_size_of_the_lower_bound_then_the_validator_should_fail_for_doubles() {
 			double value = 1.0;
-			var validator = new ExclusiveBetweenValidator(1, 10);
+			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
 			result.IsValid.ShouldBeFalse();
 		}

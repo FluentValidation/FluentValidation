@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Collections.Generic;
 	using Results;
 
 	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
@@ -34,6 +35,15 @@ namespace FluentValidation.Validators {
 				return InnerValidator.Validate(context);
 			}
 			return PropertyValidatorResult.Success();
+		}
+
+		public string CustomValidationMessage {
+			get { return InnerValidator.CustomValidationMessage; }
+			set { InnerValidator.CustomValidationMessage=value; }
+		}
+
+		public ICollection<Func<object, object>> CustomMessageFormatArguments {
+			get { return InnerValidator.CustomMessageFormatArguments; }
 		}
 
 		IPropertyValidator IDelegatingValidator.InnerValidator {

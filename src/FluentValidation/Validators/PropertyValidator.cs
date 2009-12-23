@@ -26,9 +26,9 @@ namespace FluentValidation.Validators {
 
 	public abstract class PropertyValidator : IPropertyValidator {
 		private readonly List<Func<object, object>> customFormatArgs = new List<Func<object, object>>();
-		public string CustomError { get; set; }
+		public string CustomValidationMessage { get; set; }
 
-		public ICollection<Func<object, object>> CustomFormatArgs {
+		public ICollection<Func<object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
 		}
 
@@ -42,6 +42,7 @@ namespace FluentValidation.Validators {
 			return PropertyValidatorResult.Success();
 		}
 
+
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
 		/// <summary>
@@ -50,7 +51,7 @@ namespace FluentValidation.Validators {
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
 		protected virtual PropertyValidatorResult CreateValidationError(PropertyValidatorContext context) {
-			string error = CustomError ?? ValidationMessageAttribute.GetMessage(GetType());
+			string error = CustomValidationMessage ?? ValidationMessageAttribute.GetMessage(GetType());
 
 			context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
 

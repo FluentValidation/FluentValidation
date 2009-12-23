@@ -68,7 +68,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-			builder.Cast<PropertyRule<Person, string>>().Single().CustomValidationMessage.ShouldEqual("Bar");
+			builder.Cast<PropertyRule<Person, string>>().Single().Validator.CustomValidationMessage.ShouldEqual("Bar");
 		}
 
 		[Test]
@@ -184,9 +184,9 @@ namespace FluentValidation.Tests {
 			results.Single().PropertyName.ShouldEqual("Foo");
 		}
 
-		class TestPropertyValidator : IPropertyValidator {
-			public PropertyValidatorResult Validate(PropertyValidatorContext context) {
-				return null;
+		class TestPropertyValidator : PropertyValidator {
+			protected override bool IsValid(PropertyValidatorContext context) {
+				return true;
 			}
 		}
 	}

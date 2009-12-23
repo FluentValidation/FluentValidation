@@ -76,7 +76,7 @@ namespace FluentValidation.Internal {
 			rules.Add(rule);
 		}
 
-		public IRuleBuilderOptions<T, TProperty> Configure(Action<ISimplePropertyRule<T, TProperty>> configurator) {
+		public IRuleBuilderOptions<T, TProperty> Configure(Action<ISimplePropertyRule<T>> configurator) {
 			configurator(currentRule);
 			return this;
 		}
