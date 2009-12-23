@@ -17,15 +17,11 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
 	using System.Collections;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
 	using System.Reflection;
 	using Attributes;
 	using Internal;
 	using Resources;
-	using Results;
 
 	[ValidationMessage(Key=DefaultResourceManager.Equal)]
 	public class EqualValidator : PropertyValidator, IComparisonValidator {

@@ -80,7 +80,7 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, int exactLength) {
-			return ruleBuilder.SetValidator(new ExactLengthValidator<T>(exactLength));
+			return ruleBuilder.SetValidator(new ExactLengthValidator(exactLength));
 		}
 
 		/// <summary>
@@ -442,7 +442,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator<T, TProperty>(from, to));
+			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator(from, to));
 		}
 	}
 }

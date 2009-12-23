@@ -52,7 +52,7 @@ namespace FluentValidation.Validators {
 	}
 
 	[ValidationMessage(Key = DefaultResourceManager.ExactLengthValidatorError)]
-	public class ExactLengthValidator<TInstance> : LengthValidator {
+	public class ExactLengthValidator : LengthValidator {
 		public ExactLengthValidator(int length) : base(length,length) {
 			
 		}

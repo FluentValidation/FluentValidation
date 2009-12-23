@@ -22,7 +22,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	[ValidationMessage(Key = DefaultResourceManager.ExclusiveBetweenValidatorError)]
-	public class ExclusiveBetweenValidator<TInstance, TProperty> : PropertyValidator, IBetweenValidator {
+	public class ExclusiveBetweenValidator : PropertyValidator, IBetweenValidator {
 		public ExclusiveBetweenValidator(IComparable from, IComparable to) {
 			To = to;
 			From = from;

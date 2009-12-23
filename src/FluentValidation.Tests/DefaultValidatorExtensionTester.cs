@@ -52,7 +52,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Length_should_create_ExactLengthValidator() {
 			validator.RuleFor(x => x.Surname).Length(5);
-			AssertValidator<ExactLengthValidator<Person>>();
+			AssertValidator<ExactLengthValidator>();
 		}
 
 		[Test]

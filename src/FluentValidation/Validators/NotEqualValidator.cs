@@ -17,17 +17,12 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
 	using System.Collections;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
 	using System.Reflection;
 	using Attributes;
 	using Internal;
 	using Resources;
-	using Results;
 
-	//TODO: PV Remove generics
 	[ValidationMessage(Key=DefaultResourceManager.NotEqual)]
 	public class NotEqualValidator : PropertyValidator, IComparisonValidator {
 		readonly IEqualityComparer comparer;
