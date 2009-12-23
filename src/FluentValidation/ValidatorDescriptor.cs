@@ -21,11 +21,13 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
-	using System.Reflection;
 	using Internal;
 	using Validators;
 
-	public class ValidatorDescriptor<T> : IValidatorDescriptor<T> {
+	/// <summary>
+	/// Used for providing metadata about a validator.
+	/// </summary>
+	public class ValidatorDescriptor<T> : IValidatorDescriptor {
 		protected IEnumerable<IValidationRule<T>> Rules { get; private set; }
 
 		public ValidatorDescriptor(IEnumerable<IValidationRule<T>> ruleBuilders) {
@@ -41,9 +43,13 @@ namespace FluentValidation {
 			return nameUsed;
 		}
 
-		public ILookup<MemberInfo, IPropertyValidator> GetMembersWithValidators() {
+		public ILookup<string, IPropertyValidator> GetMembersWithValidators() {
 			return Rules.OfType<ISimplePropertyRule<T>>()
-					.ToLookup(x => x.Member, x => (IPropertyValidator)x.Validator);
+					.ToLookup(x => x.Member.Name, x => x.Validator);
+		}
+
+		public IEnumerable<IPropertyValidator> GetValidatorsForMember(string name) {
+			return GetMembersWithValidators()[name];
 		}
 
 		public string GetName(Expression<Func<T, object>> propertyExpression) {

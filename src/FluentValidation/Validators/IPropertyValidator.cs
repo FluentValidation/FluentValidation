@@ -25,5 +25,6 @@ namespace FluentValidation.Validators {
 		PropertyValidatorResult Validate(PropertyValidatorContext context);
 		string ErrorMessageTemplate { get; set; }
 		ICollection<Func<object, object>> CustomMessageFormatArguments { get; }
+		bool SupportsStandaloneValidation { get; }
 	}
 }

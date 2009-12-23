@@ -18,8 +18,10 @@
 
 namespace FluentValidation.Tests {
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
+	using Validators;
 
 	[TestFixture]
 	public class ValidatorDescriptorTester {
@@ -32,19 +34,26 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void Should_retrieve_name_given_to_it() {
-			validator.RuleFor(x => x.Forename).NotNull().WithName("First Name");
-			var descriptor = validator.CreateDescriptor();
-			var name = descriptor.GetName(x => x.Forename);
-			name.ShouldEqual("First Name");
-		}
-
-		[Test]
 		public void Should_retrieve_name_given_to_it_pass_property_as_string() {
 			validator.RuleFor(x => x.Forename).NotNull().WithName("First Name");
 			var descriptor = validator.CreateDescriptor();
 			var name = descriptor.GetName("Forename");
 			name.ShouldEqual("First Name");
+		}
+
+		[Test]
+		public void Gets_validators_for_property() {
+			validator.RuleFor(x => x.Forename).NotNull();
+			var descriptor = validator.CreateDescriptor();
+			var validators = descriptor.GetValidatorsForMember("Forename");
+			validators.Single().ShouldBe<NotNullValidator>();
+		}
+
+		[Test]
+		public void Returns_empty_collection_for_property_with_no_validators() {
+			var descriptor = validator.CreateDescriptor();
+			var validators = descriptor.GetValidatorsForMember("NoSuchProperty");
+			validators.Count().ShouldEqual(0);
 		}
 	}
 }

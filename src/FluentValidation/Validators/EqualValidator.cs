@@ -29,12 +29,14 @@ namespace FluentValidation.Validators {
 
 		public EqualValidator(object valueToCompare) : base(() => Messages.equal_error) {
 			this.ValueToCompare = valueToCompare;
+			SupportsStandaloneValidation = true;
 		}
 
 		public EqualValidator(object valueToCompare, IEqualityComparer comparer)
 			: base(() => Messages.equal_error) {
 			ValueToCompare = valueToCompare;
 			this.comparer = comparer;
+			SupportsStandaloneValidation = true;
 		}
 
 		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member)

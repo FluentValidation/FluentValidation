@@ -23,8 +23,6 @@ namespace FluentValidation {
 
 	public interface IValidator<T> : IValidator, IEnumerable<IValidationRule<T>> {
 		ValidationResult Validate(T instance);
-		new IValidatorDescriptor<T> CreateDescriptor();
-
 		/// <summary>
 		/// Validates the specified instance.
 		/// </summary>
