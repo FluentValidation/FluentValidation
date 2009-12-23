@@ -23,16 +23,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void Returns_empty_collection_for_properties() {
-			//We only support getting validators for the containing object - not properties. 
-
-			var metaData = new ModelMetadata(new EmptyModelMetadataProvider(), typeof(Person), null, typeof(string), "Name");
-			var validators = provider.GetValidators(metaData, new ControllerContext());
-
-			validators.Count().ShouldEqual(0);
-		}
-
-		[Test]
 		public void Performs_validation() {
 			var metaData = new ModelMetadata(new EmptyModelMetadataProvider(), null, null, typeof(Person), null) {
 				Model = new Person()
