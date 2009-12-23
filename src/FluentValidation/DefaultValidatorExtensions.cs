@@ -178,8 +178,7 @@ namespace FluentValidation {
 		/// <param name="toCompare">The value to compare</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare) {
-			//return ruleBuilder.SetValidator(new EqualValidator<T, TProperty>(lambda));
-			throw new NotImplementedException();
+			return ruleBuilder.SetValidator(new EqualValidator(toCompare));
 		}
 
 		/// <summary>
@@ -189,10 +188,12 @@ namespace FluentValidation {
 		/// <typeparam name="T">The type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-		/// <param name="func">A lambda expression to provide the comparison value</param>
+		/// <param name="expression">A lambda expression to provide the comparison value</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> func) {
-			return ruleBuilder.SetValidator(new EqualValidator<T, TProperty>(func));
+		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<PropertySelector<T, TProperty>> expression) {
+			var func = expression.Compile();
+			PropertySelector propertySelector = x => func((T)x);
+			return ruleBuilder.SetValidator(new EqualValidator(propertySelector, expression.GetMember()));
 		}
 
 
@@ -206,9 +207,8 @@ namespace FluentValidation {
 		/// <param name="toCompare">The value to compare</param>
 		/// <param name="comparer">Equality Comparer to use</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare, IEqualityComparer<TProperty> comparer) {
-			var lambda = Extensions.GetConstantExpresionFromConstant<T, TProperty>(toCompare);
-			return ruleBuilder.SetValidator(new EqualValidator<T, TProperty>(lambda, comparer));
+		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare, IEqualityComparer comparer) {
+			return ruleBuilder.SetValidator(new EqualValidator(toCompare, comparer));
 		}
 
 		/// <summary>
@@ -218,14 +218,14 @@ namespace FluentValidation {
 		/// <typeparam name="T">The type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-		/// <param name="func">A lambda expression to provide the comparison value</param>
+		/// <param name="expression">A lambda expression to provide the comparison value</param>
 		/// <param name="comparer">Equality comparer to use</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> func, IEqualityComparer<TProperty> comparer) {
-			return ruleBuilder.SetValidator(new EqualValidator<T, TProperty>(func, comparer));
+		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression, IEqualityComparer comparer) {
+			var func = expression.Compile();
+			PropertySelector propertySelector = x => func((T)x);
+			return ruleBuilder.SetValidator(new EqualValidator(propertySelector, expression.GetMember(), comparer));
 		}
-
-
 
 		/// <summary>
 		/// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.

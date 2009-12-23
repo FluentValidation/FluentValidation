@@ -76,6 +76,15 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+
+		[Test]
+		public void Validates_against_constant() {
+			var validator = new NotEqualValidator("foo");
+			var result = validator.Validate(new PropertyValidatorContext(null, new Person(), x => "foo"));
+			result.IsValid.ShouldBeFalse();
+		}
+
+
 		private NotEqualValidator CreateValidator<T>(Expression<PropertySelector<Person, T>> expression) {
 			var func = expression.Compile();
 			PropertySelector selector = x => func((Person)x);

@@ -70,13 +70,13 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Equal_should_create_EqualValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).Equal("Foo");
-			AssertValidator<EqualValidator<Person, string>>();
+			AssertValidator<EqualValidator>();
 		}
 
 		[Test]
 		public void Equal_should_create_EqualValidator_with_lambda() {
 			validator.RuleFor(x => x.Surname).Equal(x => "Foo");
-			AssertValidator<EqualValidator<Person, string>>();
+			AssertValidator<EqualValidator>();
 		}
 
 		[Test]

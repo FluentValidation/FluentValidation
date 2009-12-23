@@ -54,7 +54,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			var comparisonValue = func(context.Instance);
+			var comparisonValue = GetComparisonValue(context);
 			bool success = !Compare(comparisonValue, context.PropertyValue);
 
 			if (!success) {
@@ -63,6 +63,14 @@ namespace FluentValidation.Validators {
 			}
 
 			return true;
+		}
+
+		private object GetComparisonValue(PropertyValidatorContext context) {
+			if (func != null) {
+				return func(context.Instance);
+			}
+
+			return ValueToCompare;
 		}
 
 		public Comparison Comparison {
