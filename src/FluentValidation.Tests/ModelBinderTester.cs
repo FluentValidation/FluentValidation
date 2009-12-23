@@ -33,7 +33,8 @@ namespace FluentValidation.Tests {
 		public void Setup() {
 			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
 			binder = new DefaultModelBinder();
-
+			//TODO: Remove this line once FluentValidationModelMetadataProvider is fixed...
+			ModelValidatorProviders.Providers.Clear();
 			ModelValidatorProviders.Providers.Add(provider);
 		}
 
@@ -93,7 +94,7 @@ namespace FluentValidation.Tests {
 			binder.BindModel(new ControllerContext(), bindingContext).ShouldNotBeNull();
 		}
 
-		[Test, Ignore("This test will always fail as the DefaultModelBinder does not allow for the default 'required' validation to be disabled. One day I'm hoping this will be changed...")]
+		[Test]
 		public void Should_not_add_default_message_to_modelstate() {
 			var form = new FormCollection {
 				{ "Id", "" }
@@ -109,7 +110,23 @@ namespace FluentValidation.Tests {
 
 			binder.BindModel(new ControllerContext(), bindingContext);
 
-			bindingContext.ModelState["Id"].Errors[0].ErrorMessage.ShouldEqual("Validation failed");
+			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("Validation failed");
+		}
+
+		[Test]
+		public void Im_Broken() {
+			ModelValidatorProviders.Providers.Insert(0, new DataAnnotationsModelValidatorProvider());
+			Should_not_add_default_message_to_modelstate();
+		}
+
+		[Test]
+		public void Should_not_run_validation_twice() {
+			Assert.Fail();
+		}
+
+		[Test]
+		public void Maintains_custom_property_name() {
+			Assert.Fail();
 		}
 
 		private ModelMetadata CreateMetaData(Type type) {
@@ -141,4 +158,28 @@ namespace FluentValidation.Tests {
 			}
 		}
 	}
+
+	/*public class TestableModelBinder : DefaultModelBinder {
+		protected override void OnPropertyValidated(ControllerContext controllerContext, ModelBindingContext bindingContext, System.ComponentModel.PropertyDescriptor propertyDescriptor, object value) {
+			//base.OnPropertyValidated(controllerContext, bindingContext, propertyDescriptor, value);
+			ModelMetadata propertyMetadata = bindingContext.PropertyMetadata[propertyDescriptor.Name];
+			propertyMetadata.Model = value;
+			string modelStateKey = CreateSubPropertyName(bindingContext.ModelName, propertyMetadata.PropertyName);
+
+			// run validation
+			foreach (ModelValidator validator in propertyMetadata.GetValidators(controllerContext)) {
+				foreach (ModelValidationResult validationResult in validator.Validate(bindingContext.Model)) {
+					bindingContext.ModelState.AddModelError(CreateSubPropertyName(modelStateKey, validationResult.MemberName), validationResult.Message);
+				}
+			}
+
+			// only add a "value was required" error message if there were no validation errors
+			if (bindingContext.ModelState.IsValidField(modelStateKey)) {
+
+//				if (value == null && !TypeHelpers.TypeAllowsNullValue(propertyDescriptor.PropertyType)) {
+					//bindingContext.ModelState.AddModelError(modelStateKey, GetValueRequiredResource(controllerContext));
+//				}
+			}
+		}
+	}*/
 }

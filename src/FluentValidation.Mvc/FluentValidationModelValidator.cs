@@ -9,24 +9,20 @@ namespace FluentValidation.Mvc {
 	/// ModelValidator implementation that uses FluentValidation.
 	/// </summary>
 	public class FluentValidationModelValidator : ModelValidator {
-		protected IValidatorFactory ValidatorFactory { get; private set; }
+		readonly IValidator validator;
 
-		public FluentValidationModelValidator(ModelMetadata metadata, ControllerContext controllerContext, IValidatorFactory factory)
+		public FluentValidationModelValidator(ModelMetadata metadata, ControllerContext controllerContext, IValidator validator)
 			: base(metadata, controllerContext) {
-			this.ValidatorFactory = factory;
+			this.validator = validator;
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
 			if (Metadata.Model != null) {
 
-				var validator = CreateValidator(Metadata.ModelType);
+				var result = validator.Validate(Metadata.Model);
 
-				if (validator != null) {
-					var result = Validate(validator, Metadata);
-
-					if (!result.IsValid) {
-						return ConvertValidationResultToModelValidationResults(result);
-					}
+				if (!result.IsValid) {
+					return ConvertValidationResultToModelValidationResults(result);
 				}
 			}
 			return Enumerable.Empty<ModelValidationResult>();
@@ -37,14 +33,6 @@ namespace FluentValidation.Mvc {
 				MemberName = x.PropertyName,
 				Message = x.ErrorMessage
 			});
-		}
-
-		protected virtual ValidationResult Validate(IValidator validator, ModelMetadata metadata) {
-			return validator.Validate(Metadata.Model);
-		}
-
-		protected virtual IValidator CreateValidator(Type type) {
-			return ValidatorFactory.GetValidator(type);
 		}
 	}
 }

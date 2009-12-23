@@ -80,5 +80,6 @@ namespace FluentValidation.Mvc {
 			var attributes = ConvertFVMetaDataToAttributes(modelType);
 			return CreateMetadata(attributes, null /* containerType */, modelAccessor, modelType, null /* propertyName */);
 		}
+
 	}
 }

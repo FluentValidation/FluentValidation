@@ -17,41 +17,51 @@
 #endregion
 
 namespace FluentValidation.Mvc {
+	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Web.Mvc;
 
 
 	/// <summary>
 	/// Implementation of ModelValidatorProvider that uses FluentValidation.
-	/// Note: We do not support retrieving validators for individual properties, only for the containing object.
 	/// </summary>
 	public class FluentValidationModelValidatorProvider : ModelValidatorProvider {
-		public delegate ModelValidator ModelValidatorFactory(ModelMetadata metaData, ControllerContext context, IValidatorFactory validatorFactory);
-
 		readonly IValidatorFactory validatorFactory;
-		readonly ModelValidatorFactory modelValidatorFactory;
 
-		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory)
-			: this(validatorFactory, CreateDefaultValidator) {
-		}
-
-		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory, ModelValidatorFactory modelValidatorFactory) {
+		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {
 			this.validatorFactory = validatorFactory;
-			this.modelValidatorFactory = modelValidatorFactory;
 		}
 
 		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context) {
-
-			//We do not support retrieving validators for individual properties - only for the entire object.
-			if (metadata.ContainerType != null && !string.IsNullOrEmpty(metadata.PropertyName)) {
-				yield break;
+			if (IsValidatingProperty(metadata)) {
+				return GetValidatorsForProperty(metadata, context, validatorFactory.GetValidator(metadata.ContainerType));
 			}
 
-			yield return modelValidatorFactory(metadata, context, validatorFactory);
+			return GetValidatorsForModel(metadata, context, validatorFactory.GetValidator(metadata.ModelType));
 		}
 
-		static ModelValidator CreateDefaultValidator(ModelMetadata metadata, ControllerContext context, IValidatorFactory validatorFactory) {
-			return new FluentValidationModelValidator(metadata, context, validatorFactory);
+		IEnumerable<ModelValidator> GetValidatorsForProperty(ModelMetadata metadata, ControllerContext context, IValidator validator) {
+			if (validator != null) {
+				var descriptor = validator.CreateDescriptor();
+
+				var validators = descriptor.GetValidatorsForMember(metadata.PropertyName)
+					.Where(x => x.SupportsStandaloneValidation);
+
+				foreach(var propertyValidator in validators) {
+					yield return new FluentValidationPropertyValidator(metadata, context, propertyValidator);
+				}
+			}
+		}
+
+		IEnumerable<ModelValidator> GetValidatorsForModel(ModelMetadata metadata, ControllerContext context, IValidator validator) {
+			if (validator != null) {
+				yield return new FluentValidationModelValidator(metadata, context, validator);
+			}
+		}
+
+		bool IsValidatingProperty(ModelMetadata metadata) {
+			return metadata.ContainerType != null && !string.IsNullOrEmpty(metadata.PropertyName);
 		}
 	}
 }
