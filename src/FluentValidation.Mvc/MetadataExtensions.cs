@@ -26,34 +26,34 @@ namespace FluentValidation.Mvc {
 	public static class MetadataExtensions {
 
 		public static IRuleBuilder<T, TProperty> HiddenInput<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new HiddenInputAttribute()));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new HiddenInputAttribute()));
 		}
 
 		public static IRuleBuilder<T, TProperty> HiddenInput<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool displayValue) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new HiddenInputAttribute { DisplayValue = displayValue }));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new HiddenInputAttribute { DisplayValue = displayValue }));
 		}
 
 		public static IRuleBuilder<T, TProperty> UIHint<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, string hint) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new UIHintAttribute(hint)));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new UIHintAttribute(hint)));
 		}
 
 		public static IRuleBuilder<T, TProperty> UIHint<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, string hint, string presentationLayer) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new UIHintAttribute(hint, presentationLayer)));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new UIHintAttribute(hint, presentationLayer)));
 		}
 
 		public static IRuleBuilder<T, TProperty> Scaffold<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool scaffold) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new ScaffoldColumnAttribute(scaffold)));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new ScaffoldColumnAttribute(scaffold)));
 		}
 
 		public static IRuleBuilder<T, TProperty> DataType<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, DataType dataType) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new DataTypeAttribute(dataType)));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new DataTypeAttribute(dataType)));
 		}
 		public static IRuleBuilder<T, TProperty> DataType<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, string customDataType) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new DataTypeAttribute(customDataType)));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new DataTypeAttribute(customDataType)));
 		}
 
 		public static IRuleBuilder<T, TProperty> DisplayName<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, string name) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new DisplayNameAttribute(name)));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new DisplayNameAttribute(name)));
 		}
 
 		public static IDisplayFormatBuilder<T, TProperty> DisplayFormat<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
@@ -61,7 +61,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public static IRuleBuilder<T, TProperty> ReadOnly<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool readOnly) {
-			return ruleBuilder.SetValidator(new AttributeMetadataValidator<T, TProperty>(new ReadOnlyAttribute(readOnly)));
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new ReadOnlyAttribute(readOnly)));
 		}
 
 		public interface IDisplayFormatBuilder<T, TProperty> : IRuleBuilder<T, TProperty> {
@@ -77,10 +77,10 @@ namespace FluentValidation.Mvc {
 
 			public DisplayFormatBuilder(IRuleBuilder<T, TProperty> builder) {
 				this.builder = builder;
-				builder.SetValidator(new AttributeMetadataValidator<T, TProperty>(attribute));
+				builder.SetValidator(new AttributeMetadataValidator(attribute));
 			}
 
-			public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator<T, TProperty> validator) {
+			public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator validator) {
 				return builder.SetValidator(validator);
 			}
 

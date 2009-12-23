@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Mvc {
 	using System;
+	using System.Collections.Generic;
 	using Results;
 	using Validators;
 	using Internal;
@@ -26,15 +27,28 @@ namespace FluentValidation.Mvc {
 		Attribute ToAttribute();
 	}
 
-	internal class AttributeMetadataValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IAttributeMetadataValidator {
+	internal class AttributeMetadataValidator : IPropertyValidator, IAttributeMetadataValidator {
 		readonly Attribute attribute;
 
 		public AttributeMetadataValidator(Attribute attributeConverter) {
 			attribute = attributeConverter;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			return PropertyValidatorResult.Success();
+		}
+
+		public string ErrorMessageTemplate {
+			get { return null; }
+			set { }
+		}
+
+		public ICollection<Func<object, object>> CustomMessageFormatArguments {
+			get { return null; }
+		}
+
+		public bool SupportsStandaloneValidation {
+			get { return false; }
 		}
 
 		public Attribute ToAttribute() {

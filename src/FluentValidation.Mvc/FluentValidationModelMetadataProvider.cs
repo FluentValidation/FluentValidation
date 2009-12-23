@@ -45,14 +45,13 @@ namespace FluentValidation.Mvc {
 				return Enumerable.Empty<Attribute>();
 			}
 
-			var lookup = validator.CreateDescriptor().GetMemberNamesWithValidators();
 			IEnumerable<IPropertyValidator> validators;
 
 			if (name == null) {
-				validators = lookup.SelectMany(x => x);
+				validators = validator.CreateDescriptor().GetMembersWithValidators().SelectMany(x => x);
 			}
 			else {
-				validators = lookup[name];
+				validators = validator.CreateDescriptor().GetValidatorsForMember(name);
 			}
 
 			var attributes = validators.OfType<IAttributeMetadataValidator>()
