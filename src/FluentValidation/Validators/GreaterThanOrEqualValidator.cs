@@ -23,12 +23,11 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	[ValidationMessage(Key=DefaultResourceManager.GreaterThanOrEqual)]
 	public class GreaterThanOrEqualValidator : AbstractComparisonValidator  {
-		public GreaterThanOrEqualValidator(IComparable value) : base(value) {
+		public GreaterThanOrEqualValidator(IComparable value) : base(value, () => Messages.greaterthanorequal_error) {
 		}
 
-		public GreaterThanOrEqualValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member) {
+		public GreaterThanOrEqualValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member, () => Messages.greaterthanorequal_error) {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {

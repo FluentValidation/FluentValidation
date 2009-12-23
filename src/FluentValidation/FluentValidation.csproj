@@ -53,7 +53,6 @@
     </Compile>
     <Compile Include="AbstractValidator.cs" />
     <Compile Include="Attributes\AttributedValidatorFactory.cs" />
-    <Compile Include="Attributes\ValidationMessageAttribute.cs" />
     <Compile Include="Attributes\ValidatorAttribute.cs" />
     <Compile Include="DefaultRuleBuilderExtensions.cs" />
     <Compile Include="DefaultValidatorExtensions.cs" />
@@ -69,6 +68,7 @@
     <Compile Include="Internal\IValidationRuleCollection.cs" />
     <Compile Include="Internal\PropertyModel.cs" />
     <Compile Include="Internal\PropertySelector.cs" />
+    <Compile Include="Internal\ResourceHelper.cs" />
     <Compile Include="Internal\SimpleRuleBuilder.cs" />
     <Compile Include="IValidationRule.cs" />
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
@@ -79,12 +79,16 @@
     <Compile Include="Internal\PropertyRule.cs" />
     <Compile Include="Internal\ValidationContext.cs" />
     <Compile Include="Internal\IValidatorSelector.cs" />
+    <Compile Include="Resources\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Syntax.cs" />
     <Compile Include="Internal\RuleBuilder.cs" />
     <Compile Include="IValidator.cs" />
     <Compile Include="IValidatorDescriptor.cs" />
     <Compile Include="IValidatorFactory.cs" />
-    <Compile Include="Resources\DefaultResourceManager.cs" />
     <Compile Include="TestHelper\ValidationTestException.cs" />
     <Compile Include="TestHelper\ValidatorTester.cs" />
     <Compile Include="TestHelper\ValidatorTestExtensions.cs" />
@@ -121,6 +125,8 @@
     <EmbeddedResource Include="Resources\Messages.nl.resx" />
     <EmbeddedResource Include="Resources\Messages.pt.resx" />
     <EmbeddedResource Include="Resources\Messages.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.sv.resx" />
   </ItemGroup>

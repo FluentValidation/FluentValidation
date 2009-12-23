@@ -37,9 +37,9 @@ namespace FluentValidation.Validators {
 			return PropertyValidatorResult.Success();
 		}
 
-		public string CustomValidationMessage {
-			get { return InnerValidator.CustomValidationMessage; }
-			set { InnerValidator.CustomValidationMessage=value; }
+		public string ErrorMessageTemplate {
+			get { return InnerValidator.ErrorMessageTemplate; }
+			set { InnerValidator.ErrorMessageTemplate=value; }
 		}
 
 		public ICollection<Func<object, object>> CustomMessageFormatArguments {

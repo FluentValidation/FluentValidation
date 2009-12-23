@@ -71,8 +71,8 @@ namespace FluentValidation.Internal {
 		/// <returns>Will return a <see cref="ValidationFailure">ValidationFailure</see> if validation fails, otherwise null.</returns>
 		public IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
 			//Property Name cannot be determined for non-MemberExpressions. 
-			if (model.PropertyName == null && model.CustomPropertyName == null && Validator.CustomValidationMessage == null) {
-				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name or a custom error message (with a call to WithName or WithMessage).", model.Expression));
+			if (model.PropertyName == null && model.CustomPropertyName == null) {
+				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", model.Expression));
 			}
 
 			string propertyName = BuildPropertyName(context);

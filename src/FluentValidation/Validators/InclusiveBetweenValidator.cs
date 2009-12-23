@@ -21,9 +21,8 @@ namespace FluentValidation.Validators {
 	using Attributes;
 	using Resources;
 
-	[ValidationMessage(Key = DefaultResourceManager.InclusiveBetweenValidatorError)]
 	public class InclusiveBetweenValidator : PropertyValidator, IBetweenValidator {
-		public InclusiveBetweenValidator(IComparable from, IComparable to) {
+		public InclusiveBetweenValidator(IComparable from, IComparable to) : base(() => Messages.inclusivebetween_error) {
 			To = to;
 			From = from;
 

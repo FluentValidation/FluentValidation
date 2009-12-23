@@ -21,9 +21,8 @@ namespace FluentValidation.Validators {
 	using Attributes;
 	using Resources;
 
-	[ValidationMessage(Key = DefaultResourceManager.ExclusiveBetweenValidatorError)]
 	public class ExclusiveBetweenValidator : PropertyValidator, IBetweenValidator {
-		public ExclusiveBetweenValidator(IComparable from, IComparable to) {
+		public ExclusiveBetweenValidator(IComparable from, IComparable to) : base(() => Messages.exclusivebetween_error) {
 			To = to;
 			From = from;
 

@@ -23,6 +23,7 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using Moq;
 	using NUnit.Framework;
+	using Resources;
 	using Results;
 	using Validators;
 
@@ -68,7 +69,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-			builder.Cast<PropertyRule<Person, string>>().Single().Validator.CustomValidationMessage.ShouldEqual("Bar");
+			builder.Cast<PropertyRule<Person, string>>().Single().Validator.ErrorMessageTemplate.ShouldEqual("Bar");
 		}
 
 		[Test]
@@ -160,7 +161,7 @@ namespace FluentValidation.Tests {
 			builder.GreaterThan(4);
 
 			var ex = typeof(InvalidOperationException).ShouldBeThrownBy(() => builder.Single().Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector())).ToList());
-			ex.Message.ShouldEqual("Property name could not be automatically determined for expression x => x.CalculateSalary(). Please specify either a custom property name or a custom error message (with a call to WithName or WithMessage).");
+			ex.Message.ShouldEqual("Property name could not be automatically determined for expression x => x.CalculateSalary(). Please specify either a custom property name by calling 'WithName'.");
 		}
 
 		[Test]
@@ -185,6 +186,10 @@ namespace FluentValidation.Tests {
 		}
 
 		class TestPropertyValidator : PropertyValidator {
+			public TestPropertyValidator() : base(() => Messages.notnull_error) {
+				
+			}
+
 			protected override bool IsValid(PropertyValidatorContext context) {
 				return true;
 			}

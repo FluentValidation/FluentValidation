@@ -20,11 +20,10 @@ namespace FluentValidation.Validators {
 	using Attributes;
 	using Resources;
 
-	[ValidationMessage(Key=DefaultResourceManager.NotEmpty)]
 	public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
 		readonly object defaultValueForType;
 
-		public NotEmptyValidator(object defaultValueForType) {
+		public NotEmptyValidator(object defaultValueForType) : base(() => Messages.notempty_error) {
 			this.defaultValueForType = defaultValueForType;
 		}
 

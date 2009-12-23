@@ -23,26 +23,28 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	[ValidationMessage(Key=DefaultResourceManager.Equal)]
 	public class EqualValidator : PropertyValidator, IComparisonValidator {
 		readonly PropertySelector func;
 		readonly IEqualityComparer comparer;
 
-		public EqualValidator(object valueToCompare) {
+		public EqualValidator(object valueToCompare) : base(() => Messages.equal_error) {
 			this.ValueToCompare = valueToCompare;
 		}
 
-		public EqualValidator(object valueToCompare, IEqualityComparer comparer) {
+		public EqualValidator(object valueToCompare, IEqualityComparer comparer)
+			: base(() => Messages.equal_error) {
 			ValueToCompare = valueToCompare;
 			this.comparer = comparer;
 		}
 
-		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member) {
+		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member)
+			: base(() => Messages.equal_error)  {
 			func = comparisonProperty;
 			MemberToCompare = member;
 		}
 
-		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member, IEqualityComparer comparer) {
+		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member, IEqualityComparer comparer)
+			: base(() => Messages.equal_error) {
 			func = comparisonProperty;
 			MemberToCompare = member;
 			this.comparer = comparer;

@@ -24,12 +24,11 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	[ValidationMessage(Key=DefaultResourceManager.RegexError)]
 	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
 		readonly string expression;
 		readonly Regex regex;
 
-		public RegularExpressionValidator(string expression) {
+		public RegularExpressionValidator(string expression) : base(() => Messages.regex_error) {
 			this.expression = expression;
 			regex = new Regex(expression);
 		}

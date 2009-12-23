@@ -14,6 +14,11 @@
 * Added WithPropertyName
 * Added FluentValidationModelBinderDecorator so the FV/ModelBinder integration can be used with custom model binders.
 * Patch - InclusiveBetween/ExclusiveBetween validators.
+* **Breaking Change** Removed generics from all the IPropertyValidator instances.
+* Introduced PropertyValidator base class
+* **Breaking Change** Removed the ValidationMessageAttribute
+* **Breaking Change** Removed the DefaultResourceManager
+* Simplified PropertyValidatorContext
 
 1.1 - Jul 17 2009
 * Spanish resource translations.

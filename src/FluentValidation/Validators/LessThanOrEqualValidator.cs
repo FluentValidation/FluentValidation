@@ -24,12 +24,11 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	[ValidationMessage(Key=DefaultResourceManager.LessThanOrEqual)]
 	public class LessThanOrEqualValidator : AbstractComparisonValidator {
-		public LessThanOrEqualValidator(IComparable value) : base(value) {
+		public LessThanOrEqualValidator(IComparable value) : base(value, () => Messages.lessthanorequal_error) {
 		}
 
-		public LessThanOrEqualValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member) {
+		public LessThanOrEqualValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member, () => Messages.lessthanorequal_error) {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {

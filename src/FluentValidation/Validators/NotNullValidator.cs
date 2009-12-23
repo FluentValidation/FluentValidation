@@ -17,11 +17,12 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using Attributes;
 	using Resources;
 
-	[ValidationMessage(Key=DefaultResourceManager.NotNull)]
 	public class NotNullValidator : PropertyValidator, INotNullValidator {
+		public NotNullValidator() : base(() => Messages.notnull_error) {
+		}
+
 		protected override bool IsValid(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) {
 				return false;

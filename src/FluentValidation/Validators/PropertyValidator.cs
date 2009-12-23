@@ -20,28 +20,45 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Linq.Expressions;
 	using Attributes;
 	using Internal;
 	using Results;
 
 	public abstract class PropertyValidator : IPropertyValidator {
 		private readonly List<Func<object, object>> customFormatArgs = new List<Func<object, object>>();
-		public string CustomValidationMessage { get; set; }
+		private Func<string> resourceAccessor;
+
+		public string ErrorMessageTemplate {
+			get { return resourceAccessor(); }
+			set { resourceAccessor = () => value; }
+		}
 
 		public ICollection<Func<object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
 		}
 
+		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
+			resourceAccessor = ResourceHelper.BuildResourceAccessor(errorMessageResourceName, errorMessageResourceType);
+		}
+
+		protected PropertyValidator(string errorMessage) {
+			resourceAccessor = () => errorMessage;
+		}
+
+		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
+			resourceAccessor = ResourceHelper.BuildResourceAccessor(errorMessageResourceSelector);
+		}
+
 		public virtual PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
 
-			if (! IsValid(context)) {
+			if (!IsValid(context)) {
 				return CreateValidationError(context);
 			}
 
 			return PropertyValidatorResult.Success();
 		}
-
 
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
@@ -51,7 +68,8 @@ namespace FluentValidation.Validators {
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
 		protected virtual PropertyValidatorResult CreateValidationError(PropertyValidatorContext context) {
-			string error = CustomValidationMessage ?? ValidationMessageAttribute.GetMessage(GetType());
+			//Continue to support ValidationMessageAttribute for backwards compatibility.
+			string error = ErrorMessageTemplate;
 
 			context.MessageFormatter.AppendAdditionalArguments(
 				customFormatArgs.Select(func => func(context.Instance)).ToArray()

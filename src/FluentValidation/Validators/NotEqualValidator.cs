@@ -23,27 +23,29 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	[ValidationMessage(Key=DefaultResourceManager.NotEqual)]
 	public class NotEqualValidator : PropertyValidator, IComparisonValidator {
 		readonly IEqualityComparer comparer;
 		readonly PropertySelector func;
 
-		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare) {
+		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare) : base(() => Messages.notequal_error) {
 			this.func = func;
 			MemberToCompare = memberToCompare;
 		}
 
-		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare, IEqualityComparer equalityComparer) {
+		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare, IEqualityComparer equalityComparer)
+			: base(() => Messages.notequal_error) {
 			this.func = func;
 			this.comparer = equalityComparer;
 			MemberToCompare = memberToCompare;
 		}
 
-		public NotEqualValidator(object comparisonValue) {
+		public NotEqualValidator(object comparisonValue)
+			: base(() => Messages.notequal_error) {
 			ValueToCompare = comparisonValue;
 		}
 
-		public NotEqualValidator(object comparisonValue, IEqualityComparer equalityComparer) {
+		public NotEqualValidator(object comparisonValue, IEqualityComparer equalityComparer)
+			: base(() => Messages.notequal_error) {
 			ValueToCompare = comparisonValue;
 			comparer = equalityComparer;
 		}

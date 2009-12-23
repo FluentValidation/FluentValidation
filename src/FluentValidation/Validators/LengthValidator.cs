@@ -18,15 +18,18 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Linq.Expressions;
 	using Attributes;
 	using Resources;
 
-	[ValidationMessage(Key=DefaultResourceManager.LengthValidatorError)]
 	public class LengthValidator : PropertyValidator, ILengthValidator {
 		public int Min { get; private set; }
 		public int Max { get; private set; }
 
-		public LengthValidator(int min, int max) {
+		public LengthValidator(int min, int max) : this(min, max, () => Messages.length_error) {
+		}
+
+		public LengthValidator(int min, int max, Expression<Func<string>> errorMessageResourceSelector) : base(errorMessageResourceSelector) {
 			Max = max;
 			Min = min;
 
@@ -51,9 +54,8 @@ namespace FluentValidation.Validators {
 		}
 	}
 
-	[ValidationMessage(Key = DefaultResourceManager.ExactLengthValidatorError)]
 	public class ExactLengthValidator : LengthValidator {
-		public ExactLengthValidator(int length) : base(length,length) {
+		public ExactLengthValidator(int length) : base(length,length, () => Messages.exact_length_error) {
 			
 		}
 	}
