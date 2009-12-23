@@ -19,6 +19,7 @@
 * **Breaking Change** Removed the ValidationMessageAttribute
 * **Breaking Change** Removed the DefaultResourceManager
 * Simplified PropertyValidatorContext
+* Adding ValidatorFactoryBase to make creation of Validator Factories easier.
 
 1.1 - Jul 17 2009
 * Spanish resource translations.
