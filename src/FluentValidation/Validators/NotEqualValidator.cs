@@ -17,49 +17,57 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
+	using System.Collections;
 	using System.Reflection;
 	using Attributes;
 	using Internal;
 	using Resources;
-	using Results;
 
-	[ValidationMessage(Key=DefaultResourceManager.NotEqual)]
-	public class NotEqualValidator<TInstance, TProperty> : IPropertyValidator<TInstance, TProperty>, IComparisonValidator {
-		readonly IEqualityComparer<TProperty> comparer;
-		readonly Func<TInstance, TProperty> func;
+	public class NotEqualValidator : PropertyValidator, IComparisonValidator {
+		readonly IEqualityComparer comparer;
+		readonly PropertySelector func;
 
-		public NotEqualValidator(Expression<Func<TInstance, TProperty>> expression) {
-			func = expression.Compile();
-
-			MemberToCompare = expression.GetMember();
-			
-			if (MemberToCompare == null && expression.Body.NodeType == ExpressionType.Constant) {
-				var constant = expression.Body as ConstantExpression;
-				ValueToCompare = constant != null ? (TProperty)constant.Value : default(TProperty);
-			}
+		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare) : base(() => Messages.notequal_error) {
+			this.func = func;
+			MemberToCompare = memberToCompare;
 		}
 
-		public NotEqualValidator(Expression<Func<TInstance, TProperty>> expression, IEqualityComparer<TProperty> comparer) : this(expression) {
-			this.comparer = comparer;
+		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare, IEqualityComparer equalityComparer)
+			: base(() => Messages.notequal_error) {
+			this.func = func;
+			this.comparer = equalityComparer;
+			MemberToCompare = memberToCompare;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TProperty> context) {
-			var comparisonValue = func(context.Instance);
+		public NotEqualValidator(object comparisonValue)
+			: base(() => Messages.notequal_error) {
+			ValueToCompare = comparisonValue;
+		}
+
+		public NotEqualValidator(object comparisonValue, IEqualityComparer equalityComparer)
+			: base(() => Messages.notequal_error) {
+			ValueToCompare = comparisonValue;
+			comparer = equalityComparer;
+		}
+
+		protected override bool IsValid(PropertyValidatorContext context) {
+			var comparisonValue = GetComparisonValue(context);
 			bool success = !Compare(comparisonValue, context.PropertyValue);
 
 			if (!success) {
-				var formatter = new MessageFormatter()
-					.AppendProperyName(context.PropertyDescription)
-					.AppendArgument("PropertyValue", context.PropertyValue);
-
-				string error = context.GetFormattedErrorMessage(typeof(NotEqualValidator<TInstance, TProperty>), formatter);
-				return PropertyValidatorResult.Failure(error);
+				context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+				return false;
 			}
 
-			return PropertyValidatorResult.Success();
+			return true;
+		}
+
+		private object GetComparisonValue(PropertyValidatorContext context) {
+			if (func != null) {
+				return func(context.Instance);
+			}
+
+			return ValueToCompare;
 		}
 
 		public Comparison Comparison {
@@ -69,7 +77,7 @@ namespace FluentValidation.Validators {
 		public MemberInfo MemberToCompare { get; private set; }
 		public object ValueToCompare { get; private set; }
 
-		protected bool Compare(TProperty comparisonValue, TProperty propertyValue) {
+		protected bool Compare(object comparisonValue, object propertyValue) {
 			if(comparer != null) {
 				return comparer.Equals(comparisonValue, propertyValue);
 			}

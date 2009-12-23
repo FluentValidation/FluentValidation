@@ -17,30 +17,27 @@
 #endregion
 
 namespace FluentValidation.Validators {
+	using System;
 	using System.Text.RegularExpressions;
 	using Attributes;
 	using Internal;
 	using Resources;
 	using Results;
 
-	[ValidationMessage(Key=DefaultResourceManager.RegexError)]
-	public class RegularExpressionValidator<TInstance> : IPropertyValidator<TInstance, string>, IRegularExpressionValidator {
+	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
 		readonly string expression;
 		readonly Regex regex;
 
-		public RegularExpressionValidator(string expression) {
+		public RegularExpressionValidator(string expression) : base(() => Messages.regex_error) {
 			this.expression = expression;
 			regex = new Regex(expression);
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, string> context) {
-			if (context.PropertyValue == null) return PropertyValidatorResult.Success();
-			if (!regex.IsMatch(context.PropertyValue)) {
-				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);
-				string error = context.GetFormattedErrorMessage(typeof(RegularExpressionValidator<TInstance>), formatter);
-				return PropertyValidatorResult.Failure(error);
+		protected override bool IsValid(PropertyValidatorContext context) {
+			if (context.PropertyValue != null && !regex.IsMatch((string)context.PropertyValue)) {
+				return false;
 			}
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 
 		public string Expression {

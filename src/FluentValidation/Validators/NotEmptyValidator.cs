@@ -18,21 +18,22 @@
 
 namespace FluentValidation.Validators {
 	using Attributes;
-	using Internal;
 	using Resources;
-	using Results;
 
-	[ValidationMessage(Key=DefaultResourceManager.NotEmpty)]
-	public class NotEmptyValidator<TInstance, TProperty> : IPropertyValidator<TInstance, TProperty>, INotEmptyValidator {
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TProperty> context) {
+	public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
+		readonly object defaultValueForType;
+
+		public NotEmptyValidator(object defaultValueForType) : base(() => Messages.notempty_error) {
+			this.defaultValueForType = defaultValueForType;
+		}
+
+		protected override bool IsValid(PropertyValidatorContext context) {
 			if (context.PropertyValue == null || context.PropertyValue.Equals(string.Empty) ||
-			    Equals(context.PropertyValue, default(TProperty))) {
-				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);
-				string error = context.GetFormattedErrorMessage(typeof(NotEmptyValidator<TInstance, TProperty>), formatter);
-				return PropertyValidatorResult.Failure(error);
+				Equals(context.PropertyValue, defaultValueForType)) {
+				return false;
 			}
 
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 	}
 

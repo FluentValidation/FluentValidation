@@ -19,24 +19,28 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
-	using System.Globalization;
 	using System.Linq;
-	using System.Resources;
 	using Attributes;
 	using Internal;
-	using Resources;
 
-	public class PropertyValidatorContext<T, TProperty> {
-		private readonly Func<T, TProperty> propertyValueFunc;
+	public class PropertyValidatorContext {
+		private readonly MessageFormatter messageFormatter;
+		private readonly PropertySelector propertyValueFunc;
 		private bool propertyValueSet;
-		private TProperty propertyValue;
-		private IEnumerable<Func<T, object>> customFormatArgs;
+		private object propertyValue;
+
+		public string PropertyDescription { get; protected set; }
+		public object Instance { get; private set; }
+
+		public MessageFormatter MessageFormatter {
+			get { return messageFormatter; }
+		}
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
-		public TProperty PropertyValue {
+		public object PropertyValue {
 			get {
-				if (! propertyValueSet) {
+				if (!propertyValueSet) {
 					propertyValue = propertyValueFunc(Instance);
 					propertyValueSet = true;
 				}
@@ -45,34 +49,12 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public string PropertyDescription { get; private set; }
-		public T Instance { get; private set; }
-		public string CustomError { get; private set; }
-
-		public PropertyValidatorContext(string propertyDescription, T instance, Func<T, TProperty> propertyValueFunc)
-			: this(propertyDescription, instance, propertyValueFunc, null, null) {
-		}
-
-		public PropertyValidatorContext(string propertyDescription, T instance, Func<T, TProperty> propertyValueFunc, string customError, IEnumerable<Func<T, object>> customFormatArgs) {
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc) {
 			propertyValueFunc.Guard("propertyValueFunc cannot be null");
 			PropertyDescription = propertyDescription;
 			Instance = instance;
-			CustomError = customError;
-			this.customFormatArgs = customFormatArgs;
+			messageFormatter = new MessageFormatter();
 			this.propertyValueFunc = propertyValueFunc;
-		}
-
-
-		public string GetFormattedErrorMessage(Type type, MessageFormatter formatter) {
-			string error = CustomError ?? ValidationMessageAttribute.GetMessage(type);
-
-			if (customFormatArgs != null) {
-				formatter.AppendAdditionalArguments(
-					customFormatArgs.Select(func => func(Instance)).ToArray()	
-				);
-			}
-
-			return formatter.BuildMessage(error);
 		}
 	}
 }

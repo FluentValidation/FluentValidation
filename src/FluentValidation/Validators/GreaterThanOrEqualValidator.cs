@@ -18,17 +18,19 @@
 
 namespace FluentValidation.Validators {
 	using System;
-	using System.Linq.Expressions;
+	using System.Reflection;
 	using Attributes;
+	using Internal;
 	using Resources;
 
-	[ValidationMessage(Key=DefaultResourceManager.GreaterThanOrEqual)]
-	public class GreaterThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty> {
-		public GreaterThanOrEqualValidator(Expression<Func<T, TProperty>> valueToCompare)
-			: base(valueToCompare) {
+	public class GreaterThanOrEqualValidator : AbstractComparisonValidator  {
+		public GreaterThanOrEqualValidator(IComparable value) : base(value, () => Messages.greaterthanorequal_error) {
 		}
 
-		public override bool IsValid(TProperty value, TProperty valueToCompare) {
+		public GreaterThanOrEqualValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member, () => Messages.greaterthanorequal_error) {
+		}
+
+		public override bool IsValid(IComparable value, IComparable valueToCompare) {
 			return value.CompareTo(valueToCompare) >= 0;
 		}
 

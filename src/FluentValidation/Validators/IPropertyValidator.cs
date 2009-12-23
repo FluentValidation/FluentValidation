@@ -17,15 +17,13 @@
 #endregion
 
 namespace FluentValidation.Validators {
+	using System;
+	using System.Collections.Generic;
 	using Results;
 
 	public interface IPropertyValidator {
-	}
-
-	public interface IPropertyValidator<T> : IPropertyValidator {
-	}
-
-	public interface IPropertyValidator<TInstance, TProperty> : IPropertyValidator<TInstance> {
-		PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TProperty> context);
+		PropertyValidatorResult Validate(PropertyValidatorContext context);
+		string ErrorMessageTemplate { get; set; }
+		ICollection<Func<object, object>> CustomMessageFormatArguments { get; }
 	}
 }

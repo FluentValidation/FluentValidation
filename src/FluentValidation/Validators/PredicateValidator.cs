@@ -23,24 +23,22 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	[ValidationMessage(Key=DefaultResourceManager.PredicateError)]
-	public class PredicateValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IPredicateValidator {
-		private readonly Func<T, TProperty, bool> predicate;
+	public class PredicateValidator : PropertyValidator, IPredicateValidator {
+		public delegate bool Predicate(object instanceToValidate, object propertyValue);
 
-		public PredicateValidator(Func<T, TProperty, bool> predicate) {
+		private readonly Predicate predicate;
+
+		public PredicateValidator(Predicate predicate) : base(() => Messages.predicate_error) {
 			predicate.Guard("A predicate must be specified.");
 			this.predicate = predicate;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
-
-			if (! predicate(context.Instance, context.PropertyValue)) {
-				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);
-				string error = context.GetFormattedErrorMessage(typeof(PredicateValidator<T, TProperty>), formatter);
-				return PropertyValidatorResult.Failure(error);
+		protected override bool IsValid(PropertyValidatorContext context) {
+			if (!predicate(context.Instance, context.PropertyValue)) {
+				return false;
 			}
 
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 	}
 

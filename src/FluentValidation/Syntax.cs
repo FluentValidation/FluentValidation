@@ -41,7 +41,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="validator">The validator to set</param>
 		/// <returns></returns>
-		IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator<T, TProperty> validator);
+		IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator validator);
 
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderOptions<T, TProperty> : IValidatorOptions<T, TProperty>, IRuleBuilder<T, TProperty>, IConfigurable<ISimplePropertyRule<T, TProperty>, IRuleBuilderOptions<T, TProperty>> {
+	public interface IRuleBuilderOptions<T, TProperty> : IValidatorOptions<T, TProperty>, IRuleBuilder<T, TProperty>, IConfigurable<ISimplePropertyRule<T>, IRuleBuilderOptions<T, TProperty>> {
 
 	}
 }

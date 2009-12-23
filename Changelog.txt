@@ -12,6 +12,12 @@
 * Patch - Swedish language resources 
 * Added WithPropertyName
 * Patch - InclusiveBetween/ExclusiveBetween validators.
+* **Breaking Change** Removed generics from all the IPropertyValidator instances.
+* Introduced PropertyValidator base class
+* **Breaking Change** Removed the ValidationMessageAttribute
+* **Breaking Change** Removed the DefaultResourceManager
+* Simplified PropertyValidatorContext
+* Adding ValidatorFactoryBase to make creation of Validator Factories easier.
 * Added FluentValidationModelValidator / FluentValidationModelValidatorProvider
 * Removed the FluentValidationModelBinder in favour of using ASP.NET MVC's DefaultModelBinder with the FluentValidationModelValidatorProvider.
 

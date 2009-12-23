@@ -18,48 +18,62 @@
 
 namespace FluentValidation.Tests {
 	using System.Globalization;
+	using System.Linq.Expressions;
 	using System.Threading;
+	using Internal;
 	using NUnit.Framework;
 	using Validators;
 
 	[TestFixture]
 	public class LessThanOrEqualToValidatorTester {
-		private LessThanOrEqualValidator<Person, int> validator;
+		private LessThanOrEqualValidator validator;
 		private const int value = 1;
 
 		[SetUp]
 		public void Setup() {
-			validator = new LessThanOrEqualValidator<Person, int>(x => value);
+			validator = new LessThanOrEqualValidator(value);
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 		}
 
 		[Test]
 		public void Should_fail_when_greater_than_input() {
-			var result = validator.Validate(new PropertyValidatorContext<Person, int>(null, null, x => 2));
+			var result = validator.Validate(new PropertyValidatorContext(null, null, x => 2));
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void Should_succeed_when_less_than_input() {
-			var result = validator.Validate(new PropertyValidatorContext<Person, int>(null, null, x => 0));
+			var result = validator.Validate(new PropertyValidatorContext(null, null, x => 0));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void Should_succeed_when_equal_to_input() {
-			var result = validator.Validate(new PropertyValidatorContext<Person, int>(null, null, x => value));
+			var result = validator.Validate(new PropertyValidatorContext(null, null, x => value));
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void Should_set_default_error_when_validation_fails() {
-			var result = validator.Validate(new PropertyValidatorContext<Person, int>("Discount", null, x => 2));
+			var result = validator.Validate(new PropertyValidatorContext("Discount", null, x => 2));
 			result.Error.ShouldEqual("'Discount' must be less than or equal to '1'.");
 		}
 
 		[Test]
 		public void Comparison_type() {
 			validator.Comparison.ShouldEqual(Comparison.LessThanOrEqual);
+		}
+
+		[Test]
+		public void Validates_with_property() {
+			validator = CreateValidator(x => x.Id);
+			var result = validator.Validate(new PropertyValidatorContext(null, new Person { Id = 1 }, x => 2));
+			result.IsValid.ShouldBeFalse();
+		}
+
+		private LessThanOrEqualValidator CreateValidator<T>(Expression<PropertySelector<Person, T>> expression) {
+			PropertySelector selector = x => expression.Compile()((Person)x);
+			return new LessThanOrEqualValidator(selector, expression.GetMember());
 		}
 	}
 }

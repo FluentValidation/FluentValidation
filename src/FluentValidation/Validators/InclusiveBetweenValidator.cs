@@ -19,13 +19,10 @@
 namespace FluentValidation.Validators {
 	using System;
 	using Attributes;
-	using Internal;
 	using Resources;
-	using Results;
 
-	[ValidationMessage(Key = DefaultResourceManager.InclusiveBetweenValidatorError)]
-	public class InclusiveBetweenValidator<TInstance, TType> : IPropertyValidator<TInstance, TType>, IBetweenValidator<TType> where TType : IComparable<TType> {
-		public InclusiveBetweenValidator(TType from, TType to) {
+	public class InclusiveBetweenValidator : PropertyValidator, IBetweenValidator {
+		public InclusiveBetweenValidator(IComparable from, IComparable to) : base(() => Messages.inclusivebetween_error) {
 			To = to;
 			From = from;
 
@@ -34,27 +31,27 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public TType From { get; private set; }
-		public TType To { get; private set; }
+		public IComparable From { get; private set; }
+		public IComparable To { get; private set; }
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TType> context) {
-			if (context.PropertyValue.CompareTo(From) < 0 || context.PropertyValue.CompareTo(To) > 0) {
-				
-				var formatter = new MessageFormatter()
-					.AppendProperyName(context.PropertyDescription)
+		protected override bool IsValid(PropertyValidatorContext context) {
+			var propertyValue = (IComparable)context.PropertyValue;
+
+			if (propertyValue.CompareTo(From) < 0 || propertyValue.CompareTo(To) > 0) {
+
+				context.MessageFormatter
 					.AppendArgument("From", From)
 					.AppendArgument("To", To)
 					.AppendArgument("Value", context.PropertyValue);
 
-				string error = context.GetFormattedErrorMessage(GetType(), formatter);
-				return PropertyValidatorResult.Failure(error);
+				return false;
 			}
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 	}
 
-	public interface IBetweenValidator<T> : IPropertyValidator {
-		T From { get; }
-		T To { get; }
+	public interface IBetweenValidator : IPropertyValidator {
+		IComparable From { get; }
+		IComparable To { get; }
 	}
 }

@@ -17,20 +17,17 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using Attributes;
-	using Internal;
 	using Resources;
-	using Results;
 
-	[ValidationMessage(Key=DefaultResourceManager.NotNull)]
-	public class NotNullValidator<TInstance, TProperty> : IPropertyValidator<TInstance, TProperty>, INotNullValidator {
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TProperty> context) {
+	public class NotNullValidator : PropertyValidator, INotNullValidator {
+		public NotNullValidator() : base(() => Messages.notnull_error) {
+		}
+
+		protected override bool IsValid(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) {
-				var formatter = new MessageFormatter().AppendProperyName(context.PropertyDescription);
-				string error = context.GetFormattedErrorMessage(typeof(NotNullValidator<TInstance, TProperty>), formatter);
-				return PropertyValidatorResult.Failure(error);
+				return false;
 			}
-			return PropertyValidatorResult.Success();
+			return true;
 		}
 	}
 

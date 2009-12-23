@@ -17,22 +17,7 @@
 #endregion
 
 namespace FluentValidation.Internal {
-	using System;
-	using System.Collections.Generic;
-	using System.Reflection;
-	using Results;
-	using Validators;
+	public delegate object PropertySelector(object instance);
 
-	public interface IPropertyRule<T> : IValidationRule<T> {
-		string CustomPropertyName { get; set; }
-		string PropertyName { get; set; }
-		string PropertyDescription { get; }
-		MemberInfo Member { get; }
-	}
-	
-	public interface ISimplePropertyRule<T> : IPropertyRule<T> {
-		IPropertyValidator Validator { get; set; }
-		Func<T, object> CustomStateProvider { get; set; }
-		Action<T> OnFailure { get; set; }
-	}
+	public delegate TProperty PropertySelector<T, TProperty>(T instance);
 }

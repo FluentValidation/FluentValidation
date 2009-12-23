@@ -16,23 +16,19 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Internal {
+namespace FluentValidation {
 	using System;
-	using System.Collections.Generic;
-	using System.Reflection;
-	using Results;
-	using Validators;
 
-	public interface IPropertyRule<T> : IValidationRule<T> {
-		string CustomPropertyName { get; set; }
-		string PropertyName { get; set; }
-		string PropertyDescription { get; }
-		MemberInfo Member { get; }
-	}
-	
-	public interface ISimplePropertyRule<T> : IPropertyRule<T> {
-		IPropertyValidator Validator { get; set; }
-		Func<T, object> CustomStateProvider { get; set; }
-		Action<T> OnFailure { get; set; }
+	public abstract class ValidatorFactoryBase : IValidatorFactory {
+		public IValidator<T> GetValidator<T>() {
+			return (IValidator<T>)GetValidator(typeof(T));
+		}
+
+		public IValidator GetValidator(Type type) {
+			var genericType = typeof(IValidator<>).MakeGenericType(type);
+			return CreateInstance(genericType);
+		}
+
+		public abstract IValidator CreateInstance(Type validatorType);
 	}
 }

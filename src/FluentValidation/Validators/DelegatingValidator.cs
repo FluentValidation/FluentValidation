@@ -18,22 +18,32 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Collections.Generic;
 	using Results;
 
-	public class DelegatingValidator<T, TProperty> : IPropertyValidator<T, TProperty>, IDelegatingValidator {
-		private readonly Func<T, bool> condition;
-		public IPropertyValidator<T, TProperty> InnerValidator { get; private set; }
+	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
+		private readonly Predicate<object> condition;
+		public IPropertyValidator InnerValidator { get; private set; }
 
-		public DelegatingValidator(Func<T, bool> condition, IPropertyValidator<T, TProperty> innerValidator) {
+		public DelegatingValidator(Predicate<object> condition, IPropertyValidator innerValidator) {
 			this.condition = condition;
 			InnerValidator = innerValidator;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {
+		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
 			if (condition(context.Instance)) {
 				return InnerValidator.Validate(context);
 			}
 			return PropertyValidatorResult.Success();
+		}
+
+		public string ErrorMessageTemplate {
+			get { return InnerValidator.ErrorMessageTemplate; }
+			set { InnerValidator.ErrorMessageTemplate=value; }
+		}
+
+		public ICollection<Func<object, object>> CustomMessageFormatArguments {
+			get { return InnerValidator.CustomMessageFormatArguments; }
 		}
 
 		IPropertyValidator IDelegatingValidator.InnerValidator {

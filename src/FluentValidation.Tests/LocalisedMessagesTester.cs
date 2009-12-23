@@ -17,48 +17,36 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System.Diagnostics;
 	using System.Globalization;
-	using System.Resources;
 	using System.Threading;
+	using Internal;
 	using NUnit.Framework;
 	using Resources;
 	using Validators;
 
 	[TestFixture]
 	public class LocalisedMessagesTester {
-		private ResourceManager resourceManager;
-
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-			resourceManager = new ResourceManager("FluentValidation.Tests.TestMessages", typeof(LocalisedMessagesTester).Assembly);
-			DefaultResourceManager.SetResourceManagerProvider(() => resourceManager);
-		}
-
-		[TearDown]
-		public void Teardown() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-			DefaultResourceManager.SetResourceManagerProvider(() => new DefaultResourceManager());
-		}
 
 		[Test]
-		public void Should_use_custom_resource_manager() {
-			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext<Person, string>(null, null, x => null, null, null));
-			result.Error.ShouldEqual("Localised Error");
-		}
+		public void Correctly_assigns_default_localized_error_message() {
+			var originalCulture = Thread.CurrentThread.CurrentUICulture;
+			try {
+				var validator = new NotEmptyValidator(null);
 
-		[Test]
-		public void Should_use_localised_resources() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
-			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext<Person, string>(null, null, x => null, null, null));
-			result.Error.ShouldEqual("Localised Error (FR)");
-		}
-
-		[Test]
-		public void Should_fall_back_to_default_resources() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("ru-RU");
-			var result = new NotNullValidator<Person, string>().Validate(new PropertyValidatorContext<Person, string>(null, null, x => null, null, null));
-			result.Error.ShouldEqual("Localised Error");
+				foreach (var culture in new[] {"en", "de", "fr"}) {
+					Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+					var message = Messages.ResourceManager.GetString("notempty_error");
+					var errorMessage = new MessageFormatter().AppendPropertyName("name").BuildMessage(message);
+					Debug.WriteLine(errorMessage);
+					var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
+					result.Error.ShouldEqual(errorMessage);
+				}
+			}
+			finally {
+				// Always reset the culture.
+				Thread.CurrentThread.CurrentUICulture = originalCulture;
+			}
 		}
 	}
 }

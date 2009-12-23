@@ -17,49 +17,57 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
+	using System.Collections;
 	using System.Reflection;
 	using Attributes;
 	using Internal;
 	using Resources;
-	using Results;
 
-	[ValidationMessage(Key=DefaultResourceManager.Equal)]
-	public class EqualValidator<TInstance, TProperty> : IPropertyValidator<TInstance, TProperty>, IComparisonValidator {
-		readonly Func<TInstance, TProperty> func;
-		IEqualityComparer<TProperty> comparer;
+	public class EqualValidator : PropertyValidator, IComparisonValidator {
+		readonly PropertySelector func;
+		readonly IEqualityComparer comparer;
 
-		public EqualValidator(Expression<Func<TInstance, TProperty>> expression) {
-			func = expression.Compile();
-
-			MemberToCompare = expression.GetMember();
-
-			if (MemberToCompare == null && expression.Body.NodeType == ExpressionType.Constant) {
-				var constant = expression.Body as ConstantExpression;
-				ValueToCompare = constant != null ? (TProperty)constant.Value : default(TProperty);
-			}
+		public EqualValidator(object valueToCompare) : base(() => Messages.equal_error) {
+			this.ValueToCompare = valueToCompare;
 		}
 
-		public EqualValidator(Expression<Func<TInstance, TProperty>> expression, IEqualityComparer<TProperty> comparer) : this(expression) {
+		public EqualValidator(object valueToCompare, IEqualityComparer comparer)
+			: base(() => Messages.equal_error) {
+			ValueToCompare = valueToCompare;
 			this.comparer = comparer;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext<TInstance, TProperty> context) {
-			var comparisonValue = func(context.Instance);
+		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member)
+			: base(() => Messages.equal_error)  {
+			func = comparisonProperty;
+			MemberToCompare = member;
+		}
+
+		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member, IEqualityComparer comparer)
+			: base(() => Messages.equal_error) {
+			func = comparisonProperty;
+			MemberToCompare = member;
+			this.comparer = comparer;
+		}
+
+		protected override bool IsValid(PropertyValidatorContext context) {
+			var comparisonValue = GetComparisonValue(context);
 			bool success = Compare(comparisonValue, context.PropertyValue);
 
-			if (! success) {
-				var formatter = new MessageFormatter()
-					.AppendProperyName(context.PropertyDescription)
-					.AppendArgument("PropertyValue", comparisonValue);
-
-				string error = context.GetFormattedErrorMessage(typeof(EqualValidator<TInstance, TProperty>), formatter);
-				return PropertyValidatorResult.Failure(error);
+			if (!success) {
+				context.MessageFormatter.AppendArgument("PropertyValue", comparisonValue);
+				return false;
 			}
 
-			return PropertyValidatorResult.Success();
+			return true;
+		}
+
+		private object GetComparisonValue(PropertyValidatorContext context) {
+			if(func != null) {
+				return func(context.Instance);
+			}
+
+			return ValueToCompare;
 		}
 
 		public Comparison Comparison {
@@ -69,7 +77,7 @@ namespace FluentValidation.Validators {
 		public MemberInfo MemberToCompare { get; private set; }
 		public object ValueToCompare { get; private set; }
 
-		protected bool Compare(TProperty comparisonValue, TProperty propertyValue) {
+		protected bool Compare(object comparisonValue, object propertyValue) {
 			if(comparer != null) {
 				return comparer.Equals(comparisonValue, propertyValue);
 			}

@@ -105,7 +105,6 @@
     <Compile Include="MessageFormatterTests.cs" />
     <Compile Include="ModelBinderTester.cs" />
     <Compile Include="CustomValidatorTester.cs" />
-    <Compile Include="DefaultResouceManagerTester.cs" />
     <Compile Include="DefaultValidatorExtensionTester.cs" />
     <Compile Include="EmailValidatorTests.cs" />
     <Compile Include="EqualValidatorTests.cs" />
@@ -134,7 +133,6 @@
     <Compile Include="TestValidator.cs" />
     <Compile Include="CustomMessageFormatTester.cs" />
     <Compile Include="UserStateTester.cs" />
-    <Compile Include="ValidationMessageAttributeTests.cs" />
     <Compile Include="ValidationResultExtensionTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="ValidatorDescriptorTester.cs" />

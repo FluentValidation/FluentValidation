@@ -20,20 +20,23 @@ namespace FluentValidation {
 	using System;
 	using Microsoft.Practices.ServiceLocation;
 
-	public class DefaultValidatorFactory : IValidatorFactory {
-		public DefaultValidatorFactory(IServiceLocator serviceLocator) {
-			ServiceLocator = serviceLocator;
+	public class DefaultValidatorFactory : ValidatorFactoryBase {
+		private readonly ServiceLocatorProvider locatorProvider;
+
+		public DefaultValidatorFactory(IServiceLocator serviceLocator)
+			: this(() => serviceLocator) {
 		}
 
-		protected IServiceLocator ServiceLocator { get; private set; }
-
-		public virtual IValidator<T> GetValidator<T>() {
-			return (IValidator<T>)ServiceLocator.GetInstance(typeof(IValidator<T>));
+		public DefaultValidatorFactory(ServiceLocatorProvider locatorProvider) {
+			this.locatorProvider = locatorProvider;
 		}
 
-		public virtual IValidator GetValidator(Type type) {
-			var genericType = typeof(IValidator<>).MakeGenericType(type);
-			return (IValidator)ServiceLocator.GetInstance(genericType);
+		protected IServiceLocator ServiceLocator {
+			get { return locatorProvider(); }
+		}
+
+		public override IValidator CreateInstance(Type validatorType) {
+			return (IValidator)ServiceLocator.GetInstance(validatorType);
 		}
 	}
 }

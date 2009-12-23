@@ -23,6 +23,7 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using Moq;
 	using NUnit.Framework;
+	using Resources;
 	using Results;
 	using Validators;
 
@@ -68,12 +69,12 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-			builder.Cast<PropertyRule<Person, string>>().Single().CustomValidationMessage.ShouldEqual("Bar");
+			builder.Cast<PropertyRule<Person, string>>().Single().Validator.ErrorMessageTemplate.ShouldEqual("Bar");
 		}
 
 		[Test]
 		public void Should_throw_if_validator_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((IPropertyValidator<Person, string>)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((IPropertyValidator)null));
 		}
 
 		[Test]
@@ -105,21 +106,21 @@ namespace FluentValidation.Tests {
 		public void Calling_when_should_replace_current_validator_with_predicate_validator() {
 			var validator = new TestPropertyValidator();
 			builder.SetValidator(validator).When(x => true);
-			builder.Cast<ISimplePropertyRule<Person>>().Single().Validator.ShouldBe<DelegatingValidator<Person, string>>();
+			builder.Cast<ISimplePropertyRule<Person>>().Single().Validator.ShouldBe<DelegatingValidator>();
 
-			var predicateValidator = (DelegatingValidator<Person, string>)builder.Cast<ISimplePropertyRule<Person>>().Single().Validator;
+			var predicateValidator = (DelegatingValidator)builder.Cast<ISimplePropertyRule<Person>>().Single().Validator;
 			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
 		}
 
 		[Test]
 		public void Calling_validate_should_delegate_to_underlying_validator() {
 			var person = new Person {Surname = "Foo"};
-			var validator = new Mock<IPropertyValidator<Person, string>>();
+			var validator = new Mock<IPropertyValidator>();
 			builder.SetValidator(validator.Object);
 
 			builder.Single().Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
 
-			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext<Person, string>>(c => c.PropertyValue == "Foo")));
+			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => c.PropertyValue == "Foo")));
 		}
 
 		[Test]
@@ -160,7 +161,7 @@ namespace FluentValidation.Tests {
 			builder.GreaterThan(4);
 
 			var ex = typeof(InvalidOperationException).ShouldBeThrownBy(() => builder.Single().Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector())).ToList());
-			ex.Message.ShouldEqual("Property name could not be automatically determined for expression x => x.CalculateSalary(). Please specify either a custom property name or a custom error message (with a call to WithName or WithMessage).");
+			ex.Message.ShouldEqual("Property name could not be automatically determined for expression x => x.CalculateSalary(). Please specify either a custom property name by calling 'WithName'.");
 		}
 
 		[Test]
@@ -184,9 +185,13 @@ namespace FluentValidation.Tests {
 			results.Single().PropertyName.ShouldEqual("Foo");
 		}
 
-		class TestPropertyValidator : IPropertyValidator<Person, string> {
-			public PropertyValidatorResult Validate(PropertyValidatorContext<Person, string> context) {
-				return null;
+		class TestPropertyValidator : PropertyValidator {
+			public TestPropertyValidator() : base(() => Messages.notnull_error) {
+				
+			}
+
+			protected override bool IsValid(PropertyValidatorContext context) {
+				return true;
 			}
 		}
 	}
