@@ -24,40 +24,40 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	public abstract class AbstractComparisonValidator<T, TProperty> : IPropertyValidator, IComparisonValidator where TProperty : IComparable<TProperty> {
+	public abstract class AbstractComparisonValidator : PropertyValidator, IComparisonValidator {
 
-		readonly Func<T, TProperty> valueToCompareFunc;
+		readonly PropertySelector valueToCompareFunc;
 
-		protected AbstractComparisonValidator(Expression<Func<T, TProperty>> valueToCompareFunc) {
-			valueToCompareFunc.Guard("The value to compare cannot be null.");
-			MemberToCompare = valueToCompareFunc.GetMember();
-
-			if (MemberToCompare == null) {
-				if (valueToCompareFunc.Body.NodeType == ExpressionType.Constant) {
-					var constant = valueToCompareFunc.Body as ConstantExpression;
-					ValueToCompare = constant != null ? (TProperty)constant.Value : default(TProperty);
-				}
-			}
-
-			this.valueToCompareFunc = valueToCompareFunc.Compile();
+		public AbstractComparisonValidator(IComparable value) {
+			value.Guard("value must not be null.");
+			ValueToCompare = value;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
-			var value = valueToCompareFunc((T)context.Instance);
-
-			if (context.PropertyValue == null || !IsValid((TProperty)context.PropertyValue, value)) {
-				var formatter = new MessageFormatter()
-					.AppendPropertyName(context.PropertyDescription)
-					.AppendArgument("ComparisonValue", value);
-
-				string error = context.GetFormattedErrorMessage(GetType(), formatter);
-				return PropertyValidatorResult.Failure(error);
-			}
-
-			return PropertyValidatorResult.Success();
+		public AbstractComparisonValidator(PropertySelector valueToCompareFunc, MemberInfo member) {
+			this.valueToCompareFunc = valueToCompareFunc;
+			this.MemberToCompare = member;
 		}
 
-		public abstract bool IsValid(TProperty value, TProperty valueToCompare);
+		protected sealed override bool IsValid(PropertyValidatorContext context) {
+			var value = GetComparisonValue(context);
+
+			if (context.PropertyValue == null || !IsValid((IComparable)context.PropertyValue, value)) {
+				context.MessageFormatter.AppendArgument("ComparisonValue", value);
+				return false;
+			}
+
+			return true;
+		}
+
+		private IComparable GetComparisonValue(PropertyValidatorContext context) {
+			if(valueToCompareFunc != null) {
+				return (IComparable)valueToCompareFunc(context.Instance);
+			}
+
+			return (IComparable)ValueToCompare;
+		}
+
+		public abstract bool IsValid(IComparable value, IComparable valueToCompare);
 		public abstract Comparison Comparison { get; }
 		public MemberInfo MemberToCompare { get; private set; }
 		public object ValueToCompare { get; private set; }

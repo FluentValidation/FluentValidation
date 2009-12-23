@@ -19,15 +19,20 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Linq.Expressions;
+	using System.Reflection;
 	using Attributes;
+	using Internal;
 	using Resources;
 
 	[ValidationMessage(Key=DefaultResourceManager.LessThan)]
-	public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty> {
-		public LessThanValidator(Expression<Func<T, TProperty>> valueToCompare) : base(valueToCompare) {
+	public class LessThanValidator : AbstractComparisonValidator {
+		public LessThanValidator(IComparable value) : base(value) {
 		}
 
-		public override bool IsValid(TProperty value, TProperty valueToCompare) {
+		public LessThanValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member) {
+		}
+
+		public override bool IsValid(IComparable value, IComparable valueToCompare) {
 			return value.CompareTo(valueToCompare) < 0;
 		}
 

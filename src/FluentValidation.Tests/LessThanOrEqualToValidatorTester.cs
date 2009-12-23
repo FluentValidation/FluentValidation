@@ -18,18 +18,20 @@
 
 namespace FluentValidation.Tests {
 	using System.Globalization;
+	using System.Linq.Expressions;
 	using System.Threading;
+	using Internal;
 	using NUnit.Framework;
 	using Validators;
 
 	[TestFixture]
 	public class LessThanOrEqualToValidatorTester {
-		private LessThanOrEqualValidator<Person, int> validator;
+		private LessThanOrEqualValidator validator;
 		private const int value = 1;
 
 		[SetUp]
 		public void Setup() {
-			validator = new LessThanOrEqualValidator<Person, int>(x => value);
+			validator = new LessThanOrEqualValidator(value);
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 		}
 
@@ -60,6 +62,18 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Comparison_type() {
 			validator.Comparison.ShouldEqual(Comparison.LessThanOrEqual);
+		}
+
+		[Test]
+		public void Validates_with_property() {
+			validator = CreateValidator(x => x.Id);
+			var result = validator.Validate(new PropertyValidatorContext(null, new Person { Id = 1 }, x => 2));
+			result.IsValid.ShouldBeFalse();
+		}
+
+		private LessThanOrEqualValidator CreateValidator<T>(Expression<PropertySelector<Person, T>> expression) {
+			PropertySelector selector = x => expression.Compile()((Person)x);
+			return new LessThanOrEqualValidator(selector, expression.GetMember());
 		}
 	}
 }

@@ -94,49 +94,49 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void LessThan_should_create_LessThanValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).LessThan("foo");
-			AssertValidator<LessThanValidator<Person, string>>();
+			AssertValidator<LessThanValidator>();
 		}
 
 		[Test]
 		public void LessThan_should_create_LessThanValidator_with_lambda() {
 			validator.RuleFor(x => x.Surname).LessThan(x => "foo");
-			AssertValidator<LessThanValidator<Person, string>>();
+			AssertValidator<LessThanValidator>();
 		}
 
 		[Test]
 		public void LessThanOrEqual_should_create_LessThanOrEqualValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).LessThanOrEqualTo("foo");
-			AssertValidator<LessThanOrEqualValidator<Person, string>>();
+			AssertValidator<LessThanOrEqualValidator>();
 		}
 
 		[Test]
 		public void LessThanOrEqual_should_create_LessThanOrEqualValidator_with_lambda() {
 			validator.RuleFor(x => x.Surname).LessThanOrEqualTo(x => "foo");
-			AssertValidator<LessThanOrEqualValidator<Person, string>>();
+			AssertValidator<LessThanOrEqualValidator>();
 		}
 
 		[Test]
 		public void GreaterThan_should_create_GreaterThanValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).GreaterThan("foo");
-			AssertValidator<GreaterThanValidator<Person, string>>();
+			AssertValidator<GreaterThanValidator>();
 		}
 
 		[Test]
 		public void GreaterThan_should_create_GreaterThanValidator_with_lambda() {
 			validator.RuleFor(x => x.Surname).GreaterThan(x => "foo");
-			AssertValidator<GreaterThanValidator<Person, string>>();
+			AssertValidator<GreaterThanValidator>();
 		}
 
 		[Test]
 		public void GreaterThanOrEqual_should_create_GreaterThanOrEqualValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).GreaterThanOrEqualTo("foo");
-			AssertValidator<GreaterThanOrEqualValidator<Person, string>>();
+			AssertValidator<GreaterThanOrEqualValidator>();
 		}
 
 		[Test]
 		public void GreaterThanOrEqual_should_create_GreaterThanOrEqualValidator_with_lambda() {
 			validator.RuleFor(x => x.Surname).GreaterThanOrEqualTo(x => "foo");
-			AssertValidator<GreaterThanOrEqualValidator<Person, string>>();
+			AssertValidator<GreaterThanOrEqualValidator>();
 		}
 
 		private void AssertValidator<TValidator>() {

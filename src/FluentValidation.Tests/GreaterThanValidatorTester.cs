@@ -18,18 +18,20 @@
 
 namespace FluentValidation.Tests {
 	using System.Globalization;
+	using System.Linq.Expressions;
 	using System.Threading;
+	using Internal;
 	using NUnit.Framework;
 	using Validators;
 
 	[TestFixture]
 	public class GreaterThanValidatorTester {
-		private GreaterThanValidator<Person, int> validator;
+		private GreaterThanValidator validator;
 		private const int value = 1;
 
 		[SetUp]
 		public void Setup() {
-			validator = new GreaterThanValidator<Person, int>(x => value);
+			validator = new GreaterThanValidator(value);
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 		}
 
@@ -59,8 +61,20 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Validates_with_property() {
+			validator = CreateValidator(x => x.Id);
+			var result = validator.Validate(new PropertyValidatorContext(null, new Person { Id = 2 }, x => 1));
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Test]
 		public void Comparison_Type() {
 			validator.Comparison.ShouldEqual(Comparison.GreaterThan);
+		}
+
+		private GreaterThanValidator CreateValidator<T>(Expression<PropertySelector<Person, T>> expression) {
+			PropertySelector selector = x => expression.Compile()((Person)x);
+			return new GreaterThanValidator(selector, expression.GetMember());
 		}
 	}
 }
