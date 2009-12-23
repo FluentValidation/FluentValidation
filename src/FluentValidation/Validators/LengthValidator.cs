@@ -36,6 +36,8 @@ namespace FluentValidation.Validators {
 			if (max < min) {
 				throw new ArgumentOutOfRangeException("max", "Max should be larger than min.");
 			}
+
+			SupportsStandaloneValidation = true;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {

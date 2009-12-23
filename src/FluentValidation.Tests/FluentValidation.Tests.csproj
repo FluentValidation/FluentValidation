@@ -124,6 +124,7 @@
     <Compile Include="PropertyChainTests.cs" />
     <Compile Include="RegularExpressionValidatorTests.cs" />
     <Compile Include="RuleBuilderTests.cs" />
+    <Compile Include="StandalonePropertyValidationTester.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="TestMessages.Designer.cs">
       <AutoGen>True</AutoGen>

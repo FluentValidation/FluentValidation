@@ -67,7 +67,7 @@ namespace FluentValidation {
 			nestedValidators.Add(new SimpleRuleBuilder<T>(rule));
 		}
 
-		public virtual IValidatorDescriptor<T> CreateDescriptor() {
+		public virtual IValidatorDescriptor CreateDescriptor() {
 			return new ValidatorDescriptor<T>(nestedValidators.SelectMany(x => x).ToList());
 		}
 

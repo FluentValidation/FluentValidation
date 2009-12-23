@@ -46,6 +46,10 @@ namespace FluentValidation.Validators {
 			get { return InnerValidator.CustomMessageFormatArguments; }
 		}
 
+		public bool SupportsStandaloneValidation {
+			get { return false; }
+		}
+
 		IPropertyValidator IDelegatingValidator.InnerValidator {
 			get { return InnerValidator; }
 		}

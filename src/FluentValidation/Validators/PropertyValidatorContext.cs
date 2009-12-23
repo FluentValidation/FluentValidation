@@ -47,6 +47,17 @@ namespace FluentValidation.Validators {
 
 				return propertyValue;
 			}
+			set {
+				propertyValue = value;
+				propertyValueSet = true;
+			}
+		}
+
+		public PropertyValidatorContext(string propertyDescription, object instance, object propertyValue) {
+			PropertyDescription = propertyDescription;
+			Instance = instance;
+			messageFormatter = new MessageFormatter();
+			PropertyValue = propertyValue;
 		}
 
 		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc) {

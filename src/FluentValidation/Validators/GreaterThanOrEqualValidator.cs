@@ -19,12 +19,12 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Reflection;
-	using Attributes;
 	using Internal;
 	using Resources;
 
 	public class GreaterThanOrEqualValidator : AbstractComparisonValidator  {
 		public GreaterThanOrEqualValidator(IComparable value) : base(value, () => Messages.greaterthanorequal_error) {
+			SupportsStandaloneValidation = true;
 		}
 
 		public GreaterThanOrEqualValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member, () => Messages.greaterthanorequal_error) {

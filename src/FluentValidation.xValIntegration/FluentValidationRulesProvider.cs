@@ -78,7 +78,7 @@
 
 				var rules = from memberWithValidators in descriptor.GetMembersWithValidators()
 							from xValRule in memberWithValidators.SelectMany(x => ConvertToXValRules(x))
-							select new { MemberName = memberWithValidators.Key.Name, Rule = xValRule };
+							select new { MemberName = memberWithValidators.Key, Rule = xValRule };
 
 				return new RuleSet(rules.ToLookup(x => x.MemberName, x => x.Rule));
 			}

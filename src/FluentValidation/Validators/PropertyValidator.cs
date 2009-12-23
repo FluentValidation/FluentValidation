@@ -28,6 +28,8 @@ namespace FluentValidation.Validators {
 	public abstract class PropertyValidator : IPropertyValidator {
 		private readonly List<Func<object, object>> customFormatArgs = new List<Func<object, object>>();
 		private Func<string> resourceAccessor;
+		
+		public bool SupportsStandaloneValidation { get; set; }
 
 		public string ErrorMessageTemplate {
 			get { return resourceAccessor(); }

@@ -17,19 +17,14 @@
 #endregion
 
 namespace FluentValidation {
-	using System;
+	using System.Collections.Generic;
 	using System.Linq;
-	using System.Linq.Expressions;
 	using System.Reflection;
 	using Validators;
 
-	public interface IValidatorDescriptor<T> : IValidatorDescriptor {
-		string GetName(Expression<Func<T, object>> propertyExpression);
-	}
-
 	public interface IValidatorDescriptor {
 		string GetName(string property);
-		ILookup<MemberInfo, IPropertyValidator> GetMembersWithValidators();
-		ILookup<string, IPropertyValidator> GetMemberNamesWithValidators();
+		ILookup<string, IPropertyValidator> GetMembersWithValidators();
+		IEnumerable<IPropertyValidator> GetValidatorsForMember(string name);
 	}
 }

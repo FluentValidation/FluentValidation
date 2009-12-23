@@ -23,6 +23,10 @@ namespace FluentValidation.Internal {
 	using Results;
 	using Validators;
 
+	public interface ISimplePropertyRule {
+		IPropertyValidator Validator { get; set; }
+	}
+
 	public interface IPropertyRule<T> : IValidationRule<T> {
 		string CustomPropertyName { get; set; }
 		string PropertyName { get; set; }
@@ -30,8 +34,7 @@ namespace FluentValidation.Internal {
 		MemberInfo Member { get; }
 	}
 	
-	public interface ISimplePropertyRule<T> : IPropertyRule<T> {
-		IPropertyValidator Validator { get; set; }
+	public interface ISimplePropertyRule<T> : ISimplePropertyRule, IPropertyRule<T> {
 		Func<T, object> CustomStateProvider { get; set; }
 		Action<T> OnFailure { get; set; }
 	}
