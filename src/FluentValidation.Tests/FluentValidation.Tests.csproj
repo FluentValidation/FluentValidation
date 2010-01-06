@@ -12,6 +12,8 @@
     <AssemblyName>FluentValidation.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\FluentValidation.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -148,6 +150,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\FluentValidation.snk">
+      <Link>FluentValidation.snk</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

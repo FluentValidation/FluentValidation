@@ -3,7 +3,7 @@ namespace FluentValidation.Mvc {
 	using System.Web.Mvc;
 	using Validators;
 
-	public class FluentValidationPropertyValidator : ModelValidator {
+	internal class FluentValidationPropertyValidator : ModelValidator {
 		readonly IPropertyValidator validator;
 
 		public FluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext) {

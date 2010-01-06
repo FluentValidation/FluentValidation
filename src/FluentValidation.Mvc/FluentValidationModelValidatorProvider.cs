@@ -26,7 +26,7 @@ namespace FluentValidation.Mvc {
 	/// <summary>
 	/// Implementation of ModelValidatorProvider that uses FluentValidation.
 	/// </summary>
-	public class FluentValidationModelValidatorProvider : ModelValidatorProvider {
+	internal class FluentValidationModelValidatorProvider : ModelValidatorProvider {
 		readonly IValidatorFactory validatorFactory;
 
 		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {

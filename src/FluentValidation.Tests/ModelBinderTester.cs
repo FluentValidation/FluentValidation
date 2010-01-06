@@ -25,23 +25,88 @@ namespace FluentValidation.Tests {
 	using NUnit.Framework;
 
 	[TestFixture]
-	public class ModelBinderTester {
+	public class FluentValidationModelBinderTester : BaseModelBinderTest {
 		IModelBinder binder;
-		FluentValidationModelValidatorProvider provider;
 
 		[SetUp]
 		public void Setup() {
+			binder = new FluentValidationModelBinder(new AttributedValidatorFactory());
+		}
+
+		protected override IModelBinder CreateBinder() {
+			return new FluentValidationModelBinder(new AttributedValidatorFactory());
+		}
+	}
+
+	/*[TestFixture]
+	public class ModelBinderTester : BaseModelBinderTest {
+		FluentValidationModelValidatorProvider provider;
+
+		protected override IModelBinder CreateBinder() {
 			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
-			binder = new DefaultModelBinder();
+var 			binder = new DefaultModelBinder();
 			//TODO: Remove this line once FluentValidationModelMetadataProvider is fixed...
 			ModelValidatorProviders.Providers.Clear();
 			ModelValidatorProviders.Providers.Add(provider);
+			return binder;
 		}
 
 		[TearDown]
 		public void Teardown() {
 			//Cleanup
 			ModelValidatorProviders.Providers.Remove(provider);
+		}
+
+
+		[Test, Ignore("DataAnnotationsModelValidatorProvider does not play nicely with the FluentValidationValidatorProvider when both are registered. ")]
+		public void WorksAlongsideDataAnnotationsProvider() {
+			ModelValidatorProviders.Providers.Insert(0, new DataAnnotationsModelValidatorProvider());
+			Should_not_add_default_message_to_modelstate();
+		}
+
+		[Test, Ignore("Not implemented yet")]
+		public void Maintains_custom_property_name() {
+			Assert.Fail();
+		}
+	}*/
+
+	public abstract class BaseModelBinderTest {
+		protected IModelBinder binder;
+
+		[SetUp]
+		public void Setup() {
+			binder = CreateBinder();
+		}
+
+		protected abstract IModelBinder CreateBinder();
+
+		protected ModelMetadata CreateMetaData(Type type) {
+			return new ModelMetadata(new EmptyModelMetadataProvider(), null, null, type, null);
+		}
+
+		public class TestModel2 {
+		}
+
+		[Validator(typeof(TestModelValidator))]
+		public class TestModel {
+			public string Name { get; set; }
+		}
+
+		public class TestModelValidator : AbstractValidator<TestModel> {
+			public TestModelValidator() {
+				RuleFor(x => x.Name).NotNull().WithMessage("Validation Failed");
+			}
+		}
+
+		[Validator(typeof(TestModelValidator3))]
+		public class TestModel3 {
+			public int Id { get; set; }
+		}
+
+		public class TestModelValidator3 : AbstractValidator<TestModel3> {
+			public TestModelValidator3() {
+				RuleFor(x => x.Id).NotEmpty().WithMessage("Validation failed");
+			}
 		}
 
 		[Test]
@@ -112,74 +177,5 @@ namespace FluentValidation.Tests {
 
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("Validation failed");
 		}
-
-		[Test]
-		public void Im_Broken() {
-			ModelValidatorProviders.Providers.Insert(0, new DataAnnotationsModelValidatorProvider());
-			Should_not_add_default_message_to_modelstate();
-		}
-
-		[Test]
-		public void Should_not_run_validation_twice() {
-			Assert.Fail();
-		}
-
-		[Test]
-		public void Maintains_custom_property_name() {
-			Assert.Fail();
-		}
-
-		private ModelMetadata CreateMetaData(Type type) {
-			return new ModelMetadata(new EmptyModelMetadataProvider(), null, null, type, null);
-		}
-
-		public class TestModel2 {
-		}
-
-		[Validator(typeof(TestModelValidator))]
-		public class TestModel {
-			public string Name { get; set; }
-		}
-
-		public class TestModelValidator : AbstractValidator<TestModel> {
-			public TestModelValidator() {
-				RuleFor(x => x.Name).NotNull().WithMessage("Validation Failed");
-			}
-		}
-
-		[Validator(typeof(TestModelValidator3))]
-		public class TestModel3 {
-			public int Id { get; set; }
-		}
-
-		public class TestModelValidator3:AbstractValidator<TestModel3> {
-			public TestModelValidator3() {
-				RuleFor(x => x.Id).NotEmpty().WithMessage("Validation failed");
-			}
-		}
 	}
-
-	/*public class TestableModelBinder : DefaultModelBinder {
-		protected override void OnPropertyValidated(ControllerContext controllerContext, ModelBindingContext bindingContext, System.ComponentModel.PropertyDescriptor propertyDescriptor, object value) {
-			//base.OnPropertyValidated(controllerContext, bindingContext, propertyDescriptor, value);
-			ModelMetadata propertyMetadata = bindingContext.PropertyMetadata[propertyDescriptor.Name];
-			propertyMetadata.Model = value;
-			string modelStateKey = CreateSubPropertyName(bindingContext.ModelName, propertyMetadata.PropertyName);
-
-			// run validation
-			foreach (ModelValidator validator in propertyMetadata.GetValidators(controllerContext)) {
-				foreach (ModelValidationResult validationResult in validator.Validate(bindingContext.Model)) {
-					bindingContext.ModelState.AddModelError(CreateSubPropertyName(modelStateKey, validationResult.MemberName), validationResult.Message);
-				}
-			}
-
-			// only add a "value was required" error message if there were no validation errors
-			if (bindingContext.ModelState.IsValidField(modelStateKey)) {
-
-//				if (value == null && !TypeHelpers.TypeAllowsNullValue(propertyDescriptor.PropertyType)) {
-					//bindingContext.ModelState.AddModelError(modelStateKey, GetValueRequiredResource(controllerContext));
-//				}
-			}
-		}
-	}*/
 }

@@ -8,7 +8,7 @@ namespace FluentValidation.Mvc {
 	/// <summary>
 	/// ModelValidator implementation that uses FluentValidation.
 	/// </summary>
-	public class FluentValidationModelValidator : ModelValidator {
+	internal class FluentValidationModelValidator : ModelValidator {
 		readonly IValidator validator;
 
 		public FluentValidationModelValidator(ModelMetadata metadata, ControllerContext controllerContext, IValidator validator)
