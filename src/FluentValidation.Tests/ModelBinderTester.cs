@@ -26,12 +26,6 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class FluentValidationModelBinderTester : BaseModelBinderTest {
-		IModelBinder binder;
-
-		[SetUp]
-		public void Setup() {
-			binder = new FluentValidationModelBinder(new AttributedValidatorFactory());
-		}
 
 		protected override IModelBinder CreateBinder() {
 			return new FluentValidationModelBinder(new AttributedValidatorFactory());
