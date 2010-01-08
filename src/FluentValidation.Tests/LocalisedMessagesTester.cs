@@ -48,5 +48,22 @@ namespace FluentValidation.Tests {
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
 			}
 		}
+
+		[Test]
+		public void Uses_custom_resouces() {
+			ValidatorOptions.ResourceProviderType = typeof(MyResources);
+
+			var validator = new NotEmptyValidator(null);
+			var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
+			result.Error.ShouldEqual("foo");
+
+			ValidatorOptions.ResourceProviderType = null;
+		}
+
+		private class MyResources {
+			public static string notempty_error {
+				get { return "foo"; }
+			}
+		}
 	}
 }

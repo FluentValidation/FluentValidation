@@ -20,10 +20,25 @@ namespace FluentValidation.Internal {
 	using System;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using Resources;
 
 	internal class ResourceHelper {
+		private static readonly Type defaultResourceType = typeof(Messages);
+
 		public static Func<string> BuildResourceAccessor(string resourceName, Type resourceType) {
-			var property = resourceType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
+			PropertyInfo property = null;
+
+			if (resourceType == defaultResourceType && ValidatorOptions.ResourceProviderType != null) {
+				property = ValidatorOptions.ResourceProviderType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
+				
+				if(property != null) {
+					resourceType = ValidatorOptions.ResourceProviderType;	
+				}
+			}
+
+			if(property == null) {
+				property = resourceType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
+			}
 
 			if (property == null) {
 				throw new InvalidOperationException(string.Format("Could not find a property named '{0}' on type '{1}'.", resourceName, resourceType));
@@ -48,5 +63,6 @@ namespace FluentValidation.Internal {
 
 			return BuildResourceAccessor(resourceName, resourceType);
 		}
+
 	}
 }

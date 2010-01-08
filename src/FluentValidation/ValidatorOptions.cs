@@ -17,7 +17,10 @@
 #endregion
 
 namespace FluentValidation {
+	using System;
+
 	public static class ValidatorOptions {
 		public static CascadeMode CascadeMode = CascadeMode.Continue;
+		public static Type ResourceProviderType;
 	}
 }
