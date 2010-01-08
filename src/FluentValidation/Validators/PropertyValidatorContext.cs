@@ -39,6 +39,8 @@ namespace FluentValidation.Validators {
 			get { return messageFormatter; }
 		}
 
+		internal PropertySelector PropertyValueFunc { get { return propertyValueFunc; } }
+
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
 		public object PropertyValue {

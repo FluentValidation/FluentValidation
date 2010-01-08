@@ -54,6 +54,7 @@
     <Compile Include="AbstractValidator.cs" />
     <Compile Include="Attributes\AttributedValidatorFactory.cs" />
     <Compile Include="Attributes\ValidatorAttribute.cs" />
+    <Compile Include="BackwardsCompatibility.cs" />
     <Compile Include="DefaultRuleBuilderExtensions.cs" />
     <Compile Include="DefaultValidatorExtensions.cs" />
     <Compile Include="DefaultValidatorOptions.cs" />
