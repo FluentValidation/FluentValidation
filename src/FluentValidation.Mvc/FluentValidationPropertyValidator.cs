@@ -11,7 +11,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
-			var context = new PropertyValidatorContext(Metadata.PropertyName, container, Metadata.Model);
+			var context = new PropertyValidatorContext(Metadata.PropertyName, container, Metadata.Model, Metadata.PropertyName);
 			var result = validator.Validate(context);
 
 			if(! result.IsValid) {

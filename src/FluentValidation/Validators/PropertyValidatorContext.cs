@@ -20,6 +20,7 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Reflection;
 	using Attributes;
 	using Internal;
 
@@ -29,8 +30,10 @@ namespace FluentValidation.Validators {
 		private bool propertyValueSet;
 		private object propertyValue;
 
+		public MemberInfo Member { get; private set; }
 		public string PropertyDescription { get; protected set; }
 		public object Instance { get; private set; }
+		public string PropertyName { get; private set; }
 
 		public MessageFormatter MessageFormatter {
 			get { return messageFormatter; }
@@ -53,14 +56,19 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public PropertyValidatorContext(string propertyDescription, object instance, object propertyValue) {
+		public PropertyValidatorContext(string propertyDescription, object instance, object propertyValue, string propertyName) {
 			PropertyDescription = propertyDescription;
 			Instance = instance;
 			messageFormatter = new MessageFormatter();
 			PropertyValue = propertyValue;
 		}
 
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc) {
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc)
+		: this(propertyDescription, instance, propertyValueFunc, null){
+
+		}
+
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string propertyName) {
 			propertyValueFunc.Guard("propertyValueFunc cannot be null");
 			PropertyDescription = propertyDescription;
 			Instance = instance;
