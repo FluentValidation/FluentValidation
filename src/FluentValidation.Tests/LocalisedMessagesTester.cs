@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System.Diagnostics;
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using Internal;
 	using NUnit.Framework;
@@ -58,6 +59,14 @@ namespace FluentValidation.Tests {
 			result.Error.ShouldEqual("foo");
 
 			ValidatorOptions.ResourceProviderType = null;
+		}
+
+		[Test]
+		public void Sets_localised_message_via_expression() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Surname).NotEmpty().WithLocalizedMessage(() => MyResources.notempty_error);
+			var result = validator.Validate(new Person());
+			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 		}
 
 		private class MyResources {

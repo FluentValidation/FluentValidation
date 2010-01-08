@@ -25,7 +25,7 @@ namespace FluentValidation.Internal {
 	internal class ResourceHelper {
 		private static readonly Type defaultResourceType = typeof(Messages);
 
-		public static Func<string> BuildResourceAccessor(string resourceName, Type resourceType) {
+		public static ResourceMetaData BuildResourceAccessor(string resourceName, Type resourceType) {
 			PropertyInfo property = null;
 
 			if (resourceType == defaultResourceType && ValidatorOptions.ResourceProviderType != null) {
@@ -48,14 +48,16 @@ namespace FluentValidation.Internal {
 				throw new InvalidOperationException(string.Format("Property '{0}' on type '{1}' does not return a string", resourceName, resourceType));
 			}
 
-			return () => (string)property.GetValue(null, null);
+			Func<string> accessor = () => (string)property.GetValue(null, null);
+
+			return new ResourceMetaData(resourceName, resourceType, accessor);
 		}
 
-		public static Func<string> BuildResourceAccessor(Expression<Func<string>> expression) {
+		public static ResourceMetaData BuildResourceAccessor(Expression<Func<string>> expression) {
 			var member = expression.GetMember();
 
 			if(member == null) {
-				throw new InvalidOperationException("Only MemberExpressions an be passed to BuildResourceAccessor.");
+				throw new InvalidOperationException("Only MemberExpressions an be passed to BuildResourceAccessor, eg () => Messages.MyResource");
 			}
 
 			var resourceType = member.DeclaringType;
@@ -64,5 +66,17 @@ namespace FluentValidation.Internal {
 			return BuildResourceAccessor(resourceName, resourceType);
 		}
 
+	}
+
+	internal class ResourceMetaData {
+		public ResourceMetaData(string resourceName, Type resourceType, Func<string> accessor) {
+			ResourceName = resourceName;
+			ResourceType = resourceType;
+			Accessor = accessor;
+		}
+
+		public string ResourceName { get; private set; }
+		public Type ResourceType { get; private set; }
+		public Func<string> Accessor { get; private set; }
 	}
 }

@@ -19,12 +19,20 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq.Expressions;
+	using Internal;
 	using Results;
 
 	public interface IPropertyValidator {
 		PropertyValidatorResult Validate(PropertyValidatorContext context);
-		string ErrorMessageTemplate { get; set; }
+		string ErrorMessageTemplate { get; }
 		ICollection<Func<object, object>> CustomMessageFormatArguments { get; }
 		bool SupportsStandaloneValidation { get; }
+		Type ErrorMessageResourceType { get; }
+		string ErrorMessageResourceName { get; }
+
+		void SetErrorMessage(string message);
+		void SetErrorMessage(Type errorMessageResourceType, string resourceName);
+		void SetErrorMessage(Expression<Func<string>> resourceSelector);
 	}
 }

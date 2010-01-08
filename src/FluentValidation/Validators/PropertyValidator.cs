@@ -27,13 +27,32 @@ namespace FluentValidation.Validators {
 
 	public abstract class PropertyValidator : IPropertyValidator {
 		private readonly List<Func<object, object>> customFormatArgs = new List<Func<object, object>>();
-		private Func<string> resourceAccessor;
-		
+		private ResourceMetaData resourceMeta;
+
 		public bool SupportsStandaloneValidation { get; set; }
 
+		public Type ErrorMessageResourceType {
+			get { return resourceMeta.ResourceType; }
+		}
+
+		public string ErrorMessageResourceName {
+			get { return resourceMeta.ResourceName; }
+		}
+
 		public string ErrorMessageTemplate {
-			get { return resourceAccessor(); }
-			set { resourceAccessor = () => value; }
+			get { return resourceMeta.Accessor(); }
+		}
+
+		public void SetErrorMessage(string errorMessage) {
+			resourceMeta = new ResourceMetaData(null, null, () => errorMessage);
+		}
+
+		public void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
+			resourceMeta = ResourceHelper.BuildResourceAccessor(resourceName, errorMessageResourceType);
+		}
+
+		public void SetErrorMessage(Expression<Func<string>> resourceSelector) {
+			resourceMeta = ResourceHelper.BuildResourceAccessor(resourceSelector);
 		}
 
 		public ICollection<Func<object, object>> CustomMessageFormatArguments {
@@ -41,15 +60,15 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			resourceAccessor = ResourceHelper.BuildResourceAccessor(errorMessageResourceName, errorMessageResourceType);
+			resourceMeta = ResourceHelper.BuildResourceAccessor(errorMessageResourceName, errorMessageResourceType);
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			resourceAccessor = () => errorMessage;
+			resourceMeta = new ResourceMetaData(null, null, () => errorMessage);
 		}
 
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
-			resourceAccessor = ResourceHelper.BuildResourceAccessor(errorMessageResourceSelector);
+			resourceMeta = ResourceHelper.BuildResourceAccessor(errorMessageResourceSelector);
 		}
 
 		public virtual PropertyValidatorResult Validate(PropertyValidatorContext context) {

@@ -19,6 +19,7 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq.Expressions;
 	using Results;
 
 	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
@@ -39,7 +40,6 @@ namespace FluentValidation.Validators {
 
 		public string ErrorMessageTemplate {
 			get { return InnerValidator.ErrorMessageTemplate; }
-			set { InnerValidator.ErrorMessageTemplate=value; }
 		}
 
 		public ICollection<Func<object, object>> CustomMessageFormatArguments {
@@ -48,6 +48,26 @@ namespace FluentValidation.Validators {
 
 		public bool SupportsStandaloneValidation {
 			get { return false; }
+		}
+
+		public Type ErrorMessageResourceType {
+			get { return InnerValidator.ErrorMessageResourceType; }
+		}
+
+		public string ErrorMessageResourceName {
+			get { return InnerValidator.ErrorMessageResourceName; }
+		}
+
+		public void SetErrorMessage(string message) {
+			InnerValidator.SetErrorMessage(message);
+		}
+
+		public void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
+			InnerValidator.SetErrorMessage(errorMessageResourceType, resourceName);
+		}
+
+		public void SetErrorMessage(Expression<Func<string>> resourceSelector) {
+			InnerValidator.SetErrorMessage(resourceSelector);
 		}
 
 		IPropertyValidator IDelegatingValidator.InnerValidator {
