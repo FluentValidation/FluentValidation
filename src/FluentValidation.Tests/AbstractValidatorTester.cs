@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Threading;
 	using NUnit.Framework;
+	using Results;
 
 	[TestFixture]
 	public class AbstractValidatorTester {
@@ -94,7 +95,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Should_throw_when_custom_rule_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.Custom(null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.Custom((Func<Person, ValidationFailure>)null));
 		}
 
 		[Test]

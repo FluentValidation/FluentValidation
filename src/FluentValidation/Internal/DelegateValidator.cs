@@ -22,14 +22,18 @@ namespace FluentValidation.Internal {
 	using Results;
 
 	public class DelegateValidator<T> : IValidationRule<T> {
-		private readonly Func<T, IEnumerable<ValidationFailure>> func;
+		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
 
-		public DelegateValidator(Func<T, IEnumerable<ValidationFailure>> func) {
+		public DelegateValidator(Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func) {
 			this.func = func;
 		}
 
+		public DelegateValidator(Func<T, IEnumerable<ValidationFailure>> func) {
+			this.func = (x, ctx) => func(x);
+		}
+
 		public IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
-			return func(context.InstanceToValidate);
+			return func(context.InstanceToValidate, context);
 		}
 	}
 }

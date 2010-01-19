@@ -86,5 +86,11 @@ namespace FluentValidation.Internal {
 		public bool IsChildChainOf(PropertyChain parentChain) {
 			return ToString().StartsWith(parentChain.ToString());
 		}
+
+		public string BuildPropertyName(string propertyName) {
+			var chain = new PropertyChain(this);
+			chain.Add(propertyName);
+			return chain.ToString();
+		}
 	}
 }

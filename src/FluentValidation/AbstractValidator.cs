@@ -102,6 +102,17 @@ namespace FluentValidation {
 			AddRule(new DelegateValidator<T>(x => new[] { customValidator(x) }));
 		}
 
+		/// <summary>
+		/// Defines a custom validation rule using a lambda expression.
+		/// If the validation rule fails, it should return an instance of <see cref="ValidationFailure">ValidationFailure</see>
+		/// If the validation rule succeeds, it should return null.
+		/// </summary>
+		/// <param name="customValidator">A lambda that executes custom validation rules</param>
+		public void Custom(Func<T, ValidationContext<T>, ValidationFailure> customValidator) {
+			customValidator.Guard("Cannot pass null to Custom");
+			AddRule(new DelegateValidator<T>((x, ctx) => new[] { customValidator(x, ctx) }));
+		}
+
 		public IEnumerator<IValidationRule<T>> GetEnumerator() {
 			return nestedValidators.SelectMany(x => x).ToList().GetEnumerator();
 		}

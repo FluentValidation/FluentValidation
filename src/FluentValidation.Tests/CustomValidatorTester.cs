@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System.Linq;
 	using NUnit.Framework;
 	using Results;
 
@@ -46,5 +47,24 @@ namespace FluentValidation.Tests {
 
 			result.IsValid.ShouldBeTrue();
 		}
+
+		[Test]
+		public void Perserves_property_chain_using_custom() {
+			validator.RuleFor(x => x.Orders).SetValidator(new NestedOrderValidator());
+			var person = new Person();
+			person.Orders.Add(new Order());
+			var result = validator.Validate(person);
+
+			result.Errors.Single().PropertyName.ShouldEqual("Orders[0].Amount");
+		}
+
+		private class NestedOrderValidator : AbstractValidator<Order> {
+			public NestedOrderValidator() {
+				Custom((x, ctx) => {
+					return new ValidationFailure(ctx.PropertyChain.BuildPropertyName("Amount"), "bar");
+				});
+			}
+		}
+
 	}
 }

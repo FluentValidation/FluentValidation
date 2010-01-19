@@ -1,6 +1,7 @@
 1.2 - 
+* Upgraded MVC integration to ASP.NET MVC 2
 * Model Binder now works with empty prefixes
-* Added Adam Schroder xVal integration in the new FluentValidation.xValIntegration project. 
+* Added Adam Schroder xVal integration in the new FluentValidation.xValIntegration project (experimental)
 * Allow the validator cascade mode to be set globally. The existing behaviour is the default (Continue). It can now also be set to StopOnFirstFailure:
     ValidationOptions.CascadeMode = ValidatorCascadeMode.StopOnFirstFailure
 * Allow the validator cascade mode to be set at the rule level (overrides the global option):
@@ -18,8 +19,7 @@
 * **Breaking Change** Removed the DefaultResourceManager
 * Simplified PropertyValidatorContext
 * Adding ValidatorFactoryBase to make creation of Validator Factories easier.
-* Added FluentValidationModelValidator / FluentValidationModelValidatorProvider
-* Removed the FluentValidationModelBinder in favour of using ASP.NET MVC's DefaultModelBinder with the FluentValidationModelValidatorProvider.
+* Additional overload of Custom that can access the current ValidationContext.
 
 1.1 - Jul 17 2009
 * Spanish resource translations.
