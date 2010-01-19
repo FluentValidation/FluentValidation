@@ -93,8 +93,6 @@
     <Compile Include="CustomFailureActionTester.cs" />
     <Compile Include="ExactLengthValidatorTester.cs" />
     <Compile Include="ExclusiveBetweenValidatorTests.cs" />
-    <Compile Include="FluentValidationModelMetadataProviderTester.cs" />
-    <Compile Include="FluentValidationModelValidatorProviderTests.cs" />
     <Compile Include="InclusiveBetweenValidatorTests.cs" />
     <Compile Include="MessageFormatterTests.cs" />
     <Compile Include="ModelBinderTester.cs" />
