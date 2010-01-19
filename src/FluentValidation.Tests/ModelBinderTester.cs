@@ -32,7 +32,7 @@ namespace FluentValidation.Tests {
 		}
 	}
 
-	/*[TestFixture]
+	[TestFixture]
 	public class ModelBinderTester : BaseModelBinderTest {
 		FluentValidationModelValidatorProvider provider;
 
@@ -62,7 +62,7 @@ var 			binder = new DefaultModelBinder();
 		public void Maintains_custom_property_name() {
 			Assert.Fail();
 		}
-	}*/
+	}
 
 	public abstract class BaseModelBinderTest {
 		protected IModelBinder binder;
