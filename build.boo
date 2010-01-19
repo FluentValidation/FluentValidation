@@ -46,14 +46,7 @@ target deploy:
     .Include("FluentValidation.Mvc.*")
     .ForEach def(file):
       file.CopyToDirectory("${build_dir}/${project_configuration}/MVC")
-      
-  #CSL integration
-  with FileList("src/FluentValidation.CommonServiceLocator/bin/${project_configuration}"):
-    .Include("FluentValidation.CommonServiceLocator.*")
-    .Include("Microsoft.Practices.ServiceLocation.dll")
-    .ForEach def(file):
-      file.CopyToDirectory("${build_dir}/${project_configuration}/CommonServiceLocator")
-  
+
   #xVal
   with FileList("src/FluentValidation.xValIntegration/bin/${project_configuration}"):
     .Include("FluentValidation.xValIntegration.*")
@@ -80,7 +73,7 @@ target package, (deploy):
   
 target coverage:
   ncover_path = "c:/program files (x86)/ncover"
-  app_assemblies = ("FluentValidation", "FluentValidation.Mvc", "FluentValidation.xValIntegration", "FluentValidation.CommonServiceLocator")
+  app_assemblies = ("FluentValidation", "FluentValidation.Mvc", "FluentValidation.xValIntegration")
   teamcity_launcher = env("teamcity.dotnet.nunitlauncher")
 
   with ncover():

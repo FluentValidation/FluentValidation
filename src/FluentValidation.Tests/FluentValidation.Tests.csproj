@@ -33,10 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\csl\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
     <Reference Include="Moq, Version=2.6.1014.1, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\moq\Moq.dll</HintPath>
@@ -71,10 +67,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.CommonServiceLocator\FluentValidation.CommonServiceLocator.csproj">
-      <Project>{11771E5C-4E71-4DEF-8204-9C08735DA238}</Project>
-      <Name>FluentValidation.CommonServiceLocator</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FluentValidation.Mvc\FluentValidation.Mvc.csproj">
       <Project>{F781D265-EB91-4876-BF8E-E7E482E7F0BE}</Project>
       <Name>FluentValidation.Mvc</Name>
@@ -140,7 +132,6 @@
     <Compile Include="ValidationResultExtensionTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="ValidatorDescriptorTester.cs" />
-    <Compile Include="ValidatorFactoryTester.cs" />
     <Compile Include="ValidatorSelectorTests.cs" />
     <Compile Include="ValidatorTesterTester.cs" />
     <Compile Include="xValRuleProviderTester.cs" />
