@@ -23,6 +23,7 @@
 * **Breaking Change** Deprecated and removed the CommonServiceLocator implementation.
 * Removed unnecessary IValidatorOptions interface.
 * Added InlineValidator.
+* Added ValidateAndThrow extension
 
 1.1 - Jul 17 2009
 * Spanish resource translations.

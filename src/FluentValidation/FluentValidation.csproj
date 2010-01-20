@@ -94,6 +94,7 @@
     <Compile Include="TestHelper\ValidationTestException.cs" />
     <Compile Include="TestHelper\ValidatorTester.cs" />
     <Compile Include="TestHelper\ValidatorTestExtensions.cs" />
+    <Compile Include="ValidationException.cs" />
     <Compile Include="ValidatorFactoryBase.cs" />
     <Compile Include="ValidatorOptions.cs" />
     <Compile Include="CascadeMode.cs" />

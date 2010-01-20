@@ -417,6 +417,14 @@ namespace FluentValidation {
 			return validator.Validate(instance, new MemberNameValidatorSelector(properties));
 		}
 
+		public static void ValidateAndThrow<T>(this IValidator<T> validator, T instance) {
+			var result = validator.Validate(instance);
+
+			if(! result.IsValid) {
+				throw new ValidationException(result.Errors);	
+			}
+		}
+
 		/// <summary>
 		/// Defines an 'inclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
 		/// Validation will fail if the value of the property is outside of the specifed range. The range is inclusive.

@@ -128,6 +128,7 @@
     <Compile Include="TestValidator.cs" />
     <Compile Include="CustomMessageFormatTester.cs" />
     <Compile Include="UserStateTester.cs" />
+    <Compile Include="ValidateAndThrowTester.cs" />
     <Compile Include="ValidationResultExtensionTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="ValidatorDescriptorTester.cs" />
