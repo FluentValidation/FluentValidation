@@ -21,6 +21,8 @@
 * Adding ValidatorFactoryBase to make creation of Validator Factories easier.
 * Additional overload of Custom that can access the current ValidationContext.
 * **Breaking Change** Deprecated and removed the CommonServiceLocator implementation.
+* Removed unnecessary IValidatorOptions interface.
+* Added InlineValidator.
 
 1.1 - Jul 17 2009
 * Spanish resource translations.

@@ -94,6 +94,7 @@
     <Compile Include="ExactLengthValidatorTester.cs" />
     <Compile Include="ExclusiveBetweenValidatorTests.cs" />
     <Compile Include="InclusiveBetweenValidatorTests.cs" />
+    <Compile Include="InlineValidatorTester.cs" />
     <Compile Include="MessageFormatterTests.cs" />
     <Compile Include="ModelBinderTester.cs" />
     <Compile Include="CustomValidatorTester.cs" />
