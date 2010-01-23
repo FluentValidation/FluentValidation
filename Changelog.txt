@@ -1,4 +1,4 @@
-1.2 - 
+1.2 beta 1 - Jan 23 2010
 * Upgraded MVC integration to ASP.NET MVC 2
 * Model Binder now works with empty prefixes
 * Added Adam Schroder xVal integration in the new FluentValidation.xValIntegration project (experimental)
