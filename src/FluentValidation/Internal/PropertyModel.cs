@@ -17,21 +17,15 @@ namespace FluentValidation.Internal {
 			PropertyFunc = propertyFunc;
 			Expression = expression;
 			OnFailure = x => { };
+
+			PropertyName = ValidatorOptions.PropertyNameResolver(typeof(T), member);
 		}
 
 		/// <summary>
 		/// Returns the property name for the property being validated.
 		/// Returns null if it is not a property being validated (eg a method call)
 		/// </summary>
-		public string PropertyName {
-			get {
-				return propertyName ?? (Member == null ? null : Member.Name);
-			}
-			set {
-				propertyName = value;
-			}
-		}
-
+		public string PropertyName { get; set; }
 
 		public string PropertyDescription {
 			get { return CustomPropertyName ?? PropertyName.SplitPascalCase(); }
