@@ -34,7 +34,7 @@ namespace FluentValidation {
 			this.Rules = ruleBuilders;
 		}
 
-		public string GetName(string property) {
+		public virtual string GetName(string property) {
 			var nameUsed = Rules
 				.OfType<IPropertyRule<T>>()
 				.Where(x => x.Member.Name == property)
@@ -43,7 +43,7 @@ namespace FluentValidation {
 			return nameUsed;
 		}
 
-		public ILookup<string, IPropertyValidator> GetMembersWithValidators() {
+		public virtual ILookup<string, IPropertyValidator> GetMembersWithValidators() {
 			return Rules.OfType<ISimplePropertyRule<T>>()
 					.ToLookup(x => x.Member.Name, x => x.Validator);
 		}
@@ -52,13 +52,7 @@ namespace FluentValidation {
 			return GetMembersWithValidators()[name];
 		}
 
-
-		public ILookup<string, IPropertyValidator> GetMemberNamesWithValidators() {
-			return Rules.OfType<ISimplePropertyRule<T>>()
-				.ToLookup(x => x.Member.Name, x => (IPropertyValidator)x.Validator);
-		}
-
-		public string GetName(Expression<Func<T, object>> propertyExpression) {
+		public virtual string GetName(Expression<Func<T, object>> propertyExpression) {
 			var member = propertyExpression.GetMember();
 
 			if (member == null) {
