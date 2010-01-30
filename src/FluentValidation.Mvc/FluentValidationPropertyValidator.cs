@@ -21,6 +21,9 @@ namespace FluentValidation.Mvc {
 			}
 		}
 
+		public override bool IsRequired {
+			get { return validator is INotNullValidator || validator is INotEmptyValidator; }
+		}
 
 	}
 }

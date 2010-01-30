@@ -21,6 +21,7 @@ namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Web.Mvc;
+	using Validators;
 
 
 	/// <summary>
@@ -28,6 +29,11 @@ namespace FluentValidation.Mvc {
 	/// </summary>
 	public class FluentValidationModelValidatorProvider : ModelValidatorProvider {
 		readonly IValidatorFactory validatorFactory;
+		public static bool AddImplicitRequiredValidator { get; set; }
+
+		static FluentValidationModelValidatorProvider() {
+			AddImplicitRequiredValidator = true;
+		}
 
 		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {
 			this.validatorFactory = validatorFactory;
@@ -42,6 +48,8 @@ namespace FluentValidation.Mvc {
 		}
 
 		IEnumerable<ModelValidator> GetValidatorsForProperty(ModelMetadata metadata, ControllerContext context, IValidator validator) {
+			var modelValidators = new List<ModelValidator>();
+
 			if (validator != null) {
 				var descriptor = validator.CreateDescriptor();
 
@@ -49,9 +57,28 @@ namespace FluentValidation.Mvc {
 					.Where(x => x.SupportsStandaloneValidation);
 
 				foreach(var propertyValidator in validators) {
-					yield return new FluentValidationPropertyValidator(metadata, context, propertyValidator);
+					modelValidators.Add(new FluentValidationPropertyValidator(metadata, context, propertyValidator));
 				}
 			}
+
+			if(metadata.IsRequired && AddImplicitRequiredValidator) {
+				bool hasRequiredValidators = modelValidators.Any(x => x.IsRequired);
+
+				//Is the model is 'Required' then we assume it must have a NotNullValidator. 
+				//This is consistent with the behaviour of the DataAnnotationsModelValidatorProvider
+				//which silently adds a RequiredAttribute
+
+				if(! hasRequiredValidators) {
+					modelValidators.Add(CreateNotNullValidatorForProperty(metadata, context));
+				}
+			}
+
+			return modelValidators;
+		}
+
+		ModelValidator CreateNotNullValidatorForProperty(ModelMetadata metadata, ControllerContext cc) {
+			var validator = new NotNullValidator();
+			return new FluentValidationPropertyValidator(metadata, cc, validator);
 		}
 
 		IEnumerable<ModelValidator> GetValidatorsForModel(ModelMetadata metadata, ControllerContext context, IValidator validator) {
