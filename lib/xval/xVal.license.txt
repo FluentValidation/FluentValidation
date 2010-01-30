@@ -1,4 +1,4 @@
-xVal 0.8 (beta)
+xVal 1.0
 (c) 2009 Steven Sanderson - http://blog.codeville.net/
 
 ----

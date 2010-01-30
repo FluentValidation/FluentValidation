@@ -89,7 +89,7 @@ namespace FluentValidation.Internal {
 			return GetEnumerator();
 		}
 
-		public IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
+		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
 			var cascade = cascadeMode();
 			bool hasAnyFailure = false;
 

@@ -43,7 +43,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xVal, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="xVal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f8fbed92c68c4006, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\xval\xVal.dll</HintPath>
     </Reference>

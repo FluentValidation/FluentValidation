@@ -96,6 +96,7 @@
     <Compile Include="FluentValidationModelMetadataProviderTester.cs" />
     <Compile Include="FluentValidationModelValidatorProviderTests.cs" />
     <Compile Include="InclusiveBetweenValidatorTests.cs" />
+    <Compile Include="InlineValidatorTester.cs" />
     <Compile Include="MessageFormatterTests.cs" />
     <Compile Include="ModelBinderTester.cs" />
     <Compile Include="CustomValidatorTester.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="LessThanOrEqualToValidatorTester.cs" />
     <Compile Include="LessThanValidatorTester.cs" />
     <Compile Include="LocalisedMessagesTester.cs" />
+    <Compile Include="NameResolutionPluggabilityTester.cs" />
     <Compile Include="NotEmptyTester.cs" />
     <Compile Include="NotEqualValidatorTests.cs" />
     <Compile Include="NotNullTester.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="TestValidator.cs" />
     <Compile Include="CustomMessageFormatTester.cs" />
     <Compile Include="UserStateTester.cs" />
+    <Compile Include="ValidateAndThrowTester.cs" />
     <Compile Include="ValidationResultExtensionTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="ValidatorDescriptorTester.cs" />

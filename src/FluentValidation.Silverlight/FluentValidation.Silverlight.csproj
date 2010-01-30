@@ -111,6 +111,12 @@
     <Compile Include="..\FluentValidation\DefaultValidatorExtensions.cs">
       <Link>DefaultValidatorExtensions.cs</Link>
     </Compile>
+     <Compile Include="..\FluentValidation\ValidationException.cs">
+      <Link>ValidationException.cs</Link>
+    </Compile>
+     <Compile Include="..\FluentValidation\InlineValidator.cs">
+      <Link>InlineValidator.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Internal\ComplexPropertyRule.cs">
       <Link>ComplexPropertyRule.cs</Link>
     </Compile>

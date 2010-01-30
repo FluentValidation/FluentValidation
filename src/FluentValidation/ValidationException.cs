@@ -16,7 +16,16 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	public class TestValidator : InlineValidator<Person> {
+namespace FluentValidation {
+	using System;
+	using System.Collections.Generic;
+	using Results;
+
+	public class ValidationException : Exception {
+		public IEnumerable<ValidationFailure> Errors { get; private set; }
+
+		public ValidationException(IEnumerable<ValidationFailure> errors) : base("Validation failed. See the Errors collection for details.") {
+			Errors = errors;
+		}
 	}
 }

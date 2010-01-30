@@ -1,4 +1,7 @@
-1.2 - 
+1.2 beta 2 -
+* Issue #4903 - Allow Name Resolution to be pluggable
+
+1.2 beta 1 - Jan 23 2010
 * Upgraded MVC integration to ASP.NET MVC 2
 * Model Binder now works with empty prefixes
 * Added Adam Schroder xVal integration in the new FluentValidation.xValIntegration project (experimental)
@@ -21,6 +24,9 @@
 * Adding ValidatorFactoryBase to make creation of Validator Factories easier.
 * Additional overload of Custom that can access the current ValidationContext.
 * **Breaking Change** Deprecated and removed the CommonServiceLocator implementation.
+* Removed unnecessary IValidatorOptions interface.
+* Added InlineValidator.
+* Added ValidateAndThrow extension
 
 1.1 - Jul 17 2009
 * Spanish resource translations.
