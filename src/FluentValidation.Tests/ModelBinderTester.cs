@@ -175,7 +175,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_add_default_message_to_modelstate_when_both_fv_and_DataAnnotations_have_implicit_required_validation_disabled() {
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
-			FluentValidationModelValidatorProvider.AddImplicitRequiredValidator = false;
+			provider.AddImplicitRequiredValidator = false;
 
 			var form = new FormCollection {
 				{ "Id", "" }
@@ -194,7 +194,7 @@ namespace FluentValidation.Tests {
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("A value is required.");
 
 
-			FluentValidationModelValidatorProvider.AddImplicitRequiredValidator = true;
+			provider.AddImplicitRequiredValidator = true;
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = true;
 		}
 	}
