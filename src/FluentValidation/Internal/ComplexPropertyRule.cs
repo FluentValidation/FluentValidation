@@ -81,9 +81,7 @@ namespace FluentValidation.Internal {
 		}
 
 		private string BuildPropertyName(ValidationContext<T> context) {
-			var chain = new PropertyChain(context.PropertyChain);
-			chain.Add(model.PropertyName);
-			return chain.ToString();
+			return context.PropertyChain.BuildPropertyName(model.PropertyName);
 		}
 	}
 }
