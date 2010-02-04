@@ -71,10 +71,6 @@ namespace FluentValidation {
 			return new ValidatorDescriptor<T>(nestedValidators.SelectMany(x => x).ToList());
 		}
 
-		IValidatorDescriptor IValidator.CreateDescriptor() {
-			return CreateDescriptor();
-		}
-
 		/// <summary>
 		/// Defines a validation rule for a specify property.
 		/// </summary>
