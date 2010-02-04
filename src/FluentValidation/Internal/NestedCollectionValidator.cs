@@ -23,11 +23,11 @@ namespace FluentValidation.Internal {
 	using System.Linq;
 	using Results;
 
-	public class NestedCollectionValidator<TCollection, TElement> : IEnumerable<IValidationRule<TCollection>>, IValidationRule<TCollection> where TCollection : IEnumerable<TElement> {
-		readonly Func<IEnumerable<IValidationRule<TElement>>> collectionElementValidatorFunc;
+	public class NestedCollectionValidator<TCollection, TElement> : IValidator<TCollection>, IValidationRule<TCollection> where TCollection : IEnumerable<TElement> {
+		readonly IValidator<TElement> innerValidator;
 
-		public NestedCollectionValidator(Func<IEnumerable<IValidationRule<TElement>>> collectionElementValidatorFunc) {
-			this.collectionElementValidatorFunc = collectionElementValidatorFunc;
+		public NestedCollectionValidator(IValidator<TElement> innerValidator) {
+			this.innerValidator = innerValidator;
 		}
 
 		public IEnumerator<IValidationRule<TCollection>> GetEnumerator() {
@@ -54,14 +54,35 @@ namespace FluentValidation.Internal {
 				//The ValidatorSelector should not be propogated downwards. 
 				//If this collection property has been selected for validation, then all properties on those items should be validated.
 				var newContext = new ValidationContext<TElement>(element, propertyChain, new DefaultValidatorSelector());
-				var validator = collectionElementValidatorFunc();
 
-				var results = validator.SelectMany(x => x.Validate(newContext));
+				var results = innerValidator.SelectMany(x => x.Validate(newContext));
 
 				foreach (var result in results) {
 					yield return result;
 				}
 			}
 		}
+
+		#region unimplemented IValidator members
+		ValidationResult IValidator.Validate(object instance) {
+			throw new NotSupportedException();
+		}
+
+		ValidationResult IValidator.Validate(object instance, IValidatorSelector selector) {
+			throw new NotSupportedException();
+		}
+
+		IValidatorDescriptor IValidator.CreateDescriptor() {
+			throw new NotSupportedException();
+		}
+
+		ValidationResult IValidator<TCollection>.Validate(TCollection instance) {
+			throw new NotSupportedException();
+		}
+
+		ValidationResult IValidator<TCollection>.Validate(TCollection instance, IValidatorSelector selector) {
+			throw new NotSupportedException();
+		}
+		#endregion
 	}
 }

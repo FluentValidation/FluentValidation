@@ -70,7 +70,7 @@ namespace FluentValidation.Internal {
 		/// Sets the validator associated with the rule. Use with complex properties where an IValidator instance is already declared for the property type.
 		/// </summary>
 		/// <param name="validator">The validator to set</param>
-		public void SetValidator(IEnumerable<IValidationRule<TProperty>> validator) {
+		public void SetValidator(IValidator<TProperty> validator) {
 			validator.Guard("Cannot pass a null validator to SetValidator");
 			var rule = new ComplexPropertyRule<T, TProperty>(validator, model);
 			rules.Add(rule);

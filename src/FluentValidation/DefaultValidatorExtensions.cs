@@ -34,7 +34,7 @@ namespace FluentValidation {
 		/// Specifies that a particular validator should be used to validate a collection of nested classes. 
 		/// </summary>
 		public static void SetValidator<T, TCollectionProperty, TCollectionElement>(this IRuleBuilder<T, TCollectionProperty> ruleBuilder, IValidator<TCollectionElement> validator) where TCollectionProperty : IEnumerable<TCollectionElement> {
-			ruleBuilder.SetValidator(new NestedCollectionValidator<TCollectionProperty, TCollectionElement>(() => validator));
+			ruleBuilder.SetValidator(new NestedCollectionValidator<TCollectionProperty, TCollectionElement>(validator));
 		}
 
 		/// <summary>

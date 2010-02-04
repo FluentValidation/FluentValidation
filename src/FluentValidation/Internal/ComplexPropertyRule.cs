@@ -25,10 +25,10 @@ namespace FluentValidation.Internal {
 	using Validators;
 
 	public class ComplexPropertyRule<T, TProperty> : IPropertyRule<T> {
-		readonly IEnumerable<IValidationRule<TProperty>> validator;
+		readonly IValidator<TProperty> validator;
 		readonly PropertyModel<T, TProperty> model;
 
-		public ComplexPropertyRule(IEnumerable<IValidationRule<TProperty>> validator, PropertyModel<T, TProperty> model) {
+		public ComplexPropertyRule(IValidator<TProperty> validator, PropertyModel<T, TProperty> model) {
 			this.validator = validator;
 			this.model = model;
 		}
