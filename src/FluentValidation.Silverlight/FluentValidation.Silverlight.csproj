@@ -72,9 +72,6 @@
     <Compile Include="..\FluentValidation\Internal\MessageFormatter.cs">
       <Link>MessageFormatter.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\NestedCollectionValidator.cs">
-      <Link>NestedCollectionValidator.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Internal\IValidationRuleCollection.cs">
       <Link>IValidationRuleCollection.cs</Link>
     </Compile>
@@ -180,6 +177,9 @@
     <Compile Include="..\FluentValidation\Validators\AbstractComparisonValidator.cs">
       <Link>AbstractComparisonValidator.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Validators\ChildCollectionValidatorAdaptor.cs">
+      <Link>ChildCollectionValidatorAdaptor.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Validators\ChildValidatorAdaptor.cs">
       <Link>ChildValidatorAdaptor.cs</Link>
     </Compile>
@@ -194,6 +194,9 @@
     </Compile>
     <Compile Include="..\FluentValidation\Validators\InclusiveBetweenValidator.cs">
       <Link>InclusiveBetweenValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\NoopPropertyValidator.cs">
+      <Link>NoopPropertyValidator.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Validators\PropertyValidator.cs">
       <Link>PropertyValidator.cs</Link>
