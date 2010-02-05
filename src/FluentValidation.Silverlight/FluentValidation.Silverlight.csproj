@@ -168,9 +168,6 @@
     <Compile Include="..\FluentValidation\IValidatorFactory.cs">
       <Link>IValidatorFactory.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Results\PropertyValidatorResult.cs">
-      <Link>PropertyValidatorResult.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Results\ValidationFailure.cs">
       <Link>ValidationFailure.cs</Link>
     </Compile>
