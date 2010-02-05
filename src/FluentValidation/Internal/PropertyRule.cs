@@ -78,20 +78,21 @@ namespace FluentValidation.Internal {
 			string propertyName = BuildPropertyName(context);
 
 			if (context.Selector.CanExecute(this, propertyName)) {
-				var validationContext = new PropertyValidatorContext(model.PropertyDescription, context.InstanceToValidate, x => model.PropertyFunc((T)x), model.PropertyName);
-				var propertyValidatorResult = Validator.Validate(validationContext);
+				var validationContext = new PropertyValidatorContext(model.PropertyDescription, context.InstanceToValidate, x => model.PropertyFunc((T)x), propertyName);
+				var propertyValidatorResults = Validator.Validate(validationContext);
 
-				if (propertyValidatorResult != null && !propertyValidatorResult.IsValid) {
-					string error = propertyValidatorResult.Error;
-					var failure = new ValidationFailure(propertyName, error, validationContext.PropertyValue);
+				var results = new List<ValidationFailure>(propertyValidatorResults);
 
-					if(CustomStateProvider != null) {
+				if (CustomStateProvider != null) {
+					foreach (var failure in results) {
 						failure.CustomState = CustomStateProvider(context.InstanceToValidate);
 					}
-
-					yield return failure;
 				}
+
+				return results;
 			}
+
+			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		private string BuildPropertyName(ValidationContext<T> context) {

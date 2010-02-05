@@ -19,6 +19,7 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using Results;
 
@@ -31,11 +32,11 @@ namespace FluentValidation.Validators {
 			InnerValidator = innerValidator;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
+		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			if (condition(context.Instance)) {
 				return InnerValidator.Validate(context);
 			}
-			return PropertyValidatorResult.Success();
+			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		public string ErrorMessageTemplate {

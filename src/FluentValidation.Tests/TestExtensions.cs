@@ -18,7 +18,10 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	using NUnit.Framework;
+	using Results;
 
 	//Inspired by SpecUnit's SpecificationExtensions
 	//http://code.google.com/p/specunit-net/source/browse/trunk/src/SpecUnit/SpecificationExtensions.cs
@@ -54,6 +57,10 @@ namespace FluentValidation.Tests {
 		public static T ShouldBe<T>(this object actual) {
 			Assert.IsInstanceOf<T>(actual);
 			return (T)actual;
+		}
+
+		public static bool IsValid(this IEnumerable<ValidationFailure> errors) {
+			return errors.Count() == 0;
 		}
 	}
 }

@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
 	using Validators;
@@ -40,7 +41,7 @@ namespace FluentValidation.Tests {
 			int value = 5;
 			var validator = new ExclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -48,7 +49,7 @@ namespace FluentValidation.Tests {
 			int value = 0;
 			var validator = new ExclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -56,7 +57,7 @@ namespace FluentValidation.Tests {
 			int value = 11;
 			var validator = new ExclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -64,7 +65,7 @@ namespace FluentValidation.Tests {
 			int value = 10;
 			var validator = new ExclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -72,7 +73,7 @@ namespace FluentValidation.Tests {
 			int value = 1;
 			var validator = new ExclusiveBetweenValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -85,7 +86,7 @@ namespace FluentValidation.Tests {
 			var validator = new ExclusiveBetweenValidator(1, 10);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Value", null, x => 0));
-			result.Error.ShouldEqual("'Value' must be between 1 and 10 (exclusive). You entered 0.");
+			result.Single().ErrorMessage.ShouldEqual("'Value' must be between 1 and 10 (exclusive). You entered 0.");
 		}
 
 		[Test]
@@ -100,7 +101,7 @@ namespace FluentValidation.Tests {
 			string value = "bbb";
 			var validator = new ExclusiveBetweenValidator("aa", "zz");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -108,7 +109,7 @@ namespace FluentValidation.Tests {
 			string value = "aaa";
 			var validator = new ExclusiveBetweenValidator("bbb", "zz");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -116,7 +117,7 @@ namespace FluentValidation.Tests {
 			string value = "zzz";
 			var validator = new ExclusiveBetweenValidator("aaa", "bbb");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -124,7 +125,7 @@ namespace FluentValidation.Tests {
 			string value = "aa";
 			var validator = new ExclusiveBetweenValidator("aa", "zz");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -132,7 +133,7 @@ namespace FluentValidation.Tests {
 			string value = "zz";
 			var validator = new ExclusiveBetweenValidator("aa", "zz");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -145,7 +146,7 @@ namespace FluentValidation.Tests {
 			string value = "aaa";
 			var validator = new ExclusiveBetweenValidator("bbb", "zzz");
 			var result = validator.Validate(new PropertyValidatorContext("Value", null, x => value));
-			result.Error.ShouldEqual("'Value' must be between bbb and zzz (exclusive). You entered aaa.");
+			result.Single().ErrorMessage.ShouldEqual("'Value' must be between bbb and zzz (exclusive). You entered aaa.");
 		}
 
 		[Test]
@@ -160,7 +161,7 @@ namespace FluentValidation.Tests {
 			double value = 5.0;
 			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -168,7 +169,7 @@ namespace FluentValidation.Tests {
 			double value = 0.9;
 			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -176,7 +177,7 @@ namespace FluentValidation.Tests {
 			double value = 10.1;
 			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -184,7 +185,7 @@ namespace FluentValidation.Tests {
 			double value = 10.0;
 			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -192,7 +193,7 @@ namespace FluentValidation.Tests {
 			double value = 1.0;
 			var validator = new ExclusiveBetweenValidator(1.0, 10.0);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -205,7 +206,7 @@ namespace FluentValidation.Tests {
 			var validator = new ExclusiveBetweenValidator(1.2, 10.9);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Value", null, x => 0.0));
-			result.Error.ShouldEqual("'Value' must be between 1.2 and 10.9 (exclusive). You entered 0.");
+			result.Single().ErrorMessage.ShouldEqual("'Value' must be between 1.2 and 10.9 (exclusive). You entered 0.");
 		}
 
 		[Test]
@@ -220,7 +221,7 @@ namespace FluentValidation.Tests {
 			DateTime value = new DateTime(2009, 9, 9);
 			var validator = new ExclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -228,7 +229,7 @@ namespace FluentValidation.Tests {
 			DateTime value = new DateTime(2008, 1, 1);
 			var validator = new ExclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -236,7 +237,7 @@ namespace FluentValidation.Tests {
 			DateTime value = new DateTime(2010, 1, 1);
 			var validator = new ExclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -244,7 +245,7 @@ namespace FluentValidation.Tests {
 			DateTime value = new DateTime(2009, 12, 31);
 			var validator = new ExclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -252,7 +253,7 @@ namespace FluentValidation.Tests {
 			DateTime value = new DateTime(2009, 1, 1);
 			var validator = new ExclusiveBetweenValidator(fromDate, toDate);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => value));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -266,7 +267,7 @@ namespace FluentValidation.Tests {
 			var validator = new ExclusiveBetweenValidator(fromDate, toDate);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Value", null, x => value));
-			result.Error.ShouldEqual("'Value' must be between 1/1/2009 12:00:00 AM and 12/31/2009 12:00:00 AM (exclusive). You entered 1/1/2008 12:00:00 AM.");
+			result.Single().ErrorMessage.ShouldEqual("'Value' must be between 1/1/2009 12:00:00 AM and 12/31/2009 12:00:00 AM (exclusive). You entered 1/1/2008 12:00:00 AM.");
 		}
 
 		[Test]

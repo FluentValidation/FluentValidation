@@ -109,7 +109,6 @@
     <Compile Include="Validators\LessThanOrEqualValidator.cs" />
     <Compile Include="Validators\LessThanValidator.cs" />
     <Compile Include="Validators\PredicateValidator.cs" />
-    <Compile Include="Results\PropertyValidatorResult.cs" />
     <Compile Include="Results\ValidationFailure.cs" />
     <Compile Include="Results\ValidationResult.cs" />
     <Compile Include="Validators\IPropertyValidator.cs" />

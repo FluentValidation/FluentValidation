@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
 	using Validators;
@@ -35,7 +36,7 @@ namespace FluentValidation.Tests {
 			string text = "Test";
 			var validator = new LengthValidator(1, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -43,7 +44,7 @@ namespace FluentValidation.Tests {
 			string text = "Test";
 			var validator = new LengthValidator(5, 10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace FluentValidation.Tests {
 			string text = "Test";
 			var validator = new LengthValidator(1, 2);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -59,7 +60,7 @@ namespace FluentValidation.Tests {
 			string text = "Test";
 			var validator = new LengthValidator(1, 4);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -67,7 +68,7 @@ namespace FluentValidation.Tests {
 			string text = "Test";
 			var validator = new LengthValidator(4, 5);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -80,7 +81,7 @@ namespace FluentValidation.Tests {
 			var validator = new LengthValidator(1, 2);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Forename", null, x => "Gire and gimble in the wabe"));
-			result.Error.ShouldEqual("'Forename' must be between 1 and 2 characters. You entered 27 characters.");
+			result.Single().ErrorMessage.ShouldEqual("'Forename' must be between 1 and 2 characters. You entered 27 characters.");
 		}
 
 		[Test]

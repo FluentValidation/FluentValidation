@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
 	using Validators;
@@ -35,7 +36,7 @@ namespace FluentValidation.Tests {
 			string email = "testperson@gmail.com";
 			var validator = new EmailValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -43,7 +44,7 @@ namespace FluentValidation.Tests {
 			string email = "testperson+label@gmail.com";
 			var validator = new EmailValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace FluentValidation.Tests {
 			string email = null;
 			var validator = new EmailValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -59,7 +60,7 @@ namespace FluentValidation.Tests {
 			string email = String.Empty;
 			var validator = new EmailValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -67,7 +68,7 @@ namespace FluentValidation.Tests {
 			string email = "testperso";
 			var validator = new EmailValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -75,7 +76,7 @@ namespace FluentValidation.Tests {
 			string email = "testperso";
 			var validator = new EmailValidator();
 			var result = validator.Validate(new PropertyValidatorContext("Email", new object(), x => email));
-			result.Error.ShouldEqual("'Email' is not a valid email address.");
+			result.Single().ErrorMessage.ShouldEqual("'Email' is not a valid email address.");
 		}
 
 		[Test]
@@ -83,7 +84,7 @@ namespace FluentValidation.Tests {
 			string email = "thisisaverylongstringcodeplex.com";
 			var validator = new EmailValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -91,11 +92,11 @@ namespace FluentValidation.Tests {
 			string email = "testperson@gmail.com";
 			var validator = new EmailValidator();
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 
 			email = "TestPerson@gmail.com";
 			result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 	}
 }

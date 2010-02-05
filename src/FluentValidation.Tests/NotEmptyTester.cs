@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
 	using Validators;
@@ -34,21 +35,21 @@ namespace FluentValidation.Tests {
 		public void When_there_is_a_value_then_the_validator_should_pass() {
 			var validator = new NotEmptyValidator(default(string));
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => "Farf"));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_value_is_null_validator_should_fail() {
 			var validator = new NotEmptyValidator(default(string));
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => null));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_value_is_empty_string_validator_should_fail() {
 			var validator = new NotEmptyValidator(default(string));
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => ""));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -56,24 +57,24 @@ namespace FluentValidation.Tests {
 			var defaultValue = default(DateTime);
 			var validator = new NotEmptyValidator(defaultValue);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => defaultValue));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_value_is_Default_for_type_validator_should_fail_int() {
 			var validator = new NotEmptyValidator(default(int));
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => 0));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 
 			var result1 = validator.Validate(new PropertyValidatorContext(null, new object(), x => 1));
-			result1.IsValid.ShouldBeTrue();
+			result1.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_validation_fails_error_should_be_set() {
 			var validator = new NotEmptyValidator(default(string));
 			var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
-			result.Error.ShouldEqual("'name' should not be empty.");
+			result.Single().ErrorMessage.ShouldEqual("'name' should not be empty.");
 		}
 	}
 }

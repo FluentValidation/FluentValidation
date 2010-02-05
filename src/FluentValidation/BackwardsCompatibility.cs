@@ -90,13 +90,22 @@ namespace FluentValidation.Validators {
 			this.obsoleteValidator = obsoleteValidator;
 		}
 
-		public override PropertyValidatorResult Validate(PropertyValidatorContext context) {
+		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			Func<T, TProperty> propertyValueFunc = x => (TProperty)context.PropertyValueFunc(x);
 			IEnumerable<Func<T, object>> customMessageFormatArgs = ConvertNewFormatArgsToOldFormatArgs();
 
 			var obsoleteContext = new PropertyValidatorContext<T, TProperty>(context.PropertyDescription, (T)context.Instance, propertyValueFunc, ErrorMessageTemplate, customMessageFormatArgs);
 
-			return obsoleteValidator.Validate(obsoleteContext);
+			var oldResult = obsoleteValidator.Validate(obsoleteContext);
+			
+			var results = new List<ValidationFailure>();
+
+			if (! oldResult.IsValid) {
+				var newResult = new ValidationFailure(context.PropertyName, oldResult.Error, context.PropertyValue);
+				results.Add(newResult);
+			}
+
+			return results;
 		}
 
 		IEnumerable<Func<T, object>> ConvertNewFormatArgsToOldFormatArgs() {
@@ -161,6 +170,31 @@ namespace FluentValidation.Attributes {
 			}
 
 			return message;
+		}
+	}
+}
+
+namespace FluentValidation.Results {
+	using System;
+
+	[Obsolete("PropertyValidatorResult is obsolete - custom validators should now inherit from FluentValidation.Validators.PropertyValidator")]
+	public class PropertyValidatorResult {
+		public PropertyValidatorResult(string error) {
+			Error = error;
+		}
+
+		public string Error { get; private set; }
+
+		public bool IsValid {
+			get { return Error == null; }
+		}
+
+		public static PropertyValidatorResult Success() {
+			return new PropertyValidatorResult(null);
+		}
+
+		public static PropertyValidatorResult Failure(string error) {
+			return new PropertyValidatorResult(error);
 		}
 	}
 }

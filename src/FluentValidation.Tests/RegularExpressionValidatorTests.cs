@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
 	using Validators;
@@ -34,7 +35,7 @@ namespace FluentValidation.Tests {
 			string input = "S3";
 			var validator = new RegularExpressionValidator(@"^\w\d$");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -42,12 +43,12 @@ namespace FluentValidation.Tests {
 			string input = "S33";
 			var validator = new RegularExpressionValidator(@"^\w\d$");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 
 			input = " 5";
 			validator = new RegularExpressionValidator(@"^\w\d$");
 			result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -55,7 +56,7 @@ namespace FluentValidation.Tests {
 			string input = "";
 			var validator = new RegularExpressionValidator(@"^\w\d$");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -63,7 +64,7 @@ namespace FluentValidation.Tests {
 			string input = null;
 			var validator = new RegularExpressionValidator(@"^\w\d$");
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -71,7 +72,7 @@ namespace FluentValidation.Tests {
 			string input = "S33";
 			var validator = new RegularExpressionValidator(@"^\w\d$");
 			var result = validator.Validate(new PropertyValidatorContext("Name", new object(), x => input));
-			result.Error.ShouldEqual("'Name' is not in the correct format.");
+			result.Single().ErrorMessage.ShouldEqual("'Name' is not in the correct format.");
 		}
 	}
 }

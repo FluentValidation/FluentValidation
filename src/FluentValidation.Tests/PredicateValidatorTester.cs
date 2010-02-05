@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
 	using Validators;
@@ -36,13 +37,13 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_fail_when_predicate_returns_false() {
 			var result = validator.Validate(new PropertyValidatorContext(null, null, x => "Foo"));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
 		public void Should_succeed_when_predicate_returns_true() {
 			var result = validator.Validate(new PropertyValidatorContext(null, null, x => "Jeremy"));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -53,7 +54,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			var result = validator.Validate(new PropertyValidatorContext("Name", null, x => "Foo"));
-			result.Error.ShouldEqual("The specified condition was not met for 'Name'.");
+			result.Single().ErrorMessage.ShouldEqual("The specified condition was not met for 'Name'.");
 		}
 	}
 }

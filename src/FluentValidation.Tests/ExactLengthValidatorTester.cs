@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Globalization;
+	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
 	using Validators;
@@ -35,7 +36,7 @@ namespace FluentValidation.Tests {
 			string text = "test";
 			var validator = new ExactLengthValidator(4);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
@@ -43,7 +44,7 @@ namespace FluentValidation.Tests {
 			string text = "test";
 			var validator = new ExactLengthValidator(10);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -51,7 +52,7 @@ namespace FluentValidation.Tests {
 			string text = "test";
 			var validator = new ExactLengthValidator(1);
 			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
@@ -59,7 +60,7 @@ namespace FluentValidation.Tests {
 			var validator = new ExactLengthValidator(2);
 			var result =
 				validator.Validate(new PropertyValidatorContext("Forename", null, x => "Gire and gimble in the wabe"));
-			result.Error.ShouldEqual("'Forename' must be 2 characters in length. You entered 27 characters.");
+			result.Single().ErrorMessage.ShouldEqual("'Forename' must be 2 characters in length. You entered 27 characters.");
 		}
 
 		[Test]

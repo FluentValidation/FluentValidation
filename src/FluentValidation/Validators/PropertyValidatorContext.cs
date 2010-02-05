@@ -63,6 +63,7 @@ namespace FluentValidation.Validators {
 			Instance = instance;
 			messageFormatter = new MessageFormatter();
 			PropertyValue = propertyValue;
+			PropertyName = propertyName;
 		}
 
 		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc)
@@ -75,6 +76,7 @@ namespace FluentValidation.Validators {
 			PropertyDescription = propertyDescription;
 			Instance = instance;
 			messageFormatter = new MessageFormatter();
+			this.PropertyName = propertyName;
 			this.propertyValueFunc = propertyValueFunc;
 		}
 	}

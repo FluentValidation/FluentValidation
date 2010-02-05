@@ -41,7 +41,7 @@ namespace FluentValidation.Tests {
 					var errorMessage = new MessageFormatter().AppendPropertyName("name").BuildMessage(message);
 					Debug.WriteLine(errorMessage);
 					var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
-					result.Error.ShouldEqual(errorMessage);
+					result.Single().ErrorMessage.ShouldEqual(errorMessage);
 				}
 			}
 			finally {
@@ -56,7 +56,7 @@ namespace FluentValidation.Tests {
 
 			var validator = new NotEmptyValidator(null);
 			var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
-			result.Error.ShouldEqual("foo");
+			result.Single().ErrorMessage.ShouldEqual("foo");
 
 			ValidatorOptions.ResourceProviderType = null;
 		}

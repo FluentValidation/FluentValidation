@@ -71,14 +71,14 @@ namespace FluentValidation.Validators {
 			resourceMeta = ResourceHelper.BuildResourceAccessor(errorMessageResourceSelector);
 		}
 
-		public virtual PropertyValidatorResult Validate(PropertyValidatorContext context) {
+		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
 
 			if (!IsValid(context)) {
-				return CreateValidationError(context);
+				return new[] { CreateValidationError(context) };
 			}
 
-			return PropertyValidatorResult.Success();
+			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		protected abstract bool IsValid(PropertyValidatorContext context);
@@ -88,15 +88,14 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
-		protected virtual PropertyValidatorResult CreateValidationError(PropertyValidatorContext context) {
-			//Continue to support ValidationMessageAttribute for backwards compatibility.
-			string error = ErrorMessageTemplate;
-
+		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
 			context.MessageFormatter.AppendAdditionalArguments(
 				customFormatArgs.Select(func => func(context.Instance)).ToArray()
 			);
 
-			return PropertyValidatorResult.Failure(context.MessageFormatter.BuildMessage(error));
+			string error = context.MessageFormatter.BuildMessage(ErrorMessageTemplate);
+
+			return new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 		}
 	}
 }

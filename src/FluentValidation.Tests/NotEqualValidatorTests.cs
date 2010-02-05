@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections;
 	using System.Globalization;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Threading;
 	using Internal;
@@ -37,21 +38,21 @@ namespace FluentValidation.Tests {
 		public void When_the_objects_are_equal_then_the_validator_should_fail() {
 			var validator = CreateValidator(person => person.Forename);
 			var result = validator.Validate(new PropertyValidatorContext(null, new Person {Forename = "Foo"}, x => "Foo"));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_objects_are_not_equal_then_the_validator_should_pass() {
 			var validator = CreateValidator(person => person.Forename);
 			var result = validator.Validate(new PropertyValidatorContext(null, new Person {Forename = "Foo"}, x => "Bar"));
-			result.IsValid.ShouldBeTrue();
+			result.IsValid().ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = CreateValidator(person => person.Forename);
 			var result = validator.Validate(new PropertyValidatorContext("Forename", new Person {Forename = "Foo"}, x => "Foo"));
-			result.Error.ShouldEqual("'Forename' should not be equal to 'Foo'.");
+			result.Single().ErrorMessage.ShouldEqual("'Forename' should not be equal to 'Foo'.");
 		}
 
 		[Test]
@@ -73,7 +74,7 @@ namespace FluentValidation.Tests {
 			var context = new PropertyValidatorContext("Surname", person, x => "FOO");
 
 			var result = validator.Validate(context);
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 
@@ -81,7 +82,7 @@ namespace FluentValidation.Tests {
 		public void Validates_against_constant() {
 			var validator = new NotEqualValidator("foo");
 			var result = validator.Validate(new PropertyValidatorContext(null, new Person(), x => "foo"));
-			result.IsValid.ShouldBeFalse();
+			result.IsValid().ShouldBeFalse();
 		}
 
 
