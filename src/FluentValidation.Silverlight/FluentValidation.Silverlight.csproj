@@ -111,14 +111,11 @@
     <Compile Include="..\FluentValidation\DefaultValidatorExtensions.cs">
       <Link>DefaultValidatorExtensions.cs</Link>
     </Compile>
-     <Compile Include="..\FluentValidation\ValidationException.cs">
+    <Compile Include="..\FluentValidation\ValidationException.cs">
       <Link>ValidationException.cs</Link>
     </Compile>
-     <Compile Include="..\FluentValidation\InlineValidator.cs">
+    <Compile Include="..\FluentValidation\InlineValidator.cs">
       <Link>InlineValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Internal\ComplexPropertyRule.cs">
-      <Link>ComplexPropertyRule.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Internal\DefaultValidatorSelector.cs">
       <Link>DefaultValidatorSelector.cs</Link>
@@ -182,6 +179,9 @@
     </Compile>
     <Compile Include="..\FluentValidation\Validators\AbstractComparisonValidator.cs">
       <Link>AbstractComparisonValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\ChildValidatorAdaptor.cs">
+      <Link>ChildValidatorAdaptor.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Validators\EmailValidator.cs">
       <Link>EmailValidator.cs</Link>
