@@ -72,8 +72,7 @@ namespace FluentValidation.Internal {
 		/// <param name="validator">The validator to set</param>
 		public void SetValidator(IValidator<TProperty> validator) {
 			validator.Guard("Cannot pass a null validator to SetValidator");
-			var rule = new ComplexPropertyRule<T, TProperty>(validator, model);
-			rules.Add(rule);
+			SetValidator(new ChildValidatorAdaptor<TProperty>(validator));
 		}
 
 		public IRuleBuilderOptions<T, TProperty> Configure(Action<ISimplePropertyRule<T>> configurator) {

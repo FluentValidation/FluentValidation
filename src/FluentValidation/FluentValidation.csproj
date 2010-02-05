@@ -59,7 +59,6 @@
     <Compile Include="DefaultValidatorExtensions.cs" />
     <Compile Include="DefaultValidatorOptions.cs" />
     <Compile Include="InlineValidator.cs" />
-    <Compile Include="Internal\ComplexPropertyRule.cs" />
     <Compile Include="Internal\DefaultValidatorSelector.cs" />
     <Compile Include="Internal\DelegateValidator.cs" />
     <Compile Include="Internal\Extensions.cs" />
@@ -100,6 +99,7 @@
     <Compile Include="CascadeMode.cs" />
     <Compile Include="ValidatorDescriptor.cs" />
     <Compile Include="Validators\AbstractComparisonValidator.cs" />
+    <Compile Include="Validators\ChildValidatorAdaptor.cs" />
     <Compile Include="Validators\EmailValidator.cs" />
     <Compile Include="Validators\EqualValidator.cs" />
     <Compile Include="Validators\ExclusiveBetweenValidator.cs" />

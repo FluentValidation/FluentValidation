@@ -39,6 +39,8 @@ namespace FluentValidation.Validators {
 			get { return messageFormatter; }
 		}
 
+		//TODO: Should this be exposed? If so, should it be public?
+		internal PropertyChain PropertyChain { get; set; }
 		internal PropertySelector PropertyValueFunc { get { return propertyValueFunc; } }
 
 		//Lazily load the property value
@@ -67,17 +69,18 @@ namespace FluentValidation.Validators {
 		}
 
 		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc)
-		: this(propertyDescription, instance, propertyValueFunc, null){
+		: this(propertyDescription, instance, propertyValueFunc, null, null){
 
 		}
 
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string propertyName) {
+		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string propertyName, MemberInfo member) {
 			propertyValueFunc.Guard("propertyValueFunc cannot be null");
 			PropertyDescription = propertyDescription;
 			Instance = instance;
 			messageFormatter = new MessageFormatter();
 			this.PropertyName = propertyName;
 			this.propertyValueFunc = propertyValueFunc;
+			this.Member = member;
 		}
 	}
 }
