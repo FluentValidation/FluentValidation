@@ -35,6 +35,7 @@ namespace FluentValidation.Validators {
 		bool SupportsStandaloneValidation { get; }
 		Type ErrorMessageResourceType { get; }
 		string ErrorMessageResourceName { get; }
+		Func<object, object> CustomStateProvider { get; set; }
 
 		void SetErrorMessage(string message);
 		void SetErrorMessage(Type errorMessageResourceType, string resourceName);

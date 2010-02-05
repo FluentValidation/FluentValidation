@@ -29,6 +29,8 @@ namespace FluentValidation.Validators {
 		private readonly List<Func<object, object>> customFormatArgs = new List<Func<object, object>>();
 		private ResourceMetaData resourceMeta;
 
+		public Func<object, object> CustomStateProvider { get; set; }
+
 		public bool SupportsStandaloneValidation { get; set; }
 
 		public Type ErrorMessageResourceType {
@@ -95,7 +97,13 @@ namespace FluentValidation.Validators {
 
 			string error = context.MessageFormatter.BuildMessage(ErrorMessageTemplate);
 
-			return new ValidationFailure(context.PropertyName, error, context.PropertyValue);
+			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
+
+			if(CustomStateProvider != null) {
+				failure.CustomState = CustomStateProvider(context.Instance);
+			}
+
+			return failure;
 		}
 	}
 }

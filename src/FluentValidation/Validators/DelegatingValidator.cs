@@ -59,6 +59,11 @@ namespace FluentValidation.Validators {
 			get { return InnerValidator.ErrorMessageResourceName; }
 		}
 
+		public Func<object, object> CustomStateProvider {
+			get { return InnerValidator.CustomStateProvider; }
+			set { InnerValidator.CustomStateProvider = value; }
+		}
+
 		public void SetErrorMessage(string message) {
 			InnerValidator.SetErrorMessage(message);
 		}

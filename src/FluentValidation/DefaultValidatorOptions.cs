@@ -156,7 +156,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState");
-			return rule.Configure(config => config.CustomStateProvider = stateProvider);
+			return rule.Configure(config => config.Validator.CustomStateProvider = x => stateProvider((T)x));
 		}
 
 		static Func<T, object>[] ConvertArrayOfObjectsToArrayOfDelegates<T>(object[] objects) {

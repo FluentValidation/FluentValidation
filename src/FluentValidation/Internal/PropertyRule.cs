@@ -44,8 +44,6 @@ namespace FluentValidation.Internal {
 			set { model.OnFailure=value; }
 		}
 
-		public Func<T, object> CustomStateProvider { get; set; }
-
 		public string CustomPropertyName {
 			get { return model.CustomPropertyName; }
 			set { model.CustomPropertyName = value; }
@@ -79,17 +77,7 @@ namespace FluentValidation.Internal {
 
 			if (context.Selector.CanExecute(this, propertyName)) {
 				var validationContext = new PropertyValidatorContext(model.PropertyDescription, context.InstanceToValidate, x => model.PropertyFunc((T)x), propertyName);
-				var propertyValidatorResults = Validator.Validate(validationContext);
-
-				var results = new List<ValidationFailure>(propertyValidatorResults);
-
-				if (CustomStateProvider != null) {
-					foreach (var failure in results) {
-						failure.CustomState = CustomStateProvider(context.InstanceToValidate);
-					}
-				}
-
-				return results;
+				return Validator.Validate(validationContext);
 			}
 
 			return Enumerable.Empty<ValidationFailure>();

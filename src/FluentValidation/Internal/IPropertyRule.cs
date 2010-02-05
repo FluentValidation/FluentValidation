@@ -35,7 +35,6 @@ namespace FluentValidation.Internal {
 	}
 	
 	public interface ISimplePropertyRule<T> : ISimplePropertyRule, IPropertyRule<T> {
-		Func<T, object> CustomStateProvider { get; set; }
 		Action<T> OnFailure { get; set; }
 	}
 }
