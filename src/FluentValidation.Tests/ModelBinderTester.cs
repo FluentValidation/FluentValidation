@@ -25,24 +25,16 @@ namespace FluentValidation.Tests {
 	using NUnit.Framework;
 
 	[TestFixture]
-	public class FluentValidationModelBinderTester : BaseModelBinderTest {
-
-		protected override IModelBinder CreateBinder() {
-			return new FluentValidationModelBinder(new AttributedValidatorFactory());
-		}
-	}
-
-	/*[TestFixture]
-	public class ModelBinderTester : BaseModelBinderTest {
+	public class ModelBinderTester {
 		FluentValidationModelValidatorProvider provider;
+		DefaultModelBinder binder;
 
-		protected override IModelBinder CreateBinder() {
+		[SetUp]
+		public void Setup() {
 			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
-var 			binder = new DefaultModelBinder();
-			//TODO: Remove this line once FluentValidationModelMetadataProvider is fixed...
-			ModelValidatorProviders.Providers.Clear();
 			ModelValidatorProviders.Providers.Add(provider);
-			return binder;
+			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
+			binder = new DefaultModelBinder();
 		}
 
 		[TearDown]
@@ -50,29 +42,6 @@ var 			binder = new DefaultModelBinder();
 			//Cleanup
 			ModelValidatorProviders.Providers.Remove(provider);
 		}
-
-
-		[Test, Ignore("DataAnnotationsModelValidatorProvider does not play nicely with the FluentValidationValidatorProvider when both are registered. ")]
-		public void WorksAlongsideDataAnnotationsProvider() {
-			ModelValidatorProviders.Providers.Insert(0, new DataAnnotationsModelValidatorProvider());
-			Should_not_add_default_message_to_modelstate();
-		}
-
-		[Test, Ignore("Not implemented yet")]
-		public void Maintains_custom_property_name() {
-			Assert.Fail();
-		}
-	}*/
-
-	public abstract class BaseModelBinderTest {
-		protected IModelBinder binder;
-
-		[SetUp]
-		public void Setup() {
-			binder = CreateBinder();
-		}
-
-		protected abstract IModelBinder CreateBinder();
 
 		protected ModelMetadata CreateMetaData(Type type) {
 			return new ModelMetadata(new EmptyModelMetadataProvider(), null, null, type, null);
@@ -99,8 +68,12 @@ var 			binder = new DefaultModelBinder();
 
 		public class TestModelValidator3 : AbstractValidator<TestModel3> {
 			public TestModelValidator3() {
-				RuleFor(x => x.Id).NotEmpty().WithMessage("Validation failed");
+				RuleFor(x => x.Id).NotNull().WithMessage("Validation failed");
 			}
+		}
+
+		public class TestModelWithoutValidator {
+			public int Id { get; set; }
 		}
 
 		[Test]
@@ -170,6 +143,59 @@ var 			binder = new DefaultModelBinder();
 			binder.BindModel(new ControllerContext(), bindingContext);
 
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("Validation failed");
+		}
+
+		[Test]
+		public void Should_not_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
+			var form = new FormCollection {
+				{ "Id", "" }
+			};
+
+			var bindingContext = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(TestModelWithoutValidator)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider()
+			};
+
+			binder.BindModel(new ControllerContext(), bindingContext);
+
+			//TODO: Localise test.
+			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("'Id' must not be empty.");
+		}
+
+
+		[Test]
+		public void WorksAlongsideDataAnnotationsProvider() {
+			ModelValidatorProviders.Providers.Insert(0, new DataAnnotationsModelValidatorProvider());
+			Should_not_add_default_message_to_modelstate();
+		}
+
+		[Test]
+		public void Should_add_default_message_to_modelstate_when_both_fv_and_DataAnnotations_have_implicit_required_validation_disabled() {
+			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
+			provider.AddImplicitRequiredValidator = false;
+
+			var form = new FormCollection {
+				{ "Id", "" }
+			};
+
+			var bindingContext = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(TestModelWithoutValidator)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider()
+			};
+
+			binder.BindModel(new ControllerContext(), bindingContext);
+
+			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("A value is required.");
+
+
+			provider.AddImplicitRequiredValidator = true;
+			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = true;
 		}
 	}
 }

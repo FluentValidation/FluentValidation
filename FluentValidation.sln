@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.xValIntegration", "src\FluentValidation.xValIntegration\FluentValidation.xValIntegration.csproj", "{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.MvcIntegrationDemo", "src\FluentValidation.MvcIntegrationDemo\FluentValidation.MvcIntegrationDemo.csproj", "{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
