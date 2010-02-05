@@ -75,7 +75,6 @@
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
     <Compile Include="Internal\MemberValidatorSelector.cs" />
     <Compile Include="Internal\MessageFormatter.cs" />
-    <Compile Include="Internal\NestedCollectionValidator.cs" />
     <Compile Include="Internal\PropertyChain.cs" />
     <Compile Include="Internal\PropertyRule.cs" />
     <Compile Include="Internal\ValidationContext.cs" />
@@ -99,6 +98,7 @@
     <Compile Include="CascadeMode.cs" />
     <Compile Include="ValidatorDescriptor.cs" />
     <Compile Include="Validators\AbstractComparisonValidator.cs" />
+    <Compile Include="Validators\ChildCollectionValidatorAdaptor.cs" />
     <Compile Include="Validators\ChildValidatorAdaptor.cs" />
     <Compile Include="Validators\EmailValidator.cs" />
     <Compile Include="Validators\EqualValidator.cs" />
@@ -108,6 +108,7 @@
     <Compile Include="Validators\InclusiveBetweenValidator.cs" />
     <Compile Include="Validators\LessThanOrEqualValidator.cs" />
     <Compile Include="Validators\LessThanValidator.cs" />
+    <Compile Include="Validators\NoopPropertyValidator.cs" />
     <Compile Include="Validators\PredicateValidator.cs" />
     <Compile Include="Results\ValidationFailure.cs" />
     <Compile Include="Results\ValidationResult.cs" />

@@ -2,7 +2,9 @@
 * Issue #4903 - Allow Name Resolution to be pluggable
 * Changed the .SetValidator method to require an IValidator<TProperty> rather than an IEnumerable<IValidationRule<TProperty>>
 * Removed unnecessary CreateDescriptor overload from AbstractValidator.
-
+* MVC2 Integration - FluentValidationModelValidatorProvider (serverside & clientside)
+* MVC2 Integration - FluentValidationModelMetadataProvider
+* Removed ComplexPropertyRule / NestedCollectionValidator. Replaced with IPropertyValidator implementations.
 
 1.2 beta 1 - Jan 23 2010
 * Upgraded MVC integration to ASP.NET MVC 2

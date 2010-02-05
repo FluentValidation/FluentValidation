@@ -6,17 +6,17 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	internal class ChildValidatorAdaptor<T> : IPropertyValidator {
+	internal class ChildValidatorAdaptor<T> : NoopPropertyValidator {
 		readonly IValidator<T> validator;
 
 		public ChildValidatorAdaptor(IValidator<T> validator) {
 			this.validator = validator;
 		}
 
-		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			/*if (context.Member == null) {
+		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+			if (context.Member == null) {
 				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
-			}*/
+			}
 
 			var instanceToValidate = context.PropertyValue;
 
@@ -25,48 +25,24 @@ namespace FluentValidation.Validators {
 			}
 
 			var propertyChain = new PropertyChain(context.PropertyChain);
-			propertyChain.Add(context.PropertyName);
+			propertyChain.Add(context.Member);
 
 			var newContext = new ValidationContext<T>((T)instanceToValidate, propertyChain, new DefaultValidatorSelector());
-			var results = validator.SelectMany(x => x.Validate(newContext));
+			var results = validator.SelectMany(x => x.Validate(newContext)).ToList();
 
 			return results;
 		}
 
-		public string ErrorMessageTemplate {
-			get { return null; }
-		}
-
-		public ICollection<Func<object, object>> CustomMessageFormatArguments {
-			get { return new List<Func<object, object>>(); }
-		}
-
-		public bool SupportsStandaloneValidation {
-			get { return false; }
-		}
-
-		public Type ErrorMessageResourceType {
-			get { return null; }
-		}
-
-		public string ErrorMessageResourceName {
-			get { return null; }
-		}
-
-		public Func<object, object> CustomStateProvider {
-			get { return null; }
-			set {/*TODO: Should this be a no-op*/  }
-		}
-
-		public void SetErrorMessage(string message) {
+		
+		public override void SetErrorMessage(string message) {
 			throw new NotSupportedException("Custom error messages are not supported with child validators.");
 		}
 
-		public void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
+		public override void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
 			throw new NotSupportedException("Custom error messages are not supported with child validators.");
 		}
 
-		public void SetErrorMessage(Expression<Func<string>> resourceSelector) {
+		public override void SetErrorMessage(Expression<Func<string>> resourceSelector) {
 			throw new NotSupportedException("Custom error messages are not supported with child validators.");
 		}
 	}

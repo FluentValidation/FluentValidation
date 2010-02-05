@@ -77,6 +77,7 @@ namespace FluentValidation.Internal {
 
 			if (context.Selector.CanExecute(this, propertyName)) {
 				var validationContext = new PropertyValidatorContext(model.PropertyDescription, context.InstanceToValidate, x => model.PropertyFunc((T)x), propertyName, Member);
+				validationContext.PropertyChain = context.PropertyChain;
 				return Validator.Validate(validationContext);
 			}
 
