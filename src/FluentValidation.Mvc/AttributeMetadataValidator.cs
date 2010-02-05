@@ -19,6 +19,7 @@
 namespace FluentValidation.Mvc {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using Results;
 	using Validators;
@@ -35,8 +36,8 @@ namespace FluentValidation.Mvc {
 			attribute = attributeConverter;
 		}
 
-		public PropertyValidatorResult Validate(PropertyValidatorContext context) {
-			return PropertyValidatorResult.Success();
+		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		public string ErrorMessageTemplate {
@@ -58,6 +59,11 @@ namespace FluentValidation.Mvc {
 
 		public string ErrorMessageResourceName {
 			get { throw new NotImplementedException(); }
+		}
+
+		public Func<object, object> CustomStateProvider {
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
 		}
 
 		public void SetErrorMessage(string message) {

@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Mvc {
+	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
@@ -84,7 +85,7 @@ namespace FluentValidation.Mvc {
 				return builder.SetValidator(validator);
 			}
 
-			public void SetValidator(IEnumerable<IValidationRule<TProperty>> validator) {
+			public void SetValidator(IValidator<TProperty> validator) {
 				builder.SetValidator(validator);
 			}
 

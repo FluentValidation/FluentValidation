@@ -15,10 +15,8 @@ namespace FluentValidation.Mvc {
 			var context = new PropertyValidatorContext(Metadata.PropertyName, container, Metadata.Model, Metadata.PropertyName);
 			var result = validator.Validate(context);
 
-			if(! result.IsValid) {
-				yield return new ModelValidationResult {
-                    Message = result.Error
-				};
+			foreach(var failure in result) {
+				yield return new ModelValidationResult { Message = failure.ErrorMessage };
 			}
 		}
 
