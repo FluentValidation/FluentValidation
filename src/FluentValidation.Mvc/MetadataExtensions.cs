@@ -16,7 +16,7 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Mvc {
+namespace FluentValidation.Mvc.MetadataExtensions {
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;

@@ -21,7 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Mvc;
 	using NUnit.Framework;
-
+	using FluentValidation.Mvc.MetadataExtensions;
 	//These tests are largely based upon DataAnnotationsModelMetadataProviderTest from the MVC2 source code.
 
 	[TestFixture]
