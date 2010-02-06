@@ -29,7 +29,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public class PropertyRule<T, TProperty> : ISimplePropertyRule<T> {
+	public class PropertyRule<T, TProperty> : IPropertyRule<T> {
 		readonly PropertyModel<T, TProperty> model;
 
 		public PropertyRule(PropertyModel<T, TProperty> propertyModel, IPropertyValidator validator) {

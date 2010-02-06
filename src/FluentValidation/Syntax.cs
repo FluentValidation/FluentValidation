@@ -57,7 +57,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderOptions<T, TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<ISimplePropertyRule<T>, IRuleBuilderOptions<T, TProperty>> {
+	public interface IRuleBuilderOptions<T, TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<IPropertyRule<T>, IRuleBuilderOptions<T, TProperty>> {
 
 	}
 }

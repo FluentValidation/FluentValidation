@@ -57,7 +57,7 @@ namespace FluentValidation.Tests {
 		public void Adding_a_validator_should_store_validator() {
 			var validator = new TestPropertyValidator();
 			builder.SetValidator(validator);
-			builder.Cast<ISimplePropertyRule<Person>>().Single().Validator.ShouldBeTheSameAs(validator);
+			builder.Cast<IPropertyRule<Person>>().Single().Validator.ShouldBeTheSameAs(validator);
 		}
 
 		[Test]
@@ -106,9 +106,9 @@ namespace FluentValidation.Tests {
 		public void Calling_when_should_replace_current_validator_with_predicate_validator() {
 			var validator = new TestPropertyValidator();
 			builder.SetValidator(validator).When(x => true);
-			builder.Cast<ISimplePropertyRule<Person>>().Single().Validator.ShouldBe<DelegatingValidator>();
+			builder.Cast<IPropertyRule<Person>>().Single().Validator.ShouldBe<DelegatingValidator>();
 
-			var predicateValidator = (DelegatingValidator)builder.Cast<ISimplePropertyRule<Person>>().Single().Validator;
+			var predicateValidator = (DelegatingValidator)builder.Cast<IPropertyRule<Person>>().Single().Validator;
 			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
 		}
 

@@ -75,7 +75,7 @@ namespace FluentValidation.Internal {
 			SetValidator(new ChildValidatorAdaptor<TProperty>(validator));
 		}
 
-		public IRuleBuilderOptions<T, TProperty> Configure(Action<ISimplePropertyRule<T>> configurator) {
+		public IRuleBuilderOptions<T, TProperty> Configure(Action<IPropertyRule<T>> configurator) {
 			configurator(currentRule);
 			return this;
 		}

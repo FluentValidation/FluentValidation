@@ -1,4 +1,4 @@
-1.2 beta 2 -
+1.2 beta 2 - Feb 6 2010
 * Issue #4903 - Allow Name Resolution to be pluggable
 * Changed the .SetValidator method to require an IValidator<TProperty> rather than an IEnumerable<IValidationRule<TProperty>>
 * Removed unnecessary CreateDescriptor overload from AbstractValidator.

@@ -44,7 +44,7 @@ namespace FluentValidation {
 		}
 
 		public virtual ILookup<string, IPropertyValidator> GetMembersWithValidators() {
-			return Rules.OfType<ISimplePropertyRule<T>>()
+			return Rules.OfType<IPropertyRule<T>>()
 					.ToLookup(x => x.Member.Name, x => x.Validator);
 		}
 

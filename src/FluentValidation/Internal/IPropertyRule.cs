@@ -18,23 +18,15 @@
 
 namespace FluentValidation.Internal {
 	using System;
-	using System.Collections.Generic;
 	using System.Reflection;
-	using Results;
 	using Validators;
-
-	public interface ISimplePropertyRule {
-		IPropertyValidator Validator { get; set; }
-	}
 
 	public interface IPropertyRule<T> : IValidationRule<T> {
 		string CustomPropertyName { get; set; }
 		string PropertyName { get; set; }
 		string PropertyDescription { get; }
 		MemberInfo Member { get; }
-	}
-	
-	public interface ISimplePropertyRule<T> : ISimplePropertyRule, IPropertyRule<T> {
 		Action<T> OnFailure { get; set; }
+		IPropertyValidator Validator { get; set; }
 	}
 }
