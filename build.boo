@@ -7,7 +7,7 @@ test_assemblies = "src/FluentValidation.Tests/bin/${project_configuration}/Fluen
 build_silverlight = false
 ncover_path = "C:/Program Files (x86)/ncover"
 
-target default, (init, compile, test, deploy):
+target default, (init, compile, test, deploy, package):
   pass
 
 target ci, (init, silverlight, compile, coverage, package):
@@ -52,14 +52,14 @@ target deploy:
     .Include("FluentValidation.xValIntegration.*")
     .Include("xVal.dll")
     .ForEach def(file):
-      file.CopyToDirectory("${build_dir}/${project_configuration}/xVal")
+      file.CopyToDirectory("${build_dir}/${project_configuration}/Experimental/xVal")
   
   #silverlight
   if build_silverlight:
     with FileList("src/FluentValidation.Silverlight/bin/${project_configuration}"):
       .Include("*.{dll,pdb,xml}")
       .ForEach def(file):
-        file.CopyToDirectory("${build_dir}/${project_configuration}/Silverlight")
+        file.CopyToDirectory("${build_dir}/${project_configuration}/Experimental/Silverlight")
       
   #License/Changelog
   with FileList():
