@@ -86,12 +86,11 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test, Ignore("Why")]
+		[Test]
 		public void Should_throw_when_not_a_member_expression() {
 			validator.RuleFor(x => PointlessMethod()).SetValidator(new PointlessStringValidator());
 
 			var exception = typeof(InvalidOperationException).ShouldBeThrownBy(() => validator.Validate(person));
-			exception.Message.StartsWith("Nested validators can only be used with Member Expressions.").ShouldBeTrue();
 		}
 
 		private static string PointlessMethod() { return null; }
