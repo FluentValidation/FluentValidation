@@ -93,6 +93,26 @@ namespace FluentValidation.Tests {
 			var exception = typeof(InvalidOperationException).ShouldBeThrownBy(() => validator.Validate(person));
 		}
 
+		[Test]
+		public void Condition_should_work_with_complex_property() {
+			var validator = new TestValidator() {
+				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).When(x => x.Address.Line1 == "foo")
+			};
+
+			var result = validator.Validate(person);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void WithMessage_not_supported_for_child_rule() {
+
+			typeof(NotSupportedException).ShouldBeThrownBy(() => {
+				new TestValidator() {
+					v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).WithMessage("x")
+				};
+			});
+		}
+
 		private static string PointlessMethod() { return null; }
 
 		public class PersonValidator : AbstractValidator<Person> {

@@ -1,3 +1,6 @@
+1.2 beta 3 -
+* Initial support additional options (such as When/Unless) on child validators. Needs refactoring for next version.
+
 1.2 beta 2 - Feb 6 2010
 * Issue #4903 - Allow Name Resolution to be pluggable
 * Changed the .SetValidator method to require an IValidator<TProperty> rather than an IEnumerable<IValidationRule<TProperty>>

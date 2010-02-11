@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System;
 	using System.Collections.Generic;
 	using NUnit.Framework;
 
@@ -61,6 +62,26 @@ namespace FluentValidation.Tests {
 		public void Collection_should_be_excluded() {
 			var results = validator.Validate(person, x => x.Forename);
 			results.Errors.Count.ShouldEqual(0);
+		}
+
+		[Test]
+		public void Condition_should_work_with_child_collection() {
+			var validator = new TestValidator() {
+				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator()).When(x => x.Orders.Count == 3 /*there are only 2*/)
+			};
+
+			var result = validator.Validate(person);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void WithMessage_not_supported_for_child_rule() {
+
+			typeof(NotSupportedException).ShouldBeThrownBy(() => {
+				new TestValidator() {
+					v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator()).WithMessage("x")
+				};
+			});
 		}
 
 		public class OrderValidator : AbstractValidator<Order> {

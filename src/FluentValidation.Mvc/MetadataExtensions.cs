@@ -85,8 +85,8 @@ namespace FluentValidation.Mvc.MetadataExtensions {
 				return builder.SetValidator(validator);
 			}
 
-			public void SetValidator(IValidator<TProperty> validator) {
-				builder.SetValidator(validator);
+			public IRuleBuilderOptions<T,TProperty> SetValidator(IValidator<TProperty> validator) {
+				return builder.SetValidator(validator);
 			}
 
 			public IDisplayFormatBuilder<T, TProperty> NullDisplayText(string text) {

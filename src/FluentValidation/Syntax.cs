@@ -48,7 +48,7 @@ namespace FluentValidation {
 		/// Associates an instance of IValidator with the current property rule.
 		/// </summary>
 		/// <param name="validator">The validator to use</param>
-		void SetValidator(IValidator<TProperty> validator);
+		IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator);
 	}
 
 
