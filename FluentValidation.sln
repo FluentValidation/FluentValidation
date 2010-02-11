@@ -1,12 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation", "src\FluentValidation\FluentValidation.csproj", "{DAE0249B-4F69-4AC9-9A17-AA23E0795316}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests", "src\FluentValidation.Tests\FluentValidation.Tests.csproj", "{E353A6E3-5404-4E1E-B33D-4C7BAE646752}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc", "src\FluentValidation.Mvc\FluentValidation.Mvc.csproj", "{F781D265-EB91-4876-BF8E-E7E482E7F0BE}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3906F280-A567-4AD7-A0EF-7253E95E7852}"
 	ProjectSection(SolutionItems) = preProject
 		build.boo = build.boo
@@ -14,9 +8,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		FluentValidation.snk = FluentValidation.snk
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.xValIntegration", "src\FluentValidation.xValIntegration\FluentValidation.xValIntegration.csproj", "{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation", "src\FluentValidation\FluentValidation.csproj", "{DAE0249B-4F69-4AC9-9A17-AA23E0795316}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.MvcIntegrationDemo", "src\FluentValidation.MvcIntegrationDemo\FluentValidation.MvcIntegrationDemo.csproj", "{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests", "src\FluentValidation.Tests\FluentValidation.Tests.csproj", "{E353A6E3-5404-4E1E-B33D-4C7BAE646752}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc", "src\FluentValidation.Mvc\FluentValidation.Mvc.csproj", "{F781D265-EB91-4876-BF8E-E7E482E7F0BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.xValIntegration", "src\FluentValidation.xValIntegration\FluentValidation.xValIntegration.csproj", "{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,10 +38,6 @@ Global
 		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED2D0296-FE1B-4FCD-A7AE-951A115B099B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
