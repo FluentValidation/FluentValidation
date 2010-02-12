@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Globalization;
 	using System.Linq;
 	using System.Web.Mvc;
 	using Attributes;
@@ -44,7 +45,9 @@ namespace FluentValidation.Tests {
 		}
 
 		protected ModelMetadata CreateMetaData(Type type) {
-			return new ModelMetadata(new EmptyModelMetadataProvider(), null, null, type, null);
+			var meta = new DataAnnotationsModelMetadataProvider();
+			return meta.GetMetadataForType(null, type);
+			//return new ModelMetadata(new EmptyModelMetadataProvider(), null, null, type, null);
 		}
 
 		public class TestModel2 {
@@ -74,6 +77,47 @@ namespace FluentValidation.Tests {
 
 		public class TestModelWithoutValidator {
 			public int Id { get; set; }
+		}
+
+		[Validator(typeof(TestModel4Validator))]
+		public class TestModel4 {
+			public string Surname { get; set; }
+			public string Forename { get; set; }
+			public string Email { get; set; }
+			public DateTime DateOfBirth { get; set; }
+		}
+
+		public class TestModel4Validator : AbstractValidator<TestModel4> {
+			public TestModel4Validator() {
+				RuleFor(x => x.Surname).NotEqual(x => x.Forename);
+
+				RuleFor(x => x.Email)
+					.EmailAddress();
+			}
+		}
+
+		[Test]
+		public void Should_add_all_errors_in_one_go() {
+			var form = new FormCollection {
+				{ "Email", "foo" },
+				{ "Surname", "foo" },
+				{ "Forename", "foo" },
+				{ "DateOfBirth", null }
+			};
+
+			var context = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata =  CreateMetaData(typeof(TestModel4)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider(),
+			};
+
+			binder.BindModel(new ControllerContext(), context);
+
+			context.ModelState.IsValidField("Email").ShouldBeFalse(); //Email validation failed
+			context.ModelState.IsValidField("DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
+			context.ModelState.IsValidField("Surname").ShouldBeFalse(); //cross-property
 		}
 
 		[Test]
@@ -163,13 +207,6 @@ namespace FluentValidation.Tests {
 
 			//TODO: Localise test.
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("'Id' must not be empty.");
-		}
-
-
-		[Test]
-		public void WorksAlongsideDataAnnotationsProvider() {
-			ModelValidatorProviders.Providers.Insert(0, new DataAnnotationsModelValidatorProvider());
-			Should_not_add_default_message_to_modelstate();
 		}
 
 		[Test]
