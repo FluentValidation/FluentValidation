@@ -28,7 +28,7 @@ namespace FluentValidation.Validators {
 			propertyChain.Add(context.Member);
 
 			var newContext = new ValidationContext<T>((T)instanceToValidate, propertyChain, new DefaultValidatorSelector());
-			var results = validator.SelectMany(x => x.Validate(newContext)).ToList();
+			var results = validator.Validate(newContext).Errors;
 
 			return results;
 		}

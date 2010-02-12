@@ -53,7 +53,7 @@ namespace FluentValidation.Validators {
 				//If this collection property has been selected for validation, then all properties on those items should be validated.
 				var newContext = new ValidationContext<TCollectionElement>(element, childPropertyChain, new DefaultValidatorSelector());
 
-				var results = childValidator.SelectMany(x => x.Validate(newContext));
+				var results = childValidator.Validate(newContext).Errors;
 
 				foreach (var result in results) {
 					yield return result;

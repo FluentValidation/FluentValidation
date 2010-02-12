@@ -50,7 +50,6 @@ namespace FluentValidation {
 		/// <summary>
 		/// Validates the specified instance.
 		/// </summary>
-		/// <param name="instance">The object to validate</param>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public ValidationResult Validate(ValidationContext<T> context) {
