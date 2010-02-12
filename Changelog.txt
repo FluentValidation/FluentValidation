@@ -1,4 +1,5 @@
 1.2 beta 3 -
+* Fixed issue with MVC2 MetaData throwing exceptions.
 * Initial support additional options (such as When/Unless) on child validators. Needs refactoring for next version.
 * Child validators no longer bypass the Validate method on the child validator instance.
 
