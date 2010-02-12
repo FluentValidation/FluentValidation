@@ -87,6 +87,9 @@
     <Compile Include="..\FluentValidation\Resources\Messages.Designer.cs">
       <Link>Resources\Messages.Designer.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\ValidationContext.cs">
+      <Link>ValidationContext.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\ValidatorFactoryBase.cs">
       <Link>ValidatorFactoryBase.cs</Link>
     </Compile>
@@ -143,9 +146,6 @@
     </Compile>
     <Compile Include="..\FluentValidation\Internal\RuleBuilder.cs">
       <Link>RuleBuilder.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Internal\ValidationContext.cs">
-      <Link>ValidationContext.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Internal\PropertyChain.cs">
       <Link>PropertyChain.cs</Link>
