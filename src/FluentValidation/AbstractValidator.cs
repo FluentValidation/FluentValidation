@@ -52,7 +52,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		public ValidationResult Validate(ValidationContext<T> context) {
+		public virtual ValidationResult Validate(ValidationContext<T> context) {
 			context.Guard("Cannot pass null to Validate");
 			var failures = nestedValidators.SelectMany(x => x.Validate(context)).ToList();
 			return new ValidationResult(failures);
