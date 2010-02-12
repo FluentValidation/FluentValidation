@@ -121,6 +121,7 @@ namespace FluentValidation.Validators {
 namespace FluentValidation {
 	using System;
 	using Internal;
+	using Results;
 	using Validators;
 
 	public static class ObsoleteExtensions {
@@ -132,6 +133,11 @@ namespace FluentValidation {
 		[Obsolete("The generic IPropertyValidator interface has been deprecated. Please modify your custom validators to inherit from the abstract base class FluentValidation.Validators.PropertyValidator.")]
 		public static IRuleBuilderOptions<T, TProperty> SetValidator<T,TProperty>(this IRuleBuilder<T, TProperty> rule, IPropertyValidator<T,TProperty> validator) {
 			return rule.SetValidator(new BackwardsCompatibilityValidatorAdaptor<T, TProperty>(validator));
+		}
+
+		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, IValidatorSelector selector) {
+			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
+			return validator.Validate(context);
 		}
 	}
 }

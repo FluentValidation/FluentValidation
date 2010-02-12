@@ -26,16 +26,13 @@ namespace FluentValidation {
 		/// <summary>
 		/// Validates the specified instance.
 		/// </summary>
-		/// <param name="instance">The object to validate</param>
-		/// <param name="selector">An IValidatorSelector that determines which rules should execute.</param>
+		/// <param name="context">A ValidationContext</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		ValidationResult Validate(T instance, IValidatorSelector selector);
+		ValidationResult Validate(ValidationContext<T> context);
 	}
 
 	public interface IValidator {
 		ValidationResult Validate(object instance);
-		ValidationResult Validate(object instance, IValidatorSelector selector);
-
 		/// <summary>
 		/// Creates a hook to access various meta data properties
 		/// </summary>

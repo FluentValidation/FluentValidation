@@ -38,27 +38,23 @@ namespace FluentValidation {
 			return Validate((T)instance);
 		}
 
-		ValidationResult IValidator.Validate(object instance, IValidatorSelector selector) {
-			return Validate((T)instance, selector);
-		}
-
 		/// <summary>
 		/// Validates the specified instance
 		/// </summary>
 		/// <param name="instance">The object to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public virtual ValidationResult Validate(T instance) {
-			return Validate(instance, new DefaultValidatorSelector());
+			return Validate(new ValidationContext<T>(instance, new PropertyChain(), new DefaultValidatorSelector()));
 		}
 		
 		/// <summary>
 		/// Validates the specified instance.
 		/// </summary>
 		/// <param name="instance">The object to validate</param>
-		/// <param name="selector">An IValidatorSelector that determines which rules should execute.</param>
+		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		public ValidationResult Validate(T instance, IValidatorSelector selector) {
-			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
+		public ValidationResult Validate(ValidationContext<T> context) {
+			context.Guard("Cannot pass null to Validate");
 			var failures = nestedValidators.SelectMany(x => x.Validate(context)).ToList();
 			return new ValidationResult(failures);
 		}
