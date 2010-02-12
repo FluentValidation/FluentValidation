@@ -1,5 +1,6 @@
 1.2 beta 3 -
 * Initial support additional options (such as When/Unless) on child validators. Needs refactoring for next version.
+* Child validators no longer bypass the Validate method on the child validator instance.
 
 1.2 beta 2 - Feb 6 2010
 * Issue #4903 - Allow Name Resolution to be pluggable
