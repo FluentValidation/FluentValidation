@@ -85,6 +85,7 @@ namespace FluentValidation.Tests {
 			public string Forename { get; set; }
 			public string Email { get; set; }
 			public DateTime DateOfBirth { get; set; }
+			public string Address1 { get; set; }
 		}
 
 		public class TestModel4Validator : AbstractValidator<TestModel4> {
@@ -93,6 +94,8 @@ namespace FluentValidation.Tests {
 
 				RuleFor(x => x.Email)
 					.EmailAddress();
+
+				RuleFor(x => x.Address1).NotEmpty();
 			}
 		}
 
@@ -102,7 +105,8 @@ namespace FluentValidation.Tests {
 				{ "Email", "foo" },
 				{ "Surname", "foo" },
 				{ "Forename", "foo" },
-				{ "DateOfBirth", null }
+				{ "DateOfBirth", null },
+				{ "Address1", null }
 			};
 
 			var context = new ModelBindingContext {
