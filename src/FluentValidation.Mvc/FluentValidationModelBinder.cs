@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Mvc {
+	using System;
 	using System.Web.Mvc;
 	using Mvc;
 
@@ -25,6 +26,7 @@ namespace FluentValidation.Mvc {
 	/// After binding takes place a validator will be instantiated using the specified validator factory
 	/// and the bound object will be validated. Any validation errors are added to ModelState.
 	/// </summary>
+	[Obsolete("The FluentValidationModelBinder is deprecated in this release. Please consider using the FluentValidationModelValidatorProvider instead.")]
 	public class FluentValidationModelBinder : FluentValidationModelBinderDecorator {
 		public FluentValidationModelBinder(IValidatorFactory validatorFactory)
 			: base(validatorFactory, new IgnoreDataAnnotationsModelBinder()) {
