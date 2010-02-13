@@ -1,4 +1,5 @@
 namespace FluentValidation.Mvc {
+	using System;
 	using System.Collections.Generic;
 	using System.Web.Mvc;
 	using Validators;
@@ -14,14 +15,14 @@ namespace FluentValidation.Mvc {
 		 The exception to this is the Required validator - these *do* need to run standalone
 		 in order to bypass MVC's "A value is required" message which cannot be turned off.
 		*/
-		protected bool NoOp { get; set; }
+		protected bool ShouldValidate { get; set; }
 
 		public FluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext) {
 			this.validator = validator;
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
-			if (!NoOp) {
+			if (ShouldValidate) {
 				var context = new PropertyValidatorContext(Metadata.PropertyName, container, Metadata.Model, Metadata.PropertyName);
 				var result = validator.Validate(context);
 
@@ -34,11 +35,15 @@ namespace FluentValidation.Mvc {
 		public static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {
 			return new FluentValidationPropertyValidator(meta, context, validator);
 		}
+
+		protected bool TypeAllowsNullValue(Type type) {
+			return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
+		}
 	}
 
 	internal class RequiredFluentValidationPropertyValidator : FluentValidationPropertyValidator {
 		public RequiredFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext, validator) {
-			NoOp = false;
+			ShouldValidate = !TypeAllowsNullValue(metadata.ModelType);
 		}
 
 		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {
@@ -60,7 +65,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public StringLengthFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext, validator) {
-			NoOp = true;
+			ShouldValidate = false;
 		}
 
 		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {
@@ -78,7 +83,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public RegularExpressionFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext, validator) {
-			NoOp = true;
+			ShouldValidate = false;
 		}
 
 		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {
