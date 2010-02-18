@@ -3,7 +3,8 @@ solution_file = "FluentValidation.sln"
 solution_file_silverlight = "FluentValidation.Silverlight.sln"
 project_configuration = "release"
 build_dir = "build"
-test_assemblies = "src/FluentValidation.Tests/bin/${project_configuration}/FluentValidation.Tests.dll"
+test_assemblies = ("src/FluentValidation.Tests/bin/${project_configuration}/FluentValidation.Tests.dll", 
+  "src/FluentValidation.Tests.Mvc1/bin/${project_configuration}/FluentValidation.Tests.Mvc1.dll")
 build_silverlight = false
 ncover_path = "C:/Program Files (x86)/ncover"
 
@@ -31,7 +32,7 @@ target compile:
 
 desc "Runs tests"
 target test:
-  nunit(assembly: test_assemblies)
+  nunit(assemblies: test_assemblies)
 
 desc "Creates release package"
 target deploy:  
@@ -41,12 +42,18 @@ target deploy:
     .ForEach def(file):
       file.CopyToDirectory("${build_dir}/${project_configuration}/FluentValidation")
   
-  #Mvc integration
+  #Mvc2 integration
   with FileList("src/FluentValidation.Mvc/bin/${project_configuration}"):
     .Include("FluentValidation.Mvc.*")
     .ForEach def(file):
-      file.CopyToDirectory("${build_dir}/${project_configuration}/MVC")
-
+      file.CopyToDirectory("${build_dir}/${project_configuration}/MVC/MVC2")
+  
+  #mvc1 integration
+  with FileList("src/FluentValidation.Mvc1/bin/${project_configuration}"):
+    .Include("FluentValidation.Mvc.*")
+    .ForEach def(file):
+      file.CopyToDirectory("${build_dir}/${project_configuration}/MVC/MVC1")
+      
   #xVal
   with FileList("src/FluentValidation.xValIntegration/bin/${project_configuration}"):
     .Include("FluentValidation.xValIntegration.*")

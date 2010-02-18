@@ -1,3 +1,6 @@
+1.2 RC - 
+* Re-enabled MVC1 integration. 
+
 1.2 beta 3 - Feb 14 2010
 * Fixed issue with MVC2 MetaData throwing exceptions.
 * Initial support additional options (such as When/Unless) on child validators. Needs refactoring for next version.
