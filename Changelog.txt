@@ -1,5 +1,6 @@
 1.2 RC - 
 * Re-enabled MVC1 integration. 
+* Tweak ModelValidator behaviour so that all errors are run in one go (again)
 
 1.2 beta 3 - Feb 14 2010
 * Fixed issue with MVC2 MetaData throwing exceptions.
