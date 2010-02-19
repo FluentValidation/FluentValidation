@@ -1,0 +1,11 @@
+syntax: glob
+
+build/
+*.suo
+*.user
+*.cache
+bin
+Bin
+obj
+_ReSharper*
+TestResult.xml
