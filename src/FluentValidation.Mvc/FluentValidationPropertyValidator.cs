@@ -43,7 +43,10 @@ namespace FluentValidation.Mvc {
 
 	internal class RequiredFluentValidationPropertyValidator : FluentValidationPropertyValidator {
 		public RequiredFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext, validator) {
-			ShouldValidate = !TypeAllowsNullValue(metadata.ModelType);
+			bool isNonNullableValueType = !TypeAllowsNullValue(metadata.ModelType);
+			bool nullWasSpecified = metadata.Model == null;
+
+			ShouldValidate = isNonNullableValueType && nullWasSpecified;
 		}
 
 		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {

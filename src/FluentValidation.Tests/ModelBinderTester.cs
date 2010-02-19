@@ -88,6 +88,8 @@ namespace FluentValidation.Tests {
 			public string Address1 { get; set; }
 		}
 
+		
+
 		public class TestModel4Validator : AbstractValidator<TestModel4> {
 			public TestModel4Validator() {
 				RuleFor(x => x.Surname).NotEqual(x => x.Forename);
@@ -122,6 +124,41 @@ namespace FluentValidation.Tests {
 			context.ModelState.IsValidField("Email").ShouldBeFalse(); //Email validation failed
 			context.ModelState.IsValidField("DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
 			context.ModelState.IsValidField("Surname").ShouldBeFalse(); //cross-property
+		}
+
+		[Validator(typeof(TestModel5Validator))]
+		public class TestModel5 {
+			public int Id { get; set; }
+			public bool SomeBool { get; set; }
+		}
+
+		public class TestModel5Validator : AbstractValidator<TestModel5> {
+			public TestModel5Validator() {
+				//force a complex rule
+				RuleFor(x => x.SomeBool).Must(x => x == true);
+				RuleFor(x => x.Id).NotEmpty();
+			}
+		}
+
+		[Test]
+		public void Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
+			var form = new FormCollection {
+				{ "SomeBool", "False" },
+				{ "Id", "0" }
+			};
+
+			var context = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(TestModel5)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider(),
+			};
+
+			binder.BindModel(new ControllerContext(), context);
+
+			context.ModelState.IsValidField("SomeBool").ShouldBeFalse(); //Complex rule
+			context.ModelState.IsValidField("Id").ShouldBeFalse(); //NotEmpty for non-nullable value type
 		}
 
 		[Test]
