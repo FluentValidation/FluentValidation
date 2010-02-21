@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System.Collections.Generic;
 	using System.Linq;
 	using NUnit.Framework;
 
@@ -35,6 +36,14 @@ namespace FluentValidation.Tests {
 			results[1].InterfaceType.ShouldEqual(typeof(IValidator<Model2>));
 		}
 
+		[Test]
+		public void ForEach_iterates_over_types() {
+			var scanner = new AssemblyScanner(new[] { typeof(Model1Validator), typeof(Model2Validator) });
+			var results = new List<AssemblyScanner.AssemblyScanResult>();
+
+			scanner.ForEach(x => results.Add(x));
+			results.Count.ShouldEqual(2);
+		}
 
 		public class Model1 {
 			

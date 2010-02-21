@@ -60,6 +60,15 @@ namespace FluentValidation {
 			return query;
 		}
 
+		/// <summary>
+		/// Performs the specified action to all of the assembly scan results.
+		/// </summary>
+		public void ForEach(Action<AssemblyScanResult> action) {
+			foreach(var result in this) {
+				action(result);
+			}
+		}
+
 		public IEnumerator<AssemblyScanResult> GetEnumerator() {
 			return Execute().GetEnumerator();
 		}
