@@ -74,6 +74,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AbstractValidator.cs" />
+    <Compile Include="AssemblyScanner.cs" />
     <Compile Include="Attributes\AttributedValidatorFactory.cs" />
     <Compile Include="Attributes\ValidatorAttribute.cs" />
     <Compile Include="BackwardsCompatibility.cs" />

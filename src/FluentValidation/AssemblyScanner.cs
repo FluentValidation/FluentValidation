@@ -1,0 +1,82 @@
+#region License
+// Copyright 2008-2009 Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at http://www.codeplex.com/FluentValidation
+#endregion
+
+namespace FluentValidation {
+	using System;
+	using System.Collections;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Reflection;
+
+	/// <summary>
+	/// Class that can be used to find all the validators from a collection of types.
+	/// </summary>
+	public class AssemblyScanner : IEnumerable<AssemblyScanner.AssemblyScanResult> {
+		readonly IEnumerable<Type> types;
+
+		public AssemblyScanner(IEnumerable<Type> types) {
+			this.types = types;
+		}
+
+		/// <summary>
+		/// Finds all the validators in the specified assembly.
+		/// </summary>
+		public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly) {
+			return new AssemblyScanner(assembly.GetExportedTypes());
+		}
+
+		/// <summary>
+		/// Finds all the validators in the assembly containing the specified type.
+		/// </summary>
+		public static AssemblyScanner FindValidatorsInAssemblyContaining<T>() {
+			return FindValidatorsInAssembly(typeof(T).Assembly);
+		}
+
+		private IEnumerable<AssemblyScanResult> Execute() {
+			var openGenericType = typeof(IValidator<>);
+
+			var query = from type in types
+						let interfaces = type.GetInterfaces()
+						let genericInterfaces = interfaces.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
+						let matchingInterface = genericInterfaces.FirstOrDefault()
+						where matchingInterface != null
+						select new AssemblyScanResult(matchingInterface, type);
+
+			return query;
+		}
+
+		public IEnumerator<AssemblyScanResult> GetEnumerator() {
+			return Execute().GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator() {
+			return GetEnumerator();
+		}
+
+		public class AssemblyScanResult {
+			public AssemblyScanResult(Type interfaceType, Type validatorType) {
+				InterfaceType = interfaceType;
+				ValidatorType = validatorType;
+			}
+
+			public Type InterfaceType { get; private set; }
+			public Type ValidatorType { get; private set; }
+		}
+
+	}
+}
