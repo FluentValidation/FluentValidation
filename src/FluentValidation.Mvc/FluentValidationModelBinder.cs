@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Mvc {
 	using System;
+	using System.ComponentModel;
 	using System.Web.Mvc;
 	using Mvc;
 
@@ -40,6 +41,32 @@ namespace FluentValidation.Mvc {
 
 			protected override void OnPropertyValidated(ControllerContext controllerContext, ModelBindingContext bindingContext, System.ComponentModel.PropertyDescriptor propertyDescriptor, object value) {
 				//no-op
+			}
+
+			protected override void SetProperty(ControllerContext controllerContext, ModelBindingContext bindingContext, PropertyDescriptor propertyDescriptor, object value) {
+				//Bypass the built in validation entirely.
+				bool isNonNullableValueTypeWithNullValue = (value == null) && !TypeAllowsNullValue(propertyDescriptor.PropertyType);
+
+				var metadata = bindingContext.PropertyMetadata[propertyDescriptor.Name];
+				string key = CreateSubPropertyName(bindingContext.ModelName, metadata.PropertyName);
+
+				if (!propertyDescriptor.IsReadOnly && !isNonNullableValueTypeWithNullValue) {
+					try {
+						propertyDescriptor.SetValue(bindingContext.Model, value);
+					}
+					catch (Exception exception) {
+						if (bindingContext.ModelState.IsValidField(key)) {
+							bindingContext.ModelState.AddModelError(key, exception);
+						}
+					}
+				}
+			}
+
+			static bool TypeAllowsNullValue(Type type) {
+				if (type.IsValueType) {
+					return (Nullable.GetUnderlyingType(type) != null);
+				}
+				return true;
 			}
 		}
 	}
