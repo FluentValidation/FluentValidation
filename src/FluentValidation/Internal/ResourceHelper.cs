@@ -54,6 +54,12 @@ namespace FluentValidation.Internal {
 		}
 
 		public static ResourceMetaData BuildResourceAccessor(Expression<Func<string>> expression) {
+			var constant = expression.Body as ConstantExpression;
+
+			if(constant != null) {
+				return new ResourceMetaData(null,null, () => (string)constant.Value);
+			}
+
 			var member = expression.GetMember();
 
 			if(member == null) {

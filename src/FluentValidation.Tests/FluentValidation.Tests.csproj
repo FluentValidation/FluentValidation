@@ -142,6 +142,7 @@
     <Compile Include="Person.cs" />
     <Compile Include="PredicateValidatorTester.cs" />
     <Compile Include="PropertyChainTests.cs" />
+    <Compile Include="PropertyValidatorTester.cs" />
     <Compile Include="RegularExpressionValidatorTests.cs" />
     <Compile Include="RuleBuilderTests.cs" />
     <Compile Include="StandalonePropertyValidationTester.cs" />
