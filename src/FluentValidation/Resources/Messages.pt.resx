@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="email_error" xml:space="preserve">
     <value>'{PropertyName}' é um endereço de email inválido.</value>
@@ -148,9 +148,18 @@
     <value>'{PropertyName}' não verifica a condição definida.</value>
   </data>
   <data name="regex_error" xml:space="preserve">
-    <value>'{PropertyName}' tem um formato incorrecto.</value>
+    <value>'{PropertyName}' não se encontra no formato correcto.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
     <value>'{PropertyName}' deve ser igual a '{PropertyValue}'.</value>
+  </data>
+  <data name="exact_length_error" xml:space="preserve">
+    <value>'{PropertyName}' deve ter o comprimento de {MaxLength} caracteres. Introduziu {TotalLength} caracteres.</value>
+  </data>
+  <data name="exclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' deve estar entre {From} e {To} (exclusivo). Introduziu {Value}.</value>
+  </data>
+  <data name="inclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' deve estar entre {From} e {To}. Introduziu {Value}.</value>
   </data>
 </root>
