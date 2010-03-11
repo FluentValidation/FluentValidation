@@ -1,7 +1,8 @@
-1.2 RC - 
+1.2 RC - March 11 2010
 * Re-enabled MVC1 integration. 
 * Tweak ModelValidator behaviour so that all errors are run in one go (again)
 * Added AssemblyScanner.
+* Upgraded to MVC2 RTM.
 
 1.2 beta 3 - Feb 14 2010
 * Fixed issue with MVC2 MetaData throwing exceptions.
