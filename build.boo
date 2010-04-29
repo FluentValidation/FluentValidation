@@ -8,10 +8,10 @@ test_assemblies = ("src/FluentValidation.Tests/bin/${project_configuration}/Flue
 build_silverlight = false
 ncover_path = "C:/Program Files (x86)/ncover"
 
-target default, (init, compile, test, deploy, package):
+target default, (init, compile, compile_silverlight, test, deploy, package):
   pass
 
-target ci, (init, silverlight, compile, coverage, package):
+target ci, (init, silverlight, compile, compile_silverlight, coverage, package):
   pass
   
 target init:
@@ -25,10 +25,12 @@ target silverlight:
 
 desc "Compiles solution"
 target compile:
-  msbuild(file: solution_file, configuration: project_configuration)
+  msbuild(file: solution_file, configuration: project_configuration, version: "4" )
   
+desc "Compiles silverlight"
+target compile_silverlight:
   if build_silverlight:
-    msbuild(file: solution_file_silverlight, configuration: project_configuration)
+    msbuild(file: solution_file_silverlight, configuration: project_configuration, version: "4")
 
 desc "Runs tests"
 target test:
