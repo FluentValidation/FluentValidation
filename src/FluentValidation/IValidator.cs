@@ -22,6 +22,11 @@ namespace FluentValidation {
 	using Results;
 
 	public interface IValidator<T> : IValidator, IEnumerable<IValidationRule<T>> {
+		/// <summary>
+		/// Validates the specified instance.
+		/// </summary>
+		/// <param name="instance">The instance to validate</param>
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		ValidationResult Validate(T instance);
 		/// <summary>
 		/// Validates the specified instance.
@@ -32,7 +37,21 @@ namespace FluentValidation {
 	}
 
 	public interface IValidator {
+		/// <summary>
+		/// Validates the specified instance
+		/// </summary>
+		/// <param name="instance"></param>
+		/// <returns>A ValidationResult containing any validation failures</returns>
 		ValidationResult Validate(object instance);
+
+
+		/// <summary>
+		/// Validates the specified instance.
+		/// </summary>
+		/// <param name="context">A ValidationContext</param>
+		/// <returns>A ValidationResult object containy any validation failures.</returns>
+		ValidationResult Validate(ValidationContext context);
+
 		/// <summary>
 		/// Creates a hook to access various meta data properties
 		/// </summary>

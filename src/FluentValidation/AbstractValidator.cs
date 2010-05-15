@@ -34,8 +34,13 @@ namespace FluentValidation {
 		readonly List<IValidationRuleCollection<T>> nestedValidators = new List<IValidationRuleCollection<T>>();
 
 		ValidationResult IValidator.Validate(object instance) {
-			//TODO: Type checking
 			return Validate((T)instance);
+		}
+
+		ValidationResult IValidator.Validate(ValidationContext context) {
+			var genericContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector);
+
+			return Validate(genericContext);
 		}
 
 		/// <summary>

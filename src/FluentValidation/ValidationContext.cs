@@ -30,4 +30,10 @@ namespace FluentValidation {
 		public T InstanceToValidate { get; private set; }
 		public IValidatorSelector Selector { get; private set; }
 	}
+
+	public class ValidationContext : ValidationContext<object> {
+		public ValidationContext(object instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector) 
+			: base(instanceToValidate, propertyChain, validatorSelector) {
+		}
+	}
 }
