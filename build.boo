@@ -25,7 +25,7 @@ target silverlight:
 
 desc "Compiles solution"
 target compile:
-  msbuild(file: solution_file, configuration: project_configuration, version: "4" )
+  msbuild(file: solution_file, configuration: project_configuration, version: "4", properties: { "TrackFileAccess" : false } )
   
 desc "Compiles silverlight"
 target compile_silverlight:
