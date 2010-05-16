@@ -149,6 +149,7 @@
     <EmbeddedResource Include="Resources\Messages.de.resx" />
     <EmbeddedResource Include="Resources\Messages.es.resx" />
     <EmbeddedResource Include="Resources\Messages.fr.resx" />
+    <EmbeddedResource Include="Resources\Messages.it.resx" />
     <EmbeddedResource Include="Resources\Messages.nl.resx" />
     <EmbeddedResource Include="Resources\Messages.pt.resx" />
     <EmbeddedResource Include="Resources\Messages.resx">
