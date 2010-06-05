@@ -4,6 +4,7 @@ namespace FluentValidation.Tests {
 	using Attributes;
 	using Moq;
 	using NUnit.Framework;
+	using Resources;
 	using xVal.RuleProviders;
 	using xVal.Rules;
 	using xValIntegration;
@@ -132,7 +133,7 @@ namespace FluentValidation.Tests {
 
 			var rules = provider.GetRulesFromType(typeof(Person));
 			var rule = rules["DateOfBirth"].Single().ShouldBe<RangeRule>();
-			rule.Max.ShouldEqual(new DateTime(1987,4,19));
+			rule.Max.ShouldEqual(new DateTime(1987, 4, 19));
 			rule.Min.ShouldBeNull();
 		}
 
@@ -190,5 +191,29 @@ namespace FluentValidation.Tests {
 			rules["Surname"].ElementAt(1).ShouldBe<ComparisonRule>();
 		}
 
+		[Test]
+		public void Copies_error_message_template() {
+			validator.RuleFor(x => x.Surname).NotNull().WithMessage("foo");
+			var rules = provider.GetRulesFromType(typeof(Person));
+			rules["Surname"].Single().ErrorMessage.ShouldEqual("foo");
+		}
+
+		[Test]
+		public void Copies_error_message_resource_using_default_resources() {
+			validator.RuleFor(x => x.Surname).NotNull();
+			var rules = provider.GetRulesFromType(typeof(Person));
+			var rule = rules["Surname"].Single();
+			rule.ErrorMessageResourceName.ShouldEqual("notnull_error");
+			rule.ErrorMessageResourceType.ShouldEqual(typeof(Messages));
+		}
+
+		[Test]
+		public void Copies_error_message_resource_using_Custom_resources() {
+			validator.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(() => TestMessages.notnull_error);
+			var rules = provider.GetRulesFromType(typeof(Person));
+			var rule = rules["Surname"].Single();
+			rule.ErrorMessageResourceName.ShouldEqual("notnull_error");
+			rule.ErrorMessageResourceType.ShouldEqual(typeof(TestMessages));
+		}
 	}
 }

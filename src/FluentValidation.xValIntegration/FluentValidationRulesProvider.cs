@@ -13,25 +13,66 @@
 		readonly IValidatorFactory factory;
 		readonly RuleEmitterList<IPropertyValidator> ruleEmitters = new RuleEmitterList<IPropertyValidator>();
 
+		private void CopyErrorMessages(IPropertyValidator source, Rule destination) {
+			if (source.CustomMessageFormatArguments.Count == 0) {
+				if (source.ErrorMessageResourceType != null && source.ErrorMessageResourceName != null) {
+					destination.ErrorMessageResourceName = source.ErrorMessageResourceName;
+					destination.ErrorMessageResourceType = source.ErrorMessageResourceType;
+				}
+				else {
+					destination.ErrorMessage = source.ErrorMessageTemplate;
+				}
+			}
+		}
+
 		public FluentValidationRulesProvider(IValidatorFactory factory) {
 			this.factory = factory;
 
-			ruleEmitters.AddSingle<INotNullValidator>(x => new RequiredRule());
-			ruleEmitters.AddSingle<INotEmptyValidator>(x => new RequiredRule());
-			ruleEmitters.AddSingle<ILengthValidator>(x => new StringLengthRule(x.Min, x.Max));
-			ruleEmitters.AddSingle<IEmailValidator>(x => new DataTypeRule(DataTypeRule.DataType.EmailAddress));
-			ruleEmitters.AddSingle<IRegularExpressionValidator>(x => new RegularExpressionRule(x.Expression));
+			ruleEmitters.AddSingle<INotNullValidator>(x => {
+				Rule rule = new RequiredRule();
+				CopyErrorMessages(x, rule);
+				return rule;
+			});
+
+			ruleEmitters.AddSingle<INotEmptyValidator>(x => {
+				Rule rule = new RequiredRule();
+				CopyErrorMessages(x, rule);
+				return rule;
+			});
+
+			ruleEmitters.AddSingle<ILengthValidator>(x => {
+				Rule rule = new StringLengthRule(x.Min, x.Max);
+				CopyErrorMessages(x, rule);
+				return rule;
+			});
+
+			ruleEmitters.AddSingle<IEmailValidator>(x => {
+				Rule rule = new DataTypeRule(DataTypeRule.DataType.EmailAddress);
+				CopyErrorMessages(x, rule);
+				return rule;
+			});
+
+			ruleEmitters.AddSingle<IRegularExpressionValidator>(x => {
+				Rule rule = new RegularExpressionRule(x.Expression);
+				CopyErrorMessages(x, rule);
+				return rule;
+			});
 
 			ruleEmitters.AddSingle<IComparisonValidator>(x => {
+				Rule rule = null;
+
 				if (x.Comparison == Comparison.Equal && x.MemberToCompare != null)
-					return new ComparisonRule(x.MemberToCompare.Name, ComparisonRule.Operator.Equals);
+					rule = new ComparisonRule(x.MemberToCompare.Name, ComparisonRule.Operator.Equals);
 				if (x.Comparison == Comparison.NotEqual && x.MemberToCompare != null)
-					return new ComparisonRule(x.MemberToCompare.Name, ComparisonRule.Operator.DoesNotEqual);
+					rule = new ComparisonRule(x.MemberToCompare.Name, ComparisonRule.Operator.DoesNotEqual);
 				if (x.Comparison == Comparison.GreaterThanOrEqual && x.ValueToCompare != null)
-					return GenerateComparisonRule(x.ValueToCompare, x.Comparison);
+					rule = GenerateComparisonRule(x.ValueToCompare, x.Comparison);
 				if (x.Comparison == Comparison.LessThanOrEqual && x.ValueToCompare != null)
-					return GenerateComparisonRule(x.ValueToCompare, x.Comparison);
-				return null;
+					rule = GenerateComparisonRule(x.ValueToCompare, x.Comparison);
+				if (rule != null) {
+					CopyErrorMessages(x, rule);
+				}
+				return rule;
 			});
 
 			//The rule for DelegatingValidator *must* be last
@@ -73,7 +114,7 @@
 		protected override RuleSet GetRulesFromTypeCore(Type type) {
 			var validator = factory.GetValidator(type);
 
-			if(validator != null) {
+			if (validator != null) {
 				var descriptor = validator.CreateDescriptor();
 
 				var rules = from memberWithValidators in descriptor.GetMembersWithValidators()
