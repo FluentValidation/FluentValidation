@@ -20,72 +20,114 @@ namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Linq.Expressions;
 	using System.Reflection;
 	using Results;
 	using Validators;
 
-	/// <summary>
-	/// Defines a validation rule for a property.
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	/// <typeparam name="TProperty"></typeparam>
-	public class PropertyRule<T, TProperty> : IPropertyRule<T> {
-		readonly PropertyModel<T, TProperty> model;
+	public class PropertyRule<T> : IValidationRule<T> {
+		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
+		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
 
-		public PropertyRule(PropertyModel<T, TProperty> propertyModel, IPropertyValidator validator) {
-			this.model = propertyModel;
-			Validator = validator;
+		public CascadeMode CascadeMode {
+			get { return cascadeMode(); }
+			set { cascadeMode = () => value; }
 		}
 
-		public IPropertyValidator Validator { get; set; }
+		public MemberInfo Member { get; private set; }
+		public PropertySelector PropertyFunc { get; private set; }
+		public Expression Expression { get; private set; }
+		public string CustomPropertyName { get; set; }
+		public Action<object> OnFailure { get; set; }
+		public IPropertyValidator CurrentValidator { get; private set; }
 
-		public Action<T> OnFailure {
-			get { return model.OnFailure; }
-			set { model.OnFailure=value; }
+		public IEnumerable<IPropertyValidator> Validators {
+			get { return validators.AsReadOnly(); }
 		}
 
-		public string CustomPropertyName {
-			get { return model.CustomPropertyName; }
-			set { model.CustomPropertyName = value; }
+		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression) {
+			Member = member;
+			PropertyFunc = propertyFunc;
+			Expression = expression;
+			OnFailure = x => { };
+
+			PropertyName = ValidatorOptions.PropertyNameResolver(typeof(T), member);
 		}
 
-		public string PropertyName {
-			get { return model.PropertyName; }
-			set { model.PropertyName = value; }
+		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression) {
+			var member = expression.GetMember();
+			var compiled = expression.Compile();
+			PropertySelector propertySelector = x => compiled((T)x);
+
+			return new PropertyRule<T>(member, propertySelector, expression);
 		}
 
-		public string PropertyDescription {
-			get { return model.PropertyDescription; }
+		public void AddValidator(IPropertyValidator validator) {
+			CurrentValidator = validator;
+			validators.Add(validator);
 		}
 
-		public MemberInfo Member {
-			get { return model.Member; }
+		public void ReplaceCurrentValidtor(IPropertyValidator newValidator) {
+			var index = validators.IndexOf(CurrentValidator);
+			//TODO: Ensure that it is a valid index
+			validators.Insert(index, newValidator);
+			validators.Remove(CurrentValidator);
+			CurrentValidator = newValidator;
 		}
 
 		/// <summary>
-		/// Executes the validator associated with this rule.
+		/// Returns the property name for the property being validated.
+		/// Returns null if it is not a property being validated (eg a method call)
 		/// </summary>
-		/// <param name="instance">The object to validate</param>
-		/// <returns>Will return a <see cref="ValidationFailure">ValidationFailure</see> if validation fails, otherwise null.</returns>
-		public IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
-			//Property Name cannot be determined for non-MemberExpressions. 
-			if (model.PropertyName == null && model.CustomPropertyName == null) {
-				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", model.Expression));
+		public string PropertyName { get; set; }
+
+		public string PropertyDescription {
+			get { return CustomPropertyName ?? PropertyName.SplitPascalCase(); }
+		}
+
+		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
+			var cascade = cascadeMode();
+			bool hasAnyFailure = false;
+
+			foreach (var validator in validators) {
+				var results = InvokePropertyValidator(context, validator);
+
+				bool hasFailure = false;
+
+				foreach (var result in results) {
+					hasAnyFailure = true;
+					hasFailure = true;
+					yield return result;
+				}
+
+				if (cascade == CascadeMode.StopOnFirstFailure && hasFailure) {
+					break;
+				}
+			}
+
+			if (hasAnyFailure) {
+				OnFailure(context.InstanceToValidate);
+			}
+		}
+
+		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext<T> context, IPropertyValidator validator) {
+			if (PropertyName == null && CustomPropertyName == null) {
+				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
 			}
 
 			string propertyName = BuildPropertyName(context);
 
 			if (context.Selector.CanExecute(this, propertyName)) {
-				var validationContext = new PropertyValidatorContext(model.PropertyDescription, context.InstanceToValidate, x => model.PropertyFunc((T)x), propertyName, Member);
+				var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc((T)x), propertyName, Member);
 				validationContext.PropertyChain = context.PropertyChain;
-				return Validator.Validate(validationContext);
+				return validator.Validate(validationContext);
 			}
 
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		private string BuildPropertyName(ValidationContext<T> context) {
-			return context.PropertyChain.BuildPropertyName(model.PropertyName ?? model.CustomPropertyName);
+			return context.PropertyChain.BuildPropertyName(PropertyName ?? CustomPropertyName);
 		}
 	}
 }

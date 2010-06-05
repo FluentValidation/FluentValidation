@@ -16,33 +16,36 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Internal {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using Results;
+namespace FluentValidation.Syntax {
+	using Internal;
 
 	/// <summary>
-	/// A simple implementation of IRuleBuilder that just holds a single validation rule.
+	/// Specifies the cascade mode for the rule. 
 	/// </summary>
-	public class SimpleRuleBuilder<T> : IValidationRuleCollection<T> {
+	public class CascadeStep<T, TProperty> {
+		readonly RuleBuilder<T, TProperty> rule;
 
-		readonly IValidationRule<T> rule;
-
-		public SimpleRuleBuilder(IValidationRule<T> rule) {
-			this.rule = rule;
+		public CascadeStep(RuleBuilder<T, TProperty> ruleBuilder) {
+			this.rule = ruleBuilder;
 		}
 
-		public IEnumerator<IValidationRule<T>> GetEnumerator() {
-			return new List<IValidationRule<T>> {rule}.GetEnumerator();
+		/// <summary>
+		///  When a validator fails, the next validator will be run
+		/// </summary>
+		/// <returns></returns>
+		public IRuleBuilderInitial<T, TProperty> Continue() {
+			rule.Configure(x => x.CascadeMode = CascadeMode.Continue);
+			return rule;
 		}
 
-		IEnumerator IEnumerable.GetEnumerator() {
-			return GetEnumerator();
-		}
 
-		public IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
-			return rule.Validate(context);
+		/// <summary>
+		/// The rule will stop executing as soon as one validator fails.
+		/// </summary>
+		/// <returns></returns>
+		public IRuleBuilderInitial<T, TProperty> StopOnFirstFailure() {
+			rule.Configure(x => x.CascadeMode = CascadeMode.StopOnFirstFailure);
+			return rule;
 		}
 	}
 }

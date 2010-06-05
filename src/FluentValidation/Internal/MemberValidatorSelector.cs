@@ -30,7 +30,7 @@ namespace FluentValidation.Internal {
 			this.members = members;
 		}
 
-		public bool CanExecute<T>(IPropertyRule<T> rule, string propertyPath) {
+		public bool CanExecute<T>(PropertyRule<T> rule, string propertyPath) {
 			return members.Any(x => x == rule.Member);
 		}
 

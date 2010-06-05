@@ -27,7 +27,7 @@ namespace FluentValidation.Internal {
 			this.memberNames = memberNames;
 		}
 
-		public bool CanExecute<T>(IPropertyRule<T> rule, string propertyPath) {
+		public bool CanExecute<T>(PropertyRule<T> rule, string propertyPath) {
 			return memberNames.Any(x => x == propertyPath);
 		}
 	}

@@ -18,11 +18,8 @@
 
 namespace FluentValidation.Internal {
 	using System;
-	using System.Collections;
 	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using Results;
+	using Syntax;
 	using Validators;
 
 	/// <summary>
@@ -30,27 +27,18 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
-	public class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IValidationRuleCollection<T>, IRuleBuilderInitial<T, TProperty> {
-		PropertyRule<T, TProperty> currentRule;
-		readonly PropertyModel<T, TProperty> model;
-		readonly List<IValidationRule<T>> rules = new List<IValidationRule<T>>();
-		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
+	public class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty> {
+		readonly PropertyRule<T> rule;
 
-		public CascadeMode CascadeMode {
-			get { return cascadeMode(); }
-			set { cascadeMode = () => value; }
-		}
-
-		public PropertyModel<T, TProperty> Model {
-			get { return model; }
+		public PropertyRule<T> Rule {
+			get { return rule; }
 		}
 
 		/// <summary>
 		/// Creates a new instance of the <see cref="RuleBuilder{T,TProperty}">RuleBuilder</see> class.
 		/// </summary>
-		/// <param name="expression">Property expression used to initialise the rule builder.</param>
-		public RuleBuilder(Expression<Func<T, TProperty>> expression) {
-			model = new PropertyModel<T, TProperty>(expression.GetMember(), expression.Compile(), expression);
+		public RuleBuilder(PropertyRule<T> rule) {
+			this.rule = rule;
 		}
 
 		/// <summary>
@@ -60,9 +48,7 @@ namespace FluentValidation.Internal {
 		/// <returns></returns>
 		public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator validator) {
 			validator.Guard("Cannot pass a null validator to SetValidator.");
-			var rule = new PropertyRule<T, TProperty>(model, validator);
-			rules.Add(rule);
-			currentRule = rule;
+			rule.AddValidator(validator);
 			return this;
 		}
 
@@ -76,47 +62,13 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		public IRuleBuilderOptions<T, TProperty> Configure(Action<IPropertyRule<T>> configurator) {
-			configurator(currentRule);
+		public IRuleBuilderOptions<T, TProperty> Configure(Action<PropertyRule<T>> configurator) {
+			configurator(rule);
 			return this;
 		}
 
-		public IEnumerator<IValidationRule<T>> GetEnumerator() {
-			return rules.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator() {
-			return GetEnumerator();
-		}
-
-		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
-			var cascade = cascadeMode();
-			bool hasAnyFailure = false;
-
-			foreach(var rule in rules) {
-				var results = rule.Validate(context);
-
-				bool hasFailure = false;
-
-				foreach(var result in results) {
-					hasAnyFailure=true;
-					hasFailure = true;
-					yield return result;
-				}
-
-				if(cascade == CascadeMode.StopOnFirstFailure && hasFailure) {
-					break;
-				}
-			}
-
-			if (hasAnyFailure) {
-				model.OnFailure(context.InstanceToValidate);
-			}
-		}
-
-		public IRuleBuilderInitial<T, TProperty> Configure(Action<RuleBuilder<T, TProperty>> configurator) {
-			configurator(this);
-			return this;
+		public CascadeStep<T, TProperty> Cascade() {
+			return new CascadeStep<T, TProperty>(this);
 		}
 	}
 }

@@ -20,6 +20,7 @@ namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
 	using Internal;
+	using Syntax;
 	using Validators;
 
 	/// <summary>
@@ -27,7 +28,8 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderInitial<T, TProperty> : IFluentInterface, IRuleBuilder<T, TProperty>, IConfigurable<RuleBuilder<T, TProperty>, IRuleBuilderInitial<T, TProperty>> {
+	public interface IRuleBuilderInitial<T, TProperty> : IFluentInterface, IRuleBuilder<T, TProperty> {
+		CascadeStep<T, TProperty> Cascade();
 	}
 
 	/// <summary>
@@ -57,7 +59,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderOptions<T, TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<IPropertyRule<T>, IRuleBuilderOptions<T, TProperty>> {
+	public interface IRuleBuilderOptions<T, TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule<T>, IRuleBuilderOptions<T, TProperty>> {
 
 	}
 }

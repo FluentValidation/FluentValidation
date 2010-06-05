@@ -62,10 +62,10 @@ namespace FluentValidation.Tests {
 			selector.CanExecute(rule, "SomeOtherProperty").ShouldBeFalse();
 		}
 
-		private PropertyRule<TestObject, object> CreateRule(Expression<Func<TestObject, object>> expression) {
-			var builder = new RuleBuilder<TestObject, object>(expression);
-			builder.SetValidator(new NotNullValidator());
-			return (PropertyRule<TestObject, object>)builder.Single();
+		private PropertyRule<TestObject> CreateRule(Expression<Func<TestObject, object>> expression) {
+			var rule = PropertyRule<TestObject>.Create(expression);
+			rule.AddValidator(new NotNullValidator());
+			return rule;
 		}
 
 		private class TestObject {

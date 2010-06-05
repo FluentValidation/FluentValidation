@@ -35,7 +35,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Action<T> onFailure) {
 			return rule.Configure(config => {
-				config.OnFailure = onFailure;
+				config.OnFailure = x => onFailure((T)x);
 			});
 		}
 
@@ -72,11 +72,11 @@ namespace FluentValidation {
 			errorMessage.Guard("A message must be specified when calling WithMessage.");
 
 			return rule.Configure(config => {
-				config.Validator.SetErrorMessage(errorMessage);
+				config.CurrentValidator.SetErrorMessage(errorMessage);
 
 				funcs
 					.Select(func => new Func<object, object>(x => func((T)x)))
-					.ForEach(config.Validator.CustomMessageFormatArguments.Add);
+					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
 			});
 		}
 
@@ -90,7 +90,7 @@ namespace FluentValidation {
 			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)");
 		
 			return rule.Configure(config => {
-				config.Validator.SetErrorMessage(resourceSelector);
+				config.CurrentValidator.SetErrorMessage(resourceSelector);
 			});
 		}
 
@@ -105,8 +105,9 @@ namespace FluentValidation {
 			predicate.Guard("A predicate must be specified when calling When.");
 
 			return rule.Configure(config => {
-				var originalValidator = config.Validator;
-				config.Validator = new DelegatingValidator(x => predicate((T)x), originalValidator);
+				var originalValidator = config.CurrentValidator;
+				var wrappedValidator = new DelegatingValidator(x => predicate((T)x), originalValidator);
+				config.ReplaceCurrentValidtor(wrappedValidator);
 			});
 		}
 
@@ -156,7 +157,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState");
-			return rule.Configure(config => config.Validator.CustomStateProvider = x => stateProvider((T)x));
+			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = x => stateProvider((T)x));
 		}
 
 		static Func<T, object>[] ConvertArrayOfObjectsToArrayOfDelegates<T>(object[] objects) {
