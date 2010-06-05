@@ -100,7 +100,6 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-
 		[ValidationMessage(Key = "notnull_error")]
 		public class ObsoleteNotNullValidator<T, TProperty> : IPropertyValidator<T, TProperty> {
 			public PropertyValidatorResult Validate(PropertyValidatorContext<T, TProperty> context) {

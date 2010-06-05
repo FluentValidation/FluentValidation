@@ -94,7 +94,7 @@ namespace FluentValidation.Validators {
 			Func<T, TProperty> propertyValueFunc = x => (TProperty)context.PropertyValueFunc(x);
 			IEnumerable<Func<T, object>> customMessageFormatArgs = ConvertNewFormatArgsToOldFormatArgs();
 
-			var obsoleteContext = new PropertyValidatorContext<T, TProperty>(context.PropertyDescription, (T)context.Instance, propertyValueFunc, ErrorMessageTemplate, customMessageFormatArgs);
+			var obsoleteContext = new PropertyValidatorContext<T, TProperty>(context.PropertyDescription, (T)context.Instance, propertyValueFunc, ErrorMessageSource.BuildErrorMessage(), customMessageFormatArgs);
 
 			var oldResult = obsoleteValidator.Validate(obsoleteContext);
 			

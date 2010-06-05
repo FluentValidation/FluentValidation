@@ -21,6 +21,7 @@ namespace FluentValidation {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using Internal;
+	using Resources;
 	using Validators;
 
 	public static class DefaultValidatorOptions {
@@ -72,7 +73,7 @@ namespace FluentValidation {
 			errorMessage.Guard("A message must be specified when calling WithMessage.");
 
 			return rule.Configure(config => {
-				config.CurrentValidator.SetErrorMessage(errorMessage);
+				config.CurrentValidator.ErrorMessageSource = new StringErrorMessageSource(errorMessage);
 
 				funcs
 					.Select(func => new Func<object, object>(x => func((T)x)))
@@ -90,7 +91,7 @@ namespace FluentValidation {
 			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)");
 		
 			return rule.Configure(config => {
-				config.CurrentValidator.SetErrorMessage(resourceSelector);
+				config.CurrentValidator.ErrorMessageSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector);
 			});
 		}
 

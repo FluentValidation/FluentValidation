@@ -20,7 +20,7 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Linq.Expressions;
+	using Resources;
 	using Results;
 
 	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
@@ -32,15 +32,16 @@ namespace FluentValidation.Validators {
 			InnerValidator = innerValidator;
 		}
 
+		public IErrorMessageSource ErrorMessageSource {
+			get { return InnerValidator.ErrorMessageSource; }
+			set { InnerValidator.ErrorMessageSource = value; }
+		}
+
 		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			if (condition(context.Instance)) {
 				return InnerValidator.Validate(context);
 			}
 			return Enumerable.Empty<ValidationFailure>();
-		}
-
-		public string ErrorMessageTemplate {
-			get { return InnerValidator.ErrorMessageTemplate; }
 		}
 
 		public ICollection<Func<object, object>> CustomMessageFormatArguments {
@@ -51,29 +52,9 @@ namespace FluentValidation.Validators {
 			get { return false; }
 		}
 
-		public Type ErrorMessageResourceType {
-			get { return InnerValidator.ErrorMessageResourceType; }
-		}
-
-		public string ErrorMessageResourceName {
-			get { return InnerValidator.ErrorMessageResourceName; }
-		}
-
 		public Func<object, object> CustomStateProvider {
 			get { return InnerValidator.CustomStateProvider; }
 			set { InnerValidator.CustomStateProvider = value; }
-		}
-
-		public void SetErrorMessage(string message) {
-			InnerValidator.SetErrorMessage(message);
-		}
-
-		public void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
-			InnerValidator.SetErrorMessage(errorMessageResourceType, resourceName);
-		}
-
-		public void SetErrorMessage(Expression<Func<string>> resourceSelector) {
-			InnerValidator.SetErrorMessage(resourceSelector);
 		}
 
 		IPropertyValidator IDelegatingValidator.InnerValidator {

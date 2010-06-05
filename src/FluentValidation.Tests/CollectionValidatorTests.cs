@@ -74,16 +74,6 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
-		public void WithMessage_not_supported_for_child_rule() {
-
-			typeof(NotSupportedException).ShouldBeThrownBy(() => {
-				new TestValidator() {
-					v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator()).WithMessage("x")
-				};
-			});
-		}
-
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {
 				RuleFor(x => x.ProductName).NotEmpty();

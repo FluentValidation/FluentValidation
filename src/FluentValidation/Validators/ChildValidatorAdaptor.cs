@@ -2,7 +2,6 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Linq.Expressions;
 	using Internal;
 	using Results;
 
@@ -33,17 +32,5 @@ namespace FluentValidation.Validators {
 			return results;
 		}
 
-		
-		public override void SetErrorMessage(string message) {
-			throw new NotSupportedException("Custom error messages are not supported with child validators.");
-		}
-
-		public override void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
-			throw new NotSupportedException("Custom error messages are not supported with child validators.");
-		}
-
-		public override void SetErrorMessage(Expression<Func<string>> resourceSelector) {
-			throw new NotSupportedException("Custom error messages are not supported with child validators.");
-		}
 	}
 }

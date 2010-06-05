@@ -103,16 +103,6 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
-		public void WithMessage_not_supported_for_child_rule() {
-
-			typeof(NotSupportedException).ShouldBeThrownBy(() => {
-				new TestValidator() {
-					v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).WithMessage("x")
-				};
-			});
-		}
-
 		private static string PointlessMethod() { return null; }
 
 		public class PersonValidator : AbstractValidator<Person> {

@@ -20,14 +20,16 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
+	using Resources;
 	using Results;
 
 	internal abstract class NoopPropertyValidator : IPropertyValidator {
-		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
-
-		public virtual string ErrorMessageTemplate {
+		public IErrorMessageSource ErrorMessageSource {
 			get { return null; }
+			set { }
 		}
+
+		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
 		public virtual ICollection<Func<object, object>> CustomMessageFormatArguments {
 			get { return new List<Func<object, object>>(); }
@@ -37,26 +39,9 @@ namespace FluentValidation.Validators {
 			get { return false; }
 		}
 
-		public virtual Type ErrorMessageResourceType {
-			get { return null; }
-		}
-
-		public virtual string ErrorMessageResourceName {
-			get { return null; }
-		}
-
 		public Func<object, object> CustomStateProvider {
 			get { return null; }
 			set { }
-		}
-
-		public virtual void SetErrorMessage(string message) {
-		}
-
-		public virtual void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
-		}
-
-		public virtual void SetErrorMessage(Expression<Func<string>> resourceSelector) {
 		}
 	}
 }

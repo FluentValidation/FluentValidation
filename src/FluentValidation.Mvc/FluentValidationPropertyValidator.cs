@@ -54,7 +54,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			return new[] { new ModelClientValidationRequiredRule(validator.ErrorMessageTemplate) };
+			return new[] { new ModelClientValidationRequiredRule(validator.ErrorMessageSource.BuildErrorMessage()) };
 		}
 
 		public override bool IsRequired {
@@ -76,7 +76,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			return new[] { new ModelClientValidationStringLengthRule(LengthValidator.ErrorMessageTemplate, LengthValidator.Min, LengthValidator.Max) };
+			return new[] { new ModelClientValidationStringLengthRule(LengthValidator.ErrorMessageSource.BuildErrorMessage(), LengthValidator.Min, LengthValidator.Max) };
 		}
 	}
 
@@ -94,7 +94,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			return new[] { new ModelClientValidationRegexRule(RegexValidator.ErrorMessageTemplate, RegexValidator.Expression) };
+			return new[] { new ModelClientValidationRegexRule(RegexValidator.ErrorMessageSource.BuildErrorMessage(), RegexValidator.Expression) };
 
 		}
 	}

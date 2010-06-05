@@ -94,6 +94,9 @@
     <Compile Include="Internal\MessageFormatter.cs" />
     <Compile Include="Internal\PropertyChain.cs" />
     <Compile Include="Internal\PropertyRule.cs" />
+    <Compile Include="Resources\IErrorMessageSource.cs" />
+    <Compile Include="Resources\LocalizedErrorMessageSource.cs" />
+    <Compile Include="Resources\StringErrorMessageSource.cs" />
     <Compile Include="Syntax\CascadeStep.cs" />
     <Compile Include="ValidationContext.cs" />
     <Compile Include="Internal\IValidatorSelector.cs" />

@@ -21,6 +21,7 @@ namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
+	using Resources;
 	using Results;
 	using Validators;
 	using Internal;
@@ -34,6 +35,11 @@ namespace FluentValidation.Mvc {
 
 		public AttributeMetadataValidator(Attribute attributeConverter) {
 			attribute = attributeConverter;
+		}
+
+		public IErrorMessageSource ErrorMessageSource {
+			get { throw new NotImplementedException(); }
+			set { throw new NotImplementedException(); }
 		}
 
 		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
@@ -53,29 +59,9 @@ namespace FluentValidation.Mvc {
 			get { return false; }
 		}
 
-		public Type ErrorMessageResourceType {
-			get { throw new NotImplementedException(); }
-		}
-
-		public string ErrorMessageResourceName {
-			get { throw new NotImplementedException(); }
-		}
-
 		public Func<object, object> CustomStateProvider {
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
-		}
-
-		public void SetErrorMessage(string message) {
-			throw new NotImplementedException();
-		}
-
-		public void SetErrorMessage(Type errorMessageResourceType, string resourceName) {
-			throw new NotImplementedException();
-		}
-
-		public void SetErrorMessage(Expression<Func<string>> resourceSelector) {
-			throw new NotImplementedException();
 		}
 
 		public Attribute ToAttribute() {

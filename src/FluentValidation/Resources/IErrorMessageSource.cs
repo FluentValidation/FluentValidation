@@ -16,22 +16,28 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Validators {
+namespace FluentValidation.Resources {
+
 	using System;
-	using System.Collections.Generic;
-	using Resources;
-	using Results;
 
 	/// <summary>
-	/// A custom property validator.
-	/// This interface should not be implemented directly in your code as it is subject to change.
-	/// Please inherit from <see cref="PropertyValidator">PropertyValidator</see> instead.
+	/// Provides error message templates
 	/// </summary>
-	public interface IPropertyValidator {
-		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
-		ICollection<Func<object, object>> CustomMessageFormatArguments { get; }
-		bool SupportsStandaloneValidation { get; }
-		Func<object, object> CustomStateProvider { get; set; }
-		IErrorMessageSource ErrorMessageSource { get; set; }
+	public interface IErrorMessageSource {
+		/// <summary>
+		/// Construct the error message template
+		/// </summary>
+		/// <returns>Error message template</returns>
+		string BuildErrorMessage();
+
+		/// <summary>
+		/// The name of the resource if localized.
+		/// </summary>
+		string ResourceName { get; }
+
+		/// <summary>
+		/// The type of the resource provider if localized.
+		/// </summary>
+		Type ResourceType { get; }
 	}
 }

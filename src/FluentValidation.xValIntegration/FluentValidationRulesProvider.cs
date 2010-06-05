@@ -15,12 +15,12 @@
 
 		private void CopyErrorMessages(IPropertyValidator source, Rule destination) {
 			if (source.CustomMessageFormatArguments.Count == 0) {
-				if (source.ErrorMessageResourceType != null && source.ErrorMessageResourceName != null) {
-					destination.ErrorMessageResourceName = source.ErrorMessageResourceName;
-					destination.ErrorMessageResourceType = source.ErrorMessageResourceType;
+				if (source.ErrorMessageSource.ResourceType != null && source.ErrorMessageSource.ResourceName != null) {
+					destination.ErrorMessageResourceName = source.ErrorMessageSource.ResourceName;
+					destination.ErrorMessageResourceType = source.ErrorMessageSource.ResourceType;
 				}
 				else {
-					destination.ErrorMessage = source.ErrorMessageTemplate;
+					destination.ErrorMessage = source.ErrorMessageSource.BuildErrorMessage();
 				}
 			}
 		}
