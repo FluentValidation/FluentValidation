@@ -87,17 +87,8 @@
     <Compile Include="..\FluentValidation\Internal\IConfigurable.cs">
       <Link>IConfigurable.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\IFluentInterfaceMarker.cs">
-      <Link>IFluentInterfaceMarker.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Internal\IPropertyRule.cs">
-      <Link>IPropertyRule.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Internal\MessageFormatter.cs">
       <Link>MessageFormatter.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Internal\IValidationRuleCollection.cs">
-      <Link>IValidationRuleCollection.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Internal\PropertySelector.cs">
       <Link>PropertySelector.cs</Link>
@@ -105,11 +96,11 @@
     <Compile Include="..\FluentValidation\Internal\ResourceHelper.cs">
       <Link>ResourceHelper.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\SimpleRuleBuilder.cs">
-      <Link>SimpleRuleBuilder.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Resources\Messages.Designer.cs">
       <Link>Resources\Messages.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Syntax\CascadeStep.cs">
+      <Link>CascadeStep.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\ValidationContext.cs">
       <Link>ValidationContext.cs</Link>
@@ -161,9 +152,6 @@
     </Compile>
     <Compile Include="..\FluentValidation\Internal\MemberValidatorSelector.cs">
       <Link>MemberValidatorSelector.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Internal\PropertyModel.cs">
-      <Link>PropertyModel.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Internal\PropertyRule.cs">
       <Link>PropertyRule.cs</Link>
@@ -274,6 +262,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.fr.resx">
       <Link>Resources\Messages.fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\FluentValidation\Resources\Messages.it.resx">
+      <Link>Resources\Messages.it.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.nl.resx">
       <Link>Resources\Messages.nl.resx</Link>
