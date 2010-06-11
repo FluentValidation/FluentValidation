@@ -3,6 +3,7 @@
 * Simplified the internal model
 * Patch - Italian language resources
 * Introduced IErrorMessageSource to abstract different mechanisms for building error messages
+* Make ChildValidatorAdaptor public
 
 1.2 for SL4 - April 29 2010
 * Ported 1.2 codebase to Silverlight 4.
