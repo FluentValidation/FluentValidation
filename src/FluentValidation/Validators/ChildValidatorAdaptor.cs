@@ -5,8 +5,12 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	internal class ChildValidatorAdaptor<T> : NoopPropertyValidator {
-		readonly IValidator<T> validator;
+	public class ChildValidatorAdaptor<T> : NoopPropertyValidator {
+		readonly IValidator validator;
+
+		protected IValidator Validator {
+			get { return validator; }
+		}
 
 		public ChildValidatorAdaptor(IValidator<T> validator) {
 			this.validator = validator;
@@ -23,14 +27,31 @@ namespace FluentValidation.Validators {
 				return Enumerable.Empty<ValidationFailure>();
 			}
 
-			var propertyChain = new PropertyChain(context.PropertyChain);
-			propertyChain.Add(context.Member);
+			var validator = GetValidator(context);
 
-			var newContext = new ValidationContext<T>((T)instanceToValidate, propertyChain, new DefaultValidatorSelector());
+			if(validator == null) {
+				return Enumerable.Empty<ValidationFailure>();
+			}
+
+			var newContext = CreateNewValidationContextForChildValidator(instanceToValidate, context);
 			var results = validator.Validate(newContext).Errors;
 
 			return results;
 		}
 
+		protected virtual IValidator GetValidator(PropertyValidatorContext context) {
+			return Validator;
+		}
+
+		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
+			return CreateNewValidationContextForChildValidator(instanceToValidate, context, new DefaultValidatorSelector());
+		}
+
+		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext propertyValidatorContext, IValidatorSelector validatorSelector) {
+			var propertyChain = new PropertyChain(propertyValidatorContext.PropertyChain);
+			propertyChain.Add(propertyValidatorContext.Member);
+
+			return new ValidationContext(instanceToValidate, propertyChain, validatorSelector);
+		}
 	}
 }

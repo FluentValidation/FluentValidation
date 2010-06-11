@@ -23,7 +23,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	internal abstract class NoopPropertyValidator : IPropertyValidator {
+	public abstract class NoopPropertyValidator : IPropertyValidator {
 		public IErrorMessageSource ErrorMessageSource {
 			get { return null; }
 			set { }
