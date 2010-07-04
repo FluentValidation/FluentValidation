@@ -29,7 +29,7 @@ namespace FluentValidation.Tests {
 
 		[SetUp]
 		public void Setup() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
 			validator = new TestValidator();
 		}
 

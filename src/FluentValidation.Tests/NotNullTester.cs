@@ -27,7 +27,7 @@ namespace FluentValidation.Tests {
 	public class NotNullTester {
 		[SetUp]
 		public void Setup() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 		}
 
 		[Test]

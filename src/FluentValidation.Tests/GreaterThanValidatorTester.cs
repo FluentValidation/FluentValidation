@@ -33,7 +33,7 @@ namespace FluentValidation.Tests {
 		[SetUp]
 		public void Setup() {
 			validator = new GreaterThanValidator(value);
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 		}
 
 

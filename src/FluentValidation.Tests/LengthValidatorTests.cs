@@ -28,7 +28,7 @@ namespace FluentValidation.Tests {
 	public class LengthValidatorTests {
 		[SetUp]
 		public void Setup() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 		}
 
 		[Test]

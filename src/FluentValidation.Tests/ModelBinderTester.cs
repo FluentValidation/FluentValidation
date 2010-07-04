@@ -17,13 +17,14 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System;
-	using System.Globalization;
-	using System.Linq;
-	using System.Web.Mvc;
-	using Attributes;
-	using Mvc;
-	using NUnit.Framework;
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading;
+    using System.Web.Mvc;
+    using Attributes;
+    using Mvc;
+    using NUnit.Framework;
 
 	[TestFixture]
 	public class ModelBinderTester {
@@ -32,7 +33,8 @@ namespace FluentValidation.Tests {
 
 		[SetUp]
 		public void Setup() {
-			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
 			ModelValidatorProviders.Providers.Add(provider);
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 			binder = new DefaultModelBinder();
