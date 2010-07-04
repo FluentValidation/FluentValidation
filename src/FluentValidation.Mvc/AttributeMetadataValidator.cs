@@ -20,17 +20,15 @@ namespace FluentValidation.Mvc {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Linq.Expressions;
 	using Resources;
 	using Results;
 	using Validators;
-	using Internal;
 
-	internal interface IAttributeMetadataValidator {
+	public interface IAttributeMetadataValidator : IPropertyValidator {
 		Attribute ToAttribute();
 	}
 
-	internal class AttributeMetadataValidator : IPropertyValidator, IAttributeMetadataValidator {
+	internal class AttributeMetadataValidator : IAttributeMetadataValidator {
 		readonly Attribute attribute;
 
 		public AttributeMetadataValidator(Attribute attributeConverter) {
