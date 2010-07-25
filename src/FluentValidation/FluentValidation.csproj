@@ -116,7 +116,7 @@
     <Compile Include="ValidationException.cs" />
     <Compile Include="ValidatorFactoryBase.cs" />
     <Compile Include="ValidatorOptions.cs" />
-    <Compile Include="CascadeMode.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="ValidatorDescriptor.cs" />
     <Compile Include="Validators\AbstractComparisonValidator.cs" />
     <Compile Include="Validators\ChildCollectionValidatorAdaptor.cs" />

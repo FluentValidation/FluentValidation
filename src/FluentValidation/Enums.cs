@@ -21,4 +21,9 @@ namespace FluentValidation {
 		Continue,
 		StopOnFirstFailure
 	}
+
+	public enum ApplyConditionTo {
+		AllValidators,
+		CurrentValidator
+	}
 }

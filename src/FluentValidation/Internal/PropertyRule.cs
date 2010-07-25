@@ -72,12 +72,21 @@ namespace FluentValidation.Internal {
 			validators.Add(validator);
 		}
 
+		public void ReplaceValidator(IPropertyValidator original, IPropertyValidator newValidator) {
+			var index = validators.IndexOf(original);
+			
+			if(index > -1) {
+				validators[index] = newValidator;
+
+				if(ReferenceEquals(CurrentValidator, original)) {
+					CurrentValidator = newValidator;
+				}
+			}
+		}
+
+		[Obsolete("Use ReplaceValiadtor instead.")]
 		public void ReplaceCurrentValidtor(IPropertyValidator newValidator) {
-			var index = validators.IndexOf(CurrentValidator);
-			//TODO: Ensure that it is a valid index
-			validators.Insert(index, newValidator);
-			validators.Remove(CurrentValidator);
-			CurrentValidator = newValidator;
+			ReplaceValidator(CurrentValidator, newValidator);
 		}
 
 		/// <summary>

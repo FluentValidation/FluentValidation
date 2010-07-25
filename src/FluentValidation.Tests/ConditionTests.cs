@@ -49,6 +49,26 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+		[Test]
+		public void Condition_is_applied_to_all_validators_in_the_chain() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").When(x => x.Id > 0)
+			};
+
+			var result = validator.Validate(new Person());
+			result.Errors.Count.ShouldEqual(0);
+		}
+
+		[Test]
+		public void Condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").When(x => x.Id > 0, ApplyConditionTo.CurrentValidator)
+			};
+
+			var result = validator.Validate(new Person());
+			result.Errors.Count.ShouldEqual(1);
+		}
+
 		private class TestConditionValidator : AbstractValidator<Person> {
 			public TestConditionValidator() {
 				RuleFor(x => x.Forename).NotNull().When(x => x.Id == 0);

@@ -84,8 +84,8 @@
     <Compile Include="..\FluentValidation\BackwardsCompatibility.cs">
       <Link>BackwardsCompatibility.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\CascadeMode.cs">
-      <Link>CascadeMode.cs</Link>
+    <Compile Include="..\FluentValidation\Enums.cs">
+      <Link>Enums.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\DefaultValidatorOptions.cs">
       <Link>DefaultValidatorOptions.cs</Link>

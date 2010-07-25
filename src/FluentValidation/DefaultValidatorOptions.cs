@@ -107,6 +107,46 @@ namespace FluentValidation {
 			});
 		}
 
+
+		/// <summary>
+		/// Specifies a condition limiting when the validator should run. 
+		/// The validator will only be executed if the result of the lambda returns true.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="predicate">A lambda expression that specifies a condition for when the validator should run</param>
+		/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> When<T,TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo) {
+			predicate.Guard("A predicate must be specified when calling When.");
+
+			return rule.Configure(config => {
+				// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
+				if (applyConditionTo == ApplyConditionTo.AllValidators) {
+					foreach (var validator in config.Validators.ToList()) {
+						var wrappedValidator = new DelegatingValidator(x => predicate((T)x), validator);
+						config.ReplaceValidator(validator, wrappedValidator);
+					}
+				}
+				else {
+					var wrappedValidator = new DelegatingValidator(x => predicate((T)x), config.CurrentValidator);
+					config.ReplaceValidator(config.CurrentValidator, wrappedValidator);
+				}
+			});
+		}
+
+				/// <summary>
+		/// Specifies a condition limiting when the validator should not run. 
+		/// The validator will only be executed if the result of the lambda returns false.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="predicate">A lambda expression that specifies a condition for when the validator should not run</param>
+		/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> Unless<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo) {
+			predicate.Guard("A predicate must be specified when calling Unless");
+			return rule.When(x => !predicate(x), applyConditionTo);
+		}
+
 		/// <summary>
 		/// Specifies a condition limiting when the validator should run. 
 		/// The validator will only be executed if the result of the lambda returns true.
@@ -115,13 +155,7 @@ namespace FluentValidation {
 		/// <param name="predicate">A lambda expression that specifies a condition for when the validator should run</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> When<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate) {
-			predicate.Guard("A predicate must be specified when calling When.");
-
-			return rule.Configure(config => {
-				var originalValidator = config.CurrentValidator;
-				var wrappedValidator = new DelegatingValidator(x => predicate((T)x), originalValidator);
-				config.ReplaceCurrentValidtor(wrappedValidator);
-			});
+			return rule.When(predicate, ApplyConditionTo.AllValidators);
 		}
 
 
@@ -133,8 +167,7 @@ namespace FluentValidation {
 		/// <param name="predicate">A lambda expression that specifies a condition for when the validator should not run</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Unless<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate) {
-			predicate.Guard("A predicate must be specified when calling Unless");
-			return rule.When(x => !predicate(x));
+			return rule.Unless(predicate, ApplyConditionTo.AllValidators);
 		}
 
 		/// <summary>
