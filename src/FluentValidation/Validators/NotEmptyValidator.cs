@@ -29,12 +29,31 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			if (context.PropertyValue == null || context.PropertyValue.Equals(string.Empty) ||
+			if (context.PropertyValue == null || IsInvalidString(context.PropertyValue) ||
 				Equals(context.PropertyValue, defaultValueForType)) {
 				return false;
 			}
 
 			return true;
+		}
+
+		private bool IsInvalidString(object value) {
+			if(value is string) {
+				return IsNullOrWhiteSpace(value as string);
+			}
+			return false;
+		}
+
+		private bool IsNullOrWhiteSpace(string value) {
+			if (value != null) {
+				for (int i = 0; i < value.Length; i++) {
+					if (!char.IsWhiteSpace(value[i])) {
+						return false;
+					}
+				}
+			}
+			return true;
+
 		}
 	}
 

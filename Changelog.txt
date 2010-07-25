@@ -1,4 +1,4 @@
-1.3 - 
+1.3 - July 26 2010
 * Added non-generic ValidationContext to allow for using Validator Selectors with non-generic IValidator instances
 * Simplified the internal model
 * Patch - Italian language resources
@@ -9,6 +9,7 @@
 * Deprecated Cascade().StopOnFirstFailure() / Cascade().Continue() in favour of Cascade(cascadeMode) for consistency
 * Deprecated PropertyRule.ReplaceCurrentValidator(newValidator) with PropertyRule.ReplaceValidator(originalValidator, newValidator)
 * Changed default behaviour of When/Unless. They now apply to all previous validators in the chain, not only to the current one. Previous behaviour can be maintained by using the overload that takes an ApplyConditionTo.
+* NotEmpty now considers strings that contain whitespace as invalid.
 
 1.2 for SL4 - April 29 2010
 * Ported 1.2 codebase to Silverlight 4.

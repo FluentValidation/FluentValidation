@@ -53,6 +53,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void When_value_is_whitespace_validation_should_fail() {
+			var validator = new NotEmptyValidator(default(string));
+			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => "           "));
+			result.IsValid().ShouldBeFalse();
+		}
+
+		[Test]
 		public void When_value_is_Default_for_type_validator_should_fail_datetime() {
 			var defaultValue = default(DateTime);
 			var validator = new NotEmptyValidator(defaultValue);
