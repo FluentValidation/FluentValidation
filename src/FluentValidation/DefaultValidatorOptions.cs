@@ -25,7 +25,19 @@ namespace FluentValidation {
 	using Validators;
 
 	public static class DefaultValidatorOptions {
-		
+
+		/// <summary>
+		/// Specifies the cascade mode for failures. 
+		/// If set to 'Stop' then execution of the rule will stop once the first validator in the chain fails.
+		/// If set to 'Continue' then all validators in the chain will execute regardless of failures.
+		/// </summary>
+		public static IRuleBuilderInitial<T, TProperty> Cascade<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, CascadeMode cascadeMode) {
+			return ruleBuilder.Configure(cfg => {
+				cfg.CascadeMode = cascadeMode;
+			});
+		}
+
+
 		/// <summary>
 		/// Specifies a custom action to be invoked when the validator fails. 
 		/// </summary>

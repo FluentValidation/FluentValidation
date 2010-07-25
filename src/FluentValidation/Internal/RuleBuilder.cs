@@ -62,13 +62,19 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		public IRuleBuilderOptions<T, TProperty> Configure(Action<PropertyRule<T>> configurator) {
+		[Obsolete("Use Cascade(CascadeMode.StopOnFirstFailure) or Cascade(CascadeMode.Continue) instead")]
+		public CascadeStep<T, TProperty> Cascade() {
+			return new CascadeStep<T, TProperty>(this);
+		}
+
+		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule<T>, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule<T>> configurator) {
 			configurator(rule);
 			return this;
 		}
 
-		public CascadeStep<T, TProperty> Cascade() {
-			return new CascadeStep<T, TProperty>(this);
+		IRuleBuilderInitial<T, TProperty> IConfigurable<PropertyRule<T>, IRuleBuilderInitial<T, TProperty>>.Configure(Action<PropertyRule<T>> configurator) {
+			configurator(rule);
+			return this;
 		}
 	}
 }

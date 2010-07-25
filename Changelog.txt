@@ -5,6 +5,9 @@
 * Introduced IErrorMessageSource to abstract different mechanisms for building error messages
 * Make ChildValidatorAdaptor public
 * Silverlight build is now signed
+* Allow cascade mode to be set at the validator level.
+* Deprecated Cascade().StopOnFirstFailure() / Cascade().Continue() in favour of Cascade(cascadeMode) for consistency
+
 
 1.2 for SL4 - April 29 2010
 * Ported 1.2 codebase to Silverlight 4.

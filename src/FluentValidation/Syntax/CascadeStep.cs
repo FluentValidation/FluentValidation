@@ -17,15 +17,17 @@
 #endregion
 
 namespace FluentValidation.Syntax {
+	using System;
 	using Internal;
+	using FluentValidation;
 
 	/// <summary>
 	/// Specifies the cascade mode for the rule. 
 	/// </summary>
 	public class CascadeStep<T, TProperty> {
-		readonly RuleBuilder<T, TProperty> rule;
+		readonly IRuleBuilderInitial<T, TProperty> rule;
 
-		public CascadeStep(RuleBuilder<T, TProperty> ruleBuilder) {
+		public CascadeStep(IRuleBuilderInitial<T, TProperty> ruleBuilder) {
 			this.rule = ruleBuilder;
 		}
 
@@ -33,19 +35,18 @@ namespace FluentValidation.Syntax {
 		///  When a validator fails, the next validator will be run
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete("Use Cascade(CascadeMode.Continue) instead")]
 		public IRuleBuilderInitial<T, TProperty> Continue() {
-			rule.Configure(x => x.CascadeMode = CascadeMode.Continue);
-			return rule;
+			return rule.Cascade(CascadeMode.Continue);
 		}
-
 
 		/// <summary>
 		/// The rule will stop executing as soon as one validator fails.
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete("Use Cascade(CascadeMode.StopOnFirstFailure) instead")]
 		public IRuleBuilderInitial<T, TProperty> StopOnFirstFailure() {
-			rule.Configure(x => x.CascadeMode = CascadeMode.StopOnFirstFailure);
-			return rule;
+			return rule.Cascade(CascadeMode.StopOnFirstFailure);
 		}
 	}
 }
