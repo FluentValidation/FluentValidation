@@ -10,6 +10,7 @@
 * Deprecated PropertyRule.ReplaceCurrentValidator(newValidator) with PropertyRule.ReplaceValidator(originalValidator, newValidator)
 * Changed default behaviour of When/Unless. They now apply to all previous validators in the chain, not only to the current one. Previous behaviour can be maintained by using the overload that takes an ApplyConditionTo.
 * NotEmpty now considers strings that contain whitespace as invalid.
+* Added ShouldHaveChildValidator(x => x.Property, typeof(SomeChildValidator)) test extension
 
 1.2 for SL4 - April 29 2010
 * Ported 1.2 codebase to Silverlight 4.

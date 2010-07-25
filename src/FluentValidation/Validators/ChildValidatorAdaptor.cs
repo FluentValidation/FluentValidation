@@ -8,7 +8,7 @@ namespace FluentValidation.Validators {
 	public class ChildValidatorAdaptor<T> : NoopPropertyValidator {
 		readonly IValidator validator;
 
-		protected IValidator Validator {
+		public IValidator Validator {
 			get { return validator; }
 		}
 
