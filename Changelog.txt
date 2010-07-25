@@ -4,6 +4,7 @@
 * Patch - Italian language resources
 * Introduced IErrorMessageSource to abstract different mechanisms for building error messages
 * Make ChildValidatorAdaptor public
+* Silverlight build is now signed
 
 1.2 for SL4 - April 29 2010
 * Ported 1.2 codebase to Silverlight 4.
