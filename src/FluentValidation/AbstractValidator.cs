@@ -33,6 +33,16 @@ namespace FluentValidation {
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule<T>> {
 		readonly List<IValidationRule<T>> nestedValidators = new List<IValidationRule<T>>();
 
+		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
+
+		/// <summary>
+		/// Sets the cascade mode for all rules within this validator.
+		/// </summary>
+		public CascadeMode CascadeMode {
+			get { return cascadeMode(); }
+			set { cascadeMode = () => value; }
+		}
+
 		ValidationResult IValidator.Validate(object instance) {
 			return Validate((T)instance);
 		}
@@ -82,7 +92,7 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor");
-			var rule = PropertyRule<T>.Create(expression);
+			var rule = PropertyRule<T>.Create(expression, cascadeMode);
 			AddRule(rule);
 			var ruleBuilder = new RuleBuilder<T, TProperty>(rule);
 			return ruleBuilder;
