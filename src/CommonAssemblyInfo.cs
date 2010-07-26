@@ -26,8 +26,8 @@ using System.Security;
 [assembly : AssemblyProduct("FluentValidation")]
 [assembly : AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2009")]
 [assembly : ComVisible(false)]
-[assembly : AssemblyVersion("1.2.0.0")]
-[assembly : AssemblyFileVersion("1.2.0.0")]
+[assembly : AssemblyVersion("1.3.0.0")]
+[assembly : AssemblyFileVersion("1.3.0.0")]
 [assembly: CLSCompliant(true)]
 #if !SILVERLIGHT
 [assembly: AllowPartiallyTrustedCallers]
