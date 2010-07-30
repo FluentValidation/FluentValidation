@@ -156,4 +156,10 @@
   <data name="exact_length_error" xml:space="preserve">
     <value>"{PropertyName}" måste vara {MaxLength} tecken långt. Du angav {TotalLength} tecken.</value>
   </data>
+  <data name="inclusivebetween_error" xml:space="preserve">
+    <value>"{PropertyName}" måste vara mellan {From} och {To}. Du angav {Value}.</value>
+  </data>
+  <data name="exclusivebetween_error" xml:space="preserve">
+    <value>"{PropertyName}" måste vara mellan {From} och {To} (gränsvärdena exkluderade). Du angav {Value}.</value>
+  </data>
 </root>
