@@ -121,19 +121,19 @@
     <value>"{PropertyName}" är inte en giltig e-postadress.</value>
   </data>
   <data name="greaterthanorequal_error" xml:space="preserve">
-    <value>"{PropertyName}" måste vara större än eller lika med "{ComparisonValue}".</value>
+    <value>"{PropertyName}" måste vara större än eller lika med {ComparisonValue}.</value>
   </data>
   <data name="greaterthan_error" xml:space="preserve">
-    <value>"{PropertyName}" måste vara större än "{ComparisonValue}".</value>
+    <value>"{PropertyName}" måste vara större än {ComparisonValue}.</value>
   </data>
   <data name="length_error" xml:space="preserve">
     <value>"{PropertyName}" måste vara mellan {MinLength} och {MaxLength} tecken långt. Du angav {TotalLength} tecken.</value>
   </data>
   <data name="lessthanorequal_error" xml:space="preserve">
-    <value>"{PropertyName}" måste vara mindre än eller lika med "{ComparisonValue}".</value>
+    <value>"{PropertyName}" måste vara mindre än eller lika med {ComparisonValue}.</value>
   </data>
   <data name="lessthan_error" xml:space="preserve">
-    <value>"{PropertyName}" måste vara mindre än "{ComparisonValue}".</value>
+    <value>"{PropertyName}" måste vara mindre än {ComparisonValue}.</value>
   </data>
   <data name="notempty_error" xml:space="preserve">
     <value>"{PropertyName}" måste anges.</value>
@@ -151,7 +151,7 @@
     <value>"{PropertyName}" har inte ett korrekt format.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>"{PropertyName}" måste vara lika som "{PropertyValue}".</value>
+    <value>"{PropertyName}" måste vara lika med "{PropertyValue}".</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
     <value>"{PropertyName}" måste vara {MaxLength} tecken långt. Du angav {TotalLength} tecken.</value>
