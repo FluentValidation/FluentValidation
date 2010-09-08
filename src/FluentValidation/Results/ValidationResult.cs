@@ -17,9 +17,13 @@
 #endregion
 
 namespace FluentValidation.Results {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 
+#if !SILVERLIGHT
+	[Serializable]
+#endif
 	public class ValidationResult {
 		private readonly List<ValidationFailure> errors = new List<ValidationFailure>();
 
