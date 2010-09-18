@@ -63,12 +63,17 @@ target deploy:
     .ForEach def(file):
       file.CopyToDirectory("${build_dir}/${project_configuration}/Experimental/xVal")
   
-  #silverlight
+  #silverlight & WP7
   if build_silverlight:
     with FileList("src/FluentValidation.Silverlight/bin/${project_configuration}"):
-      .Include("*.{dll,pdb,xml}")
+      .Include("**/*")
       .ForEach def(file):
-        file.CopyToDirectory("${build_dir}/${project_configuration}/Experimental/Silverlight")
+        file.CopyToDirectory("${build_dir}/${project_configuration}/Silverlight")
+        
+    with FileList("src/FluentValidation.WP7/bin/${project_configuration}"):
+      .Include("**/*")
+      .ForEach def(file):
+        file.CopyToDirectory("${build_dir}/${project_configuration}/WP7")
       
   #License/Changelog
   with FileList():
