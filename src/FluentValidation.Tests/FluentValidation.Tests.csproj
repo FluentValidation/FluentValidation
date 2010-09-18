@@ -120,6 +120,7 @@
     <Compile Include="FluentValidationModelValidatorProviderTests.cs" />
     <Compile Include="InclusiveBetweenValidatorTests.cs" />
     <Compile Include="InlineValidatorTester.cs" />
+    <Compile Include="InstanceCacheTester.cs" />
     <Compile Include="MessageFormatterTests.cs" />
     <Compile Include="ModelBinderTester.cs" />
     <Compile Include="CustomValidatorTester.cs" />

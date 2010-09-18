@@ -86,6 +86,7 @@
     <Compile Include="Internal\Extensions.cs" />
     <Compile Include="Internal\IConfigurable.cs" />
     <Compile Include="Internal\IFluentInterface.cs" />
+    <Compile Include="Internal\InstanceCache.cs" />
     <Compile Include="Internal\PropertySelector.cs" />
     <Compile Include="Internal\ResourceHelper.cs" />
     <Compile Include="IValidationRule.cs" />

@@ -18,12 +18,14 @@
 
 namespace FluentValidation.Attributes {
 	using System;
+	using Internal;
 
 	/// <summary>
-	/// Implementation of IValidatorFactory that looks for [Validator] attributes on the specified type in order to provide the validator instance.
-	/// Note that the validators are created by calling Activator.CreateInstance and the created validators are not cached, so there are potential performance implications using this approach.
+	/// Implementation of IValidatorFactory that looks for ValidatorAttribute instances on the specified type in order to provide the validator instance.
 	/// </summary>
 	public class AttributedValidatorFactory : IValidatorFactory {
+		readonly InstanceCache cache = new InstanceCache();
+
 		public IValidator<T> GetValidator<T>() {
 			return (IValidator<T>)GetValidator(typeof(T));
 		}
@@ -37,7 +39,7 @@ namespace FluentValidation.Attributes {
 			if (attribute == null || attribute.ValidatorType == null)
 				return null;
 
-			return (IValidator)Activator.CreateInstance(attribute.ValidatorType);
+			return cache.GetOrCreateInstance(attribute.ValidatorType) as IValidator;
 		}
 	}
 }
