@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F1F2DB04-2FFE-48CB-AE58-52039D9ED7E3}</ProjectGuid>
+    <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FluentValidation</RootNamespace>
+    <AssemblyName>FluentValidation.WP7</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+    <TargetFrameworkProfile>WindowsPhone</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows" />
+    <Reference Include="system" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\fluentvalidation\resources\Messages.de.resx">
+      <Link>Resources\Messages.de.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\fluentvalidation\resources\Messages.es.resx">
+      <Link>Resources\Messages.es.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\fluentvalidation\resources\Messages.fr.resx">
+      <Link>Resources\Messages.fr.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\fluentvalidation\resources\Messages.it.resx">
+      <Link>Resources\Messages.it.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\fluentvalidation\resources\Messages.nl.resx">
+      <Link>Resources\Messages.nl.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\fluentvalidation\resources\Messages.pt.resx">
+      <Link>Resources\Messages.pt.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\fluentvalidation\resources\Messages.resx">
+      <Link>Resources\Messages.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\fluentvalidation\resources\Messages.sv.resx">
+      <Link>Resources\Messages.sv.resx</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\AbstractValidator.cs">
+      <Link>AbstractValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Attributes\AttributedValidatorFactory.cs">
+      <Link>AttributedValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Attributes\ValidatorAttribute.cs">
+      <Link>ValidatorAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\BackwardsCompatibility.cs">
+      <Link>BackwardsCompatibility.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\DefaultValidatorExtensions.cs">
+      <Link>DefaultValidatorExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\DefaultValidatorOptions.cs">
+      <Link>DefaultValidatorOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Enums.cs">
+      <Link>Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\InlineValidator.cs">
+      <Link>InlineValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\DefaultValidatorSelector.cs">
+      <Link>DefaultValidatorSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\DelegateValidator.cs">
+      <Link>DelegateValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\IConfigurable.cs">
+      <Link>IConfigurable.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\IFluentInterface.cs">
+      <Link>IFluentInterface.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\InstanceCache.cs">
+      <Link>InstanceCache.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\IValidatorSelector.cs">
+      <Link>IValidatorSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\MemberNameValidatorSelector.cs">
+      <Link>MemberNameValidatorSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\MemberValidatorSelector.cs">
+      <Link>MemberValidatorSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\MessageFormatter.cs">
+      <Link>MessageFormatter.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\PropertyChain.cs">
+      <Link>PropertyChain.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\PropertyRule.cs">
+      <Link>PropertyRule.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\PropertySelector.cs">
+      <Link>PropertySelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\ResourceHelper.cs">
+      <Link>ResourceHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\RuleBuilder.cs">
+      <Link>RuleBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\IValidationRule.cs">
+      <Link>IValidationRule.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\IValidator.cs">
+      <Link>IValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\IValidatorDescriptor.cs">
+      <Link>IValidatorDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\IValidatorFactory.cs">
+      <Link>IValidatorFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Resources\IErrorMessageSource.cs">
+      <Link>IErrorMessageSource.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Resources\LocalizedErrorMessageSource.cs">
+      <Link>LocalizedErrorMessageSource.cs</Link>
+    </Compile>
+    <Compile Include="..\fluentvalidation\resources\Messages.Designer.cs">
+      <Link>Resources\Messages.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Resources\StringErrorMessageSource.cs">
+      <Link>StringErrorMessageSource.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Results\ValidationFailure.cs">
+      <Link>ValidationFailure.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Results\ValidationResult.cs">
+      <Link>ValidationResult.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Syntax.cs">
+      <Link>Syntax.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Syntax\CascadeStep.cs">
+      <Link>CascadeStep.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\ValidationContext.cs">
+      <Link>ValidationContext.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\ValidationException.cs">
+      <Link>ValidationException.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\ValidatorDescriptor.cs">
+      <Link>ValidatorDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\ValidatorFactoryBase.cs">
+      <Link>ValidatorFactoryBase.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\ValidatorOptions.cs">
+      <Link>ValidatorOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\AbstractComparisonValidator.cs">
+      <Link>AbstractComparisonValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\ChildCollectionValidatorAdaptor.cs">
+      <Link>ChildCollectionValidatorAdaptor.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\ChildValidatorAdaptor.cs">
+      <Link>ChildValidatorAdaptor.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\DelegatingValidator.cs">
+      <Link>DelegatingValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\EmailValidator.cs">
+      <Link>EmailValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\EqualValidator.cs">
+      <Link>EqualValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\ExclusiveBetweenValidator.cs">
+      <Link>ExclusiveBetweenValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\GreaterThanOrEqualValidator.cs">
+      <Link>GreaterThanOrEqualValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\GreaterThanValidator.cs">
+      <Link>GreaterThanValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\InclusiveBetweenValidator.cs">
+      <Link>InclusiveBetweenValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\IPropertyValidator.cs">
+      <Link>IPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\LengthValidator.cs">
+      <Link>LengthValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\LessThanOrEqualValidator.cs">
+      <Link>LessThanOrEqualValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\LessThanValidator.cs">
+      <Link>LessThanValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\NoopPropertyValidator.cs">
+      <Link>NoopPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\NotEmptyValidator.cs">
+      <Link>NotEmptyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\NotEqualValidator.cs">
+      <Link>NotEqualValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\NotNullValidator.cs">
+      <Link>NotNullValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\PredicateValidator.cs">
+      <Link>PredicateValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\PropertyValidator.cs">
+      <Link>PropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\PropertyValidatorContext.cs">
+      <Link>PropertyValidatorContext.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\RegularExpressionValidator.cs">
+      <Link>RegularExpressionValidator.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
+  <ProjectExtensions />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
