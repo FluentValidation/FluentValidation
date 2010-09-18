@@ -111,5 +111,13 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(1);
 		}
 
+		[Test]
+		public void Cascade_mode_can_be_set_after_validator_instantiated() {
+			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
+			validator.CascadeMode = CascadeMode.StopOnFirstFailure;
+			var results = validator.Validate(new Person());
+			results.Errors.Count.ShouldEqual(1);
+		}
+
 	}
 }

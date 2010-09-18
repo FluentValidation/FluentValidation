@@ -92,7 +92,7 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor");
-			var rule = PropertyRule<T>.Create(expression, cascadeMode);
+			var rule = PropertyRule<T>.Create(expression, () => CascadeMode);
 			AddRule(rule);
 			var ruleBuilder = new RuleBuilder<T, TProperty>(rule);
 			return ruleBuilder;
