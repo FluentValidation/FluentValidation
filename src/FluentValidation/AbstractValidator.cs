@@ -81,6 +81,10 @@ namespace FluentValidation {
 			return new ValidatorDescriptor<T>(nestedValidators);
 		}
 
+		bool IValidator.CanValidateInstancesOfType(Type type) {
+			return typeof(T).IsAssignableFrom(type);
+		}
+
 		/// <summary>
 		/// Defines a validation rule for a specify property.
 		/// </summary>

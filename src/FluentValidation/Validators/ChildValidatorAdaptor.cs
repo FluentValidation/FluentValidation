@@ -5,14 +5,14 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	public class ChildValidatorAdaptor<T> : NoopPropertyValidator {
+	public class ChildValidatorAdaptor : NoopPropertyValidator {
 		readonly IValidator validator;
 
 		public IValidator Validator {
 			get { return validator; }
 		}
 
-		public ChildValidatorAdaptor(IValidator<T> validator) {
+		public ChildValidatorAdaptor(IValidator validator) {
 			this.validator = validator;
 		}
 

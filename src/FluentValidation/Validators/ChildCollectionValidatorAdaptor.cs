@@ -23,7 +23,7 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	internal class ChildCollectionValidatorAdaptor : NoopPropertyValidator {
+	public class ChildCollectionValidatorAdaptor : NoopPropertyValidator {
 		readonly IValidator childValidator;
 
 		public IValidator Validator {

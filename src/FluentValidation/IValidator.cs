@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation {
+	using System;
 	using System.Collections.Generic;
 	using Internal;
 	using Results;
@@ -62,5 +63,10 @@ namespace FluentValidation {
 		/// </summary>
 		/// <returns>A IValidatorDescriptor object which contains methods to access metadata</returns>
 		IValidatorDescriptor CreateDescriptor();
+
+		/// <summary>
+		/// Checks to see whether the validator can validate objects of the specified type
+		/// </summary>
+		bool CanValidateInstancesOfType(Type type);
 	}
 }

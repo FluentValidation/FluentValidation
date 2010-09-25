@@ -29,14 +29,6 @@ namespace FluentValidation {
 	/// Extension methods that provide the default set of validators.
 	/// </summary>
 	public static class DefaultValidatorExtensions {
-
-		/// <summary>
-		/// Specifies that a particular validator should be used to validate a collection of nested classes. 
-		/// </summary>
-		public static IRuleBuilderOptions<T, TCollectionProperty> SetValidator<T, TCollectionProperty, TCollectionElement>(this IRuleBuilder<T, TCollectionProperty> ruleBuilder, IValidator<TCollectionElement> validator) where TCollectionProperty : class, IEnumerable<TCollectionElement> {
-			return ruleBuilder.SetValidator(new ChildCollectionValidatorAdaptor(validator));
-		}
-
 		/// <summary>
 		/// Defines a 'not null' validator on the current rule builder. 
 		/// Validation will fail if the property is null.

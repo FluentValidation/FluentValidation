@@ -140,5 +140,26 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person(), "Surname1");
 			result.Errors.Count.ShouldEqual(0);
 		}
+
+		[Test]
+		public void CanValidateInstancesOfType_returns_true_when_comparing_against_same_type() {
+			var validator = (IValidator)this.validator;
+			validator.CanValidateInstancesOfType(typeof(Person)).ShouldBeTrue();
+		}
+
+		[Test]
+		public void CanValidateInstancesOfType_returns_true_when_comparing_against_subclass() {
+			var validator = (IValidator)this.validator;
+			validator.CanValidateInstancesOfType(typeof(DerivedPerson)).ShouldBeTrue();
+		}
+
+		[Test]
+		public void CanValidateInstancesOfType_returns_false_when_comparing_against_some_other_type() {
+			var validator = (IValidator)this.validator;
+			validator.CanValidateInstancesOfType(typeof(Address)).ShouldBeFalse();
+		}
+
+		private class DerivedPerson : Person { }
+
 	}
 }
