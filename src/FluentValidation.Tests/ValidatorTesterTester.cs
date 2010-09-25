@@ -87,7 +87,27 @@ namespace FluentValidation.Tests {
 			validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator));
 		}
 
+		[Test]
+		public void ShouldHaveChildvalidator_throws_when_collection_property_Does_not_have_child_validator() {
+			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() => 
+				validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator))
+			);
+
+			ex.Message.ShouldEqual("Expected property 'Orders' to have a child validator of type 'OrderValidator.'");
+		}
+
+		[Test]
+		public void ShouldHaveChildValidator_should_not_throw_when_property_does_not_have_child_validator() {
+			validator.RuleFor(x => x.Orders).SetValidator(new OrderValidator());
+			validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator));
+		}
+
+
 		private class AddressValidator:AbstractValidator<Address> {
+			
+		}
+
+		private class OrderValidator:AbstractValidator<Order> {
 			
 		}
 	}

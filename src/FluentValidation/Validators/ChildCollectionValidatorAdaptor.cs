@@ -18,14 +18,19 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using Internal;
 	using Results;
 
-	internal class ChildCollectionValidatorAdaptor<TCollection, TCollectionElement> : NoopPropertyValidator where TCollection : class, IEnumerable<TCollectionElement> {
-		readonly IValidator<TCollectionElement> childValidator;
+	internal class ChildCollectionValidatorAdaptor : NoopPropertyValidator {
+		readonly IValidator childValidator;
 
-		public ChildCollectionValidatorAdaptor(IValidator<TCollectionElement> childValidator) {
+		public IValidator Validator {
+			get { return childValidator; }
+		}
+
+		public ChildCollectionValidatorAdaptor(IValidator childValidator) {
 			this.childValidator = childValidator;
 		}
 
@@ -34,7 +39,7 @@ namespace FluentValidation.Validators {
 				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
 			}
 
-			var collection = context.PropertyValue as TCollection;
+			var collection = context.PropertyValue as IEnumerable;
 
 			if (collection == null) {
 				yield break;
@@ -49,7 +54,7 @@ namespace FluentValidation.Validators {
 
 				//The ValidatorSelector should not be propogated downwards. 
 				//If this collection property has been selected for validation, then all properties on those items should be validated.
-				var newContext = new ValidationContext<TCollectionElement>(element, childPropertyChain, new DefaultValidatorSelector());
+				var newContext = new ValidationContext(element, childPropertyChain, new DefaultValidatorSelector());
 
 				var results = childValidator.Validate(newContext).Errors;
 

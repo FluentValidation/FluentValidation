@@ -49,6 +49,7 @@ namespace FluentValidation.TestHelper {
 			var matchingValidators = descriptor.GetValidatorsForMember(expression.GetMember().Name);
 
 			var childValidators = matchingValidators.OfType<ChildValidatorAdaptor<TProperty>>().Select(x => x.Validator);
+			childValidators = childValidators.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.Validator));
 
 			if(! childValidators.Any(x => x.GetType() == childValidatorType)) {
 				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
