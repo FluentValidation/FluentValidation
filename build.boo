@@ -4,8 +4,7 @@ solution_file_silverlight = "FluentValidation.Silverlight.sln"
 project_configuration = "release"
 build_dir = "build"
 test_assemblies = ("src/FluentValidation.Tests/bin/${project_configuration}/FluentValidation.Tests.dll", 
-  "src/FluentValidation.Tests.Mvc3/bin/${project_configuration}/FluentValidation.Tests.Mvc3.dll",
-  "src/FluentValidation.Tests.Mvc1/bin/${project_configuration}/FluentValidation.Tests.Mvc1.dll")
+  "src/FluentValidation.Tests.Mvc3/bin/${project_configuration}/FluentValidation.Tests.Mvc3.dll")
 build_silverlight = false
 ncover_path = "C:/Program Files (x86)/ncover"
 
@@ -56,12 +55,6 @@ target deploy:
     .Include("FluentValidation.Mvc.*")
     .ForEach def(file):
       file.CopyToDirectory("${build_dir}/${project_configuration}/MVC/MVC2")
-  
-  #mvc1 integration
-  with FileList("src/FluentValidation.Mvc1/bin/${project_configuration}"):
-    .Include("FluentValidation.Mvc.*")
-    .ForEach def(file):
-      file.CopyToDirectory("${build_dir}/${project_configuration}/MVC/MVC1")
       
   #xVal
   with FileList("src/FluentValidation.xValIntegration/bin/${project_configuration}"):
