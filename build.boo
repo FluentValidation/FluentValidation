@@ -55,14 +55,7 @@ target deploy:
     .Include("FluentValidation.Mvc.*")
     .ForEach def(file):
       file.CopyToDirectory("${build_dir}/${project_configuration}/MVC/MVC2")
-      
-  #xVal
-  with FileList("src/FluentValidation.xValIntegration/bin/${project_configuration}"):
-    .Include("FluentValidation.xValIntegration.*")
-    .Include("xVal.dll")
-    .ForEach def(file):
-      file.CopyToDirectory("${build_dir}/${project_configuration}/Experimental/xVal")
-  
+        
   #silverlight & WP7
   if build_silverlight:
     with FileList("src/FluentValidation.Silverlight/bin/${project_configuration}"):
