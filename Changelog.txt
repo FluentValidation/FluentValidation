@@ -1,9 +1,10 @@
-1.4 - 
+2.0 beta 1 - 
 * AttributedValidatorFactory is finally production worthy with the introduction of InstanceCache
 * Fixed an issue where CascadeMode values are ignored if they're changed after the rules have been defined.
 * Ported FluentValidation to WP7.
 * ShouldHaveChildValidator test helper now works with child collection validators
 * Simplified the implementation of SetValidator.
+* MVC3 integration
 
 1.3 - July 26 2010
 * Added non-generic ValidationContext to allow for using Validator Selectors with non-generic IValidator instances
