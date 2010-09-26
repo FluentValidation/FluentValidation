@@ -54,7 +54,11 @@ namespace FluentValidation.Mvc.MetadataExtensions {
 		}
 
 		public static IRuleBuilder<T, TProperty> DisplayName<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, string name) {
+#if NET4
+			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new DisplayAttribute { Name = name }));
+#else
 			return ruleBuilder.SetValidator(new AttributeMetadataValidator(new DisplayNameAttribute(name)));
+#endif
 		}
 
 		public static IDisplayFormatBuilder<T, TProperty> DisplayFormat<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
