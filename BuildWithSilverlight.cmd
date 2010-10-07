@@ -1,3 +1,3 @@
 @echo off
-build.cmd silverlight default %*
+build.cmd /p:BuildSilverlight=true %*
 pause

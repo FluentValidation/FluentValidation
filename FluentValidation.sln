@@ -3,8 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3906F280-A567-4AD7-A0EF-7253E95E7852}"
 	ProjectSection(SolutionItems) = preProject
-		build.boo = build.boo
+		buildscripts\build.proj = buildscripts\build.proj
 		Changelog.txt = Changelog.txt
+		buildscripts\FluentValidation.MVC2.nuspec = buildscripts\FluentValidation.MVC2.nuspec
+		buildscripts\FluentValidation.nuspec = buildscripts\FluentValidation.nuspec
 		FluentValidation.snk = FluentValidation.snk
 	EndProjectSection
 EndProject
