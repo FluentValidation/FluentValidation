@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>FluentValidation.MVC3</id>
+    <version></version>
+    <homepage>http://fluentvalidation.codeplex.com</homepage>
+    <authors>
+      <author>Jeremy Skinner</author>
+    </authors>
+    <description>ASP.NET MVC 3 integration for FluentValidation</description>
+    <language>en-US</language>
+    <licenseUrl>http://fluentvalidation.codeplex.com/license</licenseUrl>
+  </metadata>
+  <dependencies>
+    <dependency id="FluentValidation" version="" />
+  </dependencies>
+</package>

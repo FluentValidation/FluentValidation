@@ -10,7 +10,7 @@
 		<BuildSilverlight Condition="'$(BuildSilverlight)' == ''" >true</BuildSilverlight>
 		<TestAssemblies>
 			$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll;
-			$(BaseDir)\src\FluentValidation.Tests.Mvc1\bin\$(Configuration)\FluentValidation.Tests.Mvc1.dll
+			$(BaseDir)\src\FluentValidation.Tests.Mvc3\bin\$(Configuration)\FluentValidation.Tests.Mvc3.dll
 		</TestAssemblies>
 		<MSBuildExtensions>$(BaseDir)\lib\msbuild\msbuild.community.tasks.dll</MSBuildExtensions>
 	</PropertyGroup>
@@ -40,19 +40,18 @@
 		<ItemGroup>
 			<MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\**\*.*" />
 			<Mvc2Binaries Include="$(BaseDir)\src\FluentValidation.Mvc\bin\$(Configuration)\FluentValidation.Mvc.*" />
-			<Mvc1Binaries Include="$(BaseDir)\src\FluentValidation.Mvc1\bin\$(Configuration)\FluentValidation.Mvc.*" />
-			<XValBinaries Include="$(BaseDir)\src\FluentValidation.xValIntegration\bin\$(Configuration)\FluentValidation.xValIntegration.*" />
-			<XValBinaries Include="$(BaseDir)\src\FluentValidation.xValIntegration\bin\$(Configuration)\xVal.dll" />
+			<Mvc3Binaries Include="$(BaseDir)\src\FluentValidation.Mvc3\bin\$(Configuration)\FluentValidation.Mvc.*" />
 			<SilverlightBinaries Include="$(BaseDir)\src\FluentValidation.Silverlight\bin\$(Configuration)\**\*.*" />
+			<WP7Binaries Include="$(BaseDir)\src\FluentValidation.WP7\bin\$(Configuration)\**\*.*" />
 			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
 		</ItemGroup>
 
 		<!-- Copy to the output directory -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation\%(RecursiveDir)"  />
 		<Copy SourceFiles="@(Mvc2Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC2" />
-		<Copy SourceFiles="@(Mvc1Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC1" />
-		<Copy SourceFiles="@(XValBinaries)" DestinationFolder="$(OutputDir)\Experimental\xVal" />
+		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC3" />
 		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(OutputDir)\Silverlight\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+		<Copy SourceFiles="@(WP7Binaries)" DestinationFolder="$(OutputDir)\WP7\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
 		<Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
 	</Target>
 
@@ -67,10 +66,12 @@
 		<!-- First copy the nuspec template files to the package dir -->
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation" />
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC2.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC2" />
+		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC3.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3" />
 
 		<!-- Copy the source files to the package dir -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\NET35\%(RecursiveDir)" />
 		<Copy SourceFiles="@(Mvc2Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC2\lib\NET35" />
+		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3\lib\NET4" />
 		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
 
 		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
@@ -89,9 +90,19 @@
 			XPath="/package/metadata/version"
 			Value="%(AsmInfo.Version)" />
 
-		<!-- Also need to insert the version number into the MVC2 dependencies section -->
+		<XmlUpdate
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+
+		<!-- Also need to insert the version number into the MVC2/MVC3 dependencies section -->
 		<XmlUpdate
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC2\FluentValidation.MVC2.nuspec"
+			XPath="/package/dependencies/dependency[@id='FluentValidation']/@version"
+			Value="%(AsmInfo.Version)" />
+
+		<XmlUpdate
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec"
 			XPath="/package/dependencies/dependency[@id='FluentValidation']/@version"
 			Value="%(AsmInfo.Version)" />
 
@@ -100,6 +111,9 @@
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
 					Command="$(BaseDir)\lib\nupack\nupack.exe $(PackageDir)\temp\FluentValidation.MVC2\FluentValidation.MVC2.nuspec" />
+					
+		<Exec WorkingDirectory="$(BuildDir)\Packages"
+		    	Command="$(BaseDir)\lib\nupack\nupack.exe $(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec" />
 
 		<!--<RemoveDir Directories="$(PackageDir)\temp" />-->
 	</Target>
