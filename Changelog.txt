@@ -1,4 +1,4 @@
-2.0 beta 1 - 
+2.0 beta 1 - October 7 2010
 * AttributedValidatorFactory is finally production worthy with the introduction of InstanceCache
 * Fixed an issue where CascadeMode values are ignored if they're changed after the rules have been defined.
 * Ported FluentValidation to WP7.
