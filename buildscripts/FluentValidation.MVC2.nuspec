@@ -9,7 +9,7 @@
     </authors>
     <description>ASP.NET MVC 2 integration for FluentValidation</description>
     <language>en-US</language>
-    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
+    <licenseUrl>http://fluentvalidation.codeplex.com/license</licenseUrl>
   </metadata>
   <dependencies>
     <dependency id="FluentValidation" version="" />
