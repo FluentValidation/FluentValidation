@@ -57,12 +57,6 @@
     <Compile Include="..\FluentValidation.Mvc\AttributeMetadataValidator.cs">
       <Link>AttributeMetadataValidator.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation.Mvc\FluentValidationModelBinder.cs">
-      <Link>FluentValidationModelBinder.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc\FluentValidationModelBinderDecorator.cs">
-      <Link>FluentValidationModelBinderDecorator.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation.Mvc\FluentValidationModelMetadataProvider.cs">
       <Link>FluentValidationModelMetadataProvider.cs</Link>
     </Compile>
