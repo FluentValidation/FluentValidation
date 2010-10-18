@@ -20,7 +20,6 @@ namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
 	using Internal;
-	using Syntax;
 	using Validators;
 
 	/// <summary>
@@ -29,8 +28,6 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
 	public interface IRuleBuilderInitial<T, TProperty> : IFluentInterface, IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule<T>, IRuleBuilderInitial<T, TProperty>> {
-		[Obsolete("Use Cascade(CascadeMode.StopOnFirstFailure) or Cascade(CascadeMode.Continue) instead")]
-		CascadeStep<T, TProperty> Cascade();
 	}
 
 	/// <summary>

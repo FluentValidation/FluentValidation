@@ -54,7 +54,7 @@ namespace FluentValidation.Tests {
 		public void Validation_continues_on_failure_when_set_to_Stop_globally_and_overriden_at_rule_level() {
 			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
 
-			validator.RuleFor(x => x.Surname).Cascade().Continue().NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
 			results.Errors.Count.ShouldEqual(2);
 		}
@@ -62,7 +62,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level() {
 			ValidatorOptions.CascadeMode = CascadeMode.Continue;
-			validator.RuleFor(x => x.Surname).Cascade().StopOnFirstFailure().NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
 			results.Errors.Count.ShouldEqual(1);
 		}
@@ -97,7 +97,7 @@ namespace FluentValidation.Tests {
 		public void Validation_continues_on_failure_when_set_to_StopOnFirstFailure_at_validator_level_and_overriden_at_rule_level() {
 			validator.CascadeMode = CascadeMode.StopOnFirstFailure;
 
-			validator.RuleFor(x => x.Surname).Cascade().Continue().NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
 			results.Errors.Count.ShouldEqual(2);
 		}
@@ -106,7 +106,7 @@ namespace FluentValidation.Tests {
 		public void Validation_stops_on_failure_when_set_to_Continue_and_overriden_at_rule_level() {
 			validator.CascadeMode = CascadeMode.Continue;
 
-			validator.RuleFor(x => x.Surname).Cascade().StopOnFirstFailure().NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
 			results.Errors.Count.ShouldEqual(1);
 		}

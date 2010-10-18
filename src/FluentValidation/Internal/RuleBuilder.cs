@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Internal {
 	using System;
-	using System.Collections.Generic;
-	using Syntax;
 	using Validators;
 
 	/// <summary>
@@ -60,11 +58,6 @@ namespace FluentValidation.Internal {
 			validator.Guard("Cannot pass a null validator to SetValidator");
 			SetValidator(Extensions.InferPropertyValidatorForChildValidator(Rule, validator));
 			return this;
-		}
-
-		[Obsolete("Use Cascade(CascadeMode.StopOnFirstFailure) or Cascade(CascadeMode.Continue) instead")]
-		public CascadeStep<T, TProperty> Cascade() {
-			return new CascadeStep<T, TProperty>(this);
 		}
 
 		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule<T>, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule<T>> configurator) {

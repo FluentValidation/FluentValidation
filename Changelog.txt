@@ -1,6 +1,7 @@
 2.0 beta 2
 * Breaking change - Renamed the assembly names for SL/WP7 assemblies to FluentValidation.dll for consistency (formerly FluentValidation.Silverlight and FluentValidation.WP7)
 * Breaking change - Finally removed the FV 1.1 backwards compatibility layer.
+* Breaking chagne - Removed the deprecated Cascade() method - use Cascade(cascadeMode) instead (this was deprecated in 1.3)
 * Provide more useful information in ValidationException error message.
 * FluentValidatorModelMetadataProvider now converts NotNull/NotEmpty validators to IsRequired in metadata.
 
