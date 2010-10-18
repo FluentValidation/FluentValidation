@@ -86,11 +86,6 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		[Obsolete("Use ReplaceValiadtor instead.")]
-		public void ReplaceCurrentValidtor(IPropertyValidator newValidator) {
-			ReplaceValidator(CurrentValidator, newValidator);
-		}
-
 		/// <summary>
 		/// Returns the property name for the property being validated.
 		/// Returns null if it is not a property being validated (eg a method call)
