@@ -328,6 +328,33 @@ namespace FluentValidation.Tests {
 			Assert.AreEqual("Custom property name", provider.GetMetadataForProperty(null, typeof(DisplayNameModel), "With").DisplayName);
 		}
 
+		[Test]
+		public void RequiredAttributeSetsRequired() {
+			provider.GetMetadataForProperty(null, typeof(RequiredModel), "WithNotNull")
+				.IsRequired.ShouldBeTrue();
+
+			provider.GetMetadataForProperty(null, typeof(RequiredModel), "WithNotEmpty")
+				.IsRequired.ShouldBeTrue();
+
+			provider.GetMetadataForProperty(null, typeof(RequiredModel), "WithNothing")
+				.IsRequired.ShouldBeFalse();
+
+		}
+
+
+		class RequiredModel {
+			public string WithNotNull { get; set; }
+			public string WithNotEmpty { get; set; }
+			public string WithNothing { get; set; }
+
+			public class Validator : AbstractValidator<RequiredModel> {
+				public Validator() {
+					RuleFor(x => x.WithNotNull).NotNull();
+					RuleFor(x => x.WithNotEmpty).NotEmpty();
+				}
+			}
+		}
+
 
 		private class TestValidatorFactory : IValidatorFactory {
 			public IValidator<T> GetValidator<T>() {
@@ -356,6 +383,9 @@ namespace FluentValidation.Tests {
 				}
 				if (type == typeof(DisplayNameModel)) {
 					return new DisplayNameModel.Validator();
+				}
+				if(type == typeof(RequiredModel)) {
+					return new RequiredModel.Validator();
 				}
 
 				return null;
