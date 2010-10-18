@@ -69,7 +69,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\..\FluentValidation.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\FluentValidation.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows" />
@@ -312,7 +312,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\FluentValidation.snk">
+    <None Include="..\FluentValidation.snk">
       <Link>FluentValidation.snk</Link>
     </None>
   </ItemGroup>
