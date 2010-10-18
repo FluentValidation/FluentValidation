@@ -1,3 +1,6 @@
+2.0 beta 2
+* Breaking change - Renamed the assembly names for SL/WP7 assemblies to FluentValidation.dll for consistency (formerly FluentValidation.Silverlight and FluentValidation.WP7)
+
 2.0 beta 1 - October 7 2010
 * AttributedValidatorFactory is finally production worthy with the introduction of InstanceCache
 * Fixed an issue where CascadeMode values are ignored if they're changed after the rules have been defined.
