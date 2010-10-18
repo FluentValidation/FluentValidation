@@ -396,7 +396,8 @@ namespace FluentValidation {
 		/// <param name="propertyExpressions">Expressions to specify the properties to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, params Expression<Func<T, object>>[] propertyExpressions) {
-			return validator.Validate(instance, MemberValidatorSelector.FromExpressions(propertyExpressions));
+			var context = new ValidationContext<T>(instance, new PropertyChain(), MemberValidatorSelector.FromExpressions(propertyExpressions));
+			return validator.Validate(context);
 		}
 
 		/// <summary>
@@ -406,7 +407,8 @@ namespace FluentValidation {
 		/// <param name="properties">The names of the properties to validate.</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, params string[] properties) {
-			return validator.Validate(instance, new MemberNameValidatorSelector(properties));
+			var context = new ValidationContext<T>(instance, new PropertyChain(), new MemberNameValidatorSelector(properties));
+			return validator.Validate(context);
 		}
 
 		public static void ValidateAndThrow<T>(this IValidator<T> validator, T instance) {

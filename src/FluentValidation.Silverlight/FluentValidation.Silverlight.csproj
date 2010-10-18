@@ -81,9 +81,6 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\FluentValidation\BackwardsCompatibility.cs">
-      <Link>BackwardsCompatibility.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Enums.cs">
       <Link>Enums.cs</Link>
     </Compile>

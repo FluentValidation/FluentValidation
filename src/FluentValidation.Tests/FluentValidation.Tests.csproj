@@ -138,7 +138,6 @@
     <Compile Include="NotEmptyTester.cs" />
     <Compile Include="NotEqualValidatorTests.cs" />
     <Compile Include="NotNullTester.cs" />
-    <Compile Include="BackwardsCompatibilityTester.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="PredicateValidatorTester.cs" />
     <Compile Include="PropertyChainTests.cs" />

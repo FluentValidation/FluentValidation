@@ -86,9 +86,6 @@
     <Compile Include="..\FluentValidation\Attributes\ValidatorAttribute.cs">
       <Link>ValidatorAttribute.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\BackwardsCompatibility.cs">
-      <Link>BackwardsCompatibility.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\DefaultValidatorExtensions.cs">
       <Link>DefaultValidatorExtensions.cs</Link>
     </Compile>
