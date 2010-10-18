@@ -49,5 +49,16 @@ namespace FluentValidation.Tests {
 			var ex = (ValidationException)typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
 			ex.Errors.Count().ShouldEqual(1);
 		}
+
+		[Test]
+		public void ToString_provides_error_details() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Forename).NotNull()
+			};
+
+			var ex = typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+			ex.ToString().ShouldStartWith("FluentValidation.ValidationException: Validation failed: \r\n -- 'Surname' must not be empty.\r\n -- 'Forename' must not be empty.");
+		}
 	}
 }

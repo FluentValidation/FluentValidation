@@ -20,12 +20,18 @@ namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
 	using Results;
+	using System.Linq;
 
 	public class ValidationException : Exception {
 		public IEnumerable<ValidationFailure> Errors { get; private set; }
 
-		public ValidationException(IEnumerable<ValidationFailure> errors) : base("Validation failed. See the Errors collection for details.") {
+		public ValidationException(IEnumerable<ValidationFailure> errors) : base(BuildErrorMesage(errors)) {
 			Errors = errors;
+		}
+
+		private static string BuildErrorMesage(IEnumerable<ValidationFailure> errors) {
+			var arr = errors.Select(x => "\r\n -- " + x.ErrorMessage).ToArray();
+			return "Validation failed: " + string.Join("", arr);
 		}
 	}
 }
