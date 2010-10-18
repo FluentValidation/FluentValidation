@@ -114,9 +114,6 @@
     <Compile Include="..\FluentValidation\Resources\StringErrorMessageSource.cs">
       <Link>StringErrorMessageSource.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Syntax\CascadeStep.cs">
-      <Link>CascadeStep.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\ValidationContext.cs">
       <Link>ValidationContext.cs</Link>
     </Compile>

@@ -176,9 +176,6 @@
     <Compile Include="..\FluentValidation\Syntax.cs">
       <Link>Syntax.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Syntax\CascadeStep.cs">
-      <Link>CascadeStep.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\ValidationContext.cs">
       <Link>ValidationContext.cs</Link>
     </Compile>
