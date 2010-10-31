@@ -81,39 +81,44 @@
 
 		<!-- insert the version number into the nuspec files -->
 		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation\FluentValidation.nuspec"
 			XPath="/package/metadata/version"
 			Value="%(AsmInfo.Version)" />
 
 		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC2\FluentValidation.MVC2.nuspec"
 			XPath="/package/metadata/version"
 			Value="%(AsmInfo.Version)" />
 
 		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec"
 			XPath="/package/metadata/version"
 			Value="%(AsmInfo.Version)" />
 
 		<!-- Also need to insert the version number into the MVC2/MVC3 dependencies section -->
 		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC2\FluentValidation.MVC2.nuspec"
-			XPath="/package/dependencies/dependency[@id='FluentValidation']/@version"
+			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation']/@version"
 			Value="%(AsmInfo.Version)" />
 
 		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec"
-			XPath="/package/dependencies/dependency[@id='FluentValidation']/@version"
+			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation']/@version"
 			Value="%(AsmInfo.Version)" />
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages" 
-					Command="$(BaseDir)\lib\nupack\nupack.exe $(PackageDir)\temp\FluentValidation\FluentValidation.nuspec" />
+					Command="$(BaseDir)\lib\nupack\nupack.exe pack $(PackageDir)\temp\FluentValidation\FluentValidation.nuspec" />
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
-					Command="$(BaseDir)\lib\nupack\nupack.exe $(PackageDir)\temp\FluentValidation.MVC2\FluentValidation.MVC2.nuspec" />
+					Command="$(BaseDir)\lib\nupack\nupack.exe pack $(PackageDir)\temp\FluentValidation.MVC2\FluentValidation.MVC2.nuspec" />
 					
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
-		    	Command="$(BaseDir)\lib\nupack\nupack.exe $(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec" />
+		    	Command="$(BaseDir)\lib\nupack\nupack.exe pack $(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec" />
 
 		<!--<RemoveDir Directories="$(PackageDir)\temp" />-->
 	</Target>

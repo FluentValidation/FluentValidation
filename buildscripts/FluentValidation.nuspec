@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <package>
   <metadata>
     <id>FluentValidation</id>
     <version></version>
-    <homepage>http://fluentvalidation.codeplex.com</homepage>
-    <authors>
-      <author>Jeremy Skinner</author>
-    </authors>
-    <description>A validation library for .NET, Silverlight and WP7 that uses a fluent interface to construct strongly-typed validation rules.</description>
-    <language>en-US</language>
+    <authors>Jeremy Skinner</authors>
     <licenseUrl>http://fluentvalidation.codeplex.com/license</licenseUrl>
+	<projectUrl>http://fluentvalidation.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A validation library for .NET, Silverlight and WP7 that uses a fluent interface to construct strongly-typed validation rules.</description>
+    <summary>A validation library for .NET, Silverlight and WP7 that uses a fluent interface to construct strongly-typed validation rules.</summary>
+    <language>en-US</language>
   </metadata>
 </package>

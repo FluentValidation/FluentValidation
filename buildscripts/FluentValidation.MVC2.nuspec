@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <package>
   <metadata>
     <id>FluentValidation.MVC2</id>
     <version></version>
-    <homepage>http://fluentvalidation.codeplex.com</homepage>
-    <authors>
-      <author>Jeremy Skinner</author>
-    </authors>
-    <description>ASP.NET MVC 2 integration for FluentValidation</description>
-    <language>en-US</language>
+    <authors>Jeremy Skinner</authors>
     <licenseUrl>http://fluentvalidation.codeplex.com/license</licenseUrl>
+	<projectUrl>http://fluentvalidation.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ASP.NET MVC 2 integration for FluentValidation</description>
+    <summary>ASP.NET MVC 2 integration for FluentValidation</summary>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="FluentValidation" version="" />
+    </dependencies>
   </metadata>
-  <dependencies>
-    <dependency id="FluentValidation" version="" />
-  </dependencies>
 </package>
