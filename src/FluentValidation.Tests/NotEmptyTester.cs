@@ -18,16 +18,14 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
 	using NUnit.Framework;
-	using Validators;
 
 	[TestFixture]
 	public class NotEmptyTester {
-		
-
 		[SetUp]
 		public void Setup() {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
@@ -94,6 +92,16 @@ namespace FluentValidation.Tests {
 
 			var result1 = validator.Validate(new Person{Id = 1});
 			result1.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Fails_when_collection_empty() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Children).NotEmpty()
+			};
+
+			var result = validator.Validate(new Person { Children = new List<Person>() });
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
