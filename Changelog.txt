@@ -4,6 +4,7 @@
 * Breaking chagne - Removed the deprecated Cascade() method - use Cascade(cascadeMode) instead (this was deprecated in 1.3)
 * Provide more useful information in ValidationException error message.
 * FluentValidatorModelMetadataProvider now converts NotNull/NotEmpty validators to IsRequired in metadata.
+* Patch - updated German localization
 
 2.0 beta 1 - October 7 2010
 * AttributedValidatorFactory is finally production worthy with the introduction of InstanceCache
