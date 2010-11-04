@@ -5,6 +5,7 @@
 * Provide more useful information in ValidationException error message.
 * FluentValidatorModelMetadataProvider now converts NotNull/NotEmpty validators to IsRequired in metadata.
 * Patch - updated German localization
+* Using a child validator on a collection will now skip items in the collection that are null.
 
 2.0 beta 1 - October 7 2010
 * AttributedValidatorFactory is finally production worthy with the introduction of InstanceCache
