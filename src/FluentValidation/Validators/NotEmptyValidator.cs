@@ -13,13 +13,11 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 // 
-// The latest version of this file can be found at http://www.codeplex.com/FluentValidation
+// The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
 	using System.Collections;
-	using Attributes;
 	using Resources;
 
 	public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
@@ -31,10 +29,10 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			if (context.PropertyValue == null 
-				|| IsInvalidString(context.PropertyValue) 
-				|| IsEmptyCollection(context.PropertyValue)
-				|| Equals(context.PropertyValue, defaultValueForType)) {
+			if (context.PropertyValue == null
+			    || IsInvalidString(context.PropertyValue)
+			    || IsEmptyCollection(context.PropertyValue)
+			    || Equals(context.PropertyValue, defaultValueForType)) {
 				return false;
 			}
 
@@ -47,7 +45,7 @@ namespace FluentValidation.Validators {
 		}
 
 		bool IsInvalidString(object value) {
-			if(value is string) {
+			if (value is string) {
 				return IsNullOrWhiteSpace(value as string);
 			}
 			return false;
@@ -62,7 +60,6 @@ namespace FluentValidation.Validators {
 				}
 			}
 			return true;
-
 		}
 	}
 
