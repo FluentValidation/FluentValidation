@@ -153,4 +153,13 @@
   <data name="equal_error" xml:space="preserve">
     <value>'{PropertyName}' muss gleich '{PropertyValue}' sein.</value>
   </data>
+  <data name="exact_length_error" xml:space="preserve">
+    <value>'{PropertyName}' muss genau {MaxLength} lang sein. Es wurden {TotalLength} eingegeben.</value>
+  </data>
+  <data name="exclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' muss zwischen {From} und {To} sein (exklusiv). Es wurde {Value} eingegeben.</value>
+  </data>
+  <data name="inclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' must zwischen {From} and {To} sein. Es wurde {Value} eingegeben.</value>
+  </data>
 </root>
