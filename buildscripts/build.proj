@@ -112,13 +112,13 @@
 			Value="%(AsmInfo.Version)" />
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages" 
-					Command="$(BaseDir)\lib\nupack\nupack.exe pack $(PackageDir)\temp\FluentValidation\FluentValidation.nuspec" />
+					Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation\FluentValidation.nuspec" />
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
-					Command="$(BaseDir)\lib\nupack\nupack.exe pack $(PackageDir)\temp\FluentValidation.MVC2\FluentValidation.MVC2.nuspec" />
+					Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC2\FluentValidation.MVC2.nuspec" />
 					
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
-		    	Command="$(BaseDir)\lib\nupack\nupack.exe pack $(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec" />
+		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec" />
 
 		<!--<RemoveDir Directories="$(PackageDir)\temp" />-->
 	</Target>
