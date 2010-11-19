@@ -32,6 +32,7 @@ namespace FluentValidation.Tests {
 		[SetUp]
 		public void Setup() {
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 			fromDate = new DateTime(2009, 1, 1);
 			toDate = new DateTime(2009, 12, 31);
 		}

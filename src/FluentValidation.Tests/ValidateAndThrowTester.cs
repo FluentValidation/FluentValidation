@@ -17,11 +17,20 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System.Linq;
-	using NUnit.Framework;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading;
+    using NUnit.Framework;
 
 	[TestFixture]
 	public class ValidateAndThrowTester {
+
+        [SetUp]
+        public void SetUp() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        }
+
 		[Test]
 		public void Throws_exception() {
 			var validator = new TestValidator {
