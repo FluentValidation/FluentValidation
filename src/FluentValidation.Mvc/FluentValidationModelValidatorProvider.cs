@@ -44,6 +44,13 @@ namespace FluentValidation.Mvc {
 			this.validatorFactory = validatorFactory;
 		}
 
+		public void Add(Type validatorType, FluentValidationModelValidationFactory factory) {
+			if(validatorType == null) throw new ArgumentNullException("validatorType");
+			if(factory == null) throw new ArgumentNullException("factory");
+
+			validatorFactories[validatorType] = factory;
+		}
+
 		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context) {
 			if (IsValidatingProperty(metadata)) {
 				return GetValidatorsForProperty(metadata, context, validatorFactory.GetValidator(metadata.ContainerType));
