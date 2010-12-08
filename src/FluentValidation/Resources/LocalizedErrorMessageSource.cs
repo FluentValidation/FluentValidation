@@ -26,7 +26,6 @@ namespace FluentValidation.Resources {
 	/// Implementation of IErrorMessageSource that uses a resource provider and resource name.
 	/// </summary>
 	public class LocalizedErrorMessageSource : IErrorMessageSource {
-		static readonly Type defaultResourceType = typeof(Messages);
 		readonly Func<string> accessor;
 		readonly Type resourceType;
 		readonly string resourceName;
@@ -36,41 +35,20 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		/// <param name="resourceType">The resource type</param>
 		/// <param name="resourceName">The resource name</param>
-		public LocalizedErrorMessageSource(Type resourceType, string resourceName) {
+		/// <param name="resourceProviderSelectionStrategy">Strategy used to construct the resource accessor</param>
+		public LocalizedErrorMessageSource(Type resourceType, string resourceName, IResourceProviderSelectionStrategy resourceProviderSelectionStrategy) {
 			this.resourceType = resourceType;
 			this.resourceName = resourceName;
-
-			PropertyInfo property = null;
-
-			if (resourceType == defaultResourceType && ValidatorOptions.ResourceProviderType != null) {
-				property = ValidatorOptions.ResourceProviderType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
-
-				if (property != null) {
-					resourceType = ValidatorOptions.ResourceProviderType;
-				}
-			}
-
-			if (property == null) {
-				property = resourceType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
-			}
-
-			if (property == null) {
-				throw new InvalidOperationException(string.Format("Could not find a property named '{0}' on type '{1}'.", resourceName, resourceType));
-			}
-
-			if (property.PropertyType != typeof(string)) {
-				throw new InvalidOperationException(string.Format("Property '{0}' on type '{1}' does not return a string", resourceName, resourceType));
-			}
-
-			accessor = () => (string)property.GetValue(null, null);
+			this.accessor = resourceProviderSelectionStrategy.GetResourceAccessor(resourceType, resourceName);
 		}
 
 		/// <summary>
 		/// Creates an IErrorMessageSource from an expression: () => MyResources.SomeResourceName
 		/// </summary>
 		/// <param name="expression">The expression </param>
+		/// <param name="resourceProviderSelectionStrategy">Strategy used to construct the resource accessor</param>
 		/// <returns>Error message source</returns>
-		public static IErrorMessageSource CreateFromExpression(Expression<Func<string>> expression) {
+		public static IErrorMessageSource CreateFromExpression(Expression<Func<string>> expression, IResourceProviderSelectionStrategy resourceProviderSelectionStrategy) {
 			var constant = expression.Body as ConstantExpression;
 
 			if (constant != null) {
@@ -85,7 +63,7 @@ namespace FluentValidation.Resources {
 
 			var resourceType = member.DeclaringType;
 			var resourceName = member.Name;
-			return new LocalizedErrorMessageSource(resourceType, resourceName);
+			return new LocalizedErrorMessageSource(resourceType, resourceName, resourceProviderSelectionStrategy);
 		}
 
 		/// <summary>

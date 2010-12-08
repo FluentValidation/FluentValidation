@@ -103,7 +103,8 @@ namespace FluentValidation {
 			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)");
 		
 			return rule.Configure(config => {
-				config.CurrentValidator.ErrorMessageSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector);
+				// We use the StaticResourceProviderSelectionStrategy here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
+				config.CurrentValidator.ErrorMessageSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector, new StaticResourceProviderSelectionStrategy());
 			});
 		}
 
