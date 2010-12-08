@@ -105,6 +105,9 @@
     <Compile Include="..\FluentValidation\Resources\IErrorMessageSource.cs">
       <Link>IErrorMessageSource.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Resources\IResourceProviderSelectionStrategy.cs">
+      <Link>IResourceProviderSelectionStrategy.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Resources\LocalizedErrorMessageSource.cs">
       <Link>LocalizedErrorMessageSource.cs</Link>
     </Compile>
