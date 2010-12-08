@@ -57,7 +57,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void Uses_custom_resouces() {
+		public void ResourceProviderType_overrides_default_messages() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 
 			var validator = new TestValidator() {
