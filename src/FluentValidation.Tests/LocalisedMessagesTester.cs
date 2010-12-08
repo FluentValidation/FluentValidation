@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System;
 	using System.Diagnostics;
 	using System.Globalization;
 	using System.Linq;
@@ -88,6 +89,30 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
 		}
 
+		[Test]
+		public void Custom_property_validators_should_respect_ResourceProvider() {
+			ValidatorOptions.ResourceProviderType = typeof(MyResources);
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).SetValidator(new MyPropertyValidator())
+			};
+
+			var results = validator.Validate(new Person());
+			results.Errors.Single().ErrorMessage.ShouldEqual("foo");
+		}
+
+
+		[Test]
+		public void When_using_explicitly_localized_message_with_custom_validator_does_not_fall_back_to_ResourceProvider() {
+			ValidatorOptions.ResourceProviderType = typeof(MyResources);
+
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).SetValidator(new MyPropertyValidator())
+					.WithLocalizedMessage(() => MyOverridenResources.notempty_error)
+			};
+
+			var results = validator.Validate(new Person());
+			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
+		}
 
 		private class MyResources {
 			public static string notempty_error {
@@ -98,6 +123,16 @@ namespace FluentValidation.Tests {
 		private class MyOverridenResources {
 			public static string notempty_error {
 				get { return "bar"; }
+			}
+		}
+
+		private class MyPropertyValidator : PropertyValidator {
+			public MyPropertyValidator() : base(() => MyOverridenResources.notempty_error) {
+				
+			}
+
+			protected override bool IsValid(PropertyValidatorContext context) {
+				return false;
 			}
 		}
 	}
