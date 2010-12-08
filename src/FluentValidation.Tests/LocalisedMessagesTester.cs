@@ -35,7 +35,7 @@ namespace FluentValidation.Tests {
 			try {
 				var validator = new NotEmptyValidator(null);
 
-				foreach (var culture in new[] {"en", "de", "fr"}) {
+				foreach (var culture in new[] { "en", "de", "fr" }) {
 					Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 					var message = Messages.ResourceManager.GetString("notempty_error");
 					var errorMessage = new MessageFormatter().AppendPropertyName("name").BuildMessage(message);
@@ -54,9 +54,13 @@ namespace FluentValidation.Tests {
 		public void Uses_custom_resouces() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 
-			var validator = new NotEmptyValidator(null);
-			var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
-			result.Single().ErrorMessage.ShouldEqual("foo");
+			var validator = new TestValidator() {
+				v => v.RuleFor(x => x.Surname).NotEmpty()
+			};
+
+			var result = validator.Validate(new Person());
+			// 'foo' is the error message for the NotEmptyValidator defined in the customised MyResources type.
+			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 
 			ValidatorOptions.ResourceProviderType = null;
 		}
