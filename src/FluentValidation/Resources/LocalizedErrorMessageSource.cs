@@ -35,11 +35,11 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		/// <param name="resourceType">The resource type</param>
 		/// <param name="resourceName">The resource name</param>
-		/// <param name="resourceProviderSelectionStrategy">Strategy used to construct the resource accessor</param>
-		public LocalizedErrorMessageSource(Type resourceType, string resourceName, IResourceProviderSelectionStrategy resourceProviderSelectionStrategy) {
+		/// <param name="resourceAccessorBuilder">Strategy used to construct the resource accessor</param>
+		public LocalizedErrorMessageSource(Type resourceType, string resourceName, IResourceAccessorBuilder resourceAccessorBuilder) {
 			this.resourceType = resourceType;
 			this.resourceName = resourceName;
-			this.accessor = resourceProviderSelectionStrategy.GetResourceAccessor(resourceType, resourceName);
+			this.accessor = resourceAccessorBuilder.GetResourceAccessor(resourceType, resourceName);
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace FluentValidation.Resources {
 		/// <param name="expression">The expression </param>
 		/// <param name="resourceProviderSelectionStrategy">Strategy used to construct the resource accessor</param>
 		/// <returns>Error message source</returns>
-		public static IErrorMessageSource CreateFromExpression(Expression<Func<string>> expression, IResourceProviderSelectionStrategy resourceProviderSelectionStrategy) {
+		public static IErrorMessageSource CreateFromExpression(Expression<Func<string>> expression, IResourceAccessorBuilder resourceProviderSelectionStrategy) {
 			var constant = expression.Body as ConstantExpression;
 
 			if (constant != null) {

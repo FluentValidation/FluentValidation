@@ -37,7 +37,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			errorSource = new LocalizedErrorMessageSource(errorMessageResourceType, errorMessageResourceName, new FallbackAwareResourceProviderSelectionStrategy());
+			errorSource = new LocalizedErrorMessageSource(errorMessageResourceType, errorMessageResourceName, new FallbackAwareResurceAccessorBuilder());
 		}
 
 		protected PropertyValidator(string errorMessage) {
@@ -45,7 +45,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
-			errorSource = LocalizedErrorMessageSource.CreateFromExpression(errorMessageResourceSelector, new FallbackAwareResourceProviderSelectionStrategy());
+			errorSource = LocalizedErrorMessageSource.CreateFromExpression(errorMessageResourceSelector, new FallbackAwareResurceAccessorBuilder());
 		}
 
 		public IErrorMessageSource ErrorMessageSource {

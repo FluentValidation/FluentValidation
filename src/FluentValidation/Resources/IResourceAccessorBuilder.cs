@@ -5,7 +5,7 @@ namespace FluentValidation.Resources {
 	/// <summary>
 	/// Builds a delegate for retrieving a localised resource from a resource type and property name.
 	/// </summary>
-	public interface IResourceProviderSelectionStrategy {
+	public interface IResourceAccessorBuilder {
 		Func<string> GetResourceAccessor(Type resourceType, string resourceName);
 	}
 
@@ -13,7 +13,7 @@ namespace FluentValidation.Resources {
 	/// <summary>
 	/// Builds a delegate for retrieving a localised resource from a resource type and property name.
 	/// </summary>
-	public class StaticResourceProviderSelectionStrategy : IResourceProviderSelectionStrategy {
+	public class StaticResourceAccessorBuilder : IResourceAccessorBuilder {
 
 		public virtual Func<string> GetResourceAccessor(Type resourceType, string resourceName) {
 			var property = GetResourceProperty(ref resourceType, ref resourceName);
@@ -38,7 +38,7 @@ namespace FluentValidation.Resources {
 		}
 	}
 
-	public class FallbackAwareResourceProviderSelectionStrategy : StaticResourceProviderSelectionStrategy {
+	public class FallbackAwareResurceAccessorBuilder : StaticResourceAccessorBuilder {
 
 		protected override PropertyInfo GetResourceProperty(ref Type resourceType, ref string resourceName) {
 			// Rather than just using the specified resource type to find the resource accessor property
