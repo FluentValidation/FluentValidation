@@ -1,5 +1,6 @@
 2.0 RC1 - 
 * Allow custom MVC ModelValidators to be added to the FVModelValidatorProvider
+* Support resource provider for custom property validators through the new IResourceProviderSelectionStrategy interface
 
 2.0 beta 2 - 9 November 2010
 * Breaking change - Renamed the assembly names for SL/WP7 assemblies to FluentValidation.dll for consistency (formerly FluentValidation.Silverlight and FluentValidation.WP7)
