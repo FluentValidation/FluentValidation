@@ -29,6 +29,12 @@ namespace FluentValidation.Tests {
 	[TestFixture]
 	public class LocalisedMessagesTester {
 
+		[TearDown]
+		public void Teardown() {
+			// ensure the resource provider is reset after any tests that use it.
+			ValidatorOptions.ResourceProviderType = null;
+		}
+
 		[Test]
 		public void Correctly_assigns_default_localized_error_message() {
 			var originalCulture = Thread.CurrentThread.CurrentUICulture;
@@ -59,10 +65,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
-			// 'foo' is the error message for the NotEmptyValidator defined in the customised MyResources type.
 			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
-
-			ValidatorOptions.ResourceProviderType = null;
 		}
 
 		[Test]
@@ -73,9 +76,28 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 		}
 
+		[Test]
+		public void When_using_explicitly_localized_message_does_not_fall_back_to_ResourceProvider() {
+			ValidatorOptions.ResourceProviderType = typeof(MyResources);
+
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotEmpty().WithLocalizedMessage(() => MyOverridenResources.notempty_error)
+			};
+
+			var results = validator.Validate(new Person());
+			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
+		}
+
+
 		private class MyResources {
 			public static string notempty_error {
 				get { return "foo"; }
+			}
+		}
+
+		private class MyOverridenResources {
+			public static string notempty_error {
+				get { return "bar"; }
 			}
 		}
 	}
