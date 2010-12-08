@@ -39,15 +39,13 @@ namespace FluentValidation.Resources {
 	}
 
 	public class FallbackAwareResourceProviderSelectionStrategy : StaticResourceProviderSelectionStrategy {
-		Type defaultResourceType = typeof(Messages);
-
 
 		protected override PropertyInfo GetResourceProperty(ref Type resourceType, ref string resourceName) {
 			// Rather than just using the specified resource type to find the resource accessor property
 			// we first look on the ResourceProviderType which gives our end user the ability  
 			// to redirect error messages away from the default Messages class.
 
-			if (resourceType == defaultResourceType && ValidatorOptions.ResourceProviderType != null) {
+			if (ValidatorOptions.ResourceProviderType != null) {
 				var property = ValidatorOptions.ResourceProviderType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
 
 				if (property != null) {
