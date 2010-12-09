@@ -191,7 +191,34 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string overridePropertyName) {
 			overridePropertyName.Guard("A property name must be specified when calling WithName.");
-			return rule.Configure(config => config.CustomPropertyName = overridePropertyName);
+			return rule.Configure(config => {
+				config.CustomPropertyNameSource = new StringErrorMessageSource(overridePropertyName);	
+			});
+		}
+
+		/// <summary>
+		/// Specifies a localized name for the error message. 
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
+		public static IRuleBuilderOptions<T, TProperty> WithLocalizedName<T,TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Expression<Func<string>> resourceSelector) {
+			// default to the static resource accessor builder - explicit resources configured with WithLocalizedName should take precedence over ResourceProviderType.
+			return rule.WithLocalizedName(resourceSelector, new StaticResourceAccessorBuilder());
+		}
+
+		/// <summary>
+		/// Specifies a localized name for the error message. 
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
+		/// <param name="resourceAccessorBuilder">Resource accessor builder to use</param>
+		public static IRuleBuilderOptions<T, TProperty> WithLocalizedName<T,TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Expression<Func<string>> resourceSelector, IResourceAccessorBuilder resourceAccessorBuilder) {
+			resourceSelector.Guard("A resource selector must be specified.");
+			resourceAccessorBuilder.Guard("A resource accessor builder must be specified.");
+			
+			return rule.Configure(config => {
+				config.CustomPropertyNameSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
+			});
 		}
 
 		/// <summary>

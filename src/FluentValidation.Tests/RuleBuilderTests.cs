@@ -64,7 +64,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_set_cutom_property_name() {
 			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
-			Assert.That(builder.Rule.CustomPropertyName, Is.EqualTo("Foo"));
+			Assert.That(builder.Rule.CustomPropertyNameSource.BuildErrorMessage(), Is.EqualTo("Foo"));
 		}
 
 		[Test]
