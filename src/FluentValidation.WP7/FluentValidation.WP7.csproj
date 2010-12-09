@@ -155,20 +155,20 @@
     <Compile Include="..\FluentValidation\IValidatorFactory.cs">
       <Link>IValidatorFactory.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Resources\IErrorMessageSource.cs">
-      <Link>IErrorMessageSource.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Resources\IResourceAccessorBuilder.cs">
       <Link>IResourceAccessorBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Resources\LocalizedErrorMessageSource.cs">
-      <Link>LocalizedErrorMessageSource.cs</Link>
+    <Compile Include="..\FluentValidation\Resources\IStringSource.cs">
+      <Link>IStringSource.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Resources\LocalizedStringSource.cs">
+      <Link>LocalizedStringSource.cs</Link>
     </Compile>
     <Compile Include="..\fluentvalidation\resources\Messages.Designer.cs">
       <Link>Resources\Messages.Designer.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Resources\StringErrorMessageSource.cs">
-      <Link>StringErrorMessageSource.cs</Link>
+    <Compile Include="..\FluentValidation\Resources\StaticStringSource.cs">
+      <Link>StaticStringSource.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Results\ValidationFailure.cs">
       <Link>ValidationFailure.cs</Link>
