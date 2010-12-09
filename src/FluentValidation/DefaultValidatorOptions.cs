@@ -222,16 +222,28 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies a custom property name.
+		/// Overrides the name of the property associated with this rule.
+		/// NOTE: This is a considered to be an advanced feature. 99% of the time that you use this, you actually meant to use WithName.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
 		/// <param name="propertyName">The property name to use</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> WithPropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string propertyName) {
+		public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string propertyName) {
 			propertyName.Guard("A property name must be specified when calling WithNamePropertyName.");
 			return rule.Configure(config => config.PropertyName = propertyName);
 		}
 
+		/// <summary>
+		/// Overrides the name of the property associated with this rule.
+		/// NOTE: This is a considered to be an advanced feature. 99% of the time that you use this, you actually meant to use WithName.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="propertyName">The property name to use</param>
+		/// <returns></returns>
+		[Obsolete("WithPropertyName has been deprecated. If you wish to set the name of the property within the error message, use 'WithName'. If you actually intended to change which property this rule was declared against, use 'OverridePropertyName' instead.")]
+		public static IRuleBuilderOptions<T, TProperty> WithPropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string propertyName) {
+			return rule.OverridePropertyName(propertyName);
+		}
 
 		/// <summary>
 		/// Specifies custom state that should be stored alongside the validation message when validation fails for this rule.
