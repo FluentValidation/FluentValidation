@@ -94,10 +94,10 @@
     <Compile Include="Internal\MessageFormatter.cs" />
     <Compile Include="Internal\PropertyChain.cs" />
     <Compile Include="Internal\PropertyRule.cs" />
-    <Compile Include="Resources\IErrorMessageSource.cs" />
+    <Compile Include="Resources\IStringSource.cs" />
     <Compile Include="Resources\IResourceAccessorBuilder.cs" />
-    <Compile Include="Resources\LocalizedErrorMessageSource.cs" />
-    <Compile Include="Resources\StringErrorMessageSource.cs" />
+    <Compile Include="Resources\LocalizedStringSource.cs" />
+    <Compile Include="Resources\StaticStringSource.cs" />
     <Compile Include="ValidationContext.cs" />
     <Compile Include="Internal\IValidatorSelector.cs" />
     <Compile Include="Resources\Messages.Designer.cs">
