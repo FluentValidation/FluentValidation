@@ -100,11 +100,23 @@ namespace FluentValidation {
 		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T,TProperty> WithLocalizedMessage<T,TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Expression<Func<string>> resourceSelector) {
+			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
+			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder());
+		}
+
+
+		/// <summary>
+		/// Specifies a custom error message resource to use when validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
+		/// <param name="resourceAccessorBuilder">The resource accessor builder to use. </param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T,TProperty> WithLocalizedMessage<T,TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Expression<Func<string>> resourceSelector, IResourceAccessorBuilder resourceAccessorBuilder) {
 			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)");
 		
 			return rule.Configure(config => {
-				// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
-				config.CurrentValidator.ErrorMessageSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector, new StaticResourceAccessorBuilder());
+				config.CurrentValidator.ErrorMessageSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
 			});
 		}
 
