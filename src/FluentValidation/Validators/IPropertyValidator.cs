@@ -32,6 +32,6 @@ namespace FluentValidation.Validators {
 		ICollection<Func<object, object>> CustomMessageFormatArguments { get; }
 		bool SupportsStandaloneValidation { get; }
 		Func<object, object> CustomStateProvider { get; set; }
-		IErrorMessageSource ErrorMessageSource { get; set; }
+		IStringSource ErrorMessageSource { get; set; }
 	}
 }

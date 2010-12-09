@@ -85,7 +85,7 @@ namespace FluentValidation {
 			errorMessage.Guard("A message must be specified when calling WithMessage.");
 
 			return rule.Configure(config => {
-				config.CurrentValidator.ErrorMessageSource = new StringErrorMessageSource(errorMessage);
+				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
 
 				funcs
 					.Select(func => new Func<object, object>(x => func((T)x)))
@@ -116,7 +116,7 @@ namespace FluentValidation {
 			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)");
 		
 			return rule.Configure(config => {
-				config.CurrentValidator.ErrorMessageSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
+				config.CurrentValidator.ErrorMessageSource = LocalizedStringSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
 			});
 		}
 
@@ -192,7 +192,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string overridePropertyName) {
 			overridePropertyName.Guard("A property name must be specified when calling WithName.");
 			return rule.Configure(config => {
-				config.CustomPropertyNameSource = new StringErrorMessageSource(overridePropertyName);	
+				config.CustomPropertyName = new StaticStringSource(overridePropertyName);	
 			});
 		}
 
@@ -217,7 +217,7 @@ namespace FluentValidation {
 			resourceAccessorBuilder.Guard("A resource accessor builder must be specified.");
 			
 			return rule.Configure(config => {
-				config.CustomPropertyNameSource = LocalizedErrorMessageSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
+				config.CustomPropertyName = LocalizedStringSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
 			});
 		}
 

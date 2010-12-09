@@ -32,7 +32,7 @@ namespace FluentValidation.Validators {
 			InnerValidator = innerValidator;
 		}
 
-		public IErrorMessageSource ErrorMessageSource {
+		public IStringSource ErrorMessageSource {
 			get { return InnerValidator.ErrorMessageSource; }
 			set { InnerValidator.ErrorMessageSource = value; }
 		}

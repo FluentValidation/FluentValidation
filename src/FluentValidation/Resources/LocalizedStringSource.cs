@@ -23,9 +23,9 @@ namespace FluentValidation.Resources {
 	using Internal;
 
 	/// <summary>
-	/// Implementation of IErrorMessageSource that uses a resource provider and resource name.
+	/// Represents a localized string.
 	/// </summary>
-	public class LocalizedErrorMessageSource : IErrorMessageSource {
+	public class LocalizedStringSource : IStringSource {
 		readonly Func<string> accessor;
 		readonly Type resourceType;
 		readonly string resourceName;
@@ -36,7 +36,7 @@ namespace FluentValidation.Resources {
 		/// <param name="resourceType">The resource type</param>
 		/// <param name="resourceName">The resource name</param>
 		/// <param name="resourceAccessorBuilder">Strategy used to construct the resource accessor</param>
-		public LocalizedErrorMessageSource(Type resourceType, string resourceName, IResourceAccessorBuilder resourceAccessorBuilder) {
+		public LocalizedStringSource(Type resourceType, string resourceName, IResourceAccessorBuilder resourceAccessorBuilder) {
 			this.resourceType = resourceType;
 			this.resourceName = resourceName;
 			this.accessor = resourceAccessorBuilder.GetResourceAccessor(resourceType, resourceName);
@@ -48,11 +48,11 @@ namespace FluentValidation.Resources {
 		/// <param name="expression">The expression </param>
 		/// <param name="resourceProviderSelectionStrategy">Strategy used to construct the resource accessor</param>
 		/// <returns>Error message source</returns>
-		public static IErrorMessageSource CreateFromExpression(Expression<Func<string>> expression, IResourceAccessorBuilder resourceProviderSelectionStrategy) {
+		public static IStringSource CreateFromExpression(Expression<Func<string>> expression, IResourceAccessorBuilder resourceProviderSelectionStrategy) {
 			var constant = expression.Body as ConstantExpression;
 
 			if (constant != null) {
-				return new StringErrorMessageSource((string)constant.Value);
+				return new StaticStringSource((string)constant.Value);
 			}
 
 			var member = expression.GetMember();
@@ -63,14 +63,14 @@ namespace FluentValidation.Resources {
 
 			var resourceType = member.DeclaringType;
 			var resourceName = member.Name;
-			return new LocalizedErrorMessageSource(resourceType, resourceName, resourceProviderSelectionStrategy);
+			return new LocalizedStringSource(resourceType, resourceName, resourceProviderSelectionStrategy);
 		}
 
 		/// <summary>
 		/// Construct the error message template
 		/// </summary>
 		/// <returns>Error message template</returns>
-		public string BuildErrorMessage() {
+		public string GetString() {
 			return accessor();
 		}
 

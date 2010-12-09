@@ -3,6 +3,7 @@
 * Support resource provider for custom property validators through the new IResourceAccessorBuilder interface
 * Introduce WithLocalizedName
 * Deprecated WithPropertyName - you should either use WithName or OverridePropertyName.
+* *Breaking change* Rename IErrorMessageSource and its derivatives to IStringSource
 
 2.0 beta 2 - 9 November 2010
 * Breaking change - Renamed the assembly names for SL/WP7 assemblies to FluentValidation.dll for consistency (formerly FluentValidation.Silverlight and FluentValidation.WP7)

@@ -64,13 +64,13 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_set_cutom_property_name() {
 			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
-			Assert.That(builder.Rule.CustomPropertyNameSource.BuildErrorMessage(), Is.EqualTo("Foo"));
+			Assert.That(builder.Rule.CustomPropertyName.GetString(), Is.EqualTo("Foo"));
 		}
 
 		[Test]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-			builder.Rule.CurrentValidator.ErrorMessageSource.BuildErrorMessage().ShouldEqual("Bar");
+			builder.Rule.CurrentValidator.ErrorMessageSource.GetString().ShouldEqual("Bar");
 		}
 
 		[Test]

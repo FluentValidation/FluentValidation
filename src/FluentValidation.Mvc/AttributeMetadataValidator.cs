@@ -35,7 +35,7 @@ namespace FluentValidation.Mvc {
 			attribute = attributeConverter;
 		}
 
-		public IErrorMessageSource ErrorMessageSource {
+		public IStringSource ErrorMessageSource {
 			get { throw new NotImplementedException(); }
 			set { throw new NotImplementedException(); }
 		}

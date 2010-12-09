@@ -26,7 +26,7 @@ namespace FluentValidation.Validators {
 
 	public abstract class PropertyValidator : IPropertyValidator {
 		private readonly List<Func<object, object>> customFormatArgs = new List<Func<object, object>>();
-		private IErrorMessageSource errorSource;
+		private IStringSource errorSource;
 
 		public Func<object, object> CustomStateProvider { get; set; }
 
@@ -37,18 +37,18 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			errorSource = new LocalizedErrorMessageSource(errorMessageResourceType, errorMessageResourceName, new FallbackAwareResurceAccessorBuilder());
+			errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName, new FallbackAwareResurceAccessorBuilder());
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			errorSource = new StringErrorMessageSource(errorMessage);
+			errorSource = new StaticStringSource(errorMessage);
 		}
 
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
-			errorSource = LocalizedErrorMessageSource.CreateFromExpression(errorMessageResourceSelector, new FallbackAwareResurceAccessorBuilder());
+			errorSource = LocalizedStringSource.CreateFromExpression(errorMessageResourceSelector, new FallbackAwareResurceAccessorBuilder());
 		}
 
-		public IErrorMessageSource ErrorMessageSource {
+		public IStringSource ErrorMessageSource {
 			get { return errorSource; }
 			set {
 				if (value == null) {
@@ -80,7 +80,7 @@ namespace FluentValidation.Validators {
 				customFormatArgs.Select(func => func(context.Instance)).ToArray()
 			);
 
-			string error = context.MessageFormatter.BuildMessage(errorSource.BuildErrorMessage());
+			string error = context.MessageFormatter.BuildMessage(errorSource.GetString());
 
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 

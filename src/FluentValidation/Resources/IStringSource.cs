@@ -17,42 +17,27 @@
 #endregion
 
 namespace FluentValidation.Resources {
+
 	using System;
 
 	/// <summary>
-	/// Implementation of IErrorMessageSource that uses a constant string.
+	/// Provides error message templates
 	/// </summary>
-	public class StringErrorMessageSource : IErrorMessageSource {
-		readonly string errorMessage;
-
-		/// <summary>
-		/// Creates a new StringErrorMessageSource using the specified error message as the error template.
-		/// </summary>
-		/// <param name="errorMessage">The error message template.</param>
-		public StringErrorMessageSource(string errorMessage) {
-			this.errorMessage = errorMessage;
-		}
-
+	public interface IStringSource {
 		/// <summary>
 		/// Construct the error message template
 		/// </summary>
 		/// <returns>Error message template</returns>
-		public string BuildErrorMessage() {
-			return errorMessage;
-		}
+		string GetString();
 
 		/// <summary>
 		/// The name of the resource if localized.
 		/// </summary>
-		public string ResourceName {
-			get { return null; }
-		}
+		string ResourceName { get; }
 
 		/// <summary>
 		/// The type of the resource provider if localized.
 		/// </summary>
-		public Type ResourceType {
-			get { return null; }
-		}
+		Type ResourceType { get; }
 	}
 }

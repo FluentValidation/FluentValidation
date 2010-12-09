@@ -34,7 +34,7 @@ namespace FluentValidation.Internal {
 		public PropertySelector PropertyFunc { get; private set; }
 		public Expression Expression { get; private set; }
 
-		public IErrorMessageSource CustomPropertyNameSource { get; set; }
+		public IStringSource CustomPropertyName { get; set; }
 
 		public Action<object> OnFailure { get; set; }
 		public IPropertyValidator CurrentValidator { get; private set; }
@@ -98,8 +98,8 @@ namespace FluentValidation.Internal {
 		public string PropertyDescription {
 			get {
 				
-				if(CustomPropertyNameSource != null) {
-					return CustomPropertyNameSource.BuildErrorMessage();
+				if(CustomPropertyName != null) {
+					return CustomPropertyName.GetString();
 				}
 
 				return PropertyName.SplitPascalCase();
@@ -132,7 +132,7 @@ namespace FluentValidation.Internal {
 		}
 
 		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext<T> context, IPropertyValidator validator) {
-			if (PropertyName == null && CustomPropertyNameSource == null) {
+			if (PropertyName == null && CustomPropertyName == null) {
 				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
 			}
 
@@ -148,7 +148,7 @@ namespace FluentValidation.Internal {
 		}
 
 		private string BuildPropertyName(ValidationContext<T> context) {
-			return context.PropertyChain.BuildPropertyName(PropertyName ?? CustomPropertyNameSource.BuildErrorMessage());
+			return context.PropertyChain.BuildPropertyName(PropertyName ?? CustomPropertyName.GetString());
 		}
 	}
 }

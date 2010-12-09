@@ -20,7 +20,7 @@
 					destination.ErrorMessageResourceType = source.ErrorMessageSource.ResourceType;
 				}
 				else {
-					destination.ErrorMessage = source.ErrorMessageSource.BuildErrorMessage();
+					destination.ErrorMessage = source.ErrorMessageSource.GetString();
 				}
 			}
 		}
