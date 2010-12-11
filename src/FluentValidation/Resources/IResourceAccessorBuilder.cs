@@ -38,7 +38,7 @@ namespace FluentValidation.Resources {
 		}
 	}
 
-	public class FallbackAwareResurceAccessorBuilder : StaticResourceAccessorBuilder {
+	public class FallbackAwareResourceAccessorBuilder : StaticResourceAccessorBuilder {
 
 		protected override PropertyInfo GetResourceProperty(ref Type resourceType, ref string resourceName) {
 			// Rather than just using the specified resource type to find the resource accessor property
