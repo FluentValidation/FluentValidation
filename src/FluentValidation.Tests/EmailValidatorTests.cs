@@ -26,77 +26,75 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class EmailValidatorTests {
+		TestValidator validator;
+
 		[SetUp]
 		public void Setup() {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+
+			validator = new TestValidator {
+				v => v.RuleFor(x => x.Email).EmailAddress()
+			};
 		}
 
 		[Test]
 		public void When_the_text_is_a_valid_email_address_then_the_validator_should_pass() {
 			string email = "testperson@gmail.com";
-			var validator = new EmailValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person { Email = email });
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_text_is_a_valid_email_address_including_plus_validator_should_pass() {
 			string email = "testperson+label@gmail.com";
-			var validator = new EmailValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person { Email = email });
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_text_is_null_then_the_validator_should_pass() {
 			string email = null;
-			var validator = new EmailValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person { Email = email });
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_text_is_empty_then_the_validator_should_fail() {
 			string email = String.Empty;
-			var validator = new EmailValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid().ShouldBeFalse();
+			var result = validator.Validate(new Person { Email = email });
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_text_is_not_a_valid_email_address_then_the_validator_should_fail() {
 			string email = "testperso";
-			var validator = new EmailValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid().ShouldBeFalse();
+			var result = validator.Validate(new Person { Email = email });
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			string email = "testperso";
-			var validator = new EmailValidator();
-			var result = validator.Validate(new PropertyValidatorContext("Email", new object(), x => email));
-			result.Single().ErrorMessage.ShouldEqual("'Email' is not a valid email address.");
+		var result = validator.Validate(new Person { Email = email });
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Email' is not a valid email address.");
 		}
 
 		[Test]
 		public void This_should_not_hang() {
 			string email = "thisisaverylongstringcodeplex.com";
-			var validator = new EmailValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid().ShouldBeFalse();
+			var result = validator.Validate(new Person { Email = email });
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_email_address_contains_upper_cases_then_the_validator_should_pass() {
 			string email = "testperson@gmail.com";
-			var validator = new EmailValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person { Email = email });
+			result.IsValid.ShouldBeTrue();
 
 			email = "TestPerson@gmail.com";
-			result = validator.Validate(new PropertyValidatorContext(null, new object(), x => email));
-			result.IsValid().ShouldBeTrue();
+			result = validator.Validate(new Person { Email = email });
+			result.IsValid.ShouldBeTrue();
 		}
 	}
 }
