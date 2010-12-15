@@ -27,54 +27,52 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class GreaterThanOrEqualToValidatorTester {
-		private GreaterThanOrEqualValidator validator;
+		private TestValidator validator;
 		private const int value = 1;
 
 		[SetUp]
 		public void Setup() {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-			validator = new GreaterThanOrEqualValidator( value);
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(value));
 		}
 
 		[Test]
 		public void Should_fail_when_less_than_input() {
-			var result = validator.Validate(new PropertyValidatorContext(null, null, x => 0));
-			result.IsValid().ShouldBeFalse();
+			var result = validator.Validate(new Person{Id=0});
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void Should_succeed_when_greater_than_input() {
-			var result = validator.Validate(new PropertyValidatorContext(null, null, x => 2));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person{Id=2});
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void Should_succeed_when_equal_to_input() {
-			var result = validator.Validate(new PropertyValidatorContext(null, null, x => value));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person{Id=value});
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void Should_set_default_error_when_validation_fails() {
-			var result = validator.Validate(new PropertyValidatorContext("Discount", null, x => 0));
-			result.Single().ErrorMessage.ShouldEqual("'Discount' must be greater than or equal to '1'.");
+			var result = validator.Validate(new Person{Id=0});
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Id' must be greater than or equal to '1'.");
 		}
 
 		[Test]
 		public void Validates_with_property() {
-			validator = CreateValidator(x => x.Id);
-			var result = validator.Validate(new PropertyValidatorContext(null, new Person { Id = 1 }, x => 0));
-			result.IsValid().ShouldBeFalse();
+			var validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(x => x.AnotherInt));
+			var result = validator.Validate(new Person { Id = 0, AnotherInt = 1 });
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void Comparison_type() {
-			validator.Comparison.ShouldEqual(Comparison.GreaterThanOrEqual);
-		}
+			var propertyValidator = validator.CreateDescriptor()
+				.GetValidatorsForMember("Id").Cast<GreaterThanOrEqualValidator>().Single();
 
-		private GreaterThanOrEqualValidator CreateValidator<T>(Expression<PropertySelector<Person, T>> expression) {
-			PropertySelector selector = x => expression.Compile()((Person)x);
-			return new GreaterThanOrEqualValidator(selector, expression.GetMember());
+			propertyValidator.Comparison.ShouldEqual(Comparison.GreaterThanOrEqual);
 		}
 	}
 }

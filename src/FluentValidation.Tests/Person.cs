@@ -49,6 +49,8 @@ namespace FluentValidation.Tests {
     	public string Email { get; set; }
 		public decimal Discount { get; set; }
 		public double Age { get; set; }
+
+		public int AnotherInt { get; set; }
 	}
 
 
