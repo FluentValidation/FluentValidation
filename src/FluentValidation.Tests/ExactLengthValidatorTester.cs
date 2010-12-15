@@ -29,39 +29,35 @@ namespace FluentValidation.Tests {
 		[SetUp]
 		public void Setup() {
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 		}
 
 		[Test]
 		public void When_the_text_is_an_exact_length_the_validator_should_pass() {
-			string text = "test";
-			var validator = new ExactLengthValidator(4);
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid().ShouldBeTrue();
+			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(4) };
+			var result = validator.Validate(new Person { Surname = "test" });
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_text_length_is_smaller_the_validator_should_fail() {
-			string text = "test";
-			var validator = new ExactLengthValidator(10);
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid().ShouldBeFalse();
+			var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Length(10) };
+			var result = validator.Validate(new Person { Surname = "test" });
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_text_length_is_larger_the_validator_should_fail() {
-			string text = "test";
-			var validator = new ExactLengthValidator(1);
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => text));
-			result.IsValid().ShouldBeFalse();
+			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(1) };
+			var result = validator.Validate(new Person { Surname = "test" });
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
-			var validator = new ExactLengthValidator(2);
-			var result =
-				validator.Validate(new PropertyValidatorContext("Forename", null, x => "Gire and gimble in the wabe"));
-			result.Single().ErrorMessage.ShouldEqual("'Forename' must be 2 characters in length. You entered 27 characters.");
+			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2) };
+			var result = validator.Validate(new Person() { Surname = "test"});
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be 2 characters in length. You entered 4 characters.");
 		}
 
 		[Test]
