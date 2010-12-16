@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc", "src\FluentValidation.Mvc\FluentValidation.Mvc.csproj", "{F781D265-EB91-4876-BF8E-E7E482E7F0BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.xValIntegration", "src\FluentValidation.xValIntegration\FluentValidation.xValIntegration.csproj", "{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc3", "src\FluentValidation.Mvc3\FluentValidation.Mvc3.csproj", "{A2D31732-F255-4F05-8412-3C8C29B65755}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc3", "src\FluentValidation.Tests.Mvc3\FluentValidation.Tests.Mvc3.csproj", "{0624E8C9-10A4-40C3-A355-102D69BD8271}"
@@ -41,10 +39,6 @@ Global
 		{F781D265-EB91-4876-BF8E-E7E482E7F0BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F781D265-EB91-4876-BF8E-E7E482E7F0BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F781D265-EB91-4876-BF8E-E7E482E7F0BE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A2D31732-F255-4F05-8412-3C8C29B65755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2D31732-F255-4F05-8412-3C8C29B65755}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2D31732-F255-4F05-8412-3C8C29B65755}.Release|Any CPU.ActiveCfg = Release|Any CPU

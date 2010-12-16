@@ -91,10 +91,6 @@
       <Project>{F781D265-EB91-4876-BF8E-E7E482E7F0BE}</Project>
       <Name>FluentValidation.Mvc</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FluentValidation.xValIntegration\FluentValidation.xValIntegration.csproj">
-      <Project>{D0CA3DEC-0F47-4254-81BE-7E3FFAEB5A7D}</Project>
-      <Name>FluentValidation.xValIntegration</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
       <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
       <Name>FluentValidation</Name>
@@ -161,7 +157,6 @@
     <Compile Include="ValidatorDescriptorTester.cs" />
     <Compile Include="ValidatorSelectorTests.cs" />
     <Compile Include="ValidatorTesterTester.cs" />
-    <Compile Include="xValRuleProviderTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestMessages.fr.resx" />
