@@ -25,54 +25,48 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class RegularExpressionValidatorTests {
+		TestValidator validator;
+
 		[SetUp]
 		public void Setup() {
 			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).Matches(@"^\w\d$")
+			};
 		}
 
 		[Test]
 		public void When_the_text_matches_the_regular_expression_then_the_validator_should_pass() {
 			string input = "S3";
-			var validator = new RegularExpressionValidator(@"^\w\d$");
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person{Surname = input });
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_the_text_does_not_match_the_regular_expression_then_the_validator_should_fail() {
-			string input = "S33";
-			var validator = new RegularExpressionValidator(@"^\w\d$");
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid().ShouldBeFalse();
+			var result = validator.Validate(new Person{Surname = "S33"});
+			result.IsValid.ShouldBeFalse();
 
-			input = " 5";
-			validator = new RegularExpressionValidator(@"^\w\d$");
-			result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid().ShouldBeFalse();
+			result = validator.Validate(new Person{Surname = " 5"});
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_text_is_empty_then_the_validator_should_fail() {
-			string input = "";
-			var validator = new RegularExpressionValidator(@"^\w\d$");
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid().ShouldBeFalse();
+			var result = validator.Validate(new Person{Surname = ""});
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_text_is_null_then_the_validator_should_pass() {
-			string input = null;
-			var validator = new RegularExpressionValidator(@"^\w\d$");
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => input));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person{Surname = null});
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void When_validation_fails_the_default_error_should_be_set() {
-			string input = "S33";
-			var validator = new RegularExpressionValidator(@"^\w\d$");
-			var result = validator.Validate(new PropertyValidatorContext("Name", new object(), x => input));
-			result.Single().ErrorMessage.ShouldEqual("'Name' is not in the correct format.");
+			var result = validator.Validate(new Person{Surname = "S33"});
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Name' is not in the correct format.");
 		}
 	}
 }
