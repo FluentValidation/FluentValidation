@@ -81,7 +81,7 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Id).ExclusiveBetween(1, 10) };
 			var result = validator.Validate(new Person { Id = 0 });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Value' must be between 1 and 10 (exclusive). You entered 0.");
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Id' must be between 1 and 10 (exclusive). You entered 0.");
 		}
 
 		[Test]
@@ -135,7 +135,7 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set_for_strings() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).ExclusiveBetween("bbb", "zzz"));
 			var result = validator.Validate(new Person { Surname = "aaa" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Value' must be between bbb and zzz (exclusive). You entered aaa.");
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be between bbb and zzz (exclusive). You entered aaa.");
 		}
 
 		[Test]
