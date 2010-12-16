@@ -66,7 +66,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			var result = validator.Validate(new Person{Surname = "S33"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Name' is not in the correct format.");
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' is not in the correct format.");
 		}
 	}
 }
