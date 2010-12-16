@@ -34,19 +34,19 @@ namespace FluentValidation.Internal {
 			return members.Any(x => x == rule.Member);
 		}
 
-		public static MemberValidatorSelector FromExpressions<T>(IEnumerable<Expression<Func<T, object>>> propertyExpressions) {
-			var members = propertyExpressions.Select(x => MemberFromExpression(x)).ToList();
-			return new MemberValidatorSelector(members);
+		public static MemberNameValidatorSelector FromExpressions<T>(params Expression<Func<T, object>>[] propertyExpressions) {
+			var members = propertyExpressions.Select(MemberFromExpression).ToList();
+			return new MemberNameValidatorSelector(members);
 		}
 
-		private static MemberInfo MemberFromExpression<T>(Expression<Func<T, object>> expression) {
+		private static string MemberFromExpression<T>(Expression<Func<T, object>> expression) {
 			var member = expression.GetMember();
 
 			if (member == null) {
 				throw new ArgumentException(string.Format("Expression '{0}' does not specify a valid property or field.", expression));
 			}
 
-			return member;
+			return member.Name;
 		}
 	}
 }

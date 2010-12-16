@@ -50,16 +50,29 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void MemberValidatorSelector_returns_true_when_members_match() {
-			var selector = new MemberValidatorSelector(new[] { Extensions.GetMember<TestObject, object>(x => x.SomeProperty) });
+			var selector = MemberValidatorSelector.FromExpressions<TestObject>(x => x.SomeProperty);
 			var rule = CreateRule(x => x.SomeProperty);
 			selector.CanExecute(rule, "SomeProperty").ShouldBeTrue();
 		}
 
 		[Test]
 		public void MemberValidatorSelector_returns_false_when_members_do_not_match() {
-			var selector = new MemberValidatorSelector(new[] { Extensions.GetMember<TestObject, object>(x => x.SomeProperty) });
+			var selector = MemberValidatorSelector.FromExpressions<TestObject>(x => x.SomeProperty);
 			var rule = CreateRule(x => x.SomeOtherProperty);
 			selector.CanExecute(rule, "SomeOtherProperty").ShouldBeFalse();
+		}
+
+		[Test]
+		public void MemberSelector_returns_true_when_validating_overriden_names() {
+			var validator = new InlineValidator<TestObject> {
+				v => v.RuleFor(x => x.SomeNullableProperty.Value)
+					.GreaterThan(0)
+					.When(x => x.SomeNullableProperty.HasValue)
+					.OverridePropertyName("SomeNullableProperty")
+			};
+
+			var result = validator.Validate(new TestObject { SomeNullableProperty = 0 }, x => x.SomeNullableProperty);
+			result.Errors.Count.ShouldEqual(1);
 		}
 
 		private PropertyRule<TestObject> CreateRule(Expression<Func<TestObject, object>> expression) {
@@ -71,6 +84,7 @@ namespace FluentValidation.Tests {
 		private class TestObject {
 			public object SomeProperty { get; set; }
 			public object SomeOtherProperty { get; set; }
+			public decimal? SomeNullableProperty { get; set; }
 		}
 	}
 }
