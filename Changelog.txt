@@ -1,3 +1,7 @@
+2.0 -
+* Fix typo in the name of FallbackAwareResourceAccessorBuilder
+* Fix issue #7062 - allow validator selectors to work against nullable properties with overriden names.
+
 2.0 RC1 - 10 December 2010
 * Allow custom MVC ModelValidators to be added to the FVModelValidatorProvider
 * Support resource provider for custom property validators through the new IResourceAccessorBuilder interface
