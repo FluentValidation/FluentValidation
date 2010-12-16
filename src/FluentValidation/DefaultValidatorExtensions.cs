@@ -402,7 +402,7 @@ namespace FluentValidation {
 		/// <param name="propertyExpressions">Expressions to specify the properties to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, params Expression<Func<T, object>>[] propertyExpressions) {
-			var context = new ValidationContext<T>(instance, new PropertyChain(), MemberValidatorSelector.FromExpressions(propertyExpressions));
+			var context = new ValidationContext<T>(instance, new PropertyChain(), MemberNameValidatorSelector.FromExpressions(propertyExpressions));
 			return validator.Validate(context);
 		}
 

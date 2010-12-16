@@ -17,8 +17,10 @@
 #endregion
 
 namespace FluentValidation.Internal {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Linq.Expressions;
 
 	public class MemberNameValidatorSelector : IValidatorSelector {
 		readonly IEnumerable<string> memberNames;
@@ -29,6 +31,21 @@ namespace FluentValidation.Internal {
 
 		public bool CanExecute<T>(PropertyRule<T> rule, string propertyPath) {
 			return memberNames.Any(x => x == propertyPath);
+		}
+
+		public static MemberNameValidatorSelector FromExpressions<T>(params Expression<Func<T, object>>[] propertyExpressions) {
+			var members = propertyExpressions.Select(MemberFromExpression).ToList();
+			return new MemberNameValidatorSelector(members);
+		}
+
+		private static string MemberFromExpression<T>(Expression<Func<T, object>> expression) {
+			var member = expression.GetMember();
+
+			if (member == null) {
+				throw new ArgumentException(string.Format("Expression '{0}' does not specify a valid property or field.", expression));
+			}
+
+			return member.Name;
 		}
 	}
 }

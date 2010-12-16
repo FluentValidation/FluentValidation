@@ -90,7 +90,6 @@
     <Compile Include="Internal\ResourceHelper.cs" />
     <Compile Include="IValidationRule.cs" />
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
-    <Compile Include="Internal\MemberValidatorSelector.cs" />
     <Compile Include="Internal\MessageFormatter.cs" />
     <Compile Include="Internal\PropertyChain.cs" />
     <Compile Include="Internal\PropertyRule.cs" />
