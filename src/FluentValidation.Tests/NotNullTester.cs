@@ -27,35 +27,35 @@ namespace FluentValidation.Tests {
 	public class NotNullTester {
 		[SetUp]
 		public void Setup() {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 		}
 
 		[Test]
 		public void NotNullValidator_should_pass_if_value_has_value() {
-			var validator = new NotNullValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => "Jeremy"));
-			result.Count().ShouldEqual(0);
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotNull());
+			var result = validator.Validate(new Person{Surname = "Foo"});
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void NotNullValidator_should_fail_if_value_is_null() {
-			var validator = new NotNullValidator();
-			var result = validator.Validate(new PropertyValidatorContext("name", new object(), x => null));
-			result.Single();
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotNull());
+			var result = validator.Validate(new Person { Surname = null });
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
-			var validator = new NotNullValidator();
-			var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
-			result.Single().ErrorMessage.ShouldEqual("'name' must not be empty.");
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotNull());
+			var result = validator.Validate(new Person { Surname = null });
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
 		}
 
 		[Test]
-		public void Not_null_validator_should_work_ok_with_non_nullable_value_type() {
-			var validator = new NotNullValidator();
-			var result = validator.Validate(new PropertyValidatorContext(null, new object(), x => 3));
-			result.Count().ShouldEqual(0);
+		public void Not_null_validator_should_not_crash_with_non_nullable_value_type() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Id).NotNull());
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
 		}
 	}
 }
