@@ -26,35 +26,39 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class PredicateValidatorTester {
-		private PredicateValidator validator;
+		private TestValidator validator;
 
 		[SetUp]
 		public void Setup() {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-			validator = new PredicateValidator((person, forename) => forename == "Jeremy");
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			validator = new TestValidator {
+				v => v.RuleFor(x => x.Forename).Must(forename => forename == "Jeremy")
+			};
 		}
 
 		[Test]
 		public void Should_fail_when_predicate_returns_false() {
-			var result = validator.Validate(new PropertyValidatorContext(null, null, x => "Foo"));
-			result.IsValid().ShouldBeFalse();
+			var result = validator.Validate(new Person{Forename = "Foo"});
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Test]
 		public void Should_succeed_when_predicate_returns_true() {
-			var result = validator.Validate(new PropertyValidatorContext(null, null, x => "Jeremy"));
-			result.IsValid().ShouldBeTrue();
+			var result = validator.Validate(new Person{Forename = "Jeremy"});
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
 		public void Should_throw_when_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => new PredicateValidator(null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() =>
+				new TestValidator(v => v.RuleFor(x => x.Surname).Must((Func<string, bool>)null))	
+			);
 		}
 
 		[Test]
 		public void When_validation_fails_the_default_error_should_be_set() {
-			var result = validator.Validate(new PropertyValidatorContext("Name", null, x => "Foo"));
-			result.Single().ErrorMessage.ShouldEqual("The specified condition was not met for 'Name'.");
+			var result = validator.Validate(new Person{Forename = "Foo"});
+			result.Errors.Single().ErrorMessage.ShouldEqual("The specified condition was not met for 'Forename'.");
 		}
 	}
 }

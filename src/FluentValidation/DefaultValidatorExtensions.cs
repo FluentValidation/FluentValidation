@@ -231,6 +231,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		                                                                   Func<TProperty, bool> predicate) {
+			predicate.Guard("Cannot pass a null predicate to Must.");
+
 			return ruleBuilder.Must((x, val) => predicate(val));
 		}
 
@@ -247,6 +249,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		                                                                   Func<T, TProperty, bool> predicate) {
+			predicate.Guard("Cannot pass a null predicate to Must.");
+
 			return ruleBuilder.SetValidator(new PredicateValidator((instance, property) => predicate((T)instance, (TProperty)property)));
 		}
 
