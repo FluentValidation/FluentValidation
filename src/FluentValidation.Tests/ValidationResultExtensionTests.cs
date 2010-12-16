@@ -29,9 +29,9 @@ namespace FluentValidation.Tests {
 		[SetUp]
 		public void Setup() {
 			result = new ValidationResult(new[] {
-			                                    	new ValidationFailure("foo", "A foo error occurred", "x"),
-			                                    	new ValidationFailure("bar", "A bar error occurred", "y"),
-			                                    });
+				new ValidationFailure("foo", "A foo error occurred", "x"),
+				new ValidationFailure("bar", "A bar error occurred", "y"),
+			});
 		}
 
 		[Test]
