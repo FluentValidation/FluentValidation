@@ -24,18 +24,17 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class ValidateAndThrowTester {
-
-        [SetUp]
-        public void SetUp() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-        }
+		[SetUp]
+		public void SetUp() {
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+		}
 
 		[Test]
 		public void Throws_exception() {
 			var validator = new TestValidator {
-			                                  	v => v.RuleFor(x => x.Surname).NotNull()
-			                                  };
+				v => v.RuleFor(x => x.Surname).NotNull()
+			};
 
 			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
 		}
@@ -43,8 +42,8 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Does_not_throw_when_valid() {
 			var validator = new TestValidator {
-			                                  	v => v.RuleFor(x => x.Surname).NotNull()
-			                                  };
+				v => v.RuleFor(x => x.Surname).NotNull()
+			};
 
 			validator.ValidateAndThrow(new Person {Surname = "foo"});
 		}
@@ -52,8 +51,8 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Populates_errors() {
 			var validator = new TestValidator {
-			                                  	v => v.RuleFor(x => x.Surname).NotNull()
-			                                  };
+				v => v.RuleFor(x => x.Surname).NotNull()
+			};
 
 			var ex = (ValidationException)typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
 			ex.Errors.Count().ShouldEqual(1);
