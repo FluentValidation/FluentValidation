@@ -15,11 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation", "src\Flu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests", "src\FluentValidation.Tests\FluentValidation.Tests.csproj", "{E353A6E3-5404-4E1E-B33D-4C7BAE646752}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc", "src\FluentValidation.Mvc\FluentValidation.Mvc.csproj", "{F781D265-EB91-4876-BF8E-E7E482E7F0BE}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc3", "src\FluentValidation.Mvc3\FluentValidation.Mvc3.csproj", "{A2D31732-F255-4F05-8412-3C8C29B65755}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc3", "src\FluentValidation.Tests.Mvc3\FluentValidation.Tests.Mvc3.csproj", "{0624E8C9-10A4-40C3-A355-102D69BD8271}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,18 +31,10 @@ Global
 		{E353A6E3-5404-4E1E-B33D-4C7BAE646752}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E353A6E3-5404-4E1E-B33D-4C7BAE646752}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E353A6E3-5404-4E1E-B33D-4C7BAE646752}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F781D265-EB91-4876-BF8E-E7E482E7F0BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F781D265-EB91-4876-BF8E-E7E482E7F0BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F781D265-EB91-4876-BF8E-E7E482E7F0BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F781D265-EB91-4876-BF8E-E7E482E7F0BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A2D31732-F255-4F05-8412-3C8C29B65755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A2D31732-F255-4F05-8412-3C8C29B65755}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2D31732-F255-4F05-8412-3C8C29B65755}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2D31732-F255-4F05-8412-3C8C29B65755}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0624E8C9-10A4-40C3-A355-102D69BD8271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0624E8C9-10A4-40C3-A355-102D69BD8271}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0624E8C9-10A4-40C3-A355-102D69BD8271}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0624E8C9-10A4-40C3-A355-102D69BD8271}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

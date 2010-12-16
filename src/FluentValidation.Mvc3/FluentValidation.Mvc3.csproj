@@ -54,27 +54,13 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation.Mvc\AttributeMetadataValidator.cs">
-      <Link>AttributeMetadataValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc\FluentValidationModelMetadataProvider.cs">
-      <Link>FluentValidationModelMetadataProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc\FluentValidationModelValidator.cs">
-      <Link>FluentValidationModelValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc\FluentValidationModelValidatorProvider.cs">
-      <Link>FluentValidationModelValidatorProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc\FluentValidationPropertyValidator.cs">
-      <Link>FluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc\MetadataExtensions.cs">
-      <Link>MetadataExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc\ValidationResultExtension.cs">
-      <Link>ValidationResultExtension.cs</Link>
-    </Compile>
+    <Compile Include="AttributeMetadataValidator.cs" />
+    <Compile Include="FluentValidationModelMetadataProvider.cs" />
+    <Compile Include="FluentValidationModelValidator.cs" />
+    <Compile Include="FluentValidationModelValidatorProvider.cs" />
+    <Compile Include="FluentValidationPropertyValidator.cs" />
+    <Compile Include="MetadataExtensions.cs" />
+    <Compile Include="ValidationResultExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

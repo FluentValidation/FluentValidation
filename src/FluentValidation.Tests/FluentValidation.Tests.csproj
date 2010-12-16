@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FluentValidation.Tests</RootNamespace>
     <AssemblyName>FluentValidation.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>..\FluentValidation.snk</AssemblyOriginatorKeyFile>
@@ -33,6 +33,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,7 +72,7 @@
     </Reference>
     <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\mvc\v2\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\lib\mvc\v3\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -87,9 +88,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Mvc\FluentValidation.Mvc.csproj">
-      <Project>{F781D265-EB91-4876-BF8E-E7E482E7F0BE}</Project>
-      <Name>FluentValidation.Mvc</Name>
+    <ProjectReference Include="..\FluentValidation.Mvc3\FluentValidation.Mvc3.csproj">
+      <Project>{A2D31732-F255-4F05-8412-3C8C29B65755}</Project>
+      <Name>FluentValidation.Mvc3</Name>
     </ProjectReference>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
       <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
