@@ -27,48 +27,55 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class ValidatorSelectorTests {
-
-		[Test]
-		public void DefaultValidatorSelector_always_returns_true() {
-			var selector = new DefaultValidatorSelector();
-			selector.CanExecute<object>(null, null).ShouldBeTrue();
-		}
-
+	
 		[Test]
 		public void MemberNameValidatorSelector_returns_true_when_property_name_matches() {
-			var selector = new MemberNameValidatorSelector(new[] { "SomeProperty" });
-			var rule = CreateRule(x => x.SomeProperty);
-			selector.CanExecute(rule, "SomeProperty").ShouldBeTrue();
+			var validator = new InlineValidator<TestObject> {
+				v => v.RuleFor(x => x.SomeProperty).NotNull()
+			};
+
+			var result = validator.Validate(new TestObject(), "SomeProperty");
+			result.Errors.Count.ShouldEqual(1);
 		}
 
 		[Test]
-		public void MemberNameValidatorSelector_returns_false_when_property_name_does_not_match() {
-			var selector = new MemberNameValidatorSelector(new[] { "SomeProperty" });
-			var rule = CreateRule(x => x.SomeOtherProperty);
-			selector.CanExecute(rule, "SomeOtherProperty").ShouldBeFalse();
+		public void Does_not_valdiate_other_property() {
+			var validator = new InlineValidator<TestObject> {
+				v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
+			};
+
+			var result = validator.Validate(new TestObject(), "SomeProperty");
+			result.Errors.Count.ShouldEqual(0);
 		}
 
 		[Test]
-		public void MemberValidatorSelector_returns_true_when_members_match() {
-			var selector = MemberValidatorSelector.FromExpressions<TestObject>(x => x.SomeProperty);
-			var rule = CreateRule(x => x.SomeProperty);
-			selector.CanExecute(rule, "SomeProperty").ShouldBeTrue();
+		public void Validates_property_using_expression() {
+			var validator = new InlineValidator<TestObject> {
+				v => v.RuleFor(x => x.SomeProperty).NotNull()
+			};
+
+			var result = validator.Validate(new TestObject(), x => x.SomeProperty);
+			result.Errors.Count.ShouldEqual(1);
 		}
 
 		[Test]
-		public void MemberValidatorSelector_returns_false_when_members_do_not_match() {
-			var selector = MemberValidatorSelector.FromExpressions<TestObject>(x => x.SomeProperty);
-			var rule = CreateRule(x => x.SomeOtherProperty);
-			selector.CanExecute(rule, "SomeOtherProperty").ShouldBeFalse();
+		public void Does_not_validate_other_property_using_expression() {
+			var validator = new InlineValidator<TestObject> {
+				v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
+			};
+
+			var result = validator.Validate(new TestObject(), x => x.SomeProperty);
+			result.Errors.Count.ShouldEqual(0);
 		}
 
 		[Test]
-		public void MemberSelector_returns_true_when_validating_overriden_names() {
+		public void Validates_nullable_property_with_overriden_name_when_selected() {
+
 			var validator = new InlineValidator<TestObject> {
 				v => v.RuleFor(x => x.SomeNullableProperty.Value)
-					.GreaterThan(0)
-					.When(x => x.SomeNullableProperty.HasValue)
-					.OverridePropertyName("SomeNullableProperty")
+				.GreaterThan(0)
+				.When(x => x.SomeNullableProperty.HasValue)
+				.OverridePropertyName("SomeNullableProperty")
 			};
 
 			var result = validator.Validate(new TestObject { SomeNullableProperty = 0 }, x => x.SomeNullableProperty);
