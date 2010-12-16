@@ -324,6 +324,8 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		                                                                       Expression<Func<T, TProperty>> expression)
 			where TProperty : IComparable<TProperty>, IComparable {
+			expression.Guard("Cannot pass null to LessThan");
+
 			var func = expression.Compile();
 			PropertySelector selector = x => func((T)x);
 
