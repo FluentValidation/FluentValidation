@@ -160,6 +160,6 @@
     <value>'{PropertyName}' muss zwischen {From} und {To} sein (exklusiv). Es wurde {Value} eingegeben.</value>
   </data>
   <data name="inclusivebetween_error" xml:space="preserve">
-    <value>'{PropertyName}' must zwischen {From} and {To} sein. Es wurde {Value} eingegeben.</value>
+    <value>'{PropertyName}' muss zwischen {From} and {To} sein. Es wurde {Value} eingegeben.</value>
   </data>
 </root>
