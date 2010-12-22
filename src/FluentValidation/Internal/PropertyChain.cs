@@ -25,7 +25,6 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Represents a chain of properties
 	/// </summary>
-	//TODO: Is it really best to use strings for this?
 	public class PropertyChain {
 		readonly List<string> memberNames = new List<string>();
 
