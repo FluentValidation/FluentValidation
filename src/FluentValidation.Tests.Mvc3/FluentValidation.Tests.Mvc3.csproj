@@ -8,7 +8,7 @@
     <ProjectGuid>{0624E8C9-10A4-40C3-A355-102D69BD8271}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FluentValidation.Tests.Mvc3</RootNamespace>
+    <RootNamespace>FluentValidation.Tests</RootNamespace>
     <AssemblyName>FluentValidation.Tests.Mvc3</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\..\lib\moq\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\lib\nunit\nunit.framework.dll</HintPath>
     </Reference>
@@ -48,8 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientsideMessageTester.cs" />
     <Compile Include="FluentValidationModelMetadataProviderTester.cs" />
     <Compile Include="FluentValidationModelValidatorProviderTests.cs" />
+    <Compile Include="ModelBinderTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExtensions.cs" />
   </ItemGroup>
