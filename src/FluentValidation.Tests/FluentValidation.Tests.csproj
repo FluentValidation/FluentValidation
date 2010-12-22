@@ -106,6 +106,7 @@
     <Compile Include="CascadingFailuresTester.cs" />
     <Compile Include="ChainingValidatorsTester.cs" />
     <Compile Include="ChildValidatorInferenceTests.cs" />
+    <Compile Include="ClientsideMessageTester.cs" />
     <Compile Include="CollectionValidatorTests.cs" />
     <Compile Include="ComplexValidationTester.cs" />
     <Compile Include="ConditionTests.cs" />
