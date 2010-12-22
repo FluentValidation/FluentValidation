@@ -19,21 +19,25 @@
 namespace FluentValidation {
 	using Internal;
 
-	public class ValidationContext<T> {
-		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector) {
+	public class ValidationContext<T> : ValidationContext {
+		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector)
+			: base(instanceToValidate, propertyChain, validatorSelector) {
+
+			InstanceToValidate = instanceToValidate;
+		}
+
+		public new T InstanceToValidate { get; private set; }
+	}
+
+	public class ValidationContext {
+		public ValidationContext(object instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector) {
 			PropertyChain = new PropertyChain(propertyChain);
 			InstanceToValidate = instanceToValidate;
 			Selector = validatorSelector;
 		}
 
 		public PropertyChain PropertyChain { get; private set; }
-		public T InstanceToValidate { get; private set; }
+		public object InstanceToValidate { get; private set; }
 		public IValidatorSelector Selector { get; private set; }
-	}
-
-	public class ValidationContext : ValidationContext<object> {
-		public ValidationContext(object instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector) 
-			: base(instanceToValidate, propertyChain, validatorSelector) {
-		}
 	}
 }
