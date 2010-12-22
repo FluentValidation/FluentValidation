@@ -56,28 +56,28 @@ namespace FluentValidation.Tests {
 		public void RegexValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Matches("\\d");
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("foo");
+			clientRule.ErrorMessage.ShouldEqual("'Name' is not in the correct format.");
 		}
 
 		[Test]
 		public void EmailValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).EmailAddress();
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("foo");
+			clientRule.ErrorMessage.ShouldEqual("'Name' is not a valid email address.");
 		}
 
 		[Test]
 		public void LengthValidator_uses_simplified_message_for_clientside_validatation() {
 			validator.RuleFor(x => x.Name).Length(1, 10);
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("foo");
+			clientRule.ErrorMessage.ShouldEqual("'Name' must be between 1 and 10 characters.");
 		}
 
 		[Test]
 		public void ExactLengthValidator_uses_simplified_message_for_clientside_validation() {
-			validator.RuleFor(x => x.Name).Length(1);
+			validator.RuleFor(x => x.Name).Length(5);
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("foo");
+			clientRule.ErrorMessage.ShouldEqual("'Name' must be 5 characters in length");
 		}
 
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
