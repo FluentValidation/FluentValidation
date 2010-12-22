@@ -18,7 +18,7 @@
 
 namespace FluentValidation.Internal {
 	public class DefaultValidatorSelector : IValidatorSelector {
-		public bool CanExecute<T>(PropertyRule<T> rule, string propertyPath) {
+		public bool CanExecute(PropertyRule rule, string propertyPath) {
 			return true;
 		}
 	}
