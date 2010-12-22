@@ -51,7 +51,7 @@ namespace FluentValidation.Internal {
 		}
 	}
 
-	public class PropertyRule {
+	public class PropertyRule : IValidationRule {
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
 

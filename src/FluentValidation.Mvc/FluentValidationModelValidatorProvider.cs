@@ -21,9 +21,10 @@ namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Web.Mvc;
+	using Internal;
 	using Validators;
 
-	public delegate ModelValidator FluentValidationModelValidationFactory(ModelMetadata metadata, ControllerContext context, IPropertyValidator validator);
+	public delegate ModelValidator FluentValidationModelValidationFactory(ModelMetadata metadata, ControllerContext context, string propertyDescription, IPropertyValidator validator);
 
 	/// <summary>
 	/// Implementation of ModelValidatorProvider that uses FluentValidation.
@@ -65,11 +66,16 @@ namespace FluentValidation.Mvc {
 			if (validator != null) {
 				var descriptor = validator.CreateDescriptor();
 
-				var validators = descriptor.GetValidatorsForMember(metadata.PropertyName)
-					.Where(x => x.SupportsStandaloneValidation);
-
-				foreach(var propertyValidator in validators) {
-					modelValidators.Add(GetModelValidator(metadata, context, propertyValidator));
+				var validatorsWithRules = from rule in descriptor.GetRulesForMember(metadata.PropertyName)
+										  let propertyRule = (PropertyRule)rule
+										  // Only want to include rules that allow standalone clientside validation.
+										  let validators = rule.Validators.Where(x => x.SupportsStandaloneValidation)
+										  where validators.Any()
+										  from propertyValidator in validators
+										  select new { validator = propertyValidator, rule = propertyRule };
+					
+				foreach(var validatorWithRule in validatorsWithRules) {
+					modelValidators.Add(GetModelValidator(metadata, context, validatorWithRule.rule, validatorWithRule.validator));
 				}
 			}
 
@@ -88,7 +94,7 @@ namespace FluentValidation.Mvc {
 			return modelValidators;
 		}
 
-		private ModelValidator GetModelValidator(ModelMetadata meta, ControllerContext context, IPropertyValidator propertyValidator) {
+		private ModelValidator GetModelValidator(ModelMetadata meta, ControllerContext context, PropertyRule rule, IPropertyValidator propertyValidator) {
 			var type = propertyValidator.GetType();
 			
 			var factory = validatorFactories
@@ -96,11 +102,11 @@ namespace FluentValidation.Mvc {
 				.Select(x => x.Value)
 				.FirstOrDefault() ?? FluentValidationPropertyValidator.Create;
 
-			return factory(meta, context, propertyValidator);
+			return factory(meta, context, rule.PropertyDescription, propertyValidator);
 		}
 
 		ModelValidator CreateNotNullValidatorForProperty(ModelMetadata metadata, ControllerContext cc) {
-			return RequiredFluentValidationPropertyValidator.Create(metadata, cc, new NotNullValidator());
+			return RequiredFluentValidationPropertyValidator.Create(metadata, cc, metadata.PropertyName, new NotNullValidator());
 		}
 
 		IEnumerable<ModelValidator> GetValidatorsForModel(ModelMetadata metadata, ControllerContext context, IValidator validator) {

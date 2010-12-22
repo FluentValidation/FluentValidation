@@ -55,6 +55,14 @@ namespace FluentValidation {
 			return GetMembersWithValidators()[name];
 		}
 
+		public IEnumerable<IValidationRule> GetRulesForMember(string name) {
+			var query = from rule in Rules.OfType<PropertyRule>()
+						where rule.Member.Name == name
+						select (IValidationRule)rule;
+
+			return query.ToList();
+		}
+
 		public virtual string GetName(Expression<Func<T, object>> propertyExpression) {
 			var member = propertyExpression.GetMember();
 

@@ -42,12 +42,12 @@ namespace FluentValidation.Tests {
 		public void NotNull_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).NotNull();
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("'Name' should not be empty.");
+			clientRule.ErrorMessage.ShouldEqual("'Name' must not be empty.");
 		}
 
 		[Test]
 		public void NotEmpty_uses_simplified_message_for_clientside_validation() {
-			validator.RuleFor(x => x.Name);
+			validator.RuleFor(x => x.Name).NotEmpty();
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' should not be empty.");
 		}
@@ -77,7 +77,7 @@ namespace FluentValidation.Tests {
 		public void ExactLengthValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Length(5);
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("'Name' must be 5 characters in length");
+			clientRule.ErrorMessage.ShouldEqual("'Name' must be 5 characters in length.");
 		}
 
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
