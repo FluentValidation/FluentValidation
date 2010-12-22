@@ -22,9 +22,13 @@ namespace FluentValidation {
 	using System.Reflection;
 	using Validators;
 
+	//TODO: Re-visit this interface for FluentValidation v3. Remove some of the duplication.
+
 	public interface IValidatorDescriptor {
 		string GetName(string property);
 		ILookup<string, IPropertyValidator> GetMembersWithValidators();
 		IEnumerable<IPropertyValidator> GetValidatorsForMember(string name);
+
+		IEnumerable<IValidationRule> GetRulesForMember(string name);
 	}
 }

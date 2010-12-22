@@ -165,9 +165,6 @@
     <Compile Include="..\FluentValidation\Internal\MemberNameValidatorSelector.cs">
       <Link>MemberNameValidatorSelector.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\MemberValidatorSelector.cs">
-      <Link>MemberValidatorSelector.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Internal\PropertyRule.cs">
       <Link>PropertyRule.cs</Link>
     </Compile>

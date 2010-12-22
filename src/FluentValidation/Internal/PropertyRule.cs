@@ -26,7 +26,32 @@ namespace FluentValidation.Internal {
 	using Results;
 	using Validators;
 
-	public class PropertyRule<T> : IValidationRule<T> {
+	//TODO: For FluentValidation v3, remove the generic version of this class.
+
+	public class PropertyRule<T> : PropertyRule, IValidationRule<T> {
+
+		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+			: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate, typeof(T)) {
+		}
+
+		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression) {
+			return Create(expression, () => ValidatorOptions.CascadeMode);
+		}
+
+		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
+			var member = expression.GetMember();
+			var compiled = expression.Compile();
+			PropertySelector propertySelector = x => compiled((T)x);
+
+			return new PropertyRule<T>(member, propertySelector, expression, cascadeModeThunk, typeof(TProperty));
+		}
+
+		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
+			return base.Validate(context);
+		}
+	}
+
+	public class PropertyRule : IValidationRule {
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
 
@@ -49,7 +74,7 @@ namespace FluentValidation.Internal {
 			get { return validators.AsReadOnly(); }
 		}
 
-		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate) {
+		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) {
 			Member = member;
 			PropertyFunc = propertyFunc;
 			Expression = expression;
@@ -57,19 +82,7 @@ namespace FluentValidation.Internal {
 			TypeToValidate = typeToValidate;
 			this.cascadeModeThunk = cascadeModeThunk;
 
-			PropertyName = ValidatorOptions.PropertyNameResolver(typeof(T), member);
-		}
-
-		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression) {
-			return Create(expression, () => ValidatorOptions.CascadeMode);
-		}
-
-		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
-			var member = expression.GetMember();
-			var compiled = expression.Compile();
-			PropertySelector propertySelector = x => compiled((T)x);
-
-			return new PropertyRule<T>(member, propertySelector, expression, cascadeModeThunk, typeof(TProperty));
+			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member);
 		}
 
 		public void AddValidator(IPropertyValidator validator) {
@@ -79,11 +92,11 @@ namespace FluentValidation.Internal {
 
 		public void ReplaceValidator(IPropertyValidator original, IPropertyValidator newValidator) {
 			var index = validators.IndexOf(original);
-			
-			if(index > -1) {
+
+			if (index > -1) {
 				validators[index] = newValidator;
 
-				if(ReferenceEquals(CurrentValidator, original)) {
+				if (ReferenceEquals(CurrentValidator, original)) {
 					CurrentValidator = newValidator;
 				}
 			}
@@ -97,8 +110,8 @@ namespace FluentValidation.Internal {
 
 		public string PropertyDescription {
 			get {
-				
-				if(CustomPropertyName != null) {
+
+				if (CustomPropertyName != null) {
 					return CustomPropertyName.GetString();
 				}
 
@@ -106,7 +119,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
+		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext context) {
 			var cascade = cascadeModeThunk();
 			bool hasAnyFailure = false;
 
@@ -131,7 +144,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext<T> context, IPropertyValidator validator) {
+		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator) {
 			if (PropertyName == null && CustomPropertyName == null) {
 				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
 			}
@@ -139,7 +152,7 @@ namespace FluentValidation.Internal {
 			string propertyName = BuildPropertyName(context);
 
 			if (context.Selector.CanExecute(this, propertyName)) {
-				var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc((T)x), propertyName, Member);
+				var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc(x), propertyName, Member);
 				validationContext.PropertyChain = context.PropertyChain;
 				return validator.Validate(validationContext);
 			}
@@ -147,7 +160,7 @@ namespace FluentValidation.Internal {
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
-		private string BuildPropertyName(ValidationContext<T> context) {
+		private string BuildPropertyName(ValidationContext context) {
 			return context.PropertyChain.BuildPropertyName(PropertyName ?? CustomPropertyName.GetString());
 		}
 	}

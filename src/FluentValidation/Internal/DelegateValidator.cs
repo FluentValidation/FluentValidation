@@ -20,6 +20,7 @@ namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
 	using Results;
+	using Validators;
 
 	public class DelegateValidator<T> : IValidationRule<T> {
 		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
@@ -34,6 +35,15 @@ namespace FluentValidation.Internal {
 
 		public IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
 			return func(context.InstanceToValidate, context);
+		}
+
+		public IEnumerable<IPropertyValidator> Validators {
+			get { yield break; }
+		}
+
+		public IEnumerable<ValidationFailure> Validate(ValidationContext context) {
+			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector);
+			return Validate(newContext);
 		}
 	}
 }

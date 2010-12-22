@@ -2,10 +2,13 @@ namespace FluentValidation.Mvc {
 	using System;
 	using System.Collections.Generic;
 	using System.Web.Mvc;
+	using Internal;
+	using Resources;
 	using Validators;
 	using System.Linq;
 
 	public class FluentValidationPropertyValidator : ModelValidator {
+		protected readonly string propertyDescription;
 		protected readonly IPropertyValidator validator;
 
 		/*
@@ -17,7 +20,8 @@ namespace FluentValidation.Mvc {
 		*/
 		protected bool ShouldValidate { get; set; }
 
-		public FluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext) {
+		public FluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext) {
+			this.propertyDescription = propertyDescription;
 			this.validator = validator;
 		}
 
@@ -32,8 +36,8 @@ namespace FluentValidation.Mvc {
 			}
 		}
 
-		public static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {
-			return new FluentValidationPropertyValidator(meta, context, validator);
+		public static ModelValidator Create(ModelMetadata meta, ControllerContext context, string propertyDescription, IPropertyValidator validator) {
+			return new FluentValidationPropertyValidator(meta, context, propertyDescription, validator);
 		}
 
 		protected bool TypeAllowsNullValue(Type type) {
@@ -42,19 +46,21 @@ namespace FluentValidation.Mvc {
 	}
 
 	internal class RequiredFluentValidationPropertyValidator : FluentValidationPropertyValidator {
-		public RequiredFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext, validator) {
+		public RequiredFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext, propertyDescription, validator) {
 			bool isNonNullableValueType = !TypeAllowsNullValue(metadata.ModelType);
 			bool nullWasSpecified = metadata.Model == null;
 
 			ShouldValidate = isNonNullableValueType && nullWasSpecified;
 		}
 
-		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {
-			return new RequiredFluentValidationPropertyValidator(meta, context, validator);
+		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, string propertyDescription, IPropertyValidator validator) {
+			return new RequiredFluentValidationPropertyValidator(meta, context, propertyDescription, validator);
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			return new[] { new ModelClientValidationRequiredRule(validator.ErrorMessageSource.GetString()) };
+			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
+			var message = formatter.BuildMessage(validator.ErrorMessageSource.GetString());
+			return new[] { new ModelClientValidationRequiredRule(message) };
 		}
 
 		public override bool IsRequired {
@@ -67,16 +73,35 @@ namespace FluentValidation.Mvc {
 			get { return (ILengthValidator)validator; }
 		}
 
-		public StringLengthFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext, validator) {
+		public StringLengthFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator)
+			: base(metadata, controllerContext, propertyDescription, validator) {
 			ShouldValidate = false;
 		}
 
-		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {
-			return new StringLengthFluentValidationPropertyValidator(meta, context, validator);
+		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, string propertyDescription, IPropertyValidator validator) {
+			return new StringLengthFluentValidationPropertyValidator(meta, context, propertyDescription, validator);
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			return new[] { new ModelClientValidationStringLengthRule(LengthValidator.ErrorMessageSource.GetString(), LengthValidator.Min, LengthValidator.Max) };
+			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
+			string message = LengthValidator.ErrorMessageSource.GetString();
+
+			if(LengthValidator.ErrorMessageSource.ResourceType == typeof(Messages)) {
+				// If we're using the default resources then the mesage for length errors will have two parts, eg:
+				// '{PropertyName}' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters.
+				// We can't include the "TotalLength" part of the message because this information isn't available at the time the message is constructed.
+				// Instead, we'll just strip this off by finding the index of the period that separates the two parts of the message.
+
+				message = message.Substring(0, message.IndexOf(".") + 1);
+
+				// also append the min/max bits
+				formatter.AppendArgument("MinLength", LengthValidator.Min)
+					.AppendArgument("MaxLength", LengthValidator.Max);
+			}
+
+			message = formatter.BuildMessage(message);
+
+			return new[] { new ModelClientValidationStringLengthRule(message, LengthValidator.Min, LengthValidator.Max) };
 		}
 	}
 
@@ -85,16 +110,19 @@ namespace FluentValidation.Mvc {
 			get { return (IRegularExpressionValidator)validator;}
 		}
 
-		public RegularExpressionFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, IPropertyValidator validator) : base(metadata, controllerContext, validator) {
+		public RegularExpressionFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator)
+			: base(metadata, controllerContext, propertyDescription, validator) {
 			ShouldValidate = false;
 		}
 
-		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, IPropertyValidator validator) {
-			return new RegularExpressionFluentValidationPropertyValidator(meta, context, validator);
+		public new static ModelValidator Create(ModelMetadata meta, ControllerContext context, string propertyDescription, IPropertyValidator validator) {
+			return new RegularExpressionFluentValidationPropertyValidator(meta, context, propertyDescription, validator);
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			return new[] { new ModelClientValidationRegexRule(RegexValidator.ErrorMessageSource.GetString(), RegexValidator.Expression) };
+			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
+			string message = formatter.BuildMessage(RegexValidator.ErrorMessageSource.GetString());
+			return new[] { new ModelClientValidationRegexRule(message, RegexValidator.Expression) };
 
 		}
 	}
