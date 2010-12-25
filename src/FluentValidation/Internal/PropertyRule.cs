@@ -121,18 +121,23 @@ namespace FluentValidation.Internal {
 		}
 
 		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext context) {
-			// If we're defined inside a RuleSet and that RuleSet is not being executed
-			// then we cancel validation.
+			EnsureValidPropertyName();
 
-//			if(! IsInSelectedRuleset(context)) {
-//				yield break;
-//			}
+			// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
+			string propertyName = BuildPropertyName(context);
+
+			// Ensure that this rule is allowed to run. 
+			// The validatselector has the opportunity to veto this before any of the validators execute.
+			if(! context.Selector.CanExecute(this, propertyName, context)) {
+				yield break;
+			}
 
 			var cascade = cascadeModeThunk();
 			bool hasAnyFailure = false;
 
+			// Invoke each validator and collect its results.
 			foreach (var validator in validators) {
-				var results = InvokePropertyValidator(context, validator);
+				var results = InvokePropertyValidator(context, validator, propertyName);
 
 				bool hasFailure = false;
 
@@ -142,38 +147,30 @@ namespace FluentValidation.Internal {
 					yield return result;
 				}
 
+				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
+				// then don't continue to the next rule
 				if (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && hasFailure) {
 					break;
 				}
 			}
 
 			if (hasAnyFailure) {
+				// Callback if there has been at least one property validator failed.
 				OnFailure(context.InstanceToValidate);
 			}
 		}
 
-		/*private bool IsInSelectedRuleset(ValidationContext context) {
-			if(string.IsNullOrEmpty(RuleSet) && string.IsNullOrEmpty(context.RuleSet)) return true;
-			if (!string.IsNullOrEmpty(context.RuleSet) && context.RuleSet == RuleSet) return true;
+		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator, string propertyName) {
+			var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc(x), propertyName, Member);
+			validationContext.PropertyChain = context.PropertyChain;
+			validationContext.IsChildContext = context.IsChildContext;
+			return validator.Validate(validationContext);
+		}
 
-			return false;
-		}*/
-
-		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator) {
+		private void EnsureValidPropertyName() {
 			if (PropertyName == null && CustomPropertyName == null) {
 				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
 			}
-
-			string propertyName = BuildPropertyName(context);
-
-			if (context.Selector.CanExecute(this, propertyName, context)) {
-				var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc(x), propertyName, Member);
-				validationContext.PropertyChain = context.PropertyChain;
-				validationContext.IsChildContext = context.IsChildContext;
-				return validator.Validate(validationContext);
-			}
-
-			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		private string BuildPropertyName(ValidationContext context) {

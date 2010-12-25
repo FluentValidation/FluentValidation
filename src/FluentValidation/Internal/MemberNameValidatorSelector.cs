@@ -30,7 +30,10 @@ namespace FluentValidation.Internal {
 		}
 
 		public bool CanExecute (PropertyRule rule, string propertyPath, ValidationContext context) {
-			return memberNames.Any(x => x == propertyPath);
+			// Validator selector only applies to the top level.
+ 			// If we're running in a child context then this means that the child validator has already been selected
+			// Because of this, we assume that the rule should continue (ie if the parent rule is valid, all children are valid)
+			return context.IsChildContext || memberNames.Any(x => x == propertyPath);
 		}
 
 		public static MemberNameValidatorSelector FromExpressions<T>(params Expression<Func<T, object>>[] propertyExpressions) {
