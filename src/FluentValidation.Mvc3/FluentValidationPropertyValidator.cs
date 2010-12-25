@@ -17,6 +17,7 @@ namespace FluentValidation.Mvc {
 		 This is so that the validation can be left to the actual FluentValidationModelValidator.
 		 The exception to this is the Required validator - these *do* need to run standalone
 		 in order to bypass MVC's "A value is required" message which cannot be turned off.
+		 Basically, this is all just to bypass the bad design in ASP.NET MVC. Boo, hiss. 
 		*/
 		protected bool ShouldValidate { get; set; }
 
@@ -26,14 +27,18 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
-			throw new NotImplementedException();
 			if (ShouldValidate) {
-//				var context = new PropertyValidatorContext(Metadata.PropertyName, container, Metadata.Model, Metadata.PropertyName);
-//				var result = validator.Validate(context);
+				var fakeRule = new PropertyRule(null, x => Metadata.Model, null, null, Metadata.ModelType, null) {
+					PropertyName = Metadata.PropertyName
+				};
 
-//				foreach (var failure in result) {
-//					yield return new ModelValidationResult { Message = failure.ErrorMessage };
-//				}
+				var fakeParentContext = new ValidationContext(container);
+				var context = new PropertyValidatorContext(fakeParentContext, fakeRule, Metadata.PropertyName);
+				var result = validator.Validate(context);
+
+				foreach (var failure in result) {
+					yield return new ModelValidationResult { Message = failure.ErrorMessage };
+				}
 			}
 		}
 

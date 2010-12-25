@@ -86,11 +86,6 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(2); //one for each order
 		}
 
-		[Test]
-		public void Can_use_ruleset_with_other_validator_selector() {
-			Assert.Fail();
-		}
-
 		private class TestValidator : AbstractValidator<Person> {
 			public TestValidator() {
 				RuleSet("Names", () => {
