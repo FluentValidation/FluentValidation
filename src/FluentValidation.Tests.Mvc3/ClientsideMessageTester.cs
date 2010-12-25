@@ -74,6 +74,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Should_not_munge_custom_message() {
+			validator.RuleFor(x => x.Name).Length(1, 10).WithMessage("Foo");
+			var clientRule = GetClientRule(x => x.Name);
+			clientRule.ErrorMessage.ShouldEqual("Foo");
+		}
+
+		[Test]
 		public void ExactLengthValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Length(5);
 			var clientRule = GetClientRule(x => x.Name);
