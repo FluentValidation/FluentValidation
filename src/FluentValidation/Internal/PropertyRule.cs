@@ -166,7 +166,7 @@ namespace FluentValidation.Internal {
 
 			string propertyName = BuildPropertyName(context);
 
-			if (context.Selector.CanExecute(this, propertyName)) {
+			if (context.Selector.CanExecute(this, propertyName, context)) {
 				var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc(x), propertyName, Member);
 				validationContext.PropertyChain = context.PropertyChain;
 				validationContext.IsChildContext = context.IsChildContext;

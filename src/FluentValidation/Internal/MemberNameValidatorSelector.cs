@@ -29,7 +29,7 @@ namespace FluentValidation.Internal {
 			this.memberNames = memberNames;
 		}
 
-		public bool CanExecute (PropertyRule rule, string propertyPath) {
+		public bool CanExecute (PropertyRule rule, string propertyPath, ValidationContext context) {
 			return memberNames.Any(x => x == propertyPath);
 		}
 
