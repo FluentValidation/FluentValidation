@@ -38,24 +38,23 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Correctly_assigns_default_localized_error_message() {
-			/*var originalCulture = Thread.CurrentThread.CurrentUICulture;
+			var originalCulture = Thread.CurrentThread.CurrentUICulture;
 			try {
-				var validator = new NotEmptyValidator(null);
+				var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotEmpty());
 
 				foreach (var culture in new[] { "en", "de", "fr" }) {
 					Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 					var message = Messages.ResourceManager.GetString("notempty_error");
-					var errorMessage = new MessageFormatter().AppendPropertyName("name").BuildMessage(message);
+					var errorMessage = new MessageFormatter().AppendPropertyName("Surname").BuildMessage(message);
 					Debug.WriteLine(errorMessage);
-					var result = validator.Validate(new PropertyValidatorContext("name", null, x => null));
-					result.Single().ErrorMessage.ShouldEqual(errorMessage);
+					var result = validator.Validate(new Person{Surname = null});
+					result.Errors.Single().ErrorMessage.ShouldEqual(errorMessage);
 				}
 			}
 			finally {
 				// Always reset the culture.
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
-			}*/
-			Assert.Fail();
+			}
 		}
 
 		[Test]

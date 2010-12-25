@@ -1,5 +1,6 @@
 namespace FluentValidation.Tests {
 	using System.Linq;
+	using Internal;
 	using NUnit.Framework;
 	using Validators;
 
@@ -8,8 +9,14 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_validate_property_value_without_instance() {
 			var validator = new NotNullValidator();
-			var context = new PropertyValidatorContext(null, null, null);
+			var parentContext = new ValidationContext(null);
+			var rule = new PropertyRule(null, x => null, null, () => ValidatorOptions.CascadeMode, typeof(string), typeof(Person)) {
+				PropertyName = "Surname"
+			};
+			var context = new PropertyValidatorContext(parentContext, rule, "Surname");
 			validator.Validate(context).Single().ShouldNotBeNull();
 		}
+
+		//TODO: Test the other standalone validators.
 	}
 }
