@@ -38,7 +38,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Correctly_assigns_default_localized_error_message() {
-			var originalCulture = Thread.CurrentThread.CurrentUICulture;
+			/*var originalCulture = Thread.CurrentThread.CurrentUICulture;
 			try {
 				var validator = new NotEmptyValidator(null);
 
@@ -54,7 +54,8 @@ namespace FluentValidation.Tests {
 			finally {
 				// Always reset the culture.
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
-			}
+			}*/
+			Assert.Fail();
 		}
 
 		[Test]

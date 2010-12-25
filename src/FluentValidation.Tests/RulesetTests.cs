@@ -49,7 +49,10 @@ namespace FluentValidation.Tests {
 			});
 
 			var validator = new TestValidator();
-			validator.RuleFor(x => x.Address).SetValidator(addressValidator);
+
+			validator.RuleSet("Test", () => {
+				validator.RuleFor(x => x.Address).SetValidator(addressValidator);			
+			});
 
 			var person = new Person {
 			    Address = new Address()
@@ -69,7 +72,9 @@ namespace FluentValidation.Tests {
 			});
 
 			var validator = new TestValidator();
-			validator.RuleFor(x => x.Orders).SetValidator(orderValidator);
+			validator.RuleSet("Test", () => {
+				validator.RuleFor(x => x.Orders).SetValidator(orderValidator);
+			});
 
 			var person = new Person {
 				Orders = { new Order(), new Order() }

@@ -44,16 +44,9 @@ namespace FluentValidation.Validators {
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
-			var newContext =  CreateNewValidationContextForChildValidator(instanceToValidate, context, new DefaultValidatorSelector());
-			newContext.IsChildContext = true;
+			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate);
+			newContext.PropertyChain.Add(context.Rule.Member);
 			return newContext;
-		}
-
-		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext propertyValidatorContext, IValidatorSelector validatorSelector) {
-			var propertyChain = new PropertyChain(propertyValidatorContext.ParentContext.PropertyChain);
-			propertyChain.Add(propertyValidatorContext.Rule.Member);
-
-			return new ValidationContext(instanceToValidate, propertyChain, validatorSelector);
 		}
 	}
 }

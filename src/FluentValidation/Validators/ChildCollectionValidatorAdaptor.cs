@@ -56,13 +56,9 @@ namespace FluentValidation.Validators {
 					continue;
 				}
 
-				var childPropertyChain = new PropertyChain(context.ParentContext.PropertyChain);
-				childPropertyChain.Add(context.Rule.Member);
-				childPropertyChain.AddIndexer(count++);
-
-				//The ValidatorSelector should not be propogated downwards. 
-				//If this collection property has been selected for validation, then all properties on those items should be validated.
-				var newContext = new ValidationContext(element, childPropertyChain, new DefaultValidatorSelector()) { IsChildContext = true };
+				var newContext = context.ParentContext.CloneForChildValidator(element);
+				newContext.PropertyChain.Add(context.Rule.Member);
+				newContext.PropertyChain.AddIndexer(count++);
 
 				var results = childValidator.Validate(newContext).Errors;
 

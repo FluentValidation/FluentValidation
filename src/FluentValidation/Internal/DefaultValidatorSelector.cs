@@ -19,6 +19,9 @@
 namespace FluentValidation.Internal {
 	public class DefaultValidatorSelector : IValidatorSelector {
 		public bool CanExecute(PropertyRule rule, string propertyPath, ValidationContext context) {
+			// By default we ignore any rules part of a RuleSet.
+			if (!string.IsNullOrEmpty(rule.RuleSet)) return false;
+
 			return true;
 		}
 	}

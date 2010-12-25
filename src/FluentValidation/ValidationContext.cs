@@ -50,5 +50,11 @@ namespace FluentValidation {
 		public object InstanceToValidate { get; private set; }
 		public IValidatorSelector Selector { get; private set; }
 		public bool IsChildContext { get; internal set; }
+
+		internal ValidationContext CloneForChildValidator(object instanceToValidate) {
+			return new ValidationContext(instanceToValidate, PropertyChain, Selector) {
+				IsChildContext = true
+			};
+		}
 	}
 }
