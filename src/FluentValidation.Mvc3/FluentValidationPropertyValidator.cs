@@ -26,13 +26,14 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
+			throw new NotImplementedException();
 			if (ShouldValidate) {
-				var context = new PropertyValidatorContext(Metadata.PropertyName, container, Metadata.Model, Metadata.PropertyName);
-				var result = validator.Validate(context);
+//				var context = new PropertyValidatorContext(Metadata.PropertyName, container, Metadata.Model, Metadata.PropertyName);
+//				var result = validator.Validate(context);
 
-				foreach (var failure in result) {
-					yield return new ModelValidationResult { Message = failure.ErrorMessage };
-				}
+//				foreach (var failure in result) {
+//					yield return new ModelValidationResult { Message = failure.ErrorMessage };
+//				}
 			}
 		}
 

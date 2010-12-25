@@ -161,10 +161,8 @@ namespace FluentValidation.Internal {
 		}
 
 		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator, string propertyName) {
-			var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc(x), propertyName, Member);
-			validationContext.PropertyChain = context.PropertyChain;
-			validationContext.IsChildContext = context.IsChildContext;
-			return validator.Validate(validationContext);
+			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
+			return validator.Validate(propertyContext);
 		}
 
 		private void EnsureValidPropertyName() {

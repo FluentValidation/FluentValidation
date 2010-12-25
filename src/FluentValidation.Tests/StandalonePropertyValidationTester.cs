@@ -8,7 +8,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_validate_property_value_without_instance() {
 			var validator = new NotNullValidator();
-			var context = new PropertyValidatorContext("Surname", null, null as object, null);
+			var context = new PropertyValidatorContext(null, null, null);
 			validator.Validate(context).Single().ShouldNotBeNull();
 		}
 	}

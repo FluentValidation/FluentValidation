@@ -25,31 +25,32 @@ namespace FluentValidation.Validators {
 	using Internal;
 
 	public class PropertyValidatorContext {
-		private readonly MessageFormatter messageFormatter;
-		private readonly PropertySelector propertyValueFunc;
+		private readonly MessageFormatter messageFormatter = new MessageFormatter();
 		private bool propertyValueSet;
 		private object propertyValue;
 
-		public MemberInfo Member { get; private set; }
-		public string PropertyDescription { get; protected set; }
-		public object Instance { get; private set; }
+		public ValidationContext ParentContext { get; private set; }
+		public PropertyRule Rule { get; private set; }
 		public string PropertyName { get; private set; }
+		
+		public string PropertyDescription {
+			get { return Rule.PropertyDescription; } 
+		}
+
+		public object Instance {
+			get { return ParentContext.InstanceToValidate; }
+		}
 
 		public MessageFormatter MessageFormatter {
 			get { return messageFormatter; }
 		}
-
-		//TODO: Should this be exposed? If so, should it be public?
-		internal PropertyChain PropertyChain { get; set; }
-		internal PropertySelector PropertyValueFunc { get { return propertyValueFunc; } }
-		internal bool IsChildContext { get; set; }
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
 		public object PropertyValue {
 			get {
 				if (!propertyValueSet) {
-					propertyValue = propertyValueFunc(Instance);
+					propertyValue = Rule.PropertyFunc(Instance);
 					propertyValueSet = true;
 				}
 
@@ -61,27 +62,10 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public PropertyValidatorContext(string propertyDescription, object instance, object propertyValue, string propertyName) {
-			PropertyDescription = propertyDescription;
-			Instance = instance;
-			messageFormatter = new MessageFormatter();
-			PropertyValue = propertyValue;
+		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName) {
+			ParentContext = parentContext;
+			Rule = rule;
 			PropertyName = propertyName;
-		}
-
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc)
-		: this(propertyDescription, instance, propertyValueFunc, null, null){
-
-		}
-
-		public PropertyValidatorContext(string propertyDescription, object instance, PropertySelector propertyValueFunc, string propertyName, MemberInfo member) {
-			propertyValueFunc.Guard("propertyValueFunc cannot be null");
-			PropertyDescription = propertyDescription;
-			Instance = instance;
-			messageFormatter = new MessageFormatter();
-			this.PropertyName = propertyName;
-			this.propertyValueFunc = propertyValueFunc;
-			this.Member = member;
 		}
 	}
 }

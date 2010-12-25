@@ -35,7 +35,7 @@ namespace FluentValidation.Validators {
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			if (context.Member == null) {
+			if (context.Rule.Member == null) {
 				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
 			}
 
@@ -56,8 +56,8 @@ namespace FluentValidation.Validators {
 					continue;
 				}
 
-				var childPropertyChain = new PropertyChain(context.PropertyChain);
-				childPropertyChain.Add(context.Member);
+				var childPropertyChain = new PropertyChain(context.ParentContext.PropertyChain);
+				childPropertyChain.Add(context.Rule.Member);
 				childPropertyChain.AddIndexer(count++);
 
 				//The ValidatorSelector should not be propogated downwards. 
