@@ -133,10 +133,9 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void When_the_validator_fails_the_error_message_should_be_set_for_strings() {
-			string value = "aaa";
-			var validator = new InclusiveBetweenValidator("bbb", "zzz");
-			var result = validator.Validate(new PropertyValidatorContext("Value", null, x => value));
-			result.Single().ErrorMessage.ShouldEqual("'Value' must be between bbb and zzz. You entered aaa.");
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).InclusiveBetween("bbb", "zzz"));
+			var result = validator.Validate(new Person{Surname = "aaa"});
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be between bbb and zzz. You entered aaa.");
 		}
 
 		[Test]
