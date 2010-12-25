@@ -89,6 +89,7 @@
     <Compile Include="Internal\InstanceCache.cs" />
     <Compile Include="Internal\PropertySelector.cs" />
     <Compile Include="Internal\ResourceHelper.cs" />
+    <Compile Include="Internal\RulesetValidatorSelector.cs" />
     <Compile Include="IValidationRule.cs" />
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
     <Compile Include="Internal\MessageFormatter.cs" />

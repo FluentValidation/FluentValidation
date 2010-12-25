@@ -24,6 +24,7 @@ namespace FluentValidation.Internal {
 
 	public class DelegateValidator<T> : IValidationRule<T> {
 		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
+		public string RuleSet { get; set; }
 
 		public DelegateValidator(Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func) {
 			this.func = func;

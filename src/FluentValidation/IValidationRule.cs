@@ -24,6 +24,7 @@ namespace FluentValidation {
 
 	public interface IValidationRule {
 		IEnumerable<IPropertyValidator> Validators { get; }
+		string RuleSet { get; set; }
 
 		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures.

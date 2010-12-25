@@ -62,7 +62,7 @@ namespace FluentValidation.Validators {
 
 				//The ValidatorSelector should not be propogated downwards. 
 				//If this collection property has been selected for validation, then all properties on those items should be validated.
-				var newContext = new ValidationContext(element, childPropertyChain, new DefaultValidatorSelector());
+				var newContext = new ValidationContext(element, childPropertyChain, new DefaultValidatorSelector()) { IsChildContext = true };
 
 				var results = childValidator.Validate(newContext).Errors;
 

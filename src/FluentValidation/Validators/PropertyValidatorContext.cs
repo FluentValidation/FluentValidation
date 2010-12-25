@@ -42,6 +42,7 @@ namespace FluentValidation.Validators {
 		//TODO: Should this be exposed? If so, should it be public?
 		internal PropertyChain PropertyChain { get; set; }
 		internal PropertySelector PropertyValueFunc { get { return propertyValueFunc; } }
+		internal bool IsChildContext { get; set; }
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained

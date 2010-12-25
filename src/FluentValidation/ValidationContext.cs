@@ -20,6 +20,10 @@ namespace FluentValidation {
 	using Internal;
 
 	public class ValidationContext<T> : ValidationContext {
+		public ValidationContext(T instanceToValidate) : this(instanceToValidate, new PropertyChain(), new DefaultValidatorSelector()) {
+			
+		}
+
 		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector)
 			: base(instanceToValidate, propertyChain, validatorSelector) {
 
@@ -30,6 +34,12 @@ namespace FluentValidation {
 	}
 
 	public class ValidationContext {
+
+		public ValidationContext(object instanceToValidate)
+		 : this (instanceToValidate, new PropertyChain(), new DefaultValidatorSelector()){
+			
+		}
+
 		public ValidationContext(object instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector) {
 			PropertyChain = new PropertyChain(propertyChain);
 			InstanceToValidate = instanceToValidate;
@@ -39,5 +49,6 @@ namespace FluentValidation {
 		public PropertyChain PropertyChain { get; private set; }
 		public object InstanceToValidate { get; private set; }
 		public IValidatorSelector Selector { get; private set; }
+		public bool IsChildContext { get; internal set; }
 	}
 }

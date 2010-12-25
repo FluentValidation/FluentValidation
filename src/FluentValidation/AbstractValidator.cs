@@ -32,6 +32,7 @@ namespace FluentValidation {
 	/// <typeparam name="T">The type of the object being validated</typeparam>
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule<T>> {
 		readonly List<IValidationRule<T>> nestedValidators = new List<IValidationRule<T>>();
+		string currentRuleSetName = null;
 
 		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
 
@@ -74,6 +75,10 @@ namespace FluentValidation {
 		}
 
 		public void AddRule(IValidationRule<T> rule) {
+			if(currentRuleSetName != null) {
+				rule.RuleSet = currentRuleSetName;
+			}
+
 			nestedValidators.Add(rule);
 		}
 
@@ -122,6 +127,19 @@ namespace FluentValidation {
 		public void Custom(Func<T, ValidationContext<T>, ValidationFailure> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom");
 			AddRule(new DelegateValidator<T>((x, ctx) => new[] { customValidator(x, ctx) }));
+		}
+
+		public void RuleSet(string ruleSetName, Action action) {
+			ruleSetName.Guard("A name must be specified when calling RuleSet.");
+			action.Guard("A ruleset definition must be specified when calling RuleSet.");
+
+			try {
+				currentRuleSetName = ruleSetName;
+				action();
+			}
+			finally {
+				currentRuleSetName = null;
+			}
 		}
 
 		public IEnumerator<IValidationRule<T>> GetEnumerator() {

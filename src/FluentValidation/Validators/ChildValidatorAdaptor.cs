@@ -44,7 +44,9 @@ namespace FluentValidation.Validators {
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
-			return CreateNewValidationContextForChildValidator(instanceToValidate, context, new DefaultValidatorSelector());
+			var newContext =  CreateNewValidationContextForChildValidator(instanceToValidate, context, new DefaultValidatorSelector());
+			newContext.IsChildContext = true;
+			return newContext;
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext propertyValidatorContext, IValidatorSelector validatorSelector) {

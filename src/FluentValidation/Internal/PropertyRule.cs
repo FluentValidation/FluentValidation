@@ -60,6 +60,7 @@ namespace FluentValidation.Internal {
 		public Expression Expression { get; private set; }
 
 		public IStringSource CustomPropertyName { get; set; }
+		public string RuleSet { get; set; }
 
 		public Action<object> OnFailure { get; set; }
 		public IPropertyValidator CurrentValidator { get; private set; }
@@ -120,6 +121,13 @@ namespace FluentValidation.Internal {
 		}
 
 		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext context) {
+			// If we're defined inside a RuleSet and that RuleSet is not being executed
+			// then we cancel validation.
+
+//			if(! IsInSelectedRuleset(context)) {
+//				yield break;
+//			}
+
 			var cascade = cascadeModeThunk();
 			bool hasAnyFailure = false;
 
@@ -144,6 +152,13 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		/*private bool IsInSelectedRuleset(ValidationContext context) {
+			if(string.IsNullOrEmpty(RuleSet) && string.IsNullOrEmpty(context.RuleSet)) return true;
+			if (!string.IsNullOrEmpty(context.RuleSet) && context.RuleSet == RuleSet) return true;
+
+			return false;
+		}*/
+
 		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator) {
 			if (PropertyName == null && CustomPropertyName == null) {
 				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
@@ -154,6 +169,7 @@ namespace FluentValidation.Internal {
 			if (context.Selector.CanExecute(this, propertyName)) {
 				var validationContext = new PropertyValidatorContext(PropertyDescription, context.InstanceToValidate, x => PropertyFunc(x), propertyName, Member);
 				validationContext.PropertyChain = context.PropertyChain;
+				validationContext.IsChildContext = context.IsChildContext;
 				return validator.Validate(validationContext);
 			}
 
