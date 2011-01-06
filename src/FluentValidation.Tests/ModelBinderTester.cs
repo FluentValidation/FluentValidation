@@ -277,5 +277,87 @@ namespace FluentValidation.Tests {
 			provider.AddImplicitRequiredValidator = true;
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = true;
 		}
+
+		[Test]
+		public void Should_only_validate_specified_ruleset() {
+			var form = new FormCollection {
+				{ "Email", "foo" },
+				{ "Surname", "foo" },
+				{ "Forename", "foo" },
+			};
+
+			var context = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(RulesetTestModel)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider(),
+			};
+
+			var binder = new CustomizeValidatorAttribute { RuleSet = "Names" };
+			binder.BindModel(new ControllerContext(), context);
+
+			context.ModelState.IsValidField("Forename").ShouldBeFalse(); 
+			context.ModelState.IsValidField("Surname").ShouldBeFalse(); 
+			context.ModelState.IsValidField("Email").ShouldBeTrue(); 
+		}
+
+		[Test]
+		public void Should_only_validate_specified_properties() {
+			var form = new FormCollection {
+				{ "Email", "foo" },
+				{ "Surname", "foo" },
+				{ "Forename", "foo" },
+			};
+
+			var context = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(PropertiesTestModel)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider(),
+			};
+
+			var binder = new CustomizeValidatorAttribute { Properties = "Surname,Forename" };
+			binder.BindModel(new ControllerContext(), context);
+
+			context.ModelState.IsValidField("Forename").ShouldBeFalse();
+			context.ModelState.IsValidField("Surname").ShouldBeFalse();
+			context.ModelState.IsValidField("Email").ShouldBeTrue(); 
+
+		}
+
+		[Validator(typeof(PropertiesValidator))]
+		private class PropertiesTestModel {
+			public string Email { get; set; }
+			public string Surname { get; set; }
+			public string Forename { get; set; }
+		}
+
+		private class PropertiesValidator : AbstractValidator<PropertiesTestModel> {
+			public PropertiesValidator() {
+				RuleFor(x => x.Email).NotEqual("foo");
+				RuleFor(x => x.Surname).NotEqual("foo");
+				RuleFor(x => x.Forename).NotEqual("foo");
+			}
+		}
+
+		[Validator(typeof(RulesetTestValidator))]
+		private class RulesetTestModel {
+			public string Email { get; set; }
+			public string Surname { get; set; }
+			public string Forename { get; set; }
+		}
+
+		private class RulesetTestValidator : AbstractValidator<RulesetTestModel> {
+			public RulesetTestValidator() {
+				RuleFor(x => x.Email).NotEqual("foo");
+
+				RuleSet("Names", () => {
+					RuleFor(x => x.Surname).NotEqual("foo");
+					RuleFor(x => x.Forename).NotEqual("foo");
+				});
+			}
+		}
 	}
 }

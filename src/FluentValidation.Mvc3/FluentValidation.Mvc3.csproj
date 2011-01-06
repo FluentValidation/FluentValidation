@@ -55,6 +55,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AttributeMetadataValidator.cs" />
+    <Compile Include="CustomizeValidatorAttribute.cs" />
     <Compile Include="FluentValidationModelMetadataProvider.cs" />
     <Compile Include="FluentValidationModelValidator.cs" />
     <Compile Include="FluentValidationModelValidatorProvider.cs" />

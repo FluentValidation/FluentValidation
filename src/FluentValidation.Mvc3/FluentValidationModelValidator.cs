@@ -3,6 +3,7 @@ namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Web.Mvc;
+	using Internal;
 	using Results;
 
 	/// <summary>
@@ -10,16 +11,33 @@ namespace FluentValidation.Mvc {
 	/// </summary>
 	internal class FluentValidationModelValidator : ModelValidator {
 		readonly IValidator validator;
+		readonly CustomizeValidatorAttribute customizations;
 
 		public FluentValidationModelValidator(ModelMetadata metadata, ControllerContext controllerContext, IValidator validator)
 			: base(metadata, controllerContext) {
 			this.validator = validator;
+			
+			this.customizations = CustomizeValidatorAttribute.GetFromControllerContext(controllerContext) 
+				?? new CustomizeValidatorAttribute();
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
 			if (Metadata.Model != null) {
+				IValidatorSelector selector = new DefaultValidatorSelector();
+				
+				if(! string.IsNullOrEmpty(customizations.RuleSet)) {
+					selector = new RulesetValidatorSelector(customizations.RuleSet);
+				}
+				else {
+					var props = customizations.GetProperties();
+					if(props.Length > 0) {
+						selector = new MemberNameValidatorSelector(props);
+					}
+				}
 
-				var result = validator.Validate(Metadata.Model);
+				var context = new ValidationContext(Metadata.Model, new PropertyChain(), selector);
+
+				var result = validator.Validate(context);
 
 				if (!result.IsValid) {
 					return ConvertValidationResultToModelValidationResults(result);
