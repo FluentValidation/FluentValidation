@@ -23,18 +23,7 @@ namespace FluentValidation.Mvc {
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
 			if (Metadata.Model != null) {
-				IValidatorSelector selector = new DefaultValidatorSelector();
-				
-				if(! string.IsNullOrEmpty(customizations.RuleSet)) {
-					selector = new RulesetValidatorSelector(customizations.RuleSet);
-				}
-				else {
-					var props = customizations.GetProperties();
-					if(props.Length > 0) {
-						selector = new MemberNameValidatorSelector(props);
-					}
-				}
-
+				var selector = customizations.ToValidatorSelector();
 				var context = new ValidationContext(Metadata.Model, new PropertyChain(), selector);
 
 				var result = validator.Validate(context);

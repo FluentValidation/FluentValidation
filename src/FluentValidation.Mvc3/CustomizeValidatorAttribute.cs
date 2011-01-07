@@ -21,18 +21,11 @@ namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Reflection;
 	using System.Web.Mvc;
+	using Internal;
 
 	public class CustomizeValidatorAttribute : CustomModelBinderAttribute, IModelBinder {
 		public string RuleSet { get; set; }
 		public string Properties { get; set; }
-
-		public string[] GetProperties() {
-			if(string.IsNullOrEmpty(Properties)) {
-				return new string[0];
-			}
-
-			return Properties.Split(',', ';');
-		}
 
 		public override IModelBinder GetBinder() {
 			return this;
@@ -55,6 +48,28 @@ namespace FluentValidation.Mvc {
 		public static CustomizeValidatorAttribute GetFromControllerContext(ControllerContext context) {
 			var hack = context as ControllerContextHackery;
 			return hack != null ? hack.Attribute : null;
+		}
+
+		/// <summary>
+		/// Builds a validator selector from the options specified in the attribute's properties.
+		/// </summary>
+		public IValidatorSelector ToValidatorSelector() {
+			IValidatorSelector selector;
+
+			if(! string.IsNullOrEmpty(RuleSet)) {
+				var rulesets = RuleSet.Split(',', ';');
+				selector = new RulesetValidatorSelector(rulesets);
+			}
+			else if(! string.IsNullOrEmpty(Properties)) {
+				var properties = Properties.Split(',', ';');
+				selector = new MemberNameValidatorSelector(properties);
+			}
+			else {
+				selector = new DefaultValidatorSelector();
+			}
+
+			return selector;
+
 		}
 
 		private class ControllerContextHackery : ControllerContext {

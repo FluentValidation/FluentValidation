@@ -86,6 +86,19 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(2); //one for each order
 		}
 
+		[Test]
+		public void Executes_multiple_rulesets() {
+			var validator = new TestValidator();
+			validator.RuleSet("Id", () => {
+				validator.RuleFor(x => x.Id).NotEqual(0);
+			});
+
+			var person = new Person();
+			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector("Names", "Id")));
+
+			result.Errors.Count.ShouldEqual(3);
+		}
+
 		private class TestValidator : AbstractValidator<Person> {
 			public TestValidator() {
 				RuleSet("Names", () => {
