@@ -33,7 +33,7 @@ else {
     $packages | % { 
         $package = $_.Name
         write-host "Uploading $package"
-        & $nugetpath push -source "http://orchardproject.net:82/GalleryServer/" $package $key
+        & $nugetpath push -source "http://packages.nuget.org/v1/" $package $key
         write-host ""
     }
   }
