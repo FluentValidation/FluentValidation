@@ -1,4 +1,4 @@
-2.0 -
+2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder
 * Fix issue #7062 - allow validator selectors to work against nullable properties with overriden names.
 * Fix error in German localization.
