@@ -55,5 +55,12 @@ namespace FluentValidation.Tests {
 			var validators = descriptor.GetValidatorsForMember("NoSuchProperty");
 			validators.Count().ShouldEqual(0);
 		}
+
+		[Test]
+		public void Does_not_throw_when_rule_declared_without_property() {
+			validator.RuleFor(x => x).NotNull();
+			var descriptor = validator.CreateDescriptor();
+			descriptor.GetValidatorsForMember("Surname");
+		}
 	}
 }

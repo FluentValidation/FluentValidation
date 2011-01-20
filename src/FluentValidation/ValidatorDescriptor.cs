@@ -45,6 +45,7 @@ namespace FluentValidation {
 
 		public virtual ILookup<string, IPropertyValidator> GetMembersWithValidators() {
 			var query = from rule in Rules.OfType<PropertyRule<T>>()
+						where rule.Member != null
 						from validator in rule.Validators
 						select new { memberName = rule.Member.Name, validator };
 
