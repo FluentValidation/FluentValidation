@@ -26,6 +26,7 @@ namespace FluentValidation.Mvc {
 	public class CustomizeValidatorAttribute : CustomModelBinderAttribute, IModelBinder {
 		public string RuleSet { get; set; }
 		public string Properties { get; set; }
+		private const string key = "_FV_CustomizeValidator" ;
 
 		public override IModelBinder GetBinder() {
 			return this;
@@ -37,17 +38,16 @@ namespace FluentValidation.Mvc {
 			// So anything added to AdditionalValues will not be passed to the ValidatorProvider.
 			// This is a very poor design decision. 
 			// The only piece of information that is passed all the way down to the validator is the controller context.
-			// So we resort to custom ControllerContext to store this metadata. 
+			// So we resort to storing the attribute in HttpContext.Items. 
 			// Horrible, horrible, horrible hack. Horrible.
-			var wrappedContext = new ControllerContextHackery(controllerContext, this);
+			controllerContext.HttpContext.Items[key] = this;
 
 			var innerBinder = ModelBinders.Binders.GetBinder(bindingContext.ModelType);
-			return innerBinder.BindModel(wrappedContext, bindingContext);
+			return innerBinder.BindModel(controllerContext, bindingContext);
 		}
 
 		public static CustomizeValidatorAttribute GetFromControllerContext(ControllerContext context) {
-			var hack = context as ControllerContextHackery;
-			return hack != null ? hack.Attribute : null;
+			return context.HttpContext.Items[key] as CustomizeValidatorAttribute;
 		}
 
 		/// <summary>
@@ -71,14 +71,5 @@ namespace FluentValidation.Mvc {
 			return selector;
 
 		}
-
-		private class ControllerContextHackery : ControllerContext {
-			public CustomizeValidatorAttribute Attribute { get; private set; }
-
-			public ControllerContextHackery(ControllerContext controllerContext, CustomizeValidatorAttribute attribute) : base(controllerContext) {
-				Attribute = attribute;
-			}
-		}
-
 	}
 }

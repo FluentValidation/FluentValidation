@@ -18,11 +18,14 @@
 
 namespace FluentValidation.Tests {
     using System;
+    using System.Collections;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
+    using System.Web;
     using System.Web.Mvc;
     using Attributes;
+    using Moq;
     using Mvc;
     using NUnit.Framework;
 
@@ -30,6 +33,7 @@ namespace FluentValidation.Tests {
 	public class ModelBinderTester {
 		FluentValidationModelValidatorProvider provider;
 		DefaultModelBinder binder;
+		ControllerContext controllerContext;
 
 		[SetUp]
 		public void Setup() {
@@ -38,6 +42,7 @@ namespace FluentValidation.Tests {
 			ModelValidatorProviders.Providers.Add(provider);
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 			binder = new DefaultModelBinder();
+			controllerContext = new ControllerContext { HttpContext = MockHttpContext.Create() };
 		}
 
 		[TearDown]
@@ -121,7 +126,7 @@ namespace FluentValidation.Tests {
 				ValueProvider = form.ToValueProvider(),
 			};
 
-			binder.BindModel(new ControllerContext(), context);
+			binder.BindModel(controllerContext, context);
 
 			context.ModelState.IsValidField("Email").ShouldBeFalse(); //Email validation failed
 			context.ModelState.IsValidField("DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
@@ -157,7 +162,7 @@ namespace FluentValidation.Tests {
 				ValueProvider = form.ToValueProvider(),
 			};
 
-			binder.BindModel(new ControllerContext(), context);
+			binder.BindModel(controllerContext, context);
 
 			context.ModelState.IsValidField("SomeBool").ShouldBeFalse(); //Complex rule
 			context.ModelState.IsValidField("Id").ShouldBeFalse(); //NotEmpty for non-nullable value type
@@ -176,7 +181,7 @@ namespace FluentValidation.Tests {
 				ValueProvider = form.ToValueProvider()
 			};
 
-			binder.BindModel(new ControllerContext(), bindingContext);
+			binder.BindModel(controllerContext, bindingContext);
 
 			bindingContext.ModelState["test.Name"].Errors.Single().ErrorMessage.ShouldEqual("Validation Failed");
 		}
@@ -195,7 +200,7 @@ namespace FluentValidation.Tests {
 				ValueProvider = form.ToValueProvider()
 			};
 
-			binder.BindModel(new ControllerContext(), bindingContext);
+			binder.BindModel(controllerContext, bindingContext);
 			bindingContext.ModelState["Name"].Errors.Count().ShouldEqual(1);
 		}
 
@@ -210,7 +215,7 @@ namespace FluentValidation.Tests {
 				ValueProvider = new FormCollection().ToValueProvider()
 			};
 
-			binder.BindModel(new ControllerContext(), bindingContext).ShouldNotBeNull();
+			binder.BindModel(controllerContext, bindingContext).ShouldNotBeNull();
 		}
 
 		[Test]
@@ -227,7 +232,7 @@ namespace FluentValidation.Tests {
 				ValueProvider = form.ToValueProvider()
 			};
 
-			binder.BindModel(new ControllerContext(), bindingContext);
+			binder.BindModel(controllerContext, bindingContext);
 
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("Validation failed");
 		}
@@ -246,7 +251,7 @@ namespace FluentValidation.Tests {
 				ValueProvider = form.ToValueProvider()
 			};
 
-			binder.BindModel(new ControllerContext(), bindingContext);
+			binder.BindModel(controllerContext, bindingContext);
 
 			//TODO: Localise test.
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("'Id' must not be empty.");
@@ -269,7 +274,7 @@ namespace FluentValidation.Tests {
 				ValueProvider = form.ToValueProvider()
 			};
 
-			binder.BindModel(new ControllerContext(), bindingContext);
+			binder.BindModel(controllerContext, bindingContext);
 
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("A value is required.");
 
@@ -295,7 +300,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var binder = new CustomizeValidatorAttribute { RuleSet = "Names" };
-			binder.BindModel(new ControllerContext(), context);
+			binder.BindModel(controllerContext, context);
 
 			context.ModelState.IsValidField("Forename").ShouldBeFalse(); 
 			context.ModelState.IsValidField("Surname").ShouldBeFalse(); 
@@ -319,7 +324,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var binder = new CustomizeValidatorAttribute { Properties = "Surname,Forename" };
-			binder.BindModel(new ControllerContext(), context);
+			binder.BindModel(controllerContext, context);
 
 			context.ModelState.IsValidField("Forename").ShouldBeFalse();
 			context.ModelState.IsValidField("Surname").ShouldBeFalse();
@@ -357,6 +362,16 @@ namespace FluentValidation.Tests {
 					RuleFor(x => x.Surname).NotEqual("foo");
 					RuleFor(x => x.Forename).NotEqual("foo");
 				});
+			}
+		}
+
+		public class MockHttpContext : Mock<HttpContextBase> {
+			public MockHttpContext() {
+				Setup(x => x.Items).Returns(new Hashtable());
+			}
+
+			public static HttpContextBase Create() {
+				return new MockHttpContext().Object;
 			}
 		}
 	}
