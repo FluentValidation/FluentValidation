@@ -21,7 +21,6 @@ namespace FluentValidation.Validators {
 
 	public class NotNullValidator : PropertyValidator, INotNullValidator {
 		public NotNullValidator() : base(() => Messages.notnull_error) {
-			SupportsStandaloneValidation = true;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {

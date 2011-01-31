@@ -25,7 +25,6 @@ namespace FluentValidation.Validators {
 
 		public NotEmptyValidator(object defaultValueForType) : base(() => Messages.notempty_error) {
 			this.defaultValueForType = defaultValueForType;
-			SupportsStandaloneValidation = true;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {

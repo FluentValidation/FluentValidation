@@ -31,7 +31,6 @@ namespace FluentValidation.Validators {
 
 		public EmailValidator() : base(() => Messages.email_error) {
 			regex = new Regex(expression, RegexOptions.IgnoreCase);
-			SupportsStandaloneValidation = true;
 		}
 
 

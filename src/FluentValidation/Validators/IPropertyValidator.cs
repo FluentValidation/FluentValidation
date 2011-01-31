@@ -30,7 +30,6 @@ namespace FluentValidation.Validators {
 	public interface IPropertyValidator {
 		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 		ICollection<Func<object, object>> CustomMessageFormatArguments { get; }
-		bool SupportsStandaloneValidation { get; }
 		Func<object, object> CustomStateProvider { get; set; }
 		IStringSource ErrorMessageSource { get; set; }
 	}

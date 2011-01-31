@@ -68,15 +68,14 @@ namespace FluentValidation.Mvc {
 
 				var validatorsWithRules = from rule in descriptor.GetRulesForMember(metadata.PropertyName)
 										  let propertyRule = (PropertyRule)rule
-										  // Only want to include rules that allow standalone clientside validation.
-										  let validators = rule.Validators.Where(x => x.SupportsStandaloneValidation)
+										  let validators = rule.Validators
 										  where validators.Any()
 										  from propertyValidator in validators
-										  select new { validator = propertyValidator, rule = propertyRule };
+										  let modelValidatorForProperty = GetModelValidator(metadata, context, propertyRule, propertyValidator)
+										  where modelValidatorForProperty != null
+										  select modelValidatorForProperty;
 					
-				foreach(var validatorWithRule in validatorsWithRules) {
-					modelValidators.Add(GetModelValidator(metadata, context, validatorWithRule.rule, validatorWithRule.validator));
-				}
+				modelValidators.AddRange(validatorsWithRules);
 			}
 
 			if(metadata.IsRequired && AddImplicitRequiredValidator) {
@@ -100,7 +99,9 @@ namespace FluentValidation.Mvc {
 			var factory = validatorFactories
 				.Where(x => x.Key.IsAssignableFrom(type))
 				.Select(x => x.Value)
-				.FirstOrDefault() ?? FluentValidationPropertyValidator.Create;
+				.FirstOrDefault();
+
+			if (factory == null) return null;
 
 			return factory(meta, context, rule.PropertyDescription, propertyValidator);
 		}

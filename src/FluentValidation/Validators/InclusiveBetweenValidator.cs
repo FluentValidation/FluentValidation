@@ -30,7 +30,6 @@ namespace FluentValidation.Validators {
 				throw new ArgumentOutOfRangeException("to", "To should be larger than from.");
 			}
 
-			SupportsStandaloneValidation = true;
 		}
 
 		public IComparable From { get; private set; }

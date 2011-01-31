@@ -42,14 +42,12 @@ namespace FluentValidation.Validators {
 		public NotEqualValidator(object comparisonValue)
 			: base(() => Messages.notequal_error) {
 			ValueToCompare = comparisonValue;
-			SupportsStandaloneValidation = true;
 		}
 
 		public NotEqualValidator(object comparisonValue, IEqualityComparer equalityComparer)
 			: base(() => Messages.notequal_error) {
 			ValueToCompare = comparisonValue;
 			comparer = equalityComparer;
-			SupportsStandaloneValidation = true;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {

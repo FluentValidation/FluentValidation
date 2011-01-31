@@ -26,7 +26,6 @@ namespace FluentValidation.Validators {
 
 	public class LessThanOrEqualValidator : AbstractComparisonValidator {
 		public LessThanOrEqualValidator(IComparable value) : base(value, () => Messages.lessthanorequal_error) {
-			SupportsStandaloneValidation = true;
 		}
 
 		public LessThanOrEqualValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member, () => Messages.lessthanorequal_error) {

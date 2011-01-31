@@ -30,8 +30,6 @@ namespace FluentValidation.Validators {
 
 		public Func<object, object> CustomStateProvider { get; set; }
 
-		public bool SupportsStandaloneValidation { get; set; }
-
 		public ICollection<Func<object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
 		}
