@@ -87,6 +87,20 @@ namespace FluentValidation.Tests {
 			clientRule.ErrorMessage.ShouldEqual("'Name' must be 5 characters in length.");
 		}
 
+		[Test]
+		public void Custom_validation_message_with_placeholders() {
+			validator.RuleFor(x => x.Name).NotNull().WithMessage("{PropertyName} is null.");
+			var clientRule = GetClientRule(x => x.Name);
+			clientRule.ErrorMessage.ShouldEqual("Name is null.");
+		}
+
+		[Test]
+		public void Custom_validation_message_for_length() {
+			validator.RuleFor(x => x.Name).Length(1, 5).WithMessage("Must be between {MinLength} and {MaxLength}.");
+			var clientRule = GetClientRule(x => x.Name);
+			clientRule.ErrorMessage.ShouldEqual("Must be between 1 and 5.");
+		}
+
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
 			var propertyName = expression.GetMember().Name;
 			var metadata = new DataAnnotationsModelMetadataProvider().GetMetadataForProperty(null, typeof(TestModel), propertyName);

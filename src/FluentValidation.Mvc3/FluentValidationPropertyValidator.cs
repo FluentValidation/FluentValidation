@@ -89,7 +89,11 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
+			var formatter = new MessageFormatter()
+				.AppendPropertyName(propertyDescription)
+				.AppendArgument("MinLength", LengthValidator.Min)
+				.AppendArgument("MaxLength", LengthValidator.Max);
+
 			string message = LengthValidator.ErrorMessageSource.GetString();
 
 			if(LengthValidator.ErrorMessageSource.ResourceType == typeof(Messages)) {
@@ -99,10 +103,6 @@ namespace FluentValidation.Mvc {
 				// Instead, we'll just strip this off by finding the index of the period that separates the two parts of the message.
 
 				message = message.Substring(0, message.IndexOf(".") + 1);
-
-				// also append the min/max bits
-				formatter.AppendArgument("MinLength", LengthValidator.Min)
-					.AppendArgument("MaxLength", LengthValidator.Max);
 			}
 
 			message = formatter.BuildMessage(message);
