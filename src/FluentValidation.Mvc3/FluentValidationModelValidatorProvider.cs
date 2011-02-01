@@ -99,9 +99,7 @@ namespace FluentValidation.Mvc {
 			var factory = validatorFactories
 				.Where(x => x.Key.IsAssignableFrom(type))
 				.Select(x => x.Value)
-				.FirstOrDefault();
-
-			if (factory == null) return null;
+				.FirstOrDefault() ?? FluentValidationPropertyValidator.Create;
 
 			return factory(meta, context, rule.PropertyDescription, propertyValidator);
 		}

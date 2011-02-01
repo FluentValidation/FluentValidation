@@ -49,6 +49,16 @@ namespace FluentValidation.Mvc {
 		protected bool TypeAllowsNullValue(Type type) {
 			return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
 		}
+
+		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
+			var supportsClientValidation = validator as IClientValidatable;
+			
+			if(supportsClientValidation != null) {
+				return supportsClientValidation.GetClientValidationRules(Metadata, ControllerContext);
+			}
+
+			return Enumerable.Empty<ModelClientValidationRule>();
+		}
 	}
 
 	internal class RequiredFluentValidationPropertyValidator : FluentValidationPropertyValidator {

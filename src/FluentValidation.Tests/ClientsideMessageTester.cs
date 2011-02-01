@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq.Expressions;
 	using System.Web.Mvc;
@@ -27,6 +28,7 @@ namespace FluentValidation.Tests {
 	using NUnit.Framework;
 	using Internal;
 	using System.Linq;
+	using Validators;
 
 	[TestFixture]
 	public class ClientsideMessageTester {
@@ -101,6 +103,13 @@ namespace FluentValidation.Tests {
 			clientRule.ErrorMessage.ShouldEqual("Must be between 1 and 5.");
 		}
 
+		[Test]
+		public void Supports_custom_clientside_rules_with_IClientValidatable() {
+			validator.RuleFor(x => x.Name).SetValidator(new TestPropertyValidator());
+			var clientRule = GetClientRule(x => x.Name);
+			clientRule.ErrorMessage.ShouldEqual("foo");
+		}
+
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
 			var propertyName = expression.GetMember().Name;
 			var metadata = new DataAnnotationsModelMetadataProvider().GetMetadataForProperty(null, typeof(TestModel), propertyName);
@@ -117,6 +126,21 @@ namespace FluentValidation.Tests {
 
 		private class TestModel {
 			public string Name { get; set; }
+		}
+
+		private class TestPropertyValidator : PropertyValidator, IClientValidatable {
+			public TestPropertyValidator()
+				: base("foo") {
+				
+			}
+
+			protected override bool IsValid(PropertyValidatorContext context) {
+				return true;
+			}
+
+			public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context) {
+				yield return new ModelClientValidationRule { ErrorMessage = this.ErrorMessageSource.GetString() };
+			}
 		}
 	}
 }
