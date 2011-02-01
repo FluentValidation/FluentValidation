@@ -8,6 +8,9 @@ namespace FluentValidation.Internal {
 		readonly Dictionary<string, object> placeholderValues = new Dictionary<string, object>();
 		object[] additionalArgs;
 
+		/// <summary>
+		/// Default Property Name placeholder.
+		/// </summary>
 		public const string PropertyName = "PropertyName";
 
 		/// <summary>

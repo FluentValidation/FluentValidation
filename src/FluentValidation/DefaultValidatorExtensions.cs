@@ -417,6 +417,9 @@ namespace FluentValidation {
 			return validator.Validate(context);
 		}
 
+		/// <summary>
+		/// Performs validation and then throws an exception if validation fails.
+		/// </summary>
 		public static void ValidateAndThrow<T>(this IValidator<T> validator, T instance) {
 			var result = validator.Validate(instance);
 

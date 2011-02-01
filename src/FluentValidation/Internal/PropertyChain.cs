@@ -28,9 +28,15 @@ namespace FluentValidation.Internal {
 	public class PropertyChain {
 		readonly List<string> memberNames = new List<string>();
 
+		/// <summary>
+		/// Creates a new PropertyChain.
+		/// </summary>
 		public PropertyChain() {
 		}
 
+		/// <summary>
+		/// Creates a new PropertyChain based on another.
+		/// </summary>
 		public PropertyChain(PropertyChain parent) {
 			if(parent != null) {
 				memberNames.AddRange(parent.memberNames);				
@@ -86,6 +92,9 @@ namespace FluentValidation.Internal {
 			return ToString().StartsWith(parentChain.ToString());
 		}
 
+		/// <summary>
+		/// Builds a property path.
+		/// </summary>
 		public string BuildPropertyName(string propertyName) {
 			var chain = new PropertyChain(this);
 			chain.Add(propertyName);

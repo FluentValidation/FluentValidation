@@ -28,6 +28,9 @@ namespace FluentValidation.Internal {
 	public class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty> {
 		readonly PropertyRule<T> rule;
 
+		/// <summary>
+		/// The rule being created by this RuleBuilder.
+		/// </summary>
 		public PropertyRule<T> Rule {
 			get { return rule; }
 		}

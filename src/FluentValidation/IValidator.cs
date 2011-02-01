@@ -22,6 +22,10 @@ namespace FluentValidation {
 	using Internal;
 	using Results;
 
+	/// <summary>
+	/// Defines a validator for a particualr type.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public interface IValidator<T> : IValidator, IEnumerable<IValidationRule<T>> {
 		/// <summary>
 		/// Validates the specified instance.
@@ -42,6 +46,9 @@ namespace FluentValidation {
 		CascadeMode CascadeMode { get; set; }
 	}
 
+	/// <summary>
+	/// Defines a validator for a particular type.
+	/// </summary>
 	public interface IValidator {
 		/// <summary>
 		/// Validates the specified instance

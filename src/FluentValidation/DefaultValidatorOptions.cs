@@ -24,6 +24,9 @@ namespace FluentValidation {
 	using Resources;
 	using Validators;
 
+	/// <summary>
+	/// Default options that can be used to configure a validator.
+	/// </summary>
 	public static class DefaultValidatorOptions {
 
 		/// <summary>

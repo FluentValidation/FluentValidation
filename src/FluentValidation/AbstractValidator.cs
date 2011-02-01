@@ -74,6 +74,10 @@ namespace FluentValidation {
 			return new ValidationResult(failures);
 		}
 
+		/// <summary>
+		/// Adds a rule to the current validator.
+		/// </summary>
+		/// <param name="rule"></param>
 		public void AddRule(IValidationRule<T> rule) {
 			if(currentRuleSetName != null) {
 				rule.RuleSet = currentRuleSetName;
@@ -82,6 +86,9 @@ namespace FluentValidation {
 			nestedValidators.Add(rule);
 		}
 
+		/// <summary>
+		/// Creates a <see cref="IValidatorDescriptor" /> that can be used to obtain metadata about the current validator.
+		/// </summary>
 		public virtual IValidatorDescriptor CreateDescriptor() {
 			return new ValidatorDescriptor<T>(nestedValidators);
 		}
@@ -129,6 +136,11 @@ namespace FluentValidation {
 			AddRule(new DelegateValidator<T>((x, ctx) => new[] { customValidator(x, ctx) }));
 		}
 
+		/// <summary>
+		/// Defines a RuleSet that can be used to group together several validators.
+		/// </summary>
+		/// <param name="ruleSetName">The name of the ruleset.</param>
+		/// <param name="action">Action that encapsulates the rules in the ruleset.</param>
 		public void RuleSet(string ruleSetName, Action action) {
 			ruleSetName.Guard("A name must be specified when calling RuleSet.");
 			action.Guard("A ruleset definition must be specified when calling RuleSet.");
@@ -142,6 +154,13 @@ namespace FluentValidation {
 			}
 		}
 
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection of validation rules.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>1</filterpriority>
 		public IEnumerator<IValidationRule<T>> GetEnumerator() {
 			return nestedValidators.GetEnumerator();
 		}

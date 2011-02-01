@@ -17,7 +17,14 @@
 #endregion
 
 namespace FluentValidation.Internal {
+	/// <summary>
+	/// Defines a function that takes an object and returns an object.
+	/// </summary>
 	public delegate object PropertySelector(object instance);
 
+
+	/// <summary>
+	/// Defines a function that takes an object and returns an object.
+	/// </summary>
 	public delegate TProperty PropertySelector<T, TProperty>(T instance);
 }

@@ -22,13 +22,26 @@ namespace FluentValidation.Internal {
 	using System.Linq;
 	using System.Linq.Expressions;
 
+	/// <summary>
+	/// Selects validators that are associated with a particular property.
+	/// </summary>
 	public class MemberNameValidatorSelector : IValidatorSelector {
 		readonly IEnumerable<string> memberNames;
 
+		/// <summary>
+		/// Creates a new instance of MemberNameValidatorSelector.
+		/// </summary>
 		public MemberNameValidatorSelector(IEnumerable<string> memberNames) {
 			this.memberNames = memberNames;
 		}
 
+		/// <summary>
+		/// Determines whether or not a rule should execute.
+		/// </summary>
+		/// <param name="rule">The rule</param>
+		/// <param name="propertyPath">Property path (eg Customer.Address.Line1)</param>
+		/// <param name="context">Contextual information</param>
+		/// <returns>Whether or not the validator can execute.</returns>
 		public bool CanExecute (PropertyRule rule, string propertyPath, ValidationContext context) {
 			// Validator selector only applies to the top level.
  			// If we're running in a child context then this means that the child validator has already been selected
@@ -36,6 +49,9 @@ namespace FluentValidation.Internal {
 			return context.IsChildContext || memberNames.Any(x => x == propertyPath);
 		}
 
+		///<summary>
+		/// Creates a MemberNameValidatorSelector from a collection of expressions.
+		///</summary>
 		public static MemberNameValidatorSelector FromExpressions<T>(params Expression<Func<T, object>>[] propertyExpressions) {
 			var members = propertyExpressions.Select(MemberFromExpression).ToList();
 			return new MemberNameValidatorSelector(members);

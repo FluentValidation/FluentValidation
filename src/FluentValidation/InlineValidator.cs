@@ -35,8 +35,14 @@ namespace FluentValidation {
 	/// </example>
 	/// <typeparam name="T"></typeparam>
 	public class InlineValidator<T> : AbstractValidator<T> {
+		/// <summary>
+		/// Delegate that specifies configuring an InlineValidator.
+		/// </summary>
 		public delegate IRuleBuilderOptions<T, TProperty> InlineRuleCreator<TProperty>(InlineValidator<T> validator);
 
+		/// <summary>
+		/// Allows configuration of the validator.
+		/// </summary>
 		public void Add<TProperty>(InlineRuleCreator<TProperty> ruleCreator) {
 			ruleCreator(this);
 		}

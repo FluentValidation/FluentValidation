@@ -25,6 +25,9 @@ namespace FluentValidation.Internal {
 	using System.Text.RegularExpressions;
 	using Validators;
 
+	/// <summary>
+	/// Useful extensions
+	/// </summary>
 	public static class Extensions {
 		internal static void Guard(this object obj, string message) {
 			if (obj == null) {
@@ -38,6 +41,9 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		/// <summary>
+		/// Gets a MemberInfo from a member expression.
+		/// </summary>
 		public static MemberInfo GetMember(this LambdaExpression expression) {
 			var memberExp = RemoveUnary(expression.Body);
 
@@ -48,6 +54,9 @@ namespace FluentValidation.Internal {
 			return memberExp.Member;
 		}
 
+		/// <summary>
+		/// Gets a MemberInfo from a member expression.
+		/// </summary>
 		public static MemberInfo GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
 			var memberExp = RemoveUnary(expression.Body);
 
@@ -67,6 +76,9 @@ namespace FluentValidation.Internal {
 		}
 
 
+		/// <summary>
+		/// Splits pascal case, so "FooBar" would become "Foo Bar"
+		/// </summary>
 		public static string SplitPascalCase(this string input) {
 			if (string.IsNullOrEmpty(input)) {
 				return input;
@@ -86,7 +98,7 @@ namespace FluentValidation.Internal {
 			return Expression.Lambda<Func<T, TProperty>>(constant, parameter);
 		}
 
-		public static void ForEach<T>(this IEnumerable<T> source, Action<T> action) {
+		internal static void ForEach<T>(this IEnumerable<T> source, Action<T> action) {
 			foreach(var item in source) {
 				action(item);	
 			}

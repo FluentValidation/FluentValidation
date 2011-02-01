@@ -6,6 +6,9 @@ namespace FluentValidation.Resources {
 	/// Builds a delegate for retrieving a localised resource from a resource type and property name.
 	/// </summary>
 	public interface IResourceAccessorBuilder {
+		/// <summary>
+		/// Gets a function that can be used to retrieve a message from a resource type and resource name.
+		/// </summary>
 		Func<string> GetResourceAccessor(Type resourceType, string resourceName);
 	}
 
@@ -38,6 +41,9 @@ namespace FluentValidation.Resources {
 		}
 	}
 
+	/// <summary>
+	/// Implemenetation of IResourceAccessorBuilder that can fall back to the default resource provider.
+	/// </summary>
 	public class FallbackAwareResourceAccessorBuilder : StaticResourceAccessorBuilder {
 
 		protected override PropertyInfo GetResourceProperty(ref Type resourceType, ref string resourceName) {

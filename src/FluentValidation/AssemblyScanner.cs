@@ -29,6 +29,9 @@ namespace FluentValidation {
 	public class AssemblyScanner : IEnumerable<AssemblyScanner.AssemblyScanResult> {
 		readonly IEnumerable<Type> types;
 
+		/// <summary>
+		/// Creates a scanner that works on a sequence of types.
+		/// </summary>
 		public AssemblyScanner(IEnumerable<Type> types) {
 			this.types = types;
 		}
@@ -69,6 +72,13 @@ namespace FluentValidation {
 			}
 		}
 
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>1</filterpriority>
 		public IEnumerator<AssemblyScanResult> GetEnumerator() {
 			return Execute().GetEnumerator();
 		}
@@ -77,13 +87,25 @@ namespace FluentValidation {
 			return GetEnumerator();
 		}
 
+		/// <summary>
+		/// Result of performing a scan.
+		/// </summary>
 		public class AssemblyScanResult {
+			/// <summary>
+			/// Creates an instance of an AssemblyScanResult.
+			/// </summary>
 			public AssemblyScanResult(Type interfaceType, Type validatorType) {
 				InterfaceType = interfaceType;
 				ValidatorType = validatorType;
 			}
 
+			/// <summary>
+			/// Validator interface type, eg IValidator&lt;Foo&gt;
+			/// </summary>
 			public Type InterfaceType { get; private set; }
+			/// <summary>
+			/// Concrete type that implements the InterfaceType, eg FooValidator.
+			/// </summary>
 			public Type ValidatorType { get; private set; }
 		}
 

@@ -22,8 +22,17 @@ namespace FluentValidation {
 	using Results;
 	using Validators;
 
+	/// <summary>
+	/// Defines a rule associated with a property which can have multiple validators.
+	/// </summary>
 	public interface IValidationRule {
+		/// <summary>
+		/// The validators that are grouped under this rule.
+		/// </summary>
 		IEnumerable<IPropertyValidator> Validators { get; }
+		/// <summary>
+		/// Name of the rule-set to which this rule belongs.
+		/// </summary>
 		string RuleSet { get; set; }
 
 		/// <summary>
