@@ -18,6 +18,9 @@ namespace FluentValidation.Resources {
 	/// </summary>
 	public class StaticResourceAccessorBuilder : IResourceAccessorBuilder {
 
+		/// <summary>
+		/// Builds a function used to retrieve the resource.
+		/// </summary>
 		public virtual Func<string> GetResourceAccessor(Type resourceType, string resourceName) {
 			var property = GetResourceProperty(ref resourceType, ref resourceName);
 
@@ -34,8 +37,11 @@ namespace FluentValidation.Resources {
 		}
 
 	
-		// ResourceType and ResourceName are ref parameters to allow derived types
-		// to replace the type/name of the resource before the delegate is constructed.
+		/// <summary>
+		/// Gets the PropertyInfo for a resource.
+		/// ResourceType and ResourceName are ref parameters to allow derived types
+		/// to replace the type/name of the resource before the delegate is constructed.
+		/// </summary>
 		protected virtual PropertyInfo GetResourceProperty(ref Type resourceType, ref string resourceName) {
 			return resourceType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
 		}
@@ -45,7 +51,11 @@ namespace FluentValidation.Resources {
 	/// Implemenetation of IResourceAccessorBuilder that can fall back to the default resource provider.
 	/// </summary>
 	public class FallbackAwareResourceAccessorBuilder : StaticResourceAccessorBuilder {
-
+		/// <summary>
+		/// Gets the PropertyInfo for a resource.
+		/// ResourceType and ResourceName are ref parameters to allow derived types
+		/// to replace the type/name of the resource before the delegate is constructed.
+		/// </summary>
 		protected override PropertyInfo GetResourceProperty(ref Type resourceType, ref string resourceName) {
 			// Rather than just using the specified resource type to find the resource accessor property
 			// we first look on the ResourceProviderType which gives our end user the ability  

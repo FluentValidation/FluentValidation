@@ -26,32 +26,77 @@ namespace FluentValidation.Internal {
 	using Results;
 	using Validators;
 
-	//TODO: For FluentValidation v3, remove the generic version of this class.
-
+	/// <summary>
+	/// Defines a rule associated with a property.
+	/// </summary>
 	public class PropertyRule : IValidationRule {
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
 
+		/// <summary>
+		/// Property associated with this rule.
+		/// </summary>
 		public MemberInfo Member { get; private set; }
+
+		/// <summary>
+		/// Function that can be invoked to retrieve the value of the property.
+		/// </summary>
 		public PropertySelector PropertyFunc { get; private set; }
+
+		/// <summary>
+		/// Expression that was used to create the rule.
+		/// </summary>
 		public Expression Expression { get; private set; }
 
+		/// <summary>
+		/// String source that can be used to retrieve the property name.
+		/// </summary>
 		public IStringSource CustomPropertyName { get; set; }
+
+		/// <summary>
+		/// Rule set that this rule belongs to (if specified)
+		/// </summary>
 		public string RuleSet { get; set; }
 
+		/// <summary>
+		/// Function that will be invoked if any of the validators associated with this rule fail.
+		/// </summary>
 		public Action<object> OnFailure { get; set; }
+
+		/// <summary>
+		/// The current validator being configured by this rule.
+		/// </summary>
 		public IPropertyValidator CurrentValidator { get; private set; }
+
+		/// <summary>
+		/// Type of the property being validated
+		/// </summary>
 		public Type TypeToValidate { get; private set; }
 
+		/// <summary>
+		/// Cascade mode for this rule.
+		/// </summary>
 		public CascadeMode CascadeMode {
 			get { return cascadeModeThunk(); }
 			set { cascadeModeThunk = () => value; }
 		}
 
+		/// <summary>
+		/// Validators associated with this rule.
+		/// </summary>
 		public IEnumerable<IPropertyValidator> Validators {
 			get { return validators.AsReadOnly(); }
 		}
 
+		/// <summary>
+		/// Creates a new property rule.
+		/// </summary>
+		/// <param name="member">Property</param>
+		/// <param name="propertyFunc">Function to get the property value</param>
+		/// <param name="expression">Lambda expression used to create the rule</param>
+		/// <param name="cascadeModeThunk">Function to get the cascade mode.</param>
+		/// <param name="typeToValidate">Type to validate</param>
+		/// <param name="containerType">Container type that owns the property</param>
 		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) {
 			Member = member;
 			PropertyFunc = propertyFunc;
@@ -63,10 +108,16 @@ namespace FluentValidation.Internal {
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member);
 		}
 
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
 		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression) {
 			return Create(expression, () => ValidatorOptions.CascadeMode);
 		}
 
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
 		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
 			var member = expression.GetMember();
 			var compiled = expression.Compile();
@@ -75,11 +126,17 @@ namespace FluentValidation.Internal {
 			return new PropertyRule(member, propertySelector, expression, cascadeModeThunk, typeof(TProperty), typeof(T));
 		}
 
+		/// <summary>
+		/// Adds a validator to the rule.
+		/// </summary>
 		public void AddValidator(IPropertyValidator validator) {
 			CurrentValidator = validator;
 			validators.Add(validator);
 		}
 
+		/// <summary>
+		/// Replaces a validator in this rule. Used to wrap validators.
+		/// </summary>
 		public void ReplaceValidator(IPropertyValidator original, IPropertyValidator newValidator) {
 			var index = validators.IndexOf(original);
 
@@ -98,6 +155,9 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public string PropertyName { get; set; }
 
+		/// <summary>
+		/// Display name for the property. 
+		/// </summary>
 		public string PropertyDescription {
 			get {
 
@@ -109,6 +169,11 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		/// <summary>
+		/// Performs validation using a validation context and returns a collection of Validation Failures.
+		/// </summary>
+		/// <param name="context">Validation Context</param>
+		/// <returns>A collection of validation failures</returns>
 		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext context) {
 			EnsureValidPropertyName();
 
@@ -149,6 +214,9 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		/// <summary>
+		/// Invokes a property validator using the specified validation context.
+		/// </summary>
 		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator, string propertyName) {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			return validator.Validate(propertyContext);

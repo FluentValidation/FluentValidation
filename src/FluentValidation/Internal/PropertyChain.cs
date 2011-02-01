@@ -77,6 +77,9 @@ namespace FluentValidation.Internal {
 			memberNames[memberNames.Count - 1] = last;
 		}
 
+		/// <summary>
+		/// Creates a string representation of a property chain.
+		/// </summary>
 		public override string ToString() {
 			return string.Join(".", memberNames.ToArray());
 		}
