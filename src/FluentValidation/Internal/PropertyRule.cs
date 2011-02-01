@@ -28,29 +28,6 @@ namespace FluentValidation.Internal {
 
 	//TODO: For FluentValidation v3, remove the generic version of this class.
 
-	public class PropertyRule<T> : PropertyRule, IValidationRule<T> {
-
-		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
-			: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate, typeof(T)) {
-		}
-
-		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression) {
-			return Create(expression, () => ValidatorOptions.CascadeMode);
-		}
-
-		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
-			var member = expression.GetMember();
-			var compiled = expression.Compile();
-			PropertySelector propertySelector = x => compiled((T)x);
-
-			return new PropertyRule<T>(member, propertySelector, expression, cascadeModeThunk, typeof(TProperty));
-		}
-
-		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
-			return base.Validate(context);
-		}
-	}
-
 	public class PropertyRule : IValidationRule {
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
@@ -84,6 +61,18 @@ namespace FluentValidation.Internal {
 			this.cascadeModeThunk = cascadeModeThunk;
 
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member);
+		}
+
+		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression) {
+			return Create(expression, () => ValidatorOptions.CascadeMode);
+		}
+
+		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
+			var member = expression.GetMember();
+			var compiled = expression.Compile();
+			PropertySelector propertySelector = x => compiled((T)x);
+
+			return new PropertyRule(member, propertySelector, expression, cascadeModeThunk, typeof(TProperty), typeof(T));
 		}
 
 		public void AddValidator(IPropertyValidator validator) {

@@ -74,7 +74,7 @@ namespace FluentValidation.Tests {
 			var validator = new InlineValidator<Demo>();
 			validator.RuleFor(expr).SetValidator(childValidator);
 
-			var rule = (PropertyRule<Demo>)validator.Single();
+			var rule = (PropertyRule)validator.Single();
 			return rule.Validators.Single();
 		}
 

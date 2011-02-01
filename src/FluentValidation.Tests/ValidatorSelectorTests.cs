@@ -82,8 +82,8 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
-		private PropertyRule<TestObject> CreateRule(Expression<Func<TestObject, object>> expression) {
-			var rule = PropertyRule<TestObject>.Create(expression);
+		private PropertyRule CreateRule(Expression<Func<TestObject, object>> expression) {
+			var rule = PropertyRule.Create(expression);
 			rule.AddValidator(new NotNullValidator());
 			return rule;
 		}

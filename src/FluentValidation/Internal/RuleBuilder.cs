@@ -26,19 +26,19 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
 	public class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty> {
-		readonly PropertyRule<T> rule;
+		readonly PropertyRule rule;
 
 		/// <summary>
 		/// The rule being created by this RuleBuilder.
 		/// </summary>
-		public PropertyRule<T> Rule {
+		public PropertyRule Rule {
 			get { return rule; }
 		}
 
 		/// <summary>
 		/// Creates a new instance of the <see cref="RuleBuilder{T,TProperty}">RuleBuilder</see> class.
 		/// </summary>
-		public RuleBuilder(PropertyRule<T> rule) {
+		public RuleBuilder(PropertyRule rule) {
 			this.rule = rule;
 		}
 
@@ -63,12 +63,12 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule<T>, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule<T>> configurator) {
+		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
 			configurator(rule);
 			return this;
 		}
 
-		IRuleBuilderInitial<T, TProperty> IConfigurable<PropertyRule<T>, IRuleBuilderInitial<T, TProperty>>.Configure(Action<PropertyRule<T>> configurator) {
+		IRuleBuilderInitial<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderInitial<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
 			configurator(rule);
 			return this;
 		}

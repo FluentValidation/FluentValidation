@@ -3,6 +3,7 @@
 * Removed the SupportsStandaloneValidation property - this was never properly implemented.
 * Implemented Rule Sets
 * Add support for CustomizeValidatorAttribute when using MVC integration.
+* Remove generic PropertyRule<T> - use non-generic version instead.
 
 2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder

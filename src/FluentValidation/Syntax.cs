@@ -27,7 +27,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderInitial<T, TProperty> : IFluentInterface, IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule<T>, IRuleBuilderInitial<T, TProperty>> {
+	public interface IRuleBuilderInitial<T, TProperty> : IFluentInterface, IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule, IRuleBuilderInitial<T, TProperty>> {
 	}
 
 	/// <summary>
@@ -57,7 +57,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderOptions<T, TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule<T>, IRuleBuilderOptions<T, TProperty>> {
+	public interface IRuleBuilderOptions<T, TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>> {
 
 	}
 }

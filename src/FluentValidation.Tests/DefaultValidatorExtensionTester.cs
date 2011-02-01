@@ -140,7 +140,7 @@ namespace FluentValidation.Tests {
 		}
 
 		private void AssertValidator<TValidator>() {
-			var rule = (PropertyRule<Person>)validator.First();
+			var rule = (PropertyRule)validator.First();
 			rule.CurrentValidator.ShouldBe<TValidator>();
 		}
 	}

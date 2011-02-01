@@ -30,8 +30,8 @@ namespace FluentValidation {
 	/// Base class for entity validator classes.
 	/// </summary>
 	/// <typeparam name="T">The type of the object being validated</typeparam>
-	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule<T>> {
-		readonly List<IValidationRule<T>> nestedValidators = new List<IValidationRule<T>>();
+	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
+		readonly List<IValidationRule> nestedValidators = new List<IValidationRule>();
 		string currentRuleSetName = null;
 
 		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
@@ -78,7 +78,7 @@ namespace FluentValidation {
 		/// Adds a rule to the current validator.
 		/// </summary>
 		/// <param name="rule"></param>
-		public void AddRule(IValidationRule<T> rule) {
+		public void AddRule(IValidationRule rule) {
 			if(currentRuleSetName != null) {
 				rule.RuleSet = currentRuleSetName;
 			}
@@ -108,7 +108,7 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor");
-			var rule = PropertyRule<T>.Create(expression, () => CascadeMode);
+			var rule = PropertyRule.Create(expression, () => CascadeMode);
 			AddRule(rule);
 			var ruleBuilder = new RuleBuilder<T, TProperty>(rule);
 			return ruleBuilder;
@@ -161,7 +161,7 @@ namespace FluentValidation {
 		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
 		/// </returns>
 		/// <filterpriority>1</filterpriority>
-		public IEnumerator<IValidationRule<T>> GetEnumerator() {
+		public IEnumerator<IValidationRule> GetEnumerator() {
 			return nestedValidators.GetEnumerator();
 		}
 

@@ -107,7 +107,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Based on a child validator and a propery rule, infers whether the validator should be wrapped in a ChildValidatorAdaptor or a CollectionValidatorAdaptor
 		/// </summary>
-		internal static IPropertyValidator InferPropertyValidatorForChildValidator<T>(PropertyRule<T> rule, IValidator childValidator) {
+		internal static IPropertyValidator InferPropertyValidatorForChildValidator(PropertyRule rule, IValidator childValidator) {
 			// If the property implements IEnumerable<T> and the validator validates T, assume it's a collection property validator
 			if (DoesImplementCompatibleIEnumerable(rule.TypeToValidate, childValidator)) {
 				return new ChildCollectionValidatorAdaptor(childValidator);

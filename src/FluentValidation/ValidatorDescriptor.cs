@@ -28,15 +28,15 @@ namespace FluentValidation {
 	/// Used for providing metadata about a validator.
 	/// </summary>
 	public class ValidatorDescriptor<T> : IValidatorDescriptor {
-		protected IEnumerable<IValidationRule<T>> Rules { get; private set; }
+		protected IEnumerable<IValidationRule> Rules { get; private set; }
 
-		public ValidatorDescriptor(IEnumerable<IValidationRule<T>> ruleBuilders) {
+		public ValidatorDescriptor(IEnumerable<IValidationRule> ruleBuilders) {
 			Rules = ruleBuilders;
 		}
 
 		public virtual string GetName(string property) {
 			var nameUsed = Rules
-				.OfType<PropertyRule<T>>()
+				.OfType<PropertyRule>()
 				.Where(x => x.Member.Name == property)
 				.Select(x => x.PropertyDescription).FirstOrDefault();
 
@@ -44,7 +44,7 @@ namespace FluentValidation {
 		}
 
 		public virtual ILookup<string, IPropertyValidator> GetMembersWithValidators() {
-			var query = from rule in Rules.OfType<PropertyRule<T>>()
+			var query = from rule in Rules.OfType<PropertyRule>()
 						where rule.Member != null
 						from validator in rule.Validators
 						select new { memberName = rule.Member.Name, validator };

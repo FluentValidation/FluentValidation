@@ -33,7 +33,7 @@ namespace FluentValidation.Tests {
 
 		[SetUp]
 		public void Setup() {
-			var rule = PropertyRule<Person>.Create(x => x.Surname);
+			var rule = PropertyRule.Create<Person,string>(x => x.Surname);
 			builder = new RuleBuilder<Person, string>(rule);
 		}
 
@@ -126,34 +126,34 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void PropertyDescription_should_return_property_name_split() {
-			var builder = new RuleBuilder<Person, DateTime>(PropertyRule<Person>.Create(x => x.DateOfBirth));
+			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
 			builder.Rule.PropertyDescription.ShouldEqual("Date Of Birth");
 		}
 
 		[Test]
 		public void PropertyDescription_should_return_custom_property_name() {
-			var builder = new RuleBuilder<Person, DateTime>(PropertyRule<Person>.Create(x => x.DateOfBirth));
+			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
 			builder.NotEqual(default(DateTime)).WithName("Foo");
 			builder.Rule.PropertyDescription.ShouldEqual("Foo");
 		}
 
 		[Test]
 		public void Nullable_object_with_condition_should_not_throw() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule<Person>.Create(x => x.NullableInt.Value));
+			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value));
 			builder.GreaterThanOrEqualTo(3).When(x => x.NullableInt != null);
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
 		[Test]
 		public void Rule_for_a_non_memberexpression_should_not_generate_property_name() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule<Person>.Create(x => x.CalculateSalary()));
+			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
 			builder.Rule.PropertyDescription.ShouldBeNull();
 			builder.Rule.PropertyName.ShouldBeNull();
 		}
 
 		[Test]
 		public void Should_throw_when_property_name_is_null() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule<Person>.Create(x => x.CalculateSalary()));
+			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
 			builder.GreaterThan(4);
 
 			var ex = typeof(InvalidOperationException).ShouldBeThrownBy(() => builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector())).ToList());
@@ -168,13 +168,13 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Property_should_return_null_when_it_is_not_a_property_being_validated() {
-			builder = new RuleBuilder<Person, string>(PropertyRule<Person>.Create(x => "Foo"));
+			builder = new RuleBuilder<Person, string>(PropertyRule.Create<Person, string>(x => "Foo"));
 			builder.Rule.Member.ShouldBeNull();
 		}
 
 		[Test]
 		public void Result_should_use_custom_property_name_when_no_property_name_can_be_determined() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule<Person>.Create(x => x.CalculateSalary()));
+			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
 			builder.GreaterThan(100).WithName("Foo");
 
 			var results = builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
