@@ -65,7 +65,7 @@
     <Compile Include="PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs" />
     <Compile Include="PropertyValidatorAdapters\FluentValidationPropertyValidator.cs" />
     <Compile Include="MetadataExtensions.cs" />
-    <Compile Include="PropertyValidatorAdapters\IValidatorInterceptor.cs" />
+    <Compile Include="IValidatorInterceptor.cs" />
     <Compile Include="PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs" />
     <Compile Include="PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs" />
     <Compile Include="PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs" />
