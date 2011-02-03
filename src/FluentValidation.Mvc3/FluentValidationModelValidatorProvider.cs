@@ -36,10 +36,12 @@ namespace FluentValidation.Mvc {
 		private Dictionary<Type, FluentValidationModelValidationFactory> validatorFactories = new Dictionary<Type, FluentValidationModelValidationFactory>() {
 			{ typeof(INotNullValidator), (metadata, context, description, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, description, validator) },
 			{ typeof(INotEmptyValidator), (metadata, context, description, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, description, validator) },
+			// email must come before regex.
+			{ typeof(IEmailValidator), (metadata, context, description, validator) => new EmailFluentValidationPropertyValidator(metadata, context, description, validator) },			
 			{ typeof(IRegularExpressionValidator), (metadata, context, description, validator) => new RegularExpressionFluentValidationPropertyValidator(metadata, context, description, validator) },
 			{ typeof(ILengthValidator), (metadata, context, description, validator) => new StringLengthFluentValidationPropertyValidator(metadata, context, description, validator)},
 			{ typeof(InclusiveBetweenValidator), (metadata, context, description, validator) => new RangeFluentValidationPropertyValidator(metadata, context, description, validator) },
-			{ typeof(EqualValidator), (metadata, context, description, validator) => new EqualToFluentValidationPropertyValidator(metadata, context, description, validator) }
+			{ typeof(EqualValidator), (metadata, context, description, validator) => new EqualToFluentValidationPropertyValidator(metadata, context, description, validator) },
 		};
 
 		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {

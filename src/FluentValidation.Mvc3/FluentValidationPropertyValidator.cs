@@ -69,7 +69,7 @@ namespace FluentValidation.Mvc {
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
 			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
 			var message = formatter.BuildMessage(validator.ErrorMessageSource.GetString());
-			return new[] { new ModelClientValidationRequiredRule(message) };
+			yield return new ModelClientValidationRequiredRule(message);
 		}
 
 		public override bool IsRequired {
@@ -106,7 +106,7 @@ namespace FluentValidation.Mvc {
 
 			message = formatter.BuildMessage(message);
 
-			return new[] { new ModelClientValidationStringLengthRule(message, LengthValidator.Min, LengthValidator.Max) };
+			yield return new ModelClientValidationStringLengthRule(message, LengthValidator.Min, LengthValidator.Max) ;
 		}
 	}
 
@@ -123,8 +123,7 @@ namespace FluentValidation.Mvc {
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
 			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
 			string message = formatter.BuildMessage(RegexValidator.ErrorMessageSource.GetString());
-			return new[] { new ModelClientValidationRegexRule(message, RegexValidator.Expression) };
-
+			yield return new ModelClientValidationRegexRule(message, RegexValidator.Expression);
 		}
 	}
 
@@ -156,7 +155,7 @@ namespace FluentValidation.Mvc {
 
 			message = formatter.BuildMessage(message);
 
-			return new[] { new ModelClientValidationRangeRule(message, RangeValidator.From, RangeValidator.To) };
+			yield return new ModelClientValidationRangeRule(message, RangeValidator.From, RangeValidator.To);
 		}
 	}
 
@@ -166,6 +165,7 @@ namespace FluentValidation.Mvc {
 		}
 		
 		public EqualToFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext, propertyDescription, validator) {
+			ShouldValidate = false;
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
@@ -181,11 +181,28 @@ namespace FluentValidation.Mvc {
 
 
 				string message = formatter.BuildMessage(EqualValidator.ErrorMessageSource.GetString());
-				return new[] { new ModelClientValidationEqualToRule(message, CompareAttribute.FormatPropertyForClientValidation(propertyToCompare.Name)) };
+				yield return new ModelClientValidationEqualToRule(message, CompareAttribute.FormatPropertyForClientValidation(propertyToCompare.Name)) ;
 			}
+		}
+	}
 
-			return Enumerable.Empty<ModelClientValidationRule>();
+	internal class EmailFluentValidationPropertyValidator : FluentValidationPropertyValidator {
+		private IEmailValidator EmailValidator {
+			get { return (IEmailValidator)validator; }
+		}
 
+		public EmailFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext, propertyDescription, validator) {
+			ShouldValidate=false;
+		}
+
+		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
+			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
+			string message = formatter.BuildMessage(EmailValidator.ErrorMessageSource.GetString());
+			
+			yield return new ModelClientValidationRule {
+				ValidationType = "email",
+				ErrorMessage = message
+			};
 		}
 	}
 }
