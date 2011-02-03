@@ -60,8 +60,15 @@
     <Compile Include="FluentValidationModelMetadataProvider.cs" />
     <Compile Include="FluentValidationModelValidator.cs" />
     <Compile Include="FluentValidationModelValidatorProvider.cs" />
-    <Compile Include="FluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\EmailFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\FluentValidationPropertyValidator.cs" />
     <Compile Include="MetadataExtensions.cs" />
+    <Compile Include="PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs" />
     <Compile Include="ValidationResultExtension.cs" />
   </ItemGroup>
   <ItemGroup>
