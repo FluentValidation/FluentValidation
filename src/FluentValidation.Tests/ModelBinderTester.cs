@@ -25,9 +25,11 @@ namespace FluentValidation.Tests {
     using System.Web;
     using System.Web.Mvc;
     using Attributes;
+    using Internal;
     using Moq;
     using Mvc;
     using NUnit.Framework;
+    using Results;
 
 	[TestFixture]
 	public class ModelBinderTester {
@@ -332,12 +334,127 @@ namespace FluentValidation.Tests {
 
 		}
 
+		[Test]
+		public void When_interceptor_specified_Intercepts_validation() {
+			var form = new FormCollection {
+				{ "Email", "foo" },
+				{ "Surname", "foo" },
+				{ "Forename", "foo" },
+			};
+
+			var context = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(PropertiesTestModel)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider(),
+			};
+
+			var binder = new CustomizeValidatorAttribute { Interceptor = typeof(SimplePropertyInterceptor) };
+			binder.BindModel(controllerContext, context);
+
+			context.ModelState.IsValidField("Forename").ShouldBeFalse();
+			context.ModelState.IsValidField("Surname").ShouldBeFalse();
+			context.ModelState.IsValidField("Email").ShouldBeTrue(); 
+
+		}
+
+		[Test]
+		public void When_interceptor_specified_Intercepts_validation_provides_custom_errors() {
+			var form = new FormCollection {
+				{ "Email", "foo" },
+				{ "Surname", "foo" },
+				{ "Forename", "foo" },
+			};
+
+			var context = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(PropertiesTestModel)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider(),
+			};
+			var binder = new CustomizeValidatorAttribute { Interceptor = typeof(ClearErrorsInterceptor) };
+			binder.BindModel(controllerContext, context);
+
+			context.ModelState.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked() {
+				var form = new FormCollection {
+				{ "Email", "foo" },
+				{ "Surname", "foo" },
+				{ "Forename", "foo" },
+			};
+
+			var context = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(PropertiesTestModel2)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider(),
+			};
+
+			binder.BindModel(controllerContext, context);
+
+			context.ModelState.IsValid.ShouldBeTrue();
+		}
+
+		private class SimplePropertyInterceptor : IValidatorInterceptor {
+			readonly string[] properties = new[] { "Surname", "Forename" };
+
+			public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context) {
+				var newContext = context.Clone(selector: new MemberNameValidatorSelector(properties));
+				return newContext;
+			}
+
+			public ValidationResult AfterMvcValidation(ControllerContext cc, ValidationContext context, ValidationResult result) {
+				return result;
+			}
+		}
+
+		private class ClearErrorsInterceptor : IValidatorInterceptor {
+			public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context) {
+				return null;
+			}
+
+			public ValidationResult AfterMvcValidation(ControllerContext cc, ValidationContext context, ValidationResult result) {
+				return new ValidationResult();
+			}
+		}
+
+		[Validator(typeof(PropertiesValidator2))]
+		private class PropertiesTestModel2 {
+				public string Email { get; set; }
+			public string Surname { get; set; }
+			public string Forename { get; set; }
+		}
+
+		private class PropertiesValidator2 : AbstractValidator<PropertiesTestModel2>, IValidatorInterceptor {
+			public PropertiesValidator2() {
+				RuleFor(x => x.Email).NotEqual("foo");
+				RuleFor(x => x.Surname).NotEqual("foo");
+				RuleFor(x => x.Forename).NotEqual("foo");
+			}
+
+			public ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext) {
+				return	validationContext;
+			}
+
+			public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result) {
+				return new ValidationResult(); //empty errors
+			}
+		}
+
+
 		[Validator(typeof(PropertiesValidator))]
 		private class PropertiesTestModel {
 			public string Email { get; set; }
 			public string Surname { get; set; }
 			public string Forename { get; set; }
 		}
+
 
 		private class PropertiesValidator : AbstractValidator<PropertiesTestModel> {
 			public PropertiesValidator() {

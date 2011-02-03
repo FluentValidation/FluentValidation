@@ -51,6 +51,10 @@ namespace FluentValidation {
 		public IValidatorSelector Selector { get; private set; }
 		public bool IsChildContext { get; internal set; }
 
+		public ValidationContext Clone(PropertyChain chain = null, object instanceToValidate = null, IValidatorSelector selector = null) {
+			return new ValidationContext(instanceToValidate ?? this.InstanceToValidate, chain ?? this.PropertyChain, selector ?? this.Selector);
+		}
+
 		internal ValidationContext CloneForChildValidator(object instanceToValidate) {
 			return new ValidationContext(instanceToValidate, PropertyChain, Selector) {
 				IsChildContext = true

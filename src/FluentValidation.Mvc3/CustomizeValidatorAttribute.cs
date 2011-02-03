@@ -26,6 +26,8 @@ namespace FluentValidation.Mvc {
 	public class CustomizeValidatorAttribute : CustomModelBinderAttribute, IModelBinder {
 		public string RuleSet { get; set; }
 		public string Properties { get; set; }
+		public Type Interceptor { get; set; }
+
 		private const string key = "_FV_CustomizeValidator" ;
 
 		public override IModelBinder GetBinder() {
@@ -70,6 +72,22 @@ namespace FluentValidation.Mvc {
 
 			return selector;
 
+		}
+
+		public IValidatorInterceptor GetInterceptor() {
+			if (Interceptor == null) return null;
+
+			if(! typeof(IValidatorInterceptor).IsAssignableFrom(Interceptor)) {
+				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
+			}
+
+			var instance = Activator.CreateInstance(Interceptor) as IValidatorInterceptor;
+
+			if(instance == null) {
+				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
+			}
+
+			return instance;
 		}
 	}
 }
