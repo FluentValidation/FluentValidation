@@ -417,6 +417,35 @@ namespace FluentValidation {
 			return validator.Validate(context);
 		}
 
+		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, IValidatorSelector selector = null, string ruleSet = null, string[] properties = null) {
+			if(selector != null && ruleSet != null) {
+				throw new InvalidOperationException("Cannot specify both an IValidatorSelector and a RuleSet.");
+			}
+			
+			if(selector != null && properties != null) {
+				throw new InvalidOperationException("Cannot specify both an IValidatorSelector and properties to include.");
+			}
+
+			if(properties != null && ruleSet != null) {
+				throw new InvalidOperationException("Cannot specify both properties to include and a RuleSet.");
+			}
+
+			if(selector == null) {
+				selector = new DefaultValidatorSelector();
+			}
+			
+			if(properties != null) {
+				selector = new MemberNameValidatorSelector(properties);
+			}
+
+			if(ruleSet != null) {
+				selector = new RulesetValidatorSelector(ruleSet);
+			}
+
+			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
+			return validator.Validate(context);
+		}
+
 		/// <summary>
 		/// Performs validation and then throws an exception if validation fails.
 		/// </summary>

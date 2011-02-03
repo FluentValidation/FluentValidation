@@ -159,6 +159,19 @@ namespace FluentValidation.Tests {
 			validator.CanValidateInstancesOfType(typeof(Address)).ShouldBeFalse();
 		}
 
+		[Test]
+		public void Uses_named_parameters_to_validate_ruleset() {
+			validator.RuleSet("Names", () => {
+				validator.RuleFor(x => x.Surname).NotNull();
+				validator.RuleFor(x => x.Forename).NotNull();
+			});
+			validator.RuleFor(x => x.Id).NotEqual(0);
+
+			var result = validator.Validate(new Person(), ruleSet: "Names");
+			result.Errors.Count.ShouldEqual(2);
+		}
+
+
 		private class DerivedPerson : Person { }
 
 	}
