@@ -207,6 +207,9 @@
     <Compile Include="..\FluentValidation\Validators\ChildValidatorAdaptor.cs">
       <Link>ChildValidatorAdaptor.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Validators\CreditCardValidator.cs">
+      <Link>CreditCardValidator.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Validators\EmailValidator.cs">
       <Link>EmailValidator.cs</Link>
     </Compile>

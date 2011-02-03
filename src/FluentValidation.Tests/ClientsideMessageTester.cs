@@ -124,6 +124,12 @@ namespace FluentValidation.Tests {
 			clientRule.ErrorMessage.ShouldEqual("foo");
 		}
 
+		[Test]
+		public void CreditCard_creates_clientside_message() {
+			validator.RuleFor(x => x.Name).CreditCard();
+			var clientrule = GetClientRule(x => x.Name);
+			clientrule.ErrorMessage.ShouldEqual("'Name' is not a valid credit card number.");
+		}
 
 
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {

@@ -51,6 +51,8 @@ namespace FluentValidation.Tests {
 		public double Age { get; set; }
 
 		public int AnotherInt { get; set; }
+
+    	public string CreditCard { get; set; }
 	}
 
 

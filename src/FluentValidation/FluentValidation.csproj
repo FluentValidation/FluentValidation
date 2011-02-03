@@ -122,6 +122,7 @@
     <Compile Include="Validators\AbstractComparisonValidator.cs" />
     <Compile Include="Validators\ChildCollectionValidatorAdaptor.cs" />
     <Compile Include="Validators\ChildValidatorAdaptor.cs" />
+    <Compile Include="Validators\CreditCardValidator.cs" />
     <Compile Include="Validators\EmailValidator.cs" />
     <Compile Include="Validators\EqualValidator.cs" />
     <Compile Include="Validators\ExclusiveBetweenValidator.cs" />

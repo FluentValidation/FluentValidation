@@ -455,5 +455,12 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
 			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator(from, to));
 		}
+
+		/// <summary>
+		/// Defines a credit card validator for the current rule builder that ensures that the specified string is a valid credit card number.
+		/// </summary>
+		public static IRuleBuilderOptions<T,string> CreditCard<T>(this IRuleBuilder<T, string> ruleBuilder) {
+			return ruleBuilder.SetValidator(new CreditCardValidator());
+		}
 	}
 }

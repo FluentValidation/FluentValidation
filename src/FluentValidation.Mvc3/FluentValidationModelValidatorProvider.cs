@@ -42,6 +42,7 @@ namespace FluentValidation.Mvc {
 			{ typeof(ILengthValidator), (metadata, context, description, validator) => new StringLengthFluentValidationPropertyValidator(metadata, context, description, validator)},
 			{ typeof(InclusiveBetweenValidator), (metadata, context, description, validator) => new RangeFluentValidationPropertyValidator(metadata, context, description, validator) },
 			{ typeof(EqualValidator), (metadata, context, description, validator) => new EqualToFluentValidationPropertyValidator(metadata, context, description, validator) },
+			{ typeof(CreditCardValidator), (metadata, context, description, validator) => new CreditCardFluentValidationPropertyValidator(metadata, context, description, validator) }
 		};
 
 		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {

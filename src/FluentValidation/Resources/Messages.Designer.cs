@@ -61,6 +61,15 @@ namespace FluentValidation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; is not a valid credit card number..
+        /// </summary>
+        public static string CreditCardError {
+            get {
+                return ResourceManager.GetString("CreditCardError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{PropertyName}&apos; is not a valid email address..
         /// </summary>
         public static string email_error {

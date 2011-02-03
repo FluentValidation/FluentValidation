@@ -107,6 +107,7 @@
     <Compile Include="CollectionValidatorTests.cs" />
     <Compile Include="ComplexValidationTester.cs" />
     <Compile Include="ConditionTests.cs" />
+    <Compile Include="CreditCardValidatorTests.cs" />
     <Compile Include="CustomFailureActionTester.cs" />
     <Compile Include="ExactLengthValidatorTester.cs" />
     <Compile Include="ExclusiveBetweenValidatorTests.cs" />
