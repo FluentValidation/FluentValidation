@@ -76,6 +76,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void InclusiveBetween_validator_uses_simplified_message_for_clientside_validation() {
+			validator.RuleFor(x => x.Id).InclusiveBetween(1, 10);
+			var clientRules = GetClientRules(x => x.Id);
+			clientRules.Any(x => x.ErrorMessage == "'Id' must be between 1 and 10.").ShouldBeTrue();
+		}
+
+		[Test]
 		public void Should_not_munge_custom_message() {
 			validator.RuleFor(x => x.Name).Length(1, 10).WithMessage("Foo");
 			var clientRule = GetClientRule(x => x.Name);
@@ -110,6 +117,8 @@ namespace FluentValidation.Tests {
 			clientRule.ErrorMessage.ShouldEqual("foo");
 		}
 
+
+
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
 			var propertyName = expression.GetMember().Name;
 			var metadata = new DataAnnotationsModelMetadataProvider().GetMetadataForProperty(null, typeof(TestModel), propertyName);
@@ -124,8 +133,23 @@ namespace FluentValidation.Tests {
 			return clientRule;
 		}
 
+		private IEnumerable<ModelClientValidationRule> GetClientRules(Expression<Func<TestModel, object>> expression ) {
+			var propertyName = expression.GetMember().Name;
+			var metadata = new DataAnnotationsModelMetadataProvider().GetMetadataForProperty(null, typeof(TestModel), propertyName);
+
+			var factory = new Mock<IValidatorFactory>();
+			factory.Setup(x => x.GetValidator(typeof(TestModel))).Returns(validator);
+
+			var provider = new FluentValidationModelValidatorProvider(factory.Object);
+			var propertyValidators = provider.GetValidators(metadata, new ControllerContext());
+
+			return (propertyValidators.SelectMany(x => x.GetClientValidationRules())).ToList();
+		}
+
 		private class TestModel {
 			public string Name { get; set; }
+			public int Id { get; set; }
+
 		}
 
 		private class TestPropertyValidator : PropertyValidator, IClientValidatable {
