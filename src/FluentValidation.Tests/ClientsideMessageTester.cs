@@ -83,6 +83,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void EqualValidator_with_property_uses_simplified_message_for_clientside_validation() {
+			validator.RuleFor(x => x.Name).Equal(x => x.Name2);
+			var clientRule = GetClientRule(x => x.Name);
+			clientRule.ErrorMessage.ShouldEqual("'Name' should be equal to 'Name2'.");
+		}
+
+		[Test]
 		public void Should_not_munge_custom_message() {
 			validator.RuleFor(x => x.Name).Length(1, 10).WithMessage("Foo");
 			var clientRule = GetClientRule(x => x.Name);
@@ -148,6 +155,7 @@ namespace FluentValidation.Tests {
 
 		private class TestModel {
 			public string Name { get; set; }
+			public string Name2 { get; set; }
 			public int Id { get; set; }
 
 		}

@@ -6,6 +6,8 @@
 * Remove generic PropertyRule<T> - use non-generic version instead.
 * Better support for custom client-side error messages for LengthValidator.
 * Add support for MVC3's IClientValidatable
+* Implement client-side support for InclusiveBetween.
+* Implement client-side support for Equal with cross-property validation.
 
 2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder
