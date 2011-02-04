@@ -1,4 +1,4 @@
-$keyfile = "$env:USERPROFILE\Documents\My Dropbox\nuget-access-key.txt"
+$keyfile = "$env:USERPROFILE\Dropbox\nuget-access-key.txt"
 $scriptpath = split-path -parent $MyInvocation.MyCommand.Path
 $nugetpath = resolve-path "$scriptpath/../lib/nuget/nuget.exe"
 $packagespath = resolve-path "$scriptpath/../build/packages"
