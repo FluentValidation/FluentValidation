@@ -38,6 +38,10 @@ namespace FluentValidation.Validators {
 		protected override bool IsValid(PropertyValidatorContext context) {
 			var propertyValue = (IComparable)context.PropertyValue;
 
+			// If the value is null then we abort and assume success.
+			// This should not be a failure condition - only a NotNull/NotEmpty should cause a null to fail.
+			if (propertyValue == null) return true;
+
 			if (propertyValue.CompareTo(From) <= 0 || propertyValue.CompareTo(To) >= 0) {
 
 				context.MessageFormatter

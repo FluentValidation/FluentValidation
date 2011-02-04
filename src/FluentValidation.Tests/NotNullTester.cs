@@ -57,5 +57,12 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
+
+		[Test]
+		public void Fails_when_nullable_value_type_is_null() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).NotNull());
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeFalse();
+		}
 	}
 }

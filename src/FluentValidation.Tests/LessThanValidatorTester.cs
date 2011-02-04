@@ -96,5 +96,19 @@ namespace FluentValidation.Tests {
 			var validator = new LessThanValidator(1);
 			validator.Comparison.ShouldEqual(Comparison.LessThan);
 		}
+
+		[Test]
+		public void Validates_with_nullable_when_property_is_null() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(5));
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Validates_with_nullable_when_property_not_null() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(5));
+			var result = validator.Validate(new Person { NullableInt = 10 });
+			result.IsValid.ShouldBeFalse();
+		}
 	}
 }

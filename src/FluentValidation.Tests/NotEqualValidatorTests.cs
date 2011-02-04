@@ -94,7 +94,6 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-
 		private NotEqualValidator CreateValidator<T>(Expression<PropertySelector<Person, T>> expression) {
 			var func = expression.Compile();
 			PropertySelector selector = x => func((Person)x);

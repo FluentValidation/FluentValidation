@@ -74,5 +74,19 @@ namespace FluentValidation.Tests {
 
 			propertyValidator.Comparison.ShouldEqual(Comparison.GreaterThanOrEqual);
 		}
+
+		[Test]
+		public void Validates_with_nullable_when_property_is_null() {
+			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(5));
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Validates_with_nullable_when_property_not_null() {
+			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(5));
+			var result = validator.Validate(new Person { NullableInt = 1 });
+			result.IsValid.ShouldBeFalse();
+		}
 	}
 }

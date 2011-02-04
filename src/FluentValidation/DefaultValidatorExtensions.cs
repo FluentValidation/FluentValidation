@@ -271,6 +271,22 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Defines a 'less than' validator on the current rule builder. 
+		/// The validation will succeed if the property value is less than the specified value.
+		/// The validation will fail if the property value is greater than or equal to the specified value.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="valueToCompare">The value being compared</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, Nullable<TProperty>> LessThan<T, TProperty>(this IRuleBuilder<T, Nullable<TProperty>> ruleBuilder,
+																			   TProperty valueToCompare)
+			where TProperty : struct, IComparable<TProperty>, IComparable {
+			return ruleBuilder.SetValidator(new LessThanValidator(valueToCompare));
+		}
+
+		/// <summary>
 		/// Defines a 'less than or equal' validator on the current rule builder. 
 		/// The validation will succeed if the property value is less than or equal to the specified value.
 		/// The validation will fail if the property value is greater than the specified value.
@@ -282,6 +298,21 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> LessThanOrEqualTo<T, TProperty>(
 			this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare) where TProperty : IComparable<TProperty>, IComparable {
+			return ruleBuilder.SetValidator(new LessThanOrEqualValidator(valueToCompare));
+		}
+
+		/// <summary>
+		/// Defines a 'less than or equal' validator on the current rule builder. 
+		/// The validation will succeed if the property value is less than or equal to the specified value.
+		/// The validation will fail if the property value is greater than the specified value.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="valueToCompare">The value being compared</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, Nullable<TProperty>> LessThanOrEqualTo<T, TProperty>(
+			this IRuleBuilder<T, Nullable<TProperty>> ruleBuilder, TProperty valueToCompare) where TProperty : struct, IComparable<TProperty>, IComparable {
 			return ruleBuilder.SetValidator(new LessThanOrEqualValidator(valueToCompare));
 		}
 
@@ -301,6 +332,21 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Defines a 'greater than' validator on the current rule builder. 
+		/// The validation will succeed if the property value is greater than the specified value.
+		/// The validation will fail if the property value is less than or equal to the specified value.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="valueToCompare">The value being compared</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, Nullable<TProperty>> GreaterThan<T, TProperty>(this IRuleBuilder<T, Nullable<TProperty>> ruleBuilder, TProperty valueToCompare)
+			where TProperty : struct, IComparable<TProperty>, IComparable {
+			return ruleBuilder.SetValidator(new GreaterThanValidator(valueToCompare));
+		}
+
+		/// <summary>
 		/// Defines a 'greater than or equal' validator on the current rule builder. 
 		/// The validation will succeed if the property value is greater than or equal the specified value.
 		/// The validation will fail if the property value is less than the specified value.
@@ -314,6 +360,22 @@ namespace FluentValidation {
 			this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare) where TProperty : IComparable<TProperty>, IComparable {
 			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator(valueToCompare));
 		}
+
+		/// <summary>
+		/// Defines a 'greater than or equal' validator on the current rule builder. 
+		/// The validation will succeed if the property value is greater than or equal the specified value.
+		/// The validation will fail if the property value is less than the specified value.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="valueToCompare">The value being compared</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, Nullable<TProperty>> GreaterThanOrEqualTo<T, TProperty>(
+			this IRuleBuilder<T, Nullable<TProperty>> ruleBuilder, TProperty valueToCompare) where TProperty : struct, IComparable<TProperty>, IComparable {
+			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator(valueToCompare));
+		}
+
 
 		/// <summary>
 		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
@@ -472,6 +534,20 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Defines an 'inclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
+		/// Validation will fail if the value of the property is outside of the specifed range. The range is inclusive.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="from">The lowest allowed value</param>
+		/// <param name="to">The highest allowed value</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, Nullable<TProperty>> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, Nullable<TProperty>> ruleBuilder, TProperty from, TProperty to) where TProperty : struct, IComparable<TProperty>, IComparable {
+			return ruleBuilder.SetValidator(new InclusiveBetweenValidator(from, to));
+		}
+
+		/// <summary>
 		/// Defines an 'exclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
 		/// Validation will fail if the value of the property is outside of the specifed range. The range is exclusive.
 		/// </summary>
@@ -482,6 +558,20 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
+			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator(from, to));
+		}
+
+		/// <summary>
+		/// Defines an 'exclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
+		/// Validation will fail if the value of the property is outside of the specifed range. The range is exclusive.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="from">The lowest allowed value</param>
+		/// <param name="to">The highest allowed value</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, Nullable<TProperty>> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, Nullable<TProperty>> ruleBuilder, TProperty from, TProperty to) where TProperty : struct, IComparable<TProperty>, IComparable {
 			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator(from, to));
 		}
 

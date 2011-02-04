@@ -39,9 +39,15 @@ namespace FluentValidation.Validators {
 		}
 
 		protected sealed override bool IsValid(PropertyValidatorContext context) {
+			if(context.PropertyValue == null) {
+				// If we're working with a nullable type then this rule should not be applied.
+				// If you want to ensure that it's never null then a NotNull rule should also be applied. 
+				return true;
+			}
+			
 			var value = GetComparisonValue(context);
 
-			if (context.PropertyValue == null || !IsValid((IComparable)context.PropertyValue, value)) {
+			if (!IsValid((IComparable)context.PropertyValue, value)) {
 				context.MessageFormatter.AppendArgument("ComparisonValue", value);
 				return false;
 			}
