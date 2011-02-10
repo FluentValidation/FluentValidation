@@ -54,14 +54,12 @@ namespace FluentValidation.Mvc {
 		/// <summary>
 		/// Initializes the FluentValidationModelValidatorProvider using the default options and adds it in to the ModelValidatorProviders collection.
 		/// </summary>
-		public static FluentValidationModelValidatorProvider Configure(IValidatorFactory validatorFactory = null) {
+		public static void Configure(IValidatorFactory validatorFactory = null) {
 			validatorFactory = validatorFactory ?? new AttributedValidatorFactory();
 			var provider = new FluentValidationModelValidatorProvider(validatorFactory);
 
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 			ModelValidatorProviders.Providers.Add(provider);
-			
-			return provider;
 		}
 
 		public void Add(Type validatorType, FluentValidationModelValidationFactory factory) {
@@ -100,7 +98,7 @@ namespace FluentValidation.Mvc {
 			if(metadata.IsRequired && AddImplicitRequiredValidator) {
 				bool hasRequiredValidators = modelValidators.Any(x => x.IsRequired);
 
-				//Is the model is 'Required' then we assume it must have a NotNullValidator. 
+				//If the model is 'Required' then we assume it must have a NotNullValidator. 
 				//This is consistent with the behaviour of the DataAnnotationsModelValidatorProvider
 				//which silently adds a RequiredAttribute
 
