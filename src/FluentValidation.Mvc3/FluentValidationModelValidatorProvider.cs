@@ -21,6 +21,7 @@ namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Web.Mvc;
+	using Attributes;
 	using Internal;
 	using Validators;
 
@@ -48,6 +49,19 @@ namespace FluentValidation.Mvc {
 		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {
 			AddImplicitRequiredValidator = true;
 			this.validatorFactory = validatorFactory;
+		}
+
+		/// <summary>
+		/// Initializes the FluentValidationModelValidatorProvider using the default options and adds it in to the ModelValidatorProviders collection.
+		/// </summary>
+		public static FluentValidationModelValidatorProvider Configure(IValidatorFactory validatorFactory = null) {
+			validatorFactory = validatorFactory ?? new AttributedValidatorFactory();
+			var provider = new FluentValidationModelValidatorProvider(validatorFactory);
+
+			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
+			ModelValidatorProviders.Providers.Add(provider);
+			
+			return provider;
 		}
 
 		public void Add(Type validatorType, FluentValidationModelValidationFactory factory) {

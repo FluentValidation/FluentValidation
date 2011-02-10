@@ -12,6 +12,7 @@
 * Added credit card validator (plus client side support)
 * Add IValidatorInterceptor interface. This can be used to add pre/post hooks to MVC validation integration. An interceptor can either be specified as part of the CustomizeValidatorAttribute or implemented in the validator.
 * Better handling of nullable value types.
+* Add static FluentValidationModelValidatorProvider.Configure for configuring MVC integration with default options.
 
 2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder
