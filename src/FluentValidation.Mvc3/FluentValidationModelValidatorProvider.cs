@@ -31,8 +31,8 @@ namespace FluentValidation.Mvc {
 	/// Implementation of ModelValidatorProvider that uses FluentValidation.
 	/// </summary>
 	public class FluentValidationModelValidatorProvider : ModelValidatorProvider {
-		readonly IValidatorFactory validatorFactory;
 		public bool AddImplicitRequiredValidator { get; set; }
+		public IValidatorFactory ValidatorFactory { get; set; }
 
 		private Dictionary<Type, FluentValidationModelValidationFactory> validatorFactories = new Dictionary<Type, FluentValidationModelValidationFactory>() {
 			{ typeof(INotNullValidator), (metadata, context, description, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, description, validator) },
@@ -46,19 +46,18 @@ namespace FluentValidation.Mvc {
 			{ typeof(CreditCardValidator), (metadata, context, description, validator) => new CreditCardFluentValidationPropertyValidator(metadata, context, description, validator) }
 		};
 
-		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {
+		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory = null) {
 			AddImplicitRequiredValidator = true;
-			this.validatorFactory = validatorFactory;
+			ValidatorFactory = validatorFactory ?? new AttributedValidatorFactory();
 		}
 
 		/// <summary>
 		/// Initializes the FluentValidationModelValidatorProvider using the default options and adds it in to the ModelValidatorProviders collection.
 		/// </summary>
-		public static void Configure(IValidatorFactory validatorFactory = null, Action<FluentValidationModelValidatorProvider> configurationExpression = null) {
-			validatorFactory = validatorFactory ?? new AttributedValidatorFactory();
+		public static void Configure(Action<FluentValidationModelValidatorProvider> configurationExpression = null) {
 			configurationExpression = configurationExpression ?? delegate { };
 
-			var provider = new FluentValidationModelValidatorProvider(validatorFactory);
+			var provider = new FluentValidationModelValidatorProvider();
 			configurationExpression(provider);
 
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
@@ -74,10 +73,10 @@ namespace FluentValidation.Mvc {
 
 		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context) {
 			if (IsValidatingProperty(metadata)) {
-				return GetValidatorsForProperty(metadata, context, validatorFactory.GetValidator(metadata.ContainerType));
+				return GetValidatorsForProperty(metadata, context, ValidatorFactory.GetValidator(metadata.ContainerType));
 			}
 
-			return GetValidatorsForModel(metadata, context, validatorFactory.GetValidator(metadata.ModelType));
+			return GetValidatorsForModel(metadata, context, ValidatorFactory.GetValidator(metadata.ModelType));
 		}
 
 		IEnumerable<ModelValidator> GetValidatorsForProperty(ModelMetadata metadata, ControllerContext context, IValidator validator) {
