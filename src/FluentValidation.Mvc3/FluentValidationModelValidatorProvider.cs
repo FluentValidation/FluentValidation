@@ -54,9 +54,12 @@ namespace FluentValidation.Mvc {
 		/// <summary>
 		/// Initializes the FluentValidationModelValidatorProvider using the default options and adds it in to the ModelValidatorProviders collection.
 		/// </summary>
-		public static void Configure(IValidatorFactory validatorFactory = null) {
+		public static void Configure(IValidatorFactory validatorFactory = null, Action<FluentValidationModelValidatorProvider> configurationExpression = null) {
 			validatorFactory = validatorFactory ?? new AttributedValidatorFactory();
+			configurationExpression = configurationExpression ?? delegate { };
+
 			var provider = new FluentValidationModelValidatorProvider(validatorFactory);
+			configurationExpression(provider);
 
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 			ModelValidatorProviders.Providers.Add(provider);
