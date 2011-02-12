@@ -26,7 +26,7 @@ namespace FluentValidation.Internal {
 	/// Custom IValidationRule for performing custom logic.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class DelegateValidator<T> : IValidationRule<T> {
+	public class DelegateValidator<T> : IValidationRule {
 		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
 		
 		/// <summary>
