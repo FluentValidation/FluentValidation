@@ -134,11 +134,11 @@
     <Compile Include="..\FluentValidation\Internal\PropertySelector.cs">
       <Link>PropertySelector.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\ResourceHelper.cs">
-      <Link>ResourceHelper.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Internal\RuleBuilder.cs">
       <Link>RuleBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Internal\RulesetValidatorSelector.cs">
+      <Link>RulesetValidatorSelector.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\IValidationRule.cs">
       <Link>IValidationRule.cs</Link>

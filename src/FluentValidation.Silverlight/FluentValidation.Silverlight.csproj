@@ -99,8 +99,8 @@
     <Compile Include="..\FluentValidation\Internal\PropertySelector.cs">
       <Link>PropertySelector.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\ResourceHelper.cs">
-      <Link>ResourceHelper.cs</Link>
+    <Compile Include="..\FluentValidation\Internal\RulesetValidatorSelector.cs">
+      <Link>RulesetValidatorSelector.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Resources\IResourceAccessorBuilder.cs">
       <Link>IResourceAccessorBuilder.cs</Link>
