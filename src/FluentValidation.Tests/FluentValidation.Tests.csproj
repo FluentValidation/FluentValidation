@@ -132,6 +132,7 @@
     <Compile Include="LessThanValidatorTester.cs" />
     <Compile Include="LocalisedMessagesTester.cs" />
     <Compile Include="NameResolutionPluggabilityTester.cs" />
+    <Compile Include="SharedConditionTests.cs" />
     <Compile Include="NotEmptyTester.cs" />
     <Compile Include="NotEqualValidatorTests.cs" />
     <Compile Include="NotNullTester.cs" />

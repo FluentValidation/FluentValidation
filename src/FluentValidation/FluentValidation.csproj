@@ -94,6 +94,7 @@
     <Compile Include="Internal\MessageFormatter.cs" />
     <Compile Include="Internal\PropertyChain.cs" />
     <Compile Include="Internal\PropertyRule.cs" />
+    <Compile Include="SharedConditionRuleHelper.cs" />
     <Compile Include="Resources\IStringSource.cs" />
     <Compile Include="Resources\IResourceAccessorBuilder.cs" />
     <Compile Include="Resources\LocalizedStringSource.cs" />
