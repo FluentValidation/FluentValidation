@@ -131,6 +131,29 @@ namespace FluentValidation.Tests {
 			clientrule.ErrorMessage.ShouldEqual("'Name' is not a valid credit card number.");
 		}
 
+		[Test]
+		public void Overrides_property_name_for_clientside_rule() {
+			validator.RuleFor(x => x.Name).NotNull().WithName("Foo");
+			var clientRule = GetClientRule(x => x.Name);
+			clientRule.ErrorMessage.ShouldEqual("'Foo' must not be empty.");
+
+		}
+
+		[Test]
+		public void Overrides_property_name_for_clientside_rule_using_localized_name() {
+			validator.RuleFor(x => x.Name).NotNull().WithLocalizedName(() => TestMessages.notnull_error);
+			var clientRule = GetClientRule(x => x.Name);
+			clientRule.ErrorMessage.ShouldEqual("'Localised Error' must not be empty.");
+		}
+
+		[Test]
+		public void Overrides_property_name_for_non_nullable_value_type() {
+			validator.RuleFor(x => x.Id).NotNull().WithName("Foo");
+			var clientRule = GetClientRule(x => x.Id);
+			clientRule.ErrorMessage.ShouldEqual("'Foo' must not be empty.");
+		
+		}
+
 
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
 			var propertyName = expression.GetMember().Name;
