@@ -25,7 +25,7 @@ namespace FluentValidation.Mvc {
 	using Internal;
 	using Validators;
 
-	public delegate ModelValidator FluentValidationModelValidationFactory(ModelMetadata metadata, ControllerContext context, string propertyDescription, IPropertyValidator validator);
+	public delegate ModelValidator FluentValidationModelValidationFactory(ModelMetadata metadata, ControllerContext context, PropertyRule rule, IPropertyValidator validator);
 
 	/// <summary>
 	/// Implementation of ModelValidatorProvider that uses FluentValidation.
@@ -35,14 +35,14 @@ namespace FluentValidation.Mvc {
 		public IValidatorFactory ValidatorFactory { get; set; }
 
 		private Dictionary<Type, FluentValidationModelValidationFactory> validatorFactories = new Dictionary<Type, FluentValidationModelValidationFactory>() {
-			{ typeof(INotNullValidator), (metadata, context, description, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, description, validator) },
-			{ typeof(INotEmptyValidator), (metadata, context, description, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, description, validator) },
+			{ typeof(INotNullValidator), (metadata, context, rule, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(INotEmptyValidator), (metadata, context, rule, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, rule, validator) },
 			// email must come before regex.
-			{ typeof(IEmailValidator), (metadata, context, description, validator) => new EmailFluentValidationPropertyValidator(metadata, context, description, validator) },			
-			{ typeof(IRegularExpressionValidator), (metadata, context, description, validator) => new RegularExpressionFluentValidationPropertyValidator(metadata, context, description, validator) },
-			{ typeof(ILengthValidator), (metadata, context, description, validator) => new StringLengthFluentValidationPropertyValidator(metadata, context, description, validator)},
-			{ typeof(InclusiveBetweenValidator), (metadata, context, description, validator) => new RangeFluentValidationPropertyValidator(metadata, context, description, validator) },
-			{ typeof(EqualValidator), (metadata, context, description, validator) => new EqualToFluentValidationPropertyValidator(metadata, context, description, validator) },
+			{ typeof(IEmailValidator), (metadata, context, rule, validator) => new EmailFluentValidationPropertyValidator(metadata, context, rule, validator) },			
+			{ typeof(IRegularExpressionValidator), (metadata, context, rule, validator) => new RegularExpressionFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(ILengthValidator), (metadata, context, rule, validator) => new StringLengthFluentValidationPropertyValidator(metadata, context, rule, validator)},
+			{ typeof(InclusiveBetweenValidator), (metadata, context, rule, validator) => new RangeFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(EqualValidator), (metadata, context, rule, validator) => new EqualToFluentValidationPropertyValidator(metadata, context, rule, validator) },
 			{ typeof(CreditCardValidator), (metadata, context, description, validator) => new CreditCardFluentValidationPropertyValidator(metadata, context, description, validator) }
 		};
 
@@ -120,12 +120,14 @@ namespace FluentValidation.Mvc {
 				.Select(x => x.Value)
 				.FirstOrDefault() ?? ((metadata, controllerContext, description, validator) => new FluentValidationPropertyValidator(metadata, controllerContext, description, validator));
 
-			return factory(meta, context, rule.PropertyDescription, propertyValidator);
+			return factory(meta, context, rule, propertyValidator);
 		}
 
 		ModelValidator CreateNotNullValidatorForProperty(ModelMetadata metadata, ControllerContext cc) {
-			return new RequiredFluentValidationPropertyValidator(metadata, cc, metadata.PropertyName, new NotNullValidator());
+			return new RequiredFluentValidationPropertyValidator(metadata, cc, null, new NotNullValidator());
 		}
+
+
 
 		IEnumerable<ModelValidator> GetValidatorsForModel(ModelMetadata metadata, ControllerContext context, IValidator validator) {
 			if (validator != null) {

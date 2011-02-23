@@ -7,10 +7,10 @@
 
 	internal class EqualToFluentValidationPropertyValidator : FluentValidationPropertyValidator {
 		EqualValidator EqualValidator {
-			get { return (EqualValidator)validator; }
+			get { return (EqualValidator)Validator; }
 		}
 		
-		public EqualToFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext, propertyDescription, validator) {
+		public EqualToFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule rule, IPropertyValidator validator) : base(metadata, controllerContext, rule, validator) {
 			ShouldValidate = false;
 		}
 
@@ -22,7 +22,7 @@
 				// We only care about property comparisons in this case.
 
 				var formatter = new MessageFormatter()
-					.AppendPropertyName(propertyDescription)
+					.AppendPropertyName(Rule.PropertyDescription)
 					.AppendArgument("PropertyValue", propertyToCompare.Name);
 
 

@@ -260,6 +260,49 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Allows_override_of_required_message_for_non_nullable_value_types() {
+			var form = new FormCollection {
+				{ "Id", "" }
+			};
+
+			var bindingContext = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(TestModelWithOverridenMessageValueType)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider()
+			};
+
+			binder.BindModel(controllerContext, bindingContext);
+
+			//TODO: Localise test.
+			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("Foo");
+		}
+
+		[Test]
+		public void Allows_override_of_required_property_name_for_non_nullable_value_types() {
+			var form = new FormCollection {
+				{ "Id", "" }
+			};
+
+			var bindingContext = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(TestModelWithOverridenPropertyNameValueType)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider()
+			};
+
+			binder.BindModel(controllerContext, bindingContext);
+
+			//TODO: Localise test.
+			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("'Foo' must not be empty."
+);
+		}
+
+
+
+		[Test]
 		public void Should_add_default_message_to_modelstate_when_both_fv_and_DataAnnotations_have_implicit_required_validation_disabled() {
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 			provider.AddImplicitRequiredValidator = false;
@@ -479,6 +522,29 @@ namespace FluentValidation.Tests {
 					RuleFor(x => x.Surname).NotEqual("foo");
 					RuleFor(x => x.Forename).NotEqual("foo");
 				});
+			}
+		}
+
+		[Validator(typeof(TestModelWithOverridenMessageValueTypeValidator))]
+		private class TestModelWithOverridenMessageValueType {
+			public int Id { get; set; }
+		}
+
+		[Validator(typeof(TestModelWithOverridenPropertyNameValidator))]
+		private class TestModelWithOverridenPropertyNameValueType {
+			public int Id { get; set; }
+		}
+
+		private class TestModelWithOverridenMessageValueTypeValidator : AbstractValidator<TestModelWithOverridenMessageValueType> {
+			public TestModelWithOverridenMessageValueTypeValidator() {
+				RuleFor(x => x.Id).NotNull().WithMessage("Foo");
+			}
+		}
+
+		private class TestModelWithOverridenPropertyNameValidator : AbstractValidator<TestModelWithOverridenPropertyNameValueType> {
+			public TestModelWithOverridenPropertyNameValidator() {
+				RuleFor(x => x.Id).NotNull().WithName("Foo");
+				
 			}
 		}
 

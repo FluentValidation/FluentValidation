@@ -6,15 +6,15 @@
 
 	internal class EmailFluentValidationPropertyValidator : FluentValidationPropertyValidator {
 		private IEmailValidator EmailValidator {
-			get { return (IEmailValidator)validator; }
+			get { return (IEmailValidator)Validator; }
 		}
 
-		public EmailFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext, propertyDescription, validator) {
+		public EmailFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule rule, IPropertyValidator validator) : base(metadata, controllerContext, rule, validator) {
 			ShouldValidate=false;
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
+			var formatter = new MessageFormatter().AppendPropertyName(Rule.PropertyDescription);
 			string message = formatter.BuildMessage(EmailValidator.ErrorMessageSource.GetString());
 			
 			yield return new ModelClientValidationRule {

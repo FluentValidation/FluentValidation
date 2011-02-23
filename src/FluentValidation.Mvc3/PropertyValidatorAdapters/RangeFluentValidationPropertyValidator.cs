@@ -7,16 +7,16 @@
 
 	internal class RangeFluentValidationPropertyValidator : FluentValidationPropertyValidator {
 		InclusiveBetweenValidator RangeValidator {
-			get { return (InclusiveBetweenValidator)validator; }
+			get { return (InclusiveBetweenValidator)Validator; }
 		}
 		
-		public RangeFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext, propertyDescription, validator) {
+		public RangeFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext, propertyDescription, validator) {
 			ShouldValidate=false;
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
 			var formatter = new MessageFormatter()
-				.AppendPropertyName(propertyDescription)
+				.AppendPropertyName(Rule.PropertyDescription)
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
 

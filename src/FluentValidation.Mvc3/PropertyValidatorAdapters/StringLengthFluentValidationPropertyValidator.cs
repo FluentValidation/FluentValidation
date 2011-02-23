@@ -7,17 +7,17 @@
 
 	internal class StringLengthFluentValidationPropertyValidator : FluentValidationPropertyValidator {
 		private ILengthValidator LengthValidator {
-			get { return (ILengthValidator)validator; }
+			get { return (ILengthValidator)Validator; }
 		}
 
-		public StringLengthFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator)
-			: base(metadata, controllerContext, propertyDescription, validator) {
+		public StringLengthFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule rule, IPropertyValidator validator)
+			: base(metadata, controllerContext, rule, validator) {
 			ShouldValidate = false;
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
 			var formatter = new MessageFormatter()
-				.AppendPropertyName(propertyDescription)
+				.AppendPropertyName(Rule.PropertyDescription)
 				.AppendArgument("MinLength", LengthValidator.Min)
 				.AppendArgument("MaxLength", LengthValidator.Max);
 

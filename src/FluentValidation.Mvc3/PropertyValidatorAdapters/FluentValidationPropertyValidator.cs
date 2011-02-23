@@ -7,8 +7,9 @@ namespace FluentValidation.Mvc {
 	using System.Linq;
 
 	public class FluentValidationPropertyValidator : ModelValidator {
-		protected readonly string propertyDescription;
-		protected readonly IPropertyValidator validator;
+		public IPropertyValidator Validator { get; private set; }
+		public PropertyRule Rule { get; private set; }
+
 
 		/*
 		 This might seem a bit strange, but we do *not* want to do any work in these validators.
@@ -20,20 +21,28 @@ namespace FluentValidation.Mvc {
 		*/
 		protected bool ShouldValidate { get; set; }
 
-		public FluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext) {
-			this.propertyDescription = propertyDescription;
-			this.validator = validator;
+		public FluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule rule, IPropertyValidator validator) : base(metadata, controllerContext) {
+			this.Validator = validator;
+
+			// Build a new rule instead of the one passed in.
+			// We do this as the rule passed in will not have the correct properties defined for standalone validation.
+			// We also want to ensure we copy across the CustomPropertyName, if specified. 
+			Rule = new PropertyRule(null, x => metadata.Model, null, null, metadata.ModelType, null) {
+				PropertyName = metadata.PropertyName,
+				CustomPropertyName = rule == null ? null : rule.CustomPropertyName,
+			};
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
 			if (ShouldValidate) {
 				var fakeRule = new PropertyRule(null, x => Metadata.Model, null, null, Metadata.ModelType, null) {
-					PropertyName = Metadata.PropertyName
+					PropertyName = Metadata.PropertyName,
+					CustomPropertyName = Rule == null ? null : Rule.CustomPropertyName,
 				};
 
 				var fakeParentContext = new ValidationContext(container);
 				var context = new PropertyValidatorContext(fakeParentContext, fakeRule, Metadata.PropertyName);
-				var result = validator.Validate(context);
+				var result = Validator.Validate(context);
 
 				foreach (var failure in result) {
 					yield return new ModelValidationResult { Message = failure.ErrorMessage };
@@ -46,7 +55,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			var supportsClientValidation = validator as IClientValidatable;
+			var supportsClientValidation = Validator as IClientValidatable;
 			
 			if(supportsClientValidation != null) {
 				return supportsClientValidation.GetClientValidationRules(Metadata, ControllerContext);

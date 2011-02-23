@@ -6,16 +6,16 @@
 
 	internal class RegularExpressionFluentValidationPropertyValidator : FluentValidationPropertyValidator {
 		IRegularExpressionValidator RegexValidator {
-			get { return (IRegularExpressionValidator)validator;}
+			get { return (IRegularExpressionValidator)Validator;}
 		}
 
-		public RegularExpressionFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, string propertyDescription, IPropertyValidator validator)
-			: base(metadata, controllerContext, propertyDescription, validator) {
+		public RegularExpressionFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule rule, IPropertyValidator validator)
+			: base(metadata, controllerContext, rule, validator) {
 			ShouldValidate = false;
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			var formatter = new MessageFormatter().AppendPropertyName(propertyDescription);
+			var formatter = new MessageFormatter().AppendPropertyName(Rule.PropertyDescription);
 			string message = formatter.BuildMessage(RegexValidator.ErrorMessageSource.GetString());
 			yield return new ModelClientValidationRegexRule(message, RegexValidator.Expression);
 		}
