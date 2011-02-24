@@ -27,7 +27,7 @@ using System.Security;
 [assembly : AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2011")]
 [assembly : ComVisible(false)]
 [assembly : AssemblyVersion("3.0.0.0")]
-[assembly : AssemblyFileVersion("0.0.0.0")]
+[assembly : AssemblyFileVersion("3.0.0.0")]
 [assembly: CLSCompliant(true)]
 #if !SILVERLIGHT
 [assembly: AllowPartiallyTrustedCallers]
