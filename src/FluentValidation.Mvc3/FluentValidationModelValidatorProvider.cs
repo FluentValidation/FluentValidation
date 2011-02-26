@@ -97,7 +97,7 @@ namespace FluentValidation.Mvc {
 				modelValidators.AddRange(validatorsWithRules);
 			}
 
-			if(metadata.IsRequired && AddImplicitRequiredValidator) {
+			if(validator != null && metadata.IsRequired && AddImplicitRequiredValidator) {
 				bool hasRequiredValidators = modelValidators.Any(x => x.IsRequired);
 
 				//If the model is 'Required' then we assume it must have a NotNullValidator. 

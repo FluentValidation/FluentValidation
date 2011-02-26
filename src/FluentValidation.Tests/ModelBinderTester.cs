@@ -17,19 +17,19 @@
 #endregion
 
 namespace FluentValidation.Tests {
-    using System;
-    using System.Collections;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading;
-    using System.Web;
-    using System.Web.Mvc;
-    using Attributes;
-    using Internal;
-    using Moq;
-    using Mvc;
-    using NUnit.Framework;
-    using Results;
+	using System;
+	using System.Collections;
+	using System.Globalization;
+	using System.Linq;
+	using System.Threading;
+	using System.Web;
+	using System.Web.Mvc;
+	using Attributes;
+	using Internal;
+	using Moq;
+	using Mvc;
+	using NUnit.Framework;
+	using Results;
 
 	[TestFixture]
 	public class ModelBinderTester {
@@ -39,8 +39,8 @@ namespace FluentValidation.Tests {
 
 		[SetUp]
 		public void Setup() {
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-            provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
 			ModelValidatorProviders.Providers.Add(provider);
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 			binder = new DefaultModelBinder();
@@ -97,7 +97,7 @@ namespace FluentValidation.Tests {
 			public string Address1 { get; set; }
 		}
 
-		
+
 
 		public class TestModel4Validator : AbstractValidator<TestModel4> {
 			public TestModel4Validator() {
@@ -107,6 +107,17 @@ namespace FluentValidation.Tests {
 					.EmailAddress();
 
 				RuleFor(x => x.Address1).NotEmpty();
+			}
+		}
+
+		[Validator(typeof(TestModel6Validator))]
+		public class TestModel6 {
+			public int Id { get; set; }
+		}
+
+		public class TestModel6Validator : AbstractValidator<TestModel6> {
+			public TestModel6Validator() {
+				//This ctor is intentionally blank.
 			}
 		}
 
@@ -122,7 +133,7 @@ namespace FluentValidation.Tests {
 
 			var context = new ModelBindingContext {
 				ModelName = "test",
-				ModelMetadata =  CreateMetaData(typeof(TestModel4)),
+				ModelMetadata = CreateMetaData(typeof(TestModel4)),
 				ModelState = new ModelStateDictionary(),
 				FallbackToEmptyPrefix = true,
 				ValueProvider = form.ToValueProvider(),
@@ -247,6 +258,25 @@ namespace FluentValidation.Tests {
 
 			var bindingContext = new ModelBindingContext {
 				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(TestModel6)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider()
+			};
+
+			binder.BindModel(controllerContext, bindingContext);
+
+			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("'Id' must not be empty.");
+		}
+
+		[Test]
+		public void Should_add_Default_message_to_modelstate_when_no_validator_specified() {
+			var form = new FormCollection {
+				{ "Id", "" }
+			};
+
+			var bindingContext = new ModelBindingContext {
+				ModelName = "test",
 				ModelMetadata = CreateMetaData(typeof(TestModelWithoutValidator)),
 				ModelState = new ModelStateDictionary(),
 				FallbackToEmptyPrefix = true,
@@ -255,8 +285,7 @@ namespace FluentValidation.Tests {
 
 			binder.BindModel(controllerContext, bindingContext);
 
-			//TODO: Localise test.
-			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("'Id' must not be empty.");
+			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("A value is required.");
 		}
 
 		[Test]
@@ -347,9 +376,9 @@ namespace FluentValidation.Tests {
 			var binder = new CustomizeValidatorAttribute { RuleSet = "Names" };
 			binder.BindModel(controllerContext, context);
 
-			context.ModelState.IsValidField("Forename").ShouldBeFalse(); 
-			context.ModelState.IsValidField("Surname").ShouldBeFalse(); 
-			context.ModelState.IsValidField("Email").ShouldBeTrue(); 
+			context.ModelState.IsValidField("Forename").ShouldBeFalse();
+			context.ModelState.IsValidField("Surname").ShouldBeFalse();
+			context.ModelState.IsValidField("Email").ShouldBeTrue();
 		}
 
 		[Test]
@@ -373,7 +402,7 @@ namespace FluentValidation.Tests {
 
 			context.ModelState.IsValidField("Forename").ShouldBeFalse();
 			context.ModelState.IsValidField("Surname").ShouldBeFalse();
-			context.ModelState.IsValidField("Email").ShouldBeTrue(); 
+			context.ModelState.IsValidField("Email").ShouldBeTrue();
 
 		}
 
@@ -398,7 +427,7 @@ namespace FluentValidation.Tests {
 
 			context.ModelState.IsValidField("Forename").ShouldBeFalse();
 			context.ModelState.IsValidField("Surname").ShouldBeFalse();
-			context.ModelState.IsValidField("Email").ShouldBeTrue(); 
+			context.ModelState.IsValidField("Email").ShouldBeTrue();
 
 		}
 
@@ -425,7 +454,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked() {
-				var form = new FormCollection {
+			var form = new FormCollection {
 				{ "Email", "foo" },
 				{ "Surname", "foo" },
 				{ "Forename", "foo" },
@@ -469,7 +498,7 @@ namespace FluentValidation.Tests {
 
 		[Validator(typeof(PropertiesValidator2))]
 		private class PropertiesTestModel2 {
-				public string Email { get; set; }
+			public string Email { get; set; }
 			public string Surname { get; set; }
 			public string Forename { get; set; }
 		}
@@ -482,7 +511,7 @@ namespace FluentValidation.Tests {
 			}
 
 			public ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext) {
-				return	validationContext;
+				return validationContext;
 			}
 
 			public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result) {
@@ -544,7 +573,7 @@ namespace FluentValidation.Tests {
 		private class TestModelWithOverridenPropertyNameValidator : AbstractValidator<TestModelWithOverridenPropertyNameValueType> {
 			public TestModelWithOverridenPropertyNameValidator() {
 				RuleFor(x => x.Id).NotNull().WithName("Foo");
-				
+
 			}
 		}
 
