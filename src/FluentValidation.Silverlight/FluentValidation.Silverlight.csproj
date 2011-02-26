@@ -284,6 +284,9 @@
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.nl.resx">
       <Link>Resources\Messages.nl.resx</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\FluentValidation\Resources\Messages.pl.resx">
+      <Link>Resources\Messages.pl.resx</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.pt.resx">
       <Link>Resources\Messages.pt.resx</Link>
     </EmbeddedResource>

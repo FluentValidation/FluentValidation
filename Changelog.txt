@@ -14,6 +14,7 @@
 * Better handling of nullable value types.
 * Add static FluentValidationModelValidatorProvider.Configure for configuring MVC integration with default options.
 * Fixed edge case where custom property names didn't work for Required rules on non-nullable value types in MVC integration.
+* Patch - Polish localization.
 
 2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder
