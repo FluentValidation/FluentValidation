@@ -10,3 +10,4 @@ _ReSharper*
 *.suo
 *.cache
 TestResult.xml
+*.orig
