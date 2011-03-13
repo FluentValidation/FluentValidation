@@ -91,5 +91,13 @@ namespace FluentValidation.Tests {
 
 			result.IsValid.ShouldBeTrue();
 		}
+
+		[Test]
+		public void Should_succeed_on_case_insensitive_comparison_using_expression() {
+			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal(x => x.Forename, StringComparer.OrdinalIgnoreCase) };
+			var result = validator.Validate(new Person { Surname = "foo", Forename = "FOO"});
+
+			result.IsValid.ShouldBeTrue();
+		}
 	}
 }
