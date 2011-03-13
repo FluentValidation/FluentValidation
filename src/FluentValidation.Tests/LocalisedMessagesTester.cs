@@ -114,6 +114,26 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
 		}
 
+		[Test]
+		public void Can_use_placeholders_with_localized_messages() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(() => TestMessages.PlaceholderMessage, 1)
+			};
+
+			var result = validator.Validate(new Person());
+			result.Errors.Single().ErrorMessage.ShouldEqual("Test 1");
+		}
+
+		[Test]
+		public void Can_use_placeholders_with_localized_messages_using_expressions() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(() => TestMessages.PlaceholderMessage, x => 1)
+			};
+
+			var result = validator.Validate(new Person());
+			result.Errors.Single().ErrorMessage.ShouldEqual("Test 1");
+		}
+
 		private class MyResources {
 			public static string notempty_error {
 				get { return "foo"; }

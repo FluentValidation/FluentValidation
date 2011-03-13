@@ -107,6 +107,35 @@ namespace FluentValidation {
 			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder());
 		}
 
+		/// <summary>
+		/// Specifies a custom error message resource to use when validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
+		/// <param name="formatArgs">Custom message format args</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, params object[] formatArgs) {
+			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(formatArgs);
+			return rule.WithLocalizedMessage(resourceSelector, funcs);
+		}
+
+		/// <summary>
+		/// Specifies a custom error message resource to use when validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
+		/// <param name="formatArgs">Custom message format args</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, params Func<T, object>[] formatArgs) {
+			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
+			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder())
+				.Configure(cfg => {
+					formatArgs
+						   .Select(func => new Func<object, object>(x => func((T)x)))
+						   .ForEach(cfg.CurrentValidator.CustomMessageFormatArguments.Add);
+				});
+			
+		}
 
 		/// <summary>
 		/// Specifies a custom error message resource to use when validation fails.
@@ -123,6 +152,7 @@ namespace FluentValidation {
 			});
 		}
 
+		
 
 		/// <summary>
 		/// Specifies a condition limiting when the validator should run. 
