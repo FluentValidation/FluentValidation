@@ -65,10 +65,11 @@
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC3.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3" />
 
 		<!-- Copy the source files to the package dir -->
-		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\NET35\%(RecursiveDir)" />
-		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3\lib\NET4" />
+		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\Net40\%(RecursiveDir)" />
+		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3\lib\Net40" />
 		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
-
+    <Copy SourceFiles="@(WP7Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\sl3-wp\%(RecursiveDir)" Condition="'$(BuildSilverlight)'=='true'" />
+    
 		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
 		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\FluentValidation\FluentValidation.dll">
 			<Output TaskParameter="Assemblies" ItemName="AsmInfo" />
@@ -101,6 +102,6 @@
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
 		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec" />
 
-		<!--<RemoveDir Directories="$(PackageDir)\temp" />-->
+		<RemoveDir Directories="$(PackageDir)\temp" />
 	</Target>
 </Project>
