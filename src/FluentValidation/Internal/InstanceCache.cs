@@ -21,7 +21,8 @@ namespace FluentValidation.Internal {
 	using System.Collections.Generic;
 
 	/// <summary>
-	/// Thread safe instance cache.
+	/// Instancace cache.
+	/// TODO: This isn't actually completely thread safe. It would be much better to use ConcurrentDictionary, but this isn't available in Silverlight/WP7.
 	/// </summary>
 	public class InstanceCache {
 		readonly Dictionary<Type, object> cache = new Dictionary<Type, object>();
