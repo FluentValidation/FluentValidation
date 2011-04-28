@@ -171,6 +171,14 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(2);
 		}
 
+		[Test]
+		public void Validates_type_when_using_non_generic_validate_overload() {
+			IValidator nonGenericValidator = validator;
+
+			typeof(InvalidOperationException).ShouldBeThrownBy(() =>
+				nonGenericValidator.Validate("foo"));
+		}
+
 
 		private class DerivedPerson : Person { }
 
