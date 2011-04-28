@@ -25,7 +25,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="TConfiguration">Type of object being configured</typeparam>
 	/// <typeparam name="TNext">Return type</typeparam>
-	public interface IConfigurable<TConfiguration, TNext> {
+	public interface IConfigurable<TConfiguration, out TNext> {
 		/// <summary>
 		/// Configures the current object.
 		/// </summary>

@@ -109,6 +109,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		internal static IPropertyValidator InferPropertyValidatorForChildValidator(PropertyRule rule, IValidator childValidator) {
 			// If the property implements IEnumerable<T> and the validator validates T, assume it's a collection property validator
+			// This is here for backwards compatibility with v2. V3 uses the new SetCollectionValidator method.
 			if (DoesImplementCompatibleIEnumerable(rule.TypeToValidate, childValidator)) {
 				return new ChildCollectionValidatorAdaptor(childValidator);
 			}

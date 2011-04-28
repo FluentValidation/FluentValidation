@@ -69,7 +69,11 @@ namespace FluentValidation.Tests {
 		public string Name { get; set; }
 	}
 
-	public class Order {
+	public interface IOrder {
+		decimal Amount { get; }
+	}
+
+	public class Order : IOrder {
 		public string ProductName { get; set; }
 		public decimal Amount { get; set; }
 	}

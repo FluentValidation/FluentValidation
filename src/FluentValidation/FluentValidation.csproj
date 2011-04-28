@@ -78,6 +78,7 @@
     <Compile Include="AssemblyScanner.cs" />
     <Compile Include="Attributes\AttributedValidatorFactory.cs" />
     <Compile Include="Attributes\ValidatorAttribute.cs" />
+    <Compile Include="CollectionValidatorExtensions.cs" />
     <Compile Include="DefaultValidatorExtensions.cs" />
     <Compile Include="DefaultValidatorOptions.cs" />
     <Compile Include="InlineValidator.cs" />

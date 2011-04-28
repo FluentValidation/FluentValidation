@@ -23,12 +23,10 @@ namespace FluentValidation.Tests {
 
 	[TestFixture]
 	public class CollectionValidatorTests {
-		PersonValidator validator;
 		Person person;
 
 		[SetUp]
 		public void Setup() {
-			validator = new PersonValidator();
 			person = new Person() {
 				Orders = new List<Order>() {
 					new Order { Amount = 5},
@@ -39,6 +37,11 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Validates_collection() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator())
+			};
+
 			var results = validator.Validate(person);
 			results.Errors.Count.ShouldEqual(3);
 
@@ -48,24 +51,117 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Collection_should_be_explicitly_included_with_expression() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator())
+			};
+
 			var results = validator.Validate(person, x => x.Orders);
 			results.Errors.Count.ShouldEqual(2);
 		}
 
 		[Test]
 		public void Collection_should_be_explicitly_included_with_string() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator())
+			};
+
 			var results = validator.Validate(person, "Orders");
 			results.Errors.Count.ShouldEqual(2);
 		}
 
 		[Test]
 		public void Collection_should_be_excluded() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator())
+			};
+
 			var results = validator.Validate(person, x => x.Forename);
 			results.Errors.Count.ShouldEqual(0);
 		}
 
 		[Test]
 		public void Condition_should_work_with_child_collection() {
+			var validator = new TestValidator() {
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator()).When(x => x.Orders.Count == 3 /*there are only 2*/)
+			};
+
+			var result = validator.Validate(person);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Skips_null_items() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator())
+			};
+
+			person.Orders[0] = null;
+			var results = validator.Validate(person);
+			results.Errors.Count.ShouldEqual(2); //2 errors - 1 for person, 1 for 2nd Order.
+		}
+
+		[Test]
+		public void Can_validate_collection_using_validator_for_base_type() {
+			var validator = new TestValidator() {
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderInterfaceValidator())
+			};
+
+			var result = validator.Validate(person);
+			result.IsValid.ShouldBeFalse();
+		}
+		
+		#region old style - for compatibility with v2 and earlier before we had the explicit SetCollectionValidator
+
+		[Test]
+		public void Validates_collection_old_style() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
+			};
+
+			var results = validator.Validate(person);
+			results.Errors.Count.ShouldEqual(3);
+
+			results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
+			results.Errors[2].PropertyName.ShouldEqual("Orders[1].Amount");
+		}
+
+		[Test]
+		public void Collection_should_be_explicitly_included_with_expression_old_style() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
+			};
+			var results = validator.Validate(person, x => x.Orders);
+			results.Errors.Count.ShouldEqual(2);
+		}
+
+		[Test]
+		public void Collection_should_be_explicitly_included_with_string_old_style() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
+			};
+			var results = validator.Validate(person, "Orders");
+			results.Errors.Count.ShouldEqual(2);
+		}
+
+		[Test]
+		public void Collection_should_be_excluded_old_style() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
+			};
+			var results = validator.Validate(person, x => x.Forename);
+			results.Errors.Count.ShouldEqual(0);
+		}
+
+		[Test]
+		public void Condition_should_work_with_child_collection_old_style() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator()).When(x => x.Orders.Count == 3 /*there are only 2*/)
 			};
@@ -75,11 +171,17 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void Skips_null_items() {
+		public void Skips_null_items_old_style() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
+			};
 			person.Orders[0] = null;
 			var results = validator.Validate(person);
 			results.Errors.Count.ShouldEqual(2); //2 errors - 1 for person, 1 for 2nd Order.
 		}
+
+		#endregion
 
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {
@@ -87,6 +189,13 @@ namespace FluentValidation.Tests {
 				RuleFor(x => x.Amount).NotEqual(0);
 			}
 		}
+
+		public class OrderInterfaceValidator : AbstractValidator<IOrder> {
+			public OrderInterfaceValidator() {
+				RuleFor(x => x.Amount).NotEqual(0);
+			}
+		}
+
 
 		public class PersonValidator : AbstractValidator<Person> {
 			public PersonValidator() {
