@@ -17,6 +17,7 @@
 * Patch - Polish localization.
 * Additional overloads of WithLocalizedMessage that support custom format args for consistency with WithMessage.
 * Bug fix - overload for NotEqual that takes an expression and an IEqualityComparer did not use the comparer.
+* Added the ability to specify which ruleset is used to generate client-side rules.
 
 2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder
