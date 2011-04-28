@@ -30,6 +30,8 @@ namespace FluentValidation.Validators {
 			get { return childValidator; }
 		}
 
+		public Func<object, bool> Predicate { get; set; }
+
 		public ChildCollectionValidatorAdaptor(IValidator childValidator) {
 			this.childValidator = childValidator;
 		}
@@ -46,10 +48,12 @@ namespace FluentValidation.Validators {
 			}
 
 			int count = 0;
+			
+			var predicate = Predicate ?? (x => true);
 
 			foreach (var element in collection) {
 
-				if(element == null) {
+				if(element == null || !(predicate(element))) {
 					// If an element in the validator is null then we want to skip it to prevent NullReferenceExceptions in the child validator.
 					// We still need to update the counter to ensure the indexes are correct.
 					count++;

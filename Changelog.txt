@@ -20,6 +20,7 @@
 * Added the ability to specify which ruleset is used to generate client-side rules.
 * Introduced SetCollectionValidator for validating collections (replaces non-generic overload of SetValidator)
 * Better type safety using child collection validators.
+* Better control of which elements in a child collection are validated using the new Where method.
 
 2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder

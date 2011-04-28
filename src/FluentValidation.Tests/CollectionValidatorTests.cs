@@ -113,6 +113,19 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(person);
 			result.IsValid.ShouldBeFalse();
 		}
+
+		[Test]
+		public void Can_specifiy_condition_for_individual_collection_elements() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Orders)
+					.SetCollectionValidator(new OrderValidator())
+					.Where(x => x.ProductName != null)
+			};
+
+			var results = validator.Validate(person);
+			results.Errors.Count.ShouldEqual(1);
+
+		}
 		
 		#region old style - for compatibility with v2 and earlier before we had the explicit SetCollectionValidator
 		#pragma warning disable 612,618
