@@ -18,9 +18,11 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq.Expressions;
+	using System.Web;
 	using System.Web.Mvc;
 	using Attributes;
 	using Moq;
@@ -33,11 +35,13 @@ namespace FluentValidation.Tests {
 	[TestFixture]
 	public class ClientsideMessageTester {
 		InlineValidator<TestModel> validator;
+		ControllerContext controllerContext;
 
 		[SetUp]
 		public void Setup() {
 			System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
 			validator = new InlineValidator<TestModel>();
+			controllerContext = CreateControllerContext();
 		}
 
 		[Test]
@@ -162,12 +166,28 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
 
 			// Client-side rules are only generated from the default ruleset
+			// unless explicitly specified.
 			// so in this case, only the second NotNull should make it through
 
 			var rules = GetClientRules(x => x.Name);
 			rules.Count().ShouldEqual(1);
 			rules.Single().ErrorMessage.ShouldEqual("second");
 	    }
+
+		[Test]
+		public void Should_use_rules_from_specified_ruleset() {
+			validator.RuleSet("Foo", () => {
+				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
+			});
+			validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
+
+			var filter = new RuleSetForClientSideMessagesAttribute("Foo");
+			filter.OnActionExecuting(new ActionExecutingContext { HttpContext = controllerContext.HttpContext });
+
+			var rules = GetClientRules(x => x.Name);
+			rules.Count().ShouldEqual(1);
+			rules.Single().ErrorMessage.ShouldEqual("first");
+		}
 
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
 			var propertyName = expression.GetMember().Name;
@@ -177,7 +197,7 @@ namespace FluentValidation.Tests {
 			factory.Setup(x => x.GetValidator(typeof(TestModel))).Returns(validator);
 
 			var provider = new FluentValidationModelValidatorProvider(factory.Object);
-			var propertyValidator = provider.GetValidators(metadata, new ControllerContext()).Single();
+			var propertyValidator = provider.GetValidators(metadata, controllerContext).Single();
 
 			var clientRule = propertyValidator.GetClientValidationRules().Single();
 			return clientRule;
@@ -191,9 +211,15 @@ namespace FluentValidation.Tests {
 			factory.Setup(x => x.GetValidator(typeof(TestModel))).Returns(validator);
 
 			var provider = new FluentValidationModelValidatorProvider(factory.Object);
-			var propertyValidators = provider.GetValidators(metadata, new ControllerContext());
+			var propertyValidators = provider.GetValidators(metadata, controllerContext);
 
 			return (propertyValidators.SelectMany(x => x.GetClientValidationRules())).ToList();
+		}
+
+		private ControllerContext CreateControllerContext() {
+			var httpContext = new Mock<HttpContextBase>();
+			httpContext.Setup(x => x.Items).Returns(new Hashtable());
+			return new ControllerContext { HttpContext = httpContext.Object };
 		}
 
 		private class TestModel {

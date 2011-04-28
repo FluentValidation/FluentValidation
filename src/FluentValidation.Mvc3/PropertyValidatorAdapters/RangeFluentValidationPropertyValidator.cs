@@ -15,7 +15,7 @@
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			if (Rule.RuleSet != null) yield break;
+			if (!ShouldGenerateClientSideRules()) yield break;
 
 			var formatter = new MessageFormatter()
 				.AppendPropertyName(Rule.PropertyDescription)

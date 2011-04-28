@@ -55,8 +55,13 @@ namespace FluentValidation.Mvc {
 			return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
 		}
 
+		protected virtual bool ShouldGenerateClientSideRules() {
+			var ruleSetToGenerateClientSideRules = RuleSetForClientSideMessagesAttribute.GetRuleSetsForClientValidation(ControllerContext.HttpContext);
+			return ruleSetToGenerateClientSideRules.Contains(Rule.RuleSet);
+		}
+
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-			if (Rule.RuleSet != null) return Enumerable.Empty<ModelClientValidationRule>();
+			if (!ShouldGenerateClientSideRules()) return Enumerable.Empty<ModelClientValidationRule>();
 
 			var supportsClientValidation = Validator as IClientValidatable;
 			

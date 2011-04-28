@@ -70,6 +70,7 @@
     <Compile Include="PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs" />
     <Compile Include="PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs" />
     <Compile Include="PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs" />
+    <Compile Include="RuleSetForClientSideMessagesAttribute.cs" />
     <Compile Include="ValidationResultExtension.cs" />
   </ItemGroup>
   <ItemGroup>
