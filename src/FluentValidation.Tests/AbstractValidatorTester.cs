@@ -75,7 +75,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void WithPropertyName_should_override_property_name() {
-			validator.RuleFor(x => x.Surname).NotNull().WithPropertyName("foo");
+			validator.RuleFor(x => x.Surname).NotNull().OverridePropertyName("foo");
 			var result = validator.Validate(new Person());
 			result.Errors[0].PropertyName.ShouldEqual("foo");
 		}

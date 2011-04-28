@@ -115,7 +115,7 @@ namespace FluentValidation.Tests {
 		}
 		
 		#region old style - for compatibility with v2 and earlier before we had the explicit SetCollectionValidator
-
+		#pragma warning disable 612,618
 		[Test]
 		public void Validates_collection_old_style() {
 			var validator = new TestValidator {
@@ -180,7 +180,7 @@ namespace FluentValidation.Tests {
 			var results = validator.Validate(person);
 			results.Errors.Count.ShouldEqual(2); //2 errors - 1 for person, 1 for 2nd Order.
 		}
-
+		#pragma warning restore 612,618
 		#endregion
 
 		public class OrderValidator : AbstractValidator<Order> {
@@ -193,14 +193,6 @@ namespace FluentValidation.Tests {
 		public class OrderInterfaceValidator : AbstractValidator<IOrder> {
 			public OrderInterfaceValidator() {
 				RuleFor(x => x.Amount).NotEqual(0);
-			}
-		}
-
-
-		public class PersonValidator : AbstractValidator<Person> {
-			public PersonValidator() {
-				RuleFor(x => x.Surname).NotNull();
-				RuleFor(x => x.Orders).SetValidator(new OrderValidator());
 			}
 		}
 	}

@@ -50,7 +50,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Perserves_property_chain_using_custom() {
-			validator.RuleFor(x => x.Orders).SetValidator(new NestedOrderValidator());
+			validator.RuleFor(x => x.Orders).SetCollectionValidator(new NestedOrderValidator());
 			var person = new Person();
 			person.Orders.Add(new Order());
 			var result = validator.Validate(person);

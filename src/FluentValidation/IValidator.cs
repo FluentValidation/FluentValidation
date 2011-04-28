@@ -26,19 +26,13 @@ namespace FluentValidation {
 	/// Defines a validator for a particualr type.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public interface IValidator<T> : IValidator {
+	public interface IValidator<in T> : IValidator {
 		/// <summary>
 		/// Validates the specified instance.
 		/// </summary>
 		/// <param name="instance">The instance to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		ValidationResult Validate(T instance);
-		/// <summary>
-		/// Validates the specified instance.
-		/// </summary>
-		/// <param name="context">A ValidationContext</param>
-		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		ValidationResult Validate(ValidationContext<T> context);
 
 		/// <summary>
 		/// Sets the cascade mode for all rules within this validator.

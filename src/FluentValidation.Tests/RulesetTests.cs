@@ -72,8 +72,9 @@ namespace FluentValidation.Tests {
 			});
 
 			var validator = new TestValidator();
+			
 			validator.RuleSet("Test", () => {
-				validator.RuleFor(x => x.Orders).SetValidator(orderValidator);
+				validator.RuleFor(x => x.Orders).SetCollectionValidator(orderValidator);
 			});
 
 			var person = new Person {

@@ -103,6 +103,20 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
+		[Test]
+		public void Can_validate_using_validator_for_base_type() {
+			var addressValidator = new InlineValidator<IAddress>() {
+				v => v.RuleFor(x => x.Line1).NotNull()
+			};
+
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Address).SetValidator(addressValidator)	
+			};
+
+			var result = validator.Validate(new Person { Address = new Address() });
+			result.IsValid.ShouldBeFalse();
+		}
+
 		private static string PointlessMethod() { return null; }
 
 		public class PersonValidator : AbstractValidator<Person> {
@@ -126,7 +140,7 @@ namespace FluentValidation.Tests {
 		}
 
 		public class PointlessStringValidator : AbstractValidator<string> {
-			
+
 		}
 	}
 }
