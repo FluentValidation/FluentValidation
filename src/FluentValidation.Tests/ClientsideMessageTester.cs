@@ -154,6 +154,20 @@ namespace FluentValidation.Tests {
 		
 		}
 
+	    [Test]
+	    public void Should_only_use_rules_from_Default_ruleset() {
+	        validator.RuleSet("Foo", () => {
+				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
+	        });
+			validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
+
+			// Client-side rules are only generated from the default ruleset
+			// so in this case, only the second NotNull should make it through
+
+			var rules = GetClientRules(x => x.Name);
+			rules.Count().ShouldEqual(1);
+			rules.Single().ErrorMessage.ShouldEqual("second");
+	    }
 
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
 			var propertyName = expression.GetMember().Name;

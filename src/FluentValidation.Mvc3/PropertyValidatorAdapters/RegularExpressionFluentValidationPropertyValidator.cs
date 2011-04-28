@@ -15,6 +15,8 @@
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
+			if (Rule.RuleSet != null) yield break;
+
 			var formatter = new MessageFormatter().AppendPropertyName(Rule.PropertyDescription);
 			string message = formatter.BuildMessage(RegexValidator.ErrorMessageSource.GetString());
 			yield return new ModelClientValidationRegexRule(message, RegexValidator.Expression);

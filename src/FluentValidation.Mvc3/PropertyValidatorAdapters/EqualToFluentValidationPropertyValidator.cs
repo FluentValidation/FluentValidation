@@ -15,6 +15,8 @@
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
+			if (Rule.RuleSet != null) yield break;
+
 			var propertyToCompare = EqualValidator.MemberToCompare as PropertyInfo;
 			if(propertyToCompare != null) {
 				// If propertyToCompare is not null then we're comparing to another property.

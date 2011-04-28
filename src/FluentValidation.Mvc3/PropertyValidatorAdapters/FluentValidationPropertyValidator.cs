@@ -26,10 +26,11 @@ namespace FluentValidation.Mvc {
 
 			// Build a new rule instead of the one passed in.
 			// We do this as the rule passed in will not have the correct properties defined for standalone validation.
-			// We also want to ensure we copy across the CustomPropertyName, if specified. 
+			// We also want to ensure we copy across the CustomPropertyName and RuleSet, if specified. 
 			Rule = new PropertyRule(null, x => metadata.Model, null, null, metadata.ModelType, null) {
 				PropertyName = metadata.PropertyName,
 				CustomPropertyName = rule == null ? null : rule.CustomPropertyName,
+				RuleSet = rule == null ? null : rule.RuleSet
 			};
 		}
 
@@ -55,6 +56,8 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
+			if (Rule.RuleSet != null) return Enumerable.Empty<ModelClientValidationRule>();
+
 			var supportsClientValidation = Validator as IClientValidatable;
 			
 			if(supportsClientValidation != null) {
