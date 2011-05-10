@@ -55,8 +55,12 @@ namespace FluentValidation {
 
 		ValidationResult IValidator.Validate(ValidationContext context) {
 			context.Guard("Cannot pass null to Validate");
-			var failures = nestedValidators.SelectMany(x => x.Validate(context)).ToList();
-			return new ValidationResult(failures);
+
+			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector) {
+				IsChildContext = context.IsChildContext
+			};
+
+			return Validate(newContext);
 		}
 
 		/// <summary>
