@@ -100,6 +100,14 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(3);
 		}
 
+		[Test]
+		public void Executes_all_rules() {
+			var validator = new TestValidator();
+			var person = new Person();
+			var result = validator.Validate(person, ruleSet: "*");
+			result.Errors.Count.ShouldEqual(3);
+		}
+
 		private class TestValidator : AbstractValidator<Person> {
 			public TestValidator() {
 				RuleSet("Names", () => {

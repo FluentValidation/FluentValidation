@@ -25,6 +25,7 @@ namespace FluentValidation.Internal {
 		public bool CanExecute(PropertyRule rule, string propertyPath, ValidationContext context) {
 			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length == 0) return true;
 			if (!string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0 && rulesetsToExecute.Contains(rule.RuleSet)) return true;
+			if (rulesetsToExecute.Contains("*")) return true;
 
 			return false;
 		}
