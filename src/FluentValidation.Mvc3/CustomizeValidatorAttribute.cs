@@ -45,7 +45,11 @@ namespace FluentValidation.Mvc {
 			controllerContext.HttpContext.Items[key] = this;
 
 			var innerBinder = ModelBinders.Binders.GetBinder(bindingContext.ModelType);
-			return innerBinder.BindModel(controllerContext, bindingContext);
+			var result = innerBinder.BindModel(controllerContext, bindingContext);
+
+			controllerContext.HttpContext.Items.Remove(key);
+
+			return result;
 		}
 
 		public static CustomizeValidatorAttribute GetFromControllerContext(ControllerContext context) {

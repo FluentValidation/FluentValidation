@@ -473,6 +473,50 @@ namespace FluentValidation.Tests {
 			context.ModelState.IsValid.ShouldBeTrue();
 		}
 
+		[Test]
+		public void Validator_customizations_should_only_apply_to_single_parameter() {
+			var form = new FormCollection {
+				{ "first.Email", "foo" },
+				{ "first.Surname", "foo" },
+				{ "first.Forename", "foo" },
+				{ "second.Email", "foo" },
+				{ "second.Surname", "foo" },
+				{ "second.Forename", "foo" }
+			};
+
+			var modelstate = new ModelStateDictionary();
+
+			var firstContext = new ModelBindingContext {
+				ModelName = "first",
+				ModelMetadata = CreateMetaData(typeof(RulesetTestModel)),
+				ModelState = modelstate,
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider(),
+			};
+
+			var secondContext = new ModelBindingContext {
+				ModelName = "second",
+				ModelMetadata =  CreateMetaData(typeof(RulesetTestModel)),
+				ModelState = modelstate,
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider()
+			};
+
+			// Use the customizations for the first 
+			var binder = new CustomizeValidatorAttribute { RuleSet = "Names" };
+			binder.BindModel(controllerContext, firstContext);
+		
+			// ...but not for the second.
+			this.binder.BindModel(controllerContext, secondContext);
+
+			//customizations should only apply to the first validator 
+			modelstate.IsValidField("first.Forename").ShouldBeFalse();
+			modelstate.IsValidField("first.Surname").ShouldBeFalse();
+			modelstate.IsValidField("second.Forename").ShouldBeTrue();
+			modelstate.IsValidField("second.Surname").ShouldBeTrue();
+		}
+
+
 		private class SimplePropertyInterceptor : IValidatorInterceptor {
 			readonly string[] properties = new[] { "Surname", "Forename" };
 
