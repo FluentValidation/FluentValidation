@@ -18,20 +18,26 @@
 
 namespace FluentValidation {
 	using System;
+	using System.Linq.Expressions;
 	using System.Reflection;
+	using Internal;
 
 	public static class ValidatorOptions {
 		public static CascadeMode CascadeMode = CascadeMode.Continue;
 		public static Type ResourceProviderType;
 
-		private static Func<Type, MemberInfo, string> propertyNameResolver = DefaultPropertyNameResolver;
+		private static Func<Type, MemberInfo, LambdaExpression, string> propertyNameResolver = DefaultPropertyNameResolver;
 
-		public static Func<Type, MemberInfo, string> PropertyNameResolver {
+		public static Func<Type, MemberInfo, LambdaExpression, string> PropertyNameResolver {
 			get { return propertyNameResolver; }
 			set { propertyNameResolver = value ?? DefaultPropertyNameResolver; }
 		}
 
-		static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo) {
+		static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
+			if(expression != null) {
+				return PropertyChain.FromExpression(expression).ToString();
+			}
+			
 			if(memberInfo != null) {
 				return memberInfo.Name;
 			}

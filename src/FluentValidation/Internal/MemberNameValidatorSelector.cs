@@ -58,13 +58,13 @@ namespace FluentValidation.Internal {
 		}
 
 		private static string MemberFromExpression<T>(Expression<Func<T, object>> expression) {
-			var member = expression.GetMember();
+			var chain = PropertyChain.FromExpression(expression);
 
-			if (member == null) {
+			if (chain.Count == 0) {
 				throw new ArgumentException(string.Format("Expression '{0}' does not specify a valid property or field.", expression));
 			}
 
-			return member.Name;
+			return chain.ToString();
 		}
 	}
 }

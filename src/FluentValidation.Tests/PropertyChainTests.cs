@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Linq.Expressions;
 	using Internal;
 	using NUnit.Framework;
 
@@ -75,6 +76,13 @@ namespace FluentValidation.Tests {
 			otherChain.Add("Bar");
 
 			otherChain.IsChildChainOf(chain).ShouldBeFalse();
+		}
+
+		[Test]
+		public void Creates_from_expression() {
+			Expression<Func<Person, int>> expr = x => x.Address.Id;
+			var chain = PropertyChain.FromExpression(expr);
+			chain.ToString().ShouldEqual("Address.Id");
 		}
 
 		public class Parent {

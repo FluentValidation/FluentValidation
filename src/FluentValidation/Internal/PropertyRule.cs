@@ -46,7 +46,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Expression that was used to create the rule.
 		/// </summary>
-		public Expression Expression { get; private set; }
+		public LambdaExpression Expression { get; private set; }
 
 		/// <summary>
 		/// String source that can be used to retrieve the property name.
@@ -97,7 +97,7 @@ namespace FluentValidation.Internal {
 		/// <param name="cascadeModeThunk">Function to get the cascade mode.</param>
 		/// <param name="typeToValidate">Type to validate</param>
 		/// <param name="containerType">Container type that owns the property</param>
-		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, Expression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) {
+		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) {
 			Member = member;
 			PropertyFunc = propertyFunc;
 			Expression = expression;
@@ -105,7 +105,7 @@ namespace FluentValidation.Internal {
 			TypeToValidate = typeToValidate;
 			this.cascadeModeThunk = cascadeModeThunk;
 
-			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member);
+			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
 		}
 
 		/// <summary>

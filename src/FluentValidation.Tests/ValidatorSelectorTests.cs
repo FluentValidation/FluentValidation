@@ -82,6 +82,31 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
+		[Test]
+		public void Includes_nested_property() {
+			var validtor = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Address.Id).NotEqual(0)
+			};
+
+			var result = validtor.Validate(new Person { Address = new Address() }, "Address.Id");
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
+		}
+
+		[Test]
+		public void Includes_nested_property_using_expression() {
+			var validtor = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Address.Id).NotEqual(0)
+			};
+
+			var result = validtor.Validate(new Person { Address = new Address() }, x => x.Address.Id);
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
+
+		}
+
 		private PropertyRule CreateRule(Expression<Func<TestObject, object>> expression) {
 			var rule = PropertyRule.Create(expression);
 			rule.AddValidator(new NotNullValidator());
