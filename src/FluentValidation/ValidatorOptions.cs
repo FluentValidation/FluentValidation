@@ -35,7 +35,8 @@ namespace FluentValidation {
 
 		static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
 			if(expression != null) {
-				return PropertyChain.FromExpression(expression).ToString();
+				var chain = PropertyChain.FromExpression(expression);
+				if (chain.Count > 0) return chain.ToString();
 			}
 			
 			if(memberInfo != null) {
