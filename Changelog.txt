@@ -1,4 +1,4 @@
-3.0 -
+3.0 - 25 June 2011
 * Dropped compatibility for .NET 3.5 and MVC2.
 * Removed the SupportsStandaloneValidation property - this was never properly implemented.
 * Implemented Rule Sets
@@ -22,6 +22,7 @@
 * Better type safety using child collection validators.
 * Better control of which elements in a child collection are validated using the new Where method.
 * Support rules for nested properties at the top level (without needing to use a child validator)
+* Support DisplayAttribute/DisplayNameAttribute for inferring property names
 
 2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder
