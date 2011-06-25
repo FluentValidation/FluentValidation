@@ -18,6 +18,8 @@
 
 namespace FluentValidation {
 	using System;
+	using System.ComponentModel;
+	using System.ComponentModel.DataAnnotations;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Internal;
@@ -27,23 +29,52 @@ namespace FluentValidation {
 		public static Type ResourceProviderType;
 
 		private static Func<Type, MemberInfo, LambdaExpression, string> propertyNameResolver = DefaultPropertyNameResolver;
+		private static Func<Type, MemberInfo, LambdaExpression, string> displayNameResolver = DefaultDisplayNameResolver;
 
 		public static Func<Type, MemberInfo, LambdaExpression, string> PropertyNameResolver {
 			get { return propertyNameResolver; }
 			set { propertyNameResolver = value ?? DefaultPropertyNameResolver; }
 		}
 
+		public static Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver {
+			get { return displayNameResolver; }
+			set { displayNameResolver = value ?? DefaultDisplayNameResolver; }
+		}
+
 		static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
-			if(expression != null) {
+			if (expression != null) {
 				var chain = PropertyChain.FromExpression(expression);
 				if (chain.Count > 0) return chain.ToString();
 			}
-			
-			if(memberInfo != null) {
+
+			if (memberInfo != null) {
 				return memberInfo.Name;
 			}
 
 			return null;
+		}	
+		
+		static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
+			if (memberInfo == null) return null;
+
+			string name = null;
+
+			var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(memberInfo, typeof(DisplayAttribute));
+
+			if(displayAttribute != null) {
+				name = displayAttribute.GetName();
+			}
+
+			if(string.IsNullOrEmpty(name)) {
+				// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
+				var displayNameAttribute = (DisplayNameAttribute)Attribute.GetCustomAttribute(memberInfo, typeof(DisplayNameAttribute));
+				if(displayNameAttribute != null) {
+					name = displayNameAttribute.DisplayName;
+				}
+			}
+
+			return name;
 		}
+		
 	}
 }

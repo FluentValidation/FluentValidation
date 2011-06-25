@@ -49,9 +49,9 @@ namespace FluentValidation.Internal {
 		public LambdaExpression Expression { get; private set; }
 
 		/// <summary>
-		/// String source that can be used to retrieve the property name.
+		/// String source that can be used to retrieve the display name (if null, falls back to the property name)
 		/// </summary>
-		public IStringSource CustomPropertyName { get; set; }
+		public IStringSource DisplayName { get; set; }
 
 		/// <summary>
 		/// Rule set that this rule belongs to (if specified)
@@ -106,6 +106,8 @@ namespace FluentValidation.Internal {
 			this.cascadeModeThunk = cascadeModeThunk;
 
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
+			string displayName = ValidatorOptions.DisplayNameResolver(containerType, member, expression);
+			if (!string.IsNullOrEmpty(displayName)) DisplayName = new StaticStringSource(displayName);
 		}
 
 		/// <summary>
@@ -161,8 +163,8 @@ namespace FluentValidation.Internal {
 		public string PropertyDescription {
 			get {
 
-				if (CustomPropertyName != null) {
-					return CustomPropertyName.GetString();
+				if (DisplayName != null) {
+					return DisplayName.GetString();
 				}
 
 				return PropertyName.SplitPascalCase();
@@ -223,13 +225,13 @@ namespace FluentValidation.Internal {
 		}
 
 		private void EnsureValidPropertyName() {
-			if (PropertyName == null && CustomPropertyName == null) {
+			if (PropertyName == null && DisplayName == null) {
 				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
 			}
 		}
 
 		private string BuildPropertyName(ValidationContext context) {
-			return context.PropertyChain.BuildPropertyName(PropertyName ?? CustomPropertyName.GetString());
+			return context.PropertyChain.BuildPropertyName(PropertyName ?? DisplayName.GetString());
 		}
 	}
 }
