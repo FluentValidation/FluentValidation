@@ -18,8 +18,10 @@
 
 namespace FluentValidation {
 	using System;
+#if !WINDOWS_PHONE
 	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
+#endif
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Internal;
@@ -58,13 +60,16 @@ namespace FluentValidation {
 			if (memberInfo == null) return null;
 
 			string name = null;
-
+#if !WINDOWS_PHONE
 			var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(memberInfo, typeof(DisplayAttribute));
 
 			if(displayAttribute != null) {
 				name = displayAttribute.GetName();
 			}
+#endif
 
+#if !SILVERLIGHT
+			// Silverlight doesn't have DisplayAttribute.
 			if(string.IsNullOrEmpty(name)) {
 				// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
 				var displayNameAttribute = (DisplayNameAttribute)Attribute.GetCustomAttribute(memberInfo, typeof(DisplayNameAttribute));
@@ -72,7 +77,7 @@ namespace FluentValidation {
 					name = displayNameAttribute.DisplayName;
 				}
 			}
-
+#endif
 			return name;
 		}
 		
