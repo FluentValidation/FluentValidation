@@ -29,7 +29,7 @@ namespace FluentValidation.Mvc {
 			// We also want to ensure we copy across the CustomPropertyName and RuleSet, if specified. 
 			Rule = new PropertyRule(null, x => metadata.Model, null, null, metadata.ModelType, null) {
 				PropertyName = metadata.PropertyName,
-				CustomPropertyName = rule == null ? null : rule.CustomPropertyName,
+				DisplayName = rule == null ? null : rule.DisplayName,
 				RuleSet = rule == null ? null : rule.RuleSet
 			};
 		}
@@ -38,7 +38,7 @@ namespace FluentValidation.Mvc {
 			if (ShouldValidate) {
 				var fakeRule = new PropertyRule(null, x => Metadata.Model, null, null, Metadata.ModelType, null) {
 					PropertyName = Metadata.PropertyName,
-					CustomPropertyName = Rule == null ? null : Rule.CustomPropertyName,
+					DisplayName = Rule == null ? null : Rule.DisplayName,
 				};
 
 				var fakeParentContext = new ValidationContext(container);

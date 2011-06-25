@@ -64,7 +64,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Should_set_cutom_property_name() {
 			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
-			Assert.That(builder.Rule.CustomPropertyName.GetString(), Is.EqualTo("Foo"));
+			Assert.That(builder.Rule.DisplayName.GetString(), Is.EqualTo("Foo"));
 		}
 
 		[Test]
@@ -127,14 +127,14 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void PropertyDescription_should_return_property_name_split() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
-			builder.Rule.PropertyDescription.ShouldEqual("Date Of Birth");
+			builder.Rule.GetDisplayName().ShouldEqual("Date Of Birth");
 		}
 
 		[Test]
 		public void PropertyDescription_should_return_custom_property_name() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
 			builder.NotEqual(default(DateTime)).WithName("Foo");
-			builder.Rule.PropertyDescription.ShouldEqual("Foo");
+			builder.Rule.GetDisplayName().ShouldEqual("Foo");
 		}
 
 		[Test]
@@ -147,7 +147,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Rule_for_a_non_memberexpression_should_not_generate_property_name() {
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
-			builder.Rule.PropertyDescription.ShouldBeNull();
+			builder.Rule.GetDisplayName().ShouldBeNull();
 			builder.Rule.PropertyName.ShouldBeNull();
 		}
 

@@ -16,7 +16,7 @@
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
 			if (!ShouldGenerateClientSideRules()) yield break;
 
-			var formatter = new MessageFormatter().AppendPropertyName(Rule.PropertyDescription);
+			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
 			string message = formatter.BuildMessage(EmailValidator.ErrorMessageSource.GetString());
 			
 			yield return new ModelClientValidationRule {

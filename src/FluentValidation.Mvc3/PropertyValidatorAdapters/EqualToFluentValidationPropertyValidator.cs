@@ -24,7 +24,7 @@
 				// We only care about property comparisons in this case.
 
 				var formatter = new MessageFormatter()
-					.AppendPropertyName(Rule.PropertyDescription)
+					.AppendPropertyName(Rule.GetDisplayName())
 					.AppendArgument("PropertyValue", propertyToCompare.Name);
 
 

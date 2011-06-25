@@ -19,7 +19,7 @@
 			if(!ShouldGenerateClientSideRules()) yield break;
 
 			var formatter = new MessageFormatter()
-				.AppendPropertyName(Rule.PropertyDescription)
+				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("MinLength", LengthValidator.Min)
 				.AppendArgument("MaxLength", LengthValidator.Max);
 

@@ -34,7 +34,7 @@ namespace FluentValidation.Validators {
 		public string PropertyName { get; private set; }
 		
 		public string PropertyDescription {
-			get { return Rule.PropertyDescription; } 
+			get { return Rule.GetDisplayName(); } 
 		}
 
 		public object Instance {

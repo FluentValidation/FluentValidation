@@ -160,15 +160,12 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Display name for the property. 
 		/// </summary>
-		public string PropertyDescription {
-			get {
-
-				if (DisplayName != null) {
-					return DisplayName.GetString();
-				}
-
-				return PropertyName.SplitPascalCase();
+		public string GetDisplayName() {
+			if (DisplayName != null) {
+				return DisplayName.GetString();
 			}
+
+			return PropertyName.SplitPascalCase();
 		}
 
 		/// <summary>

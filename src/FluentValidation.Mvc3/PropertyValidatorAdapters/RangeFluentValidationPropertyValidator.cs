@@ -18,7 +18,7 @@
 			if (!ShouldGenerateClientSideRules()) yield break;
 
 			var formatter = new MessageFormatter()
-				.AppendPropertyName(Rule.PropertyDescription)
+				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
 

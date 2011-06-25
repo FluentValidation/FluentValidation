@@ -203,7 +203,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string overridePropertyName) {
 			overridePropertyName.Guard("A property name must be specified when calling WithName.");
 			return rule.Configure(config => {
-				config.CustomPropertyName = new StaticStringSource(overridePropertyName);	
+				config.DisplayName = new StaticStringSource(overridePropertyName);	
 			});
 		}
 
@@ -219,7 +219,7 @@ namespace FluentValidation {
 			resourceAccessorBuilder = resourceAccessorBuilder ?? new StaticResourceAccessorBuilder();
 			
 			return rule.Configure(config => {
-				config.CustomPropertyName = LocalizedStringSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
+				config.DisplayName = LocalizedStringSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
 			});
 		}
 
