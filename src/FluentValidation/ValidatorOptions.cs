@@ -20,7 +20,7 @@ namespace FluentValidation {
 	using System;
 #if !WINDOWS_PHONE
 	using System.ComponentModel;
-	using System.ComponentModel.DataAnnotations;
+	//using System.ComponentModel.DataAnnotations;
 #endif
 	using System.Linq;
 	using System.Linq.Expressions;
