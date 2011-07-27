@@ -163,6 +163,11 @@ namespace FluentValidation {
 			}
 		}
 
+		public SharedConditionRuleHelper<T> When( Func<T, bool> predicate )
+		{
+			return new SharedConditionRuleHelper<T>( predicate );
+		}
+
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection of validation rules.
 		/// </summary>
