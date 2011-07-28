@@ -164,19 +164,9 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> When<T,TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling When.");
-
+			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			return rule.Configure(config => {
-				// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-				if (applyConditionTo == ApplyConditionTo.AllValidators) {
-					foreach (var validator in config.Validators.ToList()) {
-						var wrappedValidator = new DelegatingValidator(x => predicate((T)x), validator);
-						config.ReplaceValidator(validator, wrappedValidator);
-					}
-				}
-				else {
-					var wrappedValidator = new DelegatingValidator(x => predicate((T)x), config.CurrentValidator);
-					config.ReplaceValidator(config.CurrentValidator, wrappedValidator);
-				}
+				config.ApplyCondition(x => predicate((T)x), applyConditionTo);
 			});
 		}
 

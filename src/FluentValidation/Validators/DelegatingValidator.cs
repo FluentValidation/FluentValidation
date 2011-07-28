@@ -24,10 +24,10 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
-		private readonly Predicate<object> condition;
+		private readonly Func<object, bool> condition;
 		public IPropertyValidator InnerValidator { get; private set; }
 
-		public DelegatingValidator(Predicate<object> condition, IPropertyValidator innerValidator) {
+		public DelegatingValidator(Func<object, bool> condition, IPropertyValidator innerValidator) {
 			this.condition = condition;
 			InnerValidator = innerValidator;
 		}

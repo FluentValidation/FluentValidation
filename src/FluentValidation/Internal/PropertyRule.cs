@@ -230,5 +230,19 @@ namespace FluentValidation.Internal {
 		private string BuildPropertyName(ValidationContext context) {
 			return context.PropertyChain.BuildPropertyName(PropertyName ?? DisplayName.GetString());
 		}
+
+		public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo) {
+			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
+			if (applyConditionTo == ApplyConditionTo.AllValidators) {
+				foreach (var validator in Validators.ToList()) {
+					var wrappedValidator = new DelegatingValidator(predicate, validator);
+					ReplaceValidator(validator, wrappedValidator);
+				}
+			}
+			else {
+				var wrappedValidator = new DelegatingValidator(predicate, CurrentValidator);
+				ReplaceValidator(CurrentValidator, wrappedValidator);
+			}
+		}
 	}
 }
