@@ -149,6 +149,7 @@
     </Compile>
     <Compile Include="TestValidator.cs" />
     <Compile Include="CustomMessageFormatTester.cs" />
+    <Compile Include="TrackingCollectionTests.cs" />
     <Compile Include="UserStateTester.cs" />
     <Compile Include="ValidateAndThrowTester.cs" />
     <Compile Include="ValidationResultExtensionTests.cs" />

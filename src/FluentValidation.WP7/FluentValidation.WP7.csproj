@@ -107,6 +107,9 @@
     <Compile Include="..\FluentValidation\Internal\DefaultValidatorSelector.cs">
       <Link>DefaultValidatorSelector.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Internal\TrackingCollection.cs">
+      <Link>TrackingCollection.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Internal\DelegateValidator.cs">
       <Link>DelegateValidator.cs</Link>
     </Compile>
