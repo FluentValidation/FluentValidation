@@ -50,10 +50,10 @@ namespace FluentValidation.Tests {
 				// RuleFor() respects the grouped When() and 
 				// Unless() predicates.
 				// 
-				When(x => x.Id > 0, () => {
+				When(x => x.Id > 0 && x.Age <= 65, () => {
 					RuleFor(x => x.Orders.Count).Equal(0).Unless(x => String.IsNullOrWhiteSpace(x.CreditCard) == false);
-				})
-				.Unless(x => x.Age > 65);
+				});
+				//.Unless(x => x.Age > 65);
 			}
 		}
 

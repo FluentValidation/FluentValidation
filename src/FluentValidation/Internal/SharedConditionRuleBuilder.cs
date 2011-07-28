@@ -21,17 +21,17 @@ namespace FluentValidation.Internal {
 	using System.Collections.Generic;
 
 	public interface ISharedConditionRuleBuilder<T> {
-		void Unless(Func<T, bool> predicate);
+	//	void Unless(Func<T, bool> predicate);
 	}
 
 	public class SharedConditionRuleBuilder<T> : ISharedConditionRuleBuilder<T> {
 		readonly List<PropertyRule> propertyRules = new List<PropertyRule>();
 
-		public void Unless(Func<T, bool> predicate) {
-			foreach (var rule in propertyRules) {
-				rule.ApplyCondition(x => !predicate((T)x));
-			}
-		}
+//		public void Unless(Func<T, bool> predicate) {
+//			foreach (var rule in propertyRules) {
+//				rule.ApplyCondition(x => !predicate((T)x));
+//			}
+//		}
 
 		public void Add(PropertyRule rule) {
 			propertyRules.Add(rule);
