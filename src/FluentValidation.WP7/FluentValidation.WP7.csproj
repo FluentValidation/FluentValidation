@@ -107,6 +107,9 @@
     <Compile Include="..\FluentValidation\Internal\DefaultValidatorSelector.cs">
       <Link>DefaultValidatorSelector.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Internal\SharedConditionRuleBuilder.cs">
+      <Link>SharedConditionRuleBuilder.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Internal\TrackingCollection.cs">
       <Link>TrackingCollection.cs</Link>
     </Compile>
