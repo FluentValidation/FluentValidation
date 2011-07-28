@@ -31,8 +31,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T">The type of the object being validated</typeparam>
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
-		readonly List<IValidationRule> nestedValidators = new List<IValidationRule>();
-		string currentRuleSetName = null;
+		readonly TrackingCollection<IValidationRule> nestedValidators = new TrackingCollection<IValidationRule>();
 
 		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
 
@@ -88,10 +87,6 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="rule"></param>
 		public void AddRule(IValidationRule rule) {
-			if(currentRuleSetName != null) {
-				rule.RuleSet = currentRuleSetName;
-			}
-
 			nestedValidators.Add(rule);
 		}
 
@@ -154,12 +149,8 @@ namespace FluentValidation {
 			ruleSetName.Guard("A name must be specified when calling RuleSet.");
 			action.Guard("A ruleset definition must be specified when calling RuleSet.");
 
-			try {
-				currentRuleSetName = ruleSetName;
+			using (nestedValidators.OnItemAdded(r => r.RuleSet = ruleSetName)) {
 				action();
-			}
-			finally {
-				currentRuleSetName = null;
 			}
 		}
 
