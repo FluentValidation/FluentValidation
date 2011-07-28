@@ -155,6 +155,32 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Defines a condition that applies to several rules
+		/// </summary>
+		/// <param name="predicate">The condition that should apply to multiple rules</param>
+		/// <param name="action">Action that encapsulates the rules.</param>
+		/// <returns></returns>
+		public ISharedConditionRuleBuilder<T> When(Func<T, bool> predicate, Action action) {
+			var ruleBuilder = new SharedConditionRuleBuilder<T>();
+
+			Action<IValidationRule> onRuleAdded = rule => {
+				var propertyRule = rule as PropertyRule;
+				if(propertyRule != null) {
+					ruleBuilder.Add(propertyRule);
+				}
+			};
+
+			using(nestedValidators.OnItemAdded(onRuleAdded)) {
+				action();
+			}
+
+			// Must apply the predictae after the rule has been fully created to ensure any rules-specific conditions have already been applied.
+			ruleBuilder.ApplyPredicate(predicate);
+
+			return ruleBuilder;
+		} 
+
+		/// <summary>
 		/// Returns an enumerator that iterates through the collection of validation rules.
 		/// </summary>
 		/// <returns>
