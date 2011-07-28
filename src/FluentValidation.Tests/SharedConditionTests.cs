@@ -118,7 +118,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void Outer_Until_clause_will_trump_an_inner_Until_clause_when_inner_fails_but_the_outer_is_satisfied() {
+		public void Outer_Unless_clause_will_trump_an_inner_Unless_clause_when_inner_fails_but_the_outer_is_satisfied() {
 			var validator = new SharedConditionWithScopedUnlessValidator();
 			var person = new Person() {
 			                          	Id = 4, // triggers the shared When predicate
