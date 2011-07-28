@@ -56,7 +56,6 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CustomizeValidatorAttribute.cs" />
-    <Compile Include="FluentValidationModelMetadataProvider.cs" />
     <Compile Include="FluentValidationModelValidator.cs" />
     <Compile Include="FluentValidationModelValidatorProvider.cs" />
     <Compile Include="PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs" />

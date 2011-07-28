@@ -1,5 +1,6 @@
 3.1 -
 * Support using nullables with cross-property comparisons (GreaterThan/GreaterThanOrEqual/LessThan/LessThanOrEqual)
+* Deprecate and exclude mvc metadata extensions. This is out of scope for FV, but the code for this functionality is still in the repo if anyone still depends on this.
 
 3.0.0.1 - 5 July 2011
 * Workaround issue caused by referencing DataAnnotations in windows client projects (eg WPF). Does not affect web projects/silverlight.
