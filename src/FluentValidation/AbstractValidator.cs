@@ -160,13 +160,13 @@ namespace FluentValidation {
 		/// <param name="predicate">The condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public ISharedConditionRuleBuilder<T> When(Func<T, bool> predicate, Action action) {
-			var ruleBuilder = new SharedConditionRuleBuilder<T>();
+		public void When(Func<T, bool> predicate, Action action) {
+			var propertyRules = new List<PropertyRule>();
 
 			Action<IValidationRule> onRuleAdded = rule => {
 				var propertyRule = rule as PropertyRule;
 				if(propertyRule != null) {
-					ruleBuilder.Add(propertyRule);
+					propertyRules.Add(propertyRule);
 				}
 			};
 
@@ -175,10 +175,18 @@ namespace FluentValidation {
 			}
 
 			// Must apply the predictae after the rule has been fully created to ensure any rules-specific conditions have already been applied.
-			ruleBuilder.ApplyPredicate(predicate);
+			Func<object, bool> nonGenericPredicate = x => predicate((T)x);
+			propertyRules.ForEach(x => x.ApplyCondition(nonGenericPredicate));
+		}
 
-			return ruleBuilder;
-		} 
+		/// <summary>
+		/// Defiles an inverse condition that applies to several rules
+		/// </summary>
+		/// <param name="predicate">The condition that should be applied to multiple rules</param>
+		/// <param name="action">Action that encapsulates the rules</param>
+		public void Unless(Func<T, bool> predicate, Action action) {
+			When(x => !predicate(x), action);
+		}
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection of validation rules.

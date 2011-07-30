@@ -57,6 +57,14 @@ namespace FluentValidation.Tests {
 			}
 		}
 
+		class SharedConditionInverseValidator : AbstractValidator<Person> {
+			public SharedConditionInverseValidator() {
+				Unless(x => x.Id == 0, () => {
+					RuleFor(x => x.Forename).NotNull();
+				});
+			}
+		}
+
 		[Test]
 		public void Shared_When_is_not_applied_to_grouped_rules_when_initial_predicate_is_false() {
 			var validator = new SharedConditionValidator();
@@ -161,6 +169,20 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person { Id = 5 }, ruleSet: "foo");
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
+		}
+
+		[Test]
+		public void Rules_invoke_when_inverse_shared_condition_matches() {
+			var validator = new SharedConditionInverseValidator();
+			var result = validator.Validate(new Person { Id = 1 });
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Test]
+		public void Rules_not_invoked_when_inverse_shared_condition_does_not_match() {
+			var validator = new SharedConditionInverseValidator();
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
 		}
 	}
 }

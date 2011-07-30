@@ -1,4 +1,4 @@
-3.1 -
+3.1 - 29 July 2011
 * Support using nullables with cross-property comparisons (GreaterThan/GreaterThanOrEqual/LessThan/LessThanOrEqual)
 * Deprecate and exclude mvc metadata extensions. This is out of scope for FV, but the code for this functionality is still in the repo if anyone still depends on this.
 * Add support for shared conditions based on David Alpert's patch.
