@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Validators {
+	using System;
 	using System.Collections;
 	using System.Reflection;
 	using Attributes;
@@ -24,7 +25,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class EqualValidator : PropertyValidator, IComparisonValidator {
-		readonly PropertySelector func;
+		readonly Func<object, object> func;
 		readonly IEqualityComparer comparer;
 
 		public EqualValidator(object valueToCompare) : base(() => Messages.equal_error) {
@@ -37,13 +38,13 @@ namespace FluentValidation.Validators {
 			this.comparer = comparer;
 		}
 
-		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member)
+		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member)
 			: base(() => Messages.equal_error)  {
 			func = comparisonProperty;
 			MemberToCompare = member;
 		}
 
-		public EqualValidator(PropertySelector comparisonProperty, MemberInfo member, IEqualityComparer comparer)
+		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member, IEqualityComparer comparer)
 			: base(() => Messages.equal_error) {
 			func = comparisonProperty;
 			MemberToCompare = member;

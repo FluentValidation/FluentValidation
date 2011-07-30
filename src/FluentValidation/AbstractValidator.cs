@@ -175,8 +175,7 @@ namespace FluentValidation {
 			}
 
 			// Must apply the predictae after the rule has been fully created to ensure any rules-specific conditions have already been applied.
-			Func<object, bool> nonGenericPredicate = x => predicate((T)x);
-			propertyRules.ForEach(x => x.ApplyCondition(nonGenericPredicate));
+			propertyRules.ForEach(x => x.ApplyCondition(predicate.CoerceToNonGeneric()));
 		}
 
 		/// <summary>

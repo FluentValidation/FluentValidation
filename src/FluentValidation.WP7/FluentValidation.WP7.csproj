@@ -140,9 +140,6 @@
     <Compile Include="..\FluentValidation\Internal\PropertyRule.cs">
       <Link>PropertyRule.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\PropertySelector.cs">
-      <Link>PropertySelector.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Internal\RuleBuilder.cs">
       <Link>RuleBuilder.cs</Link>
     </Compile>

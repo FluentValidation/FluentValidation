@@ -27,7 +27,8 @@ namespace FluentValidation.Validators {
 		public GreaterThanValidator(IComparable value) : base(value, () => Messages.greaterthan_error) {
 		}
 
-		public GreaterThanValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member, () => Messages.greaterthan_error) {
+		public GreaterThanValidator(Func<object, object> valueToCompareFunc, MemberInfo member)
+			: base(valueToCompareFunc, member, () => Messages.greaterthan_error) {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {

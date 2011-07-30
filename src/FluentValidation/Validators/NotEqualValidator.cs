@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Validators {
+	using System;
 	using System.Collections;
 	using System.Reflection;
 	using Attributes;
@@ -25,14 +26,15 @@ namespace FluentValidation.Validators {
 
 	public class NotEqualValidator : PropertyValidator, IComparisonValidator {
 		readonly IEqualityComparer comparer;
-		readonly PropertySelector func;
+		readonly Func<object, object> func;
 
-		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare) : base(() => Messages.notequal_error) {
+		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare)
+			: base(() => Messages.notequal_error) {
 			this.func = func;
 			MemberToCompare = memberToCompare;
 		}
 
-		public NotEqualValidator(PropertySelector func, MemberInfo memberToCompare, IEqualityComparer equalityComparer)
+		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare, IEqualityComparer equalityComparer)
 			: base(() => Messages.notequal_error) {
 			this.func = func;
 			this.comparer = equalityComparer;

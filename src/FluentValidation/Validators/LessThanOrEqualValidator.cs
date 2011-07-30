@@ -28,7 +28,8 @@ namespace FluentValidation.Validators {
 		public LessThanOrEqualValidator(IComparable value) : base(value, () => Messages.lessthanorequal_error) {
 		}
 
-		public LessThanOrEqualValidator(PropertySelector valueToCompareFunc, MemberInfo member) : base(valueToCompareFunc, member, () => Messages.lessthanorequal_error) {
+		public LessThanOrEqualValidator(Func<object, object> valueToCompareFunc, MemberInfo member)
+			: base(valueToCompareFunc, member, () => Messages.lessthanorequal_error) {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {

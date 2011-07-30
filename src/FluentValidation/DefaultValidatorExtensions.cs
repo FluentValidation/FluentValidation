@@ -124,10 +124,9 @@ namespace FluentValidation {
 		/// <param name="comparer">Equality Comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-																			   Expression<PropertySelector<T, TProperty>> expression, IEqualityComparer comparer = null) {
+																			   Expression<Func<T, TProperty>> expression, IEqualityComparer comparer = null) {
 			var func = expression.Compile();
-			PropertySelector selector = x => func((T)x);
-			return ruleBuilder.SetValidator(new NotEqualValidator(selector, expression.GetMember(), comparer));
+			return ruleBuilder.SetValidator(new NotEqualValidator(func.CoerceToNonGeneric(), expression.GetMember(), comparer));
 		}
 
 		/// <summary>
@@ -156,8 +155,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression, IEqualityComparer comparer = null) {
 			var func = expression.Compile();
-			PropertySelector propertySelector = x => func((T)x);
-			return ruleBuilder.SetValidator(new EqualValidator(propertySelector, expression.GetMember(), comparer));
+			return ruleBuilder.SetValidator(new EqualValidator(func.CoerceToNonGeneric(), expression.GetMember(), comparer));
 		}
 
 		/// <summary>
@@ -334,9 +332,8 @@ namespace FluentValidation {
 			expression.Guard("Cannot pass null to LessThan");
 
 			var func = expression.Compile();
-			PropertySelector selector = x => func((T)x);
 
-			return ruleBuilder.SetValidator(new LessThanValidator(selector, expression.GetMember()));
+			return ruleBuilder.SetValidator(new LessThanValidator(func.CoerceToNonGeneric(), expression.GetMember()));
 		}
 
 		/// <summary>
@@ -355,9 +352,8 @@ namespace FluentValidation {
 			expression.Guard("Cannot pass null to LessThan");
 
 			var func = expression.Compile();
-			PropertySelector selector = x => func((T)x);
 
-			return ruleBuilder.SetValidator(new LessThanValidator(selector, expression.GetMember()));
+			return ruleBuilder.SetValidator(new LessThanValidator(func.CoerceToNonGeneric(), expression.GetMember()));
 		}
 
 		/// <summary>
@@ -374,9 +370,8 @@ namespace FluentValidation {
 			this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression)
 			where TProperty : IComparable<TProperty>, IComparable {
 			var func = expression.Compile();
-			PropertySelector selector = x => func((T)x);
 
-			return ruleBuilder.SetValidator(new LessThanOrEqualValidator(selector, expression.GetMember()));
+			return ruleBuilder.SetValidator(new LessThanOrEqualValidator(func.CoerceToNonGeneric(), expression.GetMember()));
 		}
 
 		/// <summary>
@@ -394,9 +389,8 @@ namespace FluentValidation {
 			where TProperty : struct, IComparable<TProperty>, IComparable
 		{
 			var func = expression.Compile();
-			PropertySelector selector = x => func((T)x);
 
-			return ruleBuilder.SetValidator(new LessThanOrEqualValidator(selector, expression.GetMember()));
+			return ruleBuilder.SetValidator(new LessThanOrEqualValidator(func.CoerceToNonGeneric(), expression.GetMember()));
 		}
 
 		/// <summary>
@@ -413,9 +407,8 @@ namespace FluentValidation {
 		                                                                          Expression<Func<T, TProperty>> expression)
 			where TProperty : IComparable<TProperty>, IComparable {
 			var func = expression.Compile();
-			PropertySelector selector = x => func((T)x);
 
-			return ruleBuilder.SetValidator(new GreaterThanValidator(selector, expression.GetMember()));
+			return ruleBuilder.SetValidator(new GreaterThanValidator(func.CoerceToNonGeneric(), expression.GetMember()));
 		}
 
 
@@ -434,9 +427,8 @@ namespace FluentValidation {
 			where TProperty : struct, IComparable<TProperty>, IComparable
 		{
 			var func = expression.Compile();
-			PropertySelector selector = x => func((T)x);
 
-			return ruleBuilder.SetValidator(new GreaterThanValidator(selector, expression.GetMember()));
+			return ruleBuilder.SetValidator(new GreaterThanValidator(func.CoerceToNonGeneric(), expression.GetMember()));
 		}
 
 
@@ -454,9 +446,8 @@ namespace FluentValidation {
 			this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> valueToCompare)
 			where TProperty : IComparable<TProperty>, IComparable {
 			var func = valueToCompare.Compile();
-			PropertySelector selector = x => func((T)x);
 
-			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator(selector, valueToCompare.GetMember()));
+			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator(func.CoerceToNonGeneric(), valueToCompare.GetMember()));
 		}
 
 
@@ -475,9 +466,8 @@ namespace FluentValidation {
 			where TProperty : struct, IComparable<TProperty>, IComparable
 		{
 			var func = valueToCompare.Compile();
-			PropertySelector selector = x => func((T)x);
 
-			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator(selector, valueToCompare.GetMember()));
+			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator(func.CoerceToNonGeneric(), valueToCompare.GetMember()));
 		}
 
 		/// <summary>

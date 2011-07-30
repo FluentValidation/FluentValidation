@@ -41,7 +41,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that can be invoked to retrieve the value of the property.
 		/// </summary>
-		public PropertySelector PropertyFunc { get; private set; }
+		public Func<object, object> PropertyFunc { get; private set; }
 
 		/// <summary>
 		/// Expression that was used to create the rule.
@@ -97,7 +97,7 @@ namespace FluentValidation.Internal {
 		/// <param name="cascadeModeThunk">Function to get the cascade mode.</param>
 		/// <param name="typeToValidate">Type to validate</param>
 		/// <param name="containerType">Container type that owns the property</param>
-		public PropertyRule(MemberInfo member, PropertySelector propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) {
+		public PropertyRule(MemberInfo member, Func<object, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) {
 			Member = member;
 			PropertyFunc = propertyFunc;
 			Expression = expression;
@@ -123,9 +123,8 @@ namespace FluentValidation.Internal {
 		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
 			var member = expression.GetMember();
 			var compiled = expression.Compile();
-			PropertySelector propertySelector = x => compiled((T)x);
 
-			return new PropertyRule(member, propertySelector, expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+			return new PropertyRule(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
 		}
 
 		/// <summary>

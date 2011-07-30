@@ -51,7 +51,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Action<T> onFailure) {
 			return rule.Configure(config => {
-				config.OnFailure = x => onFailure((T)x);
+				config.OnFailure = onFailure.CoerceToNonGeneric();
 			});
 		}
 
@@ -91,7 +91,7 @@ namespace FluentValidation {
 				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
 
 				funcs
-					.Select(func => new Func<object, object>(x => func((T)x)))
+					.Select(func => func.CoerceToNonGeneric())
 					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
 			});
 		}
@@ -131,7 +131,7 @@ namespace FluentValidation {
 			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder())
 				.Configure(cfg => {
 					formatArgs
-						   .Select(func => new Func<object, object>(x => func((T)x)))
+						   .Select(func => func.CoerceToNonGeneric())
 						   .ForEach(cfg.CurrentValidator.CustomMessageFormatArguments.Add);
 				});
 			
@@ -166,7 +166,7 @@ namespace FluentValidation {
 			predicate.Guard("A predicate must be specified when calling When.");
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			return rule.Configure(config => {
-				config.ApplyCondition(x => predicate((T)x), applyConditionTo);
+				config.ApplyCondition(predicate.CoerceToNonGeneric(), applyConditionTo);
 			});
 		}
 
@@ -247,7 +247,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState");
-			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = x => stateProvider((T)x));
+			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = stateProvider.CoerceToNonGeneric());
 		}
 
 		static Func<T, object>[] ConvertArrayOfObjectsToArrayOfDelegates<T>(object[] objects) {

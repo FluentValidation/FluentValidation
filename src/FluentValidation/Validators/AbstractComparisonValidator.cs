@@ -26,14 +26,15 @@ namespace FluentValidation.Validators {
 
 	public abstract class AbstractComparisonValidator : PropertyValidator, IComparisonValidator {
 
-		readonly PropertySelector valueToCompareFunc;
+		readonly Func<object, object> valueToCompareFunc;
 
 		protected AbstractComparisonValidator(IComparable value, Expression<Func<string>> errorMessageSelector) : base(errorMessageSelector) {
 			value.Guard("value must not be null.");
 			ValueToCompare = value;
 		}
 
-		protected AbstractComparisonValidator(PropertySelector valueToCompareFunc, MemberInfo member, Expression<Func<string>> errorMessageSelector) : base(errorMessageSelector) {
+		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, Expression<Func<string>> errorMessageSelector)
+			: base(errorMessageSelector) {
 			this.valueToCompareFunc = valueToCompareFunc;
 			this.MemberToCompare = member;
 		}

@@ -99,9 +99,6 @@
     <Compile Include="..\FluentValidation\Internal\MessageFormatter.cs">
       <Link>MessageFormatter.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\PropertySelector.cs">
-      <Link>PropertySelector.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Internal\RulesetValidatorSelector.cs">
       <Link>RulesetValidatorSelector.cs</Link>
     </Compile>

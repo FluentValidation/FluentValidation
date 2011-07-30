@@ -134,6 +134,18 @@ namespace FluentValidation.Internal {
 			return interfaces.Any();
 		}
 
+		public static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {
+			return x => func((T)x);
+		} 
+
+		public static Func<object, bool> CoerceToNonGeneric<T>(this Func<T, bool> func) {
+			return x => func((T)x);
+		}
+
+		public static Action<object> CoerceToNonGeneric<T>(this Action<T> action) {
+			return x => action((T)x);
+		}
+
 #if WINDOWS_PHONE
 		// WP7 doesn't support expression tree compilation.
 		// As a workaround, this extension method falls back to delegate compilation. 
