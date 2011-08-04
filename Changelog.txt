@@ -1,3 +1,6 @@
+3.2 - 
+* Fixed issue #7084 (NotEmptyValidator does not work with EntityCollection<T>)
+
 3.1 - 29 July 2011
 * Support using nullables with cross-property comparisons (GreaterThan/GreaterThanOrEqual/LessThan/LessThanOrEqual)
 * Deprecate and exclude mvc metadata extensions. This is out of scope for FV, but the code for this functionality is still in the repo if anyone still depends on this.

@@ -19,8 +19,9 @@
 namespace FluentValidation.Validators {
 	using System.Collections;
 	using Resources;
+	using System.Linq;
 
-	public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
+    public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
 		readonly object defaultValueForType;
 
 		public NotEmptyValidator(object defaultValueForType) : base(() => Messages.notempty_error) {
@@ -39,8 +40,8 @@ namespace FluentValidation.Validators {
 		}
 
 		bool IsEmptyCollection(object propertyValue) {
-			var collection = propertyValue as ICollection;
-			return collection != null && collection.Count == 0;
+			var collection = propertyValue as IEnumerable;
+		    return collection != null && !collection.Cast<object>().Any();
 		}
 
 		bool IsInvalidString(object value) {

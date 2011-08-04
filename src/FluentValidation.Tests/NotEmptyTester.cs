@@ -113,5 +113,21 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person { Surname = null });
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' should not be empty.");
 		}
+
+	    [Test]
+	    public void Fails_for_ienumerable_that_doesnt_implement_ICollection() {
+	        var validator = new InlineValidator<TestModel> {
+                v => v.RuleFor(x => x.Strings).NotEmpty()
+	        };
+
+	        var result = validator.Validate(new TestModel());
+            result.IsValid.ShouldBeFalse();
+	    }
+
+        public class TestModel {
+            public IEnumerable<string> Strings {
+                get { yield break; }
+            } 
+        }
 	}
 }
