@@ -117,6 +117,15 @@
     <Compile Include="..\FluentValidation\Resources\StaticStringSource.cs">
       <Link>StaticStringSource.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\ValidationTestException.cs">
+      <Link>ValidationTestException.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\ValidatorTester.cs">
+      <Link>ValidatorTester.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\ValidatorTestExtensions.cs">
+      <Link>ValidatorTestExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\ValidationContext.cs">
       <Link>ValidationContext.cs</Link>
     </Compile>
