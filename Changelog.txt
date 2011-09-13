@@ -1,5 +1,6 @@
 3.2 - 
 * Fixed issue #7084 (NotEmptyValidator does not work with EntityCollection<T>)
+* Fixed issue #7087 (AbstractValidator.Custom ignores RuleSets and always runs)
 
 3.1 - 29 July 2011
 * Support using nullables with cross-property comparisons (GreaterThan/GreaterThanOrEqual/LessThan/LessThanOrEqual)

@@ -58,6 +58,24 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().PropertyName.ShouldEqual("Orders[0].Amount");
 		}
 
+	    [Test]
+	    public void Customm_within_ruleset() {
+            var validator = new InlineValidator<Person>();
+            validator.RuleSet("foo", () => {
+                validator.Custom(x => {
+                    return new ValidationFailure("x", "y");
+                });
+            });
+            validator.RuleSet("bar", () => {
+                validator.Custom(x => {
+                    return new ValidationFailure("x", "y");
+                });
+            });
+
+            var result = validator.Validate(new Person(), ruleSet: "foo");
+            result.Errors.Count.ShouldEqual(1);
+	    }
+
 		private class NestedOrderValidator : AbstractValidator<Order> {
 			public NestedOrderValidator() {
 				Custom((x, ctx) => {

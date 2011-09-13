@@ -3,6 +3,10 @@
     <ExternalPath IsNull="False">
     </ExternalPath>
     <Sharing>SOLUTION</Sharing>
+    <CSS>
+      <FormatSettings />
+      <Naming2 />
+    </CSS>
     <CSharp>
       <FormatSettings>
         <ANONYMOUS_METHOD_DECLARATION_BRACES>END_OF_LINE</ANONYMOUS_METHOD_DECLARATION_BRACES>
@@ -60,6 +64,9 @@
         <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="Other" />
       </Naming2>
     </CSharp>
+    <HTML>
+      <FormatSettings />
+    </HTML>
     <JavaScript>
       <FormatSettings />
       <Naming2 />
@@ -75,12 +82,12 @@
     <Web>
       <Naming2 />
     </Web>
-    <Xaml>
-      <Naming2 />
-    </Xaml>
     <XML>
       <FormatSettings />
     </XML>
+    <Xaml>
+      <Naming2 />
+    </Xaml>
     <FileHeader Region="License"><![CDATA[Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 
 Licensed under the Apache License, Version 2.0 (the "License"); 

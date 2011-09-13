@@ -42,7 +42,7 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyPath">Property path (eg Customer.Address.Line1)</param>
 		/// <param name="context">Contextual information</param>
 		/// <returns>Whether or not the validator can execute.</returns>
-		public bool CanExecute (PropertyRule rule, string propertyPath, ValidationContext context) {
+		public bool CanExecute (IValidationRule rule, string propertyPath, ValidationContext context) {
 			// Validator selector only applies to the top level.
  			// If we're running in a child context then this means that the child validator has already been selected
 			// Because of this, we assume that the rule should continue (ie if the parent rule is valid, all children are valid)

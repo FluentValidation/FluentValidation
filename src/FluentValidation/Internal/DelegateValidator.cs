@@ -19,6 +19,7 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using Results;
 	using Validators;
 
@@ -70,6 +71,10 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		public IEnumerable<ValidationFailure> Validate(ValidationContext context) {
+            if (!context.Selector.CanExecute(this, "", context)) {
+                return Enumerable.Empty<ValidationFailure>();
+            }
+
 			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector);
 			return Validate(newContext);
 		}
