@@ -11,3 +11,5 @@ _ReSharper*
 *.cache
 TestResult.xml
 *.orig
+.hg/
+.hgignore
