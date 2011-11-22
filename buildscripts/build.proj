@@ -10,6 +10,7 @@
 		<BuildSilverlight Condition="'$(BuildSilverlight)' == ''" >true</BuildSilverlight>
 		<TestAssemblies>
 			$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll;
+			$(BaseDir)\src\FluentValidation.Tests.Mvc4\bin\$(Configuration)\FluentValidation.Tests.Mvc4.dll;
 		</TestAssemblies>
 		<MSBuildExtensions>$(BaseDir)\lib\msbuild\msbuild.community.tasks.dll</MSBuildExtensions>
 	</PropertyGroup>
@@ -39,6 +40,7 @@
 		<ItemGroup>
 			<MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\**\*.*" />
 			<Mvc3Binaries Include="$(BaseDir)\src\FluentValidation.Mvc3\bin\$(Configuration)\FluentValidation.Mvc.*" />
+			<Mvc4Binaries Include="$(BaseDir)\src\FluentValidation.Mvc4\bin\$(Configuration)\FluentValidation.Mvc.*" />
 			<SilverlightBinaries Include="$(BaseDir)\src\FluentValidation.Silverlight\bin\$(Configuration)\**\*.*" />
 			<!--<WP7Binaries Include="$(BaseDir)\src\FluentValidation.WP7\bin\$(Configuration)\**\*.*" />-->
 			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
@@ -47,6 +49,7 @@
 		<!-- Copy to the output directory -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation\%(RecursiveDir)"  />
 		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC3" />
+		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC4" />
 		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(OutputDir)\Silverlight\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
 		<!--<Copy SourceFiles="@(WP7Binaries)" DestinationFolder="$(OutputDir)\WP7\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>-->
 		<Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
@@ -63,10 +66,13 @@
 		<!-- First copy the nuspec template files to the package dir -->
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation" />
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC3.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3" />
+		
+		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC4.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4" />
 
 		<!-- Copy the source files to the package dir -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\Net40\%(RecursiveDir)" />
 		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3\lib\Net40" />
+		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4\lib\Net40" />
 		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
     <!--<Copy SourceFiles="@(WP7Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\sl3-wp\%(RecursiveDir)" Condition="'$(BuildSilverlight)'=='true'" />-->
     
@@ -88,6 +94,12 @@
 			XPath="/package/metadata/version"
 			Value="%(AsmInfo.Version)" />
 
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4\FluentValidation.MVC4.nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+
 		<!-- Also need to insert the version number into the MVC3 dependencies section -->
 		
 		<XmlUpdate
@@ -96,11 +108,23 @@
 			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation']/@version"
 			Value="%(AsmInfo.Version)" />
 
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4\FluentValidation.MVC4.nuspec"
+			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation']/@version"
+			Value="%(AsmInfo.Version)" />
+
+
 		<Exec WorkingDirectory="$(BuildDir)\Packages" 
 					Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation\FluentValidation.nuspec" />
 		
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
 		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC3\FluentValidation.MVC3.nuspec" />
+
+
+		<Exec WorkingDirectory="$(BuildDir)\Packages"
+		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC4\FluentValidation.MVC4.nuspec" />
+
 
 		<RemoveDir Directories="$(PackageDir)\temp" />
 	</Target>

@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CB78DD3A-1BEB-4863-813B-8221FE9EC23D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FluentValidation.Mvc</RootNamespace>
+    <AssemblyName>FluentValidation.Mvc</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\FluentValidation.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\mvc\v4\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\mvc\v4\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\CustomizeValidatorAttribute.cs">
+      <Link>CustomizeValidatorAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\FluentValidationModelValidator.cs">
+      <Link>FluentValidationModelValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\FluentValidationModelValidatorProvider.cs">
+      <Link>FluentValidationModelValidatorProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\IValidatorInterceptor.cs">
+      <Link>IValidatorInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\EmailFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdapters\EmailFluentValidationPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\FluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdapters\FluentValidationPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\RuleSetForClientSideMessagesAttribute.cs">
+      <Link>RuleSetForClientSideMessagesAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Mvc3\ValidationResultExtension.cs">
+      <Link>ValidationResultExtension.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\FluentValidation.snk">
+      <Link>FluentValidation.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
+      <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
+      <Name>FluentValidation</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
