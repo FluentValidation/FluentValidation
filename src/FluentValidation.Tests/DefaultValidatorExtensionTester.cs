@@ -91,6 +91,17 @@ namespace FluentValidation.Tests {
 			AssertValidator<PredicateValidator>();
 		}
 
+        [Test]
+        public void Must_should_create_PredicateValidator_with_PropertyValidatorContext() {
+            var hasPropertyValidatorContext = false;
+            validator.RuleFor(x => x.Surname).Must((x, val, ctx) => {
+                hasPropertyValidatorContext = ctx != null;
+                return true; });
+            validator.Validate(new Person() {Surname = "Surname"});
+            AssertValidator<PredicateValidator>();
+            hasPropertyValidatorContext.ShouldBeTrue();
+        }
+
 		[Test]
 		public void LessThan_should_create_LessThanValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).LessThan("foo");

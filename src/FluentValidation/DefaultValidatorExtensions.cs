@@ -189,9 +189,25 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		                                                                   Func<T, TProperty, bool> predicate) {
 			predicate.Guard("Cannot pass a null predicate to Must.");
-
-			return ruleBuilder.SetValidator(new PredicateValidator((instance, property) => predicate((T)instance, (TProperty)property)));
+            return ruleBuilder.Must((x, val, propertyValidatorContext) => predicate(x, val));
 		}
+
+        /// <summary>
+        /// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.
+        /// Validation will fail if the specified lambda returns false. 
+        /// Validation will succeed if the specifed lambda returns true.
+        /// This overload accepts the object being validated in addition to the property being validated.
+        /// </summary>
+        /// <typeparam name="T">Type of object being validated</typeparam>
+        /// <typeparam name="TProperty">Type of property being validated</typeparam>
+        /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+        /// <param name="predicate">A lambda expression specifying the predicate</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, 
+                                                                           Func<T, TProperty, PropertyValidatorContext, bool> predicate) {
+            predicate.Guard("Cannot pass a null predicate to Must.");
+            return ruleBuilder.SetValidator(new PredicateValidator((instance, property, propertyValidatorContext) => predicate((T)instance, (TProperty)property, propertyValidatorContext)));
+        }
 
 		/// <summary>
 		/// Defines a 'less than' validator on the current rule builder. 
