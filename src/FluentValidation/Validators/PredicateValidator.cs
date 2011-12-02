@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class PredicateValidator : PropertyValidator, IPredicateValidator {
-		public delegate bool Predicate(object instanceToValidate, object propertyValue);
+        public delegate bool Predicate(object instanceToValidate, object propertyValue, PropertyValidatorContext propertyValidatorContext);
 
 		private readonly Predicate predicate;
 
@@ -34,7 +34,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			if (!predicate(context.Instance, context.PropertyValue)) {
+			if (!predicate(context.Instance, context.PropertyValue, context)) {
 				return false;
 			}
 
