@@ -1,3 +1,6 @@
+3.3 - 
+* Added additional overload for Must that accepts a PropertyValidatorContext.
+
 3.2 - 14 November 2011
 * Fixed issue #7084 (NotEmptyValidator does not work with EntityCollection<T>)
 * Fixed issue #7087 (AbstractValidator.Custom ignores RuleSets and always runs)
