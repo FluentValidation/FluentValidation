@@ -519,7 +519,8 @@ namespace FluentValidation {
 			}
 			
 			if(ruleSet != null) {
-				selector = new RulesetValidatorSelector(ruleSet);
+				var ruleSetNames = ruleSet.Split(',', ';');
+				selector = new RulesetValidatorSelector(ruleSetNames);
 			}
 
 			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);

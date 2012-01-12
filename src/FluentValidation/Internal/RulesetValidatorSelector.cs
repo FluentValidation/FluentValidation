@@ -24,6 +24,7 @@ namespace FluentValidation.Internal {
 		/// <returns>Whether or not the validator can execute.</returns>
 		public bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
 			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length == 0) return true;
+			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0 && rulesetsToExecute.Contains("default", StringComparer.OrdinalIgnoreCase)) return true;
 			if (!string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0 && rulesetsToExecute.Contains(rule.RuleSet)) return true;
 			if (rulesetsToExecute.Contains("*")) return true;
 

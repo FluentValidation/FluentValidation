@@ -108,6 +108,18 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(3);
 		}
 
+		[Test]
+		public void Executes_rules_in_default_ruleset_and_specific_ruleset() {
+			var validator = new TestValidator();
+			validator.RuleSet("foo", () => {
+				validator.RuleFor(x => x.Age).NotEqual(0);
+			});
+
+			var result = validator.Validate(new Person(), ruleSet : "default,Names");
+			result.Errors.Count.ShouldEqual(3);
+
+		}
+
 		private class TestValidator : AbstractValidator<Person> {
 			public TestValidator() {
 				RuleSet("Names", () => {
