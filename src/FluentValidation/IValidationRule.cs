@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation {
+	using System;
 	using System.Collections.Generic;
 	using Internal;
 	using Results;
@@ -41,5 +42,7 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		IEnumerable<ValidationFailure> Validate(ValidationContext context);
+
+		void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 	}
 }

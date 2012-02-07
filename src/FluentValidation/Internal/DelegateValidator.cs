@@ -29,7 +29,8 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="T"></typeparam>
 	public class DelegateValidator<T> : IValidationRule {
 		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
-		
+		private Func<object, bool> condition = x => true;
+
 		/// <summary>
 		/// Rule set to which this rule belongs.
 		/// </summary>
@@ -71,12 +72,17 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		public IEnumerable<ValidationFailure> Validate(ValidationContext context) {
-            if (!context.Selector.CanExecute(this, "", context)) {
+            if (!context.Selector.CanExecute(this, "", context) || !condition(context.InstanceToValidate)) {
                 return Enumerable.Empty<ValidationFailure>();
             }
 
 			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector);
 			return Validate(newContext);
+		}
+
+		public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+			// For custom rules within the DelegateValidator, we ignore ApplyConiditionTo - this is only relevant to chained rules using RuleFor.
+			this.condition = predicate;
 		}
 	}
 }

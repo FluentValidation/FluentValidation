@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using NUnit.Framework;
 	using System.Linq;
+	using Results;
 
 	[TestFixture]
 	public class SharedConditionTests {
@@ -183,6 +184,28 @@ namespace FluentValidation.Tests {
 			var validator = new SharedConditionInverseValidator();
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Does_not_execute_custom_Rule_when_condition_false() {
+			var validator = new TestValidator();
+			validator.When(x => false, () => {
+				validator.Custom(x => new ValidationFailure("foo", "bar"));
+			});
+
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Executes_custom_rule_when_condition_true() {
+			var validator = new TestValidator();
+			validator.When(x => true, () => {
+				validator.Custom(x => new ValidationFailure("foo", "bar"));
+			});
+
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeFalse();
 		}
 	}
 }

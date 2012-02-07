@@ -161,14 +161,9 @@ namespace FluentValidation {
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
 		public void When(Func<T, bool> predicate, Action action) {
-			var propertyRules = new List<PropertyRule>();
+			var propertyRules = new List<IValidationRule>();
 
-			Action<IValidationRule> onRuleAdded = rule => {
-				var propertyRule = rule as PropertyRule;
-				if(propertyRule != null) {
-					propertyRules.Add(propertyRule);
-				}
-			};
+			Action<IValidationRule> onRuleAdded = propertyRules.Add;
 
 			using(nestedValidators.OnItemAdded(onRuleAdded)) {
 				action();
