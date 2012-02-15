@@ -18,8 +18,8 @@
 
 namespace FluentValidation.Tests {
 	using System;
-	using NUnit.Framework;
 	using System.Linq;
+	using NUnit.Framework;
 	using Results;
 
 	[TestFixture]
@@ -51,18 +51,14 @@ namespace FluentValidation.Tests {
 				// RuleFor() respects the grouped When() and 
 				// Unless() predicates.
 				// 
-				When(x => x.Id > 0 && x.Age <= 65, () => {
-					RuleFor(x => x.Orders.Count).Equal(0).Unless(x => String.IsNullOrWhiteSpace(x.CreditCard) == false);
-				});
+				When(x => x.Id > 0 && x.Age <= 65, () => { RuleFor(x => x.Orders.Count).Equal(0).Unless(x => String.IsNullOrWhiteSpace(x.CreditCard) == false); });
 				//.Unless(x => x.Age > 65);
 			}
 		}
 
 		class SharedConditionInverseValidator : AbstractValidator<Person> {
 			public SharedConditionInverseValidator() {
-				Unless(x => x.Id == 0, () => {
-					RuleFor(x => x.Forename).NotNull();
-				});
+				Unless(x => x.Id == 0, () => { RuleFor(x => x.Forename).NotNull(); });
 			}
 		}
 
@@ -143,11 +139,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Condition_can_be_used_inside_ruleset() {
 			var validator = new TestValidator();
-			validator.RuleSet("foo", () => {
-				validator.When(x => x.Id > 0, () => {
-					validator.RuleFor(x => x.Forename).NotNull();
-				});
-			});
+			validator.RuleSet("foo", () => { validator.When(x => x.Id > 0, () => { validator.RuleFor(x => x.Forename).NotNull(); }); });
 			validator.RuleFor(x => x.Surname).NotNull();
 
 			var result = validator.Validate(new Person {Id = 5}, ruleSet : "foo");
@@ -158,16 +150,12 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void RuleSet_can_be_used_inside_condition() {
 			var validator = new TestValidator();
-			
-			validator.When(x => x.Id > 0, () => {
-				validator.RuleSet("foo", () => {
-					validator.RuleFor(x => x.Forename).NotNull();
-				});
-			});
+
+			validator.When(x => x.Id > 0, () => { validator.RuleSet("foo", () => { validator.RuleFor(x => x.Forename).NotNull(); }); });
 
 			validator.RuleFor(x => x.Surname).NotNull();
 
-			var result = validator.Validate(new Person { Id = 5 }, ruleSet: "foo");
+			var result = validator.Validate(new Person {Id = 5}, ruleSet : "foo");
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
@@ -175,7 +163,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Rules_invoke_when_inverse_shared_condition_matches() {
 			var validator = new SharedConditionInverseValidator();
-			var result = validator.Validate(new Person { Id = 1 });
+			var result = validator.Validate(new Person {Id = 1});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -189,9 +177,7 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Does_not_execute_custom_Rule_when_condition_false() {
 			var validator = new TestValidator();
-			validator.When(x => false, () => {
-				validator.Custom(x => new ValidationFailure("foo", "bar"));
-			});
+			validator.When(x => false, () => { validator.Custom(x => new ValidationFailure("foo", "bar")); });
 
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
@@ -200,12 +186,24 @@ namespace FluentValidation.Tests {
 		[Test]
 		public void Executes_custom_rule_when_condition_true() {
 			var validator = new TestValidator();
-			validator.When(x => true, () => {
-				validator.Custom(x => new ValidationFailure("foo", "bar"));
-			});
+			validator.When(x => true, () => { validator.Custom(x => new ValidationFailure("foo", "bar")); });
 
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeFalse();
 		}
+
+		[Test]
+		public void Nested_conditions_with_Custom_rule() {
+			var validator = new TestValidator();
+			validator.When(x => true, () => {
+				validator.When(x => false, () => {
+					validator.Custom(x => new ValidationFailure("Custom", "The validation failed"));
+					
+				});
+			});
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+		}
 	}
 }
+

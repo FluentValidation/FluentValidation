@@ -82,7 +82,8 @@ namespace FluentValidation.Internal {
 
 		public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// For custom rules within the DelegateValidator, we ignore ApplyConiditionTo - this is only relevant to chained rules using RuleFor.
-			this.condition = predicate;
+			var originalCondition = this.condition;
+			this.condition = x => predicate(x) && originalCondition(x);
 		}
 	}
 }
