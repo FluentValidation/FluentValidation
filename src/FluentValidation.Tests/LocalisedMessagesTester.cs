@@ -42,7 +42,7 @@ namespace FluentValidation.Tests {
 			try {
 				var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotEmpty());
 
-				foreach (var culture in new[] { "en", "de", "fr" }) {
+				foreach (var culture in new[] { "en", "de", "fr", "es", "de", "it", "nl", "pl", "pt", "ru", "sv" }) {
 					Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 					var message = Messages.ResourceManager.GetString("notempty_error");
 					var errorMessage = new MessageFormatter().AppendPropertyName("Surname").BuildMessage(message);

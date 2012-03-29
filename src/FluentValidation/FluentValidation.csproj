@@ -146,6 +146,9 @@
     <Compile Include="Validators\RegularExpressionValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Messages.ru.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.de.resx" />
     <EmbeddedResource Include="Resources\Messages.es.resx" />
     <EmbeddedResource Include="Resources\Messages.fr.resx" />
