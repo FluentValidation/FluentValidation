@@ -1,4 +1,4 @@
-3.3 - 
+3.3 - 30 March 2012
 * Added additional overload for Must that accepts a PropertyValidatorContext.
 * Allow rules not in a RuleSet to be executed in addition to rules in a ruleset, eg: validator.Validate(instance, ruleSet: "default,MyRuleset");
 * Support Custom rules within top level When conditions.
