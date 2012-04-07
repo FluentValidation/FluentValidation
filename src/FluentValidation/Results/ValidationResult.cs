@@ -27,7 +27,7 @@ namespace FluentValidation.Results {
 	public class ValidationResult {
 		private readonly List<ValidationFailure> errors = new List<ValidationFailure>();
 
-		public bool IsValid {
+		public virtual bool IsValid {
 			get { return Errors.Count == 0; }
 		}
 
