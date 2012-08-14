@@ -146,6 +146,7 @@
     <Compile Include="Validators\PropertyValidator.cs" />
     <Compile Include="Validators\PropertyValidatorContext.cs" />
     <Compile Include="Validators\RegularExpressionValidator.cs" />
+    <Compile Include="Validators\ScalePrecisionValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Messages.ru.resx">

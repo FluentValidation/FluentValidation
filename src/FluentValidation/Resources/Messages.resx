@@ -165,4 +165,7 @@
   <data name="CreditCardError" xml:space="preserve">
     <value>'{PropertyName}' is not a valid credit card number.</value>
   </data>
+  <data name="scale_precision_error" xml:space="preserve">
+    <value>'{PropertyName}' may not be more than {expectedPrecision} digits in total, with allowance for {expectedScale} decimals. {digits} digits and {actualScale} decimals were found.</value>
+  </data>
 </root>
