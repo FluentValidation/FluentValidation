@@ -107,6 +107,29 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Should_validate_single_property_with_custom_value() {
+			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleFor(x => x.Surname).NotNull();
+			var result = validator.ValidateMember(new Person { Surname = "Matthew" }, "Surname", null);
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Test]
+		public void Should_validate_single_property_with_custom_value_expressions() {
+			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleFor(x => x.Surname).NotNull();
+			var result = validator.ValidateMember(new Person { Surname = "Matthew" }, x => x.Surname, null);
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Test]
+		public void Should_validate_single_field_with_custom_value_expressions() {
+			validator.RuleFor(x => x.NameField).NotNull();
+			var result = validator.ValidateMember(new Person { Surname = "Matthew" }, x => x.NameField, null);
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Test]
 		public void Should_validate_single_Field() {
 			validator.RuleFor(x => x.NameField).NotNull();
 			var result = validator.Validate(new Person(), x => x.NameField);
