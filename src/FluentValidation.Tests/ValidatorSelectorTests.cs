@@ -107,6 +107,39 @@ namespace FluentValidation.Tests {
 
 		}
 
+		[Test]
+		public void Property_rule_remove_validator() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).Length(5, 10)
+			};
+
+			var result = validator.Validate(new Person { Surname = "Matthew Leibowitz"});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Surname");
+
+			var original = ((PropertyRule) validator.First()).Validators.Single();
+			((PropertyRule)validator.Single()).RemoveValidator(original);
+
+			result = validator.Validate(new Person { Surname = "Matthew Leibowitz" });
+			result.Errors.Count.ShouldEqual(0);
+		}
+
+		[Test]
+		public void Property_rule_clear_validator() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).Length(5, 10)
+			};
+
+			var result = validator.Validate(new Person { Surname = "Matthew Leibowitz"});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Surname");
+
+			((PropertyRule)validator.Single()).ClearValidators();
+
+			result = validator.Validate(new Person { Surname = "Matthew Leibowitz" });
+			result.Errors.Count.ShouldEqual(0);
+		}
+
 		private PropertyRule CreateRule(Expression<Func<TestObject, object>> expression) {
 			var rule = PropertyRule.Create(expression);
 			rule.AddValidator(new NotNullValidator());
