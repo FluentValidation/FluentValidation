@@ -1,8 +1,12 @@
+// ValidationAspects
+// Written by Mike Saunders
+// Released under Microsoft Public License (Ms-PL)
+
 using System;
 
 namespace FluentValidation.Validators
 {
-    public class Comparer
+    internal class Comparer
     {
         public Comparer(Func<object, double, int> compareFunc)
         {
