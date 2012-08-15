@@ -83,6 +83,12 @@ namespace FluentValidation.Validators {
 			if(comparer != null) {
 				return comparer.Equals(comparisonValue, propertyValue);
 			}
+
+			int result;
+			if (Comparer.TryCompare((IComparable) comparisonValue, (IComparable) propertyValue, out result)) {
+				return result == 0;
+			}
+
 			return Equals(comparisonValue, propertyValue);
 		}
 	}

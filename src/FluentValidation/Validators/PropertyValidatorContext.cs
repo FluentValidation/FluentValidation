@@ -49,11 +49,6 @@ namespace FluentValidation.Validators {
 		//to allow the delegating validator to cancel validation before value is obtained
 		public object PropertyValue {
 			get {
-				if (ParentContext.UseValueToValidate) {
-					propertyValue = ParentContext.ValueToValidate;
-					propertyValueSet = true;
-				}
-
 				if (!propertyValueSet) {
 					propertyValue = Rule.PropertyFunc(Instance);
 					propertyValueSet = true;

@@ -44,13 +44,7 @@ namespace FluentValidation {
 			PropertyChain = new PropertyChain(propertyChain);
 			InstanceToValidate = instanceToValidate;
 			Selector = validatorSelector;
-
-			UseValueToValidate = false;
-			ValueToValidate = null;
 		}
-
-		public bool UseValueToValidate { get; set; }
-		public object ValueToValidate { get; set; }
 
 		public PropertyChain PropertyChain { get; private set; }
 		public object InstanceToValidate { get; private set; }
@@ -59,8 +53,6 @@ namespace FluentValidation {
 
 		public ValidationContext Clone(PropertyChain chain = null, object instanceToValidate = null, IValidatorSelector selector = null) {
 			return new ValidationContext(instanceToValidate ?? this.InstanceToValidate, chain ?? this.PropertyChain, selector ?? this.Selector) {
-				UseValueToValidate = UseValueToValidate,
-				ValueToValidate = ValueToValidate
 			};
 		}
 

@@ -56,8 +56,6 @@ namespace FluentValidation {
 			context.Guard("Cannot pass null to Validate");
 
 			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector) {
-				UseValueToValidate = context.UseValueToValidate,
-				ValueToValidate = context.ValueToValidate,
 				IsChildContext = context.IsChildContext
 			};
 
