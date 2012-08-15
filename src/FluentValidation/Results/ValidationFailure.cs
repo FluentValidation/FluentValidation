@@ -23,6 +23,10 @@ namespace FluentValidation.Results {
 	[Serializable]
 #endif
 	public class ValidationFailure {
+		private ValidationFailure() {
+			
+		}
+
 		/// <summary>
 		/// Creates a new validation failure.
 		/// </summary>
