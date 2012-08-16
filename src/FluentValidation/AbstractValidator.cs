@@ -33,7 +33,9 @@ namespace FluentValidation {
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
 		readonly TrackingCollection<IValidationRule> nestedValidators = new TrackingCollection<IValidationRule>();
 
-		Func<CascadeMode> cascadeMode = () => ValidatorOptions.CascadeMode;
+        // Work-around for reflection bug in .NET 4.5
+        static Func<CascadeMode> s_cascadeMode = () => ValidatorOptions.CascadeMode;
+        Func<CascadeMode> cascadeMode = s_cascadeMode;
 
 		/// <summary>
 		/// Sets the cascade mode for all rules within this validator.
