@@ -564,7 +564,7 @@ namespace FluentValidation {
             var rule = new PropertyRule(null, x => value, null, null, null, null) {
                 PropertyName = property
             };
-            var context = new PropertyValidatorContext(parentContext, rule, null);
+            var context = new PropertyValidatorContext(parentContext, rule, property);
 
             return new ValidationResult(propertyValidators.SelectMany(v => v.Validate(context)));
         }
