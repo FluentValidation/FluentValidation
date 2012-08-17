@@ -162,6 +162,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.sv.resx" />
+    <EmbeddedResource Include="Resources\Messages.tr.resx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluentValidation.snk">
