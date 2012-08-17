@@ -149,8 +149,12 @@
 		
 		<!-- Sign the assemblies -->
 		
+		<ItemGroup>
+      <AssembliesToSign Include="$(PackageDir)\temp\FluentValidation-signed\lib\Net40\**\*.dll"></AssembliesToSign>
+		</ItemGroup>
+		
 		<Exec WorkingDirectory="$(PackageDir)\temp\FluentValidation-signed\lib\Net40" 
-		  Command="$(BaseDir)\lib\CecilSign\CecilSign.exe -a FluentValidation.dll -k $(BaseDir)\src\FluentValidation.snk" />
+		  Command="$(BaseDir)\lib\CecilSign\CecilSign.exe -a %(AssembliesToSign.FullPath) -k $(BaseDir)\src\FluentValidation.snk" />
 		  
 		<Exec WorkingDirectory="$(PackageDir)\temp\FluentValidation.mvc3-signed\lib\Net40" 
 		  Command="$(BaseDir)\lib\CecilSign\CecilSign.exe -a FluentValidation.MVC.dll -k $(BaseDir)\src\FluentValidation.snk" />
