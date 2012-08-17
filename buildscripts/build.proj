@@ -32,7 +32,7 @@
 		<NUnit Assemblies="$(TestAssemblies)" ToolPath="$(BaseDir)\lib\nunit"  />
 	</Target>
 
-	<Target Name="Package" DependsOnTargets="Deploy; PackageZip; PackageNuPack" />
+	<Target Name="Package" DependsOnTargets="Deploy; PackageZip; CreatePackages; CreatePackagesSigned" />
 
 	<Target Name="Deploy">
 		<RemoveDir Directories="$(BuildDir)" />
@@ -62,7 +62,8 @@
 		<Zip Files="@(FilesToZip)" ZipFileName="$(BuildDir)\FluentValidation.zip" WorkingDirectory="$(OutputDir)" />
 	</Target>
 
-	<Target Name="PackageNuPack" DependsOnTargets="Deploy">
+
+	<Target Name="CreatePackages" DependsOnTargets="Deploy">
 		<!-- First copy the nuspec template files to the package dir -->
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation" />
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC3.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3" />
@@ -124,6 +125,83 @@
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
 		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC4\FluentValidation.MVC4.nuspec" />
+
+
+		<RemoveDir Directories="$(PackageDir)\temp" />
+	</Target>
+	
+	<Target Name="CreatePackagesSigned" DependsOnTargets="Deploy">
+		<!-- First copy the nuspec template files to the package dir -->
+		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation-signed.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation-signed" />
+		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC3-signed.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3-signed" />
+		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC4-signed.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4-signed" />
+
+		<!-- Copy the source files to the package dir -->
+		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation-signed\lib\Net40\%(RecursiveDir)" />
+		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3-signed\lib\Net40" />
+		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4-signed\lib\Net40" />
+		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation-signed\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+    
+		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
+		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\FluentValidation\FluentValidation.dll">
+			<Output TaskParameter="Assemblies" ItemName="AsmInfo" />
+		</GetAssemblyIdentity>
+		
+		<!-- Sign the assemblies -->
+		
+		<Exec WorkingDirectory="$(PackageDir)\temp\FluentValidation-signed\lib\Net40" 
+		  Command="$(BaseDir)\lib\CecilSign\CecilSign.exe -a FluentValidation.dll -k $(BaseDir)\src\FluentValidation.snk" />
+		  
+		<Exec WorkingDirectory="$(PackageDir)\temp\FluentValidation.mvc3-signed\lib\Net40" 
+		  Command="$(BaseDir)\lib\CecilSign\CecilSign.exe -a FluentValidation.MVC.dll -k $(BaseDir)\src\FluentValidation.snk" />
+		  
+		<Exec WorkingDirectory="$(PackageDir)\temp\FluentValidation.mvc4-signed\lib\Net40" 
+		  Command="$(BaseDir)\lib\CecilSign\CecilSign.exe -a FluentValidation.Mvc.dll -k $(BaseDir)\src\FluentValidation.snk" />
+		    
+
+		<!-- insert the version number into the nuspec files -->
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation-signed\FluentValidation-signed.nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC3-signed\FluentValidation.MVC3-signed.nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4-signed\FluentValidation.MVC4-signed.nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+
+		<!-- Also need to insert the version number into the MVC3 dependencies section -->
+		
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC3-signed\FluentValidation.MVC3-signed.nuspec"
+			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation-signed']/@version"
+			Value="%(AsmInfo.Version)" />
+
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4-signed\FluentValidation.MVC4-signed.nuspec"
+			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation-signed']/@version"
+			Value="%(AsmInfo.Version)" />
+
+
+		<Exec WorkingDirectory="$(BuildDir)\Packages" 
+					Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation-signed\FluentValidation-signed.nuspec" />
+		
+		<Exec WorkingDirectory="$(BuildDir)\Packages"
+		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC3-signed\FluentValidation.MVC3-signed.nuspec" />
+
+
+		<Exec WorkingDirectory="$(BuildDir)\Packages"
+		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC4-signed\FluentValidation.MVC4-signed.nuspec" />
 
 
 		<RemoveDir Directories="$(PackageDir)\temp" />

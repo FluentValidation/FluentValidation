@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>FluentValidation.MVC4-Signed</id>
+    <version></version>
+    <authors>Jeremy Skinner</authors>
+    <licenseUrl>http://fluentvalidation.codeplex.com/license</licenseUrl>
+    <projectUrl>http://fluentvalidation.codeplex.com</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=FluentValidation&amp;DownloadId=166226</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ASP.NET MVC 4 integration for FluentValidation</description>
+    <summary>ASP.NET MVC 4 integration for FluentValidation</summary>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="FluentValidation-signed" version="" />
+    </dependencies>
+  </metadata>
+</package>
