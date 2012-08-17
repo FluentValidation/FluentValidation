@@ -1,5 +1,8 @@
-3.4 - 
+3.4 - 17/08/2012
 * Make ValidationResut.IsValid virtual
+* Add private no-arg ctor to ValidationFailure to help with serialization
+* Add Turkish error messages
+* Work-around for reflection bug in .NET 4.5
 
 3.3 - 30 March 2012
 * Added additional overload for Must that accepts a PropertyValidatorContext.
