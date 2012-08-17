@@ -63,7 +63,11 @@
       <exception cref="T:System.Reflection.AmbiguousMatchException">There is more than one attribute of type <paramref name="attributeType" /> defined for this member.</exception>
       <exception cref="T:System.ArgumentNullException">The <paramref name="attritubeType" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.ActionDescriptor.GetFilterAttributes(System.Boolean)"></member>
+    <member name="M:System.Web.Mvc.ActionDescriptor.GetFilterAttributes(System.Boolean)">
+      <summary>Gets the filter attributes.</summary>
+      <returns>The filter attributes.</returns>
+      <param name="useCache">true to use the cache, otherwise false.</param>
+    </member>
     <member name="M:System.Web.Mvc.ActionDescriptor.GetFilters">
       <summary>Returns the filters that are associated with this action method.</summary>
       <returns>The filters that are associated with this action method.</returns>
@@ -280,7 +284,10 @@
       <summary>Gets the collection of URL routes for the application.</summary>
       <returns>The collection of routes for the application.</returns>
     </member>
-    <member name="P:System.Web.Mvc.AjaxHelper.ViewBag"></member>
+    <member name="P:System.Web.Mvc.AjaxHelper.ViewBag">
+      <summary>Gets the ViewBag.</summary>
+      <returns>The ViewBag.</returns>
+    </member>
     <member name="P:System.Web.Mvc.AjaxHelper.ViewContext">
       <summary>Gets the context information about the view.</summary>
       <returns>The context of the view.</returns>
@@ -308,7 +315,10 @@
       <param name="viewDataContainer">The view data container.</param>
       <param name="routeCollection">The URL route collection.</param>
     </member>
-    <member name="P:System.Web.Mvc.AjaxHelper`1.ViewBag"></member>
+    <member name="P:System.Web.Mvc.AjaxHelper`1.ViewBag">
+      <summary>Gets the ViewBag.</summary>
+      <returns>The ViewBag.</returns>
+    </member>
     <member name="P:System.Web.Mvc.AjaxHelper`1.ViewData">
       <summary>Gets the strongly typed version of the view data dictionary.</summary>
       <returns>The strongly typed data dictionary of the view.</returns>
@@ -441,7 +451,15 @@
     <member name="M:System.Web.Mvc.AssociatedMetadataProvider.#ctor">
       <summary>Called from constructors in a derived class to initialize the <see cref="T:System.Web.Mvc.AssociatedMetadataProvider" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.AssociatedMetadataProvider.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func`1,System.Void,System.Object)"></member>
+    <member name="M:System.Web.Mvc.AssociatedMetadataProvider.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func{System.Object},System.Type,System.String)">
+      <summary>When overridden in a derived class, creates the model metadata for the property.</summary>
+      <returns>The model metadata for the property.</returns>
+      <param name="attributes">The set of attributes.</param>
+      <param name="containerType">The type of the container.</param>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The type of the model.</param>
+      <param name="propertyName">The name of the property.</param>
+    </member>
     <member name="M:System.Web.Mvc.AssociatedMetadataProvider.FilterAttributes(System.Type,System.ComponentModel.PropertyDescriptor,System.Collections.Generic.IEnumerable{System.Attribute})">
       <summary>Gets a list of attributes.</summary>
       <returns>A list of attributes.</returns>
@@ -455,8 +473,26 @@
       <param name="container">The model container.</param>
       <param name="containerType">The type of the container.</param>
     </member>
-    <member name="M:System.Web.Mvc.AssociatedMetadataProvider.GetMetadataForProperty(System.Func`1,System.Void,System.Object)"></member>
-    <member name="M:System.Web.Mvc.AssociatedMetadataProvider.GetMetadataForType(System.Func`1,System.Void)"></member>
+    <member name="M:System.Web.Mvc.AssociatedMetadataProvider.GetMetadataForProperty(System.Func{System.Object},System.Type,System.ComponentModel.PropertyDescriptor)">
+      <summary>Returns the metadata for the specified property using the container type and property descriptor.</summary>
+      <returns>The metadata for the specified property using the container type and property descriptor.</returns>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="containerType">The type of the container.</param>
+      <param name="propertyDescriptor">The property descriptor</param>
+    </member>
+    <member name="M:System.Web.Mvc.AssociatedMetadataProvider.GetMetadataForProperty(System.Func{System.Object},System.Type,System.String)">
+      <summary>Returns the metadata for the specified property using the container type and property name.</summary>
+      <returns>The metadata for the specified property using the container type and property name.</returns>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="containerType">The type of the container.</param>
+      <param name="propertyName">The name of the property.</param>
+    </member>
+    <member name="M:System.Web.Mvc.AssociatedMetadataProvider.GetMetadataForType(System.Func{System.Object},System.Type)">
+      <summary>Returns the metadata for the specified property using the type of the model.</summary>
+      <returns>The metadata for the specified property using the type of the model.</returns>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The type of the model.</param>
+    </member>
     <member name="M:System.Web.Mvc.AssociatedMetadataProvider.GetTypeDescriptor(System.Type)">
       <summary>Returns the type descriptor from the specified type.</summary>
       <returns>The type descriptor.</returns>
@@ -662,35 +698,125 @@
       <summary>Provides an abstract class to implement a cached metadata provider.</summary>
       <typeparam name="TModelMetadata"></typeparam>
     </member>
-    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.#ctor"></member>
-    <member name="P:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CacheItemPolicy"></member>
-    <member name="P:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CacheKeyPrefix"></member>
-    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func`1,System.Void,System.Object)"></member>
-    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CreateMetadataFromPrototype(`0,System.Func`1)"></member>
-    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CreateMetadataPrototype(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Type,System.String)"></member>
-    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.GetMetadataForProperties(System.Object,System.Type)"></member>
-    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.GetMetadataForProperty(System.Func`1,System.Void,System.Object)"></member>
-    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.GetMetadataForType(System.Func`1,System.Void)"></member>
-    <member name="P:System.Web.Mvc.CachedAssociatedMetadataProvider`1.PrototypeCache"></member>
+    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.CachedAssociatedMetadataProvider`1" /> class.</summary>
+    </member>
+    <member name="P:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CacheItemPolicy">
+      <summary>Gets the cache item policy.</summary>
+      <returns>The cache item policy.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CacheKeyPrefix">
+      <summary>Gets the cache key prefix.</summary>
+      <returns>The cache key prefix.</returns>
+    </member>
+    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func{System.Object},System.Type,System.String)">
+      <summary>When overridden in a derived class, creates the cached model metadata for the property.</summary>
+      <returns>The cached model metadata for the property.</returns>
+      <param name="attributes">The attributes.</param>
+      <param name="containerType">The container type.</param>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The model type.</param>
+      <param name="propertyName">The property name.</param>
+    </member>
+    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CreateMetadataFromPrototype(`0,System.Func{System.Object})">
+      <summary>Creates prototype metadata by applying the prototype and  model access to yield the final metadata.</summary>
+      <returns>The prototype metadata.</returns>
+      <param name="prototype">The prototype.</param>
+      <param name="modelAccessor">The model accessor.</param>
+    </member>
+    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.CreateMetadataPrototype(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Type,System.String)">
+      <summary>Creates a metadata prototype.</summary>
+      <returns>A metadata prototype.</returns>
+      <param name="attributes">The attributes.</param>
+      <param name="containerType">The container type.</param>
+      <param name="modelType">The model type.</param>
+      <param name="propertyName">The property name.</param>
+    </member>
+    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.GetMetadataForProperties(System.Object,System.Type)">
+      <summary>Gets the metadata for the properties.</summary>
+      <returns>The metadata for the properties.</returns>
+      <param name="container">The container.</param>
+      <param name="containerType">The container type.</param>
+    </member>
+    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.GetMetadataForProperty(System.Func{System.Object},System.Type,System.ComponentModel.PropertyDescriptor)">
+      <summary>Returns the metadata for the specified property.</summary>
+      <returns>The metadata for the specified property.</returns>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="containerType">The container type.</param>
+      <param name="propertyDescriptor">The property descriptor.</param>
+    </member>
+    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.GetMetadataForProperty(System.Func{System.Object},System.Type,System.String)">
+      <summary>Returns the metadata for the specified property.</summary>
+      <returns>The metadata for the specified property.</returns>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="containerType">The container type.</param>
+      <param name="propertyName">The property name.</param>
+    </member>
+    <member name="M:System.Web.Mvc.CachedAssociatedMetadataProvider`1.GetMetadataForType(System.Func{System.Object},System.Type)">
+      <summary>Returns the cached metadata for the specified property using the type of the model.</summary>
+      <returns>The cached metadata for the specified property using the type of the model.</returns>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The type of the container.</param>
+    </member>
+    <member name="P:System.Web.Mvc.CachedAssociatedMetadataProvider`1.PrototypeCache">
+      <summary>Gets the prototype cache.</summary>
+      <returns>The prototype cache.</returns>
+    </member>
     <member name="T:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes">
       <summary>Provides a container to cache <see cref="N:System.ComponentModel.DataAnnotations" /> attributes.</summary>
     </member>
-    <member name="M:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.#ctor(System.Attribute[])"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.DataType"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.Display"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.DisplayColumn"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.DisplayFormat"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.DisplayName"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.Editable"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.HiddenInput"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.ReadOnly"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.Required"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.ScaffoldColumn"></member>
-    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.UIHint"></member>
+    <member name="M:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.#ctor(System.Attribute[])">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes" /> class.</summary>
+      <param name="attributes">The attributes.</param>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.DataType">
+      <summary>Gets the data type.</summary>
+      <returns>The data type.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.Display">
+      <summary>Gets the display.</summary>
+      <returns>The display.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.DisplayColumn">
+      <summary>Gets the display column.</summary>
+      <returns>The display column.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.DisplayFormat">
+      <summary>Gets the display format.</summary>
+      <returns>The display format.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.DisplayName">
+      <summary>Gets the display name.</summary>
+      <returns>The display name.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.Editable">
+      <summary>Indicates whether a data field is editable.</summary>
+      <returns>true if the field is editable; otherwise, false.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.HiddenInput">
+      <summary>Gets the hidden input.</summary>
+      <returns>The hidden input.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.ReadOnly">
+      <summary>Indicates whether a data field is read only.</summary>
+      <returns>true if the field is read only; otherwise, false.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.Required">
+      <summary>Indicates whether a data field is required.</summary>
+      <returns>true if the field is required; otherwise, false.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.ScaffoldColumn">
+      <summary>Indicates whether a data field is scaffold.</summary>
+      <returns>true if the field is scaffold; otherwise, false.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.CachedDataAnnotationsMetadataAttributes.UIHint">
+      <summary>Gets the UI hint.</summary>
+      <returns>The UI hint.</returns>
+    </member>
     <member name="T:System.Web.Mvc.CachedDataAnnotationsModelMetadata">
       <summary>Provides a container to cache <see cref="T:System.Web.Mvc.DataAnnotationsModelMetadata" />.</summary>
     </member>
-    <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadata.#ctor(System.Web.Mvc.CachedDataAnnotationsModelMetadata,System.Func`1)">
+    <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadata.#ctor(System.Web.Mvc.CachedDataAnnotationsModelMetadata,System.Func{System.Object})">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.CachedDataAnnotationsModelMetadata" /> class using the prototype and model accessor.</summary>
       <param name="prototype">The prototype.</param>
       <param name="modelAccessor">The model accessor.</param>
@@ -777,7 +903,7 @@
     <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadataProvider.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.CachedDataAnnotationsModelMetadataProvider" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadataProvider.CreateMetadataFromPrototype(System.Web.Mvc.CachedDataAnnotationsModelMetadata,System.Func`1)">
+    <member name="M:System.Web.Mvc.CachedDataAnnotationsModelMetadataProvider.CreateMetadataFromPrototype(System.Web.Mvc.CachedDataAnnotationsModelMetadata,System.Func{System.Object})">
       <summary>Returns a container of real instances of the cached metadata class based on prototype and model accessor.</summary>
       <returns>A container of real instances of the cached metadata class.</returns>
       <param name="prototype">The prototype.</param>
@@ -803,7 +929,7 @@
       <param name="propertyName">The property name.</param>
       <param name="prototypeCache">The prototype.</param>
     </member>
-    <member name="M:System.Web.Mvc.CachedModelMetadata`1.#ctor(System.Web.Mvc.CachedModelMetadata{`0},System.Func`1)">
+    <member name="M:System.Web.Mvc.CachedModelMetadata`1.#ctor(System.Web.Mvc.CachedModelMetadata{`0},System.Func{System.Object})">
       <summary>Constructor for creating the prototype instances of the metadata class.</summary>
       <param name="prototype">The prototype.</param>
       <param name="modelAccessor">The model accessor.</param>
@@ -1009,7 +1135,10 @@
       <param name="metadata">The metadata.</param>
       <param name="context">The context.</param>
     </member>
-    <member name="P:System.Web.Mvc.ClientDataTypeModelValidatorProvider.ResourceClassKey"></member>
+    <member name="P:System.Web.Mvc.ClientDataTypeModelValidatorProvider.ResourceClassKey">
+      <summary>Gets the resource class key.</summary>
+      <returns>The resource class key.</returns>
+    </member>
     <member name="T:System.Web.Mvc.CompareAttribute">
       <summary>Provides an attribute that compares two properties of a model.</summary>
     </member>
@@ -1043,7 +1172,10 @@
       <summary>Gets the property to compare with the current property.</summary>
       <returns>The property to compare with the current property.</returns>
     </member>
-    <member name="P:System.Web.Mvc.CompareAttribute.OtherPropertyDisplayName"></member>
+    <member name="P:System.Web.Mvc.CompareAttribute.OtherPropertyDisplayName">
+      <summary>Gets the other properties display name.</summary>
+      <returns>The other properties display name.</returns>
+    </member>
     <member name="T:System.Web.Mvc.ContentResult">
       <summary>Represents a user-defined content type that is the result of an action method.</summary>
     </member>
@@ -1077,9 +1209,23 @@
       <summary>Gets the action invoker for the controller.</summary>
       <returns>The action invoker.</returns>
     </member>
-    <member name="P:System.Web.Mvc.Controller.AsyncManager"></member>
-    <member name="M:System.Web.Mvc.Controller.BeginExecute(System.Web.Routing.RequestContext,System.AsyncCallback,System.Object)"></member>
-    <member name="M:System.Web.Mvc.Controller.BeginExecuteCore(System.AsyncCallback,System.Object)"></member>
+    <member name="P:System.Web.Mvc.Controller.AsyncManager">
+      <summary>Provides asynchronous operations.</summary>
+      <returns>Returns <see cref="T:System.Web.Mvc.Async.AsyncManager" />.</returns>
+    </member>
+    <member name="M:System.Web.Mvc.Controller.BeginExecute(System.Web.Routing.RequestContext,System.AsyncCallback,System.Object)">
+      <summary>Begins execution of the specified request context</summary>
+      <returns>Returns an IAsyncController instance. </returns>
+      <param name="requestContext">The request context.</param>
+      <param name="callback">The callback.</param>
+      <param name="state">The state.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Controller.BeginExecuteCore(System.AsyncCallback,System.Object)">
+      <summary>Begins to invoke the action in the current controller context.</summary>
+      <returns>Returns an IAsyncController instance.</returns>
+      <param name="callback">The callback.</param>
+      <param name="state">The state.</param>
+    </member>
     <member name="P:System.Web.Mvc.Controller.Binders">
       <summary>Gets or sets the binder.</summary>
       <returns>The binder.</returns>
@@ -1110,7 +1256,10 @@
       <summary>Creates a temporary data provider.</summary>
       <returns>A temporary data provider.</returns>
     </member>
-    <member name="P:System.Web.Mvc.Controller.DisableAsyncSupport"></member>
+    <member name="P:System.Web.Mvc.Controller.DisableAsyncSupport">
+      <summary>Disable asynchronous support to provide backward compatibility.</summary>
+      <returns>true if asynchronous support is disabled; otherwise false.</returns>
+    </member>
     <member name="M:System.Web.Mvc.Controller.Dispose">
       <summary>Releases all resources that are used by the current instance of the <see cref="T:System.Web.Mvc.Controller" /> class.</summary>
     </member>
@@ -1118,8 +1267,14 @@
       <summary>Releases unmanaged resources and optionally releases managed resources.</summary>
       <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
     </member>
-    <member name="M:System.Web.Mvc.Controller.EndExecute(System.IAsyncResult)"></member>
-    <member name="M:System.Web.Mvc.Controller.EndExecuteCore(System.IAsyncResult)"></member>
+    <member name="M:System.Web.Mvc.Controller.EndExecute(System.IAsyncResult)">
+      <summary>Ends the  invocation of  the action in the current controller context.</summary>
+      <param name="asyncResult">The asynchronous result.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Controller.EndExecuteCore(System.IAsyncResult)">
+      <summary>Ends the execute core.</summary>
+      <param name="asyncResult">The asynchronous result.</param>
+    </member>
     <member name="M:System.Web.Mvc.Controller.ExecuteCore">
       <summary>Invokes the action in the current controller context.</summary>
     </member>
@@ -1275,7 +1430,10 @@
       <param name="viewName">The name of the view that is rendered to the response.</param>
       <param name="model">The model that is rendered by the partial view</param>
     </member>
-    <member name="P:System.Web.Mvc.Controller.Profile"></member>
+    <member name="P:System.Web.Mvc.Controller.Profile">
+      <summary>Gets the HTTP context profile.</summary>
+      <returns>The HTTP context profile.</returns>
+    </member>
     <member name="M:System.Web.Mvc.Controller.Redirect(System.String)">
       <summary>Creates a <see cref="T:System.Web.Mvc.RedirectResult" /> object that redirects to the specified URL.</summary>
       <returns>The redirect result object.</returns>
@@ -1434,8 +1592,17 @@
       <summary>Gets the <see cref="T:System.Web.HttpSessionStateBase" /> object for the current HTTP request.</summary>
       <returns>The HTTP session-state object for the current HTTP request.</returns>
     </member>
-    <member name="M:System.Web.Mvc.Controller.System#Web#Mvc#Async#IAsyncController#BeginExecute(System.Web.Routing.RequestContext,System.AsyncCallback,System.Object)"></member>
-    <member name="M:System.Web.Mvc.Controller.System#Web#Mvc#Async#IAsyncController#EndExecute(System.IAsyncResult)"></member>
+    <member name="M:System.Web.Mvc.Controller.System#Web#Mvc#Async#IAsyncController#BeginExecute(System.Web.Routing.RequestContext,System.AsyncCallback,System.Object)">
+      <summary>Initializes a new instance of the <see cref="M:System.Web.Mvc.Controller.System#Web#Mvc#Async#IAsyncController#BeginExecute(System.Web.Routing.RequestContext,System.AsyncCallback,System.Object)" /> class.</summary>
+      <returns>Returns an IAsyncController instance.</returns>
+      <param name="requestContext">The request context.</param>
+      <param name="callback">The callback.</param>
+      <param name="state">The state.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Controller.System#Web#Mvc#Async#IAsyncController#EndExecute(System.IAsyncResult)">
+      <summary>Ends the execute task.</summary>
+      <param name="asyncResult">The asynchronous result.</param>
+    </member>
     <member name="M:System.Web.Mvc.Controller.System#Web#Mvc#IActionFilter#OnActionExecuted(System.Web.Mvc.ActionExecutedContext)">
       <summary>This API supports the ASP.NET MVC infrastructure and is not intended to be used directly from your code. This method calls the <see cref="M:System.Web.Mvc.Controller.OnActionExecuted(System.Web.Mvc.ActionExecutedContext)" /> method.</summary>
       <param name="filterContext">The filter context.</param>
@@ -1690,7 +1857,10 @@
       <param name="view">The view that is rendered to the response.</param>
       <param name="model">The model that is rendered by the view.</param>
     </member>
-    <member name="P:System.Web.Mvc.Controller.ViewEngineCollection"></member>
+    <member name="P:System.Web.Mvc.Controller.ViewEngineCollection">
+      <summary>Gets the view engine collection.</summary>
+      <returns>The view engine collection.</returns>
+    </member>
     <member name="T:System.Web.Mvc.ControllerActionInvoker">
       <summary>Represents a class that is responsible for invoking the action methods of a controller.</summary>
     </member>
@@ -1892,7 +2062,10 @@
       <summary>Gets or sets the controller.</summary>
       <returns>The controller.</returns>
     </member>
-    <member name="P:System.Web.Mvc.ControllerContext.DisplayMode"></member>
+    <member name="P:System.Web.Mvc.ControllerContext.DisplayMode">
+      <summary>Gets the display mode.</summary>
+      <returns>The display mode.</returns>
+    </member>
     <member name="P:System.Web.Mvc.ControllerContext.HttpContext">
       <summary>Gets or sets the HTTP context.</summary>
       <returns>The HTTP context.</returns>
@@ -1953,7 +2126,11 @@
       <exception cref="T:System.Reflection.AmbiguousMatchException">There is more than one attribute of type <paramref name="attributeType" /> defined for this member.</exception>
       <exception cref="T:System.ArgumentNullException">The <paramref name="attributeType" /> parameter is null (Nothing in Visual Basic).</exception>
     </member>
-    <member name="M:System.Web.Mvc.ControllerDescriptor.GetFilterAttributes(System.Boolean)"></member>
+    <member name="M:System.Web.Mvc.ControllerDescriptor.GetFilterAttributes(System.Boolean)">
+      <summary>Gets the filter attributes.</summary>
+      <returns>The filter attributes.</returns>
+      <param name="useCache">true if the cache should be used; otherwise, false.</param>
+    </member>
     <member name="M:System.Web.Mvc.ControllerDescriptor.IsDefined(System.Type,System.Boolean)">
       <summary>Retrieves a value that indicates whether one or more instance of the specified custom attribute are defined for this member.</summary>
       <returns>true if the <paramref name="attributeType" /> is defined for this member; otherwise, false.</returns>
@@ -1990,7 +2167,15 @@
     <member name="T:System.Web.Mvc.DataAnnotationsModelMetadata">
       <summary>Provides a container for common metadata, for the <see cref="T:System.Web.Mvc.DataAnnotationsModelMetadataProvider" /> class, and for the <see cref="T:System.Web.Mvc.DataAnnotationsModelValidator" /> class for a data model.</summary>
     </member>
-    <member name="M:System.Web.Mvc.DataAnnotationsModelMetadata.#ctor(System.Web.Mvc.DataAnnotationsModelMetadataProvider,System.Type,System.Func`1,System.Void,System.Object,System.Type)"></member>
+    <member name="M:System.Web.Mvc.DataAnnotationsModelMetadata.#ctor(System.Web.Mvc.DataAnnotationsModelMetadataProvider,System.Type,System.Func{System.Object},System.Type,System.String,System.ComponentModel.DataAnnotations.DisplayColumnAttribute)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.DataAnnotationsModelMetadataProvider" /> class.</summary>
+      <param name="provider">The data-annotations model metadata provider.</param>
+      <param name="containerType">The type of the container.</param>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The type of the model.</param>
+      <param name="propertyName">The name of the property.</param>
+      <param name="displayColumnAttribute">The display column attribute.</param>
+    </member>
     <member name="M:System.Web.Mvc.DataAnnotationsModelMetadata.GetSimpleDisplayText">
       <summary>Returns simple text for the model data.</summary>
       <returns>Simple text for the model data.</returns>
@@ -2001,7 +2186,15 @@
     <member name="M:System.Web.Mvc.DataAnnotationsModelMetadataProvider.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.DataAnnotationsModelMetadataProvider" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.DataAnnotationsModelMetadataProvider.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func`1,System.Void,System.Object)"></member>
+    <member name="M:System.Web.Mvc.DataAnnotationsModelMetadataProvider.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func{System.Object},System.Type,System.String)">
+      <summary>Gets the metadata for the specified property.</summary>
+      <returns>The metadata for the property.</returns>
+      <param name="attributes">The attributes.</param>
+      <param name="containerType">The type of the container.</param>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The type of the model.</param>
+      <param name="propertyName">The name of the property.</param>
+    </member>
     <member name="T:System.Web.Mvc.DataAnnotationsModelValidationFactory">
       <summary>Represents the method that creates a <see cref="T:System.Web.Mvc.DataAnnotationsModelValidatorProvider" /> instance.</summary>
     </member>
@@ -2331,7 +2524,11 @@
       <summary>This API supports the ASP.NET MVC infrastructure and is not intended to be used directly from your code.</summary>
       <returns>The implementation of the dependency resolver.</returns>
     </member>
-    <member name="M:System.Web.Mvc.DependencyResolver.InnerSetResolver(System.Func`2,System.Boolean)"></member>
+    <member name="M:System.Web.Mvc.DependencyResolver.InnerSetResolver(System.Func{System.Type,System.Object},System.Func{System.Type,System.Collections.Generic.IEnumerable{System.Object}})">
+      <summary>This API supports the ASP.NET MVC infrastructure and is not intended to be used directly from your code.</summary>
+      <param name="getService">The function that provides the service.</param>
+      <param name="getServices">The function that provides the services.</param>
+    </member>
     <member name="M:System.Web.Mvc.DependencyResolver.InnerSetResolver(System.Object)">
       <summary>This API supports the ASP.NET MVC infrastructure and is not intended to be used directly from your code.</summary>
       <param name="commonServiceLocator">The common service locator.</param>
@@ -2340,7 +2537,11 @@
       <summary>This API supports the ASP.NET MVC infrastructure and is not intended to be used directly from your code.</summary>
       <param name="resolver">The object that implements the dependency resolver.</param>
     </member>
-    <member name="M:System.Web.Mvc.DependencyResolver.SetResolver(System.Func`2,System.Boolean)"></member>
+    <member name="M:System.Web.Mvc.DependencyResolver.SetResolver(System.Func{System.Type,System.Object},System.Func{System.Type,System.Collections.Generic.IEnumerable{System.Object}})">
+      <summary>Provides a registration point for dependency resolvers using the specified service delegate and specified service collection delegates.</summary>
+      <param name="getService">The service delegate.</param>
+      <param name="getServices">The services delegates.</param>
+    </member>
     <member name="M:System.Web.Mvc.DependencyResolver.SetResolver(System.Object)">
       <summary>Provides a registration point for dependency resolvers using the provided common service locator when using a service locator interface.</summary>
       <param name="commonServiceLocator">The common service locator.</param>
@@ -2380,7 +2581,11 @@
       <param name="prefix">The prefix to search for.</param>
       <exception cref="T:System.ArgumentNullException">The <paramref name="prefix" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.DictionaryValueProvider`1.GetKeysFromPrefix(System.String)"></member>
+    <member name="M:System.Web.Mvc.DictionaryValueProvider`1.GetKeysFromPrefix(System.String)">
+      <summary>Gets the keys from the prefix.</summary>
+      <returns>The keys from the prefix.</returns>
+      <param name="prefix">the prefix.</param>
+    </member>
     <member name="M:System.Web.Mvc.DictionaryValueProvider`1.GetValue(System.String)">
       <summary>Returns a value object using the specified key and controller context.</summary>
       <returns>The value object for the specified key.</returns>
@@ -2393,7 +2598,15 @@
     <member name="M:System.Web.Mvc.EmptyModelMetadataProvider.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.EmptyModelMetadataProvider" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.EmptyModelMetadataProvider.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func`1,System.Void,System.Object)"></member>
+    <member name="M:System.Web.Mvc.EmptyModelMetadataProvider.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func{System.Object},System.Type,System.String)">
+      <summary>Creates a new instance of the <see cref="T:System.Web.Mvc.ModelMetadata" /> class.</summary>
+      <returns>A new instance of the <see cref="T:System.Web.Mvc.ModelMetadata" /> class.</returns>
+      <param name="attributes">The attributes.</param>
+      <param name="containerType">The type of the container.</param>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The type of the model.</param>
+      <param name="propertyName">The name of the model.</param>
+    </member>
     <member name="T:System.Web.Mvc.EmptyModelValidatorProvider">
       <summary>Provides an empty validation provider for models that do not require a validator.</summary>
     </member>
@@ -2979,7 +3192,12 @@
       <returns>The HTML-encoded string.</returns>
       <param name="value">The string to encode.</param>
     </member>
-    <member name="M:System.Web.Mvc.HtmlHelper.FormatValue(System.Object,System.String)"></member>
+    <member name="M:System.Web.Mvc.HtmlHelper.FormatValue(System.Object,System.String)">
+      <summary>Formats the value.</summary>
+      <returns>The formatted value.</returns>
+      <param name="value">The value.</param>
+      <param name="format">The format string. </param>
+    </member>
     <member name="M:System.Web.Mvc.HtmlHelper.GenerateIdFromName(System.String)">
       <summary>Creates an HTML element ID using the specified element name.</summary>
       <returns>The ID of the HTML element.</returns>
@@ -3080,7 +3298,11 @@
       <summary>Gets or sets the character that replaces periods in the ID attribute of an element.</summary>
       <returns>The character that replaces periods in the ID attribute of an element.</returns>
     </member>
-    <member name="M:System.Web.Mvc.HtmlHelper.Raw(System.Object)"></member>
+    <member name="M:System.Web.Mvc.HtmlHelper.Raw(System.Object)">
+      <summary>Returns markup that is not HTML encoded.</summary>
+      <returns>Markup that is not HTML encoded.</returns>
+      <param name="value">The value.</param>
+    </member>
     <member name="M:System.Web.Mvc.HtmlHelper.Raw(System.String)">
       <summary>Returns markup that is not HTML encoded.</summary>
       <returns>The HTML markup without encoding.</returns>
@@ -3112,7 +3334,10 @@
     <member name="F:System.Web.Mvc.HtmlHelper.ValidationSummaryValidCssClassName">
       <summary>The name of the CSS class that is used to style the validation summary when the input is valid.</summary>
     </member>
-    <member name="P:System.Web.Mvc.HtmlHelper.ViewBag"></member>
+    <member name="P:System.Web.Mvc.HtmlHelper.ViewBag">
+      <summary>Gets the view bag.</summary>
+      <returns>The view bag.</returns>
+    </member>
     <member name="P:System.Web.Mvc.HtmlHelper.ViewContext">
       <summary>Gets or sets the context information about the view.</summary>
       <returns>The context of the view.</returns>
@@ -3140,7 +3365,10 @@
       <param name="viewDataContainer">The view data container.</param>
       <param name="routeCollection">The route collection.</param>
     </member>
-    <member name="P:System.Web.Mvc.HtmlHelper`1.ViewBag"></member>
+    <member name="P:System.Web.Mvc.HtmlHelper`1.ViewBag">
+      <summary>Gets the view bag.</summary>
+      <returns>The view bag.</returns>
+    </member>
     <member name="P:System.Web.Mvc.HtmlHelper`1.ViewData">
       <summary>Gets the strongly typed view data dictionary.</summary>
       <returns>The strongly typed view data dictionary.</returns>
@@ -3188,6 +3416,18 @@
       <param name="controllerContext">The context within which the controller operates. The context information includes the controller, HTTP content, request context, and route data.</param>
       <param name="methodInfo">Encapsulates information about a method, such as its type, return type, and arguments.</param>
     </member>
+    <member name="T:System.Web.Mvc.HttpHeadAttribute">
+      <summary>Specifies that the HTTP request must be the HTTP HEAD method.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.HttpHeadAttribute.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpHeadAttribute" /> class.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.HttpHeadAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether a request is a valid HTTP HEAD request.</summary>
+      <returns>true if the request is HEAD; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">The method info.</param>
+    </member>
     <member name="T:System.Web.Mvc.HttpNotFoundResult">
       <summary>Defines an object that is used to indicate that the requested resource was not found.</summary>
     </member>
@@ -3197,6 +3437,30 @@
     <member name="M:System.Web.Mvc.HttpNotFoundResult.#ctor(System.String)">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpNotFoundResult" /> class using a status description.</summary>
       <param name="statusDescription">The status description.</param>
+    </member>
+    <member name="T:System.Web.Mvc.HttpOptionsAttribute">
+      <summary>Represents an attribute that is used to restrict an action method so that the method handles only HTTP OPTIONS requests.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.HttpOptionsAttribute.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpOptionsAttribute" /> class.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.HttpOptionsAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether a request is a valid HTTP OPTIONS request.</summary>
+      <returns>true if the request is OPTIONS; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">The method info.</param>
+    </member>
+    <member name="T:System.Web.Mvc.HttpPatchAttribute">
+      <summary>Represents an attribute that is used to restrict an action method so that the method handles only HTTP PATCH requests.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.HttpPatchAttribute.#ctor">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpPatchAttribute" /> class.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.HttpPatchAttribute.IsValidForRequest(System.Web.Mvc.ControllerContext,System.Reflection.MethodInfo)">
+      <summary>Determines whether a request is a valid HTTP PATCH request.</summary>
+      <returns>true if the request is PATCH; otherwise, false.</returns>
+      <param name="controllerContext">The controller context.</param>
+      <param name="methodInfo">The method info.</param>
     </member>
     <member name="T:System.Web.Mvc.HttpPostAttribute">
       <summary>Represents an attribute that is used to restrict an action method so that the method handles only HTTP POST requests.</summary>
@@ -3257,8 +3521,15 @@
       <param name="statusCode">The status code.</param>
       <param name="statusDescription">The status description.</param>
     </member>
-    <member name="M:System.Web.Mvc.HttpStatusCodeResult.#ctor(System.Net.HttpStatusCode)"></member>
-    <member name="M:System.Web.Mvc.HttpStatusCodeResult.#ctor(System.Net.HttpStatusCode,System.String)"></member>
+    <member name="M:System.Web.Mvc.HttpStatusCodeResult.#ctor(System.Net.HttpStatusCode)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpStatusCodeResult" /> class using a status code.</summary>
+      <param name="statusCode">The status code.</param>
+    </member>
+    <member name="M:System.Web.Mvc.HttpStatusCodeResult.#ctor(System.Net.HttpStatusCode,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.HttpStatusCodeResult" /> class using a status code and status description.</summary>
+      <param name="statusCode">The status code.</param>
+      <param name="statusDescription">The status description.</param>
+    </member>
     <member name="M:System.Web.Mvc.HttpStatusCodeResult.ExecuteResult(System.Web.Mvc.ControllerContext)">
       <summary>Enables processing of the result of an action method by a custom type that inherits from the <see cref="T:System.Web.Mvc.ActionResult" /> class.</summary>
       <param name="context">The context in which the result is executed. The context information includes the controller, HTTP content, request context, and route data.</param>
@@ -3298,6 +3569,12 @@
     </member>
     <member name="F:System.Web.Mvc.HttpVerbs.Head">
       <summary>Retrieves the message headers for the information or entity that is identified by the URI of the request.</summary>
+    </member>
+    <member name="F:System.Web.Mvc.HttpVerbs.Patch">
+      <summary>Requests that a set of changes described in the   request entity be applied to the resource identified by the Request-   URI.</summary>
+    </member>
+    <member name="F:System.Web.Mvc.HttpVerbs.Options">
+      <summary>Represents a request for information about the communication options available on the request/response chain identified by the Request-URI.</summary>
     </member>
     <member name="T:System.Web.Mvc.IActionFilter">
       <summary>Defines the methods that are used in an action filter.</summary>
@@ -3384,7 +3661,7 @@
       <param name="serviceType">The type of the requested services.</param>
     </member>
     <member name="T:System.Web.Mvc.IEnumerableValueProvider">
-      <summary>Represents a special IValueProvider that has the ability to be enumerable.</summary>
+      <summary>Represents a special <see cref="T:System.Web.Mvc.IValueProvider" /> that has the ability to be enumerable.</summary>
     </member>
     <member name="M:System.Web.Mvc.IEnumerableValueProvider.GetKeysFromPrefix(System.String)">
       <summary>Gets the keys from the prefix.</summary>
@@ -3626,8 +3903,14 @@
       <summary>Gets or sets a value that indicates whether HTTP GET requests from the client are allowed.</summary>
       <returns>A value that indicates whether HTTP GET requests from the client are allowed.</returns>
     </member>
-    <member name="P:System.Web.Mvc.JsonResult.MaxJsonLength"></member>
-    <member name="P:System.Web.Mvc.JsonResult.RecursionLimit"></member>
+    <member name="P:System.Web.Mvc.JsonResult.MaxJsonLength">
+      <summary>Gets or sets the maximum length of data.</summary>
+      <returns>The maximum length of data.</returns>
+    </member>
+    <member name="P:System.Web.Mvc.JsonResult.RecursionLimit">
+      <summary>Gets or sets the recursion limit.</summary>
+      <returns>The recursion limit.</returns>
+    </member>
     <member name="T:System.Web.Mvc.JsonValueProviderFactory">
       <summary>Enables action methods to send and receive JSON-formatted text and to model-bind the JSON text to parameters of action methods.</summary>
     </member>
@@ -3911,7 +4194,14 @@
     <member name="T:System.Web.Mvc.ModelMetadata">
       <summary>Provides a container for common metadata, for the <see cref="T:System.Web.Mvc.ModelMetadataProvider" /> class, and for the <see cref="T:System.Web.Mvc.ModelValidator" /> class for a data model.</summary>
     </member>
-    <member name="M:System.Web.Mvc.ModelMetadata.#ctor(System.Web.Mvc.ModelMetadataProvider,System.Type,System.Func`1,System.Void,System.Object)"></member>
+    <member name="M:System.Web.Mvc.ModelMetadata.#ctor(System.Web.Mvc.ModelMetadataProvider,System.Type,System.Func{System.Object},System.Type,System.String)">
+      <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.ModelMetadata" /> class.</summary>
+      <param name="provider">The provider.</param>
+      <param name="containerType">The type of the container.</param>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The type of the model.</param>
+      <param name="propertyName">The name of the model.</param>
+    </member>
     <member name="P:System.Web.Mvc.ModelMetadata.AdditionalValues">
       <summary>Gets a dictionary that contains additional metadata about the model.</summary>
       <returns>A dictionary that contains additional metadata about the model.</returns>
@@ -3947,9 +4237,13 @@
       <summary>Gets or sets the edit format string of the model.</summary>
       <returns>The edit format string of the model.</returns>
     </member>
-    <member name="M:System.Web.Mvc.ModelMetadata.FromLambdaExpression``2(System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TParameter"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.ModelMetadata.FromLambdaExpression``2(System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Web.Mvc.ViewDataDictionary{``0})">
+      <summary>Returns the metadata from the <see cref="T:System.Linq.Expressions.Expression" /> parameter for the model.</summary>
+      <returns>The metadata.</returns>
+      <param name="expression">An expression that identifies the model.</param>
+      <param name="viewData">The view data dictionary.</param>
+      <typeparam name="TParameter">The type of the parameter.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
     <member name="M:System.Web.Mvc.ModelMetadata.FromStringExpression(System.String,System.Web.Mvc.ViewDataDictionary)">
       <summary>Gets the metadata from the expression parameter for the model.</summary>
@@ -4058,8 +4352,19 @@
       <param name="container">The container.</param>
       <param name="containerType">The type of the container.</param>
     </member>
-    <member name="M:System.Web.Mvc.ModelMetadataProvider.GetMetadataForProperty(System.Func`1,System.Void,System.Object)"></member>
-    <member name="M:System.Web.Mvc.ModelMetadataProvider.GetMetadataForType(System.Func`1,System.Void)"></member>
+    <member name="M:System.Web.Mvc.ModelMetadataProvider.GetMetadataForProperty(System.Func{System.Object},System.Type,System.String)">
+      <summary>Gets metadata for the specified property.</summary>
+      <returns>A <see cref="T:System.Web.Mvc.ModelMetadata" /> object for the property.</returns>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="containerType">The type of the container.</param>
+      <param name="propertyName">The property to get the metadata model for.</param>
+    </member>
+    <member name="M:System.Web.Mvc.ModelMetadataProvider.GetMetadataForType(System.Func{System.Object},System.Type)">
+      <summary>Gets metadata for the specified model accessor and model type.</summary>
+      <returns>A <see cref="T:System.Web.Mvc.ModelMetadata" /> object for the specified model accessor and model type.</returns>
+      <param name="modelAccessor">The model accessor.</param>
+      <param name="modelType">The type of the model.</param>
+    </member>
     <member name="T:System.Web.Mvc.ModelMetadataProviders">
       <summary>Provides a container for the current <see cref="T:System.Web.Mvc.ModelMetadataProvider" /> instance.</summary>
     </member>
@@ -4581,7 +4886,11 @@
       <param name="prefix">The prefix to search for.</param>
       <exception cref="T:System.ArgumentNullException">The <paramref name="prefix" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.NameValueCollectionValueProvider.GetKeysFromPrefix(System.String)"></member>
+    <member name="M:System.Web.Mvc.NameValueCollectionValueProvider.GetKeysFromPrefix(System.String)">
+      <summary>Gets the keys using the specified prefix.</summary>
+      <returns>They keys.</returns>
+      <param name="prefix">The prefix.</param>
+    </member>
     <member name="M:System.Web.Mvc.NameValueCollectionValueProvider.GetValue(System.String)">
       <summary>Returns a value object using the specified key.</summary>
       <returns>The value object for the specified key.</returns>
@@ -4968,7 +5277,11 @@
       <exception cref="T:System.TypeLoadException">The custom attribute type cannot be loaded.</exception>
       <exception cref="T:System.Reflection.AmbiguousMatchException">There is more than one attribute of type <paramref name="attributeType" /> defined for this member.</exception>
     </member>
-    <member name="M:System.Web.Mvc.ReflectedActionDescriptor.GetFilterAttributes(System.Boolean)"></member>
+    <member name="M:System.Web.Mvc.ReflectedActionDescriptor.GetFilterAttributes(System.Boolean)">
+      <summary>Gets the filter attributes.</summary>
+      <returns>The filter attributes.</returns>
+      <param name="useCache">true to use the cache, otherwise false.</param>
+    </member>
     <member name="M:System.Web.Mvc.ReflectedActionDescriptor.GetParameters">
       <summary>Retrieves the parameters of the action method.</summary>
       <returns>The parameters of the action method.</returns>
@@ -5030,7 +5343,11 @@
       <exception cref="T:System.TypeLoadException">The custom attribute type cannot be loaded.</exception>
       <exception cref="T:System.Reflection.AmbiguousMatchException">There is more than one attribute of type <paramref name="attributeType" /> defined for this member.</exception>
     </member>
-    <member name="M:System.Web.Mvc.ReflectedControllerDescriptor.GetFilterAttributes(System.Boolean)"></member>
+    <member name="M:System.Web.Mvc.ReflectedControllerDescriptor.GetFilterAttributes(System.Boolean)">
+      <summary>Gets the filter attributes.</summary>
+      <returns>The filter attributes.</returns>
+      <param name="useCache">true to use the cache, otherwise false.</param>
+    </member>
     <member name="M:System.Web.Mvc.ReflectedControllerDescriptor.IsDefined(System.Type,System.Boolean)">
       <summary>Returns a value that indicates whether one or more instances of a custom attribute type are defined for this member.</summary>
       <returns>true if the custom attribute type is defined for this member; otherwise, false.</returns>
@@ -5710,6 +6027,18 @@
       <param name="requestContext">The request context.</param>
       <param name="includeImplicitMvcValues">true to include implicit MVC values; otherwise. false.</param>
     </member>
+    <member name="M:System.Web.Mvc.UrlHelper.HttpRouteUrl(System.String,System.Object)">
+      <summary>Generates a fully qualified URL for the specified route values.</summary>
+      <returns>A fully qualified URL for the specified route values.</returns>
+      <param name="routeName">The route name.</param>
+      <param name="routeValues">The route values.</param>
+    </member>
+    <member name="M:System.Web.Mvc.UrlHelper.HttpRouteUrl(System.String,System.Web.Routing.RouteValueDictionary)">
+      <summary>Generates a fully qualified URL for the specified route values.</summary>
+      <returns>A fully qualified URL for the specified route values.</returns>
+      <param name="routeName">The route name.</param>
+      <param name="routeValues">The route values.</param>
+    </member>
     <member name="M:System.Web.Mvc.UrlHelper.IsLocalUrl(System.String)">
       <summary>Returns a value that indicates whether the URL is local.</summary>
       <returns>true if the URL is local; otherwise, false.</returns>
@@ -5834,7 +6163,11 @@
       <returns>true if the collection contains the specified prefix; otherwise, false.</returns>
       <param name="prefix">The prefix to search for.</param>
     </member>
-    <member name="M:System.Web.Mvc.ValueProviderCollection.GetKeysFromPrefix(System.String)"></member>
+    <member name="M:System.Web.Mvc.ValueProviderCollection.GetKeysFromPrefix(System.String)">
+      <summary>Gets the keys using the specified prefix.</summary>
+      <returns>They keys.</returns>
+      <param name="prefix">The prefix.</param>
+    </member>
     <member name="M:System.Web.Mvc.ValueProviderCollection.GetValue(System.String)">
       <summary>Returns a value object using the specified key.</summary>
       <returns>The value object for the specified key.</returns>
@@ -6100,7 +6433,10 @@
       <summary>Gets an object that implements the <see cref="T:System.Web.Mvc.IView" /> interface to render in the browser.</summary>
       <returns>The view.</returns>
     </member>
-    <member name="P:System.Web.Mvc.ViewContext.ViewBag"></member>
+    <member name="P:System.Web.Mvc.ViewContext.ViewBag">
+      <summary>Gets the dynamic view data dictionary.</summary>
+      <returns>The dynamic view data dictionary.</returns>
+    </member>
     <member name="P:System.Web.Mvc.ViewContext.ViewData">
       <summary>Gets the view data that is passed to the view.</summary>
       <returns>The view data.</returns>
@@ -6288,7 +6624,10 @@
     <member name="M:System.Web.Mvc.ViewDataInfo.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.ViewDataInfo" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.ViewDataInfo.#ctor(System.Func`1)"></member>
+    <member name="M:System.Web.Mvc.ViewDataInfo.#ctor(System.Func{System.Object})">
+      <summary>Initializes a new instance of the T:System.Web.Mvc.ViewDataInfo class and associates a delegate for accessing the view data information.</summary>
+      <param name="valueAccessor">A delegate that defines how the view data information is accessed.</param>
+    </member>
     <member name="P:System.Web.Mvc.ViewDataInfo.Container">
       <summary>Gets or sets the object that contains the values to be displayed by the template.</summary>
       <returns>The object that contains the values to be displayed by the template.</returns>
@@ -6771,7 +7110,10 @@
       <param name="viewPath">The path of the view.</param>
       <param name="masterPath">The path of the master view.</param>
     </member>
-    <member name="P:System.Web.Mvc.VirtualPathProviderViewEngine.DisplayModeProvider"></member>
+    <member name="P:System.Web.Mvc.VirtualPathProviderViewEngine.DisplayModeProvider">
+      <summary>Gets or sets the display mode provider.</summary>
+      <returns>The display mode provider.</returns>
+    </member>
     <member name="M:System.Web.Mvc.VirtualPathProviderViewEngine.FileExists(System.Web.Mvc.ControllerContext,System.String)">
       <summary>Returns a value that indicates whether the file is in the specified path by using the specified controller context.</summary>
       <returns>true if the file is in the specified path; otherwise, false.</returns>
@@ -7669,7 +8011,11 @@
       <param name="attributeType">The type of the custom attributes to return.</param>
       <param name="inherit">true to look up the hierarchy chain for the inherited custom attribute; otherwise, false.</param>
     </member>
-    <member name="M:System.Web.Mvc.Async.ReflectedAsyncActionDescriptor.GetFilterAttributes(System.Boolean)"></member>
+    <member name="M:System.Web.Mvc.Async.ReflectedAsyncActionDescriptor.GetFilterAttributes(System.Boolean)">
+      <summary>Gets the filter attributes.</summary>
+      <returns>The filter attributes.</returns>
+      <param name="useCache">Use cache flag.</param>
+    </member>
     <member name="M:System.Web.Mvc.Async.ReflectedAsyncActionDescriptor.GetParameters">
       <summary>Returns the parameters of the action method.</summary>
       <returns>The parameters of the action method.</returns>
@@ -7720,7 +8066,11 @@
       <param name="attributeType">The type of the custom attributes.</param>
       <param name="inherit">true to look up the hierarchy chain for the inherited custom attribute; otherwise, false.</param>
     </member>
-    <member name="M:System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.GetFilterAttributes(System.Boolean)"></member>
+    <member name="M:System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.GetFilterAttributes(System.Boolean)">
+      <summary>Gets the filter attributes.</summary>
+      <returns>The filter attributes.</returns>
+      <param name="useCache">true to use the cache, otherwise false.</param>
+    </member>
     <member name="M:System.Web.Mvc.Async.ReflectedAsyncControllerDescriptor.IsDefined(System.Type,System.Boolean)">
       <summary>Returns a value that indicates whether one or more instances of the specified custom attribute are defined for this member.</summary>
       <returns>true if an attribute of the type represented by <paramref name="attributeType" /> is defined for this member; otherwise, false.</returns>
@@ -7768,6 +8118,7 @@
       <returns>The controller descriptor.</returns>
     </member>
     <member name="M:System.Web.Mvc.Async.TaskAsyncActionDescriptor.EndExecute(System.IAsyncResult)">
+      <summary>Ends the asynchronous operation.</summary>
       <returns>The result of an asynchronous operation.</returns>
       <param name="asyncResult">An object that represents the status of an asynchronous operation.</param>
     </member>
@@ -7798,8 +8149,8 @@
       <returns>The parameters of the asynchronous action method.</returns>
     </member>
     <member name="M:System.Web.Mvc.Async.TaskAsyncActionDescriptor.GetSelectors">
-      <summary>Returns the asynchronous action-method selectors</summary>
-      <returns>The asynchronous action-method selectors</returns>
+      <summary>Returns the asynchronous action-method selectors.</summary>
+      <returns>The asynchronous action-method selectors.</returns>
     </member>
     <member name="M:System.Web.Mvc.Async.TaskAsyncActionDescriptor.IsDefined(System.Type,System.Boolean)">
       <summary>Returns a value that indicates whether one or more instance of the specified custom attribute are defined for this member.</summary>
@@ -7982,21 +8333,62 @@
       <param name="htmlFieldName">A string that is used to disambiguate the names of HTML input elements that are rendered for properties that have the same name.</param>
       <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns HTML markup for each property in the object that is represented by the <see cref="T:System.Linq.Expressions.Expression" /> expression.</summary>
+      <returns>The HTML markup for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns a string that contains each property value in the object that is represented by the specified expression, using additional view data.</summary>
+      <returns>The HTML markup for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+      <summary>Returns a string that contains each property value in the object that is represented by the <see cref="T:System.Linq.Expressions.Expression" />, using the specified template.</summary>
+      <returns>The HTML markup for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="templateName">The name of the template that is used to render the object.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0,``1)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object)">
+      <summary>Returns a string that contains each property value in the object that is represented by the specified expression, using the specified template and additional view data.</summary>
+      <returns>The HTML markup for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="templateName">The name of the template that is used to render the object.</param>
+      <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.String)">
+      <summary>Returns HTML markup for each property in the object that is represented by the <see cref="T:System.Linq.Expressions.Expression" />, using the specified template and an HTML field ID.</summary>
+      <returns>The HTML markup for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="templateName">The name of the template that is used to render the object.</param>
+      <param name="htmlFieldName">A string that is used to disambiguate the names of HTML input elements that are rendered for properties that have the same name.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.String,System.Object)">
+      <summary>Returns HTML markup for each property in the object that is represented by the specified expression, using the template, an HTML field ID, and additional view data.</summary>
+      <returns>The HTML markup for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="templateName">The name of the template that is used to render the object.</param>
+      <param name="htmlFieldName">A string that is used to disambiguate the names of HTML input elements that are rendered for properties that have the same name.</param>
+      <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
     <member name="M:System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(System.Web.Mvc.HtmlHelper)">
       <summary>Returns HTML markup for each property in the model.</summary>
@@ -8038,15 +8430,15 @@
       <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
     </member>
     <member name="T:System.Web.Mvc.Html.DisplayNameExtensions">
-      <summary>Gets the display name from the model meta-data.</summary>
+      <summary>Provides a mechanism to get display names.</summary>
     </member>
     <member name="M:System.Web.Mvc.Html.DisplayNameExtensions.DisplayName(System.Web.Mvc.HtmlHelper,System.String)">
-      <summary>Gets the display name from the model meta-data.</summary>
+      <summary>Gets the display name.</summary>
       <returns>The display name.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
       <param name="expression">An expression that identifies the object that contains the display name.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.DisplayNameExtensions.DisplayNameFor``2(System.Web.Mvc.HtmlHelper{System.Collections.Generic.IEnumerable{``0}},System.Linq.Expressions.Expression{System.Func`2})">
+    <member name="M:System.Web.Mvc.Html.DisplayNameExtensions.DisplayNameFor``2(System.Web.Mvc.HtmlHelper{System.Collections.Generic.IEnumerable{``0}},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
       <summary>Gets the display name for the model.</summary>
       <returns>The display name for the model.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
@@ -8054,7 +8446,7 @@
       <typeparam name="TModel">The type of the model.</typeparam>
       <typeparam name="TValue">The type of the value.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.DisplayNameExtensions.DisplayNameFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
+    <member name="M:System.Web.Mvc.Html.DisplayNameExtensions.DisplayNameFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
       <summary>Gets the display name for the model.</summary>
       <returns>The display name for the model.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
@@ -8076,9 +8468,13 @@
       <param name="html">The HTML helper instance that this method extends.</param>
       <param name="name">An expression that identifies the object that contains the properties to display.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.DisplayTextExtensions.DisplayTextFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TResult"></typeparam>
+    <member name="M:System.Web.Mvc.Html.DisplayTextExtensions.DisplayTextFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns HTML markup for each property in the object that is represented by the specified expression.</summary>
+      <returns>The HTML markup for each property.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TResult">The type of the result.</typeparam>
     </member>
     <member name="T:System.Web.Mvc.Html.EditorExtensions">
       <summary>Represents support for the HTML input element in an application.</summary>
@@ -8128,21 +8524,62 @@
       <param name="htmlFieldName">A string that is used to disambiguate the names of HTML input elements that are rendered for properties that have the same name.</param>
       <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns an HTML input element for each property in the object that is represented by the <see cref="T:System.Linq.Expressions.Expression" /> expression.</summary>
+      <returns>An HTML input element for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns an HTML input element for each property in the object that is represented by the expression, using additional view data.</summary>
+      <returns>An HTML input element for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+      <summary>Returns an HTML input element for each property in the object that is represented by the <see cref="T:System.Linq.Expressions.Expression" /> expression, using the specified template.</summary>
+      <returns>An HTML input element for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="templateName">The name of the template to use to render the object.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0,``1)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object)">
+      <summary>Returns an HTML input element for each property in the object that is represented by the expression, using the specified template and additional view data.</summary>
+      <returns>An HTML input element for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="templateName">The name of the template to use to render the object.</param>
+      <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.String)">
+      <summary>Returns an HTML input element for each property in the object that is represented by the <see cref="T:System.Linq.Expressions.Expression" /> expression, using the specified template and HTML field name.</summary>
+      <returns>An HTML input element for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="templateName">The name of the template to use to render the object.</param>
+      <param name="htmlFieldName">A string that is used to disambiguate the names of HTML input elements that are rendered for properties that have the same name.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.String,System.Object)">
+      <summary>Returns an HTML input element for each property in the object that is represented by the expression, using the specified template, HTML field name, and additional view data.</summary>
+      <returns>An HTML input element for each property in the object that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="templateName">The name of the template to use to render the object.</param>
+      <param name="htmlFieldName">A string that is used to disambiguate the names of HTML input elements that are rendered for properties that have the same name.</param>
+      <param name="additionalViewData">An anonymous object that can contain additional view data that will be merged into the <see cref="T:System.Web.Mvc.ViewDataDictionary`1" /> instance that is created for the template.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
     </member>
     <member name="M:System.Web.Mvc.Html.EditorExtensions.EditorForModel(System.Web.Mvc.HtmlHelper)">
       <summary>Returns an HTML input element for each property in the model.</summary>
@@ -8429,11 +8866,31 @@
       <param name="name">The name of the form field.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.CheckBoxFor``1(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.CheckBoxFor``1(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+      <summary>Returns a check box input element for each property in the object that is represented by the specified expression.</summary>
+      <returns>An HTML input element whose type attribute is set to "checkbox" for each property in the object that is represented by the specified expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.CheckBoxFor``1(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.CheckBoxFor``1(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns a check box input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An HTML input element whose type attribute is set to "checkbox" for each property in the object that is represented by the specified expression, using the specified HTML attributes.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.CheckBoxFor``1(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}},System.Object)">
+      <summary>Returns a check box input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An HTML input element whose type attribute is set to "checkbox" for each property in the object that is represented by the specified expression, using the specified HTML attributes.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.Hidden(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>Returns a hidden input element by using the specified HTML helper and the name of the form field.</summary>
@@ -8464,13 +8921,31 @@
       <param name="value">The value of the hidden input element The value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object. If the element is not found in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object, the value parameter is used.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.HiddenFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.HiddenFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns an HTML hidden input element for each property in the object that is represented by the specified expression.</summary>
+      <returns>An input element whose type attribute is set to "hidden" for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.HiddenFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.HiddenFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML hidden input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An input element whose type attribute is set to "hidden" for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.HiddenFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns an HTML hidden input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An input element whose type attribute is set to "hidden" for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.Password(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>Returns a password input element by using the specified HTML helper and the name of the form field.</summary>
@@ -8501,13 +8976,34 @@
       <param name="value">The value of the password input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.PasswordFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.PasswordFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns a password input element for each property in the object that is represented by the specified expression.</summary>
+      <returns>An HTML input element whose type attribute is set to "password" for each property in the object that is represented by the specified expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.PasswordFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.PasswordFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns a password input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An HTML input element whose type attribute is set to "password" for each property in the object that is represented by the specified expression, using the specified HTML attributes.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.PasswordFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns a password input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An HTML input element whose type attribute is set to "password" for each property in the object that is represented by the specified expression, using the specified HTML attributes.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.RadioButton(System.Web.Mvc.HtmlHelper,System.String,System.Object)">
       <summary>Returns a radio button input element that is used to present mutually exclusive options.</summary>
@@ -8570,13 +9066,37 @@
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
       <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.RadioButtonFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.RadioButtonFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns a radio button input element for each property in the object that is represented by the specified expression.</summary>
+      <returns>An HTML input element whose type attribute is set to "radio" for each property in the object that is represented by the specified expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.RadioButtonFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.RadioButtonFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns a radio button input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An HTML input element whose type attribute is set to "radio" for each property in the object that is represented by the specified expression, using the specified HTML attributes.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.RadioButtonFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object,System.Object)">
+      <summary>Returns a radio button input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An HTML input element whose type attribute is set to "radio" for each property in the object that is represented by the specified expression, using the specified HTML attributes.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="value">If this radio button is selected, the value of the radio button that is submitted when the form is posted. If the value of the selected radio button in the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> or the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object matches this value, this radio button is selected.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="value" /> parameter is null.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>Returns a text input element by using the specified HTML helper and the name of the form field.</summary>
@@ -8607,20 +9127,89 @@
       <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String)"></member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String,System.Object)"></member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String)">
+      <summary>Returns a text input element.</summary>
+      <returns>An input element whose type attribute is set to "text".</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="name">The name of the form field.</param>
+      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="format">A string that is used to format the input.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns a text input element.</summary>
+      <returns>An input element whose type attribute is set to "text".</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
+      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="format">A string that is used to format the input.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBox(System.Web.Mvc.HtmlHelper,System.String,System.Object,System.String,System.Object)">
+      <summary>Returns a text input element.</summary>
+      <returns>An input element whose type attribute is set to "text".</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="name">The name of the form field and the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> key that is used to look up the value.</param>
+      <param name="value">The value of the text input element. If this value is null, the value of the element is retrieved from the <see cref="T:System.Web.Mvc.ViewDataDictionary" /> object. If no value exists there, the value is retrieved from the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</param>
+      <param name="format">A string that is used to format the input.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns a text input element for each property in the object that is represented by the specified expression.</summary>
+      <returns>An HTML input element whose type attribute is set to "text" for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentException">The <paramref name="expression" /> parameter is null or empty.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns a text input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An HTML input element type attribute is set to "text" for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentException">The <paramref name="expression" /> parameter is null or empty.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns a text input element for each property in the object that is represented by the specified expression, using the specified HTML attributes.</summary>
+      <returns>An HTML input element whose type attribute is set to "text" for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentException">The <paramref name="expression" /> parameter is null or empty.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+      <summary>Returns a text input element.</summary>
+      <returns>An input element whose type attribute is set to "text".</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="format">A string that is used to format the input.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns a text input element.</summary>
+      <returns>An input element whose type attribute is set to "text".</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="format">A string that is used to format the input.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.InputExtensions.TextBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object)">
+      <summary>Returns a text input element.</summary>
+      <returns>An input element whose type attribute is set to "text".</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="format">A string that is used to format the input.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
     </member>
     <member name="T:System.Web.Mvc.Html.LabelExtensions">
       <summary>Represents support for the HTML label element in an ASP.NET MVC view.</summary>
@@ -8631,8 +9220,20 @@
       <param name="html">The HTML helper instance that this method extends.</param>
       <param name="expression">An expression that identifies the property to display.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.Object)"></member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>Returns <see cref="T:System.Web.Mvc.MvcHtmlString" />.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.Object)">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
     <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.String)">
       <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression using the label text.</summary>
       <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
@@ -8640,35 +9241,113 @@
       <param name="expression">An expression that identifies the property to display.</param>
       <param name="labelText">The label text to display.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object)"></member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="labelText">The label text.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.Label(System.Web.Mvc.HtmlHelper,System.String,System.String,System.Object)">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="labelText">The label text.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <typeparam name="TModel">The  type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The  type of the model.</typeparam>
       <typeparam name="TValue"></typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The  type of the model.</typeparam>
+      <typeparam name="TValue">The value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression using the label text.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="labelText">The label text to display.</param>
+      <typeparam name="TModel">The  type of the model.</typeparam>
+      <typeparam name="TValue">The type of the value.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The  type of the model.</typeparam>
       <typeparam name="TValue"></typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TValue"></typeparam>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object)">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the property to display.</param>
+      <param name="labelText">The label text.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The  type of the model.</typeparam>
+      <typeparam name="TValue">The Value.</typeparam>
     </member>
     <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper)">
       <summary>Returns an HTML label element and the property name of the property that is represented by the model.</summary>
       <returns>An HTML label element and the property name of the property that is represented by the model.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.Object)"></member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.Object)">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
     <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression using the label text.</summary>
       <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
       <param name="labelText">The label text to display.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})"></member>
-    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.String,System.Object)"></member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="labelText">The label Text.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
+    <member name="M:System.Web.Mvc.Html.LabelExtensions.LabelForModel(System.Web.Mvc.HtmlHelper,System.String,System.Object)">
+      <summary>Returns an HTML label element and the property name of the property that is represented by the specified expression.</summary>
+      <returns>An HTML label element and the property name of the property that is represented by the expression.</returns>
+      <param name="html">The HTML helper instance that this method extends.</param>
+      <param name="labelText">The label text.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+    </member>
     <member name="T:System.Web.Mvc.Html.LinkExtensions">
       <summary>Represents support for HTML links in an application.</summary>
     </member>
@@ -8915,7 +9594,7 @@
       <param name="html">The HTML helper instance that this method extends.</param>
       <param name="name">An expression that identifies the object that contains the ID.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.NameExtensions.IdFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
+    <member name="M:System.Web.Mvc.Html.NameExtensions.IdFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
       <summary> Gets the ID of the <see cref="T:System.Web.Mvc.HtmlHelper`1" /> string</summary>
       <returns>The HTML ID attribute value for the object that is represented by the expression.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
@@ -8934,7 +9613,7 @@
       <param name="html">The HTML helper instance that this method extends.</param>
       <param name="name">An expression that identifies the object that contains the name.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.NameExtensions.NameFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
+    <member name="M:System.Web.Mvc.Html.NameExtensions.NameFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
       <summary>Gets the full HTML field name for the object that is represented by the expression.</summary>
       <returns>The full HTML field name for the object that is represented by the expression.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
@@ -9078,17 +9757,72 @@
       <param name="optionLabel">The text for a default empty item. This parameter can be null.</param>
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem})">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression using the specified list items.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression using the specified list items and HTML attributes.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0,``1)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.Object)">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression using the specified list items and HTML attributes.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String)">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression using the specified list items and option label.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <param name="optionLabel">The text for a default empty item. This parameter can be null.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression using the specified list items, option label, and HTML attributes.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <param name="optionLabel">The text for a default empty item. This parameter can be null.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.DropDownListFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.String,System.Object)">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression using the specified list items, option label, and HTML attributes.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <param name="optionLabel">The text for a default empty item. This parameter can be null.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the value.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
     <member name="M:System.Web.Mvc.Html.SelectExtensions.ListBox(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>Returns a multi-select select element using the specified HTML helper and the name of the form field.</summary>
@@ -9123,13 +9857,37 @@
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
       <exception cref="T:System.ArgumentException">The <paramref name="name" /> parameter is null or empty.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.SelectExtensions.ListBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.ListBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem})">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression and using the specified list items.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.SelectExtensions.ListBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.ListBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression using the specified list items and HTML attributes.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.SelectExtensions.ListBoxFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IEnumerable{System.Web.Mvc.SelectListItem},System.Object)">
+      <summary>Returns an HTML select element for each property in the object that is represented by the specified expression using the specified list items and HTML attributes.</summary>
+      <returns>An HTML select element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to display.</param>
+      <param name="selectList">A collection of <see cref="T:System.Web.Mvc.SelectListItem" /> objects that are used to populate the drop-down list.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
     <member name="T:System.Web.Mvc.Html.TextAreaExtensions">
       <summary>Represents support for HTML textarea controls.</summary>
@@ -9197,17 +9955,58 @@
       <param name="value">The text content.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes to set for the element.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns an HTML textarea element for each property in the object that is represented by the specified expression.</summary>
+      <returns>An HTML textarea element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML textarea element for each property in the object that is represented by the specified expression using the specified HTML attributes.</summary>
+      <returns>An HTML textarea element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0,``1)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Int32,System.Int32,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns an HTML textarea element for each property in the object that is represented by the specified expression using the specified HTML attributes and the number of rows and columns.</summary>
+      <returns>An HTML textarea element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="rows">The number of rows.</param>
+      <param name="columns">The number of columns.</param>
+      <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Int32,System.Int32,System.Object)">
+      <summary>Returns an HTML textarea element for each property in the object that is represented by the specified expression using the specified HTML attributes and the number of rows and columns.</summary>
+      <returns>An HTML textarea element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="rows">The number of rows.</param>
+      <param name="columns">The number of columns.</param>
+      <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
+    </member>
+    <member name="M:System.Web.Mvc.Html.TextAreaExtensions.TextAreaFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.Object)">
+      <summary>Returns an HTML textarea element for each property in the object that is represented by the specified expression using the specified HTML attributes.</summary>
+      <returns>An HTML textarea element for each property in the object that is represented by the expression.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="htmlAttributes">A dictionary that contains the HTML attributes to set for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+      <exception cref="T:System.ArgumentNullException">The <paramref name="expression" /> parameter is null.</exception>
     </member>
     <member name="T:System.Web.Mvc.Html.ValidationExtensions">
       <summary>Provides support for validating the input from an HTML form.</summary>
@@ -9222,9 +10021,12 @@
       <param name="modelName">The name of the property or model object that is being validated.</param>
       <exception cref="T:System.ArgumentNullException">The <paramref name="modelName" /> parameter is null.</exception>
     </member>
-    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidateFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidateFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Retrieves the validation metadata for the specified model and applies each rule to the data field.</summary>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
     </member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessage(System.Web.Mvc.HtmlHelper,System.String)">
       <summary>Displays a validation message if an error exists for the specified field in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
@@ -9269,17 +10071,42 @@
       <param name="validationMessage">The message to display if the specified field contains an error.</param>
       <param name="htmlAttributes">An object that contains the HTML attributes for the element. </param>
     </member>
-    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Returns the HTML markup for a validation-error message for each data field that is represented by the specified expression.</summary>
+      <returns>If the property or object is valid, an empty string; otherwise, a span element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+      <summary>Returns the HTML markup for a validation-error message for each data field that is represented by the specified expression, using the specified message.</summary>
+      <returns>If the property or object is valid, an empty string; otherwise, a span element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="validationMessage">The message to display if the specified field contains an error.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean,``0)">
-      <typeparam name="TModel"></typeparam>
-      <typeparam name="TProperty"></typeparam>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
+      <summary>Returns the HTML markup for a validation-error message for each data field that is represented by the specified expression, using the specified message and HTML attributes.</summary>
+      <returns>If the property or object is valid, an empty string; otherwise, a span element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="validationMessage">The message to display if the specified field contains an error.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
+    </member>
+    <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationMessageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String,System.Object)">
+      <summary>Returns the HTML markup for a validation-error message for each data field that is represented by the specified expression, using the specified message and HTML attributes.</summary>
+      <returns>If the property or object is valid, an empty string; otherwise, a span element that contains an error message.</returns>
+      <param name="htmlHelper">The HTML helper instance that this method extends.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+      <param name="validationMessage">The message to display if the specified field contains an error.</param>
+      <param name="htmlAttributes">An object that contains the HTML attributes for the element.</param>
+      <typeparam name="TModel">The type of the model.</typeparam>
+      <typeparam name="TProperty">The type of the property.</typeparam>
     </member>
     <member name="M:System.Web.Mvc.Html.ValidationExtensions.ValidationSummary(System.Web.Mvc.HtmlHelper)">
       <summary>Returns an unordered list (ul element) of validation messages that are in the <see cref="T:System.Web.Mvc.ModelStateDictionary" /> object.</summary>
@@ -9336,60 +10163,75 @@
       <param name="htmlAttributes">An object that contains the HTML attributes for the element. </param>
     </member>
     <member name="T:System.Web.Mvc.Html.ValueExtensions">
-      <summary>Provides a mechanism to get view data, model data and model state.</summary>
+      <summary>Provides a mechanism to create custom HTML markup compatible with the ASP.NET MVC model binders and templates.</summary>
     </member>
     <member name="M:System.Web.Mvc.Html.ValueExtensions.Value(System.Web.Mvc.HtmlHelper,System.String)">
-      <summary>Gets the value of the object identified by the expression.</summary>
-      <returns>The value of the object identified by the expression.</returns>
+      <summary>Provides a mechanism to create custom HTML markup compatible with the ASP.NET MVC model binders and templates.</summary>
+      <returns>The HTML markup for the value.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
-      <param name="name">An expression that identifies the object.</param>
+      <param name="name">The name of the model.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.ValueExtensions.Value(System.Web.Mvc.HtmlHelper,System.String,System.String)">
-      <summary>Gets the value of the object identified by the expression.</summary>
-      <returns>The value of the object identified by the expression.</returns>
+      <summary>Provides a mechanism to create custom HTML markup compatible with the ASP.NET MVC model binders and templates.</summary>
+      <returns>The HTML markup for the value.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
-      <param name="name">The name of the object.</param>
+      <param name="name">The name of the model.</param>
+      <param name="format">The format string.</param>
     </member>
-    <member name="M:System.Web.Mvc.Html.ValueExtensions.ValueFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2})">
-      <summary>Gets the value of the object identified by the expression.</summary>
-      <returns>The value of the object identified by the expression.</returns>
+    <member name="M:System.Web.Mvc.Html.ValueExtensions.ValueFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+      <summary>Provides a mechanism to create custom HTML markup compatible with the ASP.NET MVC model binders and templates.</summary>
+      <returns>The HTML markup for the value.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
-      <param name="expression">An expression that identifies the object.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to expose.</param>
       <typeparam name="TModel">The model.</typeparam>
       <typeparam name="TProperty">The property.</typeparam>
     </member>
-    <member name="M:System.Web.Mvc.Html.ValueExtensions.ValueFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func`2},System.Boolean)">
-      <summary>Gets the value of the object identified by the expression.</summary>
-      <returns>The value of the object identified by the expression.</returns>
+    <member name="M:System.Web.Mvc.Html.ValueExtensions.ValueFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+      <summary>Provides a mechanism to create custom HTML markup compatible with the ASP.NET MVC model binders and templates.</summary>
+      <returns>The HTML markup for the value.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
-      <param name="expression">An expression that identifies the object.</param>
-      <param name="format">A sting used to format the value from T:System.Web.Mvc.ModelMetadata or from the ViewData for the current model.</param>
+      <param name="expression">An expression that identifies the object that contains the properties to expose.</param>
+      <param name="format">The format string.</param>
       <typeparam name="TModel">The model.</typeparam>
       <typeparam name="TProperty">The property.</typeparam>
     </member>
     <member name="M:System.Web.Mvc.Html.ValueExtensions.ValueForModel(System.Web.Mvc.HtmlHelper)">
-      <summary>Gets the value of the object identified by the expression.</summary>
-      <returns>The value of the object identified by the expression.</returns>
+      <summary>Provides a mechanism to create custom HTML markup compatible with the ASP.NET MVC model binders and templates.</summary>
+      <returns>The HTML markup for the value.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
     </member>
     <member name="M:System.Web.Mvc.Html.ValueExtensions.ValueForModel(System.Web.Mvc.HtmlHelper,System.String)">
-      <summary>Gets the value of the object identified by the expression.</summary>
-      <returns>The value of the object identified by the expression.</returns>
+      <summary>Provides a mechanism to create custom HTML markup compatible with the ASP.NET MVC model binders and templates.</summary>
+      <returns>The HTML markup for the value.</returns>
       <param name="html">The HTML helper instance that this method extends.</param>
-      <param name="format">A sting used to format the value from T:System.Web.Mvc.ModelMetadata or from the ViewData for the current model.</param>
+      <param name="format">The format string.</param>
     </member>
-    <member name="T:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser"></member>
-    <member name="M:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser.#ctor"></member>
-    <member name="M:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser.InheritsDirective"></member>
-    <member name="M:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser.ModelDirective"></member>
+    <member name="T:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser">
+      <summary>Compiles ASP.NET Razor views into classes.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser.#ctor">
+      <summary>Initializes a new instance of the <see cref="M:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser.#ctor" /> class.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser.InheritsDirective">
+      <summary>The inherits directive.</summary>
+    </member>
+    <member name="M:System.Web.Mvc.Razor.MvcCSharpRazorCodeParser.ModelDirective">
+      <summary>The model directive.</summary>
+    </member>
     <member name="T:System.Web.Mvc.Razor.MvcVBRazorCodeParser">
       <summary>Extends the VBCodeParser class by adding support for the @model keyword.</summary>
     </member>
     <member name="M:System.Web.Mvc.Razor.MvcVBRazorCodeParser.#ctor">
       <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.Razor.MvcVBRazorCodeParser" /> class.</summary>
     </member>
-    <member name="M:System.Web.Mvc.Razor.MvcVBRazorCodeParser.InheritsStatement"></member>
-    <member name="M:System.Web.Mvc.Razor.MvcVBRazorCodeParser.ModelTypeDirective"></member>
+    <member name="M:System.Web.Mvc.Razor.MvcVBRazorCodeParser.InheritsStatement">
+      <summary>Sets a value that indicates whether the current code block and model should be inherited.</summary>
+      <returns>true if the code block and model is inherited; otherwise, false.</returns>
+    </member>
+    <member name="M:System.Web.Mvc.Razor.MvcVBRazorCodeParser.ModelTypeDirective">
+      <summary>The Model Type Directive.</summary>
+      <returns>Returns void.</returns>
+    </member>
     <member name="T:System.Web.Mvc.Razor.MvcWebPageRazorHost">
       <summary>Configures the ASP.NET Razor parser and code generator for a specified file.</summary>
     </member>

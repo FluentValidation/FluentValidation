@@ -121,7 +121,7 @@ namespace FluentValidation.Tests {
 
 			builder.Rule.Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
 
-			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => c.PropertyValue == "Foo")));
+			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 		}
 
 		[Test]

@@ -9,6 +9,10 @@ namespace FluentValidation.Mvc {
 		private const string key = "_FV_ClientSideRuleSet";
 		string[] ruleSets;
 
+		public RuleSetForClientSideMessagesAttribute(string ruleSet) {
+			ruleSets = new[] { ruleSet };
+		}
+
 		public RuleSetForClientSideMessagesAttribute(params string[] ruleSets) {
 			this.ruleSets = ruleSets;
 		}
