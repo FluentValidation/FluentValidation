@@ -29,7 +29,10 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="T"></typeparam>
 	public class DelegateValidator<T> : IValidationRule {
 		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
-		private Func<object, bool> condition = x => true;
+
+        // Work-around for reflection bug in .NET 4.5
+        static Func<object, bool> s_condition = x => true;
+		private Func<object, bool> condition = s_condition;
 
 		/// <summary>
 		/// Rule set to which this rule belongs.
