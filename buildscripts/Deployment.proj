@@ -1,0 +1,111 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="default">
+	<PropertyGroup>
+    <BaseDir>$(MSBuildProjectDirectory)\..</BaseDir>
+    <BuildDir>$(BaseDir)\build</BuildDir>
+    <OutputDir>$(BuildDir)\$(Configuration)</OutputDir>
+    <PackageDir>$(BuildDir)\Packages</PackageDir>
+    <PackageSuffix Condition="'$(PackageSuffix)'!=''"></PackageSuffix>
+    <MSBuildExtensions>$(BaseDir)\lib\msbuild\msbuild.community.tasks.dll</MSBuildExtensions>
+  </PropertyGroup>
+  
+  <UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.Zip" />
+	<UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.XmlUpdate" />
+	
+	<Target Name="default" DependsOnTargets="Deploy; PackageZip; CreatePackages" />
+	
+	<Target Name="Deploy">
+		
+		<ItemGroup>
+			<MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\**\*.*" />
+			<Mvc3Binaries Include="$(BaseDir)\src\FluentValidation.Mvc3\bin\$(Configuration)\FluentValidation.Mvc.*" />
+			<Mvc4Binaries Include="$(BaseDir)\src\FluentValidation.Mvc4\bin\$(Configuration)\FluentValidation.Mvc.*" />
+			<SilverlightBinaries Include="$(BaseDir)\src\FluentValidation.Silverlight\bin\$(Configuration)\**\*.*" />
+			<!--<WP7Binaries Include="$(BaseDir)\src\FluentValidation.WP7\bin\$(Configuration)\**\*.*" />-->
+			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
+		</ItemGroup>
+
+		<!-- Copy to the output directory -->
+		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation\%(RecursiveDir)"  />
+		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC3" />
+		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC4" />
+		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(OutputDir)\Silverlight\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+		<!--<Copy SourceFiles="@(WP7Binaries)" DestinationFolder="$(OutputDir)\WP7\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>-->
+		<Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
+	</Target>
+
+	<Target Name="PackageZip">
+		<ItemGroup>
+			<FilesToZip Include="$(OutputDir)\**\*.*" />
+		</ItemGroup>
+		<Zip Files="@(FilesToZip)" ZipFileName="$(BuildDir)\FluentValidation.zip" WorkingDirectory="$(OutputDir)" />
+	</Target>
+
+
+	<Target Name="CreatePackages" DependsOnTargets="Deploy">
+		<!-- First copy the nuspec template files to the package dir -->
+		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)" />
+		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC3$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)" />
+		
+		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC4$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)" />
+
+		<!-- Copy the source files to the package dir -->
+		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\Net40\%(RecursiveDir)" />
+		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\lib\Net40" />
+		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\lib\Net40" />
+		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+    
+		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
+		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\FluentValidation\FluentValidation.dll">
+			<Output TaskParameter="Assemblies" ItemName="AsmInfo" />
+		</GetAssemblyIdentity>
+
+		<!-- insert the version number into the nuspec files -->
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\FluentValidation$(PackageSuffix).nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\FluentValidation.MVC3$(PackageSuffix).nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+
+		<!-- Also need to insert the version number into the MVC3 dependencies section -->
+		
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\FluentValidation.MVC3$(PackageSuffix).nuspec"
+			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation$(PackageSuffix)']/@version"
+			Value="%(AsmInfo.Version)" />
+
+		<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec"
+			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation$(PackageSuffix)']/@version"
+			Value="%(AsmInfo.Version)" />
+
+
+		<Exec WorkingDirectory="$(BuildDir)\Packages" 
+					Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation$(PackageSuffix)\FluentValidation$(PackageSuffix).nuspec" />
+		
+		<Exec WorkingDirectory="$(BuildDir)\Packages"
+		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\FluentValidation.MVC3$(PackageSuffix).nuspec" />
+
+
+		<Exec WorkingDirectory="$(BuildDir)\Packages"
+		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec" />
+
+
+		<RemoveDir Directories="$(PackageDir)\temp" />
+	</Target>
+	
+  
+</Project>
