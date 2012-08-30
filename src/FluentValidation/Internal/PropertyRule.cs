@@ -151,6 +151,25 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
+		/// Remove a validator in this rule.
+		/// </summary>
+		public void RemoveValidator(IPropertyValidator original) {
+		    if (ReferenceEquals(CurrentValidator, original)) {
+		        CurrentValidator = validators.LastOrDefault();
+		    }
+
+		    validators.Remove(original);
+		}
+
+		/// <summary>
+		/// Clear all validators from this rule.
+		/// </summary>
+		public void ClearValidators() {
+		    CurrentValidator = null;
+		    validators.Clear();
+		}
+
+		/// <summary>
 		/// Returns the property name for the property being validated.
 		/// Returns null if it is not a property being validated (eg a method call)
 		/// </summary>

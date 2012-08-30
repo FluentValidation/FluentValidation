@@ -31,7 +31,7 @@ namespace FluentValidation.Validators {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {
-			return value.CompareTo(valueToCompare) >= 0;
+			return GetComparisonResult(value, valueToCompare) >= 0;
 		}
 
 		public override Comparison Comparison {

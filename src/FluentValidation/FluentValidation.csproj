@@ -81,6 +81,7 @@
     <Compile Include="CollectionValidatorExtensions.cs" />
     <Compile Include="DefaultValidatorExtensions.cs" />
     <Compile Include="DefaultValidatorOptions.cs" />
+    <Compile Include="ExpressionExtensions.cs" />
     <Compile Include="InlineValidator.cs" />
     <Compile Include="Internal\DefaultValidatorSelector.cs" />
     <Compile Include="Internal\DelegateValidator.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Internal\MessageFormatter.cs" />
     <Compile Include="Internal\PropertyChain.cs" />
     <Compile Include="Internal\PropertyRule.cs" />
+    <Compile Include="PropertyRuleValidatorExtensions.cs" />
     <Compile Include="Resources\IStringSource.cs" />
     <Compile Include="Resources\IResourceAccessorBuilder.cs" />
     <Compile Include="Resources\LocalizedStringSource.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Validators\AbstractComparisonValidator.cs" />
     <Compile Include="Validators\ChildCollectionValidatorAdaptor.cs" />
     <Compile Include="Validators\ChildValidatorAdaptor.cs" />
+    <Compile Include="Validators\Comparer.cs" />
     <Compile Include="Validators\CreditCardValidator.cs" />
     <Compile Include="Validators\EmailValidator.cs" />
     <Compile Include="Validators\EqualValidator.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="Validators\PropertyValidator.cs" />
     <Compile Include="Validators\PropertyValidatorContext.cs" />
     <Compile Include="Validators\RegularExpressionValidator.cs" />
+    <Compile Include="Validators\ScalePrecisionValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Messages.ru.resx">

@@ -23,6 +23,7 @@ namespace FluentValidation.Validators {
 	using Attributes;
 	using Internal;
 	using Results;
+	using System.Globalization;
 
 	public abstract class AbstractComparisonValidator : PropertyValidator, IComparisonValidator {
 
@@ -68,6 +69,16 @@ namespace FluentValidation.Validators {
 		public abstract Comparison Comparison { get; }
 		public MemberInfo MemberToCompare { get; private set; }
 		public object ValueToCompare { get; private set; }
+
+        protected static int GetComparisonResult(IComparable value, IComparable valueToCompare)
+        {
+            int result;
+            if (Comparer.TryCompare(value, valueToCompare, out result))
+            {
+                return result;
+            }
+            return value.CompareTo(valueToCompare);
+        }
 	}
 
 	public interface IComparisonValidator : IPropertyValidator {
