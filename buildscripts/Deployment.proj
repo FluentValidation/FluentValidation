@@ -57,8 +57,8 @@
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\Net40\%(RecursiveDir)" />
 		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\lib\Net40" />
 		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\lib\Net40" />
-		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL5\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
-    <Copy SourceFiles="@(Silverlight4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\SL5\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+    <Copy SourceFiles="@(Silverlight4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
     
 		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
 		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\FluentValidation\FluentValidation.dll">
