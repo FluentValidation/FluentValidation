@@ -49,6 +49,11 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Should_succeed_when_less_than_input_using_different_types() {
+			new LessThanOrEqualValidator(100M).IsValid(20D, 100M).ShouldBeTrue();
+		}
+
+		[Test]
 		public void Should_succeed_when_equal_to_input() {
 			var result = validator.Validate(new Person{Id=value});
 			result.IsValid.ShouldBeTrue();
