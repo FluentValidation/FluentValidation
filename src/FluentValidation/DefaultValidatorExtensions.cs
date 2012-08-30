@@ -20,6 +20,7 @@ namespace FluentValidation {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using Internal;
 	using Results;
@@ -536,6 +537,79 @@ namespace FluentValidation {
 			if(! result.IsValid) {
 				throw new ValidationException(result.Errors);	
 			}
+		}
+
+		/// <summary>
+		/// Validates certain properties of the specified instance.
+		/// </summary>
+		/// <param name="validator">The current validator</param>
+		/// <param name="instance">The object to validate</param>
+		/// <param name="properties">The names of the properties to validate.</param>
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
+		public static ValidationResult Validate(this IValidator validator, object instance, params string[] properties)
+		{
+			var context = new ValidationContext(instance, new PropertyChain(), new MemberNameValidatorSelector(properties));
+			return validator.Validate(context);
+		}
+
+		/// <summary>
+		/// Validates a property of the specified instance but using a given value.
+		/// </summary>
+		/// <param name="validator">The current validator</param>
+		/// <param name="property">The name of the property to validate.</param>
+		/// <param name="value">The value to validate</param>
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
+		public static ValidationResult ValidateMember(this IValidator validator, string property, object value)
+		{
+			return validator.ValidateMember(null, property, value);
+		}
+
+		/// <summary>
+		/// Validates a property of the specified instance but using a given value.
+		/// </summary>
+		/// <param name="validator">The current validator</param>
+		/// <param name="instance">The instance to validate</param>
+		/// <param name="property">The name of the property to validate.</param>
+		/// <param name="value">The value to validate</param>
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
+		public static ValidationResult ValidateMember(this IValidator validator, object instance, string property, object value)
+		{
+			var desc = validator.CreateDescriptor();
+			var propertyValidators = desc.GetValidatorsForMember(property);
+
+			var parentContext = new ValidationContext(instance);
+
+			var rule = new PropertyRule(null, x => value, null, null, null, null) {
+				PropertyName = property
+			};
+			var context = new PropertyValidatorContext(parentContext, rule, property);
+
+			return new ValidationResult(propertyValidators.SelectMany(v => v.Validate(context)));
+		}
+
+		/// <summary>
+		/// Validates a property of the specified instance but using a given value.
+		/// </summary>
+		/// <param name="validator">The current validator</param>
+		/// <param name="propertyExpression">Expression to specify the property to validate</param>
+		/// <param name="value">The value to validate</param>
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
+		public static ValidationResult ValidateMember<T>(this IValidator<T> validator, Expression<Func<T, object>> propertyExpression, object value)
+		{
+			return validator.ValidateMember(null, propertyExpression, value);
+		}
+
+		/// <summary>
+		/// Validates a property of the specified instance but using a given value.
+		/// </summary>
+		/// <param name="validator">The current validator</param>
+		/// <param name="instance">The instance to validate</param>
+		/// <param name="propertyExpression">Expression to specify the property to validate</param>
+		/// <param name="value">The value to validate</param>
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
+		public static ValidationResult ValidateMember<T>(this IValidator<T> validator, object instance, Expression<Func<T, object>> propertyExpression, object value)
+		{
+			return validator.ValidateMember(instance, propertyExpression.GetMember().Name, value);
 		}
 
 		/// <summary>

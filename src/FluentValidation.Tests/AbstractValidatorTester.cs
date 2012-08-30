@@ -114,6 +114,29 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Should_validate_single_property_with_custom_value() {
+			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleFor(x => x.Surname).NotNull();
+			var result = validator.ValidateMember("Surname", null);
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Test]
+		public void Should_validate_single_property_with_custom_value_expressions() {
+			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleFor(x => x.Surname).NotNull();
+			var result = validator.ValidateMember(x => x.Surname, null);
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Test]
+		public void Should_validate_single_field_with_custom_value_expressions() {
+			validator.RuleFor(x => x.NameField).NotNull();
+			var result = validator.ValidateMember(x => x.NameField, null);
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Test]
 		public void Should_throw_for_non_member_expression_when_validating_single_property() {
 			typeof(ArgumentException).ShouldBeThrownBy(() => validator.Validate(new Person(), x => "foo"));
 		}
