@@ -2,9 +2,9 @@
 	<PropertyGroup>
     <BaseDir>$(MSBuildProjectDirectory)\..</BaseDir>
     <BuildDir>$(BaseDir)\build</BuildDir>
-    <OutputDir>$(BuildDir)\$(Configuration)</OutputDir>
     <PackageDir>$(BuildDir)\Packages</PackageDir>
     <PackageSuffix Condition="'$(PackageSuffix)'!=''"></PackageSuffix>
+    <OutputDir>$(BuildDir)\$(Configuration)$(PackageSuffix)</OutputDir>
     <MSBuildExtensions>$(BaseDir)\lib\msbuild\msbuild.community.tasks.dll</MSBuildExtensions>
   </PropertyGroup>
   
@@ -16,10 +16,12 @@
 	<Target Name="Deploy">
 		
 		<ItemGroup>
-			<MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\**\*.*" />
-			<Mvc3Binaries Include="$(BaseDir)\src\FluentValidation.Mvc3\bin\$(Configuration)\FluentValidation.Mvc.*" />
-			<Mvc4Binaries Include="$(BaseDir)\src\FluentValidation.Mvc4\bin\$(Configuration)\FluentValidation.Mvc.*" />
-			<SilverlightBinaries Include="$(BaseDir)\src\FluentValidation.Silverlight\bin\$(Configuration)\**\*.*" />
+			<MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
+			<Mvc3Binaries Include="$(BaseDir)\src\FluentValidation.Mvc3\bin\$(Configuration)$(PackageSuffix)\FluentValidation.Mvc.*" />
+			<Mvc4Binaries Include="$(BaseDir)\src\FluentValidation.Mvc4\bin\$(Configuration)$(PackageSuffix)\FluentValidation.Mvc.*" />
+			
+			<SilverlightBinaries Include="$(BaseDir)\src\FluentValidation.Silverlight\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
+			<Silverlight4Binaries Include="$(BaseDir)\src\FluentValidation.Silverlight4\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<!--<WP7Binaries Include="$(BaseDir)\src\FluentValidation.WP7\bin\$(Configuration)\**\*.*" />-->
 			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
 		</ItemGroup>
@@ -28,7 +30,9 @@
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation\%(RecursiveDir)"  />
 		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC3" />
 		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC4" />
-		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(OutputDir)\Silverlight\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(OutputDir)\Silverlight\SL5\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+		<Copy SourceFiles="@(Silverlight4Binaries)" DestinationFolder="$(OutputDir)\Silverlight\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+		
 		<!--<Copy SourceFiles="@(WP7Binaries)" DestinationFolder="$(OutputDir)\WP7\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>-->
 		<Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
 	</Target>
@@ -37,7 +41,8 @@
 		<ItemGroup>
 			<FilesToZip Include="$(OutputDir)\**\*.*" />
 		</ItemGroup>
-		<Zip Files="@(FilesToZip)" ZipFileName="$(BuildDir)\FluentValidation.zip" WorkingDirectory="$(OutputDir)" />
+		<Message Text="@(FilesToZip)" />
+		<Zip Files="@(FilesToZip)" ZipFileName="$(BuildDir)\FluentValidation$(PackageSuffix).zip" WorkingDirectory="$(OutputDir)" />
 	</Target>
 
 
@@ -52,7 +57,8 @@
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\Net40\%(RecursiveDir)" />
 		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\lib\Net40" />
 		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\lib\Net40" />
-		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+		<Copy SourceFiles="@(SilverlightBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL5\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
+    <Copy SourceFiles="@(Silverlight4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation\lib\SL4\%(RecursiveDir)"  Condition="'$(BuildSilverlight)' == 'true'"/>
     
 		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
 		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\FluentValidation\FluentValidation.dll">

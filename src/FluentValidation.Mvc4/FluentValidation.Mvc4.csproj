@@ -119,7 +119,7 @@
   </ItemGroup>
   <PropertyGroup>
     <SignAssembly Condition="'$(PerformSigning)'=='True'">true</SignAssembly>
-    <OutputPath Condition="'$(PerformSigning)'=='True'">bin\Signed\</OutputPath>
+    <OutputPath Condition="'$(PerformSigning)'=='True'">bin\$(Configuration)-Signed\</OutputPath>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

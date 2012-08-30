@@ -23,7 +23,8 @@
 	</Target>
 
 	<Target Name="CompileSilverlight">
-		<MSBuild Projects="$(SilverlightSolution)" Properties="Configuration=$(Configuration)" Condition="'$(BuildSilverlight)' == 'true'" />
+		<MSBuild Projects="$(SilverlightSolution)" Properties="Configuration=$(Configuration)" Targets="Rebuild" Condition="'$(BuildSilverlight)' == 'true'" />
+		<MSBuild Projects="$(SilverlightSolution)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" Condition="'$(BuildSilverlight)' == 'true'" />
 	</Target>
 
 	<Target Name="Test">
@@ -34,7 +35,7 @@
     <RemoveDir Directories="$(BuildDir)" />
 		
 		<MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);BuildSilverlight=$(BuildSilverlight)" />
-    <MSBuild Projects="Deployment.proj" Properties="Configuration=Signed;BuildSilverlight=false;PackageSuffix=-signed" />
+    <MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);BuildSilverlight=$(BuildSilverlight);PackageSuffix=-signed" />
     <!-- ... msbuild ... (include BuildSilverlight) (Configuration) (PackageSuffix) -->
   </Target>
 

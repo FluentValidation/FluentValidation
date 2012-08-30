@@ -87,7 +87,7 @@
   </ItemGroup>
  <PropertyGroup>
     <SignAssembly Condition="'$(PerformSigning)'=='True'">true</SignAssembly>
-    <OutputPath Condition="'$(PerformSigning)'=='True'">bin\Signed\</OutputPath>
+    <OutputPath Condition="'$(PerformSigning)'=='True'">bin\$(Configuration)-Signed\</OutputPath>
   </PropertyGroup>
   
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
