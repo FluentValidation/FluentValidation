@@ -551,15 +551,16 @@ namespace FluentValidation {
         /// Validates a property of the specified instance but using a given value.
         /// </summary>
         /// <param name="validator">The current validator</param>
-        /// <param name="value">The value to validate</param>
+	    /// <param name="instance">The instance to validate</param>
         /// <param name="property">The name of the property to validate.</param>
+	    /// <param name="value">The value to validate</param>
         /// <returns>A ValidationResult object containing any validation failures.</returns>
-        public static ValidationResult ValidateMember(this IValidator validator, string property, object value)
+	    public static ValidationResult ValidateMember(this IValidator validator, object instance, string property, object value)
         {
             var desc = validator.CreateDescriptor();
             var propertyValidators = desc.GetValidatorsForMember(property);
 
-            var parentContext = new ValidationContext(null);
+            var parentContext = new ValidationContext(instance);
 
             var rule = new PropertyRule(null, x => value, null, null, null, null) {
                 PropertyName = property
@@ -573,12 +574,13 @@ namespace FluentValidation {
         /// Validates a property of the specified instance but using a given value.
         /// </summary>
         /// <param name="validator">The current validator</param>
-        /// <param name="value">The value to validate</param>
+        /// <param name="instance">The instance to validate</param>
         /// <param name="propertyExpression">Expression to specify the property to validate</param>
+        /// <param name="value">The value to validate</param>
         /// <returns>A ValidationResult object containing any validation failures.</returns>
-        public static ValidationResult ValidateMember<T>(this IValidator<T> validator, Expression<Func<T, object>> propertyExpression, object value)
+        public static ValidationResult ValidateMember<T>(this IValidator<T> validator, object instance, Expression<Func<T, object>> propertyExpression, object value)
         {
-            return validator.ValidateMember(propertyExpression.GetMember().Name, value);
+            return validator.ValidateMember(instance, propertyExpression.GetMember().Name, value);
         }
 
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, IValidatorSelector selector = null, string ruleSet = null) {
