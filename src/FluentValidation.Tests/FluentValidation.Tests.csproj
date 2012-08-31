@@ -139,6 +139,7 @@
     <Compile Include="RegularExpressionValidatorTests.cs" />
     <Compile Include="RuleBuilderTests.cs" />
     <Compile Include="RulesetTests.cs" />
+    <Compile Include="ScalePrecisionValidatorTests.cs" />
     <Compile Include="SharedConditionTests.cs" />
     <Compile Include="StandalonePropertyValidationTester.cs" />
     <Compile Include="TestExtensions.cs" />
