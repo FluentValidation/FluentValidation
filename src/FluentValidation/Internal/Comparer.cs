@@ -43,7 +43,7 @@ namespace FluentValidation.Internal {
 				// try default (will work on same types)
 				result = value.CompareTo(valueToCompare);
 			}
-			catch {
+			catch(ArgumentException) {
 				// attempt to to value type comparison
 				if (value is decimal || valueToCompare is decimal ||
 				    value is double || valueToCompare is double ||
