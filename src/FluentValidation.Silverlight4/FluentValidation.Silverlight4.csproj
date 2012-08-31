@@ -255,6 +255,9 @@
     <Compile Include="..\FluentValidation\Validators\PropertyValidatorContext.cs">
       <Link>PropertyValidatorContext.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Validators\ScalePrecisionValidator.cs">
+      <Link>ScalePrecisionValidator.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.de.resx">
@@ -295,7 +298,7 @@
     <None Include="..\FluentValidation.snk">
       <Link>FluentValidation.snk</Link>
     </None>
-  </ItemGroup>  
+  </ItemGroup>
   <PropertyGroup>
     <SignAssembly Condition="'$(PerformSigning)'==''">false</SignAssembly>
     <SignAssembly Condition="'$(PerformSigning)'=='True'">true</SignAssembly>

@@ -1,3 +1,6 @@
+3.5 - 
+* Added scale precision validator (thanks to Matthew Leibowitz)
+
 3.4 - 17/08/2012
 * Make ValidationResut.IsValid virtual
 * Add private no-arg ctor to ValidationFailure to help with serialization
