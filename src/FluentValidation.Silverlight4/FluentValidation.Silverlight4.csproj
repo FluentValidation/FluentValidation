@@ -78,6 +78,9 @@
     <Compile Include="..\FluentValidation\Internal\RulesetValidatorSelector.cs">
       <Link>RulesetValidatorSelector.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\PropertyRuleValidatorExtensions.cs">
+      <Link>PropertyRuleValidatorExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Resources\IResourceAccessorBuilder.cs">
       <Link>IResourceAccessorBuilder.cs</Link>
     </Compile>

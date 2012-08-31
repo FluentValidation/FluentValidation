@@ -30,7 +30,8 @@ namespace FluentValidation {
 		public static void ReplaceRule<T>(this IValidator<T> validators,
 		                                  Expression<Func<T, object>> expression,
 		                                  IPropertyValidator newValidator) {
-			var property = expression.GetProperty();
+			var property = expression.GetMember();
+			if(property == null) throw new ArgumentException("Property could not be identified", "expression");
 			var type = newValidator.GetType();
 
 			// replace the first validator of this type, then remove the others
@@ -55,7 +56,8 @@ namespace FluentValidation {
 		/// </summary>
 		public static void RemoveRule<T>(this IValidator<T> validators,
 		                                 Expression<Func<T, object>> expression, Type oldValidatorType) {
-			var property = expression.GetProperty();
+			var property = expression.GetMember();
+			if (property == null) throw new ArgumentException("Property could not be identified", "expression");
 
 			foreach (var rule in validators.OfType<PropertyRule>()) {
 				if (rule.Member == property) {
@@ -71,7 +73,8 @@ namespace FluentValidation {
 		/// </summary>
 		public static void ClearRules<T>(this IValidator<T> validators,
 		                                 Expression<Func<T, object>> expression) {
-			var property = expression.GetProperty();
+			var property = expression.GetMember();
+			if (property == null) throw new ArgumentException("Property could not be identified", "expression");
 
 			foreach (var rule in validators.OfType<PropertyRule>()) {
 				if (rule.Member == property) {
