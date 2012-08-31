@@ -1,7 +1,24 @@
-using System;
+#region License
+// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at http://fluentvalidation.codeplex.com
+#endregion
 
-namespace FluentValidation.Internal
-{
+namespace FluentValidation.Internal {
+	using System;
+
 	public static class Comparer {
 		public static bool TryCompare(IComparable value, IComparable valueToCompare, out int result) {
 			try {
@@ -21,15 +38,16 @@ namespace FluentValidation.Internal
 		/// if the values are fractions. If they are, then it does a double 
 		/// comparison, otherwise it does a long comparison.
 		/// </summary>
-		private static void Compare(IComparable value, IComparable valueToCompare, out int result) {
+		static void Compare(IComparable value, IComparable valueToCompare, out int result) {
 			try {
 				// try default (will work on same types)
 				result = value.CompareTo(valueToCompare);
-			} catch {
+			}
+			catch {
 				// attempt to to value type comparison
 				if (value is decimal || valueToCompare is decimal ||
-					value is double || valueToCompare is double ||
-					value is float || valueToCompare is float) {
+				    value is double || valueToCompare is double ||
+				    value is float || valueToCompare is float) {
 					// we are comparing a decimal/double/float, then compare using doubles
 					result = Convert.ToDouble(value).CompareTo(Convert.ToDouble(valueToCompare));
 				}

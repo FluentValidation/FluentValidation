@@ -66,6 +66,9 @@
     <Compile Include="..\FluentValidation\DefaultValidatorOptions.cs">
       <Link>DefaultValidatorOptions.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Internal\Comparer.cs">
+      <Link>Comparer.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Internal\IConfigurable.cs">
       <Link>IConfigurable.cs</Link>
     </Compile>
