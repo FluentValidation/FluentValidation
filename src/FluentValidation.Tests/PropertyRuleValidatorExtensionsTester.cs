@@ -31,7 +31,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void ReplacePropertyValidator_should_replace_property() {
+		public void RemovePropertyValidator_should_remove_property() {
 			validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
 
 			var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
@@ -44,7 +44,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void RemovePropertyValidator_should_remove_property() {
+		public void ReplacePropertyValidator_should_replace_property() {
 			validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
 
 			var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
@@ -53,6 +53,19 @@ namespace FluentValidation.Tests {
 			validator.ReplaceRule(x => x.Surname, new LengthValidator(10, 20));
 
 			result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
+			Assert.AreEqual(0, result.Errors.Count);
+		}
+
+		[Test]
+		public void ReplacePropertyValidator_should_replace_field_rule() {
+			validator.RuleFor(x => x.NameField).Length(5, 10).WithMessage("foo");
+
+			var result = validator.Validate(new Person { NameField = "Matthew Leibowitz" });
+			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+
+			validator.ReplaceRule(x => x.NameField, new LengthValidator(10, 20));
+
+			result = validator.Validate(new Person { NameField = "Matthew Leibowitz" });
 			Assert.AreEqual(0, result.Errors.Count);
 		}
 
