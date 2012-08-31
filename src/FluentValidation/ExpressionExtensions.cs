@@ -13,48 +13,43 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 // 
-// The latest version of this file can be found at http://www.codeplex.com/FluentValidation
+// The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 
-namespace FluentValidation
-{
-    using System;
-    using System.Linq.Expressions;
-    using System.Reflection;
+namespace FluentValidation {
+	using System;
+	using System.Linq.Expressions;
+	using System.Reflection;
 
-    public static class ExpressionExtensions
-    {
-        public static PropertyInfo GetProperty<T>(this Expression<Func<T, object>> expression)
-        {
-            if (expression == null)
-            {
-                throw new ArgumentNullException("expression");
-            }
+	public static class ExpressionExtensions {
+		public static PropertyInfo GetProperty<T>(this Expression<Func<T, object>> expression) {
+			if (expression == null) {
+				throw new ArgumentNullException("expression");
+			}
 
-            MemberExpression memberExpression = null;
+			MemberExpression memberExpression = null;
 
-            switch (expression.Body.NodeType)
-            {
-                case ExpressionType.Convert:
-                    memberExpression = ((UnaryExpression) expression.Body).Operand as MemberExpression;
-                    break;
-                case ExpressionType.MemberAccess:
-                    memberExpression = expression.Body as MemberExpression;
-                    break;
-            }
+			switch (expression.Body.NodeType) {
+				case ExpressionType.Convert:
+					memberExpression = ((UnaryExpression)expression.Body).Operand as MemberExpression;
+					break;
+				case ExpressionType.MemberAccess:
+					memberExpression = expression.Body as MemberExpression;
+					break;
+			}
 
-            if (memberExpression == null)
-                throw new ArgumentException("Property could not be identified", "expression");
+			if (memberExpression == null)
+				throw new ArgumentException("Property could not be identified", "expression");
 
-            PropertyInfo propertyInfo = typeof (T).GetProperty(memberExpression.Member.Name,
-                                                               BindingFlags.Instance | BindingFlags.Static |
-                                                               BindingFlags.Public | BindingFlags.NonPublic |
-                                                               BindingFlags.FlattenHierarchy);
+			PropertyInfo propertyInfo = typeof(T).GetProperty(memberExpression.Member.Name,
+			                                                  BindingFlags.Instance | BindingFlags.Static |
+			                                                  BindingFlags.Public | BindingFlags.NonPublic |
+			                                                  BindingFlags.FlattenHierarchy);
 
-            if (propertyInfo == null)
-                throw new ArgumentException("Property could not be identified", "expression");
+			if (propertyInfo == null)
+				throw new ArgumentException("Property could not be identified", "expression");
 
-            return propertyInfo;
-        }
-    }
+			return propertyInfo;
+		}
+	}
 }

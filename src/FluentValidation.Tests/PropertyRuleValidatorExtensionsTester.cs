@@ -13,66 +13,60 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 // 
-// The latest version of this file can be found at http://www.codeplex.com/FluentValidation
+// The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 
-namespace FluentValidation.Tests
-{
-    using System.Linq;
-    using NUnit.Framework;
-    using Validators;
+namespace FluentValidation.Tests {
+	using System.Linq;
+	using NUnit.Framework;
+	using Validators;
 
-    [TestFixture]
-    public class PropertyRuleValidatorExtensionsTester
-    {
-        private AbstractValidator<Person> validator;
+	[TestFixture]
+	public class PropertyRuleValidatorExtensionsTester {
+		AbstractValidator<Person> validator;
 
-        [SetUp]
-        public void Setup()
-        {
-            validator = new TestValidator();
-        }
+		[SetUp]
+		public void Setup() {
+			validator = new TestValidator();
+		}
 
-        [Test]
-        public void ReplacePropertyValidator_should_replace_property()
-        {
-            validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
+		[Test]
+		public void ReplacePropertyValidator_should_replace_property() {
+			validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
 
-            var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-            result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+			var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
+			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 
-            validator.RemoveRule(x => x.Surname, typeof (LengthValidator));
+			validator.RemoveRule(x => x.Surname, typeof(LengthValidator));
 
-            result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-            Assert.AreEqual(0, result.Errors.Count);
-        }
+			result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
+			Assert.AreEqual(0, result.Errors.Count);
+		}
 
-        [Test]
-        public void RemovePropertyValidator_should_remove_property()
-        {
-            validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
+		[Test]
+		public void RemovePropertyValidator_should_remove_property() {
+			validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
 
-            var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-            result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+			var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
+			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 
-            validator.ReplaceRule(x => x.Surname, new LengthValidator(10, 20));
+			validator.ReplaceRule(x => x.Surname, new LengthValidator(10, 20));
 
-            result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-            Assert.AreEqual(0, result.Errors.Count);
-        }
+			result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
+			Assert.AreEqual(0, result.Errors.Count);
+		}
 
-        [Test]
-        public void ClearPropertyValidator_should_remove_property()
-        {
-            validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
+		[Test]
+		public void ClearPropertyValidator_should_remove_property() {
+			validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
 
-            var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-            result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+			var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
+			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 
-            validator.ClearRules(x => x.Surname);
+			validator.ClearRules(x => x.Surname);
 
-            result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-            Assert.AreEqual(0, result.Errors.Count);
-        }
-    }
+			result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
+			Assert.AreEqual(0, result.Errors.Count);
+		}
+	}
 }
