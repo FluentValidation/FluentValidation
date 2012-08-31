@@ -83,7 +83,7 @@ namespace FluentValidation.Validators {
 				return comparer.Equals(comparisonValue, propertyValue);
 			}
 
-			return Equals(comparisonValue, propertyValue);
+			return Internal.Comparer.GetEqualsResult((IComparable)comparisonValue, (IComparable)propertyValue);
 		}
 	}
 }
