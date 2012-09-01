@@ -102,6 +102,7 @@
     <Compile Include="ChildValidatorInferenceTests.cs" />
     <Compile Include="ClientsideMessageTester.cs" />
     <Compile Include="CollectionValidatorTests.cs" />
+    <Compile Include="ComparerTester.cs" />
     <Compile Include="ComplexValidationTester.cs" />
     <Compile Include="ConditionTests.cs" />
     <Compile Include="CreditCardValidatorTests.cs" />
