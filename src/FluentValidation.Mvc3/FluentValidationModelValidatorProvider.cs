@@ -82,7 +82,7 @@ namespace FluentValidation.Mvc {
 		IEnumerable<ModelValidator> GetValidatorsForProperty(ModelMetadata metadata, ControllerContext context, IValidator validator) {
 			var modelValidators = new List<ModelValidator>();
 
-			if (validator != null) {
+            if (validator != null) {
 				var descriptor = validator.CreateDescriptor();
 
 				var validatorsWithRules = from rule in descriptor.GetRulesForMember(metadata.PropertyName)
@@ -95,9 +95,9 @@ namespace FluentValidation.Mvc {
 										  select modelValidatorForProperty;
 					
 				modelValidators.AddRange(validatorsWithRules);
-			}
+            }
 
-			if(validator != null && metadata.IsRequired && AddImplicitRequiredValidator) {
+			if(metadata.IsRequired && AddImplicitRequiredValidator) {
 				bool hasRequiredValidators = modelValidators.Any(x => x.IsRequired);
 
 				//If the model is 'Required' then we assume it must have a NotNullValidator. 
