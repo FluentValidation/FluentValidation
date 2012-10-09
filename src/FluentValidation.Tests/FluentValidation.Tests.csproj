@@ -98,6 +98,7 @@
     <Compile Include="AssemblyScannerTester.cs" />
     <Compile Include="AttributedValidatorFactoryTester.cs" />
     <Compile Include="CascadingFailuresTester.cs" />
+    <Compile Include="ChainedValidationTester.cs" />
     <Compile Include="ChainingValidatorsTester.cs" />
     <Compile Include="ChildValidatorInferenceTests.cs" />
     <Compile Include="ClientsideMessageTester.cs" />
