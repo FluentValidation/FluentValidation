@@ -155,7 +155,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public void RemoveValidator(IPropertyValidator original) {
 		    if (ReferenceEquals(CurrentValidator, original)) {
-		        CurrentValidator = validators.LastOrDefault();
+		        CurrentValidator = validators.LastOrDefault(x => x != original);
 		    }
 
 		    validators.Remove(original);
