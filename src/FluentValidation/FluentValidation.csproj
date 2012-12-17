@@ -82,6 +82,7 @@
     <Compile Include="DefaultValidatorExtensions.cs" />
     <Compile Include="DefaultValidatorOptions.cs" />
     <Compile Include="InlineValidator.cs" />
+    <Compile Include="Internal\CollectionPropertyRule.cs" />
     <Compile Include="Internal\Comparer.cs" />
     <Compile Include="Internal\DefaultValidatorSelector.cs" />
     <Compile Include="Internal\DelegateValidator.cs" />

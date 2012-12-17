@@ -2,6 +2,7 @@
 * Added scale precision validator (thanks to Matthew Leibowitz)
 * Added the ability to replace property rules (thanks to Matthew Leibowitz)
 * Added a slightly better value type comparer (thanks to Matthew Leibowitz)
+* Added RuleForEach
 
 3.4 - 17/08/2012
 * Make ValidationResut.IsValid virtual

@@ -112,6 +112,7 @@
     <Compile Include="ExactLengthValidatorTester.cs" />
     <Compile Include="ExclusiveBetweenValidatorTests.cs" />
     <Compile Include="FluentValidationModelValidatorProviderTests.cs" />
+    <Compile Include="ForEachRuleTests.cs" />
     <Compile Include="InclusiveBetweenValidatorTests.cs" />
     <Compile Include="InlineValidatorTester.cs" />
     <Compile Include="InstanceCacheTester.cs" />

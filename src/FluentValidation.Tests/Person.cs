@@ -29,7 +29,8 @@ namespace FluentValidation.Tests {
 		public string Forename { get; set; }
 
 		public List<Person> Children { get; set; }
-
+	    public string[] NickNames { get; set; }
+	    
 		public DateTime DateOfBirth { get; set; }
 
 		public int? NullableInt { get; set; }
