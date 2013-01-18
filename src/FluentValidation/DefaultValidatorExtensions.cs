@@ -21,6 +21,7 @@ namespace FluentValidation {
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
+	using System.Text.RegularExpressions;
 	using Internal;
 	using Results;
 	using Validators;
@@ -85,6 +86,33 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, string expression) {
 			return ruleBuilder.SetValidator(new RegularExpressionValidator(expression));
+		}
+
+
+		/// <summary>
+		/// Defines a regular expression validator on the current rule builder, but only for string properties.
+		/// Validation will fail if the value returned by the lambda does not match the regular expression.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="regex">The regular expression to use</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Regex regex) {
+			return ruleBuilder.SetValidator(new RegularExpressionValidator(regex));
+		}
+
+
+		/// <summary>
+		/// Defines a regular expression validator on the current rule builder, but only for string properties.
+		/// Validation will fail if the value returned by the lambda does not match the regular expression.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="expression">The regular expression to check the value against.</param>
+		/// <param name="options">Regex options</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, string expression, RegexOptions options) {
+			return ruleBuilder.SetValidator(new RegularExpressionValidator(expression, options));
 		}
 
 		/// <summary>
