@@ -126,6 +126,12 @@ namespace FluentValidation.Tests {
 			AssertValidator<LessThanOrEqualValidator>();
 		}
 
+    [Test]
+    public void LessThanOrEqual_should_create_LessThanOrEqualValidator_with_lambda_with_other_Nullable() {
+      validator.RuleFor(x => x.NullableInt).LessThanOrEqualTo(x => x.OtherNullableInt);
+      AssertValidator<LessThanOrEqualValidator>();
+    }
+
 		[Test]
 		public void GreaterThan_should_create_GreaterThanValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).GreaterThan("foo");
@@ -149,6 +155,12 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).GreaterThanOrEqualTo(x => "foo");
 			AssertValidator<GreaterThanOrEqualValidator>();
 		}
+
+    [Test]
+    public void GreaterThanOrEqual_should_create_GreaterThanOrEqualValidator_with_lambda_with_other_Nullable() {
+      validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.OtherNullableInt);
+      AssertValidator<GreaterThanOrEqualValidator>();
+    }
 
 		private void AssertValidator<TValidator>() {
 			var rule = (PropertyRule)validator.First();
