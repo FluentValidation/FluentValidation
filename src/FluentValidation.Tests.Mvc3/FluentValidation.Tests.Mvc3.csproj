@@ -1,15 +1,15 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{0C98D445-E8E0-491A-B42E-48C1BED25AE3}</ProjectGuid>
+    <ProjectGuid>{73A2D2C0-694F-468C-A3A6-3CDB38900350}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FluentValidation.Tests</RootNamespace>
-    <AssemblyName>FluentValidation.Tests.Mvc4</AssemblyName>
+    <AssemblyName>FluentValidation.Tests.Mvc3</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,11 +42,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\mvc\v4\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\mvc\v4\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\..\lib\mvc\v3\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -61,18 +57,18 @@
     <Compile Include="..\FluentValidation.Tests\TestMessages.Designer.cs">
       <Link>TestMessages.Designer.cs</Link>
     </Compile>
-    <Compile Include="ClientsideMessageTester.cs" />
-    <Compile Include="ModelBinderTester.cs" />
+    <Compile Include="..\FluentValidation.Tests.Mvc4\ClientsideMessageTester.cs"><Link>ClientsideMessageTester.cs</Link></Compile>
+    <Compile Include="..\FluentValidation.Tests.Mvc4\ModelBinderTester.cs"><Link>ModelBinderTester.cs</Link></Compile>
+    <Compile Include="..\FluentValidation.Tests.Mvc4\ValidationResultExtensionTests.cs"><Link>ValidationResultExtensionTests.cs</Link></Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValidationResultExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Mvc4\FluentValidation.Mvc4.csproj">
-      <Project>{CB78DD3A-1BEB-4863-813B-8221FE9EC23D}</Project>
-      <Name>FluentValidation.Mvc4</Name>
+    <ProjectReference Include="..\FluentValidation.Mvc3\FluentValidation.Mvc3.csproj">
+      <Project>{a2d31732-f255-4f05-8412-3c8c29b65755}</Project>
+      <Name>FluentValidation.Mvc3</Name>
     </ProjectReference>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
-      <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
+      <Project>{dae0249b-4f69-4ac9-9a17-aa23e0795316}</Project>
       <Name>FluentValidation</Name>
     </ProjectReference>
   </ItemGroup>
