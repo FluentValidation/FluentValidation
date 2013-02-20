@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc4", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc4", "src\FluentValidation.Tests.Mvc4\FluentValidation.Tests.Mvc4.csproj", "{0C98D445-E8E0-491A-B42E-48C1BED25AE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc3", "src\FluentValidation.Tests.Mvc3\FluentValidation.Tests.Mvc3.csproj", "{73A2D2C0-694F-468C-A3A6-3CDB38900350}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{0C98D445-E8E0-491A-B42E-48C1BED25AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C98D445-E8E0-491A-B42E-48C1BED25AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C98D445-E8E0-491A-B42E-48C1BED25AE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73A2D2C0-694F-468C-A3A6-3CDB38900350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73A2D2C0-694F-468C-A3A6-3CDB38900350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73A2D2C0-694F-468C-A3A6-3CDB38900350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73A2D2C0-694F-468C-A3A6-3CDB38900350}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
