@@ -8,6 +8,7 @@
 		<BuildSilverlight Condition="'$(BuildSilverlight)' == ''" >true</BuildSilverlight>
 		<TestAssemblies>
 			$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll;
+			$(BaseDir)\src\FluentValidation.Tests.Mvc3\bin\$(Configuration)\FluentValidation.Tests.Mvc3.dll;
 			$(BaseDir)\src\FluentValidation.Tests.Mvc4\bin\$(Configuration)\FluentValidation.Tests.Mvc4.dll;
 		</TestAssemblies>
 		<MSBuildExtensions>$(BaseDir)\lib\msbuild\msbuild.community.tasks.dll</MSBuildExtensions>

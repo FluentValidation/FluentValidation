@@ -70,11 +70,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\mvc\v3\System.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -85,10 +80,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Mvc3\FluentValidation.Mvc3.csproj">
-      <Project>{A2D31732-F255-4F05-8412-3C8C29B65755}</Project>
-      <Name>FluentValidation.Mvc3</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
       <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
       <Name>FluentValidation</Name>
@@ -101,7 +92,6 @@
     <Compile Include="ChainedValidationTester.cs" />
     <Compile Include="ChainingValidatorsTester.cs" />
     <Compile Include="ChildValidatorInferenceTests.cs" />
-    <Compile Include="ClientsideMessageTester.cs" />
     <Compile Include="CollectionValidatorTests.cs" />
     <Compile Include="ComparerTester.cs" />
     <Compile Include="ComplexValidationTester.cs" />
@@ -118,7 +108,6 @@
     <Compile Include="InstanceCacheTester.cs" />
     <Compile Include="LocalisedNameTester.cs" />
     <Compile Include="MessageFormatterTests.cs" />
-    <Compile Include="ModelBinderTester.cs" />
     <Compile Include="CustomValidatorTester.cs" />
     <Compile Include="DefaultValidatorExtensionTester.cs" />
     <Compile Include="EmailValidatorTests.cs" />
@@ -157,7 +146,6 @@
     <Compile Include="TrackingCollectionTests.cs" />
     <Compile Include="UserStateTester.cs" />
     <Compile Include="ValidateAndThrowTester.cs" />
-    <Compile Include="ValidationResultExtensionTests.cs" />
     <Compile Include="ValidationResultTests.cs" />
     <Compile Include="ValidatorDescriptorTester.cs" />
     <Compile Include="ValidatorSelectorTests.cs" />
