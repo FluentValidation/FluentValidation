@@ -73,5 +73,13 @@ namespace FluentValidation {
 
 			return GetName(member.Name);
 		}
+
+		public IEnumerable<IPropertyValidator> GetValidatorsForMember<TValue>(MemberAccessor<T, TValue> accessor)
+		{
+			return from rule in Rules.OfType<PropertyRule>()
+			       where Equals(rule.Member, accessor.Member)
+			       from validator in rule.Validators
+			       select validator;
+		} 
 	}
 }

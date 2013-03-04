@@ -20,50 +20,33 @@ namespace FluentValidation.TestHelper {
 	using System;
 	using System.Linq;
 	using System.Linq.Expressions;
-	using System.Reflection;
-	using Internal;
 
 	public class ValidatorTester<T, TValue> where T : class {
 		private readonly IValidator<T> validator;
 		private readonly TValue value;
-		private readonly MemberInfo member;
+		private readonly MemberAccessor<T, TValue> accessor; 
 
 		public ValidatorTester(Expression<Func<T, TValue>> expression, IValidator<T> validator, TValue value) {
 			this.validator = validator;
 			this.value = value;
-			member = expression.GetMember();
+			accessor = expression;
 		}
 
-
 		public void ValidateNoError(T instanceToValidate) {
-			SetValue(instanceToValidate);
-
-			var count = validator.Validate(instanceToValidate).Errors.Count(x => x.PropertyName == member.Name);
+			accessor.Set(instanceToValidate, value);
+			var count = validator.Validate(instanceToValidate).Errors.Count(x => x.PropertyName == accessor.Member.Name);
 
 			if (count > 0) {
-				throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", member.Name));
+				throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", accessor.Member.Name));
 			}
 		}
 
 		public void ValidateError(T instanceToValidate) {
-			SetValue(instanceToValidate);
-			var count = validator.Validate(instanceToValidate).Errors.Count(x => x.PropertyName == member.Name);
+			accessor.Set(instanceToValidate, value);
+			var count = validator.Validate(instanceToValidate).Errors.Count(x => x.PropertyName == accessor.Member.Name);
 
 			if (count == 0) {
-				throw new ValidationTestException(string.Format("Expected a validation error for property {0}", member.Name));
-			}
-		}
-
-		private void SetValue(object instance) {
-			var property = member as PropertyInfo;
-			if (property != null) {
-				property.SetValue(instance, value, null);
-				return;
-			}
-
-			var field = member as FieldInfo;
-			if (field != null) {
-				field.SetValue(instance, value);
+				throw new ValidationTestException(string.Format("Expected a validation error for property {0}", accessor.Member.Name));
 			}
 		}
 	}

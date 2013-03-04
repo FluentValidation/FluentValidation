@@ -107,6 +107,7 @@
     <Compile Include="InlineValidatorTester.cs" />
     <Compile Include="InstanceCacheTester.cs" />
     <Compile Include="LocalisedNameTester.cs" />
+    <Compile Include="MemberAccessorTests.cs" />
     <Compile Include="MessageFormatterTests.cs" />
     <Compile Include="CustomValidatorTester.cs" />
     <Compile Include="DefaultValidatorExtensionTester.cs" />
