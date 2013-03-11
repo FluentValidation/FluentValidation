@@ -77,7 +77,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
       <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
-      <Name>FluentValidation</Name>
+      <Name>FluentValidation %283 - Cross Cutting\FluentValidation\FluentValidation%29</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -85,13 +85,14 @@
       <Link>FluentValidation.snk</Link>
     </None>
   </ItemGroup>
- <PropertyGroup>
+  <PropertyGroup>
     <SignAssembly Condition="'$(PerformSigning)'=='True'">true</SignAssembly>
     <OutputPath Condition="'$(PerformSigning)'=='True'">bin\$(Configuration)-Signed\</OutputPath>
   </PropertyGroup>
-  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Database|AnyCPU'">
+    <OutputPath>bin\Database\</OutputPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
- 
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
