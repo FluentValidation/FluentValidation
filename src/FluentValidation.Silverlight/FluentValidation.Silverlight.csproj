@@ -92,6 +92,9 @@
     <Compile Include="..\FluentValidation\DefaultValidatorOptions.cs">
       <Link>DefaultValidatorOptions.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Internal\CollectionPropertyRule.cs">
+      <Link>CollectionPropertyRule.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Internal\Comparer.cs">
       <Link>Comparer.cs</Link>
     </Compile>
@@ -106,6 +109,9 @@
     </Compile>
     <Compile Include="..\FluentValidation\Internal\RulesetValidatorSelector.cs">
       <Link>RulesetValidatorSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\MemberAccessor.cs">
+      <Link>MemberAccessor.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\PropertyRuleValidatorExtensions.cs">
       <Link>PropertyRuleValidatorExtensions.cs</Link>
