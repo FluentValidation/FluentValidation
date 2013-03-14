@@ -126,6 +126,17 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(1);
 
 		}
+
+		[Test]
+		public void Should_override_property_name() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator())
+					.OverridePropertyName("Orders2")
+			};
+
+			var results = validator.Validate(person);
+			results.Errors[0].PropertyName.ShouldEqual("Orders2[0].ProductName");
+		}
 		
 		#region old style - for compatibility with v2 and earlier before we had the explicit SetCollectionValidator
 		#pragma warning disable 612,618

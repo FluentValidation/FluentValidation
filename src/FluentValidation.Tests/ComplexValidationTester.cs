@@ -52,6 +52,18 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Should_override_propertyName() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator())
+					.OverridePropertyName("Address2")
+			};
+
+			var results = validator.Validate(person);
+			results.Errors[0].PropertyName.ShouldEqual("Address2.Postcode");
+		}
+
+
+		[Test]
 		public void Complex_validator_should_not_be_invoked_on_null_property() {
 			var results = validator.Validate(new Person());
 			results.Errors.Count.ShouldEqual(1);
@@ -79,6 +91,7 @@ namespace FluentValidation.Tests {
 			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
 			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
 		}
+
 
 		[Test]
 		public void Complex_property_should_be_excluded() {

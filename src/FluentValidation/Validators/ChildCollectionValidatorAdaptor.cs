@@ -61,7 +61,7 @@ namespace FluentValidation.Validators {
 				}
 
 				var newContext = context.ParentContext.CloneForChildValidator(element);
-				newContext.PropertyChain.Add(context.Rule.Member);
+				newContext.PropertyChain.Add(context.Rule.PropertyName);
 				newContext.PropertyChain.AddIndexer(count++);
 
 				var results = childValidator.Validate(newContext).Errors;

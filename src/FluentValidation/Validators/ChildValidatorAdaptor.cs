@@ -45,7 +45,7 @@ namespace FluentValidation.Validators {
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
 			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate);
-			newContext.PropertyChain.Add(context.Rule.Member);
+			newContext.PropertyChain.Add(context.Rule.PropertyName);
 			return newContext;
 		}
 	}
