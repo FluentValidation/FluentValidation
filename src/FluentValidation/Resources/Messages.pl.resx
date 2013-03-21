@@ -156,8 +156,8 @@
   <data name="exact_length_error" xml:space="preserve">
     <value>Maksymalna długość pola '{PropertyName}' to {MaxLength} znaki(ów). Wprowadzono {TotalLength} znaki(ów).</value>
   </data>
-  <data name="inclusivebetween_error" xml:space="preserve">
-    <value> '{PropertyName}' musi się zawierać pomiędzy {From} i {To}. Wprowadzono {Value}.</value>
+	<data name="inclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' musi się zawierać pomiędzy {From} i {To}. Wprowadzono {Value}.</value>
   </data>
   <data name="exclusivebetween_error" xml:space="preserve">
     <value>'{PropertyName}' musi się zawierać pomiędzy {From} i {To} (wyłącznie). Wprowadzono {Value}.</value>
