@@ -6,6 +6,7 @@
 * Additonal overloads of Matches
 * Added MemberAccessor (thanks to Mark Welsh)
 * Fix issue where OverridePropertyName didn't work with SetValidator/SetCollectionValidator
+* Add virtual CreateValidator method in to FluentValidationModelValidatorProvider
 
 3.4 - 17/08/2012
 * Make ValidationResut.IsValid virtual

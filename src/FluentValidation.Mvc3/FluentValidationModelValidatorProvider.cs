@@ -72,11 +72,19 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, ControllerContext context) {
-			if (IsValidatingProperty(metadata)) {
-				return GetValidatorsForProperty(metadata, context, ValidatorFactory.GetValidator(metadata.ContainerType));
-			}
+			IValidator validator = CreateValidator(metadata, context);
 
-			return GetValidatorsForModel(metadata, context, ValidatorFactory.GetValidator(metadata.ModelType));
+			if (IsValidatingProperty(metadata)) {
+				return GetValidatorsForProperty(metadata, context, validator);
+			}
+			return GetValidatorsForModel(metadata, context, validator);
+		}
+
+		protected virtual IValidator CreateValidator(ModelMetadata metadata, ControllerContext context) {
+			if (IsValidatingProperty(metadata)) {
+				return ValidatorFactory.GetValidator(metadata.ContainerType);
+			}
+			return ValidatorFactory.GetValidator(metadata.ModelType);
 		}
 
 		IEnumerable<ModelValidator> GetValidatorsForProperty(ModelMetadata metadata, ControllerContext context, IValidator validator) {
