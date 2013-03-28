@@ -143,7 +143,7 @@ namespace FluentValidation.Mvc {
 			}
 		}
 
-		bool IsValidatingProperty(ModelMetadata metadata) {
+		protected virtual bool IsValidatingProperty(ModelMetadata metadata) {
 			return metadata.ContainerType != null && !string.IsNullOrEmpty(metadata.PropertyName);
 		}
 	}
