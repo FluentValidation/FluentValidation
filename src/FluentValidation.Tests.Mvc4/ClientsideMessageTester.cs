@@ -208,6 +208,25 @@ namespace FluentValidation.Tests {
 			rules.Count().ShouldEqual(2);
 		}
 
+		[Test]
+		public void Should_use_rules_from_default_ruleset_and_specified_ruleset() {
+			validator.RuleSet("Foo", () => {
+				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
+			});
+
+			validator.RuleSet("Bar", () => {
+				validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
+			});
+
+			validator.RuleFor(x => x.Name).NotNull().WithMessage("third");
+
+			var filter = new RuleSetForClientSideMessagesAttribute("Foo", "default");
+			filter.OnActionExecuting(new ActionExecutingContext { HttpContext = controllerContext.HttpContext });
+
+			var rules = GetClientRules(x => x.Name);
+			rules.Count().ShouldEqual(2);
+		}
+
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
 			var propertyName = expression.GetMember().Name;
 			var metadata = new DataAnnotationsModelMetadataProvider().GetMetadataForProperty(null, typeof(TestModel), propertyName);

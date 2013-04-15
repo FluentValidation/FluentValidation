@@ -57,7 +57,8 @@ namespace FluentValidation.Mvc {
 
 		protected virtual bool ShouldGenerateClientSideRules() {
 			var ruleSetToGenerateClientSideRules = RuleSetForClientSideMessagesAttribute.GetRuleSetsForClientValidation(ControllerContext.HttpContext);
-			return ruleSetToGenerateClientSideRules.Contains(Rule.RuleSet);
+			bool executeDefaultRule = (ruleSetToGenerateClientSideRules.Contains("default", StringComparer.OrdinalIgnoreCase) && string.IsNullOrEmpty(Rule.RuleSet));
+			return ruleSetToGenerateClientSideRules.Contains(Rule.RuleSet) || executeDefaultRule ;
 		}
 
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
