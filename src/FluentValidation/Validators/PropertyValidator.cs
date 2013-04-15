@@ -74,11 +74,8 @@ namespace FluentValidation.Validators {
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
 		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
-			context.MessageFormatter.AppendAdditionalArguments(
-				customFormatArgs.Select(func => func(context.Instance)).ToArray()
-			);
-
-			string error = context.MessageFormatter.BuildMessage(errorSource.GetString());
+			Func<PropertyValidatorContext, string> errorBuilder = context.Rule.MessageBuilder ?? BuildErrorMessage;
+			var error = errorBuilder(context);
 
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 
@@ -87,6 +84,15 @@ namespace FluentValidation.Validators {
 			}
 
 			return failure;
+		}
+
+		string BuildErrorMessage(PropertyValidatorContext context) {
+			context.MessageFormatter.AppendAdditionalArguments(
+				customFormatArgs.Select(func => func(context.Instance)).ToArray()
+				);
+
+			string error = context.MessageFormatter.BuildMessage(errorSource.GetString());
+			return error;
 		}
 	}
 }

@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System;
 	using System.Linq;
 	using NUnit.Framework;
 
@@ -54,5 +55,17 @@ namespace FluentValidation.Tests {
 			string error = validator.Validate(person).Errors.Single().ErrorMessage;
 			error.ShouldEqual(expected);
 		}
+
+		[Test]
+		public void Uses_custom_delegate_for_building_message() {
+			validator.RuleFor(x => x.Surname).NotNull().Configure(cfg => {
+				cfg.MessageBuilder = context => "Test " + ((Person)context.Instance).Id;
+			});
+
+			var error = validator.Validate(new Person()).Errors.Single().ErrorMessage;
+			error.ShouldEqual("Test 0");
+		}
+
+		
 	}
 }

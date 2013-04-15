@@ -176,6 +176,11 @@ namespace FluentValidation.Internal {
 		public string PropertyName { get; set; }
 
 		/// <summary>
+		/// Allows custom creation of an error message
+		/// </summary>
+		public Func<PropertyValidatorContext, string> MessageBuilder { get; set; }
+
+		/// <summary>
 		/// Display name for the property. 
 		/// </summary>
 		public string GetDisplayName() {
