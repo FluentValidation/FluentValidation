@@ -87,5 +87,15 @@ namespace FluentValidation.Tests {
 			validator.Min.ShouldEqual(1);
 			validator.Max.ShouldEqual(5);
 		}
+
+		[Test]
+		public void When_input_is_null_then_the_validator_should_pass() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).Length(5)
+			};
+
+			var result = validator.Validate(new Person {Surname = null});
+			result.IsValid.ShouldBeTrue();
+		}
 	}
 }

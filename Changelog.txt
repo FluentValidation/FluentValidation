@@ -7,6 +7,8 @@
 * Added MemberAccessor (thanks to Mark Welsh)
 * Fix issue where OverridePropertyName didn't work with SetValidator/SetCollectionValidator
 * Add virtual CreateValidator method in to FluentValidationModelValidatorProvider
+* Add custom error message builder
+* LengthValidator no longer treats null inputs as length 0. This is now consistent with other validators.
 
 3.4 - 17/08/2012
 * Make ValidationResut.IsValid virtual

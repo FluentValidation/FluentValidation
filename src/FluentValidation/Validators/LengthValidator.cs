@@ -39,7 +39,9 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			int length = context.PropertyValue == null ? 0 : context.PropertyValue.ToString().Length;
+			if (context.PropertyValue == null) return true;
+
+			int length = context.PropertyValue.ToString().Length;
 
 			if (length < Min || (length > Max && Max != -1)) {
 				context.MessageFormatter
