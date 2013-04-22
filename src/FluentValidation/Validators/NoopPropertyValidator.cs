@@ -31,8 +31,8 @@ namespace FluentValidation.Validators {
 
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
-		public virtual ICollection<Func<object, object>> CustomMessageFormatArguments {
-			get { return new List<Func<object, object>>(); }
+		public virtual ICollection<Func<object, object, object>> CustomMessageFormatArguments {
+			get { return new List<Func<object, object, object>>(); }
 		}
 
 		public virtual bool SupportsStandaloneValidation {

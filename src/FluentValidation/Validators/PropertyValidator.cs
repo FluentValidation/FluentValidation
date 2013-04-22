@@ -25,12 +25,12 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public abstract class PropertyValidator : IPropertyValidator {
-		private readonly List<Func<object, object>> customFormatArgs = new List<Func<object, object>>();
+		private readonly List<Func<object, object, object>> customFormatArgs = new List<Func<object, object, object>>();
 		private IStringSource errorSource;
 
 		public Func<object, object> CustomStateProvider { get; set; }
 
-		public ICollection<Func<object, object>> CustomMessageFormatArguments {
+		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
 		}
 
@@ -88,7 +88,7 @@ namespace FluentValidation.Validators {
 
 		string BuildErrorMessage(PropertyValidatorContext context) {
 			context.MessageFormatter.AppendAdditionalArguments(
-				customFormatArgs.Select(func => func(context.Instance)).ToArray()
+				customFormatArgs.Select(func => func(context.Instance, context.PropertyValue)).ToArray()
 				);
 
 			string error = context.MessageFormatter.BuildMessage(errorSource.GetString());

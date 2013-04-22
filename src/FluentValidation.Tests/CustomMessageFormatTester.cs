@@ -66,6 +66,12 @@ namespace FluentValidation.Tests {
 			error.ShouldEqual("Test 0");
 		}
 
+		[Test]
+		public void Uses_property_value_in_message() {
+			validator.RuleFor(x => x.Surname).NotEqual("foo").WithMessage("was {0}", (person, name) => name);
+			var error = validator.Validate(new Person { Surname = "foo"}).Errors.Single().ErrorMessage;
+			error.ShouldEqual("was foo");
+		}
 		
 	}
 }

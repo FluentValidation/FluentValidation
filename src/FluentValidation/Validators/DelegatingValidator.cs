@@ -44,7 +44,7 @@ namespace FluentValidation.Validators {
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
-		public ICollection<Func<object, object>> CustomMessageFormatArguments {
+		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return InnerValidator.CustomMessageFormatArguments; }
 		}
 

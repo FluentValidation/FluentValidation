@@ -91,10 +91,29 @@ namespace FluentValidation {
 				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
 
 				funcs
-					.Select(func => func.CoerceToNonGeneric())
+					.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
 					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
 			});
 		}
+
+		/// <summary>
+		/// Specifies a custom error message to use if validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="errorMessage">The error message to use</param>
+		/// <param name="funcs">Additional property values to use when formatting the custom error message.</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage, params Func<T, TProperty, object>[] funcs) {
+			errorMessage.Guard("A message must be specified when calling WithMessage.");
+
+			return rule.Configure(config => {
+				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
+
+				funcs
+					.Select(func => new Func<object, object, object>((instance, value) => func((T)instance, (TProperty)value)))
+					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
+			});
+		} 
 
 		/// <summary>
 		/// Specifies a custom error message resource to use when validation fails.
@@ -131,8 +150,8 @@ namespace FluentValidation {
 			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder())
 				.Configure(cfg => {
 					formatArgs
-						   .Select(func => func.CoerceToNonGeneric())
-						   .ForEach(cfg.CurrentValidator.CustomMessageFormatArguments.Add);
+						.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
+						.ForEach(cfg.CurrentValidator.CustomMessageFormatArguments.Add);
 				});
 			
 		}

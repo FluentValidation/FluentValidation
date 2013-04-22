@@ -29,7 +29,13 @@ namespace FluentValidation.Validators {
 	/// </summary>
 	public interface IPropertyValidator {
 		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
-		ICollection<Func<object, object>> CustomMessageFormatArguments { get; }
+
+		/// <summary>
+		/// Custom message arguments. 
+		/// Arg 1: Instance being validated
+		/// Arg 2: Property value
+		/// </summary>
+		ICollection<Func<object, object, object>> CustomMessageFormatArguments { get; }
 		Func<object, object> CustomStateProvider { get; set; }
 		IStringSource ErrorMessageSource { get; set; }
 	}
