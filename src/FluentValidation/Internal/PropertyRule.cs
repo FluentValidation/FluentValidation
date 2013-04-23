@@ -85,7 +85,7 @@ namespace FluentValidation.Internal {
 		/// Validators associated with this rule.
 		/// </summary>
 		public IEnumerable<IPropertyValidator> Validators {
-			get { return validators.AsReadOnly(); }
+			get { return validators; }
 		}
 
 		/// <summary>

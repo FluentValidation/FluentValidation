@@ -24,11 +24,13 @@ using System.Security;
 [assembly : AssemblyTitle("FluentValidation")]
 [assembly : AssemblyDescription("FluentValidation")]
 [assembly : AssemblyProduct("FluentValidation")]
-[assembly : AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2012")]
+[assembly : AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2013")]
+#if !PORTABLE
 [assembly : ComVisible(false)]
-[assembly : AssemblyVersion("3.4.6.0")]
-[assembly : AssemblyFileVersion("3.4.6.0")]
+#endif
+[assembly : AssemblyVersion("4.0.0.0")]
+[assembly : AssemblyFileVersion("4.0.0.0")]
 [assembly: CLSCompliant(true)]
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
 [assembly: AllowPartiallyTrustedCallers]
 #endif

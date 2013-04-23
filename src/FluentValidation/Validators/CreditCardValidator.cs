@@ -41,9 +41,8 @@ namespace FluentValidation.Validators {
 
 			int checksum = 0;
 			bool evenDigit = false;
-
 			// http://www.beachnet.com/~hstiles/cardtype.html
-			foreach (char digit in value.Reverse()) {
+			foreach (char digit in value.ToCharArray().Reverse()) {
 				if (!char.IsDigit(digit)) {
 					return false;
 				}

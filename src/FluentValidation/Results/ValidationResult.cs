@@ -21,7 +21,7 @@ namespace FluentValidation.Results {
 	using System.Collections.Generic;
 	using System.Linq;
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT && !PORTABLE
 	[Serializable]
 #endif
 	public class ValidationResult {
