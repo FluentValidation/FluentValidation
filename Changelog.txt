@@ -1,5 +1,6 @@
 4.0 - 
 * Add portable class library and deprecate the Silverlight-specific project
+* Remove explicit silverlight projects
 * Added scale precision validator (thanks to Matthew Leibowitz)
 * Added the ability to replace property rules (thanks to Matthew Leibowitz)
 * Added a slightly better value type comparer (thanks to Matthew Leibowitz)

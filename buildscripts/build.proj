@@ -4,8 +4,6 @@
 		<Configuration Condition="'$(Configuration)'==''" >Release</Configuration>
 		<BuildDir>$(BaseDir)\build</BuildDir>
 		<SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
-		<SilverlightSolution>$(BaseDir)\FluentValidation.Silverlight.sln</SilverlightSolution>
-		<BuildSilverlight Condition="'$(BuildSilverlight)' == ''" >true</BuildSilverlight>
 		<TestAssemblies>
 			$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll;
 			$(BaseDir)\src\FluentValidation.Tests.Mvc3\bin\$(Configuration)\FluentValidation.Tests.Mvc3.dll;
@@ -16,16 +14,11 @@
 	
   <UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.NUnit" Condition="'$(teamcity_version)' == ''" />
   
-	<Target Name="default" DependsOnTargets="Compile; CompileSilverlight; Test; Deploy" />
+	<Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
 	
 	<Target Name="Compile">
 		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration)"  Targets="Rebuild" />
   	<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" />
-	</Target>
-
-	<Target Name="CompileSilverlight">
-		<MSBuild Projects="$(SilverlightSolution)" Properties="Configuration=$(Configuration)" Targets="Rebuild" Condition="'$(BuildSilverlight)' == 'true'" />
-		<MSBuild Projects="$(SilverlightSolution)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" Condition="'$(BuildSilverlight)' == 'true'" />
 	</Target>
 
 	<Target Name="Test">
@@ -35,14 +28,7 @@
   <Target Name="Deploy">
     <RemoveDir Directories="$(BuildDir)" />
 		
-		<MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);BuildSilverlight=$(BuildSilverlight)" />
-    <MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);BuildSilverlight=$(BuildSilverlight);PackageSuffix=-signed" />
-    <!-- ... msbuild ... (include BuildSilverlight) (Configuration) (PackageSuffix) -->
+		<MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration)" />
+    <MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);PackageSuffix=-signed" />
   </Target>
-
-	
-	
-	
-	
-	
 </Project>
