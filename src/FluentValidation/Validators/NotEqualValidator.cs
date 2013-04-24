@@ -57,7 +57,7 @@ namespace FluentValidation.Validators {
 			bool success = !Compare(comparisonValue, context.PropertyValue);
 
 			if (!success) {
-				context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+				context.MessageFormatter.AppendArgument("ComparisonValue", comparisonValue);
 				return false;
 			}
 

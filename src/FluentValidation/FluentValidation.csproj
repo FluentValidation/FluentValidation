@@ -154,22 +154,38 @@
     <EmbeddedResource Include="Resources\Messages.ru.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Messages.de.resx" />
-    <EmbeddedResource Include="Resources\Messages.es.resx" />
-    <EmbeddedResource Include="Resources\Messages.fr.resx" />
-    <EmbeddedResource Include="Resources\Messages.it.resx" />
-    <EmbeddedResource Include="Resources\Messages.nl.resx" />
+    <EmbeddedResource Include="Resources\Messages.de.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.es.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.fr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.it.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.nl.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.pl.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Messages.pt.resx" />
+    <EmbeddedResource Include="Resources\Messages.pt.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Messages.sv.resx" />
-    <EmbeddedResource Include="Resources\Messages.tr.resx" />
+    <EmbeddedResource Include="Resources\Messages.sv.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.tr.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluentValidation.snk">

@@ -139,7 +139,7 @@
     <value>'{PropertyName}' should not be empty.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>'{PropertyName}' should not be equal to '{PropertyValue}'.</value>
+    <value>'{PropertyName}' should not be equal to '{ComparisonValue}'.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>'{PropertyName}' must not be empty.</value>
@@ -151,7 +151,7 @@
     <value>'{PropertyName}' is not in the correct format.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>'{PropertyName}' should be equal to '{PropertyValue}'.</value>
+    <value>'{PropertyName}' should be equal to '{ComparisonValue}'.</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
     <value>'{PropertyName}' must be {MaxLength} characters in length. You entered {TotalLength} characters.</value>

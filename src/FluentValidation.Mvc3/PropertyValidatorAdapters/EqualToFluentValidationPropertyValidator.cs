@@ -25,7 +25,7 @@
 
 				var formatter = new MessageFormatter()
 					.AppendPropertyName(Rule.GetDisplayName())
-					.AppendArgument("PropertyValue", propertyToCompare.Name);
+					.AppendArgument("ComparisonValue", propertyToCompare.Name);
 
 
 				string message = formatter.BuildMessage(EqualValidator.ErrorMessageSource.GetString());

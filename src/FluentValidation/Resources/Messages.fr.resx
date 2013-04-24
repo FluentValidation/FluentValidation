@@ -139,7 +139,7 @@
     <value>'{PropertyName}' ne doit pas être vide.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>'{PropertyName}' ne doit pas être égal à '{PropertyValue}'.</value>
+    <value>'{PropertyName}' ne doit pas être égal à '{ComparisonValue}'.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>'{PropertyName}' ne doit pas avoir la valeur null.</value>
@@ -151,6 +151,6 @@
     <value>'{PropertyName}' n'a pas le bon format.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>'{PropertyName}' doit être égal à '{PropertyValue}'.</value>
+    <value>'{PropertyName}' doit être égal à '{ComparisonValue}'.</value>
   </data>
 </root>

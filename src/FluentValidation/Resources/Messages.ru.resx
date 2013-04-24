@@ -139,7 +139,7 @@
     <value>'{PropertyName}' не должно быть пусто.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>'{PropertyName}' не должно быть равно '{PropertyValue}'.</value>
+    <value>'{PropertyName}' не должно быть равно '{ComparisonValue}'.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>'{PropertyName}' обязано быть непустым.</value>
@@ -151,7 +151,7 @@
     <value>'{PropertyName}' имеет неверный формат.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>'{PropertyName}' должно быть равно '{PropertyValue}'.</value>
+    <value>'{PropertyName}' должно быть равно '{ComparisonValue}'.</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
     <value>'{PropertyName}' должно иметь длину {MaxLength} символа. Вы ввели {TotalLength} символов.</value>

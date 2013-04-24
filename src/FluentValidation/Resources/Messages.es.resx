@@ -139,7 +139,7 @@
     <value>'{PropertyName}' no debería estar vacío.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>'{PropertyName}' no debería ser igual a '{PropertyValue}'.</value>
+    <value>'{PropertyName}' no debería ser igual a '{ComparisonValue}'.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>'{PropertyName}' no debe estar vacío.</value>
@@ -151,6 +151,6 @@
     <value>'{PropertyName}' no tiene el formato correcto.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>'{PropertyName}' debería ser igual a '{PropertyValue}'.</value>
+    <value>'{PropertyName}' debería ser igual a '{ComparisonValue}'.</value>
   </data>
 </root>

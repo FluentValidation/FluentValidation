@@ -139,7 +139,7 @@
     <value>'{PropertyName}' değeri boş olmamalı.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>'{PropertyName}' değeri '{PropertyValue}' değerine eşit olmamalı.</value>
+    <value>'{PropertyName}' değeri '{ComparisonValue}' değerine eşit olmamalı.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>'{PropertyName}' değeri boş olamaz.</value>
@@ -151,7 +151,7 @@
     <value>'{PropertyName}' değerinin formatı doğru değil.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>'{PropertyName}' değeri  '{PropertyValue}' değerine eşit olmalı.</value>
+    <value>'{PropertyName}' değeri  '{ComparisonValue}' değerine eşit olmalı.</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
     <value>'{PropertyName}'  değeri {MaxLength} karakter uzunluğunda olmalı. {TotalLength} adet karakter girdiniz.</value>

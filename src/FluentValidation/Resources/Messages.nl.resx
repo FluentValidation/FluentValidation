@@ -121,7 +121,7 @@
     <value>'{PropertyName}' is geen geldig email address.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>'{PropertyName}' moet gelijk zijn aan '{PropertyValue}'.</value>
+    <value>'{PropertyName}' moet gelijk zijn aan '{ComparisonValue}'.</value>
   </data>
   <data name="greaterthanorequal_error" xml:space="preserve">
     <value>'{PropertyName}' moet meer dan of gelijk zijn aan '{ComparisonValue}'.</value>
@@ -142,7 +142,7 @@
     <value>'{PropertyName}' mag niet leeg zijn.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>'{PropertyName}' moet anders zijn dan '{PropertyValue}'.</value>
+    <value>'{PropertyName}' moet anders zijn dan '{ComparisonValue}'.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>'{PropertyName}' mag niet leeg zijn.</value>

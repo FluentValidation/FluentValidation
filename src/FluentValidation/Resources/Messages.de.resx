@@ -139,7 +139,7 @@
     <value>'{PropertyName}' darf nicht leer sein.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>'{PropertyName}' darf nicht '{PropertyValue}' sein.</value>
+    <value>'{PropertyName}' darf nicht '{ComparisonValue}' sein.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>'{PropertyName}' darf keinen Null-Wert aufweisen.</value>
@@ -151,7 +151,7 @@
     <value>'{PropertyName}' weist ein ungültiges Format auf.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>'{PropertyName}' muss gleich '{PropertyValue}' sein.</value>
+    <value>'{PropertyName}' muss gleich '{ComparisonValue}' sein.</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
     <value>'{PropertyName}' muss genau {MaxLength} lang sein. Es wurden {TotalLength} eingegeben.</value>

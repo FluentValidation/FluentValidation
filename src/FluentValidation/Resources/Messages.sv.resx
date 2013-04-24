@@ -139,7 +139,7 @@
     <value>"{PropertyName}" måste anges.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>"{PropertyName}" får inte vara lika med "{PropertyValue}".</value>
+    <value>"{PropertyName}" får inte vara lika med "{CompairsonValue}".</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>"{PropertyName}" måste anges.</value>
@@ -151,7 +151,7 @@
     <value>"{PropertyName}" har inte ett korrekt format.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>"{PropertyName}" måste vara lika med "{PropertyValue}".</value>
+    <value>"{PropertyName}" måste vara lika med "{ComparisonValue}".</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
     <value>"{PropertyName}" måste vara {MaxLength} tecken långt. Du angav {TotalLength} tecken.</value>

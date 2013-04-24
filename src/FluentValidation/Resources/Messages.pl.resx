@@ -139,7 +139,7 @@
     <value>Pole '{PropertyName}' nie może być puste.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>Pole '{PropertyName}' nie może być równe '{PropertyValue}'.</value>
+    <value>Pole '{PropertyName}' nie może być równe '{ComparisonValue}'.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>Pole '{PropertyName}' nie może być puste.</value>
@@ -151,7 +151,7 @@
     <value>'{PropertyName}' wprowadzono w niepoprawnym formacie.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>Wartość pola '{PropertyName}' powinna być równa '{PropertyValue}'.</value>
+    <value>Wartość pola '{PropertyName}' powinna być równa '{ComparisonValue}'.</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
     <value>Maksymalna długość pola '{PropertyName}' to {MaxLength} znaki(ów). Wprowadzono {TotalLength} znaki(ów).</value>

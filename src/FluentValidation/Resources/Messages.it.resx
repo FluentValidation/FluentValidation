@@ -121,7 +121,7 @@
     <value>'{PropertyName}' non è un indirizzo email valido.</value>
   </data>
   <data name="equal_error" xml:space="preserve">
-    <value>'{PropertyName}' dovrebbe essere uguale a '{PropertyValue}'.</value>
+    <value>'{PropertyName}' dovrebbe essere uguale a '{ComparisonValue}'.</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
     <value>'{PropertyName}' deve essere lungo {MaxLength} caratteri. Hai inserito {TotalLength} caratteri.</value>
@@ -151,7 +151,7 @@
     <value>'{PropertyName}' non può essere vuoto.</value>
   </data>
   <data name="notequal_error" xml:space="preserve">
-    <value>'{PropertyName}' non puo essere uguale a '{PropertyValue}'.</value>
+    <value>'{PropertyName}' non puo essere uguale a '{ComparisonValue}'.</value>
   </data>
   <data name="notnull_error" xml:space="preserve">
     <value>'{PropertyName}' non puo essere vuoto.</value>
