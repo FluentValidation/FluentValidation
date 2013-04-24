@@ -72,6 +72,20 @@ namespace FluentValidation.Tests {
 			var error = validator.Validate(new Person { Surname = "foo"}).Errors.Single().ErrorMessage;
 			error.ShouldEqual("was foo");
 		}
+
+		[Test]
+		public void Replaces_propertyvalue_placeholder() {
+			validator.RuleFor(x => x.Email).EmailAddress().WithMessage("Was '{PropertyValue}'");
+			var result = validator.Validate(new Person() {Email = "foo"});
+			result.Errors.Single().ErrorMessage.ShouldEqual("Was 'foo'");
+		}
+
+		[Test]
+		public void Replaces_propertyvalue_with_empty_string_when_null() {
+			validator.RuleFor(x => x.Surname).NotNull().WithMessage("Was '{PropertyValue}'");
+			var result = validator.Validate(new Person());
+			result.Errors.Single().ErrorMessage.ShouldEqual("Was ''");
+		}
 		
 	}
 }

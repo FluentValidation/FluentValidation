@@ -1,6 +1,5 @@
 4.0 - 
-* Add portable class library and deprecate the Silverlight-specific project
-* Remove explicit silverlight projects
+* Add portable class library and deprecate the Silverlight-specific projects
 * Added scale precision validator (thanks to Matthew Leibowitz)
 * Added the ability to replace property rules (thanks to Matthew Leibowitz)
 * Added a slightly better value type comparer (thanks to Matthew Leibowitz)
@@ -10,9 +9,9 @@
 * Fix issue where OverridePropertyName didn't work with SetValidator/SetCollectionValidator
 * Add virtual CreateValidator method in to FluentValidationModelValidatorProvider
 * Add custom error message builder
-* LengthValidator no longer treats null inputs as length 0. This is now consistent with other validators.
-* Change default error messages for Equal/NotEqual validators to use {ComparisonValue} rather than {PropertyValue} for consistency.
-* All validators can now access the current property value using {PropertyValue}
+* *Breaking* LengthValidator no longer treats null inputs as length 0. This is now consistent with other validators.
+* *Breaking* Change default error messages for Equal/NotEqual validators to use {ComparisonValue} rather than {PropertyValue} for consistency.
+* All validators can now access the current property value inside the error message using {PropertyValue}
 
 3.4 - 17/08/2012
 * Make ValidationResut.IsValid virtual

@@ -58,6 +58,7 @@ namespace FluentValidation.Validators {
 
 		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
+			context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
 
 			if (!IsValid(context)) {
 				return new[] { CreateValidationError(context) };
