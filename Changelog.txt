@@ -1,4 +1,4 @@
-4.0 - 
+4.0 - 29/04/2013 
 * Add portable class library and deprecate the Silverlight-specific projects
 * Added scale precision validator (thanks to Matthew Leibowitz)
 * Added the ability to replace property rules (thanks to Matthew Leibowitz)
