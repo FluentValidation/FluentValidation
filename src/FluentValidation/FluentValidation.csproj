@@ -101,6 +101,7 @@
     <Compile Include="PropertyRuleValidatorExtensions.cs" />
     <Compile Include="Resources\IStringSource.cs" />
     <Compile Include="Resources\IResourceAccessorBuilder.cs" />
+    <Compile Include="Resources\LazyStringSource.cs" />
     <Compile Include="Resources\LocalizedStringSource.cs" />
     <Compile Include="Resources\StaticStringSource.cs" />
     <Compile Include="ValidationContext.cs" />

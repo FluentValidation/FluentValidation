@@ -97,6 +97,7 @@
     <Compile Include="ComplexValidationTester.cs" />
     <Compile Include="ConditionTests.cs" />
     <Compile Include="CreditCardValidatorTests.cs" />
+    <Compile Include="CultureScope.cs" />
     <Compile Include="CustomFailureActionTester.cs" />
     <Compile Include="DisplayAttributeTests.cs" />
     <Compile Include="ExactLengthValidatorTester.cs" />

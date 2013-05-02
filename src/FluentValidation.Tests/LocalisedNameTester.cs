@@ -17,6 +17,8 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System.ComponentModel.DataAnnotations;
+	using System.Globalization;
 	using NUnit.Framework;
 	using System.Linq;
 	using Resources;
@@ -61,6 +63,29 @@ namespace FluentValidation.Tests {
 
 			var result = validator.Validate(new Person());
 			result.Errors.Single().ErrorMessage.ShouldEqual("'bar' must not be empty.");
+		}
+
+		[Test]
+		public void Uses_localized_name_from_display_attribute() {
+			using (new CultureScope("en-us")) {
+				var validator = new InlineValidator<Person2> {
+					v => v.RuleFor(x => x.Name).NotNull().WithMessage("{PropertyName}")
+				};
+
+				var result = validator.Validate(new Person2());
+				result.Errors[0].ErrorMessage.ShouldEqual("foo");
+
+				using (new CultureScope("fr-FR")) {
+					result = validator.Validate(new Person2());
+					result.Errors[0].ErrorMessage.ShouldEqual("bar");
+				}
+			}
+		}
+
+		public class Person2 {
+			[Display(ResourceType = typeof(TestMessages), Name = "PropertyName")]
+			public string Name { get; set; }
+			 
 		}
 
 		public static class MyResources {

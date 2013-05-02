@@ -76,6 +76,9 @@
     <Compile Include="..\FluentValidation\Resources\IStringSource.cs">
       <Link>IStringSource.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Resources\LazyStringSource.cs">
+      <Link>LazyStringSource.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Resources\LocalizedStringSource.cs">
       <Link>LocalizedStringSource.cs</Link>
     </Compile>

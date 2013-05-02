@@ -106,8 +106,7 @@ namespace FluentValidation.Internal {
 			this.cascadeModeThunk = cascadeModeThunk;
 
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
-			string displayName = ValidatorOptions.DisplayNameResolver(containerType, member, expression);
-			if (!string.IsNullOrEmpty(displayName)) DisplayName = new StaticStringSource(displayName);
+			DisplayName = new LazyStringSource(() => ValidatorOptions.DisplayNameResolver(containerType, member, expression));
 		}
 
 		/// <summary>

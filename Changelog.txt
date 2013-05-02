@@ -1,3 +1,6 @@
+4.1 - 
+* Display name is now lazily-loaded by default (as a result, localization via DisplayAttribute now works correctly)
+
 4.0 - 29/04/2013 
 * Add portable class library and deprecate the Silverlight-specific projects
 * Added scale precision validator (thanks to Matthew Leibowitz)

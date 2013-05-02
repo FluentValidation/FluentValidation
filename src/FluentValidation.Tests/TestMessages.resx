@@ -123,4 +123,7 @@
   <data name="PlaceholderMessage" xml:space="preserve">
     <value>Test {0}</value>
   </data>
+  <data name="PropertyName" xml:space="preserve">
+    <value>foo</value>
+  </data>
 </root>
