@@ -130,6 +130,14 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+		//[Test]
+		//public void Should_not_infinite_loop() {
+		//	var val = new InfiniteLoopValidator();
+		//	var target = new InfiniteLoop();
+		//	target.Property = new InfiniteLoop2 {Property = target};
+		//	val.Validate(target);
+		//}
+
 		private static string PointlessMethod() { return null; }
 
 		public class PersonValidator : AbstractValidator<Person> {
@@ -154,6 +162,26 @@ namespace FluentValidation.Tests {
 
 		public class PointlessStringValidator : AbstractValidator<string> {
 
+		}
+
+		public class InfiniteLoop {
+			public InfiniteLoop2 Property { get; set; }
+		}
+
+		public class InfiniteLoop2 {
+			public InfiniteLoop Property { get; set; }
+		}
+
+		public class InfiniteLoopValidator : AbstractValidator<InfiniteLoop> {
+			public InfiniteLoopValidator() {
+				RuleFor(x => x.Property).SetValidator(new InfiniteLoop2Validator());
+			} 
+		}
+
+		public class InfiniteLoop2Validator : AbstractValidator<InfiniteLoop2> {
+			public InfiniteLoop2Validator() {
+				RuleFor(x => x.Property).SetValidator(new InfiniteLoopValidator());
+			}
 		}
 	}
 }

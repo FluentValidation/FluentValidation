@@ -183,11 +183,17 @@ namespace FluentValidation.Internal {
 		/// Display name for the property. 
 		/// </summary>
 		public string GetDisplayName() {
+			string result = null;
+
 			if (DisplayName != null) {
-				return DisplayName.GetString();
+				result = DisplayName.GetString();
 			}
 
-			return PropertyName.SplitPascalCase();
+			if (result == null) {
+				result = PropertyName.SplitPascalCase();				
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -196,10 +202,14 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext context) {
-			EnsureValidPropertyName();
+			string displayName = GetDisplayName();
+
+			if (PropertyName == null && displayName == null) {
+				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
+			}
 
 			// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
-			string propertyName = BuildPropertyName(context);
+			string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
 
 			// Ensure that this rule is allowed to run. 
 			// The validatselector has the opportunity to veto this before any of the validators execute.
@@ -241,16 +251,6 @@ namespace FluentValidation.Internal {
 		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator, string propertyName) {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			return validator.Validate(propertyContext);
-		}
-
-		private void EnsureValidPropertyName() {
-			if (PropertyName == null && DisplayName == null) {
-				throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
-			}
-		}
-
-		private string BuildPropertyName(ValidationContext context) {
-			return context.PropertyChain.BuildPropertyName(PropertyName ?? DisplayName.GetString());
 		}
 
 		public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
