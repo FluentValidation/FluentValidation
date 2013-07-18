@@ -28,8 +28,8 @@ using System.Security;
 #if !PORTABLE
 [assembly : ComVisible(false)]
 #endif
-[assembly : AssemblyVersion("4.0.0.0")]
-[assembly : AssemblyFileVersion("4.0.0.0")]
+[assembly : AssemblyVersion("4.0.0.1")]
+[assembly : AssemblyFileVersion("4.0.0.1")]
 [assembly: CLSCompliant(true)]
 #if !SILVERLIGHT && !PORTABLE
 [assembly: AllowPartiallyTrustedCallers]
