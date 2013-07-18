@@ -46,7 +46,7 @@
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)" />
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC3$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)" />
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC4$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)" />
-		<Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-wp8%2Bsl5%2Bwin8\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-win%2Bnet40%2Bsl50%2Bwp80\%(RecursiveDir)"/>
 
 		<!-- Copy the source files to the package dir -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\Net40\%(RecursiveDir)" />
