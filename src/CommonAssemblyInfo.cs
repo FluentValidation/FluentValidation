@@ -34,3 +34,4 @@ using System.Security;
 #if !SILVERLIGHT && !PORTABLE
 [assembly: AllowPartiallyTrustedCallers]
 #endif
+[assembly: System.Resources.NeutralResourcesLanguage("en")]
