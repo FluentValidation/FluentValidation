@@ -47,6 +47,10 @@ namespace FluentValidation.Tests {
 			Assert.IsTrue(b);
 		}
 
+		public static void ShouldBeTrue(this bool b, string msg) {
+			Assert.IsTrue(b, msg);
+		}
+
 		public static void ShouldBeFalse(this bool b) {
 			Assert.IsFalse(b);
 		}

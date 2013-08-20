@@ -38,27 +38,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void When_the_text_is_a_valid_email_address_then_the_validator_should_pass() {
-			string email = "testperson@gmail.com";
-			var result = validator.Validate(new Person { Email = email });
-			result.IsValid.ShouldBeTrue();
-		}
-
-		[Test]
-		public void When_the_text_is_a_valid_email_address_including_plus_validator_should_pass() {
-			string email = "testperson+label@gmail.com";
-			var result = validator.Validate(new Person { Email = email });
-			result.IsValid.ShouldBeTrue();
-		}
-
-		[Test]
-		public void When_the_text_is_null_then_the_validator_should_pass() {
-			string email = null;
-			var result = validator.Validate(new Person { Email = email });
-			result.IsValid.ShouldBeTrue();
-		}
-
-		[Test]
 		public void When_the_text_is_empty_then_the_validator_should_fail() {
 			string email = String.Empty;
 			var result = validator.Validate(new Person { Email = email });
@@ -87,14 +66,21 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void When_email_address_contains_upper_cases_then_the_validator_should_pass() {
-			string email = "testperson@gmail.com";
-			var result = validator.Validate(new Person { Email = email });
-			result.IsValid.ShouldBeTrue();
-
-			email = "TestPerson@gmail.com";
-			result = validator.Validate(new Person { Email = email });
-			result.IsValid.ShouldBeTrue();
+		[TestCase((string)null)]
+		[TestCase("testperson@gmail.com")]
+		[TestCase("TestPerson@gmail.com")]
+		[TestCase("testperson+label@gmail.com")]
+		[TestCase("\"Abc\\@def\"@example.com")]
+		[TestCase("\"Fred Bloggs\"@example.com")]
+		[TestCase("\"Joe\\Blow\"@example.com")]
+		[TestCase("\"Abc@def\"@example.com")]
+		[TestCase("customer/department=shipping@example.com")]
+		[TestCase("$A12345@example.com")]
+		[TestCase("!def!xyz%abc@example.com")]
+		[TestCase("__somename@example.com")]
+		public void Valid_email_addresses(string email) {
+				var result = validator.Validate(new Person {Email = email});
+				result.IsValid.ShouldBeTrue(string.Format("The email address {0} should be valid", email));
 		}
 	}
 }
