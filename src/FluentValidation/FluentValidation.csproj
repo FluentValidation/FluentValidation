@@ -152,6 +152,7 @@
     <Compile Include="Validators\ScalePrecisionValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Messages.ko.resx" />
     <EmbeddedResource Include="Resources\Messages.ru.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
