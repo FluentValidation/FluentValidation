@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="email_error" xml:space="preserve">
     <value>'{PropertyName}' n'est pas une adresse email valide.</value>
@@ -152,5 +152,14 @@
   </data>
   <data name="equal_error" xml:space="preserve">
     <value>'{PropertyName}' doit être égal à '{ComparisonValue}'.</value>
+  </data>
+  <data name="exact_length_error" xml:space="preserve">
+    <value>'{PropertyName}' doit être d’une longueur de {MaxLength} caractères. {TotalLength} caractères ont été saisis.</value>
+  </data>
+  <data name="exclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' doit être entre {From} et {To} (exclusif). Vous avez saisi {Value}.</value>
+  </data>
+  <data name="inclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' doit être entre {From} et {To}. Vous avez saisi {Value}.</value>
   </data>
 </root>
