@@ -162,6 +162,21 @@ namespace FluentValidation.Tests.WebApi
 			}
 		}
 
+        [Validator(typeof(TestModel7Validator))]
+        public class TestModel7
+        {
+            public int AnIntProperty { get; set; }
+        }
+
+        public class TestModel7Validator : AbstractValidator<TestModel7>
+        {
+            public TestModel7Validator()
+            {
+                //This ctor is intentionally blank.
+                RuleFor(x => x.AnIntProperty).GreaterThan(10);
+            }
+        }
+
 		class MockContent : HttpContent
 		{
 			MockContent(): base()
@@ -288,6 +303,17 @@ namespace FluentValidation.Tests.WebApi
 
 			actionContext.ModelState["testModel6.Id"].Errors.Single().Exception.ShouldNotBeNull();
 		}
+
+        [Test]
+        public void Should_validate_greater_than()
+        {
+            actionContext.Request.Content = JsonContent(@"{AnIntProperty:'5'}");
+
+            var binder = CreateParameterBinder("testModel7", typeof(TestModel7));
+            binder.ExecuteBindingAsync(modelMetadataProvider, actionContext, new CancellationToken()).Wait();
+
+            actionContext.ModelState.IsValidField("testModel7.AnIntProperty").ShouldBeFalse();
+        }
 
 		private static FormatterParameterBinding CreateParameterBinder(string parameterName, Type parameterType) {
 			return new FormatterParameterBinding(
