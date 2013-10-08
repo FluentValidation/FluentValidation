@@ -11,8 +11,6 @@
 	using FluentValidation.Internal;
 	using FluentValidation.Validators;
 
-	using WebApi.PropertyValidatorAdapters;
-
 	public delegate ModelValidator FluentValidationModelValidationFactory(ModelMetadata metadata, IEnumerable<ModelValidatorProvider> validatorProviders, PropertyRule rule, IPropertyValidator validator);
 
 

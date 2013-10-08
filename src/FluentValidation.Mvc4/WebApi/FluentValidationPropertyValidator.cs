@@ -1,4 +1,4 @@
-﻿namespace FluentValidation.Mvc.WebApi.PropertyValidatorAdapters
+﻿namespace FluentValidation.Mvc.WebApi
 {
 	using System;
 	using System.Collections.Generic;
