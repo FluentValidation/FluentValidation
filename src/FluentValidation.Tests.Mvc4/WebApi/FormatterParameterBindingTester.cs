@@ -41,6 +41,7 @@ namespace FluentValidation.Tests.WebApi
 	using Attributes;
 
 	using FluentValidation.Mvc.WebApi;
+	using FluentValidation.Results;
 
 	using Moq;
 
@@ -61,7 +62,7 @@ namespace FluentValidation.Tests.WebApi
 			GlobalConfiguration.Configuration.Services.Clear(typeof(ModelValidatorProvider));
 			GlobalConfiguration.Configuration.Services.Add(typeof(ModelValidatorProvider), provider);
 
-			modelMetadataProvider = (ModelMetadataProvider)GlobalConfiguration.Configuration.Services.GetService(typeof(ModelMetadataProvider));
+            modelMetadataProvider = (ModelMetadataProvider)GlobalConfiguration.Configuration.Services.GetService(typeof(ModelMetadataProvider));
 			
 			actionContext = new HttpActionContext
 				                {
@@ -133,8 +134,6 @@ namespace FluentValidation.Tests.WebApi
 			public string Address1 { get; set; }
 		}
 
-
-
 		public class TestModel4Validator : AbstractValidator<TestModel4>
 		{
 			public TestModel4Validator()
@@ -162,20 +161,30 @@ namespace FluentValidation.Tests.WebApi
 			}
 		}
 
-        [Validator(typeof(TestModel7Validator))]
-        public class TestModel7
-        {
-            public int AnIntProperty { get; set; }
-        }
+		[Validator(typeof(TestModel7Validator))]
+		public class TestModel7
+		{
+			public int AnIntProperty { get; set; }
+			public int CustomProperty { get; set; }
+		}
 
-        public class TestModel7Validator : AbstractValidator<TestModel7>
-        {
-            public TestModel7Validator()
-            {
-                //This ctor is intentionally blank.
-                RuleFor(x => x.AnIntProperty).GreaterThan(10);
-            }
-        }
+		public class TestModel7Validator : AbstractValidator<TestModel7>
+		{
+			public TestModel7Validator()
+			{
+				//This ctor is intentionally blank.
+				RuleFor(x => x.AnIntProperty).GreaterThan(10);
+				Custom(
+					model =>
+						{
+                            if (model.CustomProperty == 14)
+							{
+                                return new ValidationFailure("CustomProperty", "Cannot be 14");
+							}
+						    return null;
+						});
+			}
+		}
 
 		class MockContent : HttpContent
 		{
@@ -304,22 +313,33 @@ namespace FluentValidation.Tests.WebApi
 			actionContext.ModelState["testModel6.Id"].Errors.Single().Exception.ShouldNotBeNull();
 		}
 
-        [Test]
-        public void Should_validate_greater_than()
-        {
-            actionContext.Request.Content = JsonContent(@"{AnIntProperty:'5'}");
+		[Test]
+		public void Should_validate_greater_than()
+		{
+			actionContext.Request.Content = JsonContent(@"{AnIntProperty:'5'}");
 
-            var binder = CreateParameterBinder("testModel7", typeof(TestModel7));
-            binder.ExecuteBindingAsync(modelMetadataProvider, actionContext, new CancellationToken()).Wait();
+			var binder = CreateParameterBinder("testModel7", typeof(TestModel7));
+			binder.ExecuteBindingAsync(modelMetadataProvider, actionContext, new CancellationToken()).Wait();
 
-            actionContext.ModelState.IsValidField("testModel7.AnIntProperty").ShouldBeFalse();
-        }
+			actionContext.ModelState.IsValidField("testModel7.AnIntProperty").ShouldBeFalse();
+		}
+
+		[Test]
+		public void Should_validate_custom_after_property_errors()
+		{
+            actionContext.Request.Content = JsonContent(@"{AnIntProperty:'7',CustomProperty:'14'}");
+
+			var binder = CreateParameterBinder("testModel7", typeof(TestModel7));
+			binder.ExecuteBindingAsync(modelMetadataProvider, actionContext, new CancellationToken()).Wait();
+
+            actionContext.ModelState.IsValidField("testModel7.CustomProperty").ShouldBeFalse();
+		}
 
 		private static FormatterParameterBinding CreateParameterBinder(string parameterName, Type parameterType) {
 			return new FormatterParameterBinding(
 				MockParameterDescriptor.Create(parameterName, parameterType),
 				new List<MediaTypeFormatter> { new JsonMediaTypeFormatter() },
-				new DefaultBodyModelValidator());
+				new FluentValidationBodyModelValidator());
 		}
 
 		private static HttpContent JsonContent(string json) {

@@ -128,9 +128,9 @@
     <Compile Include="..\FluentValidation.Mvc3\ValidationResultExtension.cs">
       <Link>ValidationResultExtension.cs</Link>
     </Compile>
+    <Compile Include="WebApi\FluentValidationBodyModelValidator.cs" />
     <Compile Include="WebApi\FluentValidationModelValidator.cs" />
     <Compile Include="WebApi\FluentValidationModelValidatorProvider.cs" />
-    <Compile Include="WebApi\FluentValidationPropertyValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluentValidation.snk">
