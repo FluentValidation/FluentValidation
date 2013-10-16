@@ -16,8 +16,7 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests.WebApi
-{
+namespace FluentValidation.Tests.WebApi {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
@@ -48,85 +47,70 @@ namespace FluentValidation.Tests.WebApi
 	using NUnit.Framework;
 
 	[TestFixture]
-	public class FormatterParameterBindingTester
-	{
+	public class FormatterParameterBindingTester {
 		FluentValidationModelValidatorProvider provider;
 		HttpActionContext actionContext;
 		ModelMetadataProvider modelMetadataProvider;
 
 		[SetUp]
-		public void Setup()
-		{
+		public void Setup() {
 			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
 			GlobalConfiguration.Configuration.Services.Clear(typeof(ModelValidatorProvider));
 			GlobalConfiguration.Configuration.Services.Add(typeof(ModelValidatorProvider), provider);
 
-            modelMetadataProvider = (ModelMetadataProvider)GlobalConfiguration.Configuration.Services.GetService(typeof(ModelMetadataProvider));
-			
-			actionContext = new HttpActionContext
-				                {
-					                ControllerContext = new HttpControllerContext
-						                                    {
-																Request = new HttpRequestMessage(),
-							                                    Configuration = GlobalConfiguration.Configuration
-						                                    }
-				                };
+			modelMetadataProvider = (ModelMetadataProvider)GlobalConfiguration.Configuration.Services.GetService(typeof(ModelMetadataProvider));
+
+			actionContext = new HttpActionContext {
+				ControllerContext = new HttpControllerContext {
+					Request = new HttpRequestMessage(),
+					Configuration = GlobalConfiguration.Configuration
+				}
+			};
 		}
 
 		[TearDown]
-		public void Teardown()
-		{
+		public void Teardown() {
 			//Cleanup
 			GlobalConfiguration.Configuration.Services.Remove(typeof(ModelValidatorProvider), provider);
 		}
 
-		protected ModelMetadata CreateMetaData(Type type)
-		{
+		protected ModelMetadata CreateMetaData(Type type) {
 			var meta = new DataAnnotationsModelMetadataProvider();
 			return meta.GetMetadataForType(null, type);
 		}
 
-		public class TestModel2
-		{
+		public class TestModel2 {
 		}
 
 		[Validator(typeof(TestModelValidator))]
-		public class TestModel
-		{
+		public class TestModel {
 			public string Name { get; set; }
 		}
 
-		public class TestModelValidator : AbstractValidator<TestModel>
-		{
-			public TestModelValidator()
-			{
+		public class TestModelValidator : AbstractValidator<TestModel> {
+			public TestModelValidator() {
 				RuleFor(x => x.Name).NotNull().WithMessage("Validation Failed");
 			}
 		}
 
 		[Validator(typeof(TestModelValidator3))]
-		public class TestModel3
-		{
+		public class TestModel3 {
 			public int Id { get; set; }
 		}
 
-		public class TestModelValidator3 : AbstractValidator<TestModel3>
-		{
-			public TestModelValidator3()
-			{
+		public class TestModelValidator3 : AbstractValidator<TestModel3> {
+			public TestModelValidator3() {
 				RuleFor(x => x.Id).NotNull().WithMessage("Validation failed");
 			}
 		}
 
-		public class TestModelWithoutValidator
-		{
+		public class TestModelWithoutValidator {
 			public int Id { get; set; }
 		}
 
 		[Validator(typeof(TestModel4Validator))]
-		public class TestModel4
-		{
+		public class TestModel4 {
 			public string Surname { get; set; }
 			public string Forename { get; set; }
 			public string Email { get; set; }
@@ -134,10 +118,8 @@ namespace FluentValidation.Tests.WebApi
 			public string Address1 { get; set; }
 		}
 
-		public class TestModel4Validator : AbstractValidator<TestModel4>
-		{
-			public TestModel4Validator()
-			{
+		public class TestModel4Validator : AbstractValidator<TestModel4> {
+			public TestModel4Validator() {
 				RuleFor(x => x.Surname).NotEqual(x => x.Forename);
 
 				RuleFor(x => x.Email)
@@ -148,66 +130,54 @@ namespace FluentValidation.Tests.WebApi
 		}
 
 		[Validator(typeof(TestModel6Validator))]
-		public class TestModel6
-		{
+		public class TestModel6 {
 			public int Id { get; set; }
 		}
 
-		public class TestModel6Validator : AbstractValidator<TestModel6>
-		{
-			public TestModel6Validator()
-			{
+		public class TestModel6Validator : AbstractValidator<TestModel6> {
+			public TestModel6Validator() {
 				//This ctor is intentionally blank.
 			}
 		}
 
 		[Validator(typeof(TestModel7Validator))]
-		public class TestModel7
-		{
+		public class TestModel7 {
 			public int AnIntProperty { get; set; }
 			public int CustomProperty { get; set; }
 		}
 
-		public class TestModel7Validator : AbstractValidator<TestModel7>
-		{
-			public TestModel7Validator()
-			{
+		public class TestModel7Validator : AbstractValidator<TestModel7> {
+			public TestModel7Validator() {
 				//This ctor is intentionally blank.
 				RuleFor(x => x.AnIntProperty).GreaterThan(10);
 				Custom(
-					model =>
-						{
-                            if (model.CustomProperty == 14)
-							{
-                                return new ValidationFailure("CustomProperty", "Cannot be 14");
-							}
-						    return null;
-						});
+					model => {
+						if (model.CustomProperty == 14) {
+							return new ValidationFailure("CustomProperty", "Cannot be 14");
+						}
+						return null;
+					});
 			}
 		}
 
-		class MockContent : HttpContent
-		{
-			MockContent(): base()
-			{
-				
+		class MockContent : HttpContent {
+			MockContent()
+				: base() {
+
 			}
 
-			protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
-			{
+			protected override Task SerializeToStreamAsync(Stream stream, TransportContext context) {
 				throw new NotImplementedException();
 			}
 
-			protected override bool TryComputeLength(out long length)
-			{
+			protected override bool TryComputeLength(out long length) {
 				length = -1L;
 				return false;
 			}
 		}
 
 		[Test]
-		public void Should_add_all_errors_in_one_go()
-		{
+		public void Should_add_all_errors_in_one_go() {
 			actionContext.Request.Content = JsonContent(@"{
 				Email:'foo',
 				Surname:'foo',
@@ -217,23 +187,20 @@ namespace FluentValidation.Tests.WebApi
 
 			var binder = CreateParameterBinder("testModel4", typeof(TestModel4));
 			binder.ExecuteBindingAsync(modelMetadataProvider, actionContext, new CancellationToken()).Wait();
-			
+
 			actionContext.ModelState.IsValidField("testModel4.Email").ShouldBeFalse(); //Email validation failed
 			actionContext.ModelState.IsValidField("testModel4.DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
 			actionContext.ModelState.IsValidField("testModel4.Surname").ShouldBeFalse(); //cross-property
 		}
 
 		[Validator(typeof(TestModel5Validator))]
-		public class TestModel5
-		{
+		public class TestModel5 {
 			public int Id { get; set; }
 			public bool SomeBool { get; set; }
 		}
 
-		public class TestModel5Validator : AbstractValidator<TestModel5>
-		{
-			public TestModel5Validator()
-			{
+		public class TestModel5Validator : AbstractValidator<TestModel5> {
+			public TestModel5Validator() {
 				//force a complex rule
 				RuleFor(x => x.SomeBool).Must(x => x == true);
 				RuleFor(x => x.Id).NotEmpty();
@@ -241,22 +208,20 @@ namespace FluentValidation.Tests.WebApi
 		}
 
 		[Test]
-		public void Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type()
-		{
+		public void Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
 			actionContext.Request.Content = JsonContent(@"{
 				SomeBool:'false',
 				Id:0}");
 
 			var binder = CreateParameterBinder("testModel5", typeof(TestModel5));
 			binder.ExecuteBindingAsync(modelMetadataProvider, actionContext, new CancellationToken()).Wait();
-			
+
 			actionContext.ModelState.IsValidField("testModel5.SomeBool").ShouldBeFalse(); //Complex rule
 			actionContext.ModelState.IsValidField("testModel5.Id").ShouldBeFalse(); //NotEmpty for non-nullable value type
 		}
 
 		[Test]
-		public void When_a_validation_error_occurs_the_error_should_be_added_to_modelstate()
-		{
+		public void When_a_validation_error_occurs_the_error_should_be_added_to_modelstate() {
 			actionContext.Request.Content = JsonContent(@"{
 				Name:null}");
 
@@ -279,8 +244,7 @@ namespace FluentValidation.Tests.WebApi
 		//}
 
 		[Test]
-		public void Should_not_fail_when_no_validator_can_be_found()
-		{
+		public void Should_not_fail_when_no_validator_can_be_found() {
 			actionContext.Request.Content = JsonContent(@"{}");
 
 			var binder = CreateParameterBinder("testModel2", typeof(TestModel2));
@@ -292,8 +256,7 @@ namespace FluentValidation.Tests.WebApi
 		//for parse errors (trying to parse null to a value type int, datetime, etc) the formatter (json formatter in this case) takes care of them
 		// and I didn't find a way to override that behaviour
 		[Test]
-		public void Should_add_default_message_to_modelstate()
-		{
+		public void Should_add_default_message_to_modelstate() {
 			actionContext.Request.Content = JsonContent(@"{Id:''}");
 
 			var binder = CreateParameterBinder("testModel3", typeof(TestModel3));
@@ -303,8 +266,7 @@ namespace FluentValidation.Tests.WebApi
 		}
 
 		[Test]
-		public void Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified()
-		{
+		public void Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
 			actionContext.Request.Content = JsonContent(@"{Id:''}");
 
 			var binder = CreateParameterBinder("testModel6", typeof(TestModel6));
@@ -314,8 +276,7 @@ namespace FluentValidation.Tests.WebApi
 		}
 
 		[Test]
-		public void Should_validate_greater_than()
-		{
+		public void Should_validate_greater_than() {
 			actionContext.Request.Content = JsonContent(@"{AnIntProperty:'5'}");
 
 			var binder = CreateParameterBinder("testModel7", typeof(TestModel7));
@@ -325,14 +286,13 @@ namespace FluentValidation.Tests.WebApi
 		}
 
 		[Test]
-		public void Should_validate_custom_after_property_errors()
-		{
-            actionContext.Request.Content = JsonContent(@"{AnIntProperty:'7',CustomProperty:'14'}");
+		public void Should_validate_custom_after_property_errors() {
+			actionContext.Request.Content = JsonContent(@"{AnIntProperty:'7',CustomProperty:'14'}");
 
 			var binder = CreateParameterBinder("testModel7", typeof(TestModel7));
 			binder.ExecuteBindingAsync(modelMetadataProvider, actionContext, new CancellationToken()).Wait();
 
-            actionContext.ModelState.IsValidField("testModel7.CustomProperty").ShouldBeFalse();
+			actionContext.ModelState.IsValidField("testModel7.CustomProperty").ShouldBeFalse();
 		}
 
 		private static FormatterParameterBinding CreateParameterBinder(string parameterName, Type parameterType) {
@@ -346,29 +306,23 @@ namespace FluentValidation.Tests.WebApi
 			return new StringContent(json, Encoding.UTF8, "application/json");
 		}
 
-		public class MockHttpContext : Mock<HttpContextBase>
-		{
-			public MockHttpContext()
-			{
+		public class MockHttpContext : Mock<HttpContextBase> {
+			public MockHttpContext() {
 				Setup(x => x.Items).Returns(new Hashtable());
 			}
 
-			public static HttpContextBase Create()
-			{
+			public static HttpContextBase Create() {
 				return new MockHttpContext().Object;
 			}
 		}
 
-		public class MockParameterDescriptor : Mock<HttpParameterDescriptor>
-		{
-			public MockParameterDescriptor(string parameterName, Type parameterType)
-			{
+		public class MockParameterDescriptor : Mock<HttpParameterDescriptor> {
+			public MockParameterDescriptor(string parameterName, Type parameterType) {
 				Setup(x => x.ParameterName).Returns(parameterName);
 				Setup(x => x.ParameterType).Returns(parameterType);
 			}
 
-			public static HttpParameterDescriptor Create(string parameterName, Type parameterType)
-			{
+			public static HttpParameterDescriptor Create(string parameterName, Type parameterType) {
 				return new MockParameterDescriptor(parameterName, parameterType).Object;
 			}
 		}
