@@ -114,10 +114,9 @@ namespace FluentValidation.Mvc.WebApi
 			else {
 				isValid = this.ValidateElements(enumerableModel, validationContext);
 			}
-			if (isValid) {
-				// Don't bother to validate this node if children failed.
-				isValid = ShallowValidate(metadata, validationContext, container);
-			}
+
+            // Validate this node as well
+            isValid = isValid && ShallowValidate(metadata, validationContext, container);
 			
 			// Pop the object so that it can be validated again in a different path
 			validationContext.Visited.Remove(model);
