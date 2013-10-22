@@ -16,7 +16,11 @@
   
 	<Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
 	
-	<Target Name="Compile">
+	<Target Name="PackageRestore">
+    <Exec Command="$(BaseDir)\.nuget\nuget.exe restore" WorkingDirectory="$(BaseDir)"  />
+	</Target>
+	
+	<Target Name="Compile" DependsOnTargets="PackageRestore">
 		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration)"  Targets="Rebuild" />
   	<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" />
 	</Target>
