@@ -22,7 +22,7 @@
 	</Target>
 
 	<Target Name="Test">
-		<NUnit Assemblies="$(TestAssemblies)" ToolPath="$(BaseDir)\lib\nunit"  />
+		<NUnit Assemblies="$(TestAssemblies)" ToolPath="$(BaseDir)\packages\nunit.runners.2.6.3\tools"  />
 	</Target>
 
   <Target Name="Deploy">

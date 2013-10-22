@@ -93,14 +93,14 @@
 
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages" 
-					Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation$(PackageSuffix)\FluentValidation$(PackageSuffix).nuspec" />
+					Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation$(PackageSuffix)\FluentValidation$(PackageSuffix).nuspec" />
 		
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
-		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\FluentValidation.MVC3$(PackageSuffix).nuspec" />
+		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\FluentValidation.MVC3$(PackageSuffix).nuspec" />
 
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
-		    	Command="$(BaseDir)\lib\nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec" />
+		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec" />
 
 
 		<RemoveDir Directories="$(PackageDir)\temp" />
