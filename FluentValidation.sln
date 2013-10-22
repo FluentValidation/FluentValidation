@@ -40,6 +40,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{0216F6
 		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc5", "src\FluentValidation.Mvc5\FluentValidation.Mvc5.csproj", "{23E384EF-5A39-4D73-A8D5-EF48C71C128F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc5", "src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj", "{8FF90023-30A2-410D-A735-498878BDA168}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,14 @@ Global
 		{C16154BE-8EB7-4CBF-976C-24CCD8BA3B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C16154BE-8EB7-4CBF-976C-24CCD8BA3B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C16154BE-8EB7-4CBF-976C-24CCD8BA3B51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23E384EF-5A39-4D73-A8D5-EF48C71C128F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23E384EF-5A39-4D73-A8D5-EF48C71C128F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23E384EF-5A39-4D73-A8D5-EF48C71C128F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23E384EF-5A39-4D73-A8D5-EF48C71C128F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FF90023-30A2-410D-A735-498878BDA168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FF90023-30A2-410D-A735-498878BDA168}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FF90023-30A2-410D-A735-498878BDA168}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FF90023-30A2-410D-A735-498878BDA168}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
