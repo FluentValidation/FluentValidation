@@ -86,48 +86,20 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\CustomizeValidatorAttribute.cs">
-      <Link>CustomizeValidatorAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\FluentValidationModelValidator.cs">
-      <Link>FluentValidationModelValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\FluentValidationModelValidatorProvider.cs">
-      <Link>FluentValidationModelValidatorProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\IValidatorInterceptor.cs">
-      <Link>IValidatorInterceptor.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\EmailFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdapters\EmailFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\FluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdapters\FluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\RuleSetForClientSideMessagesAttribute.cs">
-      <Link>RuleSetForClientSideMessagesAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc3\ValidationResultExtension.cs">
-      <Link>ValidationResultExtension.cs</Link>
-    </Compile>
+    <Compile Include="CustomizeValidatorAttribute.cs" />
+    <Compile Include="FluentValidationModelValidator.cs" />
+    <Compile Include="FluentValidationModelValidatorProvider.cs" />
+    <Compile Include="IValidatorInterceptor.cs" />
+    <Compile Include="PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\EmailFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\FluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs" />
+    <Compile Include="PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs" />
+    <Compile Include="RuleSetForClientSideMessagesAttribute.cs" />
+    <Compile Include="ValidationResultExtension.cs" />
     <Compile Include="WebApi\FluentValidationBodyModelValidator.cs" />
     <Compile Include="WebApi\FluentValidationModelValidator.cs" />
     <Compile Include="WebApi\FluentValidationModelValidatorProvider.cs" />
