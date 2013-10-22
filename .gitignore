@@ -13,3 +13,4 @@ TestResult.xml
 *.orig
 .hg/
 .hgignore
+packages/
