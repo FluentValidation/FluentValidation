@@ -31,7 +31,4 @@ using System.Security;
 [assembly : AssemblyVersion("5.0.0.0")]
 [assembly : AssemblyFileVersion("5.0.0.0")]
 [assembly: CLSCompliant(true)]
-#if !SILVERLIGHT && !PORTABLE
-[assembly: AllowPartiallyTrustedCallers]
-#endif
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
