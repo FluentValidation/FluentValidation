@@ -5,7 +5,7 @@
     <PackageDir>$(BuildDir)\Packages</PackageDir>
     <PackageSuffix Condition="'$(PackageSuffix)'!=''"></PackageSuffix>
     <OutputDir>$(BuildDir)\$(Configuration)$(PackageSuffix)</OutputDir>
-    <MSBuildExtensions>$(BaseDir)\lib\msbuild\msbuild.community.tasks.dll</MSBuildExtensions>
+    <MSBuildExtensions>$(BaseDir)\.build\msbuild.community.tasks.dll</MSBuildExtensions>
   </PropertyGroup>
   
   <UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.Zip" />

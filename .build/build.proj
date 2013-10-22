@@ -9,7 +9,7 @@
 			$(BaseDir)\src\FluentValidation.Tests.Mvc3\bin\$(Configuration)\FluentValidation.Tests.Mvc3.dll;
 			$(BaseDir)\src\FluentValidation.Tests.Mvc4\bin\$(Configuration)\FluentValidation.Tests.Mvc4.dll;
 		</TestAssemblies>
-		<MSBuildExtensions>$(BaseDir)\lib\msbuild\msbuild.community.tasks.dll</MSBuildExtensions>
+		<MSBuildExtensions>$(BaseDir)\.build\msbuild.community.tasks.dll</MSBuildExtensions>
 	</PropertyGroup>
 	
   <UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.NUnit" Condition="'$(teamcity_version)' == ''" />
