@@ -28,7 +28,7 @@ using System.Security;
 #if !PORTABLE
 [assembly : ComVisible(false)]
 #endif
-[assembly : AssemblyVersion("5.0.0.0")]
-[assembly : AssemblyFileVersion("5.0.0.0")]
+[assembly : AssemblyVersion("5.0.0.1")]
+[assembly : AssemblyFileVersion("5.0.0.1")]
 [assembly: CLSCompliant(true)]
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
