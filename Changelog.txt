@@ -1,4 +1,4 @@
-5.0 - 
+5.0 - 24/10/2013 
 * Display name is now lazily-loaded by default (as a result, localization via DisplayAttribute now works correctly)
 * Added WebApi integration (contributed by dmorganb)
 * Support for MVC 5 (package names are FluentValidation.Mvc5 and FluentValidation.Mvc5-signed)
