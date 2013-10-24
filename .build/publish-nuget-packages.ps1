@@ -1,6 +1,6 @@
 $keyfile = "$env:USERPROFILE\Dropbox\nuget-access-key.txt"
 $scriptpath = split-path -parent $MyInvocation.MyCommand.Path
-$nugetpath = resolve-path "$scriptpath/../lib/nuget/nuget.exe"
+$nugetpath = resolve-path "$scriptpath/../.nuget/nuget.exe"
 $packagespath = resolve-path "$scriptpath/../build/packages"
 
 if(-not (test-path $keyfile)) {
