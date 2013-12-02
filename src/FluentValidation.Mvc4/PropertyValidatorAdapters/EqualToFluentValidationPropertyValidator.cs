@@ -23,9 +23,13 @@
 				// If propertyToCompare is null then we're either comparing against a literal value, a field or a method call.
 				// We only care about property comparisons in this case.
 
+				var comparisonDisplayName =
+					ValidatorOptions.DisplayNameResolver(Rule.TypeToValidate, propertyToCompare, null)
+					?? propertyToCompare.Name.SplitPascalCase();
+
 				var formatter = new MessageFormatter()
 					.AppendPropertyName(Rule.GetDisplayName())
-					.AppendArgument("ComparisonValue", propertyToCompare.Name);
+					.AppendArgument("ComparisonValue", comparisonDisplayName);
 
 
 				string message = formatter.BuildMessage(EqualValidator.ErrorMessageSource.GetString());
