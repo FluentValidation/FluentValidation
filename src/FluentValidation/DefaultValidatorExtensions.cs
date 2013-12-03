@@ -603,7 +603,7 @@ namespace FluentValidation {
         /// <summary>
         /// Performs validation with rules and then throws an exception if validation fails.
         /// </summary>
-        public static void ValidateAndThrow<T>(this IValidator<T> validator, string ruleset, T instance)
+        public static void ValidateAndThrow<T>(this IValidator<T> validator, T instance, string ruleset)
         {
             var result = validator.Validate(instance, ruleSet:ruleset);
 
