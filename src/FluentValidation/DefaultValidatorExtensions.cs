@@ -600,6 +600,19 @@ namespace FluentValidation {
 			}
 		}
 
+        /// <summary>
+        /// Performs validation with rules and then throws an exception if validation fails.
+        /// </summary>
+        public static void ValidateAndThrow<T>(this IValidator<T> validator, string ruleset, T instance)
+        {
+            var result = validator.Validate(instance, ruleSet:ruleset);
+
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
+        }
+
 		/// <summary>
 		/// Defines an 'inclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
 		/// Validation will fail if the value of the property is outside of the specifed range. The range is inclusive.
