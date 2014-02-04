@@ -109,6 +109,7 @@
     <Compile Include="InclusiveBetweenValidatorTests.cs" />
     <Compile Include="InlineValidatorTester.cs" />
     <Compile Include="InstanceCacheTester.cs" />
+    <Compile Include="InterceptValidateDemoTester.cs" />
     <Compile Include="LocalisedNameTester.cs" />
     <Compile Include="MemberAccessorTests.cs" />
     <Compile Include="MessageFormatterTests.cs" />
