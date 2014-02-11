@@ -127,7 +127,7 @@
     <value>'{PropertyName}' deve essere lungo {MaxLength} caratteri. Hai inserito {TotalLength} caratteri.</value>
   </data>
   <data name="exclusivebetween_error" xml:space="preserve">
-    <value>'{PropertyName}' deve essere compreso tra {From} e {To} (exclusive). Hai inserito {Value}.</value>
+    <value>'{PropertyName}' deve essere compreso tra {From} e {To} (esclusi). Hai inserito {Value}.</value>
   </data>
   <data name="greaterthanorequal_error" xml:space="preserve">
     <value>'{PropertyName}' deve essere maggiore o uguale a '{ComparisonValue}'.</value>
