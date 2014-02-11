@@ -195,6 +195,9 @@
     <Compile Include="..\FluentValidation\Validators\AsyncPredicateValidator.cs">
       <Link>AsyncPredicateValidator.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Validators\AsyncValidatorBase.cs">
+      <Link>AsyncValidatorBase.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Validators\ChildCollectionValidatorAdaptor.cs">
       <Link>ChildCollectionValidatorAdaptor.cs</Link>
     </Compile>
@@ -264,7 +267,6 @@
     <Compile Include="..\FluentValidation\Validators\ScalePrecisionValidator.cs">
       <Link>ScalePrecisionValidator.cs</Link>
     </Compile>
-    <Compile Include="AsyncValidatorBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.de.resx">
