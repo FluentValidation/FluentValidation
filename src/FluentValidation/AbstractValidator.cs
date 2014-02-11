@@ -34,11 +34,11 @@ namespace FluentValidation {
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
 		readonly TrackingCollection<IValidationRule> nestedValidators = new TrackingCollection<IValidationRule>();
 
-        // Work-around for reflection bug in .NET 4.5
-        static Func<CascadeMode> s_cascadeMode = () => ValidatorOptions.CascadeMode;
-        Func<CascadeMode> cascadeMode = s_cascadeMode;
+		// Work-around for reflection bug in .NET 4.5
+		static Func<CascadeMode> s_cascadeMode = () => ValidatorOptions.CascadeMode;
+		Func<CascadeMode> cascadeMode = s_cascadeMode;
 
-	    /// <summary>
+		/// <summary>
 		/// Sets the cascade mode for all rules within this validator.
 		/// </summary>
 		public CascadeMode CascadeMode {
@@ -55,18 +55,19 @@ namespace FluentValidation {
 			return Validate((T)instance);
 		}
 
-        Task<ValidationResult> IValidator.ValidateAsync(object instance)
-	    {
-            instance.Guard("Cannot pass null to Validate.");
-            if (!((IValidator)this).CanValidateInstancesOfType(instance.GetType()))
-            {
-                throw new InvalidOperationException(string.Format("Cannot validate instances of type '{0}'. This validator can only validate instances of type '{1}'.", instance.GetType().Name, typeof(T).Name));
-            }
+		Task<ValidationResult> IValidator.ValidateAsync(object instance)
+		{
+			instance.Guard("Cannot pass null to Validate.");
+			if (!((IValidator)this).CanValidateInstancesOfType(instance.GetType()))
+			{
+				throw new InvalidOperationException(string.Format("Cannot validate instances of type '{0}'. This validator can only validate instances of type '{1}'.", instance.GetType().Name, typeof(T).Name));
+			}
 
-            return ValidateAsync((T)instance);
-	    }
+			return ValidateAsync((T)instance);
+		}
 
-	    ValidationResult IValidator.Validate(ValidationContext context) {
+		ValidationResult IValidator.Validate(ValidationContext context)
+		{
 			context.Guard("Cannot pass null to Validate");
 
 			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector) {
@@ -76,19 +77,19 @@ namespace FluentValidation {
 			return Validate(newContext);
 		}
 
-        Task<ValidationResult> IValidator.ValidateAsync(ValidationContext context)
-	    {
-            context.Guard("Cannot pass null to Validate");
+		Task<ValidationResult> IValidator.ValidateAsync(ValidationContext context)
+		{
+			context.Guard("Cannot pass null to Validate");
 
-            var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector)
-            {
-                IsChildContext = context.IsChildContext
-            };
+			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector)
+			{
+				IsChildContext = context.IsChildContext
+			};
 
-            return ValidateAsync(newContext);
-	    }
+			return ValidateAsync(newContext);
+		}
 
-	    /// <summary>
+		/// <summary>
 		/// Validates the specified instance
 		/// </summary>
 		/// <param name="instance">The object to validate</param>
@@ -97,10 +98,15 @@ namespace FluentValidation {
 			return Validate(new ValidationContext<T>(instance, new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
-        public Task<ValidationResult> ValidateAsync(T instance)
-        {
-            return ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), new DefaultValidatorSelector()));
-        }
+		/// <summary>
+		/// Validates the specified instance asynchronously
+		/// </summary>
+		/// <param name="instance">The object to validate</param>
+		/// <returns>A ValidationResult object containing any validation failures</returns>
+		public Task<ValidationResult> ValidateAsync(T instance)
+		{
+			return ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), new DefaultValidatorSelector()));
+		}
 		
 		/// <summary>
 		/// Validates the specified instance.
@@ -113,14 +119,24 @@ namespace FluentValidation {
 			return new ValidationResult(failures);
 		}
 
-	    public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context)
-	    {
-            context.Guard("Cannot pass null to Validate");
-            return 
-                nestedValidators
-                .SelectManyAsync(x => x.ValidateAsync(context))
-                .ContinueWith(t => new ValidationResult(t.Result));
-	    }
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context)
+		{
+			context.Guard("Cannot pass null to Validate");
+			var failures = new List<ValidationFailure>();
+			return
+				TaskHelpers.Iterate(
+					nestedValidators
+					.Select(v => v
+						.ValidateAsync(context)
+						.Then(fs => failures.AddRange(fs), runSynchronously:true)
+					)
+				).Then(() => new ValidationResult(failures));
+		}
 
 		/// <summary>
 		/// Adds a rule to the current validator.
@@ -186,6 +202,30 @@ namespace FluentValidation {
 		public void Custom(Func<T, ValidationContext<T>, ValidationFailure> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom");
 			AddRule(new DelegateValidator<T>((x, ctx) => new[] { customValidator(x, ctx) }));
+		}
+
+		/// <summary>
+		/// Defines a custom asynchronous validation rule using a lambda expression.
+		/// If the validation rule fails, it should asynchronously return a instance of a <see cref="ValidationFailure">ValidationFailure</see>
+		/// If the validation rule succeeds, it should return null.
+		/// </summary>
+		/// <param name="customValidator">A lambda that executes custom validation rules.</param>
+		public void CustomAsync(Func<T, Task<ValidationFailure>> customValidator)
+		{
+			customValidator.Guard("Cannot pass null to Custom");
+			AddRule(new DelegateValidator<T>(x => customValidator(x).Then(f => new[] {f}.AsEnumerable(), runSynchronously:true) ));
+		}
+
+		/// <summary>
+		/// Defines a custom asynchronous validation rule using a lambda expression.
+		/// If the validation rule fails, it should asynchronously return an instance of <see cref="ValidationFailure">ValidationFailure</see>
+		/// If the validation rule succeeds, it should return null.
+		/// </summary>
+		/// <param name="customValidator">A lambda that executes custom validation rules</param>
+		public void CustomAsync(Func<T, ValidationContext<T>, Task<ValidationFailure>> customValidator)
+		{
+			customValidator.Guard("Cannot pass null to Custom");
+			AddRule(new DelegateValidator<T>((x, ctx) => customValidator(x,ctx).Then(f => new[] {f}.AsEnumerable(), runSynchronously:true) ));
 		}
 
 		/// <summary>

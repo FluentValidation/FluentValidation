@@ -250,108 +250,103 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-	    public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context)
-	    {
-            string displayName = GetDisplayName();
+		/// <summary>
+		/// Performs asynchronous validation using a validation context and returns a collection of Validation Failures.
+		/// </summary>
+		/// <param name="context">Validation Context</param>
+		/// <returns>A collection of validation failures</returns>
+		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context)
+		{
+			try
+			{
+				string displayName = GetDisplayName();
 
-            if (PropertyName == null && displayName == null)
-            {
-                throw new InvalidOperationException(string.Format("Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.", Expression));
-            }
+				if (PropertyName == null && displayName == null)
+				{
+					return
+						TaskHelpers.FromError<IEnumerable<ValidationFailure>>(
+							new InvalidOperationException(
+								string.Format(
+									"Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.",
+									Expression)));
+				}
 
-            // Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
-            string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
+				// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
+				string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
 
-            // Ensure that this rule is allowed to run. 
-            // The validatselector has the opportunity to veto this before any of the validators execute.
-            if (!context.Selector.CanExecute(this, propertyName, context))
-            {
-                return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
-            }
+				// Ensure that this rule is allowed to run. 
+				// The validatselector has the opportunity to veto this before any of the validators execute.
+				if (!context.Selector.CanExecute(this, propertyName, context))
+				{
+					return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+				}
 
-            var cascade = cascadeModeThunk();
-	        var failures = new List<ValidationFailure>();
-            bool hasAnyFailure = false;
+				var cascade = cascadeModeThunk();
+				var failures = new List<ValidationFailure>();
 
-            // Invoke each validator and collect its results.
-            foreach (var validator in validators.Where(v => !(v is AsyncPredicateValidator)))
-            {
-                var results = InvokePropertyValidator(context, validator, propertyName);
+				var fastExit = false;
 
-                bool hasFailure = false;
+				// Firstly, invoke all syncronous validators and collect their results.
+				foreach (var validator in validators.Where(v => !(v is AsyncValidatorBase)))
+				{
+					var results = InvokePropertyValidator(context, validator, propertyName);
 
-                foreach (var result in results)
-                {
-                    hasAnyFailure = true;
-                    hasFailure = true;
-                    failures.Add(result);
-                }
+					failures.AddRange(results);
 
-                // If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
-                // then don't continue to the next rule
-                if (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && hasFailure)
-                {
-                    break;
-                }
-            }
+					// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
+					// then don't continue to the next rule
+					if (fastExit = (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && failures.Count > 0))
+					{
+						break;
+					}
+				}
 
-	        var asyncValidators = validators.OfType<AsyncPredicateValidator>().ToList();
+				var asyncValidators = validators.OfType<AsyncValidatorBase>().ToList();
 
-	        if (asyncValidators.Count == 0 || (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && hasAnyFailure))
-	        {
-                if (hasAnyFailure)
-                {
-                    // Callback if there has been at least one property validator failed.
-                    OnFailure(context.InstanceToValidate);
-                }
+				//if there's no async validators or StopOnFirstFailure triggered then we exit
+				if (asyncValidators.Count == 0 || fastExit)
+				{
+					if (failures.Count > 0)
+					{
+						// Callback if there has been at least one property validator failed.
+						OnFailure(context.InstanceToValidate);
+					}
 
-	            return TaskHelpers.FromResult(failures.AsEnumerable());
-	        }
+					return TaskHelpers.FromResult(failures.AsEnumerable());
+				}
 
-	        try
-	        {
-	            hasAnyFailure = false;
+				//Then call asyncronous validators in non-blocking way
+				var validations =
+					asyncValidators
+					.Select(v => v
+						.ValidateAsync(new PropertyValidatorContext(context, this, propertyName))
+						//this is thread safe because tasks are launched sequencially
+						.Then(fs => failures.AddRange(fs), runSynchronously:true)
+					);
 
-                var validations = 
-                    asyncValidators
-                    .Select(v => 
-                        v.ValidateAsync(new PropertyValidatorContext(context, this, propertyName))
-                        .ContinueWith(t =>
-                        {
-                            foreach (var result in t.Result)
-                            {
-                                hasAnyFailure = true;
-                                failures.Add(result);
-                            }
-                    
-                            return t.Result;
-                        }, TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion)
-                    );
+				return
+					TaskHelpers.Iterate(
+						validations,
+						breakCondition: _ => cascade == FluentValidation.CascadeMode.StopOnFirstFailure && failures.Count > 0
+					).Then(() =>
+						{
+							if (failures.Count > 0)
+							{
+								OnFailure(context.InstanceToValidate);
+							}
+							return failures.AsEnumerable();
+						}, 
+						runSynchronously: true
+					);
 
-                var enumerator = validations.GetEnumerator();
+			}
+			catch (Exception ex)
+			{
+				return TaskHelpers.FromError<IEnumerable<ValidationFailure>>(ex);
+			}
+		}
 
-                return 
-                    TaskHelpers.Iterate(
-                        enumerator, 
-                        results => cascade == FluentValidation.CascadeMode.StopOnFirstFailure || hasAnyFailure
-                    ).ContinueWith(_ => enumerator.Dispose(), TaskContinuationOptions.ExecuteSynchronously)
-                    .ContinueWith(_ =>
-                    {
-                        if (hasAnyFailure)
-                        {
-                            // Callback if there has been at least one property validator failed.
-                            OnFailure(context.InstanceToValidate);
-                        }
-                        return failures.AsEnumerable();
-                    }, TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion);
-            }
-            catch (Exception ex)
-            {
-                return TaskHelpers.FromError<IEnumerable<ValidationFailure>>(ex);
-            }
-	    }
-
-	    /// <summary>
+		/// <summary>
 		/// Invokes a property validator using the specified validation context.
 		/// </summary>
 		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator, string propertyName) {

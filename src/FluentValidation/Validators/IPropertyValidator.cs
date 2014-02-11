@@ -31,7 +31,7 @@ namespace FluentValidation.Validators {
 	public interface IPropertyValidator {
 		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
-        Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context);
+		Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context);
 
 		/// <summary>
 		/// Custom message arguments. 

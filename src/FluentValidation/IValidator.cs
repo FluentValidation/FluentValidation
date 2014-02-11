@@ -54,7 +54,7 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult containing any validation failures</returns>
 		ValidationResult Validate(object instance);
 
-	    Task<ValidationResult> ValidateAsync(object instance);
+		Task<ValidationResult> ValidateAsync(object instance);
 
 		/// <summary>
 		/// Validates the specified instance.
@@ -63,7 +63,7 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containy any validation failures.</returns>
 		ValidationResult Validate(ValidationContext context);
 
-        Task<ValidationResult> ValidateAsync(ValidationContext context);
+		Task<ValidationResult> ValidateAsync(ValidationContext context);
 
 		/// <summary>
 		/// Creates a hook to access various meta data properties
