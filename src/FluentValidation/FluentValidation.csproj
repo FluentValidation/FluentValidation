@@ -91,6 +91,7 @@
     <Compile Include="Internal\IFluentInterface.cs" />
     <Compile Include="Internal\InstanceCache.cs" />
     <Compile Include="Internal\RulesetValidatorSelector.cs" />
+    <Compile Include="Internal\TaskHelpers.cs" />
     <Compile Include="Internal\TrackingCollection.cs" />
     <Compile Include="IValidationRule.cs" />
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Enums.cs" />
     <Compile Include="ValidatorDescriptor.cs" />
     <Compile Include="Validators\AbstractComparisonValidator.cs" />
+    <Compile Include="Validators\AsyncPredicateValidator.cs" />
     <Compile Include="Validators\ChildCollectionValidatorAdaptor.cs" />
     <Compile Include="Validators\ChildValidatorAdaptor.cs" />
     <Compile Include="Validators\CreditCardValidator.cs" />

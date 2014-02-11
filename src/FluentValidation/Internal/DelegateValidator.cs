@@ -20,6 +20,7 @@ namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Results;
 	using Validators;
 
@@ -83,7 +84,12 @@ namespace FluentValidation.Internal {
 			return Validate(newContext);
 		}
 
-		public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+	    public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context)
+	    {
+	        return TaskHelpers.FromResult(Validate(context));
+	    }
+
+	    public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// For custom rules within the DelegateValidator, we ignore ApplyConiditionTo - this is only relevant to chained rules using RuleFor.
 			var originalCondition = this.condition;
 			this.condition = x => predicate(x) && originalCondition(x);

@@ -21,6 +21,8 @@ namespace FluentValidation.Validators {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
+	using System.Threading.Tasks;
+	using FluentValidation.Internal;
 	using Resources;
 	using Results;
 
@@ -30,7 +32,7 @@ namespace FluentValidation.Validators {
 
 		public Func<object, object> CustomStateProvider { get; set; }
 
-		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
+	    public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
 		}
 
@@ -67,7 +69,25 @@ namespace FluentValidation.Validators {
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
+        public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context)
+        {
+            context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
+            context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
+
+            return
+                IsValidAsync(context)
+                .ContinueWith(
+                    t => t.Result ? Enumerable.Empty<ValidationFailure>() : new[] { CreateValidationError(context) },
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion
+                );
+        }
+
 		protected abstract bool IsValid(PropertyValidatorContext context);
+
+	    protected virtual Task<bool> IsValidAsync(PropertyValidatorContext context)
+	    {
+	        return TaskHelpers.FromResult(IsValid(context));
+	    }
 
 		/// <summary>
 		/// Creates an error validation result for this validator.

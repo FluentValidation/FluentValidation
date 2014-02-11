@@ -19,6 +19,7 @@
 namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
+	using System.Threading.Tasks;
 	using Internal;
 	using Results;
 
@@ -33,6 +34,8 @@ namespace FluentValidation {
 		/// <param name="instance">The instance to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		ValidationResult Validate(T instance);
+
+		Task<ValidationResult> ValidateAsync(T instance);
 
 		/// <summary>
 		/// Sets the cascade mode for all rules within this validator.
@@ -51,6 +54,7 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult containing any validation failures</returns>
 		ValidationResult Validate(object instance);
 
+	    Task<ValidationResult> ValidateAsync(object instance);
 
 		/// <summary>
 		/// Validates the specified instance.
@@ -58,6 +62,8 @@ namespace FluentValidation {
 		/// <param name="context">A ValidationContext</param>
 		/// <returns>A ValidationResult object containy any validation failures.</returns>
 		ValidationResult Validate(ValidationContext context);
+
+        Task<ValidationResult> ValidateAsync(ValidationContext context);
 
 		/// <summary>
 		/// Creates a hook to access various meta data properties

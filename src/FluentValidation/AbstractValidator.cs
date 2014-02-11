@@ -22,6 +22,7 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
+	using System.Threading.Tasks;
 	using Internal;
 	using Results;
 	using Validators;
@@ -37,7 +38,7 @@ namespace FluentValidation {
         static Func<CascadeMode> s_cascadeMode = () => ValidatorOptions.CascadeMode;
         Func<CascadeMode> cascadeMode = s_cascadeMode;
 
-		/// <summary>
+	    /// <summary>
 		/// Sets the cascade mode for all rules within this validator.
 		/// </summary>
 		public CascadeMode CascadeMode {
@@ -54,7 +55,18 @@ namespace FluentValidation {
 			return Validate((T)instance);
 		}
 
-		ValidationResult IValidator.Validate(ValidationContext context) {
+        Task<ValidationResult> IValidator.ValidateAsync(object instance)
+	    {
+            instance.Guard("Cannot pass null to Validate.");
+            if (!((IValidator)this).CanValidateInstancesOfType(instance.GetType()))
+            {
+                throw new InvalidOperationException(string.Format("Cannot validate instances of type '{0}'. This validator can only validate instances of type '{1}'.", instance.GetType().Name, typeof(T).Name));
+            }
+
+            return ValidateAsync((T)instance);
+	    }
+
+	    ValidationResult IValidator.Validate(ValidationContext context) {
 			context.Guard("Cannot pass null to Validate");
 
 			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector) {
@@ -64,7 +76,19 @@ namespace FluentValidation {
 			return Validate(newContext);
 		}
 
-		/// <summary>
+        Task<ValidationResult> IValidator.ValidateAsync(ValidationContext context)
+	    {
+            context.Guard("Cannot pass null to Validate");
+
+            var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector)
+            {
+                IsChildContext = context.IsChildContext
+            };
+
+            return ValidateAsync(newContext);
+	    }
+
+	    /// <summary>
 		/// Validates the specified instance
 		/// </summary>
 		/// <param name="instance">The object to validate</param>
@@ -72,6 +96,11 @@ namespace FluentValidation {
 		public virtual ValidationResult Validate(T instance) {
 			return Validate(new ValidationContext<T>(instance, new PropertyChain(), new DefaultValidatorSelector()));
 		}
+
+        public Task<ValidationResult> ValidateAsync(T instance)
+        {
+            return ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), new DefaultValidatorSelector()));
+        }
 		
 		/// <summary>
 		/// Validates the specified instance.
@@ -83,6 +112,15 @@ namespace FluentValidation {
 			var failures = nestedValidators.SelectMany(x => x.Validate(context)).ToList();
 			return new ValidationResult(failures);
 		}
+
+	    public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context)
+	    {
+            context.Guard("Cannot pass null to Validate");
+            return 
+                nestedValidators
+                .SelectManyAsync(x => x.ValidateAsync(context))
+                .ContinueWith(t => new ValidationResult(t.Result));
+	    }
 
 		/// <summary>
 		/// Adds a rule to the current validator.
