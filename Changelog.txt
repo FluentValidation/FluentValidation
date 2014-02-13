@@ -1,3 +1,7 @@
+5.1 -
+* Applied pull request: Apply the same display name resolving to the target property as to the source property.
+* Applied pull request: Allow parent to be passed to child collection validator
+
 5.0 - 24/10/2013 
 * Display name is now lazily-loaded by default (as a result, localization via DisplayAttribute now works correctly)
 * Added WebApi integration (contributed by dmorganb)
