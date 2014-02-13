@@ -48,12 +48,13 @@ namespace FluentValidation.TestHelper {
 			var descriptor = validator.CreateDescriptor();
 			var matchingValidators = descriptor.GetValidatorsForMember(expression.GetMember().Name);
 
-			var childValidators = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.Validator);
-			childValidators = childValidators.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.Validator));
+            var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.Validator.GetType());
+            childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
-			if(! childValidators.Any(x => x.GetType() == childValidatorType)) {
-				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
-			}
+            if (!childValidatorTypes.Any(x => x == childValidatorType))
+            {
+                throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
+            }
 		}
 
 	}

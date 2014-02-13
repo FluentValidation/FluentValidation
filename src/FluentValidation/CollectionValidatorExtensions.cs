@@ -33,6 +33,14 @@ namespace FluentValidation {
 			return new CollectionValidatorRuleBuilder<T, TCollectionElement>(ruleBuilder, adaptor);
 		}
 
+        public static ICollectionValidatorRuleBuilder<T, TCollectionElement> SetCollectionValidator<T, TCollectionElement, TValidator>(this IRuleBuilder<T, IEnumerable<TCollectionElement>> ruleBuilder, Func<T, TValidator> validator) 
+            where TValidator : IValidator<TCollectionElement>
+        {
+            var adaptor = new ChildCollectionValidatorAdaptor(parent => validator((T)parent), typeof(TValidator));
+            ruleBuilder.SetValidator(adaptor);
+            return new CollectionValidatorRuleBuilder<T, TCollectionElement>(ruleBuilder, adaptor);
+        }
+
 		public interface ICollectionValidatorRuleBuilder<T,TCollectionElement> : IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> {
 			ICollectionValidatorRuleBuilder<T,TCollectionElement> Where(Func<TCollectionElement, bool> predicate);
 		}

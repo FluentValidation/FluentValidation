@@ -24,19 +24,28 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class ChildCollectionValidatorAdaptor : NoopPropertyValidator {
-		readonly IValidator childValidator;
+		readonly Func<object, IValidator> childValidatorProvider;
+        readonly Type childValidatorType;
 
-		public IValidator Validator {
-			get { return childValidator; }
-		}
+	    public Type ChildValidatorType
+	    {
+	        get { return childValidatorType; }
+	    }
 
-		public Func<object, bool> Predicate { get; set; }
+	    public Func<object, bool> Predicate { get; set; }
 
 		public ChildCollectionValidatorAdaptor(IValidator childValidator) {
-			this.childValidator = childValidator;
+            this.childValidatorProvider = (_) => childValidator;
+		    this.childValidatorType = childValidator.GetType();
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+        public ChildCollectionValidatorAdaptor(Func<object, IValidator> childValidatorProvider, Type childValidatorType)
+	    {
+            this.childValidatorProvider = childValidatorProvider;
+            this.childValidatorType = childValidatorType;
+	    }
+
+	    public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			if (context.Rule.Member == null) {
 				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
 			}
@@ -64,7 +73,8 @@ namespace FluentValidation.Validators {
 				newContext.PropertyChain.Add(context.Rule.PropertyName);
 				newContext.PropertyChain.AddIndexer(count++);
 
-				var results = childValidator.Validate(newContext).Errors;
+			    var validator = childValidatorProvider(context.Instance);
+                var results = validator.Validate(newContext).Errors;
 
 				foreach (var result in results) {
 					yield return result;
