@@ -37,7 +37,7 @@ namespace FluentValidation.Validators {
 			return TaskHelpers.FromResult(Validate(context));
 		}
 
-	    public virtual ICollection<Func<object, object, object>> CustomMessageFormatArguments {
+		public virtual ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return new List<Func<object, object, object>>(); }
 		}
 

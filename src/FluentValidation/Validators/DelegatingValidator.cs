@@ -46,14 +46,12 @@ namespace FluentValidation.Validators {
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
-        public Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context)
-        {
-            if (condition(context.Instance))
-            {
-                return InnerValidator.ValidateAsync(context);
-            }
-            return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
-        }
+		public Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+			if (condition(context.Instance)) {
+				return InnerValidator.ValidateAsync(context);
+			}
+			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+		}
 
 		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return InnerValidator.CustomMessageFormatArguments; }
