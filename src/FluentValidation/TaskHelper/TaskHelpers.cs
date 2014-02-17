@@ -1,49 +1,41 @@
-// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
+namespace System.Threading.Tasks {
+	using Collections.Generic;
+	using Diagnostics.CodeAnalysis;
+	using Diagnostics.Contracts;
 
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
-
-namespace System.Threading.Tasks
-{
 	// <summary>
 	// Helpers for safely using Task libraries. 
 	// </summary>
-	internal static class TaskHelpers
-	{
-		private static readonly Task _defaultCompleted = FromResult<AsyncVoid>(default(AsyncVoid));
+	static class TaskHelpers {
+		static readonly Task DefaultCompleted = FromResult(default(AsyncVoid));
 
-		private static readonly Task<object> _completedTaskReturningNull = FromResult<object>(null);
+		static readonly Task<object> CompletedTaskReturningNull = FromResult<object>(null);
 
 		// <summary>
 		// Returns a canceled Task. The task is completed, IsCanceled = True, IsFaulted = False.
 		// </summary>
-		internal static Task Canceled()
-		{
+		internal static Task Canceled() {
 			return CancelCache<AsyncVoid>.Canceled;
 		}
 
 		// <summary>
 		// Returns a canceled Task of the given type. The task is completed, IsCanceled = True, IsFaulted = False.
 		// </summary>
-		internal static Task<TResult> Canceled<TResult>()
-		{
+		internal static Task<TResult> Canceled<TResult>() {
 			return CancelCache<TResult>.Canceled;
 		}
 
 		// <summary>
 		// Returns a completed task that has no result. 
 		// </summary>        
-		internal static Task Completed()
-		{
-			return _defaultCompleted;
+		internal static Task Completed() {
+			return DefaultCompleted;
 		}
 
 		// <summary>
 		// Returns an error task. The task is Completed, IsCanceled = False, IsFaulted = True
 		// </summary>
-		internal static Task FromError(Exception exception)
-		{
+		internal static Task FromError(Exception exception) {
 			return FromError<AsyncVoid>(exception);
 		}
 
@@ -51,9 +43,8 @@ namespace System.Threading.Tasks
 		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
 		// </summary>
 		// <typeparam name="TResult"></typeparam>
-		internal static Task<TResult> FromError<TResult>(Exception exception)
-		{
-			TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
+		internal static Task<TResult> FromError<TResult>(Exception exception) {
+			var tcs = new TaskCompletionSource<TResult>();
 			tcs.SetException(exception);
 			return tcs.Task;
 		}
@@ -61,17 +52,15 @@ namespace System.Threading.Tasks
 		// <summary>
 		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
 		// </summary>
-		internal static Task FromErrors(IEnumerable<Exception> exceptions)
-		{
+		internal static Task FromErrors(IEnumerable<Exception> exceptions) {
 			return FromErrors<AsyncVoid>(exceptions);
 		}
 
 		// <summary>
 		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
 		// </summary>
-		internal static Task<TResult> FromErrors<TResult>(IEnumerable<Exception> exceptions)
-		{
-			TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
+		internal static Task<TResult> FromErrors<TResult>(IEnumerable<Exception> exceptions) {
+			var tcs = new TaskCompletionSource<TResult>();
 			tcs.SetException(exceptions);
 			return tcs.Task;
 		}
@@ -79,16 +68,14 @@ namespace System.Threading.Tasks
 		// <summary>
 		// Returns a successful completed task with the given result.  
 		// </summary>        
-		internal static Task<TResult> FromResult<TResult>(TResult result)
-		{
-			TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
+		internal static Task<TResult> FromResult<TResult>(TResult result) {
+			var tcs = new TaskCompletionSource<TResult>();
 			tcs.SetResult(result);
 			return tcs.Task;
 		}
 
-		internal static Task<object> NullResult()
-		{
-			return _completedTaskReturningNull;
+		internal static Task<object> NullResult() {
+			return CompletedTaskReturningNull;
 		}
 
 		// <summary>
@@ -101,20 +88,17 @@ namespace System.Threading.Tasks
 		// Only set to <c>false</c> if you can guarantee that <paramref name="asyncIterator"/>'s enumerator does not have any resources it needs to dispose.</param>
 		// <returns>a task that signals completed when all the incoming tasks are finished.</returns>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The exception is propagated in a Task.")]
-		internal static Task Iterate(IEnumerable<Task> asyncIterator, CancellationToken cancellationToken = default(CancellationToken), bool disposeEnumerator = true, Func<Task, bool> breakCondition = null)
-		{
+		internal static Task Iterate(IEnumerable<Task> asyncIterator, CancellationToken cancellationToken = default(CancellationToken), bool disposeEnumerator = true, Func<Task, bool> breakCondition = null) {
 			Contract.Assert(asyncIterator != null);
 
 			IEnumerator<Task> enumerator = null;
-			try
-			{
+			try {
 				enumerator = asyncIterator.GetEnumerator();
-				Task task = IterateImpl(enumerator, cancellationToken, breakCondition);
-				return (disposeEnumerator && enumerator != null) ? task.Finally(enumerator.Dispose, runSynchronously: true) : task;
+				var task = IterateImpl(enumerator, cancellationToken, breakCondition);
+				return (disposeEnumerator && enumerator != null) ? task.Finally(enumerator.Dispose, true) : task;
 			}
-			catch (Exception ex)
-			{
-				return TaskHelpers.FromError(ex);
+			catch (Exception ex) {
+				return FromError(ex);
 			}
 		}
 
@@ -123,28 +107,22 @@ namespace System.Threading.Tasks
 		// Contains special logic to help speed up common cases.
 		// </summary>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The exception is propagated in a Task.")]
-		internal static Task IterateImpl(IEnumerator<Task> enumerator, CancellationToken cancellationToken, Func<Task, bool> breakCondition)
-		{
-			try
-			{
-				while (true)
-				{
+		internal static Task IterateImpl(IEnumerator<Task> enumerator, CancellationToken cancellationToken, Func<Task, bool> breakCondition) {
+			try {
+				while (true) {
 					// short-circuit: iteration canceled
-					if (cancellationToken.IsCancellationRequested)
-					{
-						return TaskHelpers.Canceled();
+					if (cancellationToken.IsCancellationRequested) {
+						return Canceled();
 					}
 
 					// short-circuit: iteration complete
-					if (!enumerator.MoveNext())
-					{
-						return TaskHelpers.Completed();
+					if (!enumerator.MoveNext()) {
+						return Completed();
 					}
 
 					// fast case: Task completed synchronously & successfully
-					Task currentTask = enumerator.Current;
-					if (currentTask.Status == TaskStatus.RanToCompletion)
-					{
+					var currentTask = enumerator.Current;
+					if (currentTask.Status == TaskStatus.RanToCompletion) {
 						if (breakCondition != null && breakCondition(currentTask))
 							return currentTask;
 
@@ -152,8 +130,7 @@ namespace System.Threading.Tasks
 					}
 
 					// fast case: Task completed synchronously & unsuccessfully
-					if (currentTask.IsCanceled || currentTask.IsFaulted)
-					{
+					if (currentTask.IsCanceled || currentTask.IsFaulted) {
 						return currentTask;
 					}
 
@@ -161,17 +138,15 @@ namespace System.Threading.Tasks
 					return IterateImplIncompleteTask(enumerator, currentTask, cancellationToken, breakCondition);
 				}
 			}
-			catch (Exception ex)
-			{
-				return TaskHelpers.FromError(ex);
+			catch (Exception ex) {
+				return FromError(ex);
 			}
 		}
 
 		// <summary>
 		// Fallback for IterateImpl when the antecedent Task isn't yet complete.
 		// </summary>
-		internal static Task IterateImplIncompleteTask(IEnumerator<Task> enumerator, Task currentTask, CancellationToken cancellationToken, Func<Task, bool> breakCondition)
-		{
+		internal static Task IterateImplIncompleteTask(IEnumerator<Task> enumerator, Task currentTask, CancellationToken cancellationToken, Func<Task, bool> breakCondition) {
 			// There's a race condition here, the antecedent Task could complete between
 			// the check in Iterate and the call to Then below. If this happens, we could
 			// end up growing the stack indefinitely. But the chances of (a) even having
@@ -182,7 +157,7 @@ namespace System.Threading.Tasks
 			return currentTask.Then(
 				() => breakCondition != null && breakCondition(currentTask) ? Completed() : IterateImpl(enumerator, cancellationToken, breakCondition),
 				runSynchronously: true
-			);
+				);
 		}
 
 		// <summary>
@@ -202,20 +177,16 @@ namespace System.Threading.Tasks
 		// Also take in a lambda so that we can wrap in a try catch and honor task failure semantics.        
 		// </remarks>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
-		public static Task RunSynchronously(Action action, CancellationToken token = default(CancellationToken))
-		{
-			if (token.IsCancellationRequested)
-			{
+		public static Task RunSynchronously(Action action, CancellationToken token = default(CancellationToken)) {
+			if (token.IsCancellationRequested) {
 				return Canceled();
 			}
 
-			try
-			{
+			try {
 				action();
 				return Completed();
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				return FromError(e);
 			}
 		}
@@ -238,19 +209,15 @@ namespace System.Threading.Tasks
 		// Also take in a lambda so that we can wrap in a try catch and honor task failure semantics.        
 		// </remarks>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
-		internal static Task<TResult> RunSynchronously<TResult>(Func<TResult> func, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			if (cancellationToken.IsCancellationRequested)
-			{
+		internal static Task<TResult> RunSynchronously<TResult>(Func<TResult> func, CancellationToken cancellationToken = default(CancellationToken)) {
+			if (cancellationToken.IsCancellationRequested) {
 				return Canceled<TResult>();
 			}
 
-			try
-			{
+			try {
 				return FromResult(func());
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				return FromError<TResult>(e);
 			}
 		}
@@ -265,19 +232,15 @@ namespace System.Threading.Tasks
 		// <param name="cancellationToken">cancellation token. This is only checked before we run the task, and if canceled, we immediately return a canceled task.</param>
 		// <returns>a task, created by running func().</returns>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
-		internal static Task<TResult> RunSynchronously<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			if (cancellationToken.IsCancellationRequested)
-			{
+		internal static Task<TResult> RunSynchronously<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken = default(CancellationToken)) {
+			if (cancellationToken.IsCancellationRequested) {
 				return Canceled<TResult>();
 			}
 
-			try
-			{
+			try {
 				return func();
 			}
-			catch (Exception e)
-			{
+			catch (Exception e) {
 				return FromError<TResult>(e);
 			}
 		}
@@ -289,10 +252,8 @@ namespace System.Threading.Tasks
 		// <param name="tcs">completion source to update</param>
 		// <param name="source">task to update from.</param>
 		// <returns>true on success</returns>
-		internal static bool SetIfTaskFailed<TResult>(this TaskCompletionSource<TResult> tcs, Task source)
-		{
-			switch (source.Status)
-			{
+		internal static bool SetIfTaskFailed<TResult>(this TaskCompletionSource<TResult> tcs, Task source) {
+			switch (source.Status) {
 				case TaskStatus.Canceled:
 				case TaskStatus.Faulted:
 					return tcs.TrySetFromTask(source);
@@ -309,21 +270,17 @@ namespace System.Threading.Tasks
 		// <param name="source">Task to get values from.</param>
 		// <returns>true if this successfully sets the completion source.</returns>
 		[SuppressMessage("Microsoft.Web.FxCop", "MW1201:DoNotCallProblematicMethodsOnTask", Justification = "This is a known safe usage of Task.Result, since it only occurs when we know the task's state to be completed.")]
-		internal static bool TrySetFromTask<TResult>(this TaskCompletionSource<TResult> tcs, Task source)
-		{
-			if (source.Status == TaskStatus.Canceled)
-			{
+		internal static bool TrySetFromTask<TResult>(this TaskCompletionSource<TResult> tcs, Task source) {
+			if (source.Status == TaskStatus.Canceled) {
 				return tcs.TrySetCanceled();
 			}
 
-			if (source.Status == TaskStatus.Faulted)
-			{
+			if (source.Status == TaskStatus.Faulted) {
 				return tcs.TrySetException(source.Exception.InnerExceptions);
 			}
 
-			if (source.Status == TaskStatus.RanToCompletion)
-			{
-				Task<TResult> taskOfResult = source as Task<TResult>;
+			if (source.Status == TaskStatus.RanToCompletion) {
+				var taskOfResult = source as Task<TResult>;
 				return tcs.TrySetResult(taskOfResult == null ? default(TResult) : taskOfResult.Result);
 			}
 
@@ -341,38 +298,32 @@ namespace System.Threading.Tasks
 		// <param name="source">Task to get values from.</param>
 		// <returns>true if this successfully sets the completion source.</returns>
 		[SuppressMessage("Microsoft.Web.FxCop", "MW1201:DoNotCallProblematicMethodsOnTask", Justification = "This is a known safe usage of Task.Result, since it only occurs when we know the task's state to be completed.")]
-		internal static bool TrySetFromTask<TResult>(this TaskCompletionSource<Task<TResult>> tcs, Task source)
-		{
-			if (source.Status == TaskStatus.Canceled)
-			{
+		internal static bool TrySetFromTask<TResult>(this TaskCompletionSource<Task<TResult>> tcs, Task source) {
+			if (source.Status == TaskStatus.Canceled) {
 				return tcs.TrySetCanceled();
 			}
 
-			if (source.Status == TaskStatus.Faulted)
-			{
+			if (source.Status == TaskStatus.Faulted) {
 				return tcs.TrySetException(source.Exception.InnerExceptions);
 			}
 
-			if (source.Status == TaskStatus.RanToCompletion)
-			{
+			if (source.Status == TaskStatus.RanToCompletion) {
 				// Sometimes the source task is Task<Task<TResult>>, and sometimes it's Task<TResult>.
 				// The latter usually happens when we're in the middle of a sync-block postback where
 				// the continuation is a function which returns Task<TResult> rather than just TResult,
 				// but the originating task was itself just Task<TResult>. An example of this can be
 				// found in TaskExtensions.CatchImpl().
-				Task<Task<TResult>> taskOfTaskOfResult = source as Task<Task<TResult>>;
-				if (taskOfTaskOfResult != null)
-				{
+				var taskOfTaskOfResult = source as Task<Task<TResult>>;
+				if (taskOfTaskOfResult != null) {
 					return tcs.TrySetResult(taskOfTaskOfResult.Result);
 				}
 
-				Task<TResult> taskOfResult = source as Task<TResult>;
-				if (taskOfResult != null)
-				{
+				var taskOfResult = source as Task<TResult>;
+				if (taskOfResult != null) {
 					return tcs.TrySetResult(taskOfResult);
 				}
 
-				return tcs.TrySetResult(TaskHelpers.FromResult(default(TResult)));
+				return tcs.TrySetResult(FromResult(default(TResult)));
 			}
 
 			return false;
@@ -381,20 +332,17 @@ namespace System.Threading.Tasks
 		// <summary>
 		// Used as the T in a "conversion" of a Task into a Task{T}
 		// </summary>
-		private struct AsyncVoid
-		{
+		struct AsyncVoid {
 		}
 
 		// <summary>
 		// This class is a convenient cache for per-type canceled tasks
 		// </summary>
-		private static class CancelCache<TResult>
-		{
+		static class CancelCache<TResult> {
 			public static readonly Task<TResult> Canceled = GetCancelledTask();
 
-			private static Task<TResult> GetCancelledTask()
-			{
-				TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
+			static Task<TResult> GetCancelledTask() {
+				var tcs = new TaskCompletionSource<TResult>();
 				tcs.SetCanceled();
 				return tcs.Task;
 			}

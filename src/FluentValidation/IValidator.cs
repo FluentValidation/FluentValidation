@@ -35,6 +35,11 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		ValidationResult Validate(T instance);
 
+		/// <summary>
+		/// Validate the specified instance asynchronously
+		/// </summary>
+		/// <param name="instance">The instance to validate</param>
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		Task<ValidationResult> ValidateAsync(T instance);
 
 		/// <summary>
@@ -54,6 +59,11 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult containing any validation failures</returns>
 		ValidationResult Validate(object instance);
 
+		/// <summary>
+		/// Validates the specified instance asynchronously
+		/// </summary>
+		/// <param name="instance"></param>
+		/// <returns>A ValidationResult containing any validation failures</returns>
 		Task<ValidationResult> ValidateAsync(object instance);
 
 		/// <summary>
@@ -63,6 +73,11 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containy any validation failures.</returns>
 		ValidationResult Validate(ValidationContext context);
 
+		/// <summary>
+		/// Validates the specified instance asynchronously.
+		/// </summary>
+		/// <param name="context">A ValidationContext</param>
+		/// <returns>A ValidationResult object containy any validation failures.</returns>		
 		Task<ValidationResult> ValidateAsync(ValidationContext context);
 
 		/// <summary>

@@ -33,8 +33,6 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	public class PropertyRule : IValidationRule
 	{
-        static readonly Task<IEnumerable<ValidationFailure>> AsyncEmpty = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
-
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
 
@@ -255,14 +253,11 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context)
-		{
-			try
-			{
-				string displayName = GetDisplayName();
+		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context) {
+			try {
+				var displayName = GetDisplayName();
 
-				if (PropertyName == null && displayName == null)
-				{
+				if (PropertyName == null && displayName == null) {
 					return
 						TaskHelpers.FromError<IEnumerable<ValidationFailure>>(
 							new InvalidOperationException(
@@ -272,12 +267,11 @@ namespace FluentValidation.Internal {
 				}
 
 				// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
-				string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
+				var propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
 
 				// Ensure that this rule is allowed to run. 
 				// The validatselector has the opportunity to veto this before any of the validators execute.
-				if (!context.Selector.CanExecute(this, propertyName, context))
-				{
+				if (!context.Selector.CanExecute(this, propertyName, context)) {
 					return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 				}
 
@@ -287,16 +281,14 @@ namespace FluentValidation.Internal {
 				var fastExit = false;
 
 				// Firstly, invoke all syncronous validators and collect their results.
-				foreach (var validator in validators.Where(v => !(v is AsyncValidatorBase)))
-				{
+				foreach (var validator in validators.Where(v => !(v is AsyncValidatorBase))) {
 					var results = InvokePropertyValidator(context, validator, propertyName);
 
 					failures.AddRange(results);
 
 					// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 					// then don't continue to the next rule
-					if (fastExit = (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && failures.Count > 0))
-					{
+					if (fastExit = (cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0)) {
 						break;
 					}
 				}
@@ -304,10 +296,8 @@ namespace FluentValidation.Internal {
 				var asyncValidators = validators.OfType<AsyncValidatorBase>().ToList();
 
 				//if there's no async validators or StopOnFirstFailure triggered then we exit
-				if (asyncValidators.Count == 0 || fastExit)
-				{
-					if (failures.Count > 0)
-					{
+				if (asyncValidators.Count == 0 || fastExit) {
+					if (failures.Count > 0) {
 						// Callback if there has been at least one property validator failed.
 						OnFailure(context.InstanceToValidate);
 					}
@@ -318,30 +308,26 @@ namespace FluentValidation.Internal {
 				//Then call asyncronous validators in non-blocking way
 				var validations =
 					asyncValidators
-					.Select(v => v
-						.ValidateAsync(new PropertyValidatorContext(context, this, propertyName))
-						//this is thread safe because tasks are launched sequencially
-						.Then(fs => failures.AddRange(fs), runSynchronously:true)
-					);
+						.Select(v => v
+							.ValidateAsync(new PropertyValidatorContext(context, this, propertyName))
+							//this is thread safe because tasks are launched sequencially
+							.Then(fs => failures.AddRange(fs), runSynchronously: true)
+						);
 
 				return
 					TaskHelpers.Iterate(
 						validations,
-						breakCondition: _ => cascade == FluentValidation.CascadeMode.StopOnFirstFailure && failures.Count > 0
-					).Then(() =>
-						{
-							if (failures.Count > 0)
-							{
+						breakCondition: _ => cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0
+					).Then(() => {
+							if (failures.Count > 0) {
 								OnFailure(context.InstanceToValidate);
 							}
 							return failures.AsEnumerable();
-						}, 
+						},
 						runSynchronously: true
 					);
-
 			}
-			catch (Exception ex)
-			{
+			catch (Exception ex) {
 				return TaskHelpers.FromError<IEnumerable<ValidationFailure>>(ex);
 			}
 		}

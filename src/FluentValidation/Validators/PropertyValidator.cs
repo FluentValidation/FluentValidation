@@ -34,7 +34,7 @@ namespace FluentValidation.Validators {
 
 		public Func<object, object> CustomStateProvider { get; set; }
 
-	    public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
+		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
 		}
 
@@ -71,23 +71,21 @@ namespace FluentValidation.Validators {
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
-		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context)
-		{
+		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
 			context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
 			context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
 
-			return 
+			return
 				IsValidAsync(context)
 				.Then(
 					valid => valid ? Enumerable.Empty<ValidationFailure>() : new[] { CreateValidationError(context) }.AsEnumerable(),
-					runSynchronously:true
+					runSynchronously: true
 				);
 		}
 
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
-		protected virtual Task<bool> IsValidAsync(PropertyValidatorContext context)
-		{
+		protected virtual Task<bool> IsValidAsync(PropertyValidatorContext context) {
 			return TaskHelpers.FromResult(IsValid(context));
 		}
 
