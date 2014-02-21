@@ -77,8 +77,8 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AbstractValidator.cs" />
-    <Compile Include="TaskHelper\TaskHelpers.cs" />
-    <Compile Include="TaskHelper\TaskHelpersExtensions.cs" />
+    <Compile Include="TaskHelpers\TaskHelpers.cs" />
+    <Compile Include="TaskHelpers\TaskHelpersExtensions.cs" />
     <Compile Include="AssemblyScanner.cs" />
     <Compile Include="Attributes\AttributedValidatorFactory.cs" />
     <Compile Include="Attributes\ValidatorAttribute.cs" />

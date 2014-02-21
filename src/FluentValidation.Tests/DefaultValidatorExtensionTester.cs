@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Internal;
 	using NUnit.Framework;
 	using Validators;
@@ -91,16 +92,45 @@ namespace FluentValidation.Tests {
 			AssertValidator<PredicateValidator>();
 		}
 
-        [Test]
-        public void Must_should_create_PredicateValidator_with_PropertyValidatorContext() {
-            var hasPropertyValidatorContext = false;
-            validator.RuleFor(x => x.Surname).Must((x, val, ctx) => {
-                hasPropertyValidatorContext = ctx != null;
-                return true; });
-            validator.Validate(new Person() {Surname = "Surname"});
-            AssertValidator<PredicateValidator>();
-            hasPropertyValidatorContext.ShouldBeTrue();
-        }
+		[Test]
+		public void Must_should_create_PredicateValidator_with_PropertyValidatorContext() {
+			var hasPropertyValidatorContext = false;
+			this.validator.RuleFor(x => x.Surname).Must((x, val, ctx) => {
+				hasPropertyValidatorContext = ctx != null;
+				return true;
+			});
+			this.validator.Validate(new Person() {
+				Surname = "Surname"
+			});
+			this.AssertValidator<PredicateValidator>();
+			hasPropertyValidatorContext.ShouldBeTrue();
+		}
+
+		[Test]
+		public void MustAsync_should_create_AsyncPredicteValidator() {
+			validator.RuleFor(x => x.Surname).MustAsync(x => TaskHelpers.FromResult(true));
+			AssertValidator<AsyncPredicateValidator>();
+		}
+
+		[Test]
+		public void MustAsync_should_create_AsyncPredicateValidator_with_context() {
+			validator.RuleFor(x => x.Surname).MustAsync((x, val) => TaskHelpers.FromResult(true));
+			AssertValidator<AsyncPredicateValidator>();
+		}
+
+		[Test]
+		public void MustAsync_should_create_AsyncPredicateValidator_with_PropertyValidatorContext() {
+			var hasPropertyValidatorContext = false;
+			this.validator.RuleFor(x => x.Surname).MustAsync((x, val, ctx) => {
+				hasPropertyValidatorContext = ctx != null;
+				return TaskHelpers.FromResult(true);
+			});
+			this.validator.ValidateAsync(new Person {
+				Surname = "Surname"
+			}).Wait();
+			this.AssertValidator<AsyncPredicateValidator>();
+			hasPropertyValidatorContext.ShouldBeTrue();
+		}
 
 		[Test]
 		public void LessThan_should_create_LessThanValidator_with_explicit_value() {
@@ -126,11 +156,11 @@ namespace FluentValidation.Tests {
 			AssertValidator<LessThanOrEqualValidator>();
 		}
 
-    [Test]
-    public void LessThanOrEqual_should_create_LessThanOrEqualValidator_with_lambda_with_other_Nullable() {
-      validator.RuleFor(x => x.NullableInt).LessThanOrEqualTo(x => x.OtherNullableInt);
-      AssertValidator<LessThanOrEqualValidator>();
-    }
+		[Test]
+		public void LessThanOrEqual_should_create_LessThanOrEqualValidator_with_lambda_with_other_Nullable() {
+			validator.RuleFor(x => x.NullableInt).LessThanOrEqualTo(x => x.OtherNullableInt);
+			AssertValidator<LessThanOrEqualValidator>();
+		}
 
 		[Test]
 		public void GreaterThan_should_create_GreaterThanValidator_with_explicit_value() {
@@ -156,11 +186,11 @@ namespace FluentValidation.Tests {
 			AssertValidator<GreaterThanOrEqualValidator>();
 		}
 
-    [Test]
-    public void GreaterThanOrEqual_should_create_GreaterThanOrEqualValidator_with_lambda_with_other_Nullable() {
-      validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.OtherNullableInt);
-      AssertValidator<GreaterThanOrEqualValidator>();
-    }
+		[Test]
+		public void GreaterThanOrEqual_should_create_GreaterThanOrEqualValidator_with_lambda_with_other_Nullable() {
+			validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.OtherNullableInt);
+			AssertValidator<GreaterThanOrEqualValidator>();
+		}
 
 		private void AssertValidator<TValidator>() {
 			var rule = (PropertyRule)validator.First();

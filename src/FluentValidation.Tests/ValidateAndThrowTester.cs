@@ -17,7 +17,8 @@
 #endregion
 
 namespace FluentValidation.Tests {
-    using System.Globalization;
+	using System;
+	using System.Globalization;
     using System.Linq;
     using System.Threading;
     using NUnit.Framework;
@@ -40,12 +41,36 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Throws_exception_async() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull()
+			};
+
+			typeof(ValidationException).ShouldBeThrownBy(() => {
+				try {
+					validator.ValidateAndThrowAsync(new Person()).Wait();
+				}
+				catch (AggregateException agrEx) {
+					throw agrEx.InnerException;
+				}
+			});
+		}
+
+		[Test]
 		public void Does_not_throw_when_valid() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
 
 			validator.ValidateAndThrow(new Person {Surname = "foo"});
+		}
+
+		public void Does_not_throw_when_valid_async() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull()
+			};
+
+			validator.ValidateAndThrowAsync(new Person { Surname = "foo" }).Wait();
 		}
 
 		[Test]

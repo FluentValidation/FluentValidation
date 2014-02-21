@@ -139,6 +139,8 @@
     <Compile Include="ScalePrecisionValidatorTests.cs" />
     <Compile Include="SharedConditionTests.cs" />
     <Compile Include="StandalonePropertyValidationTester.cs" />
+    <Compile Include="TaskHelpers\TaskHelpers.cs" />
+    <Compile Include="TaskHelpers\TaskHelpersExtensions.cs" />
     <Compile Include="TestExtensions.cs" />
     <Compile Include="TestMessages.Designer.cs">
       <AutoGen>True</AutoGen>
