@@ -39,7 +39,7 @@ namespace FluentValidation.Tests.WebApi {
 
 	using Attributes;
 
-	using FluentValidation.Mvc.WebApi;
+	using FluentValidation.WebApi;
 	using FluentValidation.Results;
 
 	using Moq;
