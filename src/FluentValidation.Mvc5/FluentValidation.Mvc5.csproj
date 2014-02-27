@@ -41,10 +41,7 @@
     <AssemblyOriginatorKeyFile>..\FluentValidation.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -52,22 +49,14 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.0.0\lib\net45\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Http.WebHost, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.WebHost.5.0.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -89,11 +78,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs">
@@ -141,15 +125,6 @@
     <Compile Include="..\FluentValidation.Mvc4\ValidationResultExtension.cs">
       <Link>ValidationResultExtension.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\WebApi\FluentValidationBodyModelValidator.cs">
-      <Link>WebApi\FluentValidationBodyModelValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\WebApi\FluentValidationModelValidator.cs">
-      <Link>WebApi\FluentValidationModelValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\WebApi\FluentValidationModelValidatorProvider.cs">
-      <Link>WebApi\FluentValidationModelValidatorProvider.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluentValidation.snk">
@@ -159,14 +134,14 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
-      <Project>{dae0249b-4f69-4ac9-9a17-aa23e0795316}</Project>
+      <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
       <Name>FluentValidation</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-   <PropertyGroup>
+  <PropertyGroup>
     <SignAssembly Condition="'$(PerformSigning)'=='True'">true</SignAssembly>
     <OutputPath Condition="'$(PerformSigning)'=='True'">bin\$(Configuration)-Signed\</OutputPath>
   </PropertyGroup>
