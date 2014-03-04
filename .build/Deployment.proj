@@ -21,6 +21,7 @@
 			<Mvc4Binaries Include="$(BaseDir)\src\FluentValidation.Mvc4\bin\$(Configuration)$(PackageSuffix)\FluentValidation.Mvc.*" />
 			<Mvc5Binaries Include="$(BaseDir)\src\FluentValidation.Mvc5\bin\$(Configuration)$(PackageSuffix)\FluentValidation.Mvc.*" />
 			<PortableBinaries Include="$(BaseDir)\src\FluentValidation.Portable\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
+			<WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)$(PackageSuffix)\FluentValidation.WebApi.*" />
 			
 			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
 		</ItemGroup>
@@ -30,6 +31,7 @@
 		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC3" />
 		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC4" />
 		<Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC5" />
+		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi2" />
 
     <Copy SourceFIles="@(PortableBinaries)" DestinationFolder="$(OutputDir)\Portable" />
     <Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
@@ -50,6 +52,7 @@
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC3$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)" />
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC4$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC5$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.WebApi$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)" />
 
     <Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-win%2Bnet40%2Bsl50%2Bwp80\%(RecursiveDir)"/>
 
@@ -58,6 +61,7 @@
 		<Copy SourceFiles="@(Mvc3Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC3$(PackageSuffix)\lib\Net40" />
 		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\lib\Net40" />
 		<Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\lib\Net45" />
+		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\lib\Net45" />
 		
 		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
 		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\FluentValidation\FluentValidation.dll">
@@ -87,6 +91,13 @@
 		<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\FluentValidation.MVC5$(PackageSuffix).nuspec"
+			XPath="/package/metadata/version"
+			Value="%(AsmInfo.Version)" />
+			
+			
+					<XmlUpdate
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\FluentValidation.WebApi$(PackageSuffix).nuspec"
 			XPath="/package/metadata/version"
 			Value="%(AsmInfo.Version)" />
 
@@ -123,6 +134,9 @@
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
 		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\FluentValidation.MVC5$(PackageSuffix).nuspec" />
+
+		<Exec WorkingDirectory="$(BuildDir)\Packages"
+		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\FluentValidation.WebApi$(PackageSuffix).nuspec" />
 
 
 		<RemoveDir Directories="$(PackageDir)\temp" />
