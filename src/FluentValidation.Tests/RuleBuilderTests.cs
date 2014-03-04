@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Internal;
 	using Moq;
 	using NUnit.Framework;
@@ -125,6 +126,30 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
+			var person = new Person { Surname = "Foo" };
+			var validator = new Mock<IPropertyValidator>();
+			builder.SetValidator(validator.Object);
+
+			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).Result.ToList();
+
+			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
+		}
+
+		[Test]
+		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator()
+		{
+			var person = new Person { Surname = "Foo" };
+			var validator = new Mock<AsyncValidatorBase>(MockBehavior.Loose, Messages.predicate_error);
+			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>())).Returns(TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()));
+			builder.SetValidator(validator.Object);
+
+			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).Result.ToList();
+
+			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
+		}
+
+		[Test]
 		public void PropertyDescription_should_return_property_name_split() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
 			builder.Rule.GetDisplayName().ShouldEqual("Date Of Birth");
@@ -138,7 +163,8 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
-		public void Nullable_object_with_condition_should_not_throw() {
+		public void Nullable_object_with_condition_should_not_throw()
+		{
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value));
 			builder.GreaterThanOrEqualTo(3).When(x => x.NullableInt != null);
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));

@@ -22,6 +22,7 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Text.RegularExpressions;
+	using System.Threading.Tasks;
 	using Internal;
 	using Results;
 	using Validators;
@@ -188,7 +189,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.
-		/// Validation will fail if the specified lambda returns false. 
+		/// Validation will fail if the specified lambda returns false.
 		/// Validation will succeed if the specifed lambda returns true.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
@@ -196,8 +197,7 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <param name="predicate">A lambda expression specifying the predicate</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		                                                                   Func<TProperty, bool> predicate) {
+		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, bool> predicate) {
 			predicate.Guard("Cannot pass a null predicate to Must.");
 
 			return ruleBuilder.Must((x, val) => predicate(val));
@@ -205,7 +205,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.
-		/// Validation will fail if the specified lambda returns false. 
+		/// Validation will fail if the specified lambda returns false.
 		/// Validation will succeed if the specifed lambda returns true.
 		/// This overload accepts the object being validated in addition to the property being validated.
 		/// </summary>
@@ -214,28 +214,74 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <param name="predicate">A lambda expression specifying the predicate</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		                                                                   Func<T, TProperty, bool> predicate) {
+		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, bool> predicate) {
 			predicate.Guard("Cannot pass a null predicate to Must.");
-            return ruleBuilder.Must((x, val, propertyValidatorContext) => predicate(x, val));
+			return ruleBuilder.Must((x, val, propertyValidatorContext) => predicate(x, val));
 		}
 
-        /// <summary>
-        /// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.
-        /// Validation will fail if the specified lambda returns false. 
-        /// Validation will succeed if the specifed lambda returns true.
-        /// This overload accepts the object being validated in addition to the property being validated.
-        /// </summary>
-        /// <typeparam name="T">Type of object being validated</typeparam>
-        /// <typeparam name="TProperty">Type of property being validated</typeparam>
-        /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-        /// <param name="predicate">A lambda expression specifying the predicate</param>
-        /// <returns></returns>
-        public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, 
-                                                                           Func<T, TProperty, PropertyValidatorContext, bool> predicate) {
-            predicate.Guard("Cannot pass a null predicate to Must.");
-            return ruleBuilder.SetValidator(new PredicateValidator((instance, property, propertyValidatorContext) => predicate((T)instance, (TProperty)property, propertyValidatorContext)));
-        }
+		/// <summary>
+		/// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.
+		/// Validation will fail if the specified lambda returns false.
+		/// Validation will succeed if the specifed lambda returns true.
+		/// This overload accepts the object being validated in addition to the property being validated.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="predicate">A lambda expression specifying the predicate</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, PropertyValidatorContext, bool> predicate) {
+			predicate.Guard("Cannot pass a null predicate to Must.");
+			return ruleBuilder.SetValidator(new PredicateValidator((instance, property, propertyValidatorContext) => predicate((T) instance, (TProperty) property, propertyValidatorContext)));
+		}
+
+		/// <summary>
+		/// Defines an asynchronous predicate validator on the current rule builder using a lambda expression to specify the predicate.
+		/// Validation will fail if the specified lambda returns false.
+		/// Validation will succeed if the specifed lambda returns true.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="predicate">A lambda expression specifying the predicate</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, Task<bool>> predicate) {
+			predicate.Guard("Cannot pass a null predicate to Must.");
+
+			return ruleBuilder.MustAsync((x, val) => predicate(val));
+		}
+
+		/// <summary>
+		/// Defines an asynchronous predicate validator on the current rule builder using a lambda expression to specify the predicate.
+		/// Validation will fail if the specified lambda returns false.
+		/// Validation will succeed if the specifed lambda returns true.
+		/// This overload accepts the object being validated in addition to the property being validated.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="predicate">A lambda expression specifying the predicate</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, Task<bool>> predicate) {
+			predicate.Guard("Cannot pass a null predicate to Must.");
+			return ruleBuilder.MustAsync((x, val, propertyValidatorContext) => predicate(x, val));
+		}
+
+		/// <summary>
+		/// Defines an asynchronous predicate validator on the current rule builder using a lambda expression to specify the predicate.
+		/// Validation will fail if the specified lambda returns false.
+		/// Validation will succeed if the specifed lambda returns true.
+		/// This overload accepts the object being validated in addition to the property being validated.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="predicate">A lambda expression specifying the predicate</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, PropertyValidatorContext, Task<bool>> predicate) {
+			predicate.Guard("Cannot pass a null predicate to Must.");
+			return ruleBuilder.SetValidator(new AsyncPredicateValidator((instance, property, propertyValidatorContext) => predicate((T) instance, (TProperty) property, propertyValidatorContext)));
+		}
 
 		/// <summary>
 		/// Defines a 'less than' validator on the current rule builder. 
@@ -590,6 +636,47 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Validates certain properties of the specified instance asynchronously.
+		/// </summary>
+		/// <param name="validator">The current validator</param>
+		/// <param name="instance">The object to validate</param>
+		/// <param name="propertyExpressions">Expressions to specify the properties to validate</param>
+		/// <returns>A ValidationResult object containing any validation failures</returns>
+		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, params Expression<Func<T, object>>[] propertyExpressions) {
+			var context = new ValidationContext<T>(instance, new PropertyChain(), MemberNameValidatorSelector.FromExpressions(propertyExpressions));
+			return validator.ValidateAsync(context);
+		}
+
+		/// <summary>
+		/// Validates certain properties of the specified instance asynchronously.
+		/// </summary>
+		/// <param name="instance">The object to validate</param>
+		/// <param name="properties">The names of the properties to validate.</param>
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
+		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, params string[] properties) {
+			var context = new ValidationContext<T>(instance, new PropertyChain(), new MemberNameValidatorSelector(properties));
+			return validator.ValidateAsync(context);
+		}
+
+		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, IValidatorSelector selector = null, string ruleSet = null) {
+			if (selector != null && ruleSet != null) {
+				throw new InvalidOperationException("Cannot specify both an IValidatorSelector and a RuleSet.");
+			}
+
+			if (selector == null) {
+				selector = new DefaultValidatorSelector();
+			}
+
+			if (ruleSet != null) {
+				var ruleSetNames = ruleSet.Split(',', ';');
+				selector = new RulesetValidatorSelector(ruleSetNames);
+			}
+
+			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
+			return validator.ValidateAsync(context);
+		}
+
+		/// <summary>
 		/// Performs validation and then throws an exception if validation fails.
 		/// </summary>
 		public static void ValidateAndThrow<T>(this IValidator<T> validator, T instance) {
@@ -598,6 +685,15 @@ namespace FluentValidation {
 			if(! result.IsValid) {
 				throw new ValidationException(result.Errors);	
 			}
+		}
+
+		/// <summary>
+		/// Performs validation asynchronously and then throws an exception if validation fails.
+		/// </summary>
+		public static Task ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance) {
+			return validator
+				.ValidateAsync(instance)
+				.Then(r => r.IsValid ? TaskHelpers.Completed() : TaskHelpers.FromError(new ValidationException(r.Errors)));
 		}
 
 		/// <summary>

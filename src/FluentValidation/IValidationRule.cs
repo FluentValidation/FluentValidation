@@ -19,6 +19,7 @@
 namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
+	using System.Threading.Tasks;
 	using Internal;
 	using Results;
 	using Validators;
@@ -42,6 +43,13 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		IEnumerable<ValidationFailure> Validate(ValidationContext context);
+
+		/// <summary>
+		/// Performs validation using a validation context and returns a collection of Validation Failures asynchronoulsy.
+		/// </summary>
+		/// <param name="context">Validation Context</param>
+		/// <returns>A collection of validation failures</returns>
+		Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context);
 
 		void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 	}

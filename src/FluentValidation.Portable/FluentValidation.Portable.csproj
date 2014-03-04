@@ -90,6 +90,12 @@
     <Compile Include="..\FluentValidation\Resources\StaticStringSource.cs">
       <Link>StaticStringSource.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\TaskHelper\TaskHelpers.cs">
+      <Link>TaskHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\TaskHelper\TaskHelpersExtensions.cs">
+      <Link>TaskHelpersExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\TestHelper\ValidationTestException.cs">
       <Link>ValidationTestException.cs</Link>
     </Compile>
@@ -185,6 +191,12 @@
     </Compile>
     <Compile Include="..\FluentValidation\Validators\AbstractComparisonValidator.cs">
       <Link>AbstractComparisonValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\AsyncPredicateValidator.cs">
+      <Link>AsyncPredicateValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\AsyncValidatorBase.cs">
+      <Link>AsyncValidatorBase.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Validators\ChildCollectionValidatorAdaptor.cs">
       <Link>ChildCollectionValidatorAdaptor.cs</Link>

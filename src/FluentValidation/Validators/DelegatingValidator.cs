@@ -20,6 +20,8 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading.Tasks;
+	using FluentValidation.Internal;
 	using Resources;
 	using Results;
 
@@ -42,6 +44,13 @@ namespace FluentValidation.Validators {
 				return InnerValidator.Validate(context);
 			}
 			return Enumerable.Empty<ValidationFailure>();
+		}
+
+		public Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+			if (condition(context.Instance)) {
+				return InnerValidator.ValidateAsync(context);
+			}
+			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 		}
 
 		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {

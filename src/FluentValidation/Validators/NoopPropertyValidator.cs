@@ -20,6 +20,8 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
+	using System.Threading.Tasks;
+	using FluentValidation.Internal;
 	using Resources;
 	using Results;
 
@@ -30,6 +32,10 @@ namespace FluentValidation.Validators {
 		}
 
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
+
+		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+			return TaskHelpers.FromResult(Validate(context));
+		}
 
 		public virtual ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return new List<Func<object, object, object>>(); }
