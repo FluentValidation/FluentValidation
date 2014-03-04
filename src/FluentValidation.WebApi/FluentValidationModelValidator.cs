@@ -16,7 +16,7 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Mvc.WebApi
+namespace FluentValidation.WebApi
 {
 	using System.Collections.Generic;
 	using System.Linq;

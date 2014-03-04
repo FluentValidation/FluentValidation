@@ -1,15 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3906F280-A567-4AD7-A0EF-7253E95E7852}"
 	ProjectSection(SolutionItems) = preProject
-		buildscripts\build.proj = buildscripts\build.proj
 		Changelog.txt = Changelog.txt
-		buildscripts\FluentValidation.MVC3.nuspec = buildscripts\FluentValidation.MVC3.nuspec
-		buildscripts\FluentValidation.MVC4.nuspec = buildscripts\FluentValidation.MVC4.nuspec
-		buildscripts\FluentValidation.nuspec = buildscripts\FluentValidation.nuspec
 		FluentValidation.snk = FluentValidation.snk
 	EndProjectSection
 EndProject
@@ -36,6 +32,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2AE2DF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{0216F6B1-740F-49D6-87CC-40726E29C7BA}"
 	ProjectSection(SolutionItems) = preProject
+		.build\build.proj = .build\build.proj
+		.build\FluentValidation.nuspec = .build\FluentValidation.nuspec
+		.build\FluentValidation.MVC3.nuspec = .build\FluentValidation.MVC3.nuspec
+		.build\FluentValidation.MVC3-Signed.nuspec = .build\FluentValidation.MVC3-Signed.nuspec
+		.build\FluentValidation.MVC4.nuspec = .build\FluentValidation.MVC4.nuspec
+		.build\FluentValidation.MVC4-Signed.nuspec = .build\FluentValidation.MVC4-Signed.nuspec
+		.build\FluentValidation.MVC5.nuspec = .build\FluentValidation.MVC5.nuspec
+		.build\FluentValidation.MVC5-Signed.nuspec = .build\FluentValidation.MVC5-Signed.nuspec
+		.build\FluentValidation.WebApi.nuspec = .build\FluentValidation.WebApi.nuspec
+		.build\FluentValidation.WebApi-Signed.nuspec = .build\FluentValidation.WebApi-Signed.nuspec
 		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
 		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
 	EndProjectSection
@@ -43,6 +49,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc5", "src\FluentValidation.Mvc5\FluentValidation.Mvc5.csproj", "{23E384EF-5A39-4D73-A8D5-EF48C71C128F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc5", "src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj", "{8FF90023-30A2-410D-A735-498878BDA168}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.WebApi", "src\FluentValidation.WebApi\FluentValidation.WebApi.csproj", "{3D0D39A1-DCD0-4B41-BD2C-AABB5E7C7126}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.WebApi", "src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj", "{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +96,14 @@ Global
 		{8FF90023-30A2-410D-A735-498878BDA168}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FF90023-30A2-410D-A735-498878BDA168}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FF90023-30A2-410D-A735-498878BDA168}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D0D39A1-DCD0-4B41-BD2C-AABB5E7C7126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D0D39A1-DCD0-4B41-BD2C-AABB5E7C7126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D0D39A1-DCD0-4B41-BD2C-AABB5E7C7126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D0D39A1-DCD0-4B41-BD2C-AABB5E7C7126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
