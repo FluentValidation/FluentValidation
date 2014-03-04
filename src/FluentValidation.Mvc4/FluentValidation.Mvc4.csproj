@@ -102,6 +102,15 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation.WebApi\FluentValidationBodyModelValidator.cs">
+      <Link>WebApi\FluentValidationBodyModelValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.WebApi\FluentValidationModelValidator.cs">
+      <Link>WebApi\FluentValidationModelValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.WebApi\FluentValidationModelValidatorProvider.cs">
+      <Link>WebApi\FluentValidationModelValidatorProvider.cs</Link>
+    </Compile>
     <Compile Include="CustomizeValidatorAttribute.cs" />
     <Compile Include="FluentValidationModelValidator.cs" />
     <Compile Include="FluentValidationModelValidatorProvider.cs" />
@@ -116,9 +125,6 @@
     <Compile Include="PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs" />
     <Compile Include="RuleSetForClientSideMessagesAttribute.cs" />
     <Compile Include="ValidationResultExtension.cs" />
-    <Compile Include="WebApi\FluentValidationBodyModelValidator.cs" />
-    <Compile Include="WebApi\FluentValidationModelValidator.cs" />
-    <Compile Include="WebApi\FluentValidationModelValidatorProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluentValidation.snk">
