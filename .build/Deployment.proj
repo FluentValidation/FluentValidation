@@ -29,7 +29,7 @@
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation\%(RecursiveDir)"  />
 		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC4" />
 		<Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC5" />
-		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi2" />
+		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi" />
 
     <Copy SourceFIles="@(PortableBinaries)" DestinationFolder="$(OutputDir)\Portable" />
     <Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
@@ -64,6 +64,18 @@
 			<Output TaskParameter="Assemblies" ItemName="AsmInfo" />
 		</GetAssemblyIdentity>
 
+		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\Mvc\Mvc4\FluentValidation.Mvc.dll">
+			<Output TaskParameter="Assemblies" ItemName="Mvc4AsmInfo" />
+		</GetAssemblyIdentity>
+
+		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\Mvc\Mvc5\FluentValidation.Mvc.dll">
+			<Output TaskParameter="Assemblies" ItemName="Mvc5AsmInfo" />
+		</GetAssemblyIdentity>
+
+		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\WebApi\FluentValidation.WebApi.dll">
+			<Output TaskParameter="Assemblies" ItemName="WebApiAsmInfo" />
+		</GetAssemblyIdentity>
+
 		<!-- insert the version number into the nuspec files -->
 		<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
@@ -75,29 +87,30 @@
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec"
 			XPath="/package/metadata/version"
-			Value="%(AsmInfo.Version)" />
+			Value="%(Mvc4AsmInfo.Version)" />
 			
 			
 		<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\FluentValidation.MVC5$(PackageSuffix).nuspec"
 			XPath="/package/metadata/version"
-			Value="%(AsmInfo.Version)" />
+			Value="%(Mvc5AsmInfo.Version)" />
 			
 			
 					<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\FluentValidation.WebApi$(PackageSuffix).nuspec"
 			XPath="/package/metadata/version"
-			Value="%(AsmInfo.Version)" />
+			Value="%(WebApiAsmInfo.Version)" />
 
 		<!-- Also need to insert the version number into the MVC3 dependencies section -->
 
-		<XmlUpdate
+		<!-- No longer update the MVC4 depedencies. This is the last release so it's now locked to < 5.2 in the nuspec file -->
+		<!--<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec"
 			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation$(PackageSuffix)']/@version"
-			Value="%(AsmInfo.Version)" />
+			Value="%(AsmInfo.Version)" />-->
 
 	<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
