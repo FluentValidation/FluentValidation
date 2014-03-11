@@ -1,7 +1,9 @@
-5.1 -
+5.1 - 11/03/2014
 * Applied pull request: Apply the same display name resolving to the target property as to the source property.
 * Applied pull request: Allow parent to be passed to child collection validator
 * Applied pull request: Implement Async validation
+* Upgraded the MVC 5 package to MVC 5.1
+* Drop support for MVC 3
 
 5.0 - 24/10/2013 
 * Display name is now lazily-loaded by default (as a result, localization via DisplayAttribute now works correctly)
