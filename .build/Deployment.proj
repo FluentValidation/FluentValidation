@@ -120,7 +120,7 @@
 
 		<XmlUpdate
 		Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
-		XmlFileName="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\FluentValidation.WebApi(PackageSuffix).nuspec"
+		XmlFileName="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\FluentValidation.WebApi$(PackageSuffix).nuspec"
 		XPath="/package/metadata/dependencies/dependency[@id='FluentValidation$(PackageSuffix)']/@version"
 		Value="%(AsmInfo.Version)" />
 
