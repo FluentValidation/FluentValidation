@@ -16,7 +16,7 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests.WebApi {
+namespace FluentValidation.Tests.Mvc4.WebApi {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
@@ -36,14 +36,11 @@ namespace FluentValidation.Tests.WebApi {
 	using System.Web.Http.Metadata.Providers;
 	using System.Web.Http.ModelBinding;
 	using System.Web.Http.Validation;
-
 	using Attributes;
-
-	using FluentValidation.Results;
 	using FluentValidation.WebApi;
 	using Moq;
-
 	using NUnit.Framework;
+	using Results;
 
 	[TestFixture]
 	public class FormatterParameterBindingTester {

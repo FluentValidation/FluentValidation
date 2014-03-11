@@ -16,20 +16,19 @@
 // The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 
-namespace FluentValidation.Tests {
+namespace FluentValidation.Tests.Mvc4 {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Globalization;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Web;
 	using System.Web.Mvc;
-	using Attributes;
+	using Internal;
 	using Moq;
 	using Mvc;
 	using NUnit.Framework;
-	using Internal;
-	using System.Linq;
 	using Validators;
 
 	[TestFixture]

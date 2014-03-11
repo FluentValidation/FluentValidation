@@ -16,7 +16,7 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
+namespace FluentValidation.Tests.Mvc4 {
 	using System;
 	using System.Collections;
 	using System.Globalization;

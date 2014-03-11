@@ -63,6 +63,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\FluentValidation.Tests\TestExtensions.cs">
+      <Link>TestExtensions.cs</Link>
+    </Compile>
     <Compile Include="FormatterParameterBindingTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -70,10 +73,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj">
-      <Project>{8ff90023-30a2-410d-a735-498878bda168}</Project>
-      <Name>FluentValidation.Tests.Mvc5</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FluentValidation.WebApi\FluentValidation.WebApi.csproj">
       <Project>{3d0d39a1-dcd0-4b41-bd2c-aabb5e7c7126}</Project>
       <Name>FluentValidation.WebApi</Name>
