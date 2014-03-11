@@ -80,9 +80,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation.Mvc4\CustomizeValidatorAttribute.cs">
       <Link>CustomizeValidatorAttribute.cs</Link>
     </Compile>
@@ -125,6 +122,7 @@
     <Compile Include="..\FluentValidation.Mvc4\ValidationResultExtension.cs">
       <Link>ValidationResultExtension.cs</Link>
     </Compile>
+    <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluentValidation.snk">

@@ -99,9 +99,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation.WebApi\FluentValidationBodyModelValidator.cs">
       <Link>WebApi\FluentValidationBodyModelValidator.cs</Link>
     </Compile>
@@ -111,6 +108,7 @@
     <Compile Include="..\FluentValidation.WebApi\FluentValidationModelValidatorProvider.cs">
       <Link>WebApi\FluentValidationModelValidatorProvider.cs</Link>
     </Compile>
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="CustomizeValidatorAttribute.cs" />
     <Compile Include="FluentValidationModelValidator.cs" />
     <Compile Include="FluentValidationModelValidatorProvider.cs" />
