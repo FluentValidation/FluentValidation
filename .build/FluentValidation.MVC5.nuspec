@@ -11,6 +11,7 @@
     <description>ASP.NET MVC 5 integration for FluentValidation</description>
     <summary>ASP.NET MVC 5 integration for FluentValidation</summary>
     <language>en-US</language>
+    <releaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</releaseNotes>
     <dependencies>
       <dependency id="FluentValidation" version="" />
     </dependencies>
