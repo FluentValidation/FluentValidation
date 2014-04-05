@@ -69,6 +69,36 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Validates_with_nullable_property() {
+			validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThan(x => x.NullableInt));
+
+			var resultNull = validator.Validate(new Person { Id = 0, NullableInt = null });
+			var resultLess = validator.Validate(new Person { Id = 0, NullableInt = -1 });
+			var resultEqual = validator.Validate(new Person { Id = 0, NullableInt = 0 });
+			var resultMore = validator.Validate(new Person { Id = 0, NullableInt = 1 });
+
+			resultNull.IsValid.ShouldBeFalse();
+			resultLess.IsValid.ShouldBeTrue();
+			resultEqual.IsValid.ShouldBeFalse();
+			resultMore.IsValid.ShouldBeFalse();
+		}
+
+		[Test]
+		public void Validates_nullable_with_nullable_property() {
+			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThan(x => x.OtherNullableInt));
+
+			var resultNull = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = null });
+			var resultLess = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = -1 });
+			var resultEqual = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = 0 });
+			var resultMore = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = 1 });
+
+			resultNull.IsValid.ShouldBeFalse();
+			resultLess.IsValid.ShouldBeTrue();
+			resultEqual.IsValid.ShouldBeFalse();
+			resultMore.IsValid.ShouldBeFalse();
+		}
+
+		[Test]
 		public void Comparison_Type() {
 			var propertyValidator = validator.CreateDescriptor()
 				.GetValidatorsForMember("Id").OfType<GreaterThanValidator>().Single();
