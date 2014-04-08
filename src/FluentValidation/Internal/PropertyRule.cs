@@ -279,8 +279,8 @@ namespace FluentValidation.Internal {
 
 				var fastExit = false;
 
-				// Firstly, invoke all syncronous validators and collect their results.
-				foreach (var validator in validators.Where(v => !(v is AsyncValidatorBase))) {
+				// Firstly, invoke all synchronous validators and collect their results.
+				foreach (var validator in validators.Where(v => !(v is IAsyncPropertyValidator))) {
 					var results = InvokePropertyValidator(context, validator, propertyName);
 
 					failures.AddRange(results);
@@ -292,7 +292,7 @@ namespace FluentValidation.Internal {
 					}
 				}
 
-				var asyncValidators = validators.OfType<AsyncValidatorBase>().ToList();
+				var asyncValidators = validators.OfType<IAsyncPropertyValidator>().ToList();
 
 				//if there's no async validators or StopOnFirstFailure triggered then we exit
 				if (asyncValidators.Count == 0 || fastExit) {

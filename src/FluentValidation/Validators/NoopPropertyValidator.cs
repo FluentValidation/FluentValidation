@@ -25,17 +25,17 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public abstract class NoopPropertyValidator : IPropertyValidator {
+	public abstract class NoopPropertyValidator : IAsyncPropertyValidator {
 		public IStringSource ErrorMessageSource {
 			get { return null; }
 			set { }
 		}
 
-		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
+	    public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+	        return ValidateAsync(context).Result;
+	    }
 
-		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
-			return TaskHelpers.FromResult(Validate(context));
-		}
+	    public abstract Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context);
 
 		public virtual ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return new List<Func<object, object, object>>(); }

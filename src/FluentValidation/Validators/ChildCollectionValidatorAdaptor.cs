@@ -20,7 +20,8 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
-	using Internal;
+	using System.Linq;
+	using System.Threading.Tasks;
 	using Results;
 
 	public class ChildCollectionValidatorAdaptor : NoopPropertyValidator {
@@ -45,41 +46,46 @@ namespace FluentValidation.Validators {
             this.childValidatorType = childValidatorType;
 	    }
 
-	    public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			if (context.Rule.Member == null) {
-				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
-			}
+	    public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+            if (context.Rule.Member == null)
+            {
+                throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
+            }
 
-			var collection = context.PropertyValue as IEnumerable;
+            var collection = context.PropertyValue as IEnumerable;
 
-			if (collection == null) {
-				yield break;
-			}
+            if (collection == null) {
+                return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+            }
 
-			int count = 0;
-			
-			var predicate = Predicate ?? (x => true);
+            int count = 0;
 
-			foreach (var element in collection) {
+            var predicate = Predicate ?? (x => true);
 
-				if(element == null || !(predicate(element))) {
-					// If an element in the validator is null then we want to skip it to prevent NullReferenceExceptions in the child validator.
-					// We still need to update the counter to ensure the indexes are correct.
-					count++;
-					continue;
-				}
+	        var resultTasks = new List<Task<IEnumerable<ValidationFailure>>>();
 
-				var newContext = context.ParentContext.CloneForChildValidator(element);
-				newContext.PropertyChain.Add(context.Rule.PropertyName);
-				newContext.PropertyChain.AddIndexer(count++);
+            foreach (var element in collection)
+            {
 
-			    var validator = childValidatorProvider(context.Instance);
-                var results = validator.Validate(newContext).Errors;
+                if (element == null || !(predicate(element)))
+                {
+                    // If an element in the validator is null then we want to skip it to prevent NullReferenceExceptions in the child validator.
+                    // We still need to update the counter to ensure the indexes are correct.
+                    count++;
+                    continue;
+                }
 
-				foreach (var result in results) {
-					yield return result;
-				}
-			}
-		}
+                var newContext = context.ParentContext.CloneForChildValidator(element);
+                newContext.PropertyChain.Add(context.Rule.PropertyName);
+                newContext.PropertyChain.AddIndexer(count++);
+
+                var validator = childValidatorProvider(context.Instance);
+                resultTasks.Add(validator.ValidateAsync(newContext).Then(result => result.Errors.AsEnumerable()));
+            }
+
+	        return Task<IEnumerable<ValidationFailure>>
+	            .Factory
+	            .ContinueWhenAll(resultTasks.ToArray(), tasks => tasks.SelectMany(task => task.Result));
+	    }
 	}
 }

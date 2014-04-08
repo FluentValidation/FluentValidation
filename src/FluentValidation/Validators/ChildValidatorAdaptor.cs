@@ -2,6 +2,7 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Internal;
 	using Results;
 
@@ -16,7 +17,7 @@ namespace FluentValidation.Validators {
 			this.validator = validator;
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
 			if (context.Rule.Member == null) {
 				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
 			}
@@ -24,19 +25,17 @@ namespace FluentValidation.Validators {
 			var instanceToValidate = context.PropertyValue;
 
 			if (instanceToValidate == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 			}
 
 			var validator = GetValidator(context);
 
 			if(validator == null) {
-				return Enumerable.Empty<ValidationFailure>();
+                return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(instanceToValidate, context);
-			var results = validator.Validate(newContext).Errors;
-
-			return results;
+			return validator.ValidateAsync(newContext).Then(result => result.Errors.AsEnumerable());
 		}
 
 		protected virtual IValidator GetValidator(PropertyValidatorContext context) {

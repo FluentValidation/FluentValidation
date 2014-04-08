@@ -22,6 +22,7 @@ namespace FluentValidation.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using NUnit.Framework;
 
     [TestFixture]
@@ -57,6 +58,21 @@ namespace FluentValidation.Tests
 			};
 
             var results = validator.Validate(person);
+            results.Errors.Count.ShouldEqual(3);
+
+            results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
+            results.Errors[2].PropertyName.ShouldEqual("Orders[2].ProductName");
+        }
+
+        [Test]
+        public void Validates_collection_asynchronously()
+        {
+            var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new AsyncOrderValidator(y))
+			};
+
+            var results = validator.ValidateAsync(person).Result;
             results.Errors.Count.ShouldEqual(3);
 
             results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
@@ -170,6 +186,19 @@ namespace FluentValidation.Tests
             private Func<string, bool> BeOneOfTheChildrensEmailAddress(Person person)
             {
                 return productName => person.Children.Any(child => child.Email == productName);
+            }
+        }
+
+        public class AsyncOrderValidator : AbstractValidator<Order>
+        {
+            public AsyncOrderValidator(Person person)
+            {
+                RuleFor(x => x.ProductName).MustAsync(BeOneOfTheChildrensEmailAddress(person));
+            }
+
+            private Func<string, Task<bool>> BeOneOfTheChildrensEmailAddress(Person person)
+            {
+                return productName => TaskHelpers.FromResult(person.Children.Any(child => child.Email == productName));
             }
         }
 
