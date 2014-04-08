@@ -2,7 +2,7 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using Internal;
+	using System.Threading.Tasks;
 	using Results;
 
 	public class ChildValidatorAdaptor : NoopPropertyValidator {
@@ -17,6 +17,20 @@ namespace FluentValidation.Validators {
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+			return ValidateInternal(
+				context, 
+				(ctx, v) => v.Validate(ctx).Errors
+			);
+		}
+
+		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+			return ValidateInternal(
+				context, 
+				(ctx, v) => v.ValidateAsync(ctx).Then(r => r.Errors.AsEnumerable(), runSynchronously:true)
+			);
+		}
+
+		TResult ValidateInternal<TResult>(PropertyValidatorContext context, Func<ValidationContext, IValidator, TResult> validationApplicator) {
 			if (context.Rule.Member == null) {
 				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
 			}
@@ -24,19 +38,18 @@ namespace FluentValidation.Validators {
 			var instanceToValidate = context.PropertyValue;
 
 			if (instanceToValidate == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return (TResult) Enumerable.Empty<ValidationFailure>();
 			}
 
 			var validator = GetValidator(context);
 
-			if(validator == null) {
-				return Enumerable.Empty<ValidationFailure>();
+			if (validator == null) {
+				return (TResult) Enumerable.Empty<ValidationFailure>();
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(instanceToValidate, context);
-			var results = validator.Validate(newContext).Errors;
 
-			return results;
+			return validationApplicator(newContext, validator);
 		}
 
 		protected virtual IValidator GetValidator(PropertyValidatorContext context) {
