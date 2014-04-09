@@ -1,13 +1,21 @@
+// --------------------------------------------------------------------------
+//  <copyright file="ChildCollectionValidatorAdaptor.cs" company="Microsoft">
+//      Copyright (c) Microsoft Corporation. All rights reserved.
+//  </copyright>
+// --------------------------------------------------------------------------
+
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Net;
 	using System.Threading.Tasks;
-	using Results;
+	using FluentValidation.Results;
 
 	public class ChildCollectionValidatorAdaptor : NoopPropertyValidator {
+		static readonly IEnumerable<ValidationFailure> EmptyResult = Enumerable.Empty<ValidationFailure>();
+		static readonly Task<IEnumerable<ValidationFailure>> AsyncEmptyResult = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+
 		readonly Func<object, IValidator> childValidatorProvider;
 		readonly Type childValidatorType;
 
@@ -18,7 +26,7 @@ namespace FluentValidation.Validators {
 		public Func<object, bool> Predicate { get; set; }
 
 		public ChildCollectionValidatorAdaptor(IValidator childValidator) {
-			this.childValidatorProvider = (_) => childValidator;
+			this.childValidatorProvider = _ => childValidator;
 			this.childValidatorType = childValidator.GetType();
 		}
 
@@ -35,40 +43,33 @@ namespace FluentValidation.Validators {
 					var validator = tuple.Item2;
 					return validator.Validate(ctx).Errors;
 				}).SelectMany(errors => errors),
-				Enumerable.Empty<ValidationFailure>()
+				EmptyResult
 			);
 		}
 
 		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
-			throw new NotImplementedException();
-			//return ValidateInternal(
-			//	context,
-			//	items => {
-			//		var result = new List<ValidationFailure>();
-
-			//		var tasks = items.Select(tuple => {
-			//			var ctx = tuple.Item1;
-			//			var validator = tuple.Item2;
-			//			return validator.ValidateAsync(ctx).Then(fs => result.AddRange(fs), runSynchronously: true);
-			//		});
-
-			//		TaskHelpers.Iterate(
-			//			tasks,
-
-			//		)
-			//	},
-			//	TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>())
-			//);
+			return ValidateInternal(
+				context,
+				items => {
+					var failures = new List<ValidationFailure>();
+					var tasks = items.Select(tuple => {
+						var ctx = tuple.Item1;
+						var validator = tuple.Item2;
+						return validator.ValidateAsync(ctx).Then(res => failures.AddRange(res.Errors), runSynchronously: true);
+					});
+					return TaskHelpers.Iterate(tasks).Then(() => failures.AsEnumerable(), runSynchronously: true);
+				},
+				AsyncEmptyResult
+			);
 		}
 
-		private TResult ValidateInternal<TResult>(
-			PropertyValidatorContext context, 
-			Func<IEnumerable<Tuple<ValidationContext, IValidator>>, TResult> validatorApplicator, 
+		TResult ValidateInternal<TResult>(
+			PropertyValidatorContext context,
+			Func<IEnumerable<Tuple<ValidationContext, IValidator>>, TResult> validatorApplicator,
 			TResult emptyResult
-		)
-		{
+		) {
 			if (context.Rule.Member == null) {
-					throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
+				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
 			}
 
 			var collection = context.PropertyValue as IEnumerable;
@@ -81,7 +82,7 @@ namespace FluentValidation.Validators {
 
 			var itemsToValidate = collection
 				.Cast<object>()
-				.Select((item, index) => new {item, index})
+				.Select((item, index) => new { item, index })
 				.Where(a => a.item != null && predicate(a.item))
 				.Select(a => {
 					var newContext = context.ParentContext.CloneForChildValidator(a.item);
@@ -94,28 +95,6 @@ namespace FluentValidation.Validators {
 				});
 
 			return validatorApplicator(itemsToValidate);
-				
-
-			//foreach (var element in collection) {
-			//	if (element == null || !(predicate(element))) {
-			//		// If an element in the validator is null then we want to skip it to prevent NullReferenceExceptions in the child validator.
-			//		// We still need to update the counter to ensure the indexes are correct.
-			//		count++;
-			//		continue;
-			//	}
-
-			//	var newContext = context.ParentContext.CloneForChildValidator(element);
-			//	newContext.PropertyChain.Add(context.Rule.PropertyName);
-			//	newContext.PropertyChain.AddIndexer(count++);
-
-			//	var validator = childValidatorProvider(context.Instance);
-
-			//	var results = validator.Validate(newContext).Errors;
-
-			//	foreach (var result in results) {
-			//		yield return result;
-			//	}
-			//}
 		}
 	}
 }

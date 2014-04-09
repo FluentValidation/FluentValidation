@@ -8,6 +8,10 @@ namespace FluentValidation.Validators {
 	public class ChildValidatorAdaptor : NoopPropertyValidator {
 		readonly IValidator validator;
 
+		static readonly IEnumerable<ValidationFailure> EmptyResult = Enumerable.Empty<ValidationFailure>();
+
+		static readonly Task<IEnumerable<ValidationFailure>> AsyncEmptyResult = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+
 		public IValidator Validator {
 			get { return validator; }
 		}
@@ -20,7 +24,7 @@ namespace FluentValidation.Validators {
 			return ValidateInternal(
 				context, 
 				(ctx, v) => v.Validate(ctx).Errors,
-				Enumerable.Empty<ValidationFailure>()
+				EmptyResult
 			);
 		}
 
@@ -28,7 +32,7 @@ namespace FluentValidation.Validators {
 			return ValidateInternal(
 				context, 
 				(ctx, v) => v.ValidateAsync(ctx).Then(r => r.Errors.AsEnumerable(), runSynchronously:true),
-				TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>())
+				AsyncEmptyResult
 			);
 		}
 
