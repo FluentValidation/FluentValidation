@@ -19,18 +19,20 @@ namespace FluentValidation.Validators {
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			return ValidateInternal(
 				context, 
-				(ctx, v) => v.Validate(ctx).Errors
+				(ctx, v) => v.Validate(ctx).Errors,
+				Enumerable.Empty<ValidationFailure>()
 			);
 		}
 
 		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
 			return ValidateInternal(
 				context, 
-				(ctx, v) => v.ValidateAsync(ctx).Then(r => r.Errors.AsEnumerable(), runSynchronously:true)
+				(ctx, v) => v.ValidateAsync(ctx).Then(r => r.Errors.AsEnumerable(), runSynchronously:true),
+				TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>())
 			);
 		}
 
-		TResult ValidateInternal<TResult>(PropertyValidatorContext context, Func<ValidationContext, IValidator, TResult> validationApplicator) {
+		TResult ValidateInternal<TResult>(PropertyValidatorContext context, Func<ValidationContext, IValidator, TResult> validationApplicator, TResult emptyResult) {
 			if (context.Rule.Member == null) {
 				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
 			}
@@ -38,13 +40,13 @@ namespace FluentValidation.Validators {
 			var instanceToValidate = context.PropertyValue;
 
 			if (instanceToValidate == null) {
-				return (TResult) Enumerable.Empty<ValidationFailure>();
+				return emptyResult;
 			}
 
 			var validator = GetValidator(context);
 
 			if (validator == null) {
-				return (TResult) Enumerable.Empty<ValidationFailure>();
+				return emptyResult;
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(instanceToValidate, context);
