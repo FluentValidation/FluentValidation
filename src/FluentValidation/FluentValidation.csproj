@@ -130,6 +130,7 @@
     <Compile Include="ValidatorDescriptor.cs" />
     <Compile Include="Validators\AbstractComparisonValidator.cs" />
     <Compile Include="Validators\AsyncPredicateValidator.cs" />
+    <Compile Include="Validators\AsyncPropertyValidator.cs" />
     <Compile Include="Validators\AsyncValidatorBase.cs" />
     <Compile Include="Validators\ChildCollectionValidatorAdaptor.cs" />
     <Compile Include="Validators\ChildValidatorAdaptor.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Validators\ExclusiveBetweenValidator.cs" />
     <Compile Include="Validators\GreaterThanOrEqualValidator.cs" />
     <Compile Include="Validators\GreaterThanValidator.cs" />
+    <Compile Include="Validators\IAsyncPropertyValidator.cs" />
     <Compile Include="Validators\InclusiveBetweenValidator.cs" />
     <Compile Include="Validators\LessThanOrEqualValidator.cs" />
     <Compile Include="Validators\LessThanValidator.cs" />
