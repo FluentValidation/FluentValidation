@@ -249,18 +249,49 @@ namespace FluentValidation {
 				action(); 
 			}
 
-			// Must apply the predictae after the rule has been fully created to ensure any rules-specific conditions have already been applied.
+			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
 			propertyRules.ForEach(x => x.ApplyCondition(predicate.CoerceToNonGeneric()));
 		}
 
 		/// <summary>
-		/// Defiles an inverse condition that applies to several rules
+		/// Defines an inverse condition that applies to several rules
 		/// </summary>
 		/// <param name="predicate">The condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
 		public void Unless(Func<T, bool> predicate, Action action) {
 			When(x => !predicate(x), action);
 		}
+
+        /// <summary>
+        /// Defines an asynchronous condition that applies to several rules
+        /// </summary>
+        /// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
+        /// <param name="action">Action that encapsulates the rules.</param>
+        /// <returns></returns>
+        public void WhenAsync(Func<T, Task<bool>> predicate, Action action)
+        {
+            var propertyRules = new List<IValidationRule>();
+
+            Action<IValidationRule> onRuleAdded = propertyRules.Add;
+
+            using (nestedValidators.OnItemAdded(onRuleAdded))
+            {
+                action();
+            }
+
+            // Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
+            propertyRules.ForEach(x => x.ApplyAsyncCondition(predicate.CoerceToNonGeneric()));
+        }
+
+        /// <summary>
+        /// Defines an inverse asynchronous condition that applies to several rules
+        /// </summary>
+        /// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
+        /// <param name="action">Action that encapsulates the rules</param>
+        public void UnlessAsync(Func<T, Task<bool>> predicate, Action action)
+        {
+            WhenAsync(x => predicate(x).Then(y => !y), action);
+        }
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection of validation rules.

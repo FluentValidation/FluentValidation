@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
+	using System.Threading.Tasks;
 	using Xunit;
 
 	
@@ -92,6 +93,16 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+	    public void Async_condition_should_work_with_child_collection() {
+	        var validator = new TestValidator() {
+	                                                v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator()).WhenAsync(x => TaskHelpers.FromResult(x.Orders.Count == 3 /*there are only 2*/))
+	                                            };
+
+	        var result = validator.ValidateAsync(person).Result;
+	        result.IsValid.ShouldBeTrue();
+	    }
+
+	    [Fact]
 		public void Skips_null_items() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
