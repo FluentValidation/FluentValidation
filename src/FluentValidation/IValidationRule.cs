@@ -45,7 +45,7 @@ namespace FluentValidation {
 		IEnumerable<ValidationFailure> Validate(ValidationContext context);
 
 		/// <summary>
-		/// Performs validation using a validation context and returns a collection of Validation Failures asynchronoulsy.
+		/// Performs validation using a validation context and returns a collection of Validation Failures asynchronously.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
