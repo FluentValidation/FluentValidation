@@ -20,14 +20,19 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Runtime.Remoting.Messaging;
 	using System.Threading.Tasks;
 	using FluentValidation.Internal;
 	using Resources;
 	using Results;
 
-	public class DelegatingValidator : IAsyncPropertyValidator, IDelegatingValidator {
+	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
 		private readonly Func<object, bool> condition;
 		public IPropertyValidator InnerValidator { get; private set; }
+
+	    public virtual bool IsAsync {
+            get { return false; }
+	    }
 
 		public DelegatingValidator(Func<object, bool> condition, IPropertyValidator innerValidator) {
 			this.condition = condition;
@@ -48,10 +53,9 @@ namespace FluentValidation.Validators {
 
 		public Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
 			if (condition(context.Instance)) {
-			    var asyncInnerValidator = InnerValidator as IAsyncPropertyValidator;
-			    return asyncInnerValidator == null
-			               ? TaskHelpers.FromResult(InnerValidator.Validate(context))
-			               : asyncInnerValidator.ValidateAsync(context);
+			    return InnerValidator.IsAsync
+			               ? InnerValidator.ValidateAsync(context)
+			               : TaskHelpers.FromResult(InnerValidator.Validate(context));
 			}
 			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 		}

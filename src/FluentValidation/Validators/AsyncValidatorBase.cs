@@ -3,8 +3,12 @@ namespace FluentValidation.Validators {
 	using System.Linq.Expressions;
 	using System.Threading.Tasks;
 
-	public abstract class AsyncValidatorBase : AsyncPropertyValidator {
-		protected AsyncValidatorBase(string errorMessageResourceName, Type errorMessageResourceType)
+	public abstract class AsyncValidatorBase : PropertyValidator {
+	    public override bool IsAsync {
+	        get { return true; }
+	    }
+
+	    protected AsyncValidatorBase(string errorMessageResourceName, Type errorMessageResourceType)
 			: base(errorMessageResourceName, errorMessageResourceType) {
 		}
 

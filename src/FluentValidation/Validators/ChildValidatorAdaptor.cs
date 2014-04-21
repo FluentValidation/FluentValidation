@@ -16,7 +16,11 @@ namespace FluentValidation.Validators {
 			get { return validator; }
 		}
 
-		public ChildValidatorAdaptor(IValidator validator) {
+	    public override bool IsAsync {
+	        get { return true; }
+	    }
+
+	    public ChildValidatorAdaptor(IValidator validator) {
 			this.validator = validator;
 		}
 

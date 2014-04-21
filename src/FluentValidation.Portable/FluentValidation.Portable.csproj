@@ -195,9 +195,6 @@
     <Compile Include="..\FluentValidation\Validators\AsyncPredicateValidator.cs">
       <Link>AsyncPredicateValidator.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Validators\AsyncPropertyValidator.cs">
-      <Link>AsyncPropertyValidator.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Validators\AsyncValidatorBase.cs">
       <Link>AsyncValidatorBase.cs</Link>
     </Compile>
@@ -218,9 +215,6 @@
     </Compile>
     <Compile Include="..\FluentValidation\Validators\ExclusiveBetweenValidator.cs">
       <Link>ExclusiveBetweenValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Validators\IAsyncPropertyValidator.cs">
-      <Link>IAsyncPropertyValidator.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Validators\InclusiveBetweenValidator.cs">
       <Link>InclusiveBetweenValidator.cs</Link>
