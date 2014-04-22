@@ -269,11 +269,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\FluentValidation\Resources\Messages.cz.resx">
+      <Link>Resources\Messages.cz.resx</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.de.resx">
       <Link>Resources\Messages.de.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.es.resx">
       <Link>Resources\Messages.es.resx</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\FluentValidation\Resources\Messages.fi.resx">
+      <Link>Resources\Messages.fi.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.fr.resx">
       <Link>Resources\Messages.fr.resx</Link>

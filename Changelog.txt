@@ -1,3 +1,8 @@
+5.2 - 
+* Added Czech and Finish translation of default error messages
+* Allow nullable target properties for greater/less validators
+* Apply pull request: RuleForEach doesn't respect When condition
+
 5.1 - 11/03/2014
 * Applied pull request: Apply the same display name resolving to the target property as to the source property.
 * Applied pull request: Allow parent to be passed to child collection validator

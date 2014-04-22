@@ -78,6 +78,36 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void Validates_with_nullable_property() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThanOrEqualTo(x => x.NullableInt));
+
+			var resultNull = validator.Validate(new Person { Id = 0, NullableInt = null });
+			var resultLess = validator.Validate(new Person { Id = 0, NullableInt = -1 });
+			var resultEqual = validator.Validate(new Person { Id = 0, NullableInt = 0 });
+			var resultMore = validator.Validate(new Person { Id = 0, NullableInt = 1 });
+
+			resultNull.IsValid.ShouldBeFalse();
+			resultLess.IsValid.ShouldBeFalse();
+			resultEqual.IsValid.ShouldBeTrue();
+			resultMore.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Validates_nullable_with_nullable_property() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThanOrEqualTo(x => x.OtherNullableInt));
+
+			var resultNull = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = null });
+			var resultLess = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = -1 });
+			var resultEqual = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = 0 });
+			var resultMore = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = 1 });
+
+			resultNull.IsValid.ShouldBeFalse();
+			resultLess.IsValid.ShouldBeFalse();
+			resultEqual.IsValid.ShouldBeTrue();
+			resultMore.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
 		public void Validates_with_nullable_when_property_is_null() {
 			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThanOrEqualTo(5));
 			var result = validator.Validate(new Person());

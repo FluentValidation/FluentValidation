@@ -40,21 +40,24 @@ namespace FluentValidation.Internal {
 
 		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(ValidationContext context, Validators.IPropertyValidator validator, string propertyName) {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
-			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 			var results = new List<ValidationFailure>();
+			var delegatingValidator = validator as IDelegatingValidator;
+			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.Instance)) {
+				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
-			int count = 0;
+				int count = 0;
 
-			if (collectionPropertyValue != null) {
-				foreach (var element in collectionPropertyValue) {
-					var newContext = context.CloneForChildValidator(context.InstanceToValidate);
-					newContext.PropertyChain.Add(propertyName);
-					newContext.PropertyChain.AddIndexer(count++);
+				if (collectionPropertyValue != null) {
+					foreach (var element in collectionPropertyValue) {
+						var newContext = context.CloneForChildValidator(context.InstanceToValidate);
+						newContext.PropertyChain.Add(propertyName);
+						newContext.PropertyChain.AddIndexer(count++);
 
-					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString());
-					newPropertyContext.PropertyValue = element;
+						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString());
+						newPropertyContext.PropertyValue = element;
 
-					results.AddRange(validator.Validate(newPropertyContext));
+						results.AddRange(validator.Validate(newPropertyContext));
+					}
 				}
 			}
 			return results;
