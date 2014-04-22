@@ -73,8 +73,9 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void Should_throw_when_value_to_compare_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => 
-				new TestValidator(v => v.RuleFor(x => x.Id).LessThan(null))
+			Expression<Func<Person, int>> nullExpression = null;
+			typeof(ArgumentNullException).ShouldBeThrownBy(() =>
+				new TestValidator(v => v.RuleFor(x => x.Id).LessThan(nullExpression))
 			);
 		}
 
@@ -88,6 +89,36 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt));
 			var propertyValidator = validator.CreateDescriptor().GetValidatorsForMember("Id").OfType<LessThanValidator>().Single();
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("AnotherInt"));
+		}
+
+		[Test]
+		public void Validates_with_nullable_property() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.NullableInt));
+
+			var resultNull = validator.Validate(new Person { Id = 0, NullableInt = null });
+			var resultLess = validator.Validate(new Person { Id = 0, NullableInt = -1 });
+			var resultEqual = validator.Validate(new Person { Id = 0, NullableInt = 0 });
+			var resultMore = validator.Validate(new Person { Id = 0, NullableInt = 1 });
+
+			resultNull.IsValid.ShouldBeFalse();
+			resultLess.IsValid.ShouldBeFalse();
+			resultEqual.IsValid.ShouldBeFalse();
+			resultMore.IsValid.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Validates_nullable_with_nullable_property() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(x => x.OtherNullableInt));
+
+			var resultNull = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = null });
+			var resultLess = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = -1 });
+			var resultEqual = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = 0 });
+			var resultMore = validator.Validate(new Person { NullableInt = 0, OtherNullableInt = 1 });
+
+			resultNull.IsValid.ShouldBeFalse();
+			resultLess.IsValid.ShouldBeFalse();
+			resultEqual.IsValid.ShouldBeFalse();
+			resultMore.IsValid.ShouldBeTrue();
 		}
 
 		[Test]
