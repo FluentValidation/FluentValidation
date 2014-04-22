@@ -32,6 +32,10 @@ namespace FluentValidation.Validators {
 		private readonly List<Func<object, object, object>> customFormatArgs = new List<Func<object, object, object>>();
 		private IStringSource errorSource;
 
+	    public virtual bool IsAsync {
+            get { return false; }
+	    }
+
 		public Func<object, object> CustomStateProvider { get; set; }
 
 		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {

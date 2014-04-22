@@ -31,6 +31,10 @@ namespace FluentValidation.Validators {
 			set { }
 		}
 
+		public virtual bool IsAsync {
+			get { return false; }
+		}
+
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
 		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
