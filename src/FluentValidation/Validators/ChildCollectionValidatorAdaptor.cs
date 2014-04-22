@@ -19,11 +19,11 @@ namespace FluentValidation.Validators {
 		readonly Func<object, IValidator> childValidatorProvider;
 		readonly Type childValidatorType;
 
-	    public override bool IsAsync {
-	        get { return true; }
-	    }
+		public override bool IsAsync {
+			get { return true; }
+		}
 
-	    public Type ChildValidatorType {
+		public Type ChildValidatorType {
 			get { return childValidatorType; }
 		}
 
