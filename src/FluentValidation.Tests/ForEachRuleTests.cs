@@ -48,5 +48,20 @@ namespace FluentValidation.Tests {
 			result.Errors[0].PropertyName.ShouldEqual("NickNames[0]");
 			result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
 		}
+
+		class request {
+			public Person person = null;
+		}
+
+		[Test]
+		public void Nested_collection_for_null_property_should_not_throw_null_reference() {
+			var validator = new InlineValidator<request>();
+			validator.When(r => r.person != null, () => {
+				validator.RuleForEach(x => x.person.NickNames).NotNull();
+			});
+
+			var result = validator.Validate(new request());
+			result.Errors.Count.ShouldEqual(0);
+		}
 	}
 }

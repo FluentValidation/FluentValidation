@@ -69,9 +69,14 @@ namespace FluentValidation.Validators {
 		IPropertyValidator IDelegatingValidator.InnerValidator {
 			get { return InnerValidator; }
 		}
+
+		public bool CheckCondition(object instance) {
+			return condition(instance);
+		}
 	}
 
 	public interface IDelegatingValidator : IPropertyValidator {
 		IPropertyValidator InnerValidator { get; }
+		bool CheckCondition(object instance);
 	}
 }
