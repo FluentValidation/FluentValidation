@@ -1,4 +1,4 @@
-5.2 - 
+5.2 - 21/05/2014
 * Added Czech and Finish translation of default error messages
 * Allow nullable target properties for greater/less validators
 * Apply pull request: RuleForEach doesn't respect When condition
