@@ -17,7 +17,6 @@
 		
 		<ItemGroup>
 			<MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
-			<Mvc4Binaries Include="$(BaseDir)\src\FluentValidation.Mvc4\bin\$(Configuration)$(PackageSuffix)\FluentValidation.Mvc.*" />
 			<Mvc5Binaries Include="$(BaseDir)\src\FluentValidation.Mvc5\bin\$(Configuration)$(PackageSuffix)\FluentValidation.Mvc.*" />
 			<PortableBinaries Include="$(BaseDir)\src\FluentValidation.Portable\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)$(PackageSuffix)\FluentValidation.WebApi.*" />
@@ -27,7 +26,6 @@
 
 		<!-- Copy to the output directory -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation\%(RecursiveDir)"  />
-		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC4" />
 		<Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC5" />
 		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi" />
 
@@ -47,7 +45,6 @@
 	<Target Name="CreatePackages" DependsOnTargets="Deploy">
 		<!-- First copy the nuspec template files to the package dir -->
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)" />
-		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC4$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC5$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.WebApi$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)" />
 
@@ -55,17 +52,12 @@
 
 		<!-- Copy the source files to the package dir -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\Net40\%(RecursiveDir)" />
-		<Copy SourceFiles="@(Mvc4Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\lib\Net40" />
 		<Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\lib\Net45" />
 		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\lib\Net45" />
 		
 		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
 		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\FluentValidation\FluentValidation.dll">
 			<Output TaskParameter="Assemblies" ItemName="AsmInfo" />
-		</GetAssemblyIdentity>
-
-		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\Mvc\Mvc4\FluentValidation.Mvc.dll">
-			<Output TaskParameter="Assemblies" ItemName="Mvc4AsmInfo" />
 		</GetAssemblyIdentity>
 
 		<GetAssemblyIdentity AssemblyFiles="$(OutputDir)\Mvc\Mvc5\FluentValidation.Mvc.dll">
@@ -81,14 +73,7 @@
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\FluentValidation$(PackageSuffix).nuspec"
 			XPath="/package/metadata/version"
-			Value="%(AsmInfo.Version)" />
-
-		<XmlUpdate
-		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
-			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec"
-			XPath="/package/metadata/version"
-			Value="%(Mvc4AsmInfo.Version)" />
-			
+			Value="%(AsmInfo.Version)" />	
 			
 		<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
@@ -105,13 +90,6 @@
 
 		<!-- Also need to insert the version number into the MVC3 dependencies section -->
 
-		<!-- No longer update the MVC4 depedencies. This is the last release so it's now locked to < 5.2 in the nuspec file -->
-		<!--<XmlUpdate
-		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
-			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec"
-			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation$(PackageSuffix)']/@version"
-			Value="%(AsmInfo.Version)" />-->
-
 	<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\FluentValidation.MVC5$(PackageSuffix).nuspec"
@@ -126,9 +104,6 @@
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages" 
 					Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation$(PackageSuffix)\FluentValidation$(PackageSuffix).nuspec" />
-
-		<Exec WorkingDirectory="$(BuildDir)\Packages"
-		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC4$(PackageSuffix)\FluentValidation.MVC4$(PackageSuffix).nuspec" />
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
 		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\FluentValidation.MVC5$(PackageSuffix).nuspec" />
