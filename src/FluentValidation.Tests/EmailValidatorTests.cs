@@ -66,6 +66,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Test]
+		public void double_period_with_uk_Domain() {
+			string email = "first.last@test..co.uk";
+			var result = validator.Validate(new Person {Email = email});
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Test]
 		[TestCase((string)null)]
 		[TestCase("testperson@gmail.com")]
 		[TestCase("TestPerson@gmail.com")]
@@ -78,6 +85,7 @@ namespace FluentValidation.Tests {
 		[TestCase("$A12345@example.com")]
 		[TestCase("!def!xyz%abc@example.com")]
 		[TestCase("__somename@example.com")]
+		[TestCase("first.last@test.co.uk")]
 		public void Valid_email_addresses(string email) {
 				var result = validator.Validate(new Person {Email = email});
 				result.IsValid.ShouldBeTrue(string.Format("The email address {0} should be valid", email));

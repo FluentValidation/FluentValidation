@@ -1,3 +1,6 @@
+5.3 - 27/05/2014
+* Fix issue https://fluentvalidation.codeplex.com/workitem/7183 (email address validation)
+
 5.2 - 21/05/2014
 * Added Czech and Finish translation of default error messages
 * Allow nullable target properties for greater/less validators
