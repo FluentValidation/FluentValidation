@@ -1,3 +1,5 @@
+* Applied patch - Danish translation
+
 5.3 - 27/05/2014
 * Fix issue https://fluentvalidation.codeplex.com/workitem/7183 (email address validation)
 
