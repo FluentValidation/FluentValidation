@@ -34,8 +34,9 @@ namespace FluentValidation.Internal {
 	public class PropertyRule : IValidationRule {
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
+	    readonly string propertyDisplayName;
 
-		/// <summary>
+	    /// <summary>
 		/// Property associated with this rule.
 		/// </summary>
 		public MemberInfo Member { get; private set; }
@@ -108,6 +109,7 @@ namespace FluentValidation.Internal {
 			this.cascadeModeThunk = cascadeModeThunk;
 
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
+		    propertyDisplayName = PropertyName.SplitPascalCase();
 			DisplayName = new LazyStringSource(() => ValidatorOptions.DisplayNameResolver(containerType, member, expression));
 		}
 
@@ -192,7 +194,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (result == null) {
-				result = PropertyName.SplitPascalCase();				
+				result = propertyDisplayName;				
 			}
 
 			return result;
