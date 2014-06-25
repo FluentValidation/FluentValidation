@@ -22,7 +22,6 @@ namespace FluentValidation.Internal {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
-	using System.Threading;
 	using System.Threading.Tasks;
 	using Resources;
 	using Results;
@@ -34,7 +33,8 @@ namespace FluentValidation.Internal {
 	public class PropertyRule : IValidationRule {
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
-	    readonly string propertyDisplayName;
+	    string _propertyDisplayName;
+        string _propertyName;
 
 	    /// <summary>
 		/// Property associated with this rule.
@@ -109,7 +109,6 @@ namespace FluentValidation.Internal {
 			this.cascadeModeThunk = cascadeModeThunk;
 
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
-		    propertyDisplayName = PropertyName.SplitPascalCase();
 			DisplayName = new LazyStringSource(() => ValidatorOptions.DisplayNameResolver(containerType, member, expression));
 		}
 
@@ -176,7 +175,15 @@ namespace FluentValidation.Internal {
 		/// Returns the property name for the property being validated.
 		/// Returns null if it is not a property being validated (eg a method call)
 		/// </summary>
-		public string PropertyName { get; set; }
+        public string PropertyName
+        {
+            get { return _propertyName; }
+            set
+            {
+                _propertyName = value;
+                _propertyDisplayName = _propertyName.SplitPascalCase();
+            }
+        }
 
 		/// <summary>
 		/// Allows custom creation of an error message
@@ -194,7 +201,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (result == null) {
-				result = propertyDisplayName;				
+				result = _propertyDisplayName;				
 			}
 
 			return result;
