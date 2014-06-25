@@ -33,10 +33,10 @@ namespace FluentValidation.Internal {
 	public class PropertyRule : IValidationRule {
 		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
-	    string _propertyDisplayName;
-        string _propertyName;
+		string propertyDisplayName;
+		string propertyName;
 
-	    /// <summary>
+		/// <summary>
 		/// Property associated with this rule.
 		/// </summary>
 		public MemberInfo Member { get; private set; }
@@ -156,34 +156,32 @@ namespace FluentValidation.Internal {
 		/// Remove a validator in this rule.
 		/// </summary>
 		public void RemoveValidator(IPropertyValidator original) {
-		    if (ReferenceEquals(CurrentValidator, original)) {
-		        CurrentValidator = validators.LastOrDefault(x => x != original);
-		    }
+			if (ReferenceEquals(CurrentValidator, original)) {
+				CurrentValidator = validators.LastOrDefault(x => x != original);
+			}
 
-		    validators.Remove(original);
+			validators.Remove(original);
 		}
 
 		/// <summary>
 		/// Clear all validators from this rule.
 		/// </summary>
 		public void ClearValidators() {
-		    CurrentValidator = null;
-		    validators.Clear();
+			CurrentValidator = null;
+			validators.Clear();
 		}
 
 		/// <summary>
 		/// Returns the property name for the property being validated.
 		/// Returns null if it is not a property being validated (eg a method call)
 		/// </summary>
-        public string PropertyName
-        {
-            get { return _propertyName; }
-            set
-            {
-                _propertyName = value;
-                _propertyDisplayName = _propertyName.SplitPascalCase();
-            }
-        }
+		public string PropertyName {
+			get { return propertyName; }
+			set {
+				propertyName = value;
+				propertyDisplayName = propertyName.SplitPascalCase();
+			}
+		}
 
 		/// <summary>
 		/// Allows custom creation of an error message
@@ -201,7 +199,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (result == null) {
-				result = _propertyDisplayName;				
+				result = propertyDisplayName;
 			}
 
 			return result;
@@ -224,7 +222,7 @@ namespace FluentValidation.Internal {
 
 			// Ensure that this rule is allowed to run. 
 			// The validatselector has the opportunity to veto this before any of the validators execute.
-			if(! context.Selector.CanExecute(this, propertyName, context)) {
+			if (!context.Selector.CanExecute(this, propertyName, context)) {
 				yield break;
 			}
 
@@ -327,11 +325,11 @@ namespace FluentValidation.Internal {
 						validations,
 						breakCondition: _ => cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0
 					).Then(() => {
-							if (failures.Count > 0) {
-								OnFailure(context.InstanceToValidate);
-							}
-							return failures.AsEnumerable();
-						},
+						if (failures.Count > 0) {
+							OnFailure(context.InstanceToValidate);
+						}
+						return failures.AsEnumerable();
+					},
 						runSynchronously: true
 					);
 			}
