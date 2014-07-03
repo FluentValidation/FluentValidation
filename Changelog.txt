@@ -1,4 +1,4 @@
-5.4 -
+5.4 - 03/07/2014
 * Applied patch - Danish translation
 * Applied patch - Improve DisplayName resolution performance
 * Update WebApi/MVC dependencies
