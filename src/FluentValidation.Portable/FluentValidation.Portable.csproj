@@ -267,6 +267,7 @@
     <Compile Include="..\FluentValidation\Validators\ScalePrecisionValidator.cs">
       <Link>ScalePrecisionValidator.cs</Link>
     </Compile>
+    <Compile Include="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.cz.resx">

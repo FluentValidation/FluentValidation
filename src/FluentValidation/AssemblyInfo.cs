@@ -21,9 +21,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 
-[assembly: AssemblyTitle("FluentValidation.Mvc")]
-[assembly: AssemblyDescription("FluentValidation.Mvc")]
-[assembly: AssemblyProduct("FluentValidation.Mvc")]
+[assembly: AssemblyTitle("FluentValidation")]
+[assembly: AssemblyDescription("FluentValidation")]
+[assembly: AssemblyProduct("FluentValidation")]
 [assembly: AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2014")]
 #if !PORTABLE
 [assembly: ComVisible(false)]
