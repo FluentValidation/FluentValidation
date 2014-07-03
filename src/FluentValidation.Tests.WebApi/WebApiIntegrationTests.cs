@@ -66,11 +66,10 @@ namespace FluentValidation.Tests.WebApi {
 
 		[Test]
 		public void Should_add_implicit_required_validator() {
-			/*var result = InvokeTest<TestModel6>(@"Id=");
+			var result = InvokeTest<TestModel6>(@"Id=");
 			result.Count.ShouldEqual(1);
 			result.IsValidField("model.Id").ShouldBeFalse();
-			result.GetMessage("model.Id").ShouldEqual(@"A value is required.");*/
-			Assert.Fail();
+			result.GetMessage("model.Id").ShouldEqual(@"A value is required.");
 		}
 
 
@@ -88,14 +87,6 @@ namespace FluentValidation.Tests.WebApi {
 			result.IsValidField("model.CustomProperty").ShouldBeFalse();
 			result.GetMessage("model.CustomProperty").ShouldEqual("Cannot be 14");
 
-		}
-
-		[Test]
-		public void a_value_is_required() {
-			var result = InvokeTest<TestModel8>(@"Name=&Age=");
-			foreach (var error in result) {
-				Console.WriteLine(error.Message);
-			}
 		}
 	}
 }

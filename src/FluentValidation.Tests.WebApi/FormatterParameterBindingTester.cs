@@ -46,7 +46,7 @@ namespace FluentValidation.Tests.WebApi {
 
 	using NUnit.Framework;
 
-	[TestFixture]
+	[TestFixture] //TODO: Remove these tests and make sure that WebApiIntegrationTests have replaced all the tests in here
 	public class FormatterParameterBindingTester {
 		FluentValidationModelValidatorProvider provider;
 		HttpActionContext actionContext;
