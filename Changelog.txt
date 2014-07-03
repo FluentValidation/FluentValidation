@@ -1,4 +1,7 @@
+5.4 -
 * Applied patch - Danish translation
+* Applied patch - Improve DisplayName resolution performance
+* Update WebApi/MVC dependencies
 
 5.3 - 27/05/2014
 * Fix issue https://fluentvalidation.codeplex.com/workitem/7183 (email address validation)

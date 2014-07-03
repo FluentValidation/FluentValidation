@@ -14,7 +14,7 @@
     <releaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</releaseNotes>
     <dependencies>
       <dependency id="FluentValidation" version="" />
-			<dependency id="Microsoft.AspNet.WebApi.Core" version="[5.1,5.2)" />
+			<dependency id="Microsoft.AspNet.WebApi.Core" version="[5.1,5.3)" />
 		</dependencies>
   </metadata>
 </package>
