@@ -21,7 +21,7 @@ namespace FluentValidation.TestHelper {
 	using System.Linq;
 	using System.Linq.Expressions;
 
-	public class ValidatorTester<T, TValue> where T : class {
+	public class ValidatorTester<T, TValue> {
 		private readonly IValidator<T> validator;
 		private readonly TValue value;
 		private readonly MemberAccessor<T, TValue> accessor; 

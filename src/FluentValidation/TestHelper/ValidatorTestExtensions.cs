@@ -25,21 +25,21 @@ namespace FluentValidation.TestHelper {
 
 	public static class ValidationTestExtension {
 		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-		                                                           Expression<Func<T, TValue>> expression, TValue value) where T : class, new() {
+		                                                           Expression<Func<T, TValue>> expression, TValue value) where T : new() {
 			new ValidatorTester<T, TValue>(expression, validator, value).ValidateError(new T());
 		}
 
-		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest) where T : class {
+		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest) {
 			var value = expression.Compile()(objectToTest);
 			new ValidatorTester<T, TValue>(expression, validator, value).ValidateError(objectToTest);
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-		                                                              Expression<Func<T, TValue>> expression, TValue value) where T : class, new() {
+		                                                              Expression<Func<T, TValue>> expression, TValue value) where T : new() {
 			new ValidatorTester<T, TValue>(expression, validator, value).ValidateNoError(new T());
 		}
 
-		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest) where T : class {
+		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest) {
 			var value = expression.Compile()(objectToTest);
 			new ValidatorTester<T, TValue>(expression, validator, value).ValidateNoError(objectToTest);
 		}
