@@ -25,23 +25,23 @@ namespace FluentValidation.TestHelper {
 
 	public static class ValidationTestExtension {
 		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-		                                                           Expression<Func<T, TValue>> expression, TValue value) where T : class, new() {
-			new ValidatorTester<T, TValue>(expression, validator, value).ValidateError(new T());
+		                                                           Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
+			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(new T());
 		}
 
-		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest) where T : class {
+		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			new ValidatorTester<T, TValue>(expression, validator, value).ValidateError(objectToTest);
+			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(objectToTest);
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-		                                                              Expression<Func<T, TValue>> expression, TValue value) where T : class, new() {
-			new ValidatorTester<T, TValue>(expression, validator, value).ValidateNoError(new T());
+		                                                              Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
+			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(new T());
 		}
 
-		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest) where T : class {
+		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			new ValidatorTester<T, TValue>(expression, validator, value).ValidateNoError(objectToTest);
+			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(objectToTest);
 		}
 
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {

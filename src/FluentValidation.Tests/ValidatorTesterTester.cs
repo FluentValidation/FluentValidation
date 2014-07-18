@@ -101,7 +101,22 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator());
 			validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator));
 		}
-
+        
+        [Test]
+        public void GivenAValidatorWithARuleSetAndTheRuleSetNameProvided_ShouldNotHaveValidationErrorFor_ReturnsAnException()
+        {
+            // Arrange.
+            var testValidator = new TestValidator();
+            testValidator.RuleSet("Names", () =>
+            {
+                testValidator.RuleFor(x => x.Surname).NotNull();
+                testValidator.RuleFor(x => x.Forename).NotNull();
+            });
+            testValidator.RuleFor(x => x.Id).NotEqual(0);
+            
+            // Act & Assert.
+            testValidator.ShouldHaveValidationErrorFor(x => x.Forename, new Person(), "Names");
+        }
 
 		private class AddressValidator:AbstractValidator<Address> {
 			
