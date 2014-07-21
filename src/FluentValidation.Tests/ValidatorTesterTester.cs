@@ -62,7 +62,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void ShouldNotHAveValidationError_should_not_throw_When_there_are_no_errors_with_preconstructed_object() {
-			validator.ShouldNotHaveValidationErrorFor(x => x.Forename, new Person { Forename = "test"});
+			validator.ShouldNotHaveValidationErrorFor(x => x.Forename, new Person { Forename = "test" });
 		}
 
 		[Test]
@@ -80,7 +80,7 @@ namespace FluentValidation.Tests {
 			ex.Message.ShouldEqual("Expected property 'Address' to have a child validator of type 'AddressValidator.'");
 		}
 
-	
+
 		[Test]
 		public void ShouldHaveChildValidator_should_not_throw_when_property_Does_have_child_validator() {
 			validator.RuleFor(x => x.Address).SetValidator(new AddressValidator());
@@ -89,7 +89,7 @@ namespace FluentValidation.Tests {
 
 		[Test]
 		public void ShouldHaveChildvalidator_throws_when_collection_property_Does_not_have_child_validator() {
-			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() => 
+			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
 				validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator))
 			);
 
@@ -101,29 +101,25 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator());
 			validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator));
 		}
-        
-        [Test]
-        public void GivenAValidatorWithARuleSetAndTheRuleSetNameProvided_ShouldNotHaveValidationErrorFor_ReturnsAnException()
-        {
-            // Arrange.
-            var testValidator = new TestValidator();
-            testValidator.RuleSet("Names", () =>
-            {
-                testValidator.RuleFor(x => x.Surname).NotNull();
-                testValidator.RuleFor(x => x.Forename).NotNull();
-            });
-            testValidator.RuleFor(x => x.Id).NotEqual(0);
-            
-            // Act & Assert.
-            testValidator.ShouldHaveValidationErrorFor(x => x.Forename, new Person(), "Names");
-        }
 
-		private class AddressValidator:AbstractValidator<Address> {
-			
+		[Test]
+		public void ShouldHaveValidationErrorFor_takes_account_of_rulesets() {
+			var testValidator = new TestValidator();
+			testValidator.RuleSet("Names", () => {
+				testValidator.RuleFor(x => x.Surname).NotNull();
+				testValidator.RuleFor(x => x.Forename).NotNull();
+			});
+			testValidator.RuleFor(x => x.Id).NotEqual(0);
+
+			testValidator.ShouldHaveValidationErrorFor(x => x.Forename, new Person(), "Names");
 		}
 
-		private class OrderValidator:AbstractValidator<Order> {
-			
+		private class AddressValidator : AbstractValidator<Address> {
+
+		}
+
+		private class OrderValidator : AbstractValidator<Order> {
+
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace FluentValidation.TestHelper {
 
 	public static class ValidationTestExtension {
 		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-		                                                           Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
+																   Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
 			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(new T());
 		}
 
@@ -35,7 +35,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-		                                                              Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
+																	  Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
 			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(new T());
 		}
 
@@ -48,13 +48,12 @@ namespace FluentValidation.TestHelper {
 			var descriptor = validator.CreateDescriptor();
 			var matchingValidators = descriptor.GetValidatorsForMember(expression.GetMember().Name);
 
-            var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.Validator.GetType());
-            childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
+			var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.Validator.GetType());
+			childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
-            if (!childValidatorTypes.Any(x => x == childValidatorType))
-            {
-                throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
-            }
+			if (!childValidatorTypes.Any(x => x == childValidatorType)) {
+				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
+			}
 		}
 
 	}

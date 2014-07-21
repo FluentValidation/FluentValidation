@@ -25,13 +25,13 @@ namespace FluentValidation.TestHelper {
 		private readonly IValidator<T> validator;
 		private readonly TValue value;
 		private readonly MemberAccessor<T, TValue> accessor;
-	    private readonly string ruleSet;
+		private readonly string ruleSet;
 
 		public ValidatorTester(Expression<Func<T, TValue>> expression, IValidator<T> validator, TValue value, string ruleSet = null) {
 			this.validator = validator;
 			this.value = value;
 			accessor = expression;
-		    this.ruleSet = ruleSet;
+		this.ruleSet = ruleSet;
 		}
 
 		public void ValidateNoError(T instanceToValidate) {
