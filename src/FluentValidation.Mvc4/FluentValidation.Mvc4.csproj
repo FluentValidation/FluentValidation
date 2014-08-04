@@ -113,6 +113,7 @@
     <Compile Include="FluentValidationModelValidator.cs" />
     <Compile Include="FluentValidationModelValidatorProvider.cs" />
     <Compile Include="IValidatorInterceptor.cs" />
+    <Compile Include="PropertyValidatorAdapters\AbstractComparisonFluentValidationPropertyValidator.cs" />
     <Compile Include="PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs" />
     <Compile Include="PropertyValidatorAdapters\EmailFluentValidationPropertyValidator.cs" />
     <Compile Include="PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs" />

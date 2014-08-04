@@ -1,27 +1,20 @@
 ﻿namespace FluentValidation.Mvc {
-    using System.Collections.Generic;
     using System.Web.Mvc;
     using Internal;
     using Validators;
 
-    internal class MinFluentValidationPropertyValidator : FluentValidationPropertyValidator {
-        GreaterThanOrEqualValidator RangeValidator
-        {
-            get { return (GreaterThanOrEqualValidator)Validator; }
-        }
-		
-        public MinFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule propertyDescription, IPropertyValidator validator) : base(metadata, controllerContext, propertyDescription, validator) {
-            ShouldValidate=false;
+    internal class MinFluentValidationPropertyValidator : AbstractComparisonFluentValidationPropertyValidator<GreaterThanOrEqualValidator> {
+
+        protected override object MinValue {
+            get { return AbstractComparisonValidator.ValueToCompare;  }
         }
 
-        public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
-            if (!ShouldGenerateClientSideRules()) yield break;
+        protected override object MaxValue {
+            get { return null; }
+        }
 
-            var formatter = new MessageFormatter()
-                .AppendPropertyName(Rule.GetDisplayName())
-                .AppendArgument("ComparisonValue", RangeValidator.ValueToCompare);
-            var message = formatter.BuildMessage(RangeValidator.ErrorMessageSource.GetString());
-            yield return new ModelClientValidationRangeRule(message, RangeValidator.ValueToCompare, null);
+        public MinFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule propertyDescription, IPropertyValidator validator)
+            : base(metadata, controllerContext, propertyDescription, validator) {
         }
     }
 }

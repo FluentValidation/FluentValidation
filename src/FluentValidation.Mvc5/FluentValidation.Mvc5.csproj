@@ -91,6 +91,9 @@
     <Compile Include="..\FluentValidation.Mvc4\IValidatorInterceptor.cs">
       <Link>IValidatorInterceptor.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\AbstractComparisonFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdaptors\AbstractComparisonFluentValidationPropertyValidator.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs">
       <Link>PropertyValidatorAdaptors\CreditCardFluentValidationPropertyValidator.cs</Link>
     </Compile>
