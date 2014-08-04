@@ -42,6 +42,7 @@ namespace FluentValidation.Mvc {
 			{ typeof(IRegularExpressionValidator), (metadata, context, rule, validator) => new RegularExpressionFluentValidationPropertyValidator(metadata, context, rule, validator) },
 			{ typeof(ILengthValidator), (metadata, context, rule, validator) => new StringLengthFluentValidationPropertyValidator(metadata, context, rule, validator)},
 			{ typeof(InclusiveBetweenValidator), (metadata, context, rule, validator) => new RangeFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(GreaterThanOrEqualValidator), (metadata, context, rule, validator) => new MinFluentValidationPropertyValidator(metadata, context, rule, validator) },
 			{ typeof(EqualValidator), (metadata, context, rule, validator) => new EqualToFluentValidationPropertyValidator(metadata, context, rule, validator) },
 			{ typeof(CreditCardValidator), (metadata, context, description, validator) => new CreditCardFluentValidationPropertyValidator(metadata, context, description, validator) }
 		};

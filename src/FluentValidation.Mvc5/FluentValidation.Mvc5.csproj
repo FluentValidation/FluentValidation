@@ -103,6 +103,9 @@
     <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\FluentValidationPropertyValidator.cs">
       <Link>PropertyValidatorAdaptors\FluentValidationPropertyValidator.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\MinFluentValidationPropertyValidator.cs">
+      <Link>PropertyValidatorAdaptors\MinFluentValidationPropertyValidator.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs">
       <Link>PropertyValidatorAdaptors\RangeFluentValidationPropertyValidator.cs</Link>
     </Compile>
