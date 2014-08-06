@@ -4,7 +4,7 @@ http://www.jeremyskinner.co.uk
 A small validation library for .NET that uses a fluent interface 
 and lambda expressions for building validation rules.
 
-If you are have checked out the source using git, please note that 
+If you have checked out the source using git, please note that 
 this repository requires that autocrlf is set to false.
 
 This project is licensed under the Apache License 2.0 
