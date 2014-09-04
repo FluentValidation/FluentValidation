@@ -119,5 +119,40 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(1);
 		}
 
+	    [Test]
+	    public void ChainCascadeMode_StopOnFirstFailure_StopsChainProcessing() {
+	        validator.ChainCascadeMode = ChainCascadeMode.StopOnFirstFailure;
+
+	        validator.RuleFor(x => x.Age).GreaterThan(5);
+	        validator.RuleFor(x => x.CreditCard).Length(5, 8);
+
+	        var person = new Person() {
+	            Age = 3,
+	            CreditCard = "01"
+	        };
+
+	        var results = validator.Validate(person);
+
+            results.Errors.Count.ShouldEqual(1);
+	    }
+
+        [Test]
+        public void ChainCascadeMode_Continue_ChainsContinueToProcess()
+        {
+            validator.ChainCascadeMode = ChainCascadeMode.Continue;
+
+            validator.RuleFor(x => x.Age).GreaterThan(5);
+            validator.RuleFor(x => x.CreditCard).Length(5, 8);
+
+            var person = new Person()
+            {
+                Age = 3,
+                CreditCard = "01"
+            };
+
+            var results = validator.Validate(person);
+
+            results.Errors.Count.ShouldEqual(2);
+        }
 	}
 }

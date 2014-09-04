@@ -32,6 +32,20 @@ namespace FluentValidation {
 	}
 
 	/// <summary>
+	/// Specifies how rules chains should cascase when one fails.
+	/// </summary>
+	public enum ChainCascadeMode {
+		/// <summary>
+		/// When a rule chain has a failure, execution continues to the next rule chain.
+		/// </summary>
+		Continue,
+		/// <summary>
+		/// When a rule chain has a failure, validation is stopped and no further rule chains will be executed.
+		/// </summary>
+		StopOnFirstFailure
+	}
+
+	/// <summary>
 	/// Specifies where a When/Unless condition should be applied
 	/// </summary>
 	public enum ApplyConditionTo {

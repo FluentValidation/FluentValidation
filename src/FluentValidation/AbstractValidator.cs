@@ -46,6 +46,8 @@ namespace FluentValidation {
 			set { cascadeMode = () => value; }
 		}
 
+		public ChainCascadeMode ChainCascadeMode { get; set; }
+
 		ValidationResult IValidator.Validate(object instance) {
 			instance.Guard("Cannot pass null to Validate.");
 			if(! ((IValidator)this).CanValidateInstancesOfType(instance.GetType())) {
@@ -110,7 +112,15 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
 			context.Guard("Cannot pass null to Validate");
-			var failures = nestedValidators.SelectMany(x => x.Validate(context)).ToList();
+		    var failures = new List<ValidationFailure>();
+
+		    foreach (var nestedValidator in nestedValidators) {
+		        var subFailures = nestedValidator.Validate(context).ToList();
+                failures.AddRange(subFailures);
+		        if (ChainCascadeMode == ChainCascadeMode.StopOnFirstFailure && subFailures.Any())
+		            break;
+		    }
+
 			return new ValidationResult(failures);
 		}
 

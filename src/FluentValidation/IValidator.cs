@@ -46,6 +46,11 @@ namespace FluentValidation {
 		/// Sets the cascade mode for all rules within this validator.
 		/// </summary>
 		CascadeMode CascadeMode { get; set; }
+
+		/// <summary>
+		/// Sets the chain cascade mode for this validator.
+		/// </summary>
+		ChainCascadeMode ChainCascadeMode { get; set; }
 	}
 
 	/// <summary>
