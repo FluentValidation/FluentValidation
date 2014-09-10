@@ -125,8 +125,9 @@ namespace FluentValidation {
 			
 			return TaskHelpers.Iterate(
 				nestedValidators
-				.Select(v => v.ValidateAsync(context).Then(fs => failures.AddRange(fs), runSynchronously: true)))
-				.Then(() => new ValidationResult(failures)
+				.Select(v => v.ValidateAsync(context).Then(fs => failures.AddRange(fs), runSynchronously: true))
+			).Then(
+				() => new ValidationResult(failures)
 			);
 		}
 

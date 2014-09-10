@@ -29,6 +29,10 @@ namespace FluentValidation.Validators {
 		private readonly Func<object, bool> condition;
 		public IPropertyValidator InnerValidator { get; private set; }
 
+		public virtual bool IsAsync {
+			get { return InnerValidator.IsAsync; }
+		}
+
 		public DelegatingValidator(Func<object, bool> condition, IPropertyValidator innerValidator) {
 			this.condition = condition;
 			InnerValidator = innerValidator;
@@ -48,7 +52,7 @@ namespace FluentValidation.Validators {
 
 		public Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
 			if (condition(context.Instance)) {
-				return InnerValidator.ValidateAsync(context);
+			    return InnerValidator.ValidateAsync(context);
 			}
 			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 		}

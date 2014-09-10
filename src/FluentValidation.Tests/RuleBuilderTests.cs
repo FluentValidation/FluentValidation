@@ -140,7 +140,7 @@ namespace FluentValidation.Tests {
 		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator()
 		{
 			var person = new Person { Surname = "Foo" };
-			var validator = new Mock<AsyncValidatorBase>(MockBehavior.Loose, Messages.predicate_error);
+		    var validator = new Mock<AsyncValidatorBase>(MockBehavior.Loose, Messages.predicate_error) {CallBase = true};
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>())).Returns(TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()));
 			builder.SetValidator(validator.Object);
 
