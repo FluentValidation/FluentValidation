@@ -123,15 +123,23 @@ namespace FluentValidation.Internal {
 		}
 
 		private static bool DoesImplementCompatibleIEnumerable(Type propertyType, IValidator childValidator) {
-			//concatenate the property type itself, incase we're using IEnumerable directly (typeof(IEnumerable).GetInterfaces() obviously doesn't include IEnumerable)
-			var interfaces = from i in propertyType.GetInterfaces().Concat(new[] { propertyType })
+            //concatenate the property type itself, incase we're using IEnumerable directly (typeof(IEnumerable).GetInterfaces() obviously doesn't include IEnumerable)
+#if !CoreCLR
+            var interfaces = from i in propertyType.GetInterfaces().Concat(new[] { propertyType })
 							 where i.IsGenericType
 							 where i.GetGenericTypeDefinition() == typeof(IEnumerable<>)
 							 let enumerableType = i.GetGenericArguments()[0]
 							 where childValidator.CanValidateInstancesOfType(enumerableType)
 							 select i;
-
-			return interfaces.Any();
+#else
+            var interfaces = from i in propertyType.GetInterfaces().Concat(new[] { propertyType })
+							 where i.GetTypeInfo().IsGenericType
+							 where i.GetGenericTypeDefinition() == typeof(IEnumerable<>)
+							 let enumerableType = i.GetGenericArguments()[0]
+							 where childValidator.CanValidateInstancesOfType(enumerableType)
+							 select i;
+#endif
+            return interfaces.Any();
 		}
 
 		public static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {

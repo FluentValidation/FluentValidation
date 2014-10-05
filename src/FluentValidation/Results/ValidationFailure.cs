@@ -19,7 +19,7 @@
 namespace FluentValidation.Results {
 	using System;
 
-#if !SILVERLIGHT && !PORTABLE
+#if !SILVERLIGHT && !PORTABLE && !CoreCLR
 	[Serializable]
 #endif
 	public class ValidationFailure {

@@ -32,11 +32,11 @@ namespace FluentValidation.Validators {
 		private readonly List<Func<object, object, object>> customFormatArgs = new List<Func<object, object, object>>();
 		private IStringSource errorSource;
 
-	    public virtual bool IsAsync {
+        public virtual bool IsAsync {
             get { return false; }
 	    }
 
-		public Func<object, object> CustomStateProvider { get; set; }
+        public Func<object, object> CustomStateProvider { get; set; }
 
 		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
@@ -116,8 +116,8 @@ namespace FluentValidation.Validators {
 				customFormatArgs.Select(func => func(context.Instance, context.PropertyValue)).ToArray()
 				);
 
-			string error = context.MessageFormatter.BuildMessage(errorSource.GetString());
-			return error;
+            string error = context.MessageFormatter.BuildMessage(errorSource.GetString());
+            return error;
 		}
 	}
 }

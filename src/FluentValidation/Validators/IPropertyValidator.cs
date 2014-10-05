@@ -29,9 +29,9 @@ namespace FluentValidation.Validators {
 	/// Please inherit from <see cref="PropertyValidator">PropertyValidator</see> instead.
 	/// </summary>
 	public interface IPropertyValidator {
-		bool IsAsync { get; }
+        bool IsAsync { get; }
 
-		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
+        IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
 		Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context);
 
