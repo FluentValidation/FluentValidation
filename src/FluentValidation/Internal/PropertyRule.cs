@@ -229,11 +229,10 @@ namespace FluentValidation.Internal {
 			var cascade = cascadeModeThunk();
 			bool hasAnyFailure = false;
 
-			// Invoke each validator and collect its results.
-			foreach (var validator in validators) {
+            // Invoke each validator and collect its results.
+            foreach (var validator in validators) {
 				var results = InvokePropertyValidator(context, validator, propertyName);
-
-				bool hasFailure = false;
+                bool hasFailure = false;
 
 				foreach (var result in results) {
 					hasAnyFailure = true;
@@ -241,9 +240,9 @@ namespace FluentValidation.Internal {
 					yield return result;
 				}
 
-				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
-				// then don't continue to the next rule
-				if (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && hasFailure) {
+                // If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
+                // then don't continue to the next rule
+                if (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && hasFailure) {
 					break;
 				}
 			}
@@ -286,9 +285,9 @@ namespace FluentValidation.Internal {
 
 				var fastExit = false;
 
-				// Firstly, invoke all syncronous validators and collect their results.
-				foreach (var validator in validators.Where(v => !v.IsAsync)) {
-					var results = InvokePropertyValidator(context, validator, propertyName);
+                // Firstly, invoke all syncronous validators and collect their results.
+                foreach (var validator in validators.Where(v => !v.IsAsync)) {
+                    var results = InvokePropertyValidator(context, validator, propertyName);
 
 					failures.AddRange(results);
 

@@ -36,31 +36,43 @@ namespace FluentValidation {
 			this.types = types;
 		}
 
-		/// <summary>
-		/// Finds all the validators in the specified assembly.
-		/// </summary>
-		public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly) {
-			return new AssemblyScanner(assembly.GetExportedTypes());
-		}
+        /// <summary>
+        /// Finds all the validators in the specified assembly.
+        /// </summary>
+        public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly) {
+            return new AssemblyScanner(assembly.GetExportedTypes());
+        }
 
-		/// <summary>
-		/// Finds all the validators in the assembly containing the specified type.
-		/// </summary>
-		public static AssemblyScanner FindValidatorsInAssemblyContaining<T>() {
-			return FindValidatorsInAssembly(typeof(T).Assembly);
-		}
+        /// <summary>
+        /// Finds all the validators in the assembly containing the specified type.
+        /// </summary>
+        public static AssemblyScanner FindValidatorsInAssemblyContaining<T>() {
+#if (!CoreCLR)
+            return FindValidatorsInAssembly(typeof(T).Assembly);
+#else
+            return FindValidatorsInAssembly(typeof(T).GetTypeInfo().Assembly);
+#endif
+        }
 
-		private IEnumerable<AssemblyScanResult> Execute() {
+        private IEnumerable<AssemblyScanResult> Execute() {
 			var openGenericType = typeof(IValidator<>);
 
+#if (!CoreCLR)
 			var query = from type in types
 						let interfaces = type.GetInterfaces()
 						let genericInterfaces = interfaces.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
 						let matchingInterface = genericInterfaces.FirstOrDefault()
 						where matchingInterface != null
 						select new AssemblyScanResult(matchingInterface, type);
-
-			return query;
+#else
+            var query = from type in types
+                        let interfaces = type.GetInterfaces()
+                        let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
+                        let matchingInterface = genericInterfaces.FirstOrDefault()
+                        where matchingInterface != null
+                        select new AssemblyScanResult(matchingInterface, type);
+#endif
+            return query;
 		}
 
 		/// <summary>

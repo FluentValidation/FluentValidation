@@ -18,7 +18,7 @@
 
 namespace FluentValidation {
 	using System;
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE && !CoreCLR
 	using System.ComponentModel;
 	//using System.ComponentModel.DataAnnotations;
 #endif
@@ -90,16 +90,22 @@ namespace FluentValidation {
 
 			string name = null;
 
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE 
 			name = (from attr in attributes
-			        where attr.type.Name == "DisplayAttribute"
+#if !CoreCLR
+                    where attr.type.Name == "DisplayAttribute"
 			        let method = attr.type.GetMethod("GetName", BindingFlags.Instance | BindingFlags.Public)
-			        where method != null
+#endif
+#if CoreCLR
+                    where attr.GetType().Name == "DisplayAttribute"
+                    let method = attr.GetType().GetMethod("GetName", BindingFlags.Instance | BindingFlags.Public)
+#endif
+                    where method != null
 			        select method.Invoke(attr.attr, null) as string).FirstOrDefault();
 #endif
 
-#if !SILVERLIGHT
-			if (string.IsNullOrEmpty(name)) {
+#if !SILVERLIGHT 
+            if (string.IsNullOrEmpty(name)) {
 				name = (from attr in attributes
 				        where attr.type.Name == "DisplayNameAttribute"
 				        let property = attr.type.GetProperty("DisplayName", BindingFlags.Instance | BindingFlags.Public)
@@ -107,8 +113,7 @@ namespace FluentValidation {
 				        select property.GetValue(attr.attr, null) as string).FirstOrDefault();
 			}
 #endif
-
-			return name;
+            return name;
 		}
 	}
 }

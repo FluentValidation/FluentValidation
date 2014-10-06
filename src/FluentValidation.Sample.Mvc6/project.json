@@ -1,0 +1,26 @@
+﻿{
+    "webroot" : "wwwroot",
+    "exclude": "wwwroot/**/*.*",
+    "dependencies": {
+        "EntityFramework.SqlServer": "7.0.0-alpha4",
+        "Microsoft.AspNet.Mvc": "6.0.0-alpha4",
+        "Microsoft.AspNet.Identity.SqlServer": "3.0.0-alpha4",
+        "Microsoft.AspNet.Identity.Authentication": "3.0.0-alpha4",
+        "Microsoft.AspNet.Security.Cookies": "1.0.0-alpha4",
+        "Microsoft.AspNet.Server.IIS": "1.0.0-alpha4",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-alpha4",
+        "Microsoft.AspNet.StaticFiles": "1.0.0-alpha4",
+        "Microsoft.Framework.ConfigurationModel.Json": "1.0.0-alpha4",
+        "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-alpha4",
+        "Microsoft.AspNet.Diagnostics": "1.0.0-alpha4",
+        "FluentValidation.K": "",
+        "FluentValidation.Mvc6": ""
+    },
+    "commands": {
+        /* Change the port number when you are self hosting this application */
+        "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5000"
+    },
+    "frameworks": {
+        "aspnetcore50" : { }
+    }
+}

@@ -19,8 +19,12 @@
 namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Globalization;
-	using System.Web.Mvc;
-	using Results;
+#if !CoreCLR
+    using System.Web.Mvc;
+#else
+    using Microsoft.AspNet.Mvc.ModelBinding;
+#endif
+    using Results;
 
 	public static class ValidationResultExtension {
 		/// <summary>

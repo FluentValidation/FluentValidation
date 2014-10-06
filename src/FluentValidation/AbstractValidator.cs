@@ -25,13 +25,16 @@ namespace FluentValidation {
 	using System.Threading.Tasks;
 	using Internal;
 	using Results;
-	using Validators;
+    using Validators;
+#if CoreCLR
+    using System.Reflection;
+#endif
 
-	/// <summary>
-	/// Base class for entity validator classes.
-	/// </summary>
-	/// <typeparam name="T">The type of the object being validated</typeparam>
-	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
+    /// <summary>
+    /// Base class for entity validator classes.
+    /// </summary>
+    /// <typeparam name="T">The type of the object being validated</typeparam>
+    public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
 		readonly TrackingCollection<IValidationRule> nestedValidators = new TrackingCollection<IValidationRule>();
 
 		// Work-around for reflection bug in .NET 4.5
@@ -125,9 +128,8 @@ namespace FluentValidation {
 			
 			return TaskHelpers.Iterate(
 				nestedValidators
-				.Select(v => v.ValidateAsync(context).Then(fs => failures.AddRange(fs), runSynchronously: true))
-			).Then(
-				() => new ValidationResult(failures)
+				.Select(v => v.ValidateAsync(context).Then(fs => failures.AddRange(fs), runSynchronously: true)))
+				.Then(() => new ValidationResult(failures)
 			);
 		}
 
@@ -147,19 +149,23 @@ namespace FluentValidation {
 		}
 
 		bool IValidator.CanValidateInstancesOfType(Type type) {
-			return typeof(T).IsAssignableFrom(type);
-		}
+#if !CoreCLR
+            return typeof(T).IsAssignableFrom(type);
+#else
+            return typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
+#endif
+        }
 
-		/// <summary>
-		/// Defines a validation rule for a specify property.
-		/// </summary>
-		/// <example>
-		/// RuleFor(x => x.Surname)...
-		/// </example>
-		/// <typeparam name="TProperty">The type of property being validated</typeparam>
-		/// <param name="expression">The expression representing the property to validate</param>
-		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
+        /// <summary>
+        /// Defines a validation rule for a specify property.
+        /// </summary>
+        /// <example>
+        /// RuleFor(x => x.Surname)...
+        /// </example>
+        /// <typeparam name="TProperty">The type of property being validated</typeparam>
+        /// <param name="expression">The expression representing the property to validate</param>
+        /// <returns>an IRuleBuilder instance on which validators can be defined</returns>
+        public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor");
 			var rule = PropertyRule.Create(expression, () => CascadeMode);
 			AddRule(rule);

@@ -17,23 +17,38 @@
 #endregion
 
 namespace FluentValidation.Mvc {
-	using System;
-	using System.Collections.Generic;
-	using System.Reflection;
-	using System.Web.Mvc;
-	using Internal;
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+#if !CoreCLR
+    using System.Web.Mvc;
+#else
+    using Microsoft.AspNet.Mvc;
+    using Microsoft.AspNet.Mvc.ModelBinding;
+    using System.Threading.Tasks;
+    using Microsoft.Framework.DependencyInjection;
+#endif
+    using Internal;
 
-	public class CustomizeValidatorAttribute : CustomModelBinderAttribute, IModelBinder {
-		public string RuleSet { get; set; }
+#if !CoreCLR
+    public class CustomizeValidatorAttribute : CustomModelBinderAttribute, IModelBinder {
+#else
+    //TODO Portk: CustomModelBinderAttribute is not supported yet so this doesn't work. Need to update when available.
+    public class CustomizeValidatorAttribute : Attribute, IModelBinder {
+#endif
+        public string RuleSet { get; set; }
 		public string Properties { get; set; }
 		public Type Interceptor { get; set; }
 
 		private const string key = "_FV_CustomizeValidator" ;
 
-		public override IModelBinder GetBinder() {
+#if !CoreCLR
+        public override IModelBinder GetBinder() {
 			return this;
 		}
+#endif
 
+#if !CoreCLR
 		public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext) {
 			// Originally I thought about storing this inside ModelMetadata.AdditionalValues.
 			// Unfortunately, DefaultModelBinder overwrites this property internally.
@@ -43,23 +58,38 @@ namespace FluentValidation.Mvc {
 			// So we resort to storing the attribute in HttpContext.Items. 
 			// Horrible, horrible, horrible hack. Horrible.
 			controllerContext.HttpContext.Items[key] = this;
-
-			var innerBinder = ModelBinders.Binders.GetBinder(bindingContext.ModelType);
+            var innerBinder = ModelBinders.Binders.GetBinder(bindingContext.ModelType);
 			var result = innerBinder.BindModel(controllerContext, bindingContext);
 
 			controllerContext.HttpContext.Items.Remove(key);
 
-			return result;
-		}
+            return result;
+#else
+        public async Task<bool> BindModelAsync(ModelBindingContext bindingContext) {
+            bindingContext.HttpContext.Items[key] = this;
+            var innerBinder = bindingContext.ModelBinder;
+            var result = await innerBinder.BindModelAsync(bindingContext);
 
-		public static CustomizeValidatorAttribute GetFromControllerContext(ControllerContext context) {
+            bindingContext.HttpContext.Items.Remove(key);
+
+            return result;
+#endif
+        }
+
+#if !CoreCLR
+        public static CustomizeValidatorAttribute GetFromControllerContext(ControllerContext context) {
 			return context.HttpContext.Items[key] as CustomizeValidatorAttribute;
 		}
+#else
+        public static CustomizeValidatorAttribute GetFromActionContext(IContextAccessor<ActionContext> actioncontext) {
+            return actioncontext.Value.HttpContext.Items[key] as CustomizeValidatorAttribute;
+        }
+#endif
 
-		/// <summary>
-		/// Builds a validator selector from the options specified in the attribute's properties.
-		/// </summary>
-		public IValidatorSelector ToValidatorSelector() {
+        /// <summary>
+        /// Builds a validator selector from the options specified in the attribute's properties.
+        /// </summary>
+        public IValidatorSelector ToValidatorSelector() {
 			IValidatorSelector selector;
 
 			if(! string.IsNullOrEmpty(RuleSet)) {
