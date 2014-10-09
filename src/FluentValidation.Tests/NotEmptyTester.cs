@@ -87,7 +87,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Id).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { Id = 0 });
+			var result = validator.Validate(new Person { Id = default(int) });
 			result.IsValid.ShouldBeFalse();
 
 			var result1 = validator.Validate(new Person{Id = 1});
@@ -123,6 +123,38 @@ namespace FluentValidation.Tests {
 	        var result = validator.Validate(new TestModel());
             result.IsValid.ShouldBeFalse();
 	    }
+
+        [Test]
+        public void Fails_when_nullable_value_type_is_null()
+        {
+            var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).NotEmpty());
+            var result = validator.Validate(new Person());
+            result.IsValid.ShouldBeFalse();
+        }
+
+        [Test]
+        public void When_value_is_Default_for_nullable_type_validator_should_fail_datetime()
+        {
+            var validator = new TestValidator {
+				v => v.RuleFor(x => x.NullableDateTime).NotEmpty()
+			};
+
+            var result = validator.Validate(new Person { NullableDateTime = default(DateTime) });
+            result.IsValid.ShouldBeFalse();
+        }
+
+        [Test]
+        public void When_value_is_Default_for_nullable_type_validator_should_fail_int() {
+            var validator = new TestValidator {
+				v => v.RuleFor(x => x.NullableInt).NotEmpty()
+			};
+
+            var result = validator.Validate(new Person { NullableInt = default(int) });
+            result.IsValid.ShouldBeFalse();
+
+            var result1 = validator.Validate(new Person { NullableInt = 1 });
+            result1.IsValid.ShouldBeTrue();
+        }
 
         public class TestModel {
             public IEnumerable<string> Strings {

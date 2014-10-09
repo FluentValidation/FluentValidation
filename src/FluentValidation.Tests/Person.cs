@@ -34,6 +34,7 @@ namespace FluentValidation.Tests {
 		public DateTime DateOfBirth { get; set; }
 
 		public int? NullableInt { get; set; }
+        public DateTime? NullableDateTime { get; set; }
 
 		public Person() {
 			Children = new List<Person>();
