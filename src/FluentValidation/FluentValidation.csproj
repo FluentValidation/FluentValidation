@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="AbstractValidator.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DefaultValue.cs" />
     <Compile Include="TaskHelpers\TaskHelpers.cs" />
     <Compile Include="TaskHelpers\TaskHelpersExtensions.cs" />
     <Compile Include="AssemblyScanner.cs" />

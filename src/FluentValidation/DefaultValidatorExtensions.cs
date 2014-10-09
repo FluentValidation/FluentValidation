@@ -52,7 +52,7 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEmpty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
-			return ruleBuilder.SetValidator(new NotEmptyValidator(default(TProperty)));
+		    return ruleBuilder.SetValidator(new NotEmptyValidator(DefaultValue.Resolve<TProperty>()));
 		}
 
 		/// <summary>
