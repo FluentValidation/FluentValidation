@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C16154BE-8EB7-4CBF-976C-24CCD8BA3B51}</ProjectGuid>
@@ -10,8 +10,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FluentValidation</RootNamespace>
     <AssemblyName>FluentValidation</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile136</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile151</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PORTABLE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;PORTABLE;UNIVERSAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\FluentValidation.XML</DocumentationFile>
@@ -54,6 +54,9 @@
     <Compile Include="..\FluentValidation\Internal\Comparer.cs">
       <Link>Comparer.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Internal\Compatibility.cs">
+      <Link>Compatibility.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Internal\IConfigurable.cs">
       <Link>IConfigurable.cs</Link>
     </Compile>
@@ -83,6 +86,12 @@
     </Compile>
     <Compile Include="..\FluentValidation\Resources\LocalizedStringSource.cs">
       <Link>LocalizedStringSource.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Resources\Messages.da.Designer.cs">
+      <Link>Resources\Messages.da.Designer.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.da.resx</DependentUpon>
     </Compile>
     <Compile Include="..\FluentValidation\Resources\Messages.Designer.cs">
       <Link>Resources\Messages.Designer.cs</Link>

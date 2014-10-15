@@ -40,7 +40,7 @@ namespace FluentValidation.Attributes {
 			if (type == null)
 				return null;
 
-			var attribute = (ValidatorAttribute)Attribute.GetCustomAttribute(type, typeof(ValidatorAttribute));
+			var attribute = type.GetValidatorAttribute();
 
 			if (attribute == null || attribute.ValidatorType == null)
 				return null;

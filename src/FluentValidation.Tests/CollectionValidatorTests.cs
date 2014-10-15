@@ -137,76 +137,7 @@ namespace FluentValidation.Tests {
 			var results = validator.Validate(person);
 			results.Errors[0].PropertyName.ShouldEqual("Orders2[0].ProductName");
 		}
-		
-		#region old style - for compatibility with v2 and earlier before we had the explicit SetCollectionValidator
-		#pragma warning disable 612,618
-		[Test]
-		public void Validates_collection_old_style() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull(),
-				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
-			};
-
-			var results = validator.Validate(person);
-			results.Errors.Count.ShouldEqual(3);
-
-			results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
-			results.Errors[2].PropertyName.ShouldEqual("Orders[1].Amount");
-		}
-
-		[Test]
-		public void Collection_should_be_explicitly_included_with_expression_old_style() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull(),
-				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
-			};
-			var results = validator.Validate(person, x => x.Orders);
-			results.Errors.Count.ShouldEqual(2);
-		}
-
-		[Test]
-		public void Collection_should_be_explicitly_included_with_string_old_style() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull(),
-				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
-			};
-			var results = validator.Validate(person, "Orders");
-			results.Errors.Count.ShouldEqual(2);
-		}
-
-		[Test]
-		public void Collection_should_be_excluded_old_style() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull(),
-				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
-			};
-			var results = validator.Validate(person, x => x.Forename);
-			results.Errors.Count.ShouldEqual(0);
-		}
-
-		[Test]
-		public void Condition_should_work_with_child_collection_old_style() {
-			var validator = new TestValidator() {
-				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator()).When(x => x.Orders.Count == 3 /*there are only 2*/)
-			};
-
-			var result = validator.Validate(person);
-			result.IsValid.ShouldBeTrue();
-		}
-
-		[Test]
-		public void Skips_null_items_old_style() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull(),
-				v => v.RuleFor(x => x.Orders).SetValidator(new OrderValidator())
-			};
-			person.Orders[0] = null;
-			var results = validator.Validate(person);
-			results.Errors.Count.ShouldEqual(2); //2 errors - 1 for person, 1 for 2nd Order.
-		}
-		#pragma warning restore 612,618
-		#endregion
-
+	
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {
 				RuleFor(x => x.ProductName).NotEmpty();
