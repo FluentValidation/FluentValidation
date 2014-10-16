@@ -87,12 +87,6 @@
     <Compile Include="..\FluentValidation\Resources\LocalizedStringSource.cs">
       <Link>LocalizedStringSource.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Resources\Messages.da.Designer.cs">
-      <Link>Resources\Messages.da.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Messages.da.resx</DependentUpon>
-    </Compile>
     <Compile Include="..\FluentValidation\Resources\Messages.Designer.cs">
       <Link>Resources\Messages.Designer.cs</Link>
     </Compile>
