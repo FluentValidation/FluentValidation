@@ -1,6 +1,7 @@
 namespace FluentValidation.Resources {
 	using System;
 	using System.Reflection;
+	using Internal;
 
 	/// <summary>
 	/// Builds a delegate for retrieving a localised resource from a resource type and property name.
@@ -32,7 +33,7 @@ namespace FluentValidation.Resources {
 				throw new InvalidOperationException(string.Format("Property '{0}' on type '{1}' does not return a string", resourceName, resourceType));
 			}
 
-			var accessor = (Func<string>)Delegate.CreateDelegate(typeof(Func<string>), property.GetGetMethod());
+			var accessor = property.CreateGetter();
 			return accessor;
 		}
 
@@ -43,7 +44,7 @@ namespace FluentValidation.Resources {
 		/// to replace the type/name of the resource before the delegate is constructed.
 		/// </summary>
 		protected virtual PropertyInfo GetResourceProperty(ref Type resourceType, ref string resourceName) {
-			return resourceType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
+			return resourceType.GetPublicStaticProperty(resourceName);
 		}
 	}
 
@@ -62,7 +63,7 @@ namespace FluentValidation.Resources {
 			// to redirect error messages away from the default Messages class.
 
 			if (ValidatorOptions.ResourceProviderType != null) {
-				var property = ValidatorOptions.ResourceProviderType.GetProperty(resourceName, BindingFlags.Public | BindingFlags.Static);
+				var property = ValidatorOptions.ResourceProviderType.GetPublicStaticProperty(resourceName);
 
 				if (property != null) {
 					// We found a matching property on the Resource Provider.

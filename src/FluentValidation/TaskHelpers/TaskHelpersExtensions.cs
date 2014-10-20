@@ -7,6 +7,8 @@ using System.Reflection;
 
 namespace System.Threading.Tasks
 {
+	using FluentValidation.Internal;
+
 	internal static class TaskHelpersExtensions
 	{
 		private static readonly Type[] EmptyTypes = new Type[0];
@@ -449,7 +451,7 @@ namespace System.Threading.Tasks
 #if NETFX_CORE
             return task => task.GetAwaiter().GetResult();
 #else
-			MethodInfo getAwaiterMethod = typeof(Task).GetMethod("GetAwaiter", EmptyTypes);
+			MethodInfo getAwaiterMethod = typeof(Task).GetDeclaredMethod("GetAwaiter");
 			if (getAwaiterMethod != null)
 			{
 				// .NET 4.5 - dump the same code the 'await' keyword would have dumped

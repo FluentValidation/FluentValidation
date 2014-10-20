@@ -58,11 +58,6 @@ namespace FluentValidation {
 				return ruleBuilder.SetValidator(validator);
 			}
 
-			[Obsolete]
-			public IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> SetValidator(IValidator validator) {
-				return ruleBuilder.SetValidator(validator);
-			}
-
 			public IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> SetValidator(IValidator<IEnumerable<TCollectionElement>> validator) {
 				return ruleBuilder.SetValidator(validator);
 			}

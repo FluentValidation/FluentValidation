@@ -2,6 +2,7 @@ namespace System.Threading.Tasks {
 	using Diagnostics;
 	using Diagnostics.CodeAnalysis;
 	using Diagnostics.Contracts;
+	using FluentValidation.Internal;
 	using Linq.Expressions;
 
 	static class TaskHelpersExtensions {
@@ -375,7 +376,7 @@ namespace System.Threading.Tasks {
 #if NETFX_CORE
             return task => task.GetAwaiter().GetResult();
 #else
-			var getAwaiterMethod = typeof (Task).GetMethod("GetAwaiter", EmptyTypes);
+			var getAwaiterMethod = typeof (Task).GetDeclaredMethod("GetAwaiter");
 			if (getAwaiterMethod != null) {
 				// .NET 4.5 - dump the same code the 'await' keyword would have dumped
 				// >> task.GetAwaiter().GetResult()

@@ -57,17 +57,6 @@ namespace FluentValidation.Internal {
 		/// Sets the validator associated with the rule. Use with complex properties where an IValidator instance is already declared for the property type.
 		/// </summary>
 		/// <param name="validator">The validator to set</param>
-		[Obsolete("This overload of SetValidator is no longer used. If you are trying to set a child validator for a collection, use SetCollectionValidator instead.")]
-		public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator validator) {
-			validator.Guard("Cannot pass a null validator to SetValidator");
-			SetValidator(Extensions.InferPropertyValidatorForChildValidator(Rule, validator));
-			return this;
-		}
-
-		/// <summary>
-		/// Sets the validator associated with the rule. Use with complex properties where an IValidator instance is already declared for the property type.
-		/// </summary>
-		/// <param name="validator">The validator to set</param>
 		public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator) {
 			validator.Guard("Cannot pass a null validator to SetValidator");
 			SetValidator(new ChildValidatorAdaptor(validator));

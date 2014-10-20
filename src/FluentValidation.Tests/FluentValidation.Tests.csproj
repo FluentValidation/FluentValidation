@@ -93,7 +93,6 @@
     <Compile Include="CascadingFailuresTester.cs" />
     <Compile Include="ChainedValidationTester.cs" />
     <Compile Include="ChainingValidatorsTester.cs" />
-    <Compile Include="ChildValidatorInferenceTests.cs" />
     <Compile Include="CollectionValidatorTests.cs" />
     <Compile Include="ComparerTester.cs" />
     <Compile Include="ComplexValidationTester.cs" />

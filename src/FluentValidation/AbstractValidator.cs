@@ -147,7 +147,7 @@ namespace FluentValidation {
 		}
 
 		bool IValidator.CanValidateInstancesOfType(Type type) {
-			return typeof(T).IsAssignableFrom(type);
+			return type.CanAssignTo(typeof(T));
 		}
 
 		/// <summary>

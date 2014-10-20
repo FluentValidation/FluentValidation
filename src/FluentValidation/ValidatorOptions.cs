@@ -60,26 +60,6 @@ namespace FluentValidation {
 		static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
 			if (memberInfo == null) return null;
 		    return GetDisplayName(memberInfo);
-		    /*string name = null;
-#if !WINDOWS_PHONE
-			var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(memberInfo, typeof(DisplayAttribute));
-
-			if(displayAttribute != null) {
-				name = displayAttribute.GetName();
-			}
-#endif
-
-#if !SILVERLIGHT
-			// Silverlight doesn't have DisplayAttribute.
-			if(string.IsNullOrEmpty(name)) {
-				// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
-				var displayNameAttribute = (DisplayNameAttribute)Attribute.GetCustomAttribute(memberInfo, typeof(DisplayNameAttribute));
-				if(displayNameAttribute != null) {
-					name = displayNameAttribute.DisplayName;
-				}
-			}
-#endif
-			return name;*/
 		}
 
 		// Nasty hack to work around not referencing DataAnnotations directly. 
@@ -93,7 +73,7 @@ namespace FluentValidation {
 #if !WINDOWS_PHONE
 			name = (from attr in attributes
 			        where attr.type.Name == "DisplayAttribute"
-			        let method = attr.type.GetMethod("GetName", BindingFlags.Instance | BindingFlags.Public)
+			        let method = attr.type.GetPublicInstanceMethod("GetName") 
 			        where method != null
 			        select method.Invoke(attr.attr, null) as string).FirstOrDefault();
 #endif
@@ -102,7 +82,7 @@ namespace FluentValidation {
 			if (string.IsNullOrEmpty(name)) {
 				name = (from attr in attributes
 				        where attr.type.Name == "DisplayNameAttribute"
-				        let property = attr.type.GetProperty("DisplayName", BindingFlags.Instance | BindingFlags.Public)
+				        let property = attr.type.GetPublicInstanceProperty("DisplayName")
 				        where property != null
 				        select property.GetValue(attr.attr, null) as string).FirstOrDefault();
 			}
