@@ -1,3 +1,11 @@
+5.5 - 30/10/2014 
+Patch - Added optional RuleSet arguments to the validation test extensions.
+Patch - Support MVC4/5 client-side validation for GreaterThanOrEqualToValidator
+Patch - Support MVC4/5 client-side validation for LessThanOrEqualValidator
+Patch - Remove duplication in Min/MaxFluentValidationPropertyValidator
+Patch -  Async validation for ChildCollectionValidatorAdaptor
+Update nuget package for wpa81
+
 5.4 - 03/07/2014
 * Applied patch - Danish translation
 * Applied patch - Improve DisplayName resolution performance
