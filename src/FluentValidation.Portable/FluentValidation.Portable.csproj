@@ -278,8 +278,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.da.resx">
       <Link>Resources\Messages.da.resx</Link>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Messages.da.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.de.resx">
       <Link>Resources\Messages.de.resx</Link>

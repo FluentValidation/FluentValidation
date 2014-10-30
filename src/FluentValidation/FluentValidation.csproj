@@ -161,8 +161,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Messages.da.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Messages.da.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.cz.resx" />
