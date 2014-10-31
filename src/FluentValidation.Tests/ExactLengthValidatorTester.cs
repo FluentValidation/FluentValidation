@@ -16,55 +16,99 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System.Globalization;
-	using System.Linq;
-	using System.Threading;
-	using NUnit.Framework;
-	using Validators;
+namespace FluentValidation.Tests
+{
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading;
+    using NUnit.Framework;
+    using Validators;
 
-	[TestFixture]
-	public class ExactLengthValidatorTester {
+    [TestFixture]
+    public class ExactLengthValidatorTester
+    {
 
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-		}
+        [SetUp]
+        public void Setup()
+        {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        }
 
-		[Test]
-		public void When_the_text_is_an_exact_length_the_validator_should_pass() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(4) };
-			var result = validator.Validate(new Person { Surname = "test" });
-			result.IsValid.ShouldBeTrue();
-		}
+        [Test]
+        public void When_the_text_is_an_exact_length_the_validator_should_pass()
+        {
+            var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(4) };
+            var result = validator.Validate(new Person { Surname = "test" });
+            result.IsValid.ShouldBeTrue();
+        }
 
-		[Test]
-		public void When_the_text_length_is_smaller_the_validator_should_fail() {
-			var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Length(10) };
-			var result = validator.Validate(new Person { Surname = "test" });
-			result.IsValid.ShouldBeFalse();
-		}
+        [Test]
+        public void When_the_text_length_is_smaller_the_validator_should_fail()
+        {
+            var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(10) };
+            var result = validator.Validate(new Person { Surname = "test" });
+            result.IsValid.ShouldBeFalse();
+        }
 
-		[Test]
-		public void When_the_text_length_is_larger_the_validator_should_fail() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(1) };
-			var result = validator.Validate(new Person { Surname = "test" });
-			result.IsValid.ShouldBeFalse();
-		}
+        [Test]
+        public void When_the_text_length_is_larger_the_validator_should_fail()
+        {
+            var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(1) };
+            var result = validator.Validate(new Person { Surname = "test" });
+            result.IsValid.ShouldBeFalse();
+        }
 
-		[Test]
-		public void When_the_validator_fails_the_error_message_should_be_set() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2) };
-			var result = validator.Validate(new Person() { Surname = "test"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be 2 characters in length. You entered 4 characters.");
-		}
+        [Test]
+        public void When_the_validator_fails_the_error_message_should_be_set()
+        {
+            var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2) };
+            var result = validator.Validate(new Person() { Surname = "test" });
+            result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be 2 characters in length. You entered 4 characters.");
+        }
 
-		[Test]
-		public void Min_and_max_properties_should_be_set() {
-			var validator = new ExactLengthValidator(5);
-			validator.Min.ShouldEqual(5);
-			validator.Max.ShouldEqual(5);
-		}
-	}
+        [Test]
+        public void Min_and_max_properties_should_be_set()
+        {
+            var validator = new ExactLengthValidator(5);
+            validator.Min.ShouldEqual(5);
+            validator.Max.ShouldEqual(5);
+        }
+
+        /// <summary>
+        /// The validate and return validation result_ when exact length rule failed_ should not return error with exact length error code.
+        /// </summary>
+        [Test]
+        public void
+            ValidateAndReturnValidationResult_WhenExactLengthRuleFailed_ShouldReturnErrorWithExactLengthErrorCode()
+        {
+            // Arrange
+            var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2) };
+
+            // Act
+            var result = validator.Validate(new Person() { Surname = "test" });
+            var error = result.Errors.SingleOrDefault(e => e.ErrorCode == "exact_length_error");
+
+            // Assert
+            error.ShouldNotBeNull();
+            error.PropertyName.ShouldEqual("Surname");
+            error.AttemptedValue.ShouldEqual("test");
+            error.FormatedMessageArguments.Length.ShouldEqual(0);
+            
+            error.FormattedMessagePlaceholderValues.Count.ShouldEqual(5);
+            error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
+            error.FormattedMessagePlaceholderValues.ContainsKey("PropertyValue").ShouldBeTrue();
+            error.FormattedMessagePlaceholderValues.ContainsKey("MinLength").ShouldBeTrue();
+            error.FormattedMessagePlaceholderValues.ContainsKey("MaxLength").ShouldBeTrue();
+            error.FormattedMessagePlaceholderValues.ContainsKey("TotalLength").ShouldBeTrue();
+
+            error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Surname");
+            error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
+            error.FormattedMessagePlaceholderValues["MinLength"].ShouldEqual(2);
+            error.FormattedMessagePlaceholderValues["MaxLength"].ShouldEqual(2);
+            error.FormattedMessagePlaceholderValues["TotalLength"].ShouldEqual(4);
+        }
+
+
+    }
 }

@@ -103,7 +103,9 @@ namespace FluentValidation.Validators {
 			var error = errorBuilder(context);
 
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
-
+		    failure.FormatedMessageArguments = context.MessageFormatter.AdditionalArguments;
+		    failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
+		    failure.ErrorCode = errorSource.ResourceName;
 			if (CustomStateProvider != null) {
 				failure.CustomState = CustomStateProvider(context.Instance);
 			}
