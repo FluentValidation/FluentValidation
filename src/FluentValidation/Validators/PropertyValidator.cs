@@ -32,9 +32,9 @@ namespace FluentValidation.Validators {
 		private readonly List<Func<object, object, object>> customFormatArgs = new List<Func<object, object, object>>();
 		private IStringSource errorSource;
 
-	    public virtual bool IsAsync {
-            get { return false; }
-	    }
+		public virtual bool IsAsync {
+			get { return false; }
+		}
 
 		public Func<object, object> CustomStateProvider { get; set; }
 
@@ -103,9 +103,9 @@ namespace FluentValidation.Validators {
 			var error = errorBuilder(context);
 
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
-		    failure.FormatedMessageArguments = context.MessageFormatter.AdditionalArguments;
-		    failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-		    failure.ErrorCode = errorSource.ResourceName;
+			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
+			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
+			failure.ErrorCode = errorSource.ResourceName;
 			if (CustomStateProvider != null) {
 				failure.CustomState = CustomStateProvider(context.Instance);
 			}

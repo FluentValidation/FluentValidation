@@ -66,19 +66,15 @@ namespace FluentValidation.Internal {
 			get { return this.AdditionalArguments != null && this.AdditionalArguments.Length > 0; }
 		}
 
-	    public object[] AdditionalArguments {
-	        get {
-	            return this.additionalArgs;
-	        }
-	    }
+		public object[] AdditionalArguments {
+			get { return this.additionalArgs; }
+		}
 
-	    public Dictionary<string, object> PlaceholderValues {
-	        get {
-	            return this.placeholderValues;
-	        }
-	    }
+		public Dictionary<string, object> PlaceholderValues {
+			get { return this.placeholderValues; }
+		}
 
-	    string ReplacePlaceholderWithValue(string template, string key, object value) {
+		string ReplacePlaceholderWithValue(string template, string key, object value) {
 			string placeholder = "{" + key + "}";
 			return template.Replace(placeholder, value == null ? null : value.ToString());
 		}
