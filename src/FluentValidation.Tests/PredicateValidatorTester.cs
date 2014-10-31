@@ -60,5 +60,31 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person{Forename = "Foo"});
 			result.Errors.Single().ErrorMessage.ShouldEqual("The specified condition was not met for 'Forename'.");
 		}
+
+		[Test]
+		public void When_validation_fails_the_error_code_should_be_set_to_resource_key() {
+			var validator = new TestValidator() {
+													v => v.RuleFor(x => x.Forename)
+														.Must(forename => forename == "Jeremy")
+														.WithLocalizedMessage(()=>TestMessages.ValueOfForPropertyNameIsNotValid, x => x.Forename)
+												};
+
+			var result = validator.Validate(new Person() { Forename = "test" });
+			var error = result.Errors.SingleOrDefault(e => e.ErrorCode == "ValueOfForPropertyNameIsNotValid");
+
+			error.ShouldNotBeNull();
+			error.PropertyName.ShouldEqual("Forename");
+			error.AttemptedValue.ShouldEqual("test");
+
+			error.FormattedMessageArguments.Length.ShouldEqual(1);
+			error.FormattedMessageArguments[0].ShouldEqual("test");
+
+			error.FormattedMessagePlaceholderValues.Count.ShouldEqual(2);
+			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
+			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyValue").ShouldBeTrue();
+
+			error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Forename");
+			error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
+		}
 	}
 }

@@ -20,7 +20,7 @@ namespace FluentValidation.Internal {
 		/// <param name="value"></param>
 		/// <returns></returns>
 		public MessageFormatter AppendArgument(string name, object value) {
-			placeholderValues[name] = value;
+			this.PlaceholderValues[name] = value;
 			return this;
 		}
 
@@ -52,18 +52,26 @@ namespace FluentValidation.Internal {
 
 			string result = messageTemplate;
 
-			foreach(var pair in placeholderValues) {
+			foreach(var pair in this.PlaceholderValues) {
 				result = ReplacePlaceholderWithValue(result, pair.Key, pair.Value);
 			}
 
 			if(ShouldUseAdditionalArgs) {
-				return string.Format(result, additionalArgs);
+				return string.Format(result, this.AdditionalArguments);
 			}
 			return result;
 		}
 
 		private bool ShouldUseAdditionalArgs {
-			get { return additionalArgs != null && additionalArgs.Length > 0; }
+			get { return this.AdditionalArguments != null && this.AdditionalArguments.Length > 0; }
+		}
+
+		public object[] AdditionalArguments {
+			get { return this.additionalArgs; }
+		}
+
+		public Dictionary<string, object> PlaceholderValues {
+			get { return this.placeholderValues; }
 		}
 
 		string ReplacePlaceholderWithValue(string template, string key, object value) {
