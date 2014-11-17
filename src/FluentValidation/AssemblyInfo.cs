@@ -25,7 +25,7 @@ using System.Security;
 [assembly: AssemblyDescription("FluentValidation")]
 [assembly: AssemblyProduct("FluentValidation")]
 [assembly: AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2014")]
-#if !PORTABLE
+#if !PORTABLE && !PORTABLE40
 [assembly: ComVisible(false)]
 #endif
 [assembly: CLSCompliant(true)]

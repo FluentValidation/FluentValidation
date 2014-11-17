@@ -26,7 +26,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	internal static class Compatibility {
 		public static PropertyInfo GetPublicStaticProperty(this Type type, string propertyName) {
-#if UNIVERSAL
+#if PORTABLE
             return type.GetRuntimeProperty(propertyName);
 #else
 			return type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
@@ -34,7 +34,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public static MethodInfo GetPublicInstanceMethod(this Type type, string name) {
-#if UNIVERSAL
+#if PORTABLE
 			return type.GetRuntimeMethod(name, null);
 #else
 			return type.GetMethod(name, BindingFlags.Instance | BindingFlags.Public);
@@ -42,7 +42,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public static PropertyInfo GetPublicInstanceProperty(this Type type, string name) {
-#if UNIVERSAL
+#if PORTABLE
 			return type.GetRuntimeProperty(name);
 #else
 			return type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
@@ -51,7 +51,7 @@ namespace FluentValidation.Internal {
 
 		public static Func<string> CreateGetter(this PropertyInfo property) {
 			Func<string> accessor;
-#if UNIVERSAL
+#if PORTABLE
             accessor = (Func<string>)property.GetMethod.CreateDelegate(typeof(Func<string>), property.GetMethod);
 #else
 			accessor = (Func<string>)Delegate.CreateDelegate(typeof(Func<string>), property.GetGetMethod());
@@ -60,7 +60,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public static bool CanAssignTo(this Type type, Type other) {
-#if UNIVERSAL
+#if PORTABLE
             return other.GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
 #else
 			return other.IsAssignableFrom(type);
@@ -68,7 +68,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public static ValidatorAttribute GetValidatorAttribute(this Type type) {
-#if UNIVERSAL
+#if PORTABLE
             var attribute = (ValidatorAttribute)type.GetTypeInfo().GetCustomAttribute<ValidatorAttribute>(true);
 #else
 			var attribute = (ValidatorAttribute)Attribute.GetCustomAttribute(type, typeof(ValidatorAttribute));
@@ -77,7 +77,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public static Assembly GetAssembly(this Type type) {
-#if UNIVERSAL
+#if PORTABLE
                     return typeof(Messages).GetTypeInfo().Assembly;
 #else
 			return typeof(Messages).Assembly;
@@ -85,7 +85,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public static MethodInfo GetDeclaredMethod(this Type type, string name) {
-#if UNIVERSAL
+#if PORTABLE
             return type.GetTypeInfo().GetDeclaredMethod(name);
 #else
 			return type.GetMethod(name, new Type[0]);

@@ -25,8 +25,6 @@ using System.Security;
 [assembly: AssemblyDescription("FluentValidation.Mvc")]
 [assembly: AssemblyProduct("FluentValidation.Mvc")]
 [assembly: AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2014")]
-#if !PORTABLE
 [assembly: ComVisible(false)]
-#endif
 [assembly: CLSCompliant(true)]
 [assembly: System.Resources.NeutralResourcesLanguage("en")]

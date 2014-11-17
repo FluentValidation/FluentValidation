@@ -6,7 +6,6 @@
 		<SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
 		<TestAssemblies>
 			$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll;
-			$(BaseDir)\src\FluentValidation.Tests.Mvc4\bin\$(Configuration)\FluentValidation.Tests.Mvc4.dll;
 			$(BaseDir)\src\FluentValidation.Tests.Mvc5\bin\$(Configuration)\FluentValidation.Tests.Mvc5.dll;
 			$(BaseDir)\src\FluentValidation.Tests.WebApi\bin\$(Configuration)\FluentValidation.Tests.WebApi.dll;
 
@@ -28,7 +27,7 @@
 	</Target>
 
 	<Target Name="Test">
-		<NUnit Assemblies="$(TestAssemblies)" ToolPath="$(BaseDir)\packages\nunit.runners.2.6.3\tools"  />
+		<NUnit Assemblies="$(TestAssemblies)" ToolPath="$(BaseDir)\packages\nunit.runners.2.6.3\tools" Framework="net-4.0"  />
 	</Target>
 
   <Target Name="Deploy">

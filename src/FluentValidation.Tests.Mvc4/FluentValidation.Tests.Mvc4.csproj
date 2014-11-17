@@ -112,10 +112,6 @@
     <Compile Include="WebApi\FormatterParameterBindingTester.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Mvc4\FluentValidation.Mvc4.csproj">
-      <Project>{CB78DD3A-1BEB-4863-813B-8221FE9EC23D}</Project>
-      <Name>FluentValidation.Mvc4</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
       <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
       <Name>FluentValidation</Name>
