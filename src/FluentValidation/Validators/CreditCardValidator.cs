@@ -37,7 +37,7 @@ namespace FluentValidation.Validators {
 				return true;
 			}
 
-			value = value.Replace("-", "");
+			value = value.Replace("-", "").Replace(" ", "");
 
 			int checksum = 0;
 			bool evenDigit = false;

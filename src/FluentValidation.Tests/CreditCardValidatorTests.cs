@@ -24,6 +24,7 @@ namespace FluentValidation.Tests {
 			validator.Validate(new Person { CreditCard = "0000000000000000" }).IsValid.ShouldBeTrue(); // Simplest valid value
 			validator.Validate(new Person { CreditCard = "1234567890123452" }).IsValid.ShouldBeTrue(); // Good checksum
 			validator.Validate(new Person { CreditCard = "1234-5678-9012-3452" }).IsValid.ShouldBeTrue(); // Good checksum, with dashes
+			validator.Validate(new Person { CreditCard = "1234 5678 9012 3452" }).IsValid.ShouldBeTrue(); // Good checksum, with spaces
 			validator.Validate(new Person { CreditCard = "0000000000000001" }).IsValid.ShouldBeFalse(); // Bad checksum
 		}
 
