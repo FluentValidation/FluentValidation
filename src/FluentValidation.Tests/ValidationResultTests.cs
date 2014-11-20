@@ -17,28 +17,25 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using NUnit.Framework;
+	using Xunit;
 	using Results;
 
-	[TestFixture]
+	
 	public class ValidationResultTests {
-		[SetUp]
-		public void Setup() {
-		}
 
-		[Test]
+		[Fact]
 		public void Should_be_valid_when_there_are_no_errors() {
 			var result = new ValidationResult();
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_not_be_valid_when_there_are_errors() {
 			var result = new ValidationResult(new[] {new ValidationFailure(null, null), new ValidationFailure(null, null)});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_add_errors() {
 			var result = new ValidationResult(new[] {new ValidationFailure(null, null), new ValidationFailure(null, null)});
 			result.Errors.Count.ShouldEqual(2);

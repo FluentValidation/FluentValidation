@@ -20,20 +20,20 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 
-	[TestFixture]
+	
 	public class ValidatorDescriptorTester {
 		TestValidator validator;
 
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
-			validator = new TestValidator();
+		public ValidatorDescriptorTester() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            validator = new TestValidator();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_retrieve_name_given_to_it_pass_property_as_string() {
 			validator.RuleFor(x => x.Forename).NotNull().WithName("First Name");
 			var descriptor = validator.CreateDescriptor();
@@ -41,7 +41,7 @@ namespace FluentValidation.Tests {
 			name.ShouldEqual("First Name");
 		}
 
-		[Test]
+		[Fact]
 		public void Gets_validators_for_property() {
 			validator.RuleFor(x => x.Forename).NotNull();
 			var descriptor = validator.CreateDescriptor();
@@ -49,14 +49,14 @@ namespace FluentValidation.Tests {
 			validators.Single().ShouldBe<NotNullValidator>();
 		}
 
-		[Test]
+		[Fact]
 		public void Returns_empty_collection_for_property_with_no_validators() {
 			var descriptor = validator.CreateDescriptor();
 			var validators = descriptor.GetValidatorsForMember("NoSuchProperty");
 			validators.Count().ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Does_not_throw_when_rule_declared_without_property() {
 			validator.RuleFor(x => x).NotNull();
 			var descriptor = validator.CreateDescriptor();

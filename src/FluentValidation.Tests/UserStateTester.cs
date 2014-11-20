@@ -19,30 +19,30 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class UserStateTester {
 		TestValidator validator;
 
-		[SetUp]
-		public void Setup() {
+		
+		public  UserStateTester() {
 			validator = new TestValidator();
 		}
 
-		[Test]
+		[Fact]
 		public void Stores_user_state_against_validation_failure() {
 			validator.RuleFor(x => x.Surname).NotNull().WithState(x =>  "foo");
 			var result = validator.Validate(new Person());
 			result.Errors.Single().CustomState.ShouldEqual("foo");
 		}
 
-		[Test]
+		[Fact]
 		public void Throws_when_provider_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.RuleFor(x => x.Surname).NotNull().WithState(null));
 		}
 
-		[Test]
+		[Fact]
 		public void Correctly_provides_object_being_validated() {
 			Person resultPerson = null;
 

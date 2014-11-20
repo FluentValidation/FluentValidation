@@ -17,21 +17,20 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System.ComponentModel.DataAnnotations;
-	using System.Globalization;
-	using NUnit.Framework;
-	using System.Linq;
-	using Resources;
+    using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
+    using Xunit;
+    using System.Linq;
+    using Resources;
+    using System;
 
-	[TestFixture]
-	public class LocalisedNameTester {
+    public class LocalisedNameTester : IDisposable {
 
-		[TearDown]
-		public void Teardown() {
+		public void Dispose() {
 			ValidatorOptions.ResourceProviderType = null;
 		}
 
-		[Test]
+		[Fact]
 		public void Uses_localized_name() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedName(() => MyResources.CustomProperty)
@@ -41,7 +40,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
 		}
 
-		[Test]
+		[Fact]
 		public void Does_not_overwrite_resource_when_using_custom_ResourceProvider() {
 			ValidatorOptions.ResourceProviderType = typeof(OverrideResources);
 			
@@ -53,7 +52,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
 		}
 
-		[Test]
+		[Fact]
 		public void Overwrites_resoruce_type_when_using_custom_ResourceProvider_and_custom_ResourceAccessorProvider() {
 			ValidatorOptions.ResourceProviderType = typeof(OverrideResources);
 
@@ -65,7 +64,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("'bar' must not be empty.");
 		}
 
-		[Test]
+		[Fact]
 		public void Uses_localized_name_from_display_attribute() {
 			using (new CultureScope("en-us")) {
 				var validator = new InlineValidator<Person2> {

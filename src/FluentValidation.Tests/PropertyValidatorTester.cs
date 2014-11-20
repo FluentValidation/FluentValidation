@@ -18,13 +18,13 @@
 
 namespace FluentValidation.Tests {
 	using System;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 	using System.Linq;
 
-	[TestFixture]
+	
 	public class PropertyValidatorTester {
-		[Test]
+		[Fact]
 		public void When_passing_string_to_localizable_lambda_should_convert_to_string_accessor() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Surname).SetValidator(new FooValidator())

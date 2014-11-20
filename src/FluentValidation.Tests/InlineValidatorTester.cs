@@ -1,10 +1,10 @@
 namespace FluentValidation.Tests {
-	using NUnit.Framework;
+	using Xunit;
 	using Results;
 
-	[TestFixture]
+	
 	public class InlineValidatorTester {
-		[Test]
+		[Fact]
 		public void Uses_inline_validator_to_build_rules() {
 			var cust = new Customer();
 			var result = cust.Validate();

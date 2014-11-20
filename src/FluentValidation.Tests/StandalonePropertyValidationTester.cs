@@ -2,12 +2,12 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 
-	[TestFixture]
+	
 	public class StandalonePropertyValidationTester {
-		[Test]
+		[Fact]
 		public void Should_validate_property_value_without_instance() {
 			var validator = new NotNullValidator();
 			var parentContext = new ValidationContext(null);
@@ -19,7 +19,7 @@ namespace FluentValidation.Tests {
 			result.Single().ShouldNotBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_validate_property_value_without_instance_different_types() {
 			var validator = new EqualValidator(100M); // decimal
 			var parentContext = new ValidationContext(null);

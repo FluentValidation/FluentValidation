@@ -17,61 +17,60 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using NUnit.Framework;
+	using Xunit;
 	using TestHelper;
 
-	[TestFixture]
+	
 	public class ValidatorTesterTester {
 		private TestValidator validator;
 
-		[SetUp]
-		public void Setup() {
+		public ValidatorTesterTester() {
 			validator = new TestValidator();
 			validator.RuleFor(x => x.Forename).NotNull();
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldHaveValidationError_should_not_throw_when_there_are_validation_errors() {
 			validator.ShouldHaveValidationErrorFor(x => x.Forename, (string)null);
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldHaveValidationError_Should_throw_when_there_are_no_validation_errors() {
 			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldHaveValidationErrorFor(x => x.Forename, "test"));
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldNotHaveValidationError_should_not_throw_when_there_are_no_errors() {
 			validator.ShouldNotHaveValidationErrorFor(x => x.Forename, "test");
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldNotHaveValidationError_should_throw_when_there_are_errors() {
 			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldNotHaveValidationErrorFor(x => x.Forename, (string)null));
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldHaveValidationError_should_not_throw_when_there_are_errors_with_preconstructed_object() {
 			validator.ShouldHaveValidationErrorFor(x => x.Forename, new Person { Forename = null });
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldHaveValidationError_should_throw_when_there_are_no_validation_errors_with_preconstructed_object() {
 			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldHaveValidationErrorFor(x => x.Forename, new Person { Forename = "test" }));
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldNotHAveValidationError_should_not_throw_When_there_are_no_errors_with_preconstructed_object() {
 			validator.ShouldNotHaveValidationErrorFor(x => x.Forename, new Person { Forename = "test" });
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldNotHaveValidationError_should_throw_when_there_are_errors_with_preconstructed_object() {
 			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldNotHaveValidationErrorFor(x => x.Forename, new Person { Forename = null }));
 		}
 
 
-		[Test]
+		[Fact]
 		public void ShouldHaveChildValidator_throws_when_property_does_not_have_child_validator() {
 			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
 				validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator))
@@ -81,13 +80,13 @@ namespace FluentValidation.Tests {
 		}
 
 
-		[Test]
+		[Fact]
 		public void ShouldHaveChildValidator_should_not_throw_when_property_Does_have_child_validator() {
 			validator.RuleFor(x => x.Address).SetValidator(new AddressValidator());
 			validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator));
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldHaveChildvalidator_throws_when_collection_property_Does_not_have_child_validator() {
 			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
 				validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator))
@@ -96,13 +95,13 @@ namespace FluentValidation.Tests {
 			ex.Message.ShouldEqual("Expected property 'Orders' to have a child validator of type 'OrderValidator.'");
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldHaveChildValidator_should_not_throw_when_property_does_not_have_child_validator() {
 			validator.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator());
 			validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator));
 		}
 
-		[Test]
+		[Fact]
 		public void ShouldHaveValidationErrorFor_takes_account_of_rulesets() {
 			var testValidator = new TestValidator();
 			testValidator.RuleSet("Names", () => {

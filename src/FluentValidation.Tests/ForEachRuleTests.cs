@@ -16,11 +16,11 @@
 // The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 namespace FluentValidation.Tests {
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class ForEachRuleTests {
-		[Test]
+		[Fact]
 		public void Executes_rule_for_each_item_in_collection() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).NotNull()
@@ -34,7 +34,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(2);
 		}
 
-		[Test]
+		[Fact]
 		public void Correctly_gets_collection_indicies() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).NotNull()
@@ -53,7 +53,7 @@ namespace FluentValidation.Tests {
 			public Person person = null;
 		}
 
-		[Test]
+		[Fact]
 		public void Nested_collection_for_null_property_should_not_throw_null_reference() {
 			var validator = new InlineValidator<request>();
 			validator.When(r => r.person != null, () => {

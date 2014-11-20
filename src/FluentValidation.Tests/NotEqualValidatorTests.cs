@@ -24,38 +24,38 @@ namespace FluentValidation.Tests {
 	using System.Linq.Expressions;
 	using System.Threading;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 
-	[TestFixture]
+	
 	public class NotEqualValidatorTests {
-		[SetUp]
-		public void Setup() {
+		public  NotEqualValidatorTests() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-		}
+        }
 
-		[Test]
+		[Fact]
 		public void When_the_objects_are_equal_then_the_validator_should_fail() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual("Foo"));
 			var result = validator.Validate(new Person { Forename = "Foo" });
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_objects_are_not_equal_then_the_validator_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual("Bar"));
 			var result = validator.Validate(new Person { Forename = "Foo" });
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual("Foo"));
 			var result = validator.Validate(new Person { Forename = "Foo" });
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' should not be equal to 'Foo'.");
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_across_properties() {
 			var validator = new TestValidator(
 				v => v.RuleFor(x => x.Forename).NotEqual(x => x.Surname)
@@ -66,7 +66,7 @@ namespace FluentValidation.Tests {
 		}
 
 
-		[Test]
+		[Fact]
 		public void Should_store_property_to_compare() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual(x => x.Surname));
 			var propertyValidator = validator.CreateDescriptor()
@@ -77,7 +77,7 @@ namespace FluentValidation.Tests {
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
 		}
 
-		[Test]
+		[Fact]
 		public void Should_store_comparison_type() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual(x => x.Surname));
 			var propertyValidator = validator.CreateDescriptor()
@@ -87,14 +87,14 @@ namespace FluentValidation.Tests {
 			propertyValidator.Comparison.ShouldEqual(Comparison.NotEqual);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_not_be_valid_for_case_insensitve_comparison() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual("FOO", StringComparer.OrdinalIgnoreCase));
 			var result = validator.Validate(new Person{Forename = "foo"});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_not_be_valid_for_case_insensitve_comparison_with_expression() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual(x => x.Surname, StringComparer.OrdinalIgnoreCase));
 			var result = validator.Validate(new Person { Forename = "foo", Surname = "FOO"});

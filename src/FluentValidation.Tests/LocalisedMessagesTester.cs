@@ -23,20 +23,24 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Threading;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 	using Resources;
 	using Validators;
 
-	[TestFixture]
-	public class LocalisedMessagesTester {
+	
+	public class LocalisedMessagesTester : IDisposable {
 
-		[TearDown]
-		public void Teardown() {
+		public LocalisedMessagesTester() {
 			// ensure the resource provider is reset after any tests that use it.
 			ValidatorOptions.ResourceProviderType = null;
 		}
 
-		[Test]
+        public void Dispose()
+        {
+            ValidatorOptions.ResourceProviderType = null;
+        }
+
+		[Fact]
 		public void Correctly_assigns_default_localized_error_message() {
 			var originalCulture = Thread.CurrentThread.CurrentUICulture;
 			try {
@@ -57,7 +61,7 @@ namespace FluentValidation.Tests {
 			}
 		}
 
-		[Test]
+		[Fact]
 		public void ResourceProviderType_overrides_default_messagesnote() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 
@@ -69,7 +73,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 		}
 
-		[Test]
+		[Fact]
 		public void Sets_localised_message_via_expression() {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname).NotEmpty().WithLocalizedMessage(() => MyResources.notempty_error);
@@ -77,7 +81,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 		}
 
-		[Test]
+		[Fact]
 		public void When_using_explicitly_localized_message_does_not_fall_back_to_ResourceProvider() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 
@@ -89,7 +93,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
 		}
 
-		[Test]
+		[Fact]
 		public void Custom_property_validators_should_respect_ResourceProvider() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 			var validator = new TestValidator {
@@ -101,7 +105,7 @@ namespace FluentValidation.Tests {
 		}
 
 
-		[Test]
+		[Fact]
 		public void When_using_explicitly_localized_message_with_custom_validator_does_not_fall_back_to_ResourceProvider() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 
@@ -114,7 +118,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
 		}
 
-		[Test]
+		[Fact]
 		public void Can_use_placeholders_with_localized_messages() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(() => TestMessages.PlaceholderMessage, 1)
@@ -124,7 +128,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("Test 1");
 		}
 
-		[Test]
+		[Fact]
 		public void Can_use_placeholders_with_localized_messages_using_expressions() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(() => TestMessages.PlaceholderMessage, x => 1)

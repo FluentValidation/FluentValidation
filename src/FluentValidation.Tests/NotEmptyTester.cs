@@ -22,16 +22,16 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class NotEmptyTester {
-		[SetUp]
-		public void Setup() {
+		public NotEmptyTester() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-		}
+        }
 
-		[Test]
+		[Fact]
 		public void When_there_is_a_value_then_the_validator_should_pass() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
@@ -41,7 +41,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void When_value_is_null_validator_should_fail() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
@@ -51,7 +51,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_value_is_empty_string_validator_should_fail() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
@@ -61,7 +61,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_value_is_whitespace_validation_should_fail() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
@@ -71,7 +71,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_value_is_Default_for_type_validator_should_fail_datetime() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.DateOfBirth).NotEmpty()
@@ -81,7 +81,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_value_is_Default_for_type_validator_should_fail_int() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Id).NotEmpty()
@@ -94,7 +94,7 @@ namespace FluentValidation.Tests {
 			result1.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Fails_when_collection_empty() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Children).NotEmpty()
@@ -104,7 +104,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_validation_fails_error_should_be_set() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
@@ -114,7 +114,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' should not be empty.");
 		}
 
-	    [Test]
+	    [Fact]
 	    public void Fails_for_ienumerable_that_doesnt_implement_ICollection() {
 	        var validator = new InlineValidator<TestModel> {
                 v => v.RuleFor(x => x.Strings).NotEmpty()

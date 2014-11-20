@@ -22,28 +22,28 @@ namespace FluentValidation.Tests
     using System.Globalization;
     using System.Linq;
     using System.Threading;
-    using NUnit.Framework;
+    using Xunit;
     using Validators;
 
-    [TestFixture]
+    
     public class ScalePrecisionValidatorTests
     {
-        [SetUp]
-        public void Setup()
+        public ScalePrecisionValidatorTests()
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
         }
 
-        [Test]
+        [Fact]
         public void Scale_and_precision_should_work()
         {
             var validator = new TestValidator(v => v.RuleFor(x => x.Discount).SetValidator(new ScalePrecisionValidator(2, 4)));
 
             var result = validator.Validate(new Person {Discount = 123.456778m});
-            Assert.IsFalse(result.IsValid);
+            Assert.False(result.IsValid);
 
             result = validator.Validate(new Person {Discount = 12.34M});
-            Assert.IsTrue(result.IsValid);
+            Assert.True(result.IsValid);
 
             result = validator.Validate(new Person {Discount = 12.3414M});
             result.IsValid.ShouldBeFalse();

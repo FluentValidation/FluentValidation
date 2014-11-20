@@ -23,88 +23,87 @@ namespace FluentValidation.Tests {
 	using System.Threading.Tasks;
 	using Internal;
 	using Moq;
-	using NUnit.Framework;
+	using Xunit;
 	using Resources;
 	using Results;
 	using Validators;
 
-	[TestFixture]
+	
 	public class RuleBuilderTests {
 		RuleBuilder<Person, string> builder;
 
-		[SetUp]
-		public void Setup() {
+		public  RuleBuilderTests() {
 			var rule = PropertyRule.Create<Person,string>(x => x.Surname);
 			builder = new RuleBuilder<Person, string>(rule);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_build_property_name() {
 			builder.Rule.PropertyName.ShouldEqual("Surname");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_compile_expression() {
 			var person = new Person {Surname = "Foo"};
 			builder.Rule.PropertyFunc(person).ShouldEqual("Foo");
 		}
 
-		[Test]
+		[Fact]
 		public void Adding_a_validator_should_return_builder() {
 			var builderWithOptions = builder.SetValidator(new TestPropertyValidator());
 			builderWithOptions.ShouldBeTheSameAs(builder);
 		}
 
-		[Test]
+		[Fact]
 		public void Adding_a_validator_should_store_validator() {
 			var validator = new TestPropertyValidator();
 			builder.SetValidator(validator);
 			builder.Rule.CurrentValidator.ShouldBeTheSameAs(validator);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_set_cutom_property_name() {
 			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
-			Assert.That(builder.Rule.DisplayName.GetString(), Is.EqualTo("Foo"));
+			Assert.Equal(builder.Rule.DisplayName.GetString(), "Foo");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
 			builder.Rule.CurrentValidator.ErrorMessageSource.GetString().ShouldEqual("Bar");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_if_validator_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((IPropertyValidator)null));
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_if_overriding_validator_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((IValidator<string>)null));
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_if_message_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithMessage(null));
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_if_property_name_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithName(null));
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_when_predicate_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).When(null));
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_when_inverse_predicate_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).Unless(null));
 		}
 
-		[Test]
+		[Fact]
 		public void Calling_when_should_replace_current_validator_with_predicate_validator() {
 			var validator = new TestPropertyValidator();
 			builder.SetValidator(validator).When(x => true);
@@ -114,7 +113,7 @@ namespace FluentValidation.Tests {
 			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
 		}
 
-		[Test]
+		[Fact]
 		public void Calling_validate_should_delegate_to_underlying_validator() {
 			var person = new Person {Surname = "Foo"};
 			var validator = new Mock<IPropertyValidator>();
@@ -125,7 +124,7 @@ namespace FluentValidation.Tests {
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 		}
 
-		[Test]
+		[Fact]
 		public void Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
 			var person = new Person { Surname = "Foo" };
 			var validator = new Mock<IPropertyValidator>();
@@ -136,7 +135,7 @@ namespace FluentValidation.Tests {
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 		}
 
-		[Test]
+		[Fact]
 		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator()
 		{
 			var person = new Person { Surname = "Foo" };
@@ -149,20 +148,20 @@ namespace FluentValidation.Tests {
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 		}
 
-		[Test]
+		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
 			builder.Rule.GetDisplayName().ShouldEqual("Date Of Birth");
 		}
 
-		[Test]
+		[Fact]
 		public void PropertyDescription_should_return_custom_property_name() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
 			builder.NotEqual(default(DateTime)).WithName("Foo");
 			builder.Rule.GetDisplayName().ShouldEqual("Foo");
 		}
 
-		[Test]
+		[Fact]
 		public void Nullable_object_with_condition_should_not_throw()
 		{
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value));
@@ -170,14 +169,14 @@ namespace FluentValidation.Tests {
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
-		[Test]
+		[Fact]
 		public void Rule_for_a_non_memberexpression_should_not_generate_property_name() {
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
 			builder.Rule.GetDisplayName().ShouldBeNull();
 			builder.Rule.PropertyName.ShouldBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_when_property_name_is_null() {
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
 			builder.GreaterThan(4);
@@ -186,19 +185,19 @@ namespace FluentValidation.Tests {
 			ex.Message.ShouldEqual("Property name could not be automatically determined for expression x => x.CalculateSalary(). Please specify either a custom property name by calling 'WithName'.");
 		}
 
-		[Test]
+		[Fact]
 		public void Property_should_return_property_being_validated() {
 			var property = typeof(Person).GetProperty("Surname");
 			builder.Rule.Member.ShouldEqual(property);
 		}
 
-		[Test]
+		[Fact]
 		public void Property_should_return_null_when_it_is_not_a_property_being_validated() {
 			builder = new RuleBuilder<Person, string>(PropertyRule.Create<Person, string>(x => "Foo"));
 			builder.Rule.Member.ShouldBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void Result_should_use_custom_property_name_when_no_property_name_can_be_determined() {
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
 			builder.GreaterThan(100).WithName("Foo");

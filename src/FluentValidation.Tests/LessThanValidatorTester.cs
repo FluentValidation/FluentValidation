@@ -23,26 +23,26 @@ namespace FluentValidation.Tests {
 	using System.Linq.Expressions;
 	using System.Threading;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 
-	[TestFixture]
+	
 	public class LessThanValidatorTester {
 		int value = 1;
 
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-		}
+		public LessThanValidatorTester() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        }
 
-		[Test]
+		[Fact]
 		public void Should_fail_when_greater_than_input() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(value));
 			var result = validator.Validate(new Person{Id=2});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_succeed_when_less_than_input() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(value));
 
@@ -50,28 +50,28 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_fail_when_equal_to_input() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(value));
 			var result = validator.Validate(new Person{Id=value});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_set_default_validation_message_when_validation_fails() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(value));
 			var result = validator.Validate(new Person{Id=2});
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Id' must be less than '1'.");
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_against_property() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt));
 			var result = validator.Validate(new Person { Id = 2, AnotherInt = 1 });
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_when_value_to_compare_is_null() {
 			Expression<Func<Person, int>> nullExpression = null;
 			typeof(ArgumentNullException).ShouldBeThrownBy(() =>
@@ -79,19 +79,19 @@ namespace FluentValidation.Tests {
 			);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_not_throw_when_value_to_compare_is_of_different_type() {
 		    new LessThanValidator(10M).IsValid(5M, 10).ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Extracts_property_from_expression() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt));
 			var propertyValidator = validator.CreateDescriptor().GetValidatorsForMember("Id").OfType<LessThanValidator>().Single();
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("AnotherInt"));
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_with_nullable_property() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.NullableInt));
 
@@ -106,7 +106,7 @@ namespace FluentValidation.Tests {
 			resultMore.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_nullable_with_nullable_property() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(x => x.OtherNullableInt));
 
@@ -121,40 +121,40 @@ namespace FluentValidation.Tests {
 			resultMore.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Extracts_property_from_constant_using_expression() {
 			IComparisonValidator validator = new LessThanValidator(2);
 			validator.ValueToCompare.ShouldEqual(2);
 		}
 
-		[Test]
+		[Fact]
 		public void Comparison_type() {
 			var validator = new LessThanValidator(1);
 			validator.Comparison.ShouldEqual(Comparison.LessThan);
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_with_nullable_when_property_is_null() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(5));
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_with_nullable_when_property_not_null() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(5));
 			var result = validator.Validate(new Person { NullableInt = 10 });
 			result.IsValid.ShouldBeFalse();
 		}
 
-	    [Test]
+	    [Fact]
 	    public void Validates_with_nullable_when_property_null_cross_property() {
 	        var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(x => x.Id));
 	        var result = validator.Validate(new Person {Id = 5});
 	        result.IsValid.ShouldBeTrue();
 	    }
 
-	    [Test]
+	    [Fact]
 	    public void Validates_with_nullable_when_property_not_null_cross_property() {
 	        var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(x => x.Id));
 	        var result = validator.Validate(new Person {NullableInt = 10, Id = 5});

@@ -1,11 +1,11 @@
 ﻿namespace FluentValidation.Tests {
 	using System;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class ComparerTester {
-		[Test]
+		[Fact]
 		public void Should_fail_with_different_type_values() {
 			double myDouble = 100.12;
 			long myLong = 100;
@@ -22,7 +22,7 @@
 			result.ShouldEqual(-1);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_succeed_with_same_type_values() {
 			double myDouble = 100.12;
 			double myOther = 100.12;
@@ -39,7 +39,7 @@
 			result.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_succeed_with_same_object_values() {
 			var first = new MyObject {Id = 5};
 			var second = new MyObject {Id = 5};
@@ -56,7 +56,7 @@
 			result.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_fail_with_different_object_values() {
 			var first = new MyObject {Id = 5};
 			var second = new MyObject {Id = 6};
@@ -73,7 +73,7 @@
 			result.ShouldEqual(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_fail_with_different_object_types() {
 			var first = new MyObject {Id = 5};
 			var second = 5;
@@ -83,7 +83,7 @@
 
 			try {
 				Comparer.GetComparisonResult(first, second);
-				Assert.Fail();
+				Assert.True(false, "Should never get here!");
 			}
 			catch (ArgumentException ex) {
 				ex.Message.ShouldEqual("Cannot compare MyObject with anything other than another MyObject.");
@@ -91,7 +91,7 @@
 
 			try {
 				Comparer.GetComparisonResult(second, first);
-				Assert.Fail();
+				Assert.True(false, "Should never get here!");
 			}
 			catch (ArgumentException ex) {
 				ex.Message.ShouldEqual("Object must be of type Int32.");

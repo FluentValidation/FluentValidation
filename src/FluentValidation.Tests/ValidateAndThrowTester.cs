@@ -21,17 +21,16 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
     using System.Linq;
     using System.Threading;
-    using NUnit.Framework;
+    using Xunit;
 
-	[TestFixture]
+	
 	public class ValidateAndThrowTester {
-		[SetUp]
-		public void SetUp() {
+		public ValidateAndThrowTester() {
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 		}
 
-		[Test]
+		[Fact]
 		public void Throws_exception() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
@@ -40,7 +39,7 @@ namespace FluentValidation.Tests {
 			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
 		}
 
-		[Test]
+		[Fact]
 		public void Throws_exception_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
@@ -56,7 +55,7 @@ namespace FluentValidation.Tests {
 			});
 		}
 
-		[Test]
+		[Fact]
 		public void Does_not_throw_when_valid() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
@@ -73,7 +72,7 @@ namespace FluentValidation.Tests {
 			validator.ValidateAndThrowAsync(new Person { Surname = "foo" }).Wait();
 		}
 
-		[Test]
+		[Fact]
 		public void Populates_errors() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
@@ -83,7 +82,7 @@ namespace FluentValidation.Tests {
 			ex.Errors.Count().ShouldEqual(1);
 		}
 
-		[Test]
+		[Fact]
 		public void ToString_provides_error_details() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
@@ -91,7 +90,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var ex = typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
-			ex.ToString().ShouldStartWith("FluentValidation.ValidationException: Validation failed: \r\n -- 'Surname' must not be empty.\r\n -- 'Forename' must not be empty.");
+            string expected = "FluentValidation.ValidationException: Validation failed: \r\n -- 'Surname' must not be empty.\r\n -- 'Forename' must not be empty.";
+            Assert.True(ex.ToString().StartsWith(expected));
 		}
 	}
 }

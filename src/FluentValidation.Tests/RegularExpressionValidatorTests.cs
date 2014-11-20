@@ -20,29 +20,29 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 
-	[TestFixture]
+	
 	public class RegularExpressionValidatorTests {
 		TestValidator validator;
 
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-			validator = new TestValidator {
+		public  RegularExpressionValidatorTests() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).Matches(@"^\w\d$")
 			};
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_text_matches_the_regular_expression_then_the_validator_should_pass() {
 			string input = "S3";
 			var result = validator.Validate(new Person{Surname = input });
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_text_does_not_match_the_regular_expression_then_the_validator_should_fail() {
 			var result = validator.Validate(new Person{Surname = "S33"});
 			result.IsValid.ShouldBeFalse();
@@ -51,19 +51,19 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_text_is_empty_then_the_validator_should_fail() {
 			var result = validator.Validate(new Person{Surname = ""});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_text_is_null_then_the_validator_should_pass() {
 			var result = validator.Validate(new Person{Surname = null});
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			var result = validator.Validate(new Person{Surname = "S33"});
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' is not in the correct format.");

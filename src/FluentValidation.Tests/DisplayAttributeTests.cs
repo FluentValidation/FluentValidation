@@ -21,18 +21,18 @@ namespace FluentValidation.Tests {
 	using System.ComponentModel.DataAnnotations;
 	using System.Globalization;
 	using System.Threading;
-	using NUnit.Framework;
+	using Xunit;
 	using System.Linq;
 
-	[TestFixture]
+	
 	public class DisplayAttributeTests {
 
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-		}
+		public DisplayAttributeTests() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        }
 
-		[Test]
+		[Fact]
 		public void Infers_display_name_from_DisplayAttribute() {
 			var validator = new InlineValidator<DisplayNameTestModel> {
 				v => v.RuleFor(x => x.Name1).NotNull()
@@ -42,7 +42,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Foo' must not be empty.");
 		}
 
-		[Test]
+		[Fact]
 		public void Infers_display_name_from_DisplayNameAttribute() {
 			var validator = new InlineValidator<DisplayNameTestModel> {
 				v => v.RuleFor(x => x.Name2).NotNull()

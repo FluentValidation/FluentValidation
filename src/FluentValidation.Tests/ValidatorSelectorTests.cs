@@ -21,14 +21,14 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 	using System.Collections.Generic;
 
-	[TestFixture]
+	
 	public class ValidatorSelectorTests {
 	
-		[Test]
+		[Fact]
 		public void MemberNameValidatorSelector_returns_true_when_property_name_matches() {
 			var validator = new InlineValidator<TestObject> {
 				v => v.RuleFor(x => x.SomeProperty).NotNull()
@@ -38,7 +38,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Does_not_valdiate_other_property() {
 			var validator = new InlineValidator<TestObject> {
 				v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
@@ -48,7 +48,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_property_using_expression() {
 			var validator = new InlineValidator<TestObject> {
 				v => v.RuleFor(x => x.SomeProperty).NotNull()
@@ -58,7 +58,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Does_not_validate_other_property_using_expression() {
 			var validator = new InlineValidator<TestObject> {
 				v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
@@ -68,7 +68,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_nullable_property_with_overriden_name_when_selected() {
 
 			var validator = new InlineValidator<TestObject> {
@@ -82,7 +82,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Includes_nested_property() {
 			var validtor = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
@@ -94,7 +94,7 @@ namespace FluentValidation.Tests {
 			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
 		}
 
-		[Test]
+		[Fact]
 		public void Includes_nested_property_using_expression() {
 			var validtor = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),

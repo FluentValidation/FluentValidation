@@ -22,52 +22,51 @@ namespace FluentValidation.Tests {
 	using System.Linq.Expressions;
 	using System.Threading;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 
-	[TestFixture]
+	
 	public class GreaterThanOrEqualToValidatorTester {
 		private TestValidator validator;
 		private const int value = 1;
-
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-			validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(value));
+        public GreaterThanOrEqualToValidatorTester() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(value));
 		}
 
-		[Test]
+		[Fact]
 		public void Should_fail_when_less_than_input() {
 			var result = validator.Validate(new Person{Id=0});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_succeed_when_greater_than_input() {
 			var result = validator.Validate(new Person{Id=2});
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_succeed_when_equal_to_input() {
 			var result = validator.Validate(new Person{Id=value});
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_set_default_error_when_validation_fails() {
 			var result = validator.Validate(new Person{Id=0});
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Id' must be greater than or equal to '1'.");
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_with_property() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(x => x.AnotherInt));
 			var result = validator.Validate(new Person { Id = 0, AnotherInt = 1 });
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_with_nullable_property() {
 			validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(x => x.NullableInt));
 
@@ -82,7 +81,7 @@ namespace FluentValidation.Tests {
 			resultMore.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_nullable_with_nullable_property() {
 			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.OtherNullableInt));
 
@@ -97,7 +96,7 @@ namespace FluentValidation.Tests {
 			resultMore.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Comparison_type() {
 			var propertyValidator = validator.CreateDescriptor()
 				.GetValidatorsForMember("Id").Cast<GreaterThanOrEqualValidator>().Single();
@@ -105,21 +104,21 @@ namespace FluentValidation.Tests {
 			propertyValidator.Comparison.ShouldEqual(Comparison.GreaterThanOrEqual);
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_with_nullable_when_property_is_null() {
 			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(5));
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_with_nullable_when_property_not_null() {
 			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(5));
 			var result = validator.Validate(new Person { NullableInt = 1 });
 			result.IsValid.ShouldBeFalse();
 		}
 
-    [Test]
+    [Fact]
     public void Validates_with_nullable_when_property_is_null_cross_property()
     {
         validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.Id));
@@ -127,7 +126,7 @@ namespace FluentValidation.Tests {
         result.IsValid.ShouldBeTrue();
     }
 
-    [Test]
+    [Fact]
     public void Validates_with_nullable_when_property_not_null_cross_property()
     {
         validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x=>x.Id));

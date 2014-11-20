@@ -19,13 +19,13 @@
 namespace FluentValidation.Tests {
 	using System;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class RulesetTests {
 
 
-		[Test]
+		[Fact]
 		public void Executes_rules_in_specified_ruleset() {
 			var validator = new TestValidator();
 			var result = validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new RulesetValidatorSelector("Names")));
@@ -33,7 +33,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(2); // 2 rules in this ruleset
 		}
 
-		[Test]
+		[Fact]
 		public void Executes_rules_not_specified_in_ruleset() {
 			var validator = new TestValidator();
 			var result = validator.Validate(new Person());
@@ -41,7 +41,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1); // 1 rule not inside a ruleset
 		}
 
-		[Test]
+		[Fact]
 		public void Ruleset_cascades_to_child_validator() {
 			var addressValidator = new InlineValidator<Address>();
 			addressValidator.RuleSet("Test", () => {
@@ -64,7 +64,7 @@ namespace FluentValidation.Tests {
 		
 		}
 
-		[Test]
+		[Fact]
 		public void Ruleset_cascades_to_child_collection_validator() {
 			var orderValidator = new InlineValidator<Order>();
 			orderValidator.RuleSet("Test", () => {
@@ -87,7 +87,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(2); //one for each order
 		}
 
-		[Test]
+		[Fact]
 		public void Executes_multiple_rulesets() {
 			var validator = new TestValidator();
 			validator.RuleSet("Id", () => {
@@ -100,7 +100,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(3);
 		}
 
-		[Test]
+		[Fact]
 		public void Executes_all_rules() {
 			var validator = new TestValidator();
 			var person = new Person();
@@ -108,7 +108,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(3);
 		}
 
-		[Test]
+		[Fact]
 		public void Executes_rules_in_default_ruleset_and_specific_ruleset() {
 			var validator = new TestValidator();
 			validator.RuleSet("foo", () => {

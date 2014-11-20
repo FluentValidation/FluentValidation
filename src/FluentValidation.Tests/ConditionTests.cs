@@ -17,39 +17,39 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class ConditionTests {
-		[Test]
+		[Fact]
 		public void Validation_should_succeed_when_condition_does_not_match() {
 			var validator = new TestConditionValidator();
 			var result = validator.Validate(new Person {Id = 1});
-			Assert.That(result.IsValid);
+			Assert.True(result.IsValid);
 		}
 
-		[Test]
+		[Fact]
 		public void Validation_should_fail_when_condition_matches() {
 			var validator = new TestConditionValidator();
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Validation_should_succeed_when_condition_matches() {
 			var validator = new InverseConditionValidator();
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Validation_should_fail_when_condition_does_not_match() {
 			var validator = new InverseConditionValidator();
 			var result = validator.Validate(new Person {Id = 1});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Condition_is_applied_to_all_validators_in_the_chain() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").When(x => x.Id > 0)
@@ -59,7 +59,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").When(x => x.Id > 0, ApplyConditionTo.CurrentValidator)

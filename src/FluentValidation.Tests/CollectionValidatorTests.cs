@@ -19,14 +19,13 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class CollectionValidatorTests {
 		Person person;
 
-		[SetUp]
-		public void Setup() {
+		public CollectionValidatorTests() {
 			person = new Person() {
 				Orders = new List<Order>() {
 					new Order { Amount = 5},
@@ -35,7 +34,7 @@ namespace FluentValidation.Tests {
 			};
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_collection() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
@@ -49,7 +48,7 @@ namespace FluentValidation.Tests {
 			results.Errors[2].PropertyName.ShouldEqual("Orders[1].Amount");
 		}
 
-		[Test]
+		[Fact]
 		public void Collection_should_be_explicitly_included_with_expression() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
@@ -60,7 +59,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(2);
 		}
 
-		[Test]
+		[Fact]
 		public void Collection_should_be_explicitly_included_with_string() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
@@ -71,7 +70,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(2);
 		}
 
-		[Test]
+		[Fact]
 		public void Collection_should_be_excluded() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
@@ -82,7 +81,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Condition_should_work_with_child_collection() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator()).When(x => x.Orders.Count == 3 /*there are only 2*/)
@@ -92,7 +91,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Skips_null_items() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
@@ -104,7 +103,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(2); //2 errors - 1 for person, 1 for 2nd Order.
 		}
 
-		[Test]
+		[Fact]
 		public void Can_validate_collection_using_validator_for_base_type() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderInterfaceValidator())
@@ -114,7 +113,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Can_specifiy_condition_for_individual_collection_elements() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Orders)
@@ -127,7 +126,7 @@ namespace FluentValidation.Tests {
 
 		}
 
-		[Test]
+		[Fact]
 		public void Should_override_property_name() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator())

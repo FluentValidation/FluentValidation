@@ -17,18 +17,16 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class CustomFailureActionTester {
 		TestValidator validator;
-
-		[SetUp]
-		public void Setup() {
+		public CustomFailureActionTester() {
 			validator = new TestValidator();
 		}
 
-		[Test]
+		[Fact]
 		public void Invokes_custom_action_on_failure() {
 			bool invoked = false;
 			validator.RuleFor(x => x.Surname).NotNull().OnAnyFailure(x => {
@@ -40,7 +38,7 @@ namespace FluentValidation.Tests {
 			invoked.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Passes_object_being_validated_to_action() {
 			var person = new Person();
 			Person validatedPerson = null;
@@ -54,7 +52,7 @@ namespace FluentValidation.Tests {
 			person.ShouldBeTheSameAs(validatedPerson);
 		}
 
-		[Test]
+		[Fact]
 		public void Does_not_invoke_action_if_validation_success() {
 			bool invoked = false;
 			validator.RuleFor(x => x.Surname).NotNull().OnAnyFailure(x => {

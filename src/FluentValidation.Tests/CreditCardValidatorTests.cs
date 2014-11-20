@@ -2,14 +2,13 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class CreditCardValidatorTests {
 		TestValidator validator;
 
-		[SetUp]
-		public void Setup() {
+		public CreditCardValidatorTests() {
 			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
 
@@ -18,7 +17,7 @@ namespace FluentValidation.Tests {
 			};
 		}
 
-		[Test] // copied these tests from the mvc3 unit tests.
+		[Fact] // copied these tests from the mvc3 unit tests.
 		public void IsValidTests() {
 			validator.Validate(new Person { CreditCard = null }).IsValid.ShouldBeTrue(); // Optional values are always valid
 			validator.Validate(new Person { CreditCard = "0000000000000000" }).IsValid.ShouldBeTrue(); // Simplest valid value
@@ -28,7 +27,7 @@ namespace FluentValidation.Tests {
 			validator.Validate(new Person { CreditCard = "0000000000000001" }).IsValid.ShouldBeFalse(); // Bad checksum
 		}
 
-		[Test]
+		[Fact]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			string creditcard = "foo";
 			var result = validator.Validate(new Person { CreditCard = creditcard });

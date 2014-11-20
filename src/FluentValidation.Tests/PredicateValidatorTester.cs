@@ -21,47 +21,47 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 
-	[TestFixture]
+	
 	public class PredicateValidatorTester {
 		private TestValidator validator;
 
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-			validator = new TestValidator {
+		public PredicateValidatorTester() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            validator = new TestValidator {
 				v => v.RuleFor(x => x.Forename).Must(forename => forename == "Jeremy")
 			};
 		}
 
-		[Test]
+		[Fact]
 		public void Should_fail_when_predicate_returns_false() {
 			var result = validator.Validate(new Person{Forename = "Foo"});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_succeed_when_predicate_returns_true() {
 			var result = validator.Validate(new Person{Forename = "Jeremy"});
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_throw_when_predicate_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() =>
 				new TestValidator(v => v.RuleFor(x => x.Surname).Must((Func<string, bool>)null))	
 			);
 		}
 
-		[Test]
+		[Fact]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			var result = validator.Validate(new Person{Forename = "Foo"});
 			result.Errors.Single().ErrorMessage.ShouldEqual("The specified condition was not met for 'Forename'.");
 		}
 
-		[Test]
+		[Fact]
 		public void When_validation_fails_the_error_code_should_be_set_to_resource_key() {
 			var validator = new TestValidator() {
 													v => v.RuleFor(x => x.Forename)

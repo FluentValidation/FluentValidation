@@ -20,15 +20,14 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class ChainedValidationTester {
 		PersonValidator validator;
 		Person person;
 
-		[SetUp]
-		public void Setup() {
+		public ChainedValidationTester() {
 			validator = new PersonValidator();
 			person = new Person {
 				Address = new Address {
@@ -41,7 +40,7 @@ namespace FluentValidation.Tests {
 			};
 		}
 
-		[Test]
+		[Fact]
 		public void Validates_chained_property() {
 			var results = validator.Validate(person);
 
@@ -51,20 +50,20 @@ namespace FluentValidation.Tests {
 			results.Errors[2].PropertyName.ShouldEqual("Address.Country.Name");
 		}
 
-		[Test]
+		[Fact]
 		public void Chained_validator_should_not_be_invoked_on_null_property() {
 			var results = validator.Validate(new Person());
 			results.Errors.Count.ShouldEqual(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_allow_normal_rules_and_chained_property_on_same_property() {
 			validator.RuleFor(x => x.Address.Line1).NotNull();
 			var result = validator.Validate(person);
 			result.Errors.Count.ShouldEqual(4);
 		}
 
-		[Test]
+		[Fact]
 		public void Explicitly_included_properties_should_be_propogated_to_nested_validators() {
 			var results = validator.Validate(person, x => x.Address);
 			results.Errors.Count.ShouldEqual(2);
@@ -72,7 +71,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
 		}
 
-		[Test]
+		[Fact]
 		public void Explicitly_included_properties_should_be_propogated_to_nested_validators_using_strings() {
 			var results = validator.Validate(person, "Address");
 			results.Errors.Count.ShouldEqual(2);
@@ -80,13 +79,13 @@ namespace FluentValidation.Tests {
 			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
 		}
 
-		[Test]
+		[Fact]
 		public void Chained_property_should_be_excluded() {
 			var results = validator.Validate(person, x => x.Surname);
 			results.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Condition_should_work_with_chained_property() {
 			var person = new Person {
 				Address = new Address {
@@ -98,7 +97,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Last().PropertyName.ShouldEqual("Address.Line1");
 		}
 
-		[Test]
+		[Fact]
 		public void Can_validate_using_validator_for_base_type() {
 			var addressValidator = new InlineValidator<IAddress>() {
 				v => v.RuleFor(x => x.Line1).NotNull()
@@ -112,7 +111,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Separate_validation_on_chained_property() {
 			var validator = new DepartmentValidator();
 			var result = validator.Validate(new Department
@@ -123,7 +122,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Separate_validation_on_chained_property_valid() {
 			var validator = new DepartmentValidator();
 			var result = validator.Validate(new Department {
@@ -135,7 +134,7 @@ namespace FluentValidation.Tests {
 			result.Errors.IsValid().ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Separate_validation_on_chained_property_conditional() {
 			var validator = new DepartmentValidator();
 			var result = validator.Validate(new Department {
@@ -150,7 +149,7 @@ namespace FluentValidation.Tests {
 			result.Errors.First().PropertyName.ShouldEqual("Assistant.Surname");
 		}
 
-		[Test]
+		[Fact]
 		public void Chained_validator_descriptor() {
 			var descriptor = validator.CreateDescriptor();
 

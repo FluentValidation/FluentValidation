@@ -20,45 +20,45 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
-	using NUnit.Framework;
+	using Xunit;
 	using Validators;
 
-	[TestFixture]
+	
 	public class NotNullTester {
-		[SetUp]
-		public void Setup() {
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-		}
+		public NotNullTester() {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+        }
 
-		[Test]
+		[Fact]
 		public void NotNullValidator_should_pass_if_value_has_value() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotNull());
 			var result = validator.Validate(new Person{Surname = "Foo"});
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void NotNullValidator_should_fail_if_value_is_null() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotNull());
 			var result = validator.Validate(new Person { Surname = null });
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotNull());
 			var result = validator.Validate(new Person { Surname = null });
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
 		}
 
-		[Test]
+		[Fact]
 		public void Not_null_validator_should_not_crash_with_non_nullable_value_type() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).NotNull());
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Fails_when_nullable_value_type_is_null() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).NotNull());
 			var result = validator.Validate(new Person());

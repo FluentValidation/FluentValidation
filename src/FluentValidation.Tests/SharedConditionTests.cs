@@ -20,10 +20,10 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
 	using System.Threading.Tasks;
-	using NUnit.Framework;
+	using Xunit;
 	using Results;
 
-	[TestFixture]
+	
 	public class SharedConditionTests {
 		class SharedConditionValidator : AbstractValidator<Person> {
 			public SharedConditionValidator() {
@@ -63,7 +63,7 @@ namespace FluentValidation.Tests {
 			}
 		}
 
-		[Test]
+		[Fact]
 		public void Shared_When_is_not_applied_to_grouped_rules_when_initial_predicate_is_false() {
 			var validator = new SharedConditionValidator();
 			var person = new Person(); // fails the shared When predicate
@@ -72,7 +72,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Shared_When_is_applied_to_grouped_rules_when_initial_predicate_is_true() {
 			var validator = new SharedConditionValidator();
 			var person = new Person() {
@@ -83,7 +83,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(3);
 		}
 
-		[Test]
+		[Fact]
 		public void Shared_When_is_applied_to_groupd_rules_when_initial_predicate_is_true_and_all_individual_rules_are_satisfied() {
 			var validator = new SharedConditionValidator();
 			var person = new Person() {
@@ -96,7 +96,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Shared_When_respects_the_smaller_scope_of_an_inner_Unless_when_the_inner_Unless_predicate_is_satisfied() {
 			var validator = new SharedConditionWithScopedUnlessValidator();
 			var person = new Person() {
@@ -110,7 +110,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Shared_When_respects_the_smaller_scope_of_a_inner_Unless_when_the_inner_Unless_predicate_fails() {
 			var validator = new SharedConditionWithScopedUnlessValidator();
 			var person = new Person() {
@@ -123,7 +123,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
-		[Test]
+		[Fact]
 		public void Outer_Unless_clause_will_trump_an_inner_Unless_clause_when_inner_fails_but_the_outer_is_satisfied() {
 			var validator = new SharedConditionWithScopedUnlessValidator();
 			var person = new Person() {
@@ -137,7 +137,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(0);
 		}
 
-		[Test]
+		[Fact]
 		public void Condition_can_be_used_inside_ruleset() {
 			var validator = new TestValidator();
 			validator.RuleSet("foo", () => { validator.When(x => x.Id > 0, () => { validator.RuleFor(x => x.Forename).NotNull(); }); });
@@ -148,7 +148,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
 
-		[Test]
+		[Fact]
 		public void RuleSet_can_be_used_inside_condition() {
 			var validator = new TestValidator();
 
@@ -161,21 +161,21 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
 
-		[Test]
+		[Fact]
 		public void Rules_invoke_when_inverse_shared_condition_matches() {
 			var validator = new SharedConditionInverseValidator();
 			var result = validator.Validate(new Person {Id = 1});
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Rules_not_invoked_when_inverse_shared_condition_does_not_match() {
 			var validator = new SharedConditionInverseValidator();
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Does_not_execute_custom_Rule_when_condition_false() {
 			var validator = new TestValidator();
 			validator.When(x => false, () => { validator.Custom(x => new ValidationFailure("foo", "bar")); });
@@ -184,7 +184,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Does_not_execute_customasync_Rule_when_condition_false()
 		{
 			var validator = new TestValidator();
@@ -194,7 +194,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Executes_custom_rule_when_condition_true() {
 			var validator = new TestValidator();
 			validator.When(x => true, () => { validator.Custom(x => new ValidationFailure("foo", "bar")); });
@@ -203,7 +203,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Executes_customasync_rule_when_condition_true()
 		{
 			var validator = new TestValidator();
@@ -213,7 +213,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Nested_conditions_with_Custom_rule() {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {
@@ -226,7 +226,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Nested_conditions_with_CustomAsync_rule() {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {

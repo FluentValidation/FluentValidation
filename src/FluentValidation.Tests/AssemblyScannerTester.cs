@@ -19,12 +19,12 @@
 namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Linq;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class AssemblyScannerTester {
 
-		[Test]
+		[Fact]
 		public void Finds_validators_for_types() {
 			var scanner = new AssemblyScanner(new[] { typeof(Model1Validator), typeof(Model2Validator) });
 			var results = scanner.ToList();
@@ -36,7 +36,7 @@ namespace FluentValidation.Tests {
 			results[1].InterfaceType.ShouldEqual(typeof(IValidator<Model2>));
 		}
 
-		[Test]
+		[Fact]
 		public void ForEach_iterates_over_types() {
 			var scanner = new AssemblyScanner(new[] { typeof(Model1Validator), typeof(Model2Validator) });
 			var results = new List<AssemblyScanner.AssemblyScanResult>();

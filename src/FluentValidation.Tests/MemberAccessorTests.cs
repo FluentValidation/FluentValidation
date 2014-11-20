@@ -2,9 +2,9 @@
 {
 	using System;
 	using System.Linq.Expressions;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class MemberAccessorTests {
 		Person person;
 
@@ -12,8 +12,7 @@
 		MemberAccessor<Person, string> forenameAccessor;
 		MemberAccessor<Person, string> countryNameAccessor;
 
-		[SetUp]
-		public void Setup() {
+		public MemberAccessorTests() {
 			person = new Person();
 			person.NameField = "John Smith";
 			person.Forename = "John";
@@ -24,66 +23,66 @@
 			countryNameAccessor = MemberAccessor<Person>.From(x => x.Address.Country.Name);
 		}
 
-		[Test]
+		[Fact]
 		public void SimpleFieldGet() {
-			Assert.AreEqual("John Smith", nameFieldAccessor.Get(person));
+			Assert.Equal("John Smith", nameFieldAccessor.Get(person));
 		}
 
-		[Test]
+		[Fact]
 		public void SimplePropertyGet() {
-			Assert.AreEqual("John", forenameAccessor.Get(person));
+			Assert.Equal("John", forenameAccessor.Get(person));
 		}
 
-		[Test]
+		[Fact]
 		public void SimpleFieldSet() {
 			nameFieldAccessor.Set(person, "Peter Smith");
-			Assert.AreEqual("Peter Smith", person.NameField);
+			Assert.Equal("Peter Smith", person.NameField);
 		}
 
-		[Test]
+		[Fact]
 		public void SimplePropertySet() {
 			forenameAccessor.Set(person, "Peter");
-			Assert.AreEqual("Peter", person.Forename);
+			Assert.Equal("Peter", person.Forename);
 		}
 
-		[Test]
+		[Fact]
 		public void ComplexPropertyGet() {
-			Assert.AreEqual("United States", countryNameAccessor.Get(person));
+			Assert.Equal("United States", countryNameAccessor.Get(person));
 		}
 
-		[Test]
+		[Fact]
 		public void ComplexPropertySet() {
 			countryNameAccessor.Set(person, "United Kingdom");
-			Assert.AreEqual("United Kingdom", person.Address.Country.Name);
+			Assert.Equal("United Kingdom", person.Address.Country.Name);
 		}
 
-		[Test]
+		[Fact]
 		public void Equality() {
-			Assert.AreEqual(nameFieldAccessor, MemberAccessor<Person>.From(x => x.NameField));
-			Assert.AreNotEqual(nameFieldAccessor, forenameAccessor);
-			Assert.AreNotEqual(nameFieldAccessor, countryNameAccessor);
+			Assert.Equal(nameFieldAccessor, MemberAccessor<Person>.From(x => x.NameField));
+			Assert.NotEqual(nameFieldAccessor, forenameAccessor);
+			Assert.NotEqual(nameFieldAccessor, countryNameAccessor);
 
-			Assert.AreEqual(forenameAccessor, MemberAccessor<Person>.From(x => x.Forename));
-			Assert.AreNotEqual(forenameAccessor, nameFieldAccessor);
-			Assert.AreNotEqual(forenameAccessor, countryNameAccessor);
+			Assert.Equal(forenameAccessor, MemberAccessor<Person>.From(x => x.Forename));
+			Assert.NotEqual(forenameAccessor, nameFieldAccessor);
+			Assert.NotEqual(forenameAccessor, countryNameAccessor);
 
-			Assert.AreEqual(countryNameAccessor, MemberAccessor<Person>.From(x => x.Address.Country.Name));
-			Assert.AreNotEqual(countryNameAccessor, nameFieldAccessor);
-			Assert.AreNotEqual(countryNameAccessor, forenameAccessor);
+			Assert.Equal(countryNameAccessor, MemberAccessor<Person>.From(x => x.Address.Country.Name));
+			Assert.NotEqual(countryNameAccessor, nameFieldAccessor);
+			Assert.NotEqual(countryNameAccessor, forenameAccessor);
 		}
 
-		[Test]
+		[Fact]
 		public void ImplicitCast() {
 			Expression<Func<Person, string>> nameFieldAsExpression = nameFieldAccessor;
 			MemberAccessor<Person, string> nameFieldAccessor2 = nameFieldAsExpression;
-			Assert.AreEqual(nameFieldAccessor, nameFieldAccessor2);
+			Assert.Equal(nameFieldAccessor, nameFieldAccessor2);
 		}
 
-		[Test]
+		[Fact]
 		public void Name() {
-			Assert.AreEqual("NameField", nameFieldAccessor.Member.Name);
-			Assert.AreEqual("Forename", forenameAccessor.Member.Name);
-			Assert.AreEqual("Name", countryNameAccessor.Member.Name);
+			Assert.Equal("NameField", nameFieldAccessor.Member.Name);
+			Assert.Equal("Forename", forenameAccessor.Member.Name);
+			Assert.Equal("Name", countryNameAccessor.Member.Name);
 
 		}
 	}

@@ -1,39 +1,38 @@
 namespace FluentValidation.Tests {
 	using Attributes;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class AttributedValidatorFactoryTester {
 		IValidatorFactory factory;
 
-		[SetUp]
-		public void Setup() {
+		public AttributedValidatorFactoryTester() {
 			factory = new AttributedValidatorFactory();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_instantiate_validator() {
 			var validator = factory.GetValidator<AttributedPerson>();
 			validator.ShouldBe<TestValidator>();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_instantiate_validator_non_generic() {
 			var validator = factory.GetValidator(typeof(AttributedPerson));
 			validator.ShouldBe<TestValidator>();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_return_null_when_null_is_passed_to_GetValidator() {
 			factory.GetValidator(null).ShouldBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_return_null_when_type_has_no_attribute() {
 			factory.GetValidator<NonAttributedPerson>().ShouldBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_return_null_when_attribute_has_no_type() {
 			factory.GetValidator<AttributedPersonWithNoType>().ShouldBeNull();
 		}

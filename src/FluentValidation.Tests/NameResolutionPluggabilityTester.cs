@@ -1,10 +1,10 @@
 namespace FluentValidation.Tests {
 	using System.Linq;
-	using NUnit.Framework;
-
-	[TestFixture]
-	public class NameResolutionPluggabilityTester {
-		[Test]
+	using Xunit;
+    using System;
+	
+	public class NameResolutionPluggabilityTester : IDisposable {
+		[Fact]
 		public void Uses_custom_property_name() {
 			ValidatorOptions.PropertyNameResolver = (type, prop, expr) => "foo";
 
@@ -16,7 +16,7 @@ namespace FluentValidation.Tests {
 			error.PropertyName.ShouldEqual("foo");
 		}
 
-		[Test]
+		[Fact]
 		public void Resolves_nested_properties() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Address.Country).NotNull()
@@ -27,8 +27,7 @@ namespace FluentValidation.Tests {
 
 		}
 
-		[TearDown]
-		public void Teardown() {
+		public void Dispose() {
 			ValidatorOptions.PropertyNameResolver = null;
 		}
 	}

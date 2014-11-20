@@ -19,19 +19,17 @@
 namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Threading.Tasks;
-	using NUnit.Framework;
+	using Xunit;
 	using Results;
 
-	[TestFixture]
+	
 	public class CustomValidatorTester {
 		private TestValidator validator;
-
-		[SetUp]
-		public void Setup() {
+		public CustomValidatorTester() {
 			validator = new TestValidator();
 		}
 
-		[Test]
+		[Fact]
 		public void Returns_single_failure() {
 			validator.Custom(person => new ValidationFailure("Surname", "Fail", null));
 			var result = validator.Validate(new Person());
@@ -50,7 +48,7 @@ namespace FluentValidation.Tests {
 			result.Errors[0].PropertyName.ShouldEqual("Surname");
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_lambda_returns_null_then_the_validation_should_succeed() {
 			validator.Custom(person => null);
 			var result = validator.Validate(new Person());
@@ -58,7 +56,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void When_the_async_lambda_returns_null_then_the_validation_should_succeed()
 		{
 			validator.CustomAsync(person => TaskHelpers.FromResult<ValidationFailure>(null));
@@ -67,7 +65,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Perserves_property_chain_using_custom() {
 			validator.RuleFor(x => x.Orders).SetCollectionValidator(new NestedOrderValidator());
 			var person = new Person();
@@ -77,7 +75,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().PropertyName.ShouldEqual("Orders[0].Amount");
 		}
 
-		[Test]
+		[Fact]
 		public void Custom_within_ruleset() {
 			var validator = new InlineValidator<Person>();
 			validator.RuleSet("foo", () => { validator.Custom(x => { return new ValidationFailure("x", "y"); }); });
@@ -87,7 +85,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
-		[Test]
+		[Fact]
 		public void CustomAsync_within_ruleset()
 		{
 			var validator = new InlineValidator<Person>();

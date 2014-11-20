@@ -18,18 +18,16 @@
 
 namespace FluentValidation.Tests {
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class InstanceCacheTester {
 		InstanceCache cache;
-
-		[SetUp]
-		public void Setup() {
+		public InstanceCacheTester() {
 			cache = new InstanceCache();
 		}
 
-		[Test]
+		[Fact]
 		public void GetInstance_WhenNotCached_CreatesInstance() {
 			var result = cache.GetOrCreateInstance(typeof(TestModel));
 
@@ -37,7 +35,7 @@ namespace FluentValidation.Tests {
 			result.ShouldNotBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void GetInstance_WhenCached_ReUsesInstance() {
 			var instance = cache.GetOrCreateInstance(typeof(TestModel));
 

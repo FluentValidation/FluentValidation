@@ -20,18 +20,17 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Linq.Expressions;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class PropertyChainTests {
 		PropertyChain chain;
 
-		[SetUp]
-		public void Setup() {
+		public PropertyChainTests() {
 			chain = new PropertyChain();
 		}
 
-		[Test]
+		[Fact]
 		public void Calling_ToString_should_construct_string_representation_of_chain() {
 			chain.Add(typeof(Parent).GetProperty("Child"));
 			chain.Add(typeof(Child).GetProperty("GrandChild"));
@@ -41,7 +40,7 @@ namespace FluentValidation.Tests {
 			chain.ToString().ShouldEqual(expected);
 		}
 
-		[Test]
+		[Fact]
 		public void Calling_ToString_should_construct_string_representation_of_chain_with_indexers() {
 			chain.Add(typeof(Parent).GetProperty("Child"));
 			chain.AddIndexer(0);
@@ -52,12 +51,12 @@ namespace FluentValidation.Tests {
 			chain.ToString().ShouldEqual(expected);
 		}
 
-		[Test]
+		[Fact]
 		public void AddIndexer_throws_when_nothing_added() {
 			typeof(InvalidOperationException).ShouldBeThrownBy(() => chain.AddIndexer(0));
 		}
 
-		[Test]
+		[Fact]
 		public void Should_be_subchain() {
 			chain.Add("Parent");
 			chain.Add("Child");
@@ -68,7 +67,7 @@ namespace FluentValidation.Tests {
 			childChain.IsChildChainOf(chain).ShouldBeTrue();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_not_be_subchain() {
 			chain.Add("Foo");
 
@@ -78,7 +77,7 @@ namespace FluentValidation.Tests {
 			otherChain.IsChildChainOf(chain).ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Creates_from_expression() {
 			Expression<Func<Person, int>> expr = x => x.Address.Id;
 			var chain = PropertyChain.FromExpression(expr);

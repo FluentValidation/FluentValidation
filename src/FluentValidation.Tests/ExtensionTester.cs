@@ -20,30 +20,30 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Linq.Expressions;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class ExtensionTester {
-		[Test]
+		[Fact]
 		public void Should_extract_member_from_member_expression() {
 			Expression<Func<Person, string>> expression = person => person.Surname;
 			var member = expression.GetMember();
 			member.Name.ShouldEqual("Surname");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_return_null_for_non_member_expressions() {
 			Expression<Func<Person, string>> expression = person => "Foo";
 			expression.GetMember().ShouldBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_split_pascal_cased_member_name() {
 			string name = "DateOfBirth".SplitPascalCase();
 			name.ShouldEqual("Date Of Birth");
 		}
 
-		[Test]
+		[Fact]
 		public void SplitPascalCase_should_return_null_when_input_is_null() {
 			Extensions.SplitPascalCase(null).ShouldBeNull();
 		}

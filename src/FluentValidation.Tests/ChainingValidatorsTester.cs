@@ -19,19 +19,18 @@
 namespace FluentValidation.Tests {
 	using System.Linq;
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 	using System.Collections.Generic;
 
-	[TestFixture]
+	
 	public class ChainingValidatorsTester {
 		TestValidator validator;
 
-		[SetUp]
-		public void Setup() {
+		public ChainingValidatorsTester() {
 			validator = new TestValidator();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_create_multiple_validators() {
 			validator.RuleFor(x => x.Surname)
 				.NotNull()
@@ -40,7 +39,7 @@ namespace FluentValidation.Tests {
 			validator.Cast<PropertyRule>().Single().Validators.Count().ShouldEqual(2);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_execute_multiple_validators() {
 			validator.RuleFor(x => x.Surname).NotNull()
 				.Equal("Foo");
@@ -48,7 +47,7 @@ namespace FluentValidation.Tests {
 			validator.Validate(new Person()).Errors.Count().ShouldEqual(2);
 		}
 
-		[Test]
+		[Fact]
 		public void Options_should_only_apply_to_current_validator() {
 			validator.RuleFor(x => x.Surname).NotNull()
 				.WithMessage("null")

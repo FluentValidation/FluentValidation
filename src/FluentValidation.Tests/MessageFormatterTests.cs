@@ -18,18 +18,17 @@
 
 namespace FluentValidation.Tests {
 	using Internal;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
+	
 	public class MessageFormatterTests {
 		MessageFormatter formatter;
 
-		[SetUp]
-		public void Setup() {
+		public MessageFormatterTests() {
 			formatter = new MessageFormatter();
 		}
 
-		[Test]
+		[Fact]
 		public void Adds_value_to_message() {
 			string result = formatter
 				.AppendArgument("foo", "bar")
@@ -38,7 +37,7 @@ namespace FluentValidation.Tests {
 			result.ShouldEqual("bar");
 		}
 
-		[Test]
+		[Fact]
 		public void Adds_PropertyName_to_message() {
 			string result = formatter
 				.AppendPropertyName("foo")
@@ -47,7 +46,7 @@ namespace FluentValidation.Tests {
 			result.ShouldEqual("foo");
 		}
 
-		[Test]
+		[Fact]
 		public void Adds_argument_and_custom_arguments() {
 			string result = formatter
 				.AppendArgument("foo", "bar")
