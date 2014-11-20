@@ -20,7 +20,7 @@ namespace FluentValidation.Results {
 	using System;
 	using System.Collections.Generic;
 
-#if !SILVERLIGHT && !PORTABLE && !PORTABLE40
+#if !SILVERLIGHT && !PORTABLE && !PORTABLE40 && !CoreCLR
 	[Serializable]
 #endif
 	public class ValidationFailure {

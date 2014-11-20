@@ -1,0 +1,28 @@
+﻿{
+    "code": "../FluentValidation/**/*.cs",
+    "exclude": "../FluentValidation/BackwardsCompatibility.cs",
+    //"exclude": "../FluentValidation/Resources;../FluentValidation/taskhelper/**;../FluentValidation/BackwardsCompatibility.cs;../FluentValidation/Validators/NestedValidatorAdaptor.cs",
+    "dependencies": {
+        "System.Linq": "4.0.0.0-beta-22231",
+        "System.Reflection": "4.0.10.0-beta-22231",
+        "System.Reflection.Extensions": "4.0.0.0-beta-22231",
+        "System.Runtime.Extensions": "4.0.10.0-beta-22231",
+        "System.Reflection.TypeExtensions": "4.0.0.0-beta-22231",
+        "System.ComponentModel": "4.0.0-beta-22231",
+        "System.Resources.ResourceManager": "4.0.0-beta-22231",
+        "System.Text.RegularExpressions": "4.0.10-beta-22231",
+        "System.Threading": "4.0.0-beta-22231",
+        "System.Linq.Expressions": "4.0.0-beta-22231",
+        "System.Diagnostics.Contracts": "4.0.0-beta-22231",
+        "System.Diagnostics.Debug": "4.0.10-beta-22231",
+        "System.Diagnostics.Tools": "4.0.0-beta-22231"
+    },
+
+    "frameworks": {
+        "aspnetcore50": {
+        }
+    },
+    "compilationOptions": {
+        "define": [ "CoreCLR" ]
+    }
+}
