@@ -4,16 +4,17 @@
 		<Configuration Condition="'$(Configuration)'==''" >Release</Configuration>
 		<BuildDir>$(BaseDir)\build</BuildDir>
 		<SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
-		<TestAssemblies>
-			$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll;
-			$(BaseDir)\src\FluentValidation.Tests.Mvc5\bin\$(Configuration)\FluentValidation.Tests.Mvc5.dll;
-			$(BaseDir)\src\FluentValidation.Tests.WebApi\bin\$(Configuration)\FluentValidation.Tests.WebApi.dll;
-
-		</TestAssemblies>
-		<MSBuildExtensions>$(BaseDir)\.build\msbuild.community.tasks.dll</MSBuildExtensions>
 	</PropertyGroup>
 	
-  <UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.NUnit" Condition="'$(teamcity_version)' == ''" />
+  <ItemGroup>
+    <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll" />
+    <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Mvc5\bin\$(Configuration)\FluentValidation.Tests.Mvc5.dll" />
+    <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.WebApi\bin\$(Configuration)\FluentValidation.Tests.WebApi.dll" />
+  </ItemGroup>
+	
+  <UsingTask
+    AssemblyFile="$(BaseDir)\packages\xunit.runners.1.9.2\tools\xunit.runner.msbuild.dll"
+    TaskName="Xunit.Runner.MSBuild.xunit"/>
   
 	<Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
 	
@@ -27,7 +28,7 @@
 	</Target>
 
 	<Target Name="Test">
-		<NUnit Assemblies="$(TestAssemblies)" ToolPath="$(BaseDir)\packages\nunit.runners.2.6.3\tools" Framework="net-4.0"  />
+		<xunit Assemblies="@(TestAssemblies)"  />
 	</Target>
 
   <Target Name="Deploy">

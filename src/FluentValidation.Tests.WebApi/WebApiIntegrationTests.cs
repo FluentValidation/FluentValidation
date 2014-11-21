@@ -18,11 +18,10 @@
 
 namespace FluentValidation.Tests.WebApi {
 	using System;
-	using NUnit.Framework;
+	using Xunit;
 
-	[TestFixture]
 	public class WebApiIntegrationTests : WebApiBaseTest {
-		[Test]
+		[Fact]
 		public void Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
 			var result = InvokeTest<TestModel5>(@"{
 				SomeBool:'false',
@@ -32,7 +31,7 @@ namespace FluentValidation.Tests.WebApi {
 			result.IsValidField("model.Id").ShouldBeFalse(); //NotEmpty for non-nullable value type
 		}
 
-		[Test]
+		[Fact]
 		public void Should_add_all_errors_in_one_go() {
 			var result = InvokeTest<TestModel4>(@"Email=foo&Surname=foo&Forename=foo&DateOfBirth=&Address1=");
 
@@ -43,19 +42,19 @@ namespace FluentValidation.Tests.WebApi {
 			result.IsValidField("model.Address1").ShouldBeFalse(); 
 		}
 
-		[Test]
+		[Fact]
 		public void When_a_validation_error_occurs_the_error_should_be_added_to_modelstate() {
 			var result = InvokeTest<TestModel>(@"Name=");
 			result.GetMessage("model.Name").ShouldEqual("Validation Failed");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_not_fail_when_no_validator_can_be_found() {
 			var result = InvokeTest<TestModel2>(@"");
 			result.IsValid().ShouldBeTrue();
 		}
 		
-		[Test]
+		[Fact]
 		public void Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
 			var result = InvokeTest<TestModel6>(@"Id=");
 			result.Count.ShouldEqual(1);
@@ -64,7 +63,7 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
 
-		[Test]
+		[Fact]
 		public void Should_add_implicit_required_validator() {
 			var result = InvokeTest<TestModel6>(@"Id=");
 			result.Count.ShouldEqual(1);
@@ -73,14 +72,14 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
 
-		[Test]
+		[Fact]
 		public void Should_validate_less_than() {
 			 var result = InvokeTest<TestModel7>(@"AnIntProperty=15");
 			result.IsValidField("model.AnIntProperty").ShouldBeFalse();
 			result.GetMessage("model.AnIntProperty").ShouldEqual("Less than 10");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_validate_custom_after_property_errors() {
 			var result = InvokeTest<TestModel7>(@"AnIntProperty=7&CustomProperty=14");
 

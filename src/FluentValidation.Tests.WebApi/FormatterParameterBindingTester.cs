@@ -41,21 +41,21 @@ namespace FluentValidation.Tests.WebApi {
 
 	using FluentValidation.WebApi;
 	using FluentValidation.Results;
-
+    using Xunit;
 	using Moq;
 
-	using NUnit.Framework;
 
-	[TestFixture] //TODO: Remove these tests and make sure that WebApiIntegrationTests have replaced all the tests in here
-	public class FormatterParameterBindingTester {
+     //TODO: Remove these tests and make sure that WebApiIntegrationTests have replaced all the tests in here
+	public class FormatterParameterBindingTester : IDisposable {
 		FluentValidationModelValidatorProvider provider;
 		HttpActionContext actionContext;
 		ModelMetadataProvider modelMetadataProvider;
 
-		[SetUp]
-		public void Setup() {
+		public FormatterParameterBindingTester() {
 			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
+            provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
 			GlobalConfiguration.Configuration.Services.Clear(typeof(ModelValidatorProvider));
 			GlobalConfiguration.Configuration.Services.Add(typeof(ModelValidatorProvider), provider);
 
@@ -69,8 +69,7 @@ namespace FluentValidation.Tests.WebApi {
 			};
 		}
 
-		[TearDown]
-		public void Teardown() {
+		public void Dispose() {
 			//Cleanup
 			GlobalConfiguration.Configuration.Services.Remove(typeof(ModelValidatorProvider), provider);
 		}
@@ -176,7 +175,7 @@ namespace FluentValidation.Tests.WebApi {
 			}
 		}
 
-		[Test]
+		[Fact]
 		public void Should_add_all_errors_in_one_go() {
 			actionContext.Request.Content = JsonContent(@"{
 				Email:'foo',
@@ -207,7 +206,7 @@ namespace FluentValidation.Tests.WebApi {
 			}
 		}
 
-		[Test]
+		[Fact]
 		public void Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
 			actionContext.Request.Content = JsonContent(@"{
 				SomeBool:'false',
@@ -220,7 +219,7 @@ namespace FluentValidation.Tests.WebApi {
 			actionContext.ModelState.IsValidField("testModel5.Id").ShouldBeFalse(); //NotEmpty for non-nullable value type
 		}
 
-		[Test]
+		[Fact]
 		public void When_a_validation_error_occurs_the_error_should_be_added_to_modelstate() {
 			actionContext.Request.Content = JsonContent(@"{
 				Name:null}");
@@ -232,7 +231,7 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
 		//web api errors seems to be always be added with prefix (I tried with the DataAnnotationsModelValidatorProvider and that's the behaviour that I observed
-		//[Test]
+		//[Fact]
 		//public void When_a_validation_error_occurs_the_error_should_be_added_to_Modelstate_without_prefix()
 		//{
 		//	var metadataProvider = (ModelMetadataProvider)GlobalConfiguration.Configuration.Services.GetService(typeof(ModelMetadataProvider));
@@ -243,7 +242,7 @@ namespace FluentValidation.Tests.WebApi {
 		//	actionContext.ModelState["request"].Errors.Count().ShouldEqual(1);
 		//}
 
-		[Test]
+		[Fact]
 		public void Should_not_fail_when_no_validator_can_be_found() {
 			actionContext.Request.Content = JsonContent(@"{}");
 
@@ -255,7 +254,7 @@ namespace FluentValidation.Tests.WebApi {
 
 		//for parse errors (trying to parse null to a value type int, datetime, etc) the formatter (json formatter in this case) takes care of them
 		// and I didn't find a way to override that behaviour
-		[Test]
+		[Fact]
 		public void Should_add_default_message_to_modelstate() {
 			actionContext.Request.Content = JsonContent(@"{Id:''}");
 
@@ -265,7 +264,7 @@ namespace FluentValidation.Tests.WebApi {
 			actionContext.ModelState["testModel3.Id"].Errors.Single().Exception.ShouldNotBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
 			actionContext.Request.Content = JsonContent(@"{Id:''}");
 
@@ -275,7 +274,7 @@ namespace FluentValidation.Tests.WebApi {
 			actionContext.ModelState["testModel6.Id"].Errors.Single().Exception.ShouldNotBeNull();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_validate_greater_than() {
 			actionContext.Request.Content = JsonContent(@"{AnIntProperty:'5'}");
 
@@ -285,7 +284,7 @@ namespace FluentValidation.Tests.WebApi {
 			actionContext.ModelState.IsValidField("testModel7.AnIntProperty").ShouldBeFalse();
 		}
 
-		[Test]
+		[Fact]
 		public void Should_validate_custom_after_property_errors() {
 			actionContext.Request.Content = JsonContent(@"{AnIntProperty:'7',CustomProperty:'14'}");
 
