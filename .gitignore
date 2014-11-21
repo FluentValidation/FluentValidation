@@ -15,3 +15,4 @@ TestResult.xml
 .hgignore
 packages/
 *.sln.ide/
+artifacts/
