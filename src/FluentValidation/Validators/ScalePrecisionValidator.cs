@@ -103,7 +103,7 @@ namespace FluentValidation.Validators
             if (Precision < Scale)
                 throw new ArgumentOutOfRangeException(
                     "scale",
-                    string.Format("Scale must be greater than precision. [scale:{0}, precision:{1}].", Scale, Precision));
+                    string.Format("Scale must be less than precision. [scale:{0}, precision:{1}].", Scale, Precision));
         }
 
         private static UInt32[] GetBits(decimal Decimal)
