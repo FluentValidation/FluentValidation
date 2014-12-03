@@ -25,11 +25,17 @@ namespace FluentValidation {
 	public class ValidationException : Exception {
 		public IEnumerable<ValidationFailure> Errors { get; private set; }
 
-		public ValidationException(IEnumerable<ValidationFailure> errors) : base(BuildErrorMesage(errors)) {
-			Errors = errors;
-		}
+        public ValidationException(string message, IEnumerable<ValidationFailure> errors)
+            : base(message)
+        {
+            Errors = errors;
+        }
 
-		private static string BuildErrorMesage(IEnumerable<ValidationFailure> errors) {
+	    public ValidationException(IEnumerable<ValidationFailure> errors) : this(BuildErrorMesage(errors), errors) {
+
+	    }
+
+	    private static string BuildErrorMesage(IEnumerable<ValidationFailure> errors) {
 			var arr = errors.Select(x => "\r\n -- " + x.ErrorMessage).ToArray();
 			return "Validation failed: " + string.Join("", arr);
 		}
