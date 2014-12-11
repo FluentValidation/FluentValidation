@@ -4,6 +4,7 @@
 		<Configuration Condition="'$(Configuration)'==''" >Release</Configuration>
 		<BuildDir>$(BaseDir)\build</BuildDir>
 		<SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
+		<SolutionFile Condition="'$(vs2015)'=='true'">$(BaseDir)\FluentValidation-vs2015.sln</SolutionFile>
 	</PropertyGroup>
 	
   <ItemGroup>
@@ -22,7 +23,7 @@
     <Exec Command="$(BaseDir)\.nuget\nuget.exe restore" WorkingDirectory="$(BaseDir)"  />
 	</Target>
 	
-	<Target Name="Compile" DependsOnTargets="PackageRestore">
+	<Target Name="Compile">
 		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration)"  Targets="Rebuild" />
   	<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" />
 	</Target>

@@ -21,6 +21,7 @@
 			<PortableBinaries Include="$(BaseDir)\src\FluentValidation.Portable\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<Portable40Binaries Include="$(BaseDir)\src\FluentValidation.Portable40\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)$(PackageSuffix)\FluentValidation.WebApi.*" />
+			<KBinaries Include="$(BaseDir)\artifacts\bin\FluentValidation.K\$(Configuration)\aspnetcore50\**\*.*" />
 			
 			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
 		</ItemGroup>
@@ -32,6 +33,7 @@
 		<Copy SourceFIles="@(Portable40Binaries)" DestinationFolder="$(OutputDir)\Portable40" />
 		<Copy SourceFIles="@(PortableBinaries)" DestinationFolder="$(OutputDir)\Portable" />
     <Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
+    <Copy SourceFiles="@(KBinaries)" DestinationFolder="$(OutputDir)\AspNetVNext" />
 	</Target>
 
 	<Target Name="PackageZip">
@@ -49,9 +51,10 @@
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC5$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.WebApi$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)" />
 
-    <Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net45%2Bwp80%2Bwin8%2Bwpa81%2Baspnetcore50\%(RecursiveDir)"/>
+    <Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net45%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
 		<Copy SourceFiles="@(Portable40Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net40%2Bsl50%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
-
+     <Copy SourceFiles="@(KBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\aspnetcore50\%(RecursiveDir)"/>
+		
 
 		<!-- Copy the source files to the package dir -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\Net45\%(RecursiveDir)" />
