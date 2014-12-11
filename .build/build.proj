@@ -7,29 +7,23 @@
 		<SolutionFile Condition="'$(vs2015)'=='true'">$(BaseDir)\FluentValidation-vs2015.sln</SolutionFile>
 	</PropertyGroup>
 	
-  <ItemGroup>
-    <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll" />
-    <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Mvc5\bin\$(Configuration)\FluentValidation.Tests.Mvc5.dll" />
-    <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.WebApi\bin\$(Configuration)\FluentValidation.Tests.WebApi.dll" />
-  </ItemGroup>
+ 
 	
-  <UsingTask
-    AssemblyFile="$(BaseDir)\packages\xunit.runners.1.9.2\tools\xunit.runner.msbuild.dll"
-    TaskName="Xunit.Runner.MSBuild.xunit"/>
+  
   
 	<Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
 	
 	<Target Name="PackageRestore">
-    <Exec Command="$(BaseDir)\.nuget\nuget.exe restore" WorkingDirectory="$(BaseDir)"  />
+    <Exec Command="$(BaseDir)\.nuget\nuget.exe restore $(SolutionFile)" WorkingDirectory="$(BaseDir)"  />
 	</Target>
 	
-	<Target Name="Compile">
+	<Target Name="Compile" DependsOnTargets="PackageRestore">
 		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration)"  Targets="Rebuild" />
   	<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" />
 	</Target>
 
 	<Target Name="Test">
-		<xunit Assemblies="@(TestAssemblies)"  />
+    <MSBuild Projects="test.proj" Properties="Configuration=$(Configuration)" />
 	</Target>
 
   <Target Name="Deploy">
