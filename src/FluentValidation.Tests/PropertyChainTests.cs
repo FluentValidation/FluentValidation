@@ -84,6 +84,14 @@ namespace FluentValidation.Tests {
 			chain.ToString().ShouldEqual("Address.Id");
 		}
 
+		[Fact]
+		public void Should_ignore_blanks() {
+			chain.Add("");
+			chain.Add("Foo");
+
+			chain.ToString().ShouldEqual("Foo");
+		}
+
 		public class Parent {
 			public Child Child { get; set; }
 		}

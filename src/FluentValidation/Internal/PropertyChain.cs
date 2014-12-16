@@ -74,7 +74,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="member">Member to add</param>
 		public void Add(MemberInfo member) {
-			memberNames.Add(member.Name);
+			if(member != null) 
+				memberNames.Add(member.Name);
 		}
 
 		/// <summary>
@@ -82,7 +83,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="propertyName">Name of the property to add</param>
 		public void Add(string propertyName) {
-			memberNames.Add(propertyName);
+			if(!string.IsNullOrEmpty(propertyName))
+				memberNames.Add(propertyName);
 		}
 
 		/// <summary>
