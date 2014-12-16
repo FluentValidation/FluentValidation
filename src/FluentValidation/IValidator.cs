@@ -51,7 +51,7 @@ namespace FluentValidation {
 	/// <summary>
 	/// Defines a validator for a particular type.
 	/// </summary>
-	public interface IValidator : IEnumerable<IValidationRule> {
+	public interface IValidator {
 		/// <summary>
 		/// Validates the specified instance
 		/// </summary>
