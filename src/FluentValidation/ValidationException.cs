@@ -25,6 +25,10 @@ namespace FluentValidation {
 	public class ValidationException : Exception {
 		public IEnumerable<ValidationFailure> Errors { get; private set; }
 
+		public ValidationException(string message, IEnumerable<ValidationFailure> errors) : base(message) {
+			Errors = errors;
+		}
+
 		public ValidationException(IEnumerable<ValidationFailure> errors) : base(BuildErrorMesage(errors)) {
 			Errors = errors;
 		}
