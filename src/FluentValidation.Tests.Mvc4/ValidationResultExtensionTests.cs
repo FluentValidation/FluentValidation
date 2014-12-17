@@ -19,22 +19,20 @@
 namespace FluentValidation.Tests.Mvc4 {
 	using System.Web.Mvc;
 	using Mvc;
-	using NUnit.Framework;
 	using Results;
+	using Xunit;
 
-	[TestFixture]
 	public class ValidationResultExtensionTests {
 		private ValidationResult result;
 
-		[SetUp]
-		public void Setup() {
+		public ValidationResultExtensionTests() {
 			result = new ValidationResult(new[] {
 				new ValidationFailure("foo", "A foo error occurred", "x"),
 				new ValidationFailure("bar", "A bar error occurred", "y"),
 			});
 		}
 
-		[Test]
+		[Fact]
 		public void Should_persist_to_modelstate() {
 			var modelstate = new ModelStateDictionary();
 			result.AddToModelState(modelstate, null);
@@ -47,14 +45,14 @@ namespace FluentValidation.Tests.Mvc4 {
 			modelstate["bar"].Value.AttemptedValue.ShouldEqual("y");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_persist_modelstate_with_empty_prefix() {
 			var modelstate = new ModelStateDictionary();
 			result.AddToModelState(modelstate, "");
 			modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_persist_to_modelstate_with_prefix() {
 			var modelstate = new ModelStateDictionary();
 			result.AddToModelState(modelstate, "baz");
@@ -64,7 +62,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			modelstate["baz.bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_do_nothing_if_result_is_valid() {
 			var modelState = new ModelStateDictionary();
 			new ValidationResult().AddToModelState(modelState, null);

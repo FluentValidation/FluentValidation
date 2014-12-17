@@ -28,17 +28,15 @@ namespace FluentValidation.Tests.Mvc4 {
 	using Internal;
 	using Moq;
 	using Mvc;
-	using NUnit.Framework;
 	using Results;
+	using Xunit;
 
-	[TestFixture]
-	public class ModelBinderTester {
+	public class ModelBinderTester : IDisposable {
 		FluentValidationModelValidatorProvider provider;
 		DefaultModelBinder binder;
 		ControllerContext controllerContext;
 
-		[SetUp]
-		public void Setup() {
+		public ModelBinderTester() {
 			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 			provider = new FluentValidationModelValidatorProvider(new AttributedValidatorFactory());
 			ModelValidatorProviders.Providers.Add(provider);
@@ -47,8 +45,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			controllerContext = new ControllerContext { HttpContext = MockHttpContext.Create() };
 		}
 
-		[TearDown]
-		public void Teardown() {
+		public void Dispose() {
 			//Cleanup
 			ModelValidatorProviders.Providers.Remove(provider);
 		}
@@ -121,7 +118,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			}
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Should_add_all_errors_in_one_go() {
 			var form = new FormCollection {
 				{ "Email", "foo" },
@@ -160,7 +157,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			}
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
 			var form = new FormCollection {
 				{ "SomeBool", "False" },
@@ -181,7 +178,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			context.ModelState.IsValidField("Id").ShouldBeFalse(); //NotEmpty for non-nullable value type
 		}
 
-		[Test]
+		[FactAttribute]
 		public void When_a_validation_error_occurs_the_error_should_be_added_to_modelstate() {
 			var form = new FormCollection {
                 { "test.Name", null }
@@ -199,7 +196,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			bindingContext.ModelState["test.Name"].Errors.Single().ErrorMessage.ShouldEqual("Validation Failed");
 		}
 
-		[Test]
+		[FactAttribute]
 		public void When_a_validation_error_occurs_the_error_should_be_added_to_Modelstate_without_prefix() {
 			var form = new FormCollection {
 				{ "Name", null }
@@ -217,7 +214,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			bindingContext.ModelState["Name"].Errors.Count().ShouldEqual(1);
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Should_not_fail_when_no_validator_can_be_found() {
 			var bindingContext = new ModelBindingContext {
 				ModelName = "test",
@@ -231,7 +228,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			binder.BindModel(controllerContext, bindingContext).ShouldNotBeNull();
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Should_not_add_default_message_to_modelstate() {
 			var form = new FormCollection {
 				{ "Id", "" }
@@ -250,7 +247,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("Validation failed");
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Should_not_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
 			var form = new FormCollection {
 				{ "Id", "" }
@@ -269,7 +266,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("'Id' must not be empty.");
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Should_add_Default_message_to_modelstate_when_no_validator_specified() {
 			var form = new FormCollection {
 				{ "Id", "" }
@@ -288,7 +285,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("A value is required.");
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Allows_override_of_required_message_for_non_nullable_value_types() {
 			var form = new FormCollection {
 				{ "Id", "" }
@@ -308,7 +305,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("Foo");
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Allows_override_of_required_property_name_for_non_nullable_value_types() {
 			var form = new FormCollection {
 				{ "Id", "" }
@@ -331,7 +328,7 @@ namespace FluentValidation.Tests.Mvc4 {
 
 
 
-		[Test]
+		[FactAttribute]
 		public void Should_add_default_message_to_modelstate_when_both_fv_and_DataAnnotations_have_implicit_required_validation_disabled() {
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 			provider.AddImplicitRequiredValidator = false;
@@ -357,7 +354,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = true;
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Should_only_validate_specified_ruleset() {
 			var form = new FormCollection {
 				{ "Email", "foo" },
@@ -381,7 +378,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			context.ModelState.IsValidField("Email").ShouldBeTrue();
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Should_only_validate_specified_properties() {
 			var form = new FormCollection {
 				{ "Email", "foo" },
@@ -406,7 +403,7 @@ namespace FluentValidation.Tests.Mvc4 {
 
 		}
 
-		[Test]
+		[FactAttribute]
 		public void When_interceptor_specified_Intercepts_validation() {
 			var form = new FormCollection {
 				{ "Email", "foo" },
@@ -431,7 +428,7 @@ namespace FluentValidation.Tests.Mvc4 {
 
 		}
 
-		[Test]
+		[FactAttribute]
 		public void When_interceptor_specified_Intercepts_validation_provides_custom_errors() {
 			var form = new FormCollection {
 				{ "Email", "foo" },
@@ -452,7 +449,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			context.ModelState.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[FactAttribute]
 		public void When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked() {
 			var form = new FormCollection {
 				{ "Email", "foo" },
@@ -473,7 +470,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			context.ModelState.IsValid.ShouldBeTrue();
 		}
 
-		[Test]
+		[FactAttribute]
 		public void Validator_customizations_should_only_apply_to_single_parameter() {
 			var form = new FormCollection {
 				{ "first.Email", "foo" },

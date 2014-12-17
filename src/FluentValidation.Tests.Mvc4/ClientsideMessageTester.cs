@@ -28,71 +28,69 @@ namespace FluentValidation.Tests.Mvc4 {
 	using Internal;
 	using Moq;
 	using Mvc;
-	using NUnit.Framework;
 	using Validators;
+	using Xunit;
 
-	[TestFixture]
 	public class ClientsideMessageTester {
 		InlineValidator<TestModel> validator;
 		ControllerContext controllerContext;
 
-		[SetUp]
-		public void Setup() {
+		public ClientsideMessageTester() {
 			System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
 			validator = new InlineValidator<TestModel>();
 			controllerContext = CreateControllerContext();
 		}
 
-		[Test]
+		[Fact]
 		public void NotNull_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).NotNull();
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' must not be empty.");
 		}
 
-		[Test]
+		[Fact]
 		public void NotEmpty_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).NotEmpty();
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' should not be empty.");
 		}
 
-		[Test]
+		[Fact]
 		public void RegexValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Matches("\\d");
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' is not in the correct format.");
 		}
 
-		[Test]
+		[Fact]
 		public void EmailValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).EmailAddress();
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' is not a valid email address.");
 		}
 
-		[Test]
+		[Fact]
 		public void LengthValidator_uses_simplified_message_for_clientside_validatation() {
 			validator.RuleFor(x => x.Name).Length(1, 10);
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' must be between 1 and 10 characters.");
 		}
 
-		[Test]
+		[Fact]
 		public void InclusiveBetween_validator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Id).InclusiveBetween(1, 10);
 			var clientRules = GetClientRules(x => x.Id);
 			clientRules.Any(x => x.ErrorMessage == "'Id' must be between 1 and 10.").ShouldBeTrue();
 		}
 
-        [Test]
+        [Fact]
         public void GreaterThanOrEqualTo_validator_uses_simplified_message_for_clientside_validation() {
             validator.RuleFor(x => x.Id).GreaterThanOrEqualTo(5);
             var clientRules = GetClientRules(x => x.Id);
             clientRules.Any(x => x.ErrorMessage == "'Id' must be greater than or equal to '5'.").ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void LessThanOrEqualTo_validator_uses_simplified_message_for_clientside_validation()
         {
             validator.RuleFor(x => x.Id).LessThanOrEqualTo(50);
@@ -100,56 +98,56 @@ namespace FluentValidation.Tests.Mvc4 {
             clientRules.Any(x => x.ErrorMessage == "'Id' must be less than or equal to '50'.").ShouldBeTrue();
         }
 
-		[Test]
+		[Fact]
 		public void EqualValidator_with_property_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Equal(x => x.Name2);
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' should be equal to 'Name2'.");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_not_munge_custom_message() {
 			validator.RuleFor(x => x.Name).Length(1, 10).WithMessage("Foo");
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("Foo");
 		}
 
-		[Test]
+		[Fact]
 		public void ExactLengthValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Length(5);
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' must be 5 characters in length.");
 		}
 
-		[Test]
+		[Fact]
 		public void Custom_validation_message_with_placeholders() {
 			validator.RuleFor(x => x.Name).NotNull().WithMessage("{PropertyName} is null.");
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("Name is null.");
 		}
 
-		[Test]
+		[Fact]
 		public void Custom_validation_message_for_length() {
 			validator.RuleFor(x => x.Name).Length(1, 5).WithMessage("Must be between {MinLength} and {MaxLength}.");
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("Must be between 1 and 5.");
 		}
 
-		[Test]
+		[Fact]
 		public void Supports_custom_clientside_rules_with_IClientValidatable() {
 			validator.RuleFor(x => x.Name).SetValidator(new TestPropertyValidator());
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("foo");
 		}
 
-		[Test]
+		[Fact]
 		public void CreditCard_creates_clientside_message() {
 			validator.RuleFor(x => x.Name).CreditCard();
 			var clientrule = GetClientRule(x => x.Name);
 			clientrule.ErrorMessage.ShouldEqual("'Name' is not a valid credit card number.");
 		}
 
-		[Test]
+		[Fact]
 		public void Overrides_property_name_for_clientside_rule() {
 			validator.RuleFor(x => x.Name).NotNull().WithName("Foo");
 			var clientRule = GetClientRule(x => x.Name);
@@ -157,14 +155,14 @@ namespace FluentValidation.Tests.Mvc4 {
 
 		}
 
-		[Test]
+		[Fact]
 		public void Overrides_property_name_for_clientside_rule_using_localized_name() {
 			validator.RuleFor(x => x.Name).NotNull().WithLocalizedName(() => TestMessages.notnull_error);
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Localised Error' must not be empty.");
 		}
 
-		[Test]
+		[Fact]
 		public void Overrides_property_name_for_non_nullable_value_type() {
 			validator.RuleFor(x => x.Id).NotNull().WithName("Foo");
 			var clientRule = GetClientRule(x => x.Id);
@@ -172,7 +170,7 @@ namespace FluentValidation.Tests.Mvc4 {
 		
 		}
 
-	    [Test]
+	    [Fact]
 	    public void Should_only_use_rules_from_Default_ruleset() {
 	        validator.RuleSet("Foo", () => {
 				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
@@ -188,7 +186,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			rules.Single().ErrorMessage.ShouldEqual("second");
 	    }
 
-		[Test]
+		[Fact]
 		public void Should_use_rules_from_specified_ruleset() {
 			validator.RuleSet("Foo", () => {
 				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
@@ -203,7 +201,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			rules.Single().ErrorMessage.ShouldEqual("first");
 		}
 
-		[Test]
+		[Fact]
 		public void Should_use_rules_from_multiple_rulesets() {
 			validator.RuleSet("Foo", () => {
 				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
@@ -222,7 +220,7 @@ namespace FluentValidation.Tests.Mvc4 {
 			rules.Count().ShouldEqual(2);
 		}
 
-		[Test]
+		[Fact]
 		public void Should_use_rules_from_default_ruleset_and_specified_ruleset() {
 			validator.RuleSet("Foo", () => {
 				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");

@@ -49,6 +49,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.WebA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Portable40", "src\FluentValidation.Portable40\FluentValidation.Portable40.csproj", "{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc4", "src\FluentValidation.Mvc4\FluentValidation.Mvc4.csproj", "{CB78DD3A-1BEB-4863-813B-8221FE9EC23D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc4", "src\FluentValidation.Tests.Mvc4\FluentValidation.Tests.Mvc4.csproj", "{0C98D445-E8E0-491A-B42E-48C1BED25AE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,14 @@ Global
 		{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB78DD3A-1BEB-4863-813B-8221FE9EC23D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB78DD3A-1BEB-4863-813B-8221FE9EC23D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB78DD3A-1BEB-4863-813B-8221FE9EC23D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB78DD3A-1BEB-4863-813B-8221FE9EC23D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C98D445-E8E0-491A-B42E-48C1BED25AE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C98D445-E8E0-491A-B42E-48C1BED25AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C98D445-E8E0-491A-B42E-48C1BED25AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C98D445-E8E0-491A-B42E-48C1BED25AE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
