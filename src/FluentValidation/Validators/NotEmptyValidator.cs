@@ -46,22 +46,11 @@ namespace FluentValidation.Validators {
 
 		bool IsInvalidString(object value) {
 			if (value is string) {
-				return IsNullOrWhiteSpace(value as string);
+				return string.IsNullOrWhiteSpace(value as string);
 			}
 			return false;
 		}
-
-		bool IsNullOrWhiteSpace(string value) {
-			if (value != null) {
-				for (int i = 0; i < value.Length; i++) {
-					if (!char.IsWhiteSpace(value[i])) {
-						return false;
-					}
-				}
-			}
-			return true;
-		}
-	}
+    }
 
 	public interface INotEmptyValidator : IPropertyValidator {
 	}
