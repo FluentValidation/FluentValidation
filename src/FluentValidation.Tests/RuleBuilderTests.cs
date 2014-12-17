@@ -177,15 +177,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_throw_when_property_name_is_null() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
-			builder.GreaterThan(4);
-
-			var ex = typeof(InvalidOperationException).ShouldBeThrownBy(() => builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector())).ToList());
-			ex.Message.ShouldEqual("Property name could not be automatically determined for expression x => x.CalculateSalary(). Please specify either a custom property name by calling 'WithName'.");
-		}
-
-		[Fact]
 		public void Property_should_return_property_being_validated() {
 			var property = typeof(Person).GetProperty("Surname");
 			builder.Rule.Member.ShouldEqual(property);

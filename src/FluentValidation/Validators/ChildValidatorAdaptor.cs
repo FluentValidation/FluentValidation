@@ -40,11 +40,7 @@ namespace FluentValidation.Validators {
 			);
 		}
 
-		TResult ValidateInternal<TResult>(PropertyValidatorContext context, Func<ValidationContext, IValidator, TResult> validationApplicator, TResult emptyResult) {
-			if (context.Rule.Member == null) {
-				throw new InvalidOperationException(string.Format("Nested validators can only be used with Member Expressions."));
-			}
-
+		private TResult ValidateInternal<TResult>(PropertyValidatorContext context, Func<ValidationContext, IValidator, TResult> validationApplicator, TResult emptyResult) {
 			var instanceToValidate = context.PropertyValue;
 
 			if (instanceToValidate == null) {

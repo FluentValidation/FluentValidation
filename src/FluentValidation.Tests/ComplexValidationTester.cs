@@ -99,13 +99,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_throw_when_not_a_member_expression() {
-			validator.RuleFor(x => PointlessMethod()).SetValidator(new PointlessStringValidator());
-
-			var exception = typeof(InvalidOperationException).ShouldBeThrownBy(() => validator.Validate(person));
-		}
-
-		[Fact]
 		public void Condition_should_work_with_complex_property() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).When(x => x.Address.Line1 == "foo")
