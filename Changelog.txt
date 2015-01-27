@@ -1,5 +1,7 @@
 5.6 -
 Patch - Added properties to Error that can be used to build customized message.
+Fix issue where setting global resource provider isn't propogated to metadata, breaking client-side messages
+in some situations.
 
 5.5 - 30/10/2014 
 Patch - Added optional RuleSet arguments to the validation test extensions.

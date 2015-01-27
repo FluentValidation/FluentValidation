@@ -37,9 +37,11 @@ namespace FluentValidation.Resources {
 		/// <param name="resourceName">The resource name</param>
 		/// <param name="resourceAccessorBuilder">Strategy used to construct the resource accessor</param>
 		public LocalizedStringSource(Type resourceType, string resourceName, IResourceAccessorBuilder resourceAccessorBuilder) {
-			this.resourceType = resourceType;
-			this.resourceName = resourceName;
-			this.accessor = resourceAccessorBuilder.GetResourceAccessor(resourceType, resourceName);
+		    var resourceAccessor = resourceAccessorBuilder.GetResourceAccessor(resourceType, resourceName);
+
+            this.resourceType = resourceAccessor.ResourceType;
+			this.resourceName = resourceAccessor.ResourceName;
+			this.accessor = resourceAccessor.Accessor;
 		}
 
 		/// <summary>

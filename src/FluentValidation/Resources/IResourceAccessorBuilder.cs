@@ -3,6 +3,12 @@ namespace FluentValidation.Resources {
 	using System.Reflection;
 	using Internal;
 
+    public class ResourceAccessor {
+        public Func<string> Accessor { get; set; }
+        public Type ResourceType { get; set; }
+        public string ResourceName { get; set; }
+    }
+
 	/// <summary>
 	/// Builds a delegate for retrieving a localised resource from a resource type and property name.
 	/// </summary>
@@ -10,7 +16,7 @@ namespace FluentValidation.Resources {
 		/// <summary>
 		/// Gets a function that can be used to retrieve a message from a resource type and resource name.
 		/// </summary>
-		Func<string> GetResourceAccessor(Type resourceType, string resourceName);
+	    ResourceAccessor GetResourceAccessor(Type resourceType, string resourceName);
 	}
 
 
@@ -22,7 +28,7 @@ namespace FluentValidation.Resources {
 		/// <summary>
 		/// Builds a function used to retrieve the resource.
 		/// </summary>
-		public virtual Func<string> GetResourceAccessor(Type resourceType, string resourceName) {
+		public virtual ResourceAccessor GetResourceAccessor(Type resourceType, string resourceName) {
 			var property = GetResourceProperty(ref resourceType, ref resourceName);
 
 			if (property == null) {
@@ -34,7 +40,12 @@ namespace FluentValidation.Resources {
 			}
 
 			var accessor = property.CreateGetter();
-			return accessor;
+
+		    return new ResourceAccessor {
+		        Accessor = accessor,
+		        ResourceName = resourceName,
+		        ResourceType = resourceType
+		    };
 		}
 
 	

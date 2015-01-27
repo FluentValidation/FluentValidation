@@ -138,6 +138,32 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("Test 1");
 		}
 
+	    [Fact]
+	    public void Setting_global_resource_provider_propogates_to_metadata() {
+            ValidatorOptions.ResourceProviderType = typeof(TestMessages);
+            var validator = new TestValidator();
+            validator.RuleFor(x => x.Forename).NotNull();
+
+            var descriptor = validator.CreateDescriptor();
+            var resourceType = descriptor.GetMembersWithValidators().First().First().ErrorMessageSource.ResourceType;
+
+	        Assert.Equal(typeof (TestMessages), resourceType);
+
+	    }
+
+        [Fact]
+        public void Not_Setting_global_resource_provider_uses_default_messages_in_metadata()
+        {
+            var validator = new TestValidator();
+            validator.RuleFor(x => x.Forename).NotNull();
+
+            var descriptor = validator.CreateDescriptor();
+            var resourceType = descriptor.GetMembersWithValidators().First().First().ErrorMessageSource.ResourceType;
+
+            Assert.Equal(typeof(Messages), resourceType);
+
+        }
+
 		private class MyResources {
 			public static string notempty_error {
 				get { return "foo"; }
