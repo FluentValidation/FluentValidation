@@ -31,7 +31,6 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
-		[EditorBrowsable(EditorBrowsableState.Never)]
 		TNext Configure(Action<TConfiguration> configurator);
 	}
 }
