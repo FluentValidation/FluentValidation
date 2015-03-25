@@ -87,5 +87,13 @@ namespace FluentValidation.Tests.WebApi {
 			result.GetMessage("model.CustomProperty").ShouldEqual("Cannot be 14");
 
 		}
+
+        [Fact]
+	    public void Should_still_validate_other_properties_when_error_found_in_collection() {
+	        var result = InvokeTest<TestModel9>(@"{Children:[{}]}", "application/json");
+
+            result.IsValidField("model.Name").ShouldBeFalse();
+            result.IsValidField("model.Children[0].Name").ShouldBeFalse();
+	    }
 	}
 }
