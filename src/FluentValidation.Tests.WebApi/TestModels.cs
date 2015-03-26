@@ -17,6 +17,7 @@
 #endregion
 namespace FluentValidation.Tests.WebApi {
 	using System;
+	using System.Collections.Generic;
 	using Attributes;
 	using Results;
 
@@ -123,7 +124,19 @@ namespace FluentValidation.Tests.WebApi {
 	[Validator(typeof(TestModel8Validator))]
 	public class TestModel8 {
 		public string Name { get; set; }
-		public int Age { get; set; }
+        public int Age { get; set; }
 
 	}
+
+    [Validator(typeof(TestModel9Validator))]
+    public class TestModel9 {
+        public string Name { get; set; }
+        public List<TestModel> Children { get; set; }
+    }
+
+    public class TestModel9Validator : AbstractValidator<TestModel9> {
+        public TestModel9Validator() {
+            RuleFor(m => m.Name).NotEmpty();
+        }
+    }
 }

@@ -116,7 +116,7 @@ namespace FluentValidation.WebApi
 			}
 
             // Validate this node as well
-            isValid = isValid && ShallowValidate(metadata, validationContext, container);
+            isValid = ShallowValidate(metadata, validationContext, container) && isValid;
 			
 			// Pop the object so that it can be validated again in a different path
 			validationContext.Visited.Remove(model);
