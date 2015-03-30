@@ -1,6 +1,6 @@
 ## Documentation
 
-Documentation is currently being ported from CodePlex - it's not finished yet!
+[![Support FluentValidation](http://www.pledgie.com/campaigns/8403.png?skin_name=chrome)](http://www.pledgie.com/campaigns/8403)
 
 - [Creating a Validator Class](CreatingAValidator.md)
   * [Chaining Validators](CreatingAValidator.md#chaining-validators-for-the-same-property)
@@ -28,8 +28,8 @@ Documentation is currently being ported from CodePlex - it's not finished yet!
   * [Specifying a condition with When/Unless](ConfiguringAValidator.md#user-content-specifying-a-condition-with-whenunless)
   * [Specifying the cascade mode](ConfiguringAValidator.md#setting-the-cascade-mode)
 - [Custom Validators](CustomValidators.md)
-  * Writing a custom Property Validator
-  * Using AbstractValidator.Custom
+  * [Writing a custom Property Validator](CustomValidators.md#writing-a-custom-property-validator)
+  * [Using AbstractValidator.Custom](CustomValidators.md#using-abstractvalidatorcustom)
 - [Localization](Localization.md)
 - [Testing Validators](Testing.md)
 - [Integrating with ASP.NET MVC](MVC.md)
