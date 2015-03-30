@@ -66,7 +66,7 @@ CustomerValidator validator = new CustomerValidator();
 ValidationResult results = validator.Validate(customer);
 ```
 
-## ValidationResult
+## Validation Results
 
 The `Validate` method returns a ValidationResult object. This contains two properties:
 
