@@ -4,12 +4,12 @@ Documentation is currently being ported from CodePlex - it's not finished yet!
 
 - FAQ
 - Creating a Validator Class
-* Chaining Validators
-* Validation Results
-* Throwing Exceptions
-* Re-using Validators on Complex Properties
-* Re-using Validators on Nested Collections
-* Rule Sets
+  * Chaining Validators
+  * Validation Results
+  * Throwing Exceptions
+  * Re-using Validators on Complex Properties
+  * Re-using Validators on Nested Collections
+  * Rule Sets
 - Built in Validators
   * NotNull Validator
   * NotEmpty Validator
