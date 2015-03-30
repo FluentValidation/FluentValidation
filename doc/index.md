@@ -2,7 +2,6 @@
 
 Documentation is currently being ported from CodePlex - it's not finished yet!
 
-- FAQ
 - [Creating a Validator Class](CreatingAValidator.md)
   * [Chaining Validators](CreatingAValidator.md#chaining-validators-for-the-same-property)
   * [Validation Results](CreatingAValidator.md#validation-results)
@@ -10,7 +9,7 @@ Documentation is currently being ported from CodePlex - it's not finished yet!
   * [Re-using Validators on Complex Properties](CreatingAValidator.md#complex-properties)
   * [Re-using Validators on Nested Collections](CreatingAValidator.md#collections)
   * [Rule Sets](CreatingAValidator.md#RuleSets)
-- Built in Validators
+- [Built in Validators](BuiltInValidators.md)
   * NotNull Validator
   * NotEmpty Validator
   * NotEqual Validator
@@ -23,16 +22,16 @@ Documentation is currently being ported from CodePlex - it's not finished yet!
   * Predicate Validator (aka Must)
   * RegEx Validator
   * Email Validator
-- Configuring/Customising a validator
+- [Configuring/Customising a validator](ConfiguringAValidator.md)
   * Overriding the default error message
   * Overriding the default property name
   * Specifying a condition with When/Unless
   * Specifying the cascade mode
-- Custom Validators
+- [Custom Validators](CustomValidators.md)
   * Writing a custom Property Validator
   * Using AbstractValidator.Custom
-- Localization
-- Testing Validators
-- Integrating with ASP.NET MVC
-- Using a Validator Factory with an IoC container
-- Installation via NuGet
+- [Localization](Localization.md)
+- [Testing Validators](Testing.md)
+- [Integrating with ASP.NET MVC](MVC.md)
+- [Using a Validator Factory with an IoC container](IoC.md)
+- [Installation via NuGet](Nuget.md)
