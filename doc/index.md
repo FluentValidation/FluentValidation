@@ -5,7 +5,7 @@ Documentation is currently being ported from CodePlex - it's not finished yet!
 - FAQ
 - [Creating a Validator Class](CreatingAValidator.md)
   * [Chaining Validators](CreatingAValidator.md#chaining-validators-for-the-same-property)
-  * [Validation Results](CreatingAValidator.md#Chaining-Validators-for-the-Same-Property)
+  * [Validation Results](CreatingAValidator.md#ValidationResult)
   * [Throwing Exceptions](CreatingAValidator.md#throwing-exceptions)
   * [Re-using Validators on Complex Properties](CreatingAValidator.md#complex-properties)
   * [Re-using Validators on Nested Collections](CreatingAValidator.md#collections)
