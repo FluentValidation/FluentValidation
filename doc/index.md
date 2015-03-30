@@ -23,10 +23,10 @@ Documentation is currently being ported from CodePlex - it's not finished yet!
   * [RegEx Validator](BuiltInValidators.md#regular-expression-validator)
   * [Email Validator](BuiltInValidators.md#email-validator)
 - [Configuring/Customising a validator](ConfiguringAValidator.md)
-  * Overriding the default error message
-  * Overriding the default property name
-  * Specifying a condition with When/Unless
-  * Specifying the cascade mode
+  * [Overriding the default error message](ConfiguringAValidator.md#overriding-the-default-error)
+  * [Overriding the default property name](ConfiguringAValidator.md#overriding-the-default-property-name)
+  * [Specifying a condition with When/Unless](ConfiguringAValidator.md#user-content-specifying-a-condition-with-whenunless)
+  * [Specifying the cascade mode](ConfiguringAValidator.md#setting-the-cascade-mode)
 - [Custom Validators](CustomValidators.md)
   * Writing a custom Property Validator
   * Using AbstractValidator.Custom
