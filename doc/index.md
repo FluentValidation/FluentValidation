@@ -34,4 +34,4 @@ Documentation is currently being ported from CodePlex - it's not finished yet!
 - [Testing Validators](Testing.md)
 - [Integrating with ASP.NET MVC](MVC.md)
 - [Using a Validator Factory with an IoC container](IoC.md)
-- [Installation via NuGet](Nuget.md)
+- [Installation via NuGet](nuget.md)
