@@ -10,18 +10,18 @@ Documentation is currently being ported from CodePlex - it's not finished yet!
   * [Re-using Validators on Nested Collections](CreatingAValidator.md#collections)
   * [Rule Sets](CreatingAValidator.md#RuleSets)
 - [Built in Validators](BuiltInValidators.md)
-  * NotNull Validator
-  * NotEmpty Validator
-  * NotEqual Validator
-  * Equal Validator
-  * Length Validator
-  * Less Than Validator
-  * Less Than Or Equal Validator
-  * Greater Than Validator
-  * GreaterThan Or Equal Validator
-  * Predicate Validator (aka Must)
-  * RegEx Validator
-  * Email Validator
+  * [NotNull Validator](BuiltInValidators.md#notnull-validator)
+  * [NotEmpty Validator](BuiltInValidators.md#notempty-validator)
+  * [NotEqual Validator](BuiltInValidators.md#notequal-validator)
+  * [Equal Validator](BuiltInValidators.md#equal-validator)
+  * [Length Validator](BuiltInValidators.md#length-validator)
+  * [Less Than Validator](BuiltInValidators.md#less-than-validator)
+  * [Less Than Or Equal Validator](BuiltInValidators.md#less-than-or-equal-validator)
+  * [Greater Than Validator](BuiltInValidators.md#greater-than-validator)
+  * [GreaterThan Or Equal Validator](BuiltInValidators.md#greater-than-or-equal-validator)
+  * [Predicate Validator (aka Must)](BuiltInValidators.md#predicate-validator)
+  * [RegEx Validator](BuiltInValidators.md#regular-expression-validator)
+  * [Email Validator](BuiltInValidators.md#email-validator)
 - [Configuring/Customising a validator](ConfiguringAValidator.md)
   * Overriding the default error message
   * Overriding the default property name
