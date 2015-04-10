@@ -50,4 +50,4 @@ IList<ValidationFailure> failures = results.Errors;
 
 ### Further Documentation
 
-[Documentation can be found here.](doc/index.md) 
+[Documentation can be found here.](https://github.com/JeremySkinner/FluentValidation/wiki) 
