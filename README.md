@@ -10,8 +10,6 @@ If you find FluentValidation useful, [please consider making a donation](http://
 
 ### NuGet Packages
 
-[NuGet packages are available](doc/nuget.md)
-
 ```
 Install-Package FluentValidation
 ```
