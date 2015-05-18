@@ -80,6 +80,26 @@ namespace FluentValidation {
 			       where Equals(rule.Member, accessor.Member)
 			       from validator in rule.Validators
 			       select validator;
+		}
+
+
+		public IEnumerable<RulesetMetadata> GetRulesByRuleset() {
+			var query = from rule in Rules.OfType<PropertyRule>()
+				group rule by rule.RuleSet
+				into grp
+				select new RulesetMetadata(grp.Key, grp);
+
+			return query.ToList();
 		} 
+
+		public class RulesetMetadata {
+			public RulesetMetadata(string name, IEnumerable<PropertyRule> rules) {
+				Name = name;
+				Rules = rules;
+			}
+
+			public string Name { get; private set; }
+			public IEnumerable<PropertyRule> Rules { get; private set; }
+		}
 	}
 }
