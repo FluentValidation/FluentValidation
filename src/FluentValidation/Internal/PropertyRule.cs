@@ -107,7 +107,8 @@ namespace FluentValidation.Internal {
 			OnFailure = x => { };
 			TypeToValidate = typeToValidate;
 			this.cascadeModeThunk = cascadeModeThunk;
-
+			
+			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
 			DisplayName = new LazyStringSource(() => ValidatorOptions.DisplayNameResolver(containerType, member, expression));
 		}
@@ -189,6 +190,11 @@ namespace FluentValidation.Internal {
 		public Func<PropertyValidatorContext, string> MessageBuilder { get; set; }
 
 		/// <summary>
+		/// Dependent rules
+		/// </summary>
+		public List<IValidationRule> DependentRules { get; private set; }
+
+		/// <summary>
 		/// Display name for the property. 
 		/// </summary>
 		public string GetDisplayName() {
@@ -252,6 +258,13 @@ namespace FluentValidation.Internal {
 			if (hasAnyFailure) {
 				// Callback if there has been at least one property validator failed.
 				OnFailure(context.InstanceToValidate);
+			}
+			else {
+				foreach (var dependentRule in DependentRules) {
+					foreach (var failure in dependentRule.Validate(context)) {
+						yield return failure;
+					}
+				}
 			}
 		}
 

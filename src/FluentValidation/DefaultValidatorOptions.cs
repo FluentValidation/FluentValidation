@@ -202,6 +202,20 @@ namespace FluentValidation {
 			return rule.When(x => !predicate(x), applyConditionTo);
 		}
 
+		/// <summary>
+		/// Triggers an action when the rule passes. Typically used to configure dependent rules. This applies to all preceding rules in the chain. 
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="action">An action to be invoked if the rule is valid</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<DependentRules<T>>  action) {
+			var dependencyContainer = new DependentRules<T>();
+			action(dependencyContainer);
+			rule.Configure(cfg => {
+				cfg.DependentRules.AddRange(dependencyContainer);
+			});
+			return rule;
+		}
 
 		/// <summary>
 		/// Specifies a custom property name to use within the error message.

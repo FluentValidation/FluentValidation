@@ -245,7 +245,7 @@ namespace FluentValidation {
 			Action<IValidationRule> onRuleAdded = propertyRules.Add;
 
 			using(nestedValidators.OnItemAdded(onRuleAdded)) {
-				action();
+				action(); 
 			}
 
 			// Must apply the predictae after the rule has been fully created to ensure any rules-specific conditions have already been applied.
@@ -275,5 +275,8 @@ namespace FluentValidation {
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
 		}
+	}
+
+	public class	DependentRules<T> : AbstractValidator<T> {
 	}
 }
