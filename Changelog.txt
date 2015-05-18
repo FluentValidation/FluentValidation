@@ -1,13 +1,13 @@
-5.6 -
+5.6 - 18 May 2015
 Patch - Added properties to Error that can be used to build customized message.
 Fix issue where setting global resource provider isn't propogated to metadata, breaking client-side messages
 in some situations.
 Patch - allow spaces in credit card numbers
 Support model level-rules with RuleFor(x => x)
 PropertyChain handles nulls/empty strings properly
-Add support for rule dependencies 
+Add support for rule dependencies
 
-5.5 - 30/10/2014 
+5.5 - 30 Oct 2014 
 Patch - Added optional RuleSet arguments to the validation test extensions.
 Patch - Support MVC4/5 client-side validation for GreaterThanOrEqualToValidator
 Patch - Support MVC4/5 client-side validation for LessThanOrEqualValidator
@@ -15,33 +15,33 @@ Patch - Remove duplication in Min/MaxFluentValidationPropertyValidator
 Patch -  Async validation for ChildCollectionValidatorAdaptor
 Update nuget package for wpa81
 
-5.4 - 03/07/2014
+5.4 - 03 Jul 2014
 * Applied patch - Danish translation
 * Applied patch - Improve DisplayName resolution performance
 * Update WebApi/MVC dependencies
 
-5.3 - 27/05/2014
+5.3 - 27 May 2014
 * Fix issue https://fluentvalidation.codeplex.com/workitem/7183 (email address validation)
 
-5.2 - 21/05/2014
+5.2 - 21 May 2014
 * Added Czech and Finish translation of default error messages
 * Allow nullable target properties for greater/less validators
 * Apply pull request: RuleForEach doesn't respect When condition
 
-5.1 - 11/03/2014
+5.1 - 11 Mar 2014
 * Applied pull request: Apply the same display name resolving to the target property as to the source property.
 * Applied pull request: Allow parent to be passed to child collection validator
 * Applied pull request: Implement Async validation
 * Applied pull request: Split WebApi into separate project
 * Drop support for MVC 3
 
-5.0 - 24/10/2013 
+5.0 - 24 Oct 2013 
 * Display name is now lazily-loaded by default (as a result, localization via DisplayAttribute now works correctly)
 * Added WebApi integration (contributed by dmorganb)
 * Support for MVC 5 (package names are FluentValidation.Mvc5 and FluentValidation.Mvc5-signed)
 * Remove support for partial trust
 
-4.0 - 29/04/2013 
+4.0 - 29 Apr 2013 
 * Add portable class library and deprecate the Silverlight-specific projects
 * Added scale precision validator (thanks to Matthew Leibowitz)
 * Added the ability to replace property rules (thanks to Matthew Leibowitz)
@@ -56,7 +56,7 @@ Update nuget package for wpa81
 * *Breaking* Change default error messages for Equal/NotEqual validators to use {ComparisonValue} rather than {PropertyValue} for consistency.
 * All validators can now access the current property value inside the error message using {PropertyValue}
 
-3.4 - 17/08/2012
+3.4 - 17 Aug 2012
 * Make ValidationResut.IsValid virtual
 * Add private no-arg ctor to ValidationFailure to help with serialization
 * Add Turkish error messages
