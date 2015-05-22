@@ -1,5 +1,7 @@
 ![FluentValidation](fv.png)
 
+ [Full Documentation](https://github.com/JeremySkinner/FluentValidation/wiki) 
+
 A small validation library for .NET that uses a fluent interface 
 and lambda expressions for building validation rules.
 Written by Jeremy Skinner (http://www.jeremyskinner.co.uk) and licensed under [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html).
