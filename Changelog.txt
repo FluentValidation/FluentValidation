@@ -1,3 +1,6 @@
+5.7 - 
+RegExValidator can now use a special {RegularExpression} placeholder in its error message.
+
 5.6 - 22 May 2015
 Patch - Added properties to Error that can be used to build customized message.
 Fixed issue where setting global resource provider isn't propogated to metadata, breaking client-side messages

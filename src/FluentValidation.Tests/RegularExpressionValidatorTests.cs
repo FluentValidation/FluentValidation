@@ -68,5 +68,14 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person{Surname = "S33"});
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' is not in the correct format.");
 		}
+
+		[Fact]
+		public void Can_access_expression_in_message() {
+			var v = new TestValidator();
+			v.RuleFor(x => x.Forename).Matches(@"^\w\d$").WithMessage("test {RegularExpression}");
+
+			var result = v.Validate(new Person {Forename = ""});
+			result.Errors.Single().ErrorMessage.ShouldEqual(@"test ^\w\d$");
+		}
 	}
 }
