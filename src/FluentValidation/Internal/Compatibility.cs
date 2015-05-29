@@ -78,9 +78,9 @@ namespace FluentValidation.Internal {
 
 		public static Assembly GetAssembly(this Type type) {
 #if PORTABLE || CoreCLR
-                    return typeof(Messages).GetTypeInfo().Assembly;
+                    return type.GetTypeInfo().Assembly;
 #else
-			return typeof(Messages).Assembly;
+			return type.Assembly;
 #endif
 		}
 
