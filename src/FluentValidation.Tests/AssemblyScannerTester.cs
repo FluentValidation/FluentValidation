@@ -21,7 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;
 
-	
+#if !PORTABLETESTS
 	public class AssemblyScannerTester {
 
 		[Fact]
@@ -61,5 +61,5 @@ namespace FluentValidation.Tests {
 
 		}
 	}
-
+#endif
 }
