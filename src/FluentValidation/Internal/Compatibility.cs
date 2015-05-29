@@ -35,7 +35,7 @@ namespace FluentValidation.Internal {
 
 		public static MethodInfo GetPublicInstanceMethod(this Type type, string name) {
 #if PORTABLE || CoreCLR
-			return type.GetRuntimeMethod(name, null);
+			return type.GetRuntimeMethod(name, new Type[0]);
 #else
 			return type.GetMethod(name, BindingFlags.Instance | BindingFlags.Public);
 #endif
