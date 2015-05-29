@@ -4,8 +4,8 @@
     <id>FluentValidation.WebApi</id>
     <version></version>
     <authors>Jeremy Skinner</authors>
-    <licenseUrl>http://fluentvalidation.codeplex.com/license</licenseUrl>
-    <projectUrl>http://fluentvalidation.codeplex.com</projectUrl>
+    <licenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</licenseUrl>
+    <projectUrl>http://github.com/JeremySkinner/fluentvalidation</projectUrl>
     <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=FluentValidation&amp;DownloadId=166226</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>ASP.NET Web API integration for FluentValidation</description>
