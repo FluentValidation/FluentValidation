@@ -1,5 +1,6 @@
-5.7 - 
+5.6.1 - 
 RegExValidator can now use a special {RegularExpression} placeholder in its error message.
+Fix two crashes when using the PCL build
 
 5.6 - 22 May 2015
 Patch - Added properties to Error that can be used to build customized message.
