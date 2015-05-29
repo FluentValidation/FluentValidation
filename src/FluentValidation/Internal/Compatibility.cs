@@ -52,7 +52,7 @@ namespace FluentValidation.Internal {
 		public static Func<string> CreateGetter(this PropertyInfo property) {
 			Func<string> accessor;
 #if PORTABLE || CoreCLR
-            accessor = (Func<string>)property.GetMethod.CreateDelegate(typeof(Func<string>), property.GetMethod);
+            accessor = (Func<string>)property.GetMethod.CreateDelegate(typeof(Func<string>));
 #else
 			accessor = (Func<string>)Delegate.CreateDelegate(typeof(Func<string>), property.GetGetMethod());
 #endif
