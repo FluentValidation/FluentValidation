@@ -20,6 +20,7 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using FluentValidation.Internal;
 	using Resources;
@@ -37,7 +38,7 @@ namespace FluentValidation.Validators {
 
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
-		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			return TaskHelpers.FromResult(Validate(context));
 		}
 

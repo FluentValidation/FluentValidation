@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
 	using Moq;
@@ -130,7 +131,7 @@ namespace FluentValidation.Tests {
 			var validator = new Mock<IPropertyValidator>();
 			builder.SetValidator(validator.Object);
 
-			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).Result.ToList();
+			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 		}
@@ -140,12 +141,12 @@ namespace FluentValidation.Tests {
 		{
 			var person = new Person { Surname = "Foo" };
 		    var validator = new Mock<AsyncValidatorBase>(MockBehavior.Loose, Messages.predicate_error) {CallBase = true};
-			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>())).Returns(TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()));
+			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()));
 			builder.SetValidator(validator.Object);
 
-			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).Result.ToList();
+			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
 
-			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
+			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
 		}
 
 		[Fact]

@@ -2,6 +2,7 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using Results;
 
@@ -32,7 +33,7 @@ namespace FluentValidation.Validators {
 			);
 		}
 
-		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			return ValidateInternal(
 				context, 
 				(ctx, v) => v.ValidateAsync(ctx).Then(r => r.Errors.AsEnumerable(), runSynchronously:true),

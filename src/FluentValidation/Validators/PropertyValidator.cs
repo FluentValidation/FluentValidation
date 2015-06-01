@@ -75,12 +75,12 @@ namespace FluentValidation.Validators {
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
-		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
 			context.MessageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
 
 			return
-				IsValidAsync(context)
+				IsValidAsync(context, cancellation)
 				.Then(
 					valid => valid ? Enumerable.Empty<ValidationFailure>() : new[] { CreateValidationError(context) }.AsEnumerable(),
 					runSynchronously: true
@@ -89,7 +89,7 @@ namespace FluentValidation.Validators {
 
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
-		protected virtual Task<bool> IsValidAsync(PropertyValidatorContext context) {
+		protected virtual Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			return TaskHelpers.FromResult(IsValid(context));
 		}
 

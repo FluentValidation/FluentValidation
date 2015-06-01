@@ -120,7 +120,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void MustAsync_should_create_AsyncPredicateValidator_with_PropertyValidatorContext() {
 			var hasPropertyValidatorContext = false;
-			this.validator.RuleFor(x => x.Surname).MustAsync((x, val, ctx) => {
+			this.validator.RuleFor(x => x.Surname).MustAsync((x, val, ctx, cancel) => {
 				hasPropertyValidatorContext = ctx != null;
 				return TaskHelpers.FromResult(true);
 			});

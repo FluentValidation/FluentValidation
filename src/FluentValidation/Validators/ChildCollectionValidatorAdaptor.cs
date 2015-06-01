@@ -9,6 +9,7 @@ namespace FluentValidation.Validators {
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using FluentValidation.Results;
 
@@ -51,7 +52,7 @@ namespace FluentValidation.Validators {
 			);
 		}
 
-		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context) {
+		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			return ValidateInternal(
 				context,
 				items => {
@@ -59,7 +60,7 @@ namespace FluentValidation.Validators {
 					var tasks = items.Select(tuple => {
 						var ctx = tuple.Item1;
 						var validator = tuple.Item2;
-						return validator.ValidateAsync(ctx).Then(res => failures.AddRange(res.Errors), runSynchronously: true);
+						return validator.ValidateAsync(ctx, cancellation).Then(res => failures.AddRange(res.Errors), runSynchronously: true);
 					});
 					return TaskHelpers.Iterate(tasks).Then(() => failures.AsEnumerable(), runSynchronously: true);
 				},

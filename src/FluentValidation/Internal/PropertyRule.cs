@@ -22,6 +22,7 @@ namespace FluentValidation.Internal {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using Resources;
 	using Results;
@@ -273,7 +274,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context) {
+		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
 			try {
 				var displayName = GetDisplayName();
 
@@ -302,6 +303,11 @@ namespace FluentValidation.Internal {
 
 				// Firstly, invoke all syncronous validators and collect their results.
 				foreach (var validator in validators.Where(v => !v.IsAsync)) {
+
+					if (cancellation.IsCancellationRequested) {
+						return TaskHelpers.Canceled<IEnumerable<ValidationFailure>>();
+					}
+
 					var results = InvokePropertyValidator(context, validator, propertyName);
 
 					failures.AddRange(results);
@@ -329,7 +335,7 @@ namespace FluentValidation.Internal {
 				var validations =
 					asyncValidators
 						.Select(v => v
-							.ValidateAsync(new PropertyValidatorContext(context, this, propertyName))
+							.ValidateAsync(new PropertyValidatorContext(context, this, propertyName), cancellation)
 							//this is thread safe because tasks are launched sequencially
 							.Then(fs => failures.AddRange(fs), runSynchronously: true)
 						);
@@ -337,7 +343,8 @@ namespace FluentValidation.Internal {
 				return
 					TaskHelpers.Iterate(
 						validations,
-						breakCondition: _ => cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0
+						breakCondition: _ => cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0,
+						cancellationToken: cancellation
 					).Then(() => {
 						if (failures.Count > 0) {
 							OnFailure(context.InstanceToValidate);

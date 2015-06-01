@@ -1,6 +1,7 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Linq.Expressions;
+	using System.Threading;
 	using System.Threading.Tasks;
 
 	public abstract class AsyncValidatorBase : PropertyValidator {
@@ -21,9 +22,9 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			return IsValidAsync(context).Result;
+			return IsValidAsync(context, new CancellationToken()).Result;
 		}
 
-		protected abstract override Task<bool> IsValidAsync(PropertyValidatorContext context);
+		protected abstract override Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation);
 	}
 }

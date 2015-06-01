@@ -20,6 +20,7 @@ namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using Results;
 	using Validators;
@@ -30,7 +31,7 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="T"></typeparam>
 	public class DelegateValidator<T> : IValidationRule {
 		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
-		private readonly Func<T, ValidationContext<T>, Task<IEnumerable<ValidationFailure>>> asyncFunc;
+		private readonly Func<T, ValidationContext<T>, CancellationToken, Task<IEnumerable<ValidationFailure>>> asyncFunc;
 
 		// Work-around for reflection bug in .NET 4.5
 		static Func<object, bool> s_condition = x => true;
@@ -46,7 +47,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public DelegateValidator(Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func) {
 			this.func = func;
-			asyncFunc = (x, ctx) => TaskHelpers.RunSynchronously(() => this.func(x, ctx));
+			asyncFunc = (x, ctx, cancel) => TaskHelpers.RunSynchronously(() => this.func(x, ctx));
 		}
 
 		/// <summary>
@@ -59,16 +60,16 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new DelegateValidator using the specified async function to perform validation.
 		/// </summary>
-		public DelegateValidator(Func<T, ValidationContext<T>, Task<IEnumerable<ValidationFailure>>> asyncFunc) {
+		public DelegateValidator(Func<T, ValidationContext<T>, CancellationToken, Task<IEnumerable<ValidationFailure>>> asyncFunc) {
 			this.asyncFunc = asyncFunc;
-			func = (x, ctx) => Task.Factory.StartNew(() => this.asyncFunc(x, ctx)).Unwrap().Result;
+			func = (x, ctx) => Task.Factory.StartNew(() => this.asyncFunc(x, ctx, new CancellationToken())).Unwrap().Result;
 		}
 
 		/// <summary>
 		/// Creates a new DelegateValidator using the specified async function to perform validation.
 		/// </summary>
 		public DelegateValidator(Func<T, Task<IEnumerable<ValidationFailure>>> asyncFunc)
-			: this((x, ctx) => asyncFunc(x)) {
+			: this((x, ctx, cancel) => asyncFunc(x)) {
 		}
 
 		/// <summary>
@@ -85,8 +86,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext<T> context) {
-			return asyncFunc(context.InstanceToValidate, context);
+		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
+			return asyncFunc(context.InstanceToValidate, context, cancellation);
 		}
 
 		/// <summary>
@@ -115,13 +116,13 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context) {
+		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
 			if (!context.Selector.CanExecute(this, "", context) || !condition(context.InstanceToValidate)) {
 				return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 			}
 
 			var newContext = new ValidationContext<T>((T) context.InstanceToValidate, context.PropertyChain, context.Selector);
-			return ValidateAsync(newContext);
+			return ValidateAsync(newContext, cancellation);
 		}
 
 		public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
