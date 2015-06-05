@@ -63,16 +63,16 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-        /// <summary>
-        /// Sets the validator associated with the rule. Use with complex properties where an IValidator instance is already declared for the property type.
-        /// </summary>
-        /// <param name="validatorProvider">The validator provider to set</param>
-        public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TValidator> validatorProvider)
-            where TValidator : IValidator<TProperty> {
-            validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator");
-            SetValidator(new ChildValidatorAdaptor(t => validatorProvider((T) t), typeof (TProperty)));
-            return this;
-        }
+		/// <summary>
+		/// Sets the validator associated with the rule. Use with complex properties where an IValidator instance is already declared for the property type.
+		/// </summary>
+		/// <param name="validatorProvider">The validator provider to set</param>
+		public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TValidator> validatorProvider)
+			where TValidator : IValidator<TProperty> {
+			validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator");
+			SetValidator(new ChildValidatorAdaptor(t => validatorProvider((T) t), typeof (TProperty)));
+			return this;
+		}
 
 		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
 			configurator(rule);
