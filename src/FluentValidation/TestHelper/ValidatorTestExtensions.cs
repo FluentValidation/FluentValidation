@@ -48,7 +48,7 @@ namespace FluentValidation.TestHelper {
 			var descriptor = validator.CreateDescriptor();
 			var matchingValidators = descriptor.GetValidatorsForMember(expression.GetMember().Name);
 
-			var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.Validator.GetType());
+			var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.ValidatorType);
 			childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
 			if (!childValidatorTypes.Any(x => x == childValidatorType)) {
