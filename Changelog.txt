@@ -1,6 +1,7 @@
 5.7 - 
 Fixed issue - DelegateValidator causes a deadlock when running an async function synchronously.
 Added support for cancellation tokens
+Additional overload of SetValidator that takes a validatorProvider
 
 5.6.2 - 29 May 2015
 RegExValidator can now use a special {RegularExpression} placeholder in its error message.
