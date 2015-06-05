@@ -262,7 +262,23 @@ namespace FluentValidation {
 			When(x => !predicate(x), action);
 		}
 
-		/// <summary>
+	    /// <summary>
+	    /// Remove a validation rule for a specify property from existing.
+	    /// </summary>
+	    /// <example>
+	    /// RemoveRule(x => x.Surname)...
+	    /// </example>
+	    /// <typeparam name="TProperty">The type of property being validated</typeparam>
+	    /// <param name="expression">The expression representing the property to validate</param>
+	    /// <returns>Successed removed or not</returns>
+	    public bool RemoveRule<TProperty>(Expression<Func<T, TProperty>> expression) {
+	        expression.Guard("Cannot pass null to RemoveRule");
+	        var member = expression.GetMember();
+	        var rule = nestedValidators.OfType<PropertyRule>().FirstOrDefault(s => s.Member == member);
+	        return nestedValidators.Remove(rule);
+	    }
+
+	    /// <summary>
 		/// Returns an enumerator that iterates through the collection of validation rules.
 		/// </summary>
 		/// <returns>

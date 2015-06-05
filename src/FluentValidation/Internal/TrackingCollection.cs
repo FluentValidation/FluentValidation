@@ -33,6 +33,10 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+	    public bool Remove(T item) {
+	        return innerCollection.Remove(item);
+	    }
+
 		public IDisposable OnItemAdded(Action<T> onItemAdded) {
 			ItemAdded += onItemAdded;
 			return new EventDisposable(this, onItemAdded);
