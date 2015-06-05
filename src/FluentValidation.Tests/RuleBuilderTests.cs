@@ -85,6 +85,11 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+        public void Should_throw_if_overriding_validator_provider_is_null() {
+            typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((Func<Person, IValidator<string>>) null));
+        }
+
+		[Fact]
 		public void Should_throw_if_message_is_null() {
 			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithMessage(null));
 		}

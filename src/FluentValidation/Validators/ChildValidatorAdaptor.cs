@@ -7,23 +7,27 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class ChildValidatorAdaptor : NoopPropertyValidator {
-		readonly IValidator validator;
-
 		static readonly IEnumerable<ValidationFailure> EmptyResult = Enumerable.Empty<ValidationFailure>();
-
 		static readonly Task<IEnumerable<ValidationFailure>> AsyncEmptyResult = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 
-		public IValidator Validator {
-			get { return validator; }
+        readonly Func<object, IValidator> validatorProvider;
+        readonly Type validatorType;
+
+		public Type ValidatorType {
+			get { return validatorType; }
 		}
 
 		public override bool IsAsync {
 			get { return true; }
 		}
 
-		public ChildValidatorAdaptor(IValidator validator) {
-			this.validator = validator;
-		}
+	    public ChildValidatorAdaptor(IValidator validator) : this(_ => validator, validator.GetType()) {
+	    }
+
+	    public ChildValidatorAdaptor(Func<object, IValidator> validatorProvider, Type validatorType) {
+            this.validatorProvider = validatorProvider;
+            this.validatorType = validatorType;
+        }
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			return ValidateInternal(
@@ -60,7 +64,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected virtual IValidator GetValidator(PropertyValidatorContext context) {
-			return Validator;
+			return validatorProvider(context.Instance);
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
