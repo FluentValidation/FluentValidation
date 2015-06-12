@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Xunit;
 
 	
@@ -105,6 +106,16 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(person);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Async_condition_should_work_with_complex_property() {
+			var validator = new TestValidator() {
+				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).WhenAsync(x => TaskHelpers.FromResult(x.Address.Line1 == "foo"))
+			};
+
+			var result = validator.ValidateAsync(person).Result;
 			result.IsValid.ShouldBeTrue();
 		}
 
