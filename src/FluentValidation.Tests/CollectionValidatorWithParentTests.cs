@@ -22,6 +22,7 @@ namespace FluentValidation.Tests
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using Xunit;
 
@@ -213,9 +214,9 @@ namespace FluentValidation.Tests
 				RuleFor(x => x.ProductName).MustAsync(BeOneOfTheChildrensEmailAddress(person));
 			}
 
-			private Func<string, Task<bool>> BeOneOfTheChildrensEmailAddress(Person person)
+			private Func<string, CancellationToken, Task<bool>> BeOneOfTheChildrensEmailAddress(Person person)
 			{
-				return productName => TaskHelpers.FromResult(person.Children.Any(child => child.Email == productName));
+				return (productName, cancel) => TaskHelpers.FromResult(person.Children.Any(child => child.Email == productName));
 			}
 		}
 	}

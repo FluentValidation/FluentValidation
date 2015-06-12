@@ -16,6 +16,7 @@
 // The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 namespace FluentValidation.Tests {
+	using Validators;
 	using Xunit;
 
 	
@@ -49,8 +50,45 @@ namespace FluentValidation.Tests {
 			result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
 		}
 
+		[Fact]
+		public void Executes_rule_for_each_item_in_collection_async()
+		{
+			var validator = new TestValidator {
+				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator())
+			};
+
+			var person = new Person
+			{
+				NickNames = new[] { null, "foo", null }
+			};
+
+			var result = validator.ValidateAsync(person).Result;
+			result.Errors.Count.ShouldEqual(2);
+		}
+
+		[Fact]
+		public void Correctly_gets_collection_indicies_async()
+		{
+			var validator = new TestValidator {
+				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator())
+			};
+
+			var person = new Person
+			{
+				NickNames = new[] { null, "foo", null }
+			};
+
+			var result = validator.ValidateAsync(person).Result;
+			result.Errors[0].PropertyName.ShouldEqual("NickNames[0]");
+			result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
+		}
+
 		class request {
 			public Person person = null;
+		}
+
+		private class MyAsyncNotNullValidator : NotNullValidator {
+			public override bool IsAsync { get { return true; } }
 		}
 
 		[Fact]

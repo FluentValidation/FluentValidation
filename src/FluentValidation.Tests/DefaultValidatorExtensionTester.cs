@@ -107,7 +107,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void MustAsync_should_create_AsyncPredicteValidator() {
-			validator.RuleFor(x => x.Surname).MustAsync(x => TaskHelpers.FromResult(true));
+			validator.RuleFor(x => x.Surname).MustAsync((x, cancel) => TaskHelpers.FromResult(true));
 			AssertValidator<AsyncPredicateValidator>();
 		}
 

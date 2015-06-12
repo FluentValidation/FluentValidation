@@ -21,6 +21,8 @@ namespace FluentValidation.Internal {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Threading;
+	using System.Threading.Tasks;
 	using Results;
 	using Validators;
 
@@ -36,6 +38,43 @@ namespace FluentValidation.Internal {
 			var compiled = expression.Compile();
 
 			return new CollectionPropertyRule<TProperty>(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+		}
+
+		protected override Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
+
+			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
+			var results = new List<ValidationFailure>();
+			var delegatingValidator = validator as IDelegatingValidator;
+
+			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.Instance))
+			{
+				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
+
+				if (collectionPropertyValue != null)
+				{
+
+					var validators = collectionPropertyValue.Select((v, count) => {
+						var newContext = context.CloneForChildValidator(context.InstanceToValidate);
+						newContext.PropertyChain.Add(propertyName);
+						newContext.PropertyChain.AddIndexer(count);
+
+						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString());
+						newPropertyContext.PropertyValue = v;
+
+						return validator.ValidateAsync(newPropertyContext, cancellation)
+							.Then(fs => results.AddRange(fs));
+					});
+
+
+					return
+					TaskHelpers.Iterate(
+						validators,
+						cancellationToken: cancellation
+					).Then(() => results.AsEnumerable(), runSynchronously: true);
+				}
+			}
+
+			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 		}
 
 		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(ValidationContext context, Validators.IPropertyValidator validator, string propertyName) {

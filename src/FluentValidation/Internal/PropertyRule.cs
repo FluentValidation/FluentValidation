@@ -334,8 +334,8 @@ namespace FluentValidation.Internal {
 				//Then call asyncronous validators in non-blocking way
 				var validations =
 					asyncValidators
-						.Select(v => v
-							.ValidateAsync(new PropertyValidatorContext(context, this, propertyName), cancellation)
+//						.Select(v => v.ValidateAsync(new PropertyValidatorContext(context, this, propertyName), cancellation)
+						.Select(v => InvokePropertyValidatorAsync(context, v, propertyName, cancellation)
 							//this is thread safe because tasks are launched sequencially
 							.Then(fs => failures.AddRange(fs), runSynchronously: true)
 						);
@@ -357,6 +357,10 @@ namespace FluentValidation.Internal {
 			catch (Exception ex) {
 				return TaskHelpers.FromError<IEnumerable<ValidationFailure>>(ex);
 			}
+		}
+
+		protected virtual Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
+			return validator.ValidateAsync(new PropertyValidatorContext(context, this, propertyName), cancellation);
 		}
 
 		/// <summary>
