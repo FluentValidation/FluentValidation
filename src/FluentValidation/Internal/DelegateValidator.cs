@@ -48,7 +48,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public DelegateValidator(Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func) {
 			this.func = func;
-			asyncFunc = (x, ctx, cancel) => TaskHelpers.RunSynchronously(() => this.func(x, ctx));
+			asyncFunc = (x, ctx, cancel) => TaskHelpers.RunSynchronously(() => this.func(x, ctx), cancel);
 		}
 
 		/// <summary>
