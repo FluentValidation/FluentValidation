@@ -1,13 +1,13 @@
-namespace FluentValidation.TestHelper.Fluent
+namespace FluentValidation.TestHelper
 {
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using Results;
 
-    public interface IFluentPropertyChain<TValue>
+    public interface ITestPropertyChain<TValue>
     {
-        IFluentPropertyChain<TValue1> Property<TValue1>(Expression<Func<TValue, TValue1>> memberAccessor);
+        ITestPropertyChain<TValue1> Property<TValue1>(Expression<Func<TValue, TValue1>> memberAccessor);
         IEnumerable<ValidationFailure> ShouldHaveError();
         void ShouldNotHaveError();
     }

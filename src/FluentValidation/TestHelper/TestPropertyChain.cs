@@ -1,4 +1,4 @@
-namespace FluentValidation.TestHelper.Fluent
+namespace FluentValidation.TestHelper
 {
     using System;
     using System.Collections.Generic;
@@ -8,20 +8,20 @@ namespace FluentValidation.TestHelper.Fluent
     using FluentValidation;
     using Results;
 
-    internal class FluentPropertyChain<TValue, TValue1> : IFluentPropertyChain<TValue>
+    internal class TestPropertyChain<TValue, TValue1> : ITestPropertyChain<TValue>
     {
-        private readonly IFluentValidationResultTester validationResultTester;
+        private readonly IValidationResultTester validationResultTester;
         private readonly IEnumerable<MemberInfo> properties;
 
-        public FluentPropertyChain(IFluentValidationResultTester validationResultTester, IEnumerable<MemberInfo> properties = null)
+        public TestPropertyChain(IValidationResultTester validationResultTester, IEnumerable<MemberInfo> properties = null)
         {
             this.validationResultTester = validationResultTester;
             this.properties = properties ?? Enumerable.Empty<MemberInfo>();
         }
 
-        public IFluentPropertyChain<TValue2> Property<TValue2>(Expression<Func<TValue, TValue2>> memberAccessor)
+        public ITestPropertyChain<TValue2> Property<TValue2>(Expression<Func<TValue, TValue2>> memberAccessor)
         {
-            return new FluentPropertyChain<TValue2, TValue1>(validationResultTester, properties.Concat(new[] { ((MemberAccessor<TValue, TValue2>)memberAccessor).Member }));
+            return new TestPropertyChain<TValue2, TValue1>(validationResultTester, properties.Concat(new[] { ((MemberAccessor<TValue, TValue2>)memberAccessor).Member }));
         }
 
         public IEnumerable<ValidationFailure> ShouldHaveError()

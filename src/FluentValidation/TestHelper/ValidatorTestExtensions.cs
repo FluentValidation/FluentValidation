@@ -1,60 +1,91 @@
-#region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
-// limitations under the License.
-// 
-// The latest version of this file can be found at http://www.codeplex.com/FluentValidation
-#endregion
-
 namespace FluentValidation.TestHelper {
-	using System;
-	using System.Linq.Expressions;
-	using Internal;
-	using System.Linq;
-	using Validators;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Internal;
+    using Results;
+    using Validators;
 
-	public static class ValidationTestExtension {
-		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-																   Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(new T());
-		}
+    public static class ValidationTestExtension {
+        public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
+            Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
+            var testValidationResult = validator.TestValidate(expression, value, ruleSet);
+            testValidationResult.ShouldHaveError();
+        }
 
-		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
-			var value = expression.Compile()(objectToTest);
-			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(objectToTest);
-		}
+        public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
+            var value = expression.Compile()(objectToTest);
+            var testValidationResult = validator.TestValidate(expression, value, ruleSet);
+            testValidationResult.ShouldHaveError();
+        }
 
-		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-																	  Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(new T());
-		}
+        public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
+            Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
+            var testValidationResult = validator.TestValidate(expression, value, ruleSet);
+            testValidationResult.ShouldNotHaveError();
+        }
 
-		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
-			var value = expression.Compile()(objectToTest);
-			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(objectToTest);
-		}
+        public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
+            var value = expression.Compile()(objectToTest);
+            var testValidationResult = validator.TestValidate(expression, value, ruleSet);
+            testValidationResult.ShouldNotHaveError();
+        }
 
-		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
-			var descriptor = validator.CreateDescriptor();
-			var matchingValidators = descriptor.GetValidatorsForMember(expression.GetMember().Name);
+        public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
+            var descriptor = validator.CreateDescriptor();
+            var matchingValidators = descriptor.GetValidatorsForMember(expression.GetMember().Name).ToArray();
 
-			var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.ValidatorType);
-			childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
+            var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.ValidatorType);
+            childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
-			if (!childValidatorTypes.Any(x => x == childValidatorType)) {
-				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
-			}
-		}
+            if (childValidatorTypes.All(x => x != childValidatorType)) {
+                throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
+            }
+        }
 
-	}
+        public static void When(this IEnumerable<ValidationFailure> failures, params Expression<Func<ValidationFailure, bool>>[] failurePredicates) {
+            failurePredicates = failurePredicates ?? new Expression<Func<ValidationFailure, bool>>[0];
+
+            var typeParam = Expression.Parameter(typeof (ValidationFailure));
+
+            var andExpression = failurePredicates.Select(x => Expression.Invoke(x, typeParam))
+                .Aggregate(Expression.Constant(true) as Expression, Expression.AndAlso);
+
+            var lambda = Expression.Lambda<Func<ValidationFailure, bool>>(andExpression, typeParam);
+
+            var compiledLambda = lambda.Compile();
+
+            var filteredFailures = failures.Where(compiledLambda);
+
+            if (!filteredFailures.Any())
+                throw new ValidationTestException("Expected a validation error is not found");
+        }
+
+        public static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class {
+            var instanceToValidate = Activator.CreateInstance<T>();
+
+            var memberAccessor = ((MemberAccessor<T, TValue>) expression);
+
+            memberAccessor.Set(instanceToValidate, value);
+
+            var validationResult = validator.Validate(instanceToValidate, null, ruleSet: ruleSet);
+
+            return new TestValidationResult<T, TValue>(validationResult, memberAccessor);
+        }
+
+        public static TestValidationResult<T, T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
+            var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
+
+            return new TestValidationResult<T, T>(validationResult, (Expression<Func<T, T>>) (o => o));
+        }
+
+        public static IEnumerable<ValidationFailure> ShouldHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
+            return testValidationResult.Which.ShouldHaveError();
+        }
+
+        public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
+            testValidationResult.Which.ShouldNotHaveError();
+        }
+    }
 }

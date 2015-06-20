@@ -1,10 +1,10 @@
-namespace FluentValidation.TestHelper.Fluent
+namespace FluentValidation.TestHelper
 {
     using System.Collections.Generic;
     using System.Reflection;
     using Results;
 
-    public interface IFluentValidationResultTester
+    public interface IValidationResultTester
     {
         IEnumerable<ValidationFailure> ShouldHaveError(IEnumerable<MemberInfo> properties);
         void ShouldNotHaveError(IEnumerable<MemberInfo> properties);
