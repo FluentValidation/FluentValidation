@@ -113,6 +113,11 @@
     <Compile Include="Resources\LazyStringSource.cs" />
     <Compile Include="Resources\LocalizedStringSource.cs" />
     <Compile Include="Resources\StaticStringSource.cs" />
+    <Compile Include="TestHelper\TestPropertyChain.cs" />
+    <Compile Include="TestHelper\TestValidationResult.cs" />
+    <Compile Include="TestHelper\ValidationResultTester.cs" />
+    <Compile Include="TestHelper\ITestPropertyChain.cs" />
+    <Compile Include="TestHelper\IValidationResultTester.cs" />
     <Compile Include="ValidationContext.cs" />
     <Compile Include="Internal\IValidatorSelector.cs" />
     <Compile Include="Resources\Messages.Designer.cs">
@@ -126,7 +131,6 @@
     <Compile Include="IValidatorDescriptor.cs" />
     <Compile Include="IValidatorFactory.cs" />
     <Compile Include="TestHelper\ValidationTestException.cs" />
-    <Compile Include="TestHelper\ValidatorTester.cs" />
     <Compile Include="TestHelper\ValidatorTestExtensions.cs" />
     <Compile Include="ValidationException.cs" />
     <Compile Include="ValidatorFactoryBase.cs" />
@@ -169,6 +173,22 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.cs.resx" />
+    <EmbeddedResource Include="Resources\Messages.fi.resx" />
+    <EmbeddedResource Include="Resources\Messages.ko.resx" />
+    <EmbeddedResource Include="Resources\Messages.mk.resx" />
+    <EmbeddedResource Include="Resources\Messages.cz.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.fi.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.ko.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.mk.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.cz.resx" />
     <EmbeddedResource Include="Resources\Messages.fi.resx" />
     <EmbeddedResource Include="Resources\Messages.ko.resx" />
     <EmbeddedResource Include="Resources\Messages.mk.resx" />

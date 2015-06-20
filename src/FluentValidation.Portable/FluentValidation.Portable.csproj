@@ -105,11 +105,23 @@
     <Compile Include="..\FluentValidation\TaskHelpers\TaskHelpersExtensions.cs">
       <Link>TaskHelpersExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\ITestPropertyChain.cs">
+      <Link>ITestPropertyChain.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\IValidationResultTester.cs">
+      <Link>IValidationResultTester.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\TestPropertyChain.cs">
+      <Link>TestPropertyChain.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\TestValidationResult.cs">
+      <Link>TestValidationResult.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\ValidationResultTester.cs">
+      <Link>ValidationResultTester.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\TestHelper\ValidationTestException.cs">
       <Link>ValidationTestException.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\TestHelper\ValidatorTester.cs">
-      <Link>ValidatorTester.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\TestHelper\ValidatorTestExtensions.cs">
       <Link>ValidatorTestExtensions.cs</Link>
