@@ -68,7 +68,7 @@ namespace FluentValidation.TestHelper {
                 throw new ValidationTestException("Expected a validation error is not found");
         }
 
-        public static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class {
+        private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class {
             var instanceToValidate = Activator.CreateInstance<T>();
 
             var memberAccessor = ((MemberAccessor<T, TValue>) expression);
