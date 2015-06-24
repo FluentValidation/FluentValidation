@@ -62,21 +62,9 @@ namespace FluentValidation.TestHelper {
             }
         }
 
-        public static void When(this IEnumerable<ValidationFailure> failures, params Expression<Func<ValidationFailure, bool>>[] failurePredicates) {
-            failurePredicates = failurePredicates ?? new Expression<Func<ValidationFailure, bool>>[0];
-
-            var typeParam = Expression.Parameter(typeof (ValidationFailure));
-
-            var andExpression = failurePredicates.Select(x => Expression.Invoke(x, typeParam))
-                .Aggregate(Expression.Constant(true) as Expression, Expression.AndAlso);
-
-            var lambda = Expression.Lambda<Func<ValidationFailure, bool>>(andExpression, typeParam);
-
-            var compiledLambda = lambda.Compile();
-
-            var filteredFailures = failures.Where(compiledLambda);
-
-            if (!filteredFailures.Any())
+        public static void When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate) {
+            
+            if (!failures.Any(failurePredicate))
                 throw new ValidationTestException("Expected a validation error is not found");
         }
 
