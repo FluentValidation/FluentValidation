@@ -26,16 +26,16 @@ namespace FluentValidation.TestHelper {
     using Validators;
 
     public static class ValidationTestExtension {
-        public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
+        public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
             Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
             var testValidationResult = validator.TestValidate(expression, value, ruleSet);
-            testValidationResult.ShouldHaveError();
+            return testValidationResult.ShouldHaveError();
         }
 
-        public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
+        public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
             var value = expression.Compile()(objectToTest);
             var testValidationResult = validator.TestValidate(expression, value, ruleSet);
-            testValidationResult.ShouldHaveError();
+            return testValidationResult.ShouldHaveError();
         }
 
         public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
@@ -62,12 +62,6 @@ namespace FluentValidation.TestHelper {
             }
         }
 
-        public static void When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate) {
-            
-            if (!failures.Any(failurePredicate))
-                throw new ValidationTestException("Expected a validation error is not found");
-        }
-
         private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class {
             var instanceToValidate = Activator.CreateInstance<T>();
 
@@ -92,6 +86,14 @@ namespace FluentValidation.TestHelper {
 
         public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
             testValidationResult.Which.ShouldNotHaveError();
+        }
+
+        public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate)
+        {
+            if (!failures.Any(failurePredicate))
+                throw new ValidationTestException("Expected a validation error is not found");
+
+            return failures;
         }
     }
 }
