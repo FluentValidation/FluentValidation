@@ -113,6 +113,26 @@ namespace FluentValidation.Tests {
 			testValidator.ShouldHaveValidationErrorFor(x => x.Forename, new Person(), "Names");
 		}
 
+        [Fact]
+        public void ShouldHaveValidationErrorFor_takes_account_of_rulesets_fluent_approach(){
+            //arrange
+            var testValidator = new TestValidator();
+            testValidator.RuleSet("Names", () =>
+            {
+                testValidator.RuleFor(x => x.Surname).NotNull();
+                testValidator.RuleFor(x => x.Forename).NotNull();
+            });
+            testValidator.RuleFor(x => x.Id).NotEqual(0);
+
+            //act
+            var assertionRoot = testValidator.TestValidate(new Person(), "Names").Which;
+
+            //assert
+            assertionRoot.Property(x => x.Forename).ShouldHaveError().When(x => x.ErrorCode == "notnull_error");
+            assertionRoot.Property(x => x.Surname).ShouldHaveError().When(x => x.ErrorCode == "notnull_error");
+            assertionRoot.Property(x => x.Id).ShouldNotHaveError();
+        }
+
 		private class AddressValidator : AbstractValidator<Address> {
 
 		}
