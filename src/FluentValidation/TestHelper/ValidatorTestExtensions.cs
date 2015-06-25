@@ -88,10 +88,10 @@ namespace FluentValidation.TestHelper {
             testValidationResult.Which.ShouldNotHaveError();
         }
 
-        public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate)
+        public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null)
         {
             if (!failures.Any(failurePredicate))
-                throw new ValidationTestException("Expected a validation error is not found");
+                throw new ValidationTestException(exceptionMessage ?? "Expected a validation error is not found");
 
             return failures;
         }
