@@ -1,18 +1,18 @@
 ﻿#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
@@ -22,7 +22,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;
 
-	
+
 	public class ChainedValidationTester {
 		PersonValidator validator;
 		Person person;
@@ -35,7 +35,7 @@ namespace FluentValidation.Tests {
 				},
 				Orders = new List<Order> {
 					new Order() { Amount = 5 },
-					new Order() { ProductName = "Foo" }    	
+					new Order() { ProductName = "Foo" }
 				}
 			};
 		}
@@ -104,7 +104,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Address).SetValidator(addressValidator)	
+				v => v.RuleFor(x => x.Address).SetValidator(addressValidator)
 			};
 
 			var result = validator.Validate(new Person { Address = new Address() });
@@ -149,6 +149,40 @@ namespace FluentValidation.Tests {
 			result.Errors.First().PropertyName.ShouldEqual("Assistant.Surname");
 		}
 
+        [Fact]
+        public void Can_validate_using_validator_for_base_type_and_return_correct_withname()
+        {
+            var addressValidator = new InlineValidator<string>() {
+				v => v.RuleFor(x => x).NotEmpty().Length(500, 1000).WithName("Line1")
+			};
+
+            var validator = new TestValidator {
+				v => v.RuleFor(x => x.Address.Line1).SetValidator(addressValidator)
+			};
+
+            var result = validator.Validate(new Person { Address = new Address() { Line1 = "1" } });
+            result.IsValid.ShouldBeFalse();
+            var validationError = result.Errors.First();
+            validationError.ErrorMessage.StartsWith("'Line1'").ShouldBeTrue();
+            validationError.PropertyName.ShouldEqual(("Address.Line1")); // currently this fails as it is set to "Address.Line1.Line1"
+        }
+
+        [Fact]
+        public void Can_validate_using_validator_for_base_type_and_return_correct_displayname()
+        {
+            var addressValidator = new InlineValidator<string>() {
+				v => v.RuleFor(x => x).NotEmpty().Length(500, 1000)
+			};
+
+            var validator = new TestValidator {
+				v => v.RuleFor(x => x.Address.Line1).SetValidator(addressValidator)
+			};
+
+            var result = validator.Validate(new Person { Address = new Address() { Line1 = "1" } });
+            result.IsValid.ShouldBeFalse();
+            result.Errors.First().ErrorMessage.StartsWith("'Address.Line1'").ShouldBeTrue(); //current this fails as the display name is ''
+        }
+
 		[Fact]
 		public void Chained_validator_descriptor() {
 			var descriptor = validator.CreateDescriptor();
@@ -185,6 +219,7 @@ namespace FluentValidation.Tests {
 			public Person Assistant { get; set; }
 			public IList<Person> Employees { get; set; }
 		}
-	
+
+
 	}
 }
