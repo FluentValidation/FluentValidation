@@ -6,7 +6,7 @@ namespace FluentValidation.TestHelper
 
     public interface IValidationResultTester
     {
-        IEnumerable<ValidationFailure> ShouldHaveError(IEnumerable<MemberInfo> properties);
-        void ShouldNotHaveError(IEnumerable<MemberInfo> properties);
+        IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties);
+        void ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties);
     }
 }

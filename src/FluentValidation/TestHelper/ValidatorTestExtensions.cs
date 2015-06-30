@@ -78,11 +78,11 @@ namespace FluentValidation.TestHelper {
         }
 
         public static IEnumerable<ValidationFailure> ShouldHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-            return testValidationResult.Which.ShouldHaveError();
+            return testValidationResult.Which.ShouldHaveValidationError();
         }
 
         public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-            testValidationResult.Which.ShouldNotHaveError();
+            testValidationResult.Which.ShouldNotHaveValidationError();
         }
 
         public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null){

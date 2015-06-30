@@ -128,9 +128,9 @@ namespace FluentValidation.Tests {
             var assertionRoot = testValidator.TestValidate(new Person(), "Names").Which;
 
             //assert
-            assertionRoot.Property(x => x.Forename).ShouldHaveError().WithErrorCode("notnull_error");
-            assertionRoot.Property(x => x.Surname).ShouldHaveError().WithErrorCode("notnull_error");
-            assertionRoot.Property(x => x.Id).ShouldNotHaveError();
+            assertionRoot.Property(x => x.Forename).ShouldHaveValidationError().WithErrorCode("notnull_error");
+            assertionRoot.Property(x => x.Surname).ShouldHaveValidationError().WithErrorCode("notnull_error");
+            assertionRoot.Property(x => x.Id).ShouldNotHaveValidationError();
         }
 
 		private class AddressValidator : AbstractValidator<Address> {

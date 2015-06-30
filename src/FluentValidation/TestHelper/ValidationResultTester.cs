@@ -36,7 +36,7 @@ namespace FluentValidation.TestHelper {
                          .Select(x => x.Name));
         }
 
-        public IEnumerable<ValidationFailure> ShouldHaveError(IEnumerable<MemberInfo> properties) {
+        public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
             var propertyName = GetPropertyName(properties);
 
             var failures = testValidationResult.Result.Errors.Where(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
@@ -47,7 +47,7 @@ namespace FluentValidation.TestHelper {
             return failures;
         }
 
-        public void ShouldNotHaveError(IEnumerable<MemberInfo> properties) {
+        public void ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
             var propertyName = GetPropertyName(properties);
 
             if (testValidationResult.Result.Errors.Any(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)))

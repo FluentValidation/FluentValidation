@@ -8,7 +8,7 @@ namespace FluentValidation.TestHelper
     public interface ITestPropertyChain<TValue>
     {
         ITestPropertyChain<TValue1> Property<TValue1>(Expression<Func<TValue, TValue1>> memberAccessor);
-        IEnumerable<ValidationFailure> ShouldHaveError();
-        void ShouldNotHaveError();
+        IEnumerable<ValidationFailure> ShouldHaveValidationError();
+        void ShouldNotHaveValidationError();
     }
 }
