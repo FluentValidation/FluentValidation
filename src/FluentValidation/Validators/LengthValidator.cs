@@ -26,6 +26,10 @@ namespace FluentValidation.Validators {
 		public int Min { get; private set; }
 		public int Max { get; private set; }
 
+        public Func<object, int> MinFunc { get; set; }
+
+        public Func<object, int> MaxFunc { get; set; }
+
 		public LengthValidator(int min, int max) : this(min, max, () => Messages.length_error) {
 		}
 
@@ -38,8 +42,23 @@ namespace FluentValidation.Validators {
 			}
 		}
 
+        public LengthValidator(Func<object, int> min, Func<object, int> max)
+            : this(min, max, () => Messages.length_error) {
+        }
+
+        public LengthValidator(Func<object, int> min, Func<object, int> max, Expression<Func<string>> errorMessageResourceSelector) : base(errorMessageResourceSelector) {
+            MaxFunc = max;
+            MinFunc = min;
+        }
+
 		protected override bool IsValid(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) return true;
+
+            if (MaxFunc != null && MinFunc != null)
+            {
+                Max = (int)MaxFunc(context.Instance);
+                Min = (int)MinFunc(context.Instance);
+            }
 
 			int length = context.PropertyValue.ToString().Length;
 
@@ -60,6 +79,11 @@ namespace FluentValidation.Validators {
 		public ExactLengthValidator(int length) : base(length,length, () => Messages.exact_length_error) {
 			
 		}
+
+        public ExactLengthValidator(Func<object, int> length)
+            : base(length, length, () => Messages.exact_length_error) {
+
+        }
 	}
 
     public class MaximumLengthValidator : LengthValidator {
@@ -71,6 +95,16 @@ namespace FluentValidation.Validators {
             : base(0, max, errorMessageResourceSelector) {
 
         }
+
+        public MaximumLengthValidator(Func<object, int> max) : 
+            this(max, () => Messages.length_error) { 
+
+        }
+
+        public MaximumLengthValidator(Func<object, int> max, Expression<Func<string>> errorMessageResourceSelector)
+            : base(obj => 0, max, errorMessageResourceSelector) {
+
+        }
     }
 
     public class MinimumLengthValidator : LengthValidator {
@@ -80,6 +114,16 @@ namespace FluentValidation.Validators {
 
         public MinimumLengthValidator(int min, Expression<Func<string>> errorMessageResourceSelector) 
             : base(min, -1, errorMessageResourceSelector) {
+
+        }
+
+        public MinimumLengthValidator(Func<object, int> min)
+            : this(min, () => Messages.length_error) {
+
+        }
+
+        public MinimumLengthValidator(Func<object, int> min, Expression<Func<string>> errorMessageResourceSelector)
+            : base(min, obj => -1, errorMessageResourceSelector) {
 
         }
     }

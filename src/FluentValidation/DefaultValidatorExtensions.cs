@@ -67,6 +67,21 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(new LengthValidator(min, max));
 		}
 
+        /// <summary>
+        /// Defines a length validator on the current rule builder, but only for string properties.
+        /// Validation will fail if the length of the string is outside of the specifed range. The range is inclusive.
+        /// </summary>
+        /// <typeparam name="T">Type of object being validated</typeparam>
+        /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, Expression<Func<T, int>> min, Expression<Func<T, int>> max)
+        {
+            var minFunc = min.Compile();
+            var maxFunc = max.Compile();
+
+            return ruleBuilder.SetValidator(new LengthValidator(minFunc.CoerceToNonGeneric(), maxFunc.CoerceToNonGeneric()));
+        }
+
 		/// <summary>
 		/// Defines a length validator on the current rule builder, but only for string properties.
 		/// Validation will fail if the length of the string is not equal to the length specified.
@@ -77,6 +92,19 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, int exactLength) {
 			return ruleBuilder.SetValidator(new ExactLengthValidator(exactLength));
 		}
+
+        /// <summary>
+        /// Defines a length validator on the current rule builder, but only for string properties.
+        /// Validation will fail if the length of the string is not equal to the length specified.
+        /// </summary>
+        /// <typeparam name="T">Type of object being validated</typeparam>
+        /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, Expression<Func<T, int>> exactLength)
+        {
+            var func = exactLength.Compile();
+            return ruleBuilder.SetValidator(new ExactLengthValidator(func.CoerceToNonGeneric()));
+        }
 
 		/// <summary>
 		/// Defines a regular expression validator on the current rule builder, but only for string properties.
@@ -89,6 +117,20 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, string expression) {
 			return ruleBuilder.SetValidator(new RegularExpressionValidator(expression));
 		}
+
+        /// <summary>
+        /// Defines a regular expression validator on the current rule builder, but only for string properties.
+        /// Validation will fail if the value returned by the lambda does not match the regular expression.
+        /// </summary>
+        /// <typeparam name="T">Type of object being validated</typeparam>
+        /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+        /// <param name="expression">The regular expression to check the value against.</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Expression<Func<T, string>> expression)
+        {
+            var func = expression.Compile();
+            return ruleBuilder.SetValidator(new RegularExpressionValidator(func.CoerceToNonGeneric()));
+        }
 
 
 		/// <summary>
@@ -103,6 +145,20 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(new RegularExpressionValidator(regex));
 		}
 
+        /// <summary>
+        /// Defines a regular expression validator on the current rule builder, but only for string properties.
+        /// Validation will fail if the value returned by the lambda does not match the regular expression.
+        /// </summary>
+        /// <typeparam name="T">Type of object being validated</typeparam>
+        /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+        /// <param name="regex">The regular expression to use</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Expression<Func<T, Regex>> regex)
+        {
+            var func = regex.Compile();
+            return ruleBuilder.SetValidator(new RegularExpressionValidator(func.CoerceToNonGeneric()));
+        }
+
 
 		/// <summary>
 		/// Defines a regular expression validator on the current rule builder, but only for string properties.
@@ -116,6 +172,21 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, string expression, RegexOptions options) {
 			return ruleBuilder.SetValidator(new RegularExpressionValidator(expression, options));
 		}
+
+        /// <summary>
+        /// Defines a regular expression validator on the current rule builder, but only for string properties.
+        /// Validation will fail if the value returned by the lambda does not match the regular expression.
+        /// </summary>
+        /// <typeparam name="T">Type of object being validated</typeparam>
+        /// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+        /// <param name="expression">The regular expression to check the value against.</param>
+        /// <param name="options">Regex options</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Expression<Func<T, string>> expression, RegexOptions options)
+        {
+            var func = expression.Compile();
+            return ruleBuilder.SetValidator(new RegularExpressionValidator(func.CoerceToNonGeneric(), options));
+        }
 
 		/// <summary>
 		/// Defines a regular expression validator on the current rule builder, but only for string properties.
