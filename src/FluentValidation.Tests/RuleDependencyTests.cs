@@ -35,7 +35,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Does_not_invoke_dependent_rule_if_parent_rule_passes()
+		public void Does_not_invoke_dependent_rule_if_parent_rule_does_not_pass()
 		{
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname).NotNull()
