@@ -118,25 +118,25 @@ namespace FluentValidation.Internal {
 			return x => func((T)x);
 		}
 
-        public static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func)
-        {
-            return x => func((T)x);
-        }
+		public static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func)
+		{
+			return x => func((T)x);
+		}
 
-        public static Func<object, long> CoerceToNonGeneric<T>(this Func<T, long> func)
-        {
-            return x => func((T)x);
-        }
+		public static Func<object, long> CoerceToNonGeneric<T>(this Func<T, long> func)
+		{
+			return x => func((T)x);
+		}
 
-        public static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func)
-        {
-            return x => func((T)x);
-        }
+		public static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func)
+		{
+			return x => func((T)x);
+		}
 
-        public static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func)
-        {
-            return x => func((T)x);
-        }
+		public static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func)
+		{
+			return x => func((T)x);
+		}
 
 		public static Action<object> CoerceToNonGeneric<T>(this Action<T> action) {
 			return x => action((T)x);

@@ -26,12 +26,22 @@ namespace FluentValidation.Tests {
 	
 	public class RegularExpressionValidatorTests {
 		TestValidator validator;
+		TestValidator validator2;
+		TestValidator validator3;
 
 		public  RegularExpressionValidatorTests() {
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
             validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).Matches(@"^\w\d$")
+			};
+
+			validator2 = new TestValidator {
+				v => v.RuleFor(x => x.Surname).Matches(x => x.Regex)
+			};
+
+			validator3 = new TestValidator {
+				v => v.RuleFor(x => x.Surname).Matches(x => x.AnotherRegex)
 			};
 		}
 
@@ -70,11 +80,67 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void When_the_text_matches_the_lambda_regular_expression_then_the_validator_should_pass()
+		{
+			string input = "S3";
+			var result = validator2.Validate(new Person { Surname = input, Regex = @"^\w\d$" });
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void When_the_text_matches_the_lambda_regex_regular_expression_then_the_validator_should_pass()
+		{
+			string input = "S3";
+			var result = validator3.Validate(new Person { Surname = input, AnotherRegex = new System.Text.RegularExpressions.Regex(@"^\w\d$") });
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void When_the_text_does_not_match_the_lambda_regular_expression_then_the_validator_should_fail()
+		{
+			var result = validator2.Validate(new Person { Surname = "S33", Regex = @"^\w\d$" });
+			result.IsValid.ShouldBeFalse();
+
+			result = validator2.Validate(new Person { Surname = " 5", Regex = @"^\w\d$" });
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void When_the_text_does_not_match_the_lambda_regex_regular_expression_then_the_validator_should_fail()
+		{
+			var result = validator3.Validate(new Person { Surname = "S33", AnotherRegex = new System.Text.RegularExpressions.Regex(@"^\w\d$") });
+			result.IsValid.ShouldBeFalse();
+
+			result = validator3.Validate(new Person { Surname = " 5", AnotherRegex = new System.Text.RegularExpressions.Regex(@"^\w\d$") });
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
 		public void Can_access_expression_in_message() {
 			var v = new TestValidator();
 			v.RuleFor(x => x.Forename).Matches(@"^\w\d$").WithMessage("test {RegularExpression}");
 
 			var result = v.Validate(new Person {Forename = ""});
+			result.Errors.Single().ErrorMessage.ShouldEqual(@"test ^\w\d$");
+		}
+
+		[Fact]
+		public void Can_access_expression_in_message_lambda()
+		{
+			var v = new TestValidator();
+			v.RuleFor(x => x.Forename).Matches(x => x.Regex).WithMessage("test {RegularExpression}");
+
+			var result = v.Validate(new Person { Forename = "", Regex = @"^\w\d$" });
+			result.Errors.Single().ErrorMessage.ShouldEqual(@"test ^\w\d$");
+		}
+
+		[Fact]
+		public void Can_access_expression_in_message_lambda_regex()
+		{
+			var v = new TestValidator();
+			v.RuleFor(x => x.Forename).Matches(x => x.AnotherRegex).WithMessage("test {RegularExpression}");
+
+			var result = v.Validate(new Person { Forename = "", AnotherRegex = new System.Text.RegularExpressions.Regex(@"^\w\d$") });
 			result.Errors.Single().ErrorMessage.ShouldEqual(@"test ^\w\d$");
 		}
 	}
