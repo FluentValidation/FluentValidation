@@ -58,8 +58,7 @@ namespace FluentValidation.Internal {
 						newContext.PropertyChain.Add(propertyName);
 						newContext.PropertyChain.AddIndexer(count);
 
-						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString());
-						newPropertyContext.PropertyValue = v;
+						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
 
 						return validator.ValidateAsync(newPropertyContext, cancellation)
 							.Then(fs => results.AddRange(fs));
@@ -92,8 +91,7 @@ namespace FluentValidation.Internal {
 						newContext.PropertyChain.Add(propertyName);
 						newContext.PropertyChain.AddIndexer(count++);
 
-						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString());
-						newPropertyContext.PropertyValue = element;
+						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
 
 						results.AddRange(validator.Validate(newPropertyContext));
 					}

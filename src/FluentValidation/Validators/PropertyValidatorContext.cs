@@ -27,7 +27,7 @@ namespace FluentValidation.Validators {
 	public class PropertyValidatorContext {
 		private readonly MessageFormatter messageFormatter = new MessageFormatter();
 		private bool propertyValueSet;
-		private object propertyValue;
+		private readonly Lazy<object> propertyValueContainer;
 
 		public ValidationContext ParentContext { get; private set; }
 		public PropertyRule Rule { get; private set; }
@@ -48,24 +48,23 @@ namespace FluentValidation.Validators {
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
 		public object PropertyValue {
-			get {
-				if (!propertyValueSet) {
-					propertyValue = Rule.PropertyFunc(Instance);
-					propertyValueSet = true;
-				}
-
-				return propertyValue;
-			}
-			set {
-				propertyValue = value;
-				propertyValueSet = true;
-			}
+			get { return propertyValueContainer.Value; }
 		}
 
 		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
+			propertyValueContainer = new Lazy<object>( () => rule.PropertyFunc(parentContext.InstanceToValidate));
+		}
+
+
+		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue)
+		{
+			ParentContext = parentContext;
+			Rule = rule;
+			PropertyName = propertyName;
+			propertyValueContainer = new Lazy<object>(() => propertyValue);
 		}
 	}
 }
