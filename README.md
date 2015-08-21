@@ -6,8 +6,6 @@ A small validation library for .NET that uses a fluent interface
 and lambda expressions for building validation rules.
 Written by Jeremy Skinner (http://www.jeremyskinner.co.uk) and licensed under [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html).
 
-[![Support FluentValidation](http://www.pledgie.com/campaigns/8403.png?skin_name=chrome)](http://www.pledgie.com/campaigns/8403)
-
 ### NuGet Packages
 
 ```
