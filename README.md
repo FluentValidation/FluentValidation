@@ -8,8 +8,6 @@ Written by Jeremy Skinner (http://www.jeremyskinner.co.uk) and licensed under [A
 
 [![Support FluentValidation](http://www.pledgie.com/campaigns/8403.png?skin_name=chrome)](http://www.pledgie.com/campaigns/8403)
 
-If you find FluentValidation useful, [please consider making a donation](http://www.pledgie.com/campaigns/8403)
-
 ### NuGet Packages
 
 ```
