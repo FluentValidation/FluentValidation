@@ -25,29 +25,24 @@ namespace FluentValidation.Internal {
 	/// Keeps all the conditional compilation in one place.
 	/// </summary>
 	internal static class Compatibility {
-		public static PropertyInfo GetPublicStaticProperty(this Type type, string propertyName) {
-#if PORTABLE || CoreCLR
-            return type.GetRuntimeProperty(propertyName);
-#else
-			return type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
-#endif
+#if PORTABLE40
+		public static PropertyInfo GetRuntimeProperty(this Type type, string propertyName)
+		{
+			return type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
 		}
 
-		public static MethodInfo GetPublicInstanceMethod(this Type type, string name) {
-#if PORTABLE || CoreCLR
-			return type.GetRuntimeMethod(name, new Type[0]);
-#else
+		public static MethodInfo GetRuntimeMethod(this Type type, string name, Type[] parameters)
+		{
 			return type.GetMethod(name, BindingFlags.Instance | BindingFlags.Public);
-#endif
 		}
+#endif
 
-		public static PropertyInfo GetPublicInstanceProperty(this Type type, string name) {
 #if PORTABLE || CoreCLR
-			return type.GetRuntimeProperty(name);
-#else
-			return type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
-#endif
+		public static bool IsAssignableFrom(this Type type, Type otherType)
+		{
+			return type.GetTypeInfo().IsAssignableFrom(otherType.GetTypeInfo());
 		}
+#endif 
 
 		public static Func<string> CreateGetter(this PropertyInfo property) {
 			Func<string> accessor;
@@ -57,14 +52,6 @@ namespace FluentValidation.Internal {
 			accessor = (Func<string>)Delegate.CreateDelegate(typeof(Func<string>), property.GetGetMethod());
 #endif
 			return accessor;
-		}
-
-		public static bool CanAssignTo(this Type type, Type other) {
-#if PORTABLE || CoreCLR
-            return other.GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
-#else
-			return other.IsAssignableFrom(type);
-#endif 
 		}
 
 		public static ValidatorAttribute GetValidatorAttribute(this Type type) {
@@ -96,7 +83,7 @@ namespace FluentValidation.Internal {
         {
 #if PORTABLE || CoreCLR
             return type.GetTypeInfo().IsGenericType;
-#else 
+#else
             return type.IsGenericType;
 #endif
         }

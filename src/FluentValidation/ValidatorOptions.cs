@@ -73,7 +73,7 @@ namespace FluentValidation {
 #if !WINDOWS_PHONE
 			name = (from attr in attributes
 			        where attr.type.Name == "DisplayAttribute"
-			        let method = attr.type.GetPublicInstanceMethod("GetName") 
+			        let method = attr.type.GetRuntimeMethod("GetName", new Type[0]) 
 			        where method != null
 			        select method.Invoke(attr.attr, null) as string).FirstOrDefault();
 #endif
@@ -82,7 +82,7 @@ namespace FluentValidation {
 			if (string.IsNullOrEmpty(name)) {
 				name = (from attr in attributes
 				        where attr.type.Name == "DisplayNameAttribute"
-				        let property = attr.type.GetPublicInstanceProperty("DisplayName")
+				        let property = attr.type.GetRuntimeProperty("DisplayName")
 				        where property != null
 				        select property.GetValue(attr.attr, null) as string).FirstOrDefault();
 			}
