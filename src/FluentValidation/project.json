@@ -1,0 +1,20 @@
+﻿{
+    "code": "**/*.cs",
+    "exclude": "BackwardsCompatibility.cs;AssemblyScanner.cs;",
+
+    "frameworks": {
+        
+        "dotnet": {
+            "dependencies": {
+                "Microsoft.NETCore": "5.0.0",
+                "Microsoft.NETCore.Portable.Compatibility": "1.0.0"
+            },
+            "imports": "portable-net452+win81",
+            "compilationOptions": {
+                "define": [ "DNXCORE50", "CoreCLR" ]
+            }
+        }
+    }
+
+
+}

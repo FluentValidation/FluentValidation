@@ -1,0 +1,37 @@
+{
+  "locked": false,
+  "version": -9996,
+  "targets": {
+    "Asp.Net,Version=v5.0": {},
+    "Asp.NetCore,Version=v5.0": {
+      "System.Runtime/4.0.20-beta-22231": {
+        "compile": {
+          "lib/contract/System.Runtime.dll": {}
+        },
+        "runtime": {
+          "lib/aspnetcore50/System.Runtime.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "System.Runtime/4.0.20-beta-22231": {
+      "sha512": "8CFWYP0ldITYQqgfMR6Wn7yjpOzrVzwkfDWHd3PtppILgmvo6rjuJd+KfZTCdacbf1WUbWsp1yuJcTpDYI3RUw==",
+      "files": [
+        "License.rtf",
+        "System.Runtime.4.0.20-beta-22231.nupkg",
+        "System.Runtime.4.0.20-beta-22231.nupkg.sha512",
+        "System.Runtime.nuspec",
+        "lib/aspnetcore50/System.Runtime.dll",
+        "lib/contract/System.Runtime.dll"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "": [],
+    "Asp.Net,Version=v5.0": [],
+    "Asp.NetCore,Version=v5.0": [
+      "System.Runtime >= 4.0.20-beta-22231"
+    ]
+  }
+}
