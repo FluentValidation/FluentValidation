@@ -17,6 +17,8 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
 	using Internal;
@@ -191,9 +193,35 @@ namespace FluentValidation.Tests {
 			AssertValidator<GreaterThanOrEqualValidator>();
 		}
 
+		[Fact]
+		public void MustAsync_should_not_throw_InvalidCastException() {
+			var model = new Model
+			{
+				Ids = new Guid[0]
+			};
+			var validator = new AsyncModelTestValidator();
+			// this fails with "Specified cast is not valid" error
+			var result = validator.ValidateAsync(model).Result;
+			result.IsValid.ShouldBeTrue();
+		}
+
 		private void AssertValidator<TValidator>() {
 			var rule = (PropertyRule)validator.First();
 			rule.CurrentValidator.ShouldBe<TValidator>();
+		}
+
+		class Model
+		{
+			public IEnumerable<Guid> Ids { get; set; }
+		}
+
+		class AsyncModelTestValidator : AbstractValidator<Model>
+		{
+			public AsyncModelTestValidator()
+			{
+				RuleForEach(m => m.Ids)
+					.MustAsync((g, cancel) => Task.FromResult(true));
+			}
 		}
 	}
 }
