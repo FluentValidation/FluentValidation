@@ -16,3 +16,4 @@ TestResult.xml
 packages/
 *.sln.ide/
 artifacts/
+TestResults/
