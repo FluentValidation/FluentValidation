@@ -2,6 +2,9 @@
   "locked": false,
   "version": -9996,
   "targets": {
+    ".NETPortable,Version=v4.0,Profile=Profile328": {},
+    ".NETPortable,Version=v4.5,Profile=Profile259": {},
+    ".NETFramework,Version=v4.5": {},
     ".NETPlatform,Version=v5.0": {
       "Microsoft.CSharp/4.0.0": {
         "dependencies": {
@@ -220,6 +223,14 @@
         },
         "runtime": {
           "lib/dotnet/System.ComponentModel.Annotations.dll": {}
+        }
+      },
+      "System.Diagnostics.Contracts/4.0.0-beta-23019": {
+        "dependencies": {
+          "System.Runtime": "4.0.0-beta-23019"
+        },
+        "compile": {
+          "ref/dotnet/System.Diagnostics.Contracts.dll": {}
         }
       },
       "System.Diagnostics.Debug/4.0.10": {
@@ -1141,6 +1152,23 @@
         "ref/net46/_._",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._"
+      ]
+    },
+    "System.Diagnostics.Contracts/4.0.0-beta-23019": {
+      "sha512": "czCpupSaeK2opx1lB//jmrUX5T1XhdjhYQAIsPje5uPMdP7pa87jm93Y8wmmTA7iultCxk5zuDcpbHMU7Q/xoQ==",
+      "files": [
+        "System.Diagnostics.Contracts.4.0.0-beta-23019.nupkg",
+        "System.Diagnostics.Contracts.4.0.0-beta-23019.nupkg.sha512",
+        "System.Diagnostics.Contracts.nuspec",
+        "lib/DNXCore50/System.Diagnostics.Contracts.dll",
+        "lib/net45/_._",
+        "lib/netcore50/System.Diagnostics.Contracts.dll",
+        "lib/win8/_._",
+        "ref/dotnet/System.Diagnostics.Contracts.dll",
+        "ref/net45/_._",
+        "ref/netcore50/System.Diagnostics.Contracts.dll",
+        "ref/win8/_._",
+        "runtimes/win8-aot/lib/netcore50/System.Diagnostics.Contracts.dll"
       ]
     },
     "System.Diagnostics.Debug/4.0.10": {
@@ -2585,9 +2613,35 @@
   },
   "projectFileDependencyGroups": {
     "": [],
+    ".NETPortable,Version=v4.0,Profile=Profile328": [
+      "fx/mscorlib ",
+      "fx/System ",
+      "fx/System.Core "
+    ],
+    ".NETPortable,Version=v4.5,Profile=Profile259": [
+      "fx/System.Collections ",
+      "fx/System.Runtime ",
+      "fx/System.Linq ",
+      "fx/System.Linq.Expressions ",
+      "fx/System.Linq.Queryable ",
+      "fx/System.Text.RegularExpressions ",
+      "fx/System.Reflection ",
+      "fx/System.Reflection.Extensions ",
+      "fx/System.Diagnostics.Debug ",
+      "fx/System.ObjectModel ",
+      "fx/System.Runtime.Extensions ",
+      "fx/System.Threading ",
+      "fx/System.Threading.Tasks ",
+      "fx/System.Resources.ResourceManager ",
+      "fx/System.Globalization ",
+      "fx/System.Diagnostics.Tools ",
+      "fx/System.Diagnostics.Contracts "
+    ],
+    ".NETFramework,Version=v4.5": [],
     ".NETPlatform,Version=v5.0": [
       "Microsoft.NETCore >= 5.0.0",
-      "Microsoft.NETCore.Portable.Compatibility >= 1.0.0"
+      "Microsoft.NETCore.Portable.Compatibility >= 1.0.0",
+      "System.Diagnostics.Contracts >= 4.0.0-beta-23019"
     ]
   }
 }

@@ -24,6 +24,7 @@ namespace FluentValidation {
 	using System.Reflection;
     using Internal;
 
+#if !PORTABLE && !PORTABLE40 && !CoreCLR
 	/// <summary>
 	/// Class that can be used to find all the validators from a collection of types.
 	/// </summary>
@@ -111,4 +112,5 @@ namespace FluentValidation {
 		}
 
 	}
+#endif
 }
