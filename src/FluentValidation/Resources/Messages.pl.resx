@@ -154,12 +154,18 @@
     <value>Wartość pola '{PropertyName}' powinna być równa '{ComparisonValue}'.</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
-    <value>Maksymalna długość pola '{PropertyName}' to {MaxLength} znaki(ów). Wprowadzono {TotalLength} znaki(ów).</value>
+    <value>Pole '{PropertyName}' musi posiadać długość {MaxLength} znaki(ów). Wprowadzono {TotalLength} znaki(ów).</value>
   </data>
 	<data name="inclusivebetween_error" xml:space="preserve">
     <value>'{PropertyName}' musi się zawierać pomiędzy {From} i {To}. Wprowadzono {Value}.</value>
   </data>
   <data name="exclusivebetween_error" xml:space="preserve">
     <value>'{PropertyName}' musi się zawierać pomiędzy {From} i {To} (wyłącznie). Wprowadzono {Value}.</value>
+  </data>
+  <data name="CreditCardError" xml:space="preserve">
+    <value>Pole '{PropertyName}' nie zawiera poprawnego numer karty kredytowej.</value>
+  </data>
+  <data name="scale_precision_error" xml:space="preserve">
+    <value>Wartość pola '{PropertyName}' nie może mieć więcej niż {expectedPrecision} cyfr z dopuszczalną dokładnością {expectedScale} cyfr po przecinku. Znaleziono {digits} cyfr i {actualScale} cyfr po przecinku.</value>
   </data>
 </root>
