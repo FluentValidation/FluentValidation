@@ -78,6 +78,15 @@ namespace FluentValidation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; should be empty..
+        /// </summary>
+        public static string empty_error {
+            get {
+                return ResourceManager.GetString("empty_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{PropertyName}&apos; should be equal to &apos;{ComparisonValue}&apos;..
         /// </summary>
         public static string equal_error {
@@ -177,11 +186,20 @@ namespace FluentValidation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; must not be empty..
+        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; must not be null..
         /// </summary>
         public static string notnull_error {
             get {
                 return ResourceManager.GetString("notnull_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; must be empty..
+        /// </summary>
+        public static string null_error {
+            get {
+                return ResourceManager.GetString("null_error", resourceCulture);
             }
         }
         

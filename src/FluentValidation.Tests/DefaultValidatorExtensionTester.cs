@@ -46,6 +46,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Empty_should_create_EmptyValidator() {
+			validator.RuleFor(x => x.Surname).Empty();
+			AssertValidator<EmptyValidator>();
+		}
+
+		[Fact]
 		public void Length_should_create_LengthValidator() {
 			validator.RuleFor(x => x.Surname).Length(1, 20);
 			AssertValidator<LengthValidator>();

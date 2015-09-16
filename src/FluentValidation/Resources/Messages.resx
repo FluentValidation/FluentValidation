@@ -168,4 +168,10 @@
   <data name="scale_precision_error" xml:space="preserve">
     <value>'{PropertyName}' may not be more than {expectedPrecision} digits in total, with allowance for {expectedScale} decimals. {digits} digits and {actualScale} decimals were found.</value>
   </data>
+  <data name="empty_error" xml:space="preserve">
+    <value>'{PropertyName}' should be empty.</value>
+  </data>
+  <data name="null_error" xml:space="preserve">
+    <value>'{PropertyName}' must be empty.</value>
+  </data>
 </root>

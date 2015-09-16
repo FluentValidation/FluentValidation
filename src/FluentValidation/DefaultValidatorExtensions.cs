@@ -44,6 +44,18 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(new NotNullValidator());
 		}
 
+        /// <summary>
+		/// Defines a 'not null' validator on the current rule builder. 
+		/// Validation will fail if the property is null.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> Null<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
+			return ruleBuilder.SetValidator(new NullValidator());
+		}
+
 		/// <summary>
 		/// Defines a 'not empty' validator on the current rule builder.
 		/// Validation will fail if the property is null, an empty or the default value for the type (for example, 0 for integers)
@@ -54,6 +66,18 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEmpty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 			return ruleBuilder.SetValidator(new NotEmptyValidator(default(TProperty)));
+		}
+
+        /// <summary>
+		/// Defines a 'empty' validator on the current rule builder.
+		/// Validation will fail if the property is not null, an empty or the default value for the type (for example, 0 for integers)
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> Empty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
+			return ruleBuilder.SetValidator(new EmptyValidator(default(TProperty)));
 		}
 
 		/// <summary>

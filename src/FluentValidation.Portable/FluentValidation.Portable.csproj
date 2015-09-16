@@ -216,6 +216,9 @@
     <Compile Include="..\FluentValidation\Validators\EmailValidator.cs">
       <Link>EmailValidator.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Validators\EmptyValidator.cs">
+      <Link>EmptyValidator.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Validators\EqualValidator.cs">
       <Link>EqualValidator.cs</Link>
     </Compile>
@@ -227,6 +230,9 @@
     </Compile>
     <Compile Include="..\FluentValidation\Validators\NoopPropertyValidator.cs">
       <Link>NoopPropertyValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\Validators\NullValidator.cs">
+      <Link>NullValidator.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Validators\PropertyValidator.cs">
       <Link>PropertyValidator.cs</Link>

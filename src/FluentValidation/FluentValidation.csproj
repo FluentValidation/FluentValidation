@@ -147,6 +147,8 @@
     <Compile Include="Validators\LessThanOrEqualValidator.cs" />
     <Compile Include="Validators\LessThanValidator.cs" />
     <Compile Include="Validators\NoopPropertyValidator.cs" />
+    <Compile Include="Validators\EmptyValidator.cs" />
+    <Compile Include="Validators\NullValidator.cs" />
     <Compile Include="Validators\PredicateValidator.cs" />
     <Compile Include="Results\ValidationFailure.cs" />
     <Compile Include="Results\ValidationResult.cs" />
