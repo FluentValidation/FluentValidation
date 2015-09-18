@@ -92,7 +92,7 @@ namespace FluentValidation.Validators {
 				.Select(a => {
 					var newContext = context.ParentContext.CloneForChildValidator(a.item);
 					newContext.PropertyChain.Add(context.Rule.PropertyName);
-					newContext.PropertyChain.AddIndexer(a.index);
+					newContext.PropertyChain.AddIndexer(a.item is IIndexedCollectionItem ? ((IIndexedCollectionItem)a.item).Index : a.index.ToString());
 
 					var validator = childValidatorProvider(context.Instance);
 
@@ -102,4 +102,9 @@ namespace FluentValidation.Validators {
 			return validatorApplicator(itemsToValidate);
 		}
 	}
+
+    public interface IIndexedCollectionItem
+    {
+        string Index { get; }
+    }
 }
