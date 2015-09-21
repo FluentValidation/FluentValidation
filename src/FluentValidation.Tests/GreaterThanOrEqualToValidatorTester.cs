@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System;
 	using System.Globalization;
 	using System.Linq;
 	using System.Linq.Expressions;
@@ -116,6 +117,18 @@ namespace FluentValidation.Tests {
 			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(5));
 			var result = validator.Validate(new Person { NullableInt = 1 });
 			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void Should_localize_value() {
+			using (new CultureScope("fr-fr")) {
+				Console.WriteLine(1.2M.ToString(CultureInfo.CurrentCulture));
+				var orderValidator = new InlineValidator<Order>();
+				orderValidator.RuleFor(x => x.Amount).GreaterThanOrEqualTo(1.2M).WithMessage("{ComparisonValue}");
+				var result = orderValidator.Validate(new Order());
+				var msg = result.Errors[0].ErrorMessage;
+				Console.WriteLine(msg);
+			}
 		}
 
     [Fact]
