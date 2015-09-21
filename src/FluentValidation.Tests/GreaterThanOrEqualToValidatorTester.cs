@@ -122,12 +122,11 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_localize_value() {
 			using (new CultureScope("fr-fr")) {
-				Console.WriteLine(1.2M.ToString(CultureInfo.CurrentCulture));
 				var orderValidator = new InlineValidator<Order>();
 				orderValidator.RuleFor(x => x.Amount).GreaterThanOrEqualTo(1.2M).WithMessage("{ComparisonValue}");
 				var result = orderValidator.Validate(new Order());
 				var msg = result.Errors[0].ErrorMessage;
-				Console.WriteLine(msg);
+				msg.ShouldEqual("1,2");
 			}
 		}
 
