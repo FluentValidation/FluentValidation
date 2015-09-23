@@ -1,12 +1,11 @@
 ﻿{
-  "version": "1.0.0-*",
-  "description": "FluentValidation.Tests.Mvc6 Class Library",
-  "authors": [ "Jeremy" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+    "version": "1.0.0-*",
+    "description": "FluentValidation.Tests.CoreClr Class Library",
+    "authors": [ "Jeremy" ],
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": "",
     "frameworks": {
-        "dnx451": { },
         "dnxcore50": {
             "dependencies": {
                 "Microsoft.CSharp": "4.0.1-beta-23225",
@@ -19,6 +18,7 @@
     },
     "dependencies": {
         "FluentValidation": "1.0.0-*",
-        "FluentValidation.Mvc6": "1.0.0-*"
+        "xunit": "2.1.0-rc1-build3168",
+        "xunit.runner.dnx": "2.1.0-beta5-build169"
     }
 }

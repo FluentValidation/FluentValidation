@@ -57,7 +57,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Port
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluentValidation.Tests.Mvc6", "src\FluentValidation.Tests.Mvc6\FluentValidation.Tests.Mvc6.xproj", "{DEC956F9-1535-49BC-AD55-3317AE780194}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluentValidation.Tests.CoreClr", "src\FluentValidation.Tests.CoreClr\FluentValidation.Tests.CoreClr.xproj", "{0C17A29E-8E5B-49C0-8935-EECF17FB3483}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluentValidation.Tests.CoreClr", "src\FluentValidation.Tests\FluentValidation.Tests.CoreClr.xproj", "{0C17A29E-8E5B-49C0-8935-EECF17FB3483}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
