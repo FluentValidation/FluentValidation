@@ -13,6 +13,9 @@
                 "System.Linq": "4.0.1-beta-23225",
                 "System.Runtime": "4.0.21-beta-23225",
                 "System.Threading": "4.0.11-beta-23225"
+            },
+            "compilationOptions": {
+                "define": [ "CoreCLR" ]
             }
         }
     },

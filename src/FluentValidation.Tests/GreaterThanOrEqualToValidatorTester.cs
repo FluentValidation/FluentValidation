@@ -31,8 +31,7 @@ namespace FluentValidation.Tests {
 		private TestValidator validator;
 		private const int value = 1;
         public GreaterThanOrEqualToValidatorTester() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            CultureScope.SetDefaultCulture();
             validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(value));
 		}
 

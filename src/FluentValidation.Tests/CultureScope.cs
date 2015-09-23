@@ -25,11 +25,13 @@ namespace FluentValidation.Tests {
 		CultureInfo _originalCulture;
 
 		public CultureScope(CultureInfo culture) {
+#if !CoreCLR
 			_originalCulture = Thread.CurrentThread.CurrentCulture;
 			_originalUiCulture = Thread.CurrentThread.CurrentUICulture;
 
 			Thread.CurrentThread.CurrentCulture = culture;
 			Thread.CurrentThread.CurrentUICulture = culture;
+#endif
 		}
 
 		public CultureScope(string culture) : this(new CultureInfo(culture)) {
@@ -37,8 +39,17 @@ namespace FluentValidation.Tests {
 		}
 
 		public void Dispose() {
+#if !CoreCLR
 			Thread.CurrentThread.CurrentCulture = _originalCulture;
 			Thread.CurrentThread.CurrentUICulture = _originalUiCulture;
+#endif
+		}
+
+		public static void SetDefaultCulture() {
+#if !CoreCLR
+			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+#endif
 		}
 	}
 }

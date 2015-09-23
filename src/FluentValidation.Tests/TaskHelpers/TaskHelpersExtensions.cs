@@ -465,7 +465,7 @@ namespace System.Threading.Tasks
 			else
 			{
 				Func<Exception, Exception> prepForRemoting = null;
-#if !PORTABLE && !PORTABLE40
+#if !PORTABLE && !PORTABLE40 && !CoreCLR
 				try
 				{
 					if (AppDomain.CurrentDomain.IsFullyTrusted)

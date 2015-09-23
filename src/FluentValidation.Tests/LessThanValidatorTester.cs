@@ -25,14 +25,13 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using Xunit;
 	using Validators;
-
+	using System.Reflection;
 	
 	public class LessThanValidatorTester {
 		int value = 1;
 
 		public LessThanValidatorTester() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			 CultureScope.SetDefaultCulture();
         }
 
 		[Fact]
@@ -88,7 +87,11 @@ namespace FluentValidation.Tests {
 		public void Extracts_property_from_expression() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt));
 			var propertyValidator = validator.CreateDescriptor().GetValidatorsForMember("Id").OfType<LessThanValidator>().Single();
+#if CoreCLR
+			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetRuntimeProperty("AnotherInt"));
+#else
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("AnotherInt"));
+#endif
 		}
 
 		[Fact]

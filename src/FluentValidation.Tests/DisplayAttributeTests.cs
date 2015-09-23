@@ -28,8 +28,7 @@ namespace FluentValidation.Tests {
 	public class DisplayAttributeTests {
 
 		public DisplayAttributeTests() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+           CultureScope.SetDefaultCulture();
         }
 
 		[Fact]
@@ -56,7 +55,9 @@ namespace FluentValidation.Tests {
 			[Display(Name = "Foo")]
 			public string Name1 { get; set; }
 
+#if !CoreCLR
 			[DisplayName("Bar")]
+#endif
 			public string Name2 { get; set; }
 		}
 	}

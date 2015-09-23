@@ -42,6 +42,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Correctly_assigns_default_localized_error_message() {
+#if CoreCLR
+			Assert.True(false, "Not implemented on coreclr");
+#else
 			var originalCulture = Thread.CurrentThread.CurrentUICulture;
 			try {
 				var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotEmpty());
@@ -59,6 +62,7 @@ namespace FluentValidation.Tests {
 				// Always reset the culture.
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
 			}
+#endif
 		}
 
 		[Fact]

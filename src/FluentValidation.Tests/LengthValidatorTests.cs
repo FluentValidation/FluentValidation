@@ -27,9 +27,8 @@ namespace FluentValidation.Tests {
 	
 	public class LengthValidatorTests {
 		public LengthValidatorTests() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-        }
+			CultureScope.SetDefaultCulture();
+		}
 
 		[Fact]
 		public void When_the_text_is_between_the_range_specified_then_the_validator_should_pass() {

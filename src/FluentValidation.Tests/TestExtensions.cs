@@ -54,7 +54,13 @@ namespace FluentValidation.Tests {
 			Assert.False(b);
 		}
 
-		public static Exception ShouldBeThrownBy(this Type exceptionType, Assert.ThrowsDelegate code) {
+		public static Exception ShouldBeThrownBy(this Type exceptionType,
+#if CoreCLR
+			Action code
+#else
+			Assert.ThrowsDelegate code
+#endif       
+			) {
 			return Assert.Throws(exceptionType, code);
 		}
 

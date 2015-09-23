@@ -31,8 +31,7 @@ namespace FluentValidation.Tests {
 		private const int value = 1;
 
 		public GreaterThanValidatorTester() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            CultureScope.SetDefaultCulture();
             validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThan(value));
           
         }

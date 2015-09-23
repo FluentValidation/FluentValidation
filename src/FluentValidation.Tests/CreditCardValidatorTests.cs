@@ -9,8 +9,7 @@ namespace FluentValidation.Tests {
 		TestValidator validator;
 
 		public CreditCardValidatorTests() {
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
+			CultureScope.SetDefaultCulture();
 
 			validator = new TestValidator {
 				v => v.RuleFor(x => x.CreditCard).CreditCard()

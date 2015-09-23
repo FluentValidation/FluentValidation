@@ -26,12 +26,11 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using Xunit;
 	using Validators;
-
+	using System.Reflection;
 	
 	public class NotEqualValidatorTests {
 		public  NotEqualValidatorTests() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+          CultureScope.SetDefaultCulture();
         }
 
 		[Fact]

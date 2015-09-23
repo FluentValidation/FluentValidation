@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Linq.Expressions;
 	using Internal;
 	using Xunit;
+	using System.Reflection;
 
 	
 	public class PropertyChainTests {
@@ -32,9 +33,14 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Calling_ToString_should_construct_string_representation_of_chain() {
+
+#if CoreCLR
+			chain.Add(typeof(Parent).GetRuntimeProperty("Child"));
+			chain.Add(typeof(Child).GetRuntimeProperty("GrandChild"));
+#else
 			chain.Add(typeof(Parent).GetProperty("Child"));
 			chain.Add(typeof(Child).GetProperty("GrandChild"));
-
+#endif
 			const string expected = "Child.GrandChild";
 
 			chain.ToString().ShouldEqual(expected);
@@ -42,10 +48,15 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Calling_ToString_should_construct_string_representation_of_chain_with_indexers() {
+#if CoreCLR
+			chain.Add(typeof(Parent).GetRuntimeProperty("Child"));
+			chain.AddIndexer(0);
+			chain.Add(typeof(Child).GetRuntimeProperty("GrandChild"));
+#else
 			chain.Add(typeof(Parent).GetProperty("Child"));
 			chain.AddIndexer(0);
 			chain.Add(typeof(Child).GetProperty("GrandChild"));
-
+#endif
 			const string expected = "Child[0].GrandChild";
 
 			chain.ToString().ShouldEqual(expected);

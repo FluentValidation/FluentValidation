@@ -16,6 +16,8 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
+using Xunit.Extensions;
+
 namespace FluentValidation.Tests {
 	using System;
 	using System.Globalization;
@@ -29,8 +31,7 @@ namespace FluentValidation.Tests {
 		TestValidator validator;
 
 		public EmailValidatorTests() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            CultureScope.SetDefaultCulture();
 
             validator = new TestValidator {
 				v => v.RuleFor(x => x.Email).EmailAddress()
@@ -72,20 +73,20 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		[Xunit.Extensions.Theory]
-		[Xunit.Extensions.InlineData((string)null)]
-		[Xunit.Extensions.InlineData("testperson@gmail.com")]
-		[Xunit.Extensions.InlineData("TestPerson@gmail.com")]
-		[Xunit.Extensions.InlineData("testperson+label@gmail.com")]
-		[Xunit.Extensions.InlineData("\"Abc\\@def\"@example.com")]
-		[Xunit.Extensions.InlineData("\"Fred Bloggs\"@example.com")]
-		[Xunit.Extensions.InlineData("\"Joe\\Blow\"@example.com")]
-		[Xunit.Extensions.InlineData("\"Abc@def\"@example.com")]
-		[Xunit.Extensions.InlineData("customer/department=shipping@example.com")]
-		[Xunit.Extensions.InlineData("$A12345@example.com")]
-		[Xunit.Extensions.InlineData("!def!xyz%abc@example.com")]
-		[Xunit.Extensions.InlineData("__somename@example.com")]
-		[Xunit.Extensions.InlineData("first.last@test.co.uk")]
+		[Theory]
+		[InlineData((string)null)]
+		[InlineData("testperson@gmail.com")]
+		[InlineData("TestPerson@gmail.com")]
+		[InlineData("testperson+label@gmail.com")]
+		[InlineData("\"Abc\\@def\"@example.com")]
+		[InlineData("\"Fred Bloggs\"@example.com")]
+		[InlineData("\"Joe\\Blow\"@example.com")]
+		[InlineData("\"Abc@def\"@example.com")]
+		[InlineData("customer/department=shipping@example.com")]
+		[InlineData("$A12345@example.com")]
+		[InlineData("!def!xyz%abc@example.com")]
+		[InlineData("__somename@example.com")]
+		[InlineData("first.last@test.co.uk")]
 		public void Valid_email_addresses(string email) {
 				var result = validator.Validate(new Person {Email = email});
 				result.IsValid.ShouldBeTrue(string.Format("The email address {0} should be valid", email));

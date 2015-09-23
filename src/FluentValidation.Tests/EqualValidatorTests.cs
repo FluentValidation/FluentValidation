@@ -16,6 +16,8 @@
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
+using System.Reflection;
+
 namespace FluentValidation.Tests {
 	using System;
 	using System.Collections;
@@ -31,8 +33,7 @@ namespace FluentValidation.Tests {
 	public class EqualValidatorTests {
 
 		public EqualValidatorTests() {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			CultureScope.SetDefaultCulture();
         }
 
 		[Fact]
@@ -65,7 +66,11 @@ namespace FluentValidation.Tests {
 			var descriptor = validator.CreateDescriptor();
 			var propertyValidator = descriptor.GetValidatorsForMember("Forename").Cast<EqualValidator>().Single();
 
+#if CoreCLR
+			propertyValidator.MemberToCompare.ShouldEqual(typeof (Person).GetRuntimeProperty("Surname"));
+#else
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
+#endif
 		}
 
 		[Fact]

@@ -27,8 +27,7 @@ namespace FluentValidation.Tests {
 	public class ExactLengthValidatorTester {
 
 		public ExactLengthValidatorTester() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			CultureScope.SetDefaultCulture();
 		}
 
 		[Fact]

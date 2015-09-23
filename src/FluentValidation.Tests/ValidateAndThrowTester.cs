@@ -26,8 +26,7 @@ namespace FluentValidation.Tests {
 	
 	public class ValidateAndThrowTester {
 		public ValidateAndThrowTester() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+			CultureScope.SetDefaultCulture();
 		}
 
 		[Fact]

@@ -23,12 +23,14 @@ namespace FluentValidation.Tests {
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
+#if !CoreCLR
 	using Moq;
+#endif
 	using Xunit;
 	using Resources;
 	using Results;
 	using Validators;
-
+	using System.Reflection;
 	
 	public class RuleBuilderTests {
 		RuleBuilder<Person, string> builder;
@@ -141,6 +143,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Calling_validate_should_delegate_to_underlying_validator() {
+#if CoreCLR
+			Assert.True(false, "No mocking on coreclr");
+#else
 			var person = new Person {Surname = "Foo"};
 			var validator = new Mock<IPropertyValidator>();
 			builder.SetValidator(validator.Object);
@@ -148,10 +153,14 @@ namespace FluentValidation.Tests {
 			builder.Rule.Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
+#endif
 		}
 
 		[Fact]
 		public void Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
+#if CoreCLR
+			Assert.True(false, "No mocking on coreclr");
+#else
 			var person = new Person { Surname = "Foo" };
 			var validator = new Mock<IPropertyValidator>();
 			builder.SetValidator(validator.Object);
@@ -159,11 +168,16 @@ namespace FluentValidation.Tests {
 			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
+
+#endif
 		}
 
 		[Fact]
 		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator()
 		{
+#if CoreCLR
+			Assert.True(false, "No mocking on coreclr");
+#else
 			var person = new Person { Surname = "Foo" };
 		    var validator = new Mock<AsyncValidatorBase>(MockBehavior.Loose, Messages.predicate_error) {CallBase = true};
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()));
@@ -172,6 +186,7 @@ namespace FluentValidation.Tests {
 			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
 
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
+#endif
 		}
 
 		[Fact]
@@ -212,7 +227,12 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Property_should_return_property_being_validated() {
+#if CoreCLR
+			var property = typeof(Person).GetRuntimeProperty("Surname");
+#else
 			var property = typeof(Person).GetProperty("Surname");
+
+#endif
 			builder.Rule.Member.ShouldEqual(property);
 		}
 

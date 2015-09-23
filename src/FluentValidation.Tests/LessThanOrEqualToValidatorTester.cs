@@ -32,8 +32,7 @@ namespace FluentValidation.Tests {
 
 		public LessThanOrEqualToValidatorTester() {
 			validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThanOrEqualTo(value));
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+            CultureScope.SetDefaultCulture();
         }
 
 		[Fact]
