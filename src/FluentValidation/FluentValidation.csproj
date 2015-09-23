@@ -112,6 +112,11 @@
     <Compile Include="Resources\LazyStringSource.cs" />
     <Compile Include="Resources\LocalizedStringSource.cs" />
     <Compile Include="Resources\StaticStringSource.cs" />
+    <Compile Include="TestHelper\TestPropertyChain.cs" />
+    <Compile Include="TestHelper\TestValidationResult.cs" />
+    <Compile Include="TestHelper\ValidationResultTester.cs" />
+    <Compile Include="TestHelper\ITestPropertyChain.cs" />
+    <Compile Include="TestHelper\IValidationResultTester.cs" />
     <Compile Include="ValidationContext.cs" />
     <Compile Include="Internal\IValidatorSelector.cs" />
     <Compile Include="Resources\Messages.Designer.cs">
@@ -125,7 +130,6 @@
     <Compile Include="IValidatorDescriptor.cs" />
     <Compile Include="IValidatorFactory.cs" />
     <Compile Include="TestHelper\ValidationTestException.cs" />
-    <Compile Include="TestHelper\ValidatorTester.cs" />
     <Compile Include="TestHelper\ValidatorTestExtensions.cs" />
     <Compile Include="ValidationException.cs" />
     <Compile Include="ValidatorFactoryBase.cs" />
