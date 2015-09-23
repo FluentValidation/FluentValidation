@@ -1,17 +1,19 @@
 ﻿{
     "version": "1.0.0-*",
+
+    "packExclude": [
+        "**.xproj",
+        "**.user",
+        "**.vspscc"
+    ],
+
     "dependencies": {
+        "FluentValidation": "1.0.0-*",
+        "Microsoft.AspNet.Mvc": "6.0.0-beta7"
     },
 
-    "frameworks" : {
-        "aspnet50" : { 
-            "dependencies": {
-            }
-        },
-        "aspnetcore50" : { 
-            "dependencies": {
-                "System.Runtime": "4.0.20-beta-22231"
-            }
-        }
+    "frameworks": {
+      "dnx451": { },
+      "dnxcore50": { }
     }
 }
