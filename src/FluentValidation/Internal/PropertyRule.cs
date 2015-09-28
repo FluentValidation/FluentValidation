@@ -278,13 +278,10 @@ namespace FluentValidation.Internal {
 			try {
 				var displayName = GetDisplayName();
 
-				if (PropertyName == null && displayName == null) {
-					return
-						TaskHelpers.FromError<IEnumerable<ValidationFailure>>(
-							new InvalidOperationException(
-								string.Format(
-									"Property name could not be automatically determined for expression {0}. Please specify either a custom property name by calling 'WithName'.",
-									Expression)));
+				if (PropertyName == null && displayName == null)
+				{
+					//No name has been specified. Assume this is a model-level rule, so we should use empty string instead. 
+					displayName = string.Empty;
 				}
 
 				// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
