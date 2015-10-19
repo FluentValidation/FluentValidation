@@ -31,6 +31,12 @@ namespace FluentValidation.Tests {
 
 			Thread.CurrentThread.CurrentCulture = culture;
 			Thread.CurrentThread.CurrentUICulture = culture;
+#else
+			_originalCulture = CultureInfo.CurrentCulture;
+			_originalUiCulture = CultureInfo.CurrentUICulture;
+
+			CultureInfo.CurrentCulture = culture;
+			CultureInfo.CurrentUICulture = culture;
 #endif
 		}
 
@@ -42,6 +48,9 @@ namespace FluentValidation.Tests {
 #if !CoreCLR
 			Thread.CurrentThread.CurrentCulture = _originalCulture;
 			Thread.CurrentThread.CurrentUICulture = _originalUiCulture;
+#else
+			CultureInfo.CurrentCulture = _originalCulture;
+			CultureInfo.CurrentUICulture = _originalUiCulture;
 #endif
 		}
 
@@ -49,6 +58,9 @@ namespace FluentValidation.Tests {
 #if !CoreCLR
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+#else
+			CultureInfo.CurrentCulture = new CultureInfo("en-US");
+			CultureInfo.CurrentUICulture = new CultureInfo("en-US");
 #endif
 		}
 	}

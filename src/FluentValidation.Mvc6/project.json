@@ -8,12 +8,18 @@
     ],
 
     "dependencies": {
+  
         "FluentValidation": "1.0.0-*",
-        "Microsoft.AspNet.Mvc": "6.0.0-beta7"
+        "Microsoft.AspNet.Mvc": "6.0.0-beta8"
     },
 
     "frameworks": {
       "dnx451": { },
-      "dnxcore50": { }
+        "dnxcore50": {
+            "dependencies": {        "Microsoft.NETCore.Platforms": "1.0.1-beta-23409",
+         "Microsoft.NETCore.Targets": "1.0.1-beta-23409",
+        "Microsoft.NETCore": "5.0.1-beta-23409"
+}
+        }
     }
 }
