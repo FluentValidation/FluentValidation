@@ -81,7 +81,12 @@ namespace FluentValidation.Results {
 		/// Similar placeholders are defined in fluent validation library (check documentation)
 		/// </summary>
 		public Dictionary<string, object> FormattedMessagePlaceholderValues { get; set; }
-		
+
+		/// <summary>
+		/// The resource name used for building the message
+		/// </summary>
+		public string ResourceName { get; set; }
+
 		/// <summary>
 		/// Creates a textual representation of the failure.
 		/// </summary>
