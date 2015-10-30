@@ -280,7 +280,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\FluentValidation\Resources\Messages.cz.resx">
+    <EmbeddedResource Include="..\FluentValidation\Resources\Messages.cs.resx">
       <Link>Resources\Messages.cz.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.da.resx">
