@@ -65,30 +65,30 @@ namespace FluentValidation.Tests {
 			validator.Max.ShouldEqual(5);
 		}
 		
-//		[Fact]
-//		public void When_exact_length_rule_failes_error_should_have_exact_length_error_errorcode() {
-//			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2) };
-//			
-//			var result = validator.Validate(new Person() { Surname = "test" });
-//			var error = result.Errors.SingleOrDefault(e => e.ErrorCode == "exact_length_error");
-//
-//			error.ShouldNotBeNull();
-//			error.PropertyName.ShouldEqual("Surname");
-//			error.AttemptedValue.ShouldEqual("test");
-//			error.FormattedMessageArguments.Length.ShouldEqual(0);
-//
-//			error.FormattedMessagePlaceholderValues.Count.ShouldEqual(5);
-//			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
-//			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyValue").ShouldBeTrue();
-//			error.FormattedMessagePlaceholderValues.ContainsKey("MinLength").ShouldBeTrue();
-//			error.FormattedMessagePlaceholderValues.ContainsKey("MaxLength").ShouldBeTrue();
-//			error.FormattedMessagePlaceholderValues.ContainsKey("TotalLength").ShouldBeTrue();
-//
-//			error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Surname");
-//			error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
-//			error.FormattedMessagePlaceholderValues["MinLength"].ShouldEqual(2);
-//			error.FormattedMessagePlaceholderValues["MaxLength"].ShouldEqual(2);
-//			error.FormattedMessagePlaceholderValues["TotalLength"].ShouldEqual(4);
-//		}
+		[Fact]
+		public void When_exact_length_rule_failes_error_should_have_exact_length_error_errorcode() {
+			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2) };
+			
+			var result = validator.Validate(new Person() { Surname = "test" });
+			var error = result.Errors.SingleOrDefault(e => e.ErrorCode == "exact_length_error");
+
+			error.ShouldNotBeNull();
+			error.PropertyName.ShouldEqual("Surname");
+			error.AttemptedValue.ShouldEqual("test");
+			error.FormattedMessageArguments.Length.ShouldEqual(0);
+
+			error.FormattedMessagePlaceholderValues.Count.ShouldEqual(5);
+			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
+			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyValue").ShouldBeTrue();
+			error.FormattedMessagePlaceholderValues.ContainsKey("MinLength").ShouldBeTrue();
+			error.FormattedMessagePlaceholderValues.ContainsKey("MaxLength").ShouldBeTrue();
+			error.FormattedMessagePlaceholderValues.ContainsKey("TotalLength").ShouldBeTrue();
+
+			error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Surname");
+			error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
+			error.FormattedMessagePlaceholderValues["MinLength"].ShouldEqual(2);
+			error.FormattedMessagePlaceholderValues["MaxLength"].ShouldEqual(2);
+			error.FormattedMessagePlaceholderValues["TotalLength"].ShouldEqual(4);
+		}
 	}
 }
