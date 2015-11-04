@@ -49,5 +49,21 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().PropertyName.ShouldEqual("Surname");
 		}
 
+		[Fact]
+		public void Dependent_rules_inside_ruleset() {
+			var validator = new TestValidator();
+			validator.RuleSet("MyRuleSet", () => {
+
+				validator.RuleFor(x => x.Surname).NotNull()
+					.DependentRules(d => {
+						d.RuleFor(x => x.Forename).NotNull();
+					});
+			});
+
+			var results = validator.Validate(new Person { Surname = "foo" }, ruleSet: "MyRuleSet");
+			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Single().PropertyName.ShouldEqual("Forename");
+		}
+
 	}
 }

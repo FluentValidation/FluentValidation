@@ -244,7 +244,18 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<DependentRules<T>>  action) {
 			var dependencyContainer = new DependentRules<T>();
 			action(dependencyContainer);
+
 			rule.Configure(cfg => {
+
+				if (!string.IsNullOrEmpty(cfg.RuleSet)) {
+					foreach (var dependentRule in dependencyContainer) {
+						var propRule = dependentRule as PropertyRule;
+						if (propRule != null && string.IsNullOrEmpty(propRule.RuleSet)) {
+							propRule.RuleSet = cfg.RuleSet;
+						}
+					}
+				}
+
 				cfg.DependentRules.AddRange(dependencyContainer);
 			});
 			return rule;
