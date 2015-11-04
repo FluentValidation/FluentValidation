@@ -71,6 +71,9 @@
     <Compile Include="..\FluentValidation\Internal\RulesetValidatorSelector.cs">
       <Link>RulesetValidatorSelector.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\IParameterValidatorFactory.cs">
+      <Link>IParameterValidatorFactory.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\MemberAccessor.cs">
       <Link>MemberAccessor.cs</Link>
     </Compile>
