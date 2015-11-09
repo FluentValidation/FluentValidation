@@ -62,6 +62,7 @@
     <Compile Include="FluentValidationBodyModelValidator.cs" />
     <Compile Include="FluentValidationModelValidator.cs" />
     <Compile Include="FluentValidationModelValidatorProvider.cs" />
+    <Compile Include="ValidationResultExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluentValidation.snk">
