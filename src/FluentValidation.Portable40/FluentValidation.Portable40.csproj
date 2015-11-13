@@ -322,6 +322,11 @@
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.sv.resx">
       <Link>Resources\Messages.sv.resx</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\FluentValidation\Resources\Messages.zh-CN.resx">
+      <Link>Resources\Messages.zh-CN.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.zh-CN.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FluentValidation.snk">
