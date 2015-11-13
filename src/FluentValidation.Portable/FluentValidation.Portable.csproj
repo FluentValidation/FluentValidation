@@ -105,8 +105,14 @@
     <Compile Include="..\FluentValidation\TaskHelpers\TaskHelpersExtensions.cs">
       <Link>TaskHelpersExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\IValidationTestResult.cs">
+      <Link>IValidationTestResult.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\TestHelper\ValidationTestException.cs">
       <Link>ValidationTestException.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation\TestHelper\ValidationTestResult.cs">
+      <Link>ValidationTestResult.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\TestHelper\ValidatorTester.cs">
       <Link>ValidatorTester.cs</Link>

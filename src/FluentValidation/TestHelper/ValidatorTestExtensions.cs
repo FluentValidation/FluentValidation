@@ -17,44 +17,44 @@
 #endregion
 
 namespace FluentValidation.TestHelper {
-	using System;
-	using System.Linq.Expressions;
-	using Internal;
-	using System.Linq;
-	using Validators;
+    using System;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using Internal;
+    using Validators;
 
-	public static class ValidationTestExtension {
-		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-																   Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(new T());
-		}
+    public static class ValidationTestExtension {
+        public static IValidationTestResult ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
+            var failures = new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(new T());
+            return new ValidationTestResult(failures);
+        }
 
-		public static void ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
-			var value = expression.Compile()(objectToTest);
-			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(objectToTest);
-		}
+        public static IValidationTestResult ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
+            var value = expression.Compile()(objectToTest);
+            var failures = new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateError(objectToTest);
+            return new ValidationTestResult(failures);
+        }
 
-		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
-																	  Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(new T());
-		}
+        public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
+            Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
+            new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(new T());
+        }
 
-		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
-			var value = expression.Compile()(objectToTest);
-			new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(objectToTest);
-		}
+        public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
+            var value = expression.Compile()(objectToTest);
+            new ValidatorTester<T, TValue>(expression, validator, value, ruleSet).ValidateNoError(objectToTest);
+        }
 
-		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
-			var descriptor = validator.CreateDescriptor();
-			var matchingValidators = descriptor.GetValidatorsForMember(expression.GetMember().Name);
+        public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
+            var descriptor = validator.CreateDescriptor();
+            var matchingValidators = descriptor.GetValidatorsForMember(expression.GetMember().Name);
 
-			var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.ValidatorType);
-			childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
+            var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.ValidatorType);
+            childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
-			if (!childValidatorTypes.Any(x => x == childValidatorType)) {
-				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
-			}
-		}
-
-	}
+            if (childValidatorTypes.All(x => x != childValidatorType)) {
+                throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expression.GetMember().Name, childValidatorType.Name));
+            }
+        }
+    }
 }

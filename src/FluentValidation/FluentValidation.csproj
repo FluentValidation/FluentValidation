@@ -113,6 +113,8 @@
     <Compile Include="Resources\LazyStringSource.cs" />
     <Compile Include="Resources\LocalizedStringSource.cs" />
     <Compile Include="Resources\StaticStringSource.cs" />
+    <Compile Include="TestHelper\IValidationTestResult.cs" />
+    <Compile Include="TestHelper\ValidationTestResult.cs" />
     <Compile Include="ValidationContext.cs" />
     <Compile Include="Internal\IValidatorSelector.cs" />
     <Compile Include="Resources\Messages.Designer.cs">
