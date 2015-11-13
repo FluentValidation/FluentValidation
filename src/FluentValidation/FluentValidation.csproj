@@ -187,6 +187,9 @@
     <EmbeddedResource Include="Resources\Messages.it.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Messages.zh-CN.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.nl.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
