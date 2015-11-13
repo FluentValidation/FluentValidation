@@ -99,5 +99,73 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person { Forename = "foo", Surname = "FOO"});
 			result.IsValid.ShouldBeFalse();
 		}
+
+		[Fact]
+		public void Should_handle_custom_value_types_correctly() {
+			var myType = new MyType();
+			var myTypeValidator = new MyTypeValidator();
+
+			var validationResult = myTypeValidator.Validate(myType);
+			validationResult.IsValid.ShouldEqual(false);
+		}
+
+		public class MyType
+		{
+			public MyValueType Value { get; set; }
+		}
+
+		public class MyTypeValidator : AbstractValidator<MyType>
+		{
+			public MyTypeValidator()
+			{
+				RuleFor(myType => myType.Value).NotEqual(MyValueType.None);
+			}
+		}
+
+		public struct MyValueType
+		{
+			public static readonly MyValueType None = default(MyValueType);
+
+			public MyValueType(int value)
+			{
+				_value = value;
+			}
+
+			public int Value
+			{
+				get { return _value ?? -1; }
+			}
+
+			private readonly int? _value;
+
+			public override int GetHashCode() {
+				return _value == null ? 0 : _value.Value.GetHashCode();	
+			}
+
+			public override string ToString() {
+				return _value == null ? null : _value.Value.ToString();
+			}
+
+			public override bool Equals(object obj)
+			{
+				if (obj == null || obj.GetType() != typeof(MyValueType))
+					return false;
+
+				var otherValueType = (MyValueType)obj;
+				return Equals(otherValueType);
+			}
+
+			public bool Equals(MyValueType other) {
+				return _value == other._value;
+			}
+
+			public static bool operator ==(MyValueType first, MyValueType second) {
+				return first.Equals(second);
+			}
+
+			public static bool operator !=(MyValueType first, MyValueType second) {
+				return !(first == second);	
+			}
+		}
 	}
 }
