@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,44 +15,45 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at http://www.codeplex.com/FluentValidation
+
 #endregion
 
 namespace FluentValidation.TestHelper {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Results;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Reflection;
+	using Results;
 
-    class ValidationResultTester<T, TValue> : IValidationResultTester where T : class {
-        readonly TestValidationResult<T, TValue> testValidationResult;
+	class ValidationResultTester<T, TValue> : IValidationResultTester where T : class {
+		readonly TestValidationResult<T, TValue> testValidationResult;
 
-        public ValidationResultTester(TestValidationResult<T, TValue> testValidationResult) {
-            this.testValidationResult = testValidationResult;
-        }
+		public ValidationResultTester(TestValidationResult<T, TValue> testValidationResult) {
+			this.testValidationResult = testValidationResult;
+		}
 
-        string GetPropertyName(IEnumerable<MemberInfo> properties) {
-            return string.Join(".", new[] {testValidationResult.MemberAccessor != null ? testValidationResult.MemberAccessor.Member : null}
-                         .Concat(properties)
-                         .Where(x => x != null)
-                         .Select(x => x.Name));
-        }
+		string GetPropertyName(IEnumerable<MemberInfo> properties) {
+			return string.Join(".", new[] {testValidationResult.MemberAccessor != null ? testValidationResult.MemberAccessor.Member : null}
+				.Concat(properties)
+				.Where(x => x != null)
+				.Select(x => x.Name));
+		}
 
-        public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
-            var propertyName = GetPropertyName(properties);
+		public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
+			var propertyName = GetPropertyName(properties);
 
-            var failures = testValidationResult.Result.Errors.Where(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
+			var failures = testValidationResult.Result.Errors.Where(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
 
-            if (!failures.Any())
-                throw new ValidationTestException(string.Format("Expected a validation error for property {0}", propertyName));
+			if (!failures.Any())
+				throw new ValidationTestException(string.Format("Expected a validation error for property {0}", propertyName));
 
-            return failures;
-        }
+			return failures;
+		}
 
-        public void ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
-            var propertyName = GetPropertyName(properties);
+		public void ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
+			var propertyName = GetPropertyName(properties);
 
-            if (testValidationResult.Result.Errors.Any(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)))
-                throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", propertyName));
-        }
-    }
+			if (testValidationResult.Result.Errors.Any(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)))
+				throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", propertyName));
+		}
+	}
 }

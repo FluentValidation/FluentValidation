@@ -174,24 +174,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.cs.resx" />
     <EmbeddedResource Include="Resources\Messages.fi.resx" />
-    <EmbeddedResource Include="Resources\Messages.ko.resx" />
     <EmbeddedResource Include="Resources\Messages.mk.resx" />
-    <EmbeddedResource Include="Resources\Messages.cz.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Messages.fi.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Messages.ko.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Messages.mk.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Messages.cz.resx" />
-    <EmbeddedResource Include="Resources\Messages.fi.resx" />
     <EmbeddedResource Include="Resources\Messages.ko.resx" />
-    <EmbeddedResource Include="Resources\Messages.mk.resx" />
     <EmbeddedResource Include="Resources\Messages.ru.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
