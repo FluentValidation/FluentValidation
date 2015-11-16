@@ -36,6 +36,11 @@ namespace FluentValidation.Validators {
 			get { return false; }
 		}
 
+        public IStringSource ErrorCodeSource {
+            get { return null; }
+            set { }
+        }
+
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
 		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
