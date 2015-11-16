@@ -66,20 +66,20 @@ namespace FluentValidation.Tests {
 			result.Errors[0].ErrorMessage.ShouldEqual("Foo");
 		}
 
-        [Fact]
-        public void WithErrorCode_should_override_error_code() {
-            validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("ErrCode101");
-            var result = validator.Validate(new Person());
-            result.Errors[0].ErrorCode.ShouldEqual("ErrCode101");
-        }
+		[Fact]
+		public void WithErrorCode_should_override_error_code() {
+			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("ErrCode101");
+			var result = validator.Validate(new Person());
+			result.Errors[0].ErrorCode.ShouldEqual("ErrCode101");
+		}
 
-        [Fact]
-        public void WithMessage_and_WithErrorCode_should_override_error_message_and_error_code() {
-            validator.RuleFor(x => x.Forename).NotNull().WithMessage("Foo").WithErrorCode("ErrCode101");
-            var result = validator.Validate(new Person());
-            result.Errors[0].ErrorMessage.ShouldEqual("Foo");
-            result.Errors[0].ErrorCode.ShouldEqual("ErrCode101");
-        }
+		[Fact]
+		public void WithMessage_and_WithErrorCode_should_override_error_message_and_error_code() {
+			validator.RuleFor(x => x.Forename).NotNull().WithMessage("Foo").WithErrorCode("ErrCode101");
+			var result = validator.Validate(new Person());
+			result.Errors[0].ErrorMessage.ShouldEqual("Foo");
+			result.Errors[0].ErrorCode.ShouldEqual("ErrCode101");
+		}
 
 		[Fact]
 		public void WithName_should_override_field_name() {

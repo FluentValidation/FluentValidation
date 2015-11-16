@@ -36,10 +36,10 @@ namespace FluentValidation.Validators {
 			get { return false; }
 		}
 
-        public IStringSource ErrorCodeSource {
-            get { return null; }
-            set { }
-        }
+		public IStringSource ErrorCodeSource {
+			get { return null; }
+			set { }
+		}
 
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 

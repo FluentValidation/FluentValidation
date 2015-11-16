@@ -32,8 +32,8 @@ namespace FluentValidation.Validators {
 		private readonly List<Func<object, object, object>> customFormatArgs = new List<Func<object, object, object>>();
 		private IStringSource errorSource;
 		private IStringSource originalErrorSource;
-        private IStringSource errorCodeSource;
-        private IStringSource originalErrorCodeSource;
+		private IStringSource errorCodeSource;
+		private IStringSource originalErrorCodeSource;
 
 		public virtual bool IsAsync {
 			get { return false; }
@@ -114,8 +114,8 @@ namespace FluentValidation.Validators {
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
 			failure.ResourceName = errorSource.ResourceName;
-            failure.ErrorCode = (errorCodeSource != null) ? errorCodeSource.GetString() : originalErrorSource.ResourceName;
-            
+			failure.ErrorCode = (errorCodeSource != null) ? errorCodeSource.GetString() : originalErrorSource.ResourceName;
+
 			if (CustomStateProvider != null) {
 				failure.CustomState = CustomStateProvider(context.Instance);
 			}
@@ -132,17 +132,17 @@ namespace FluentValidation.Validators {
 			return error;
 		}
 
-        public IStringSource ErrorCodeSource {
-            get { return errorCodeSource; }
-            set
-            {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
+		public IStringSource ErrorCodeSource {
+			get { return errorCodeSource; }
+			set
+			{
+				if (value == null)
+				{
+					throw new ArgumentNullException("value");
+				}
 
-                errorCodeSource = value;
-            }
-        }
+				errorCodeSource = value;
+			}
+		}
 	}
 }

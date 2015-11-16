@@ -114,23 +114,21 @@ namespace FluentValidation {
 					.Select(func => new Func<object, object, object>((instance, value) => func((T)instance, (TProperty)value)))
 					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
 			});
-		} 
+		}
 
-        /// <summary>
-        /// Specifies a custom error code to use if validation fails.
-        /// </summary>
-        /// <param name="rule">The current rule</param>
-        /// <param name="errorCode">The error code to use</param>
-        /// <returns></returns>
-        public static IRuleBuilderOptions<T, TProperty> WithErrorCode<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorCode) {
-            errorCode.Guard("A error code must be specified when calling WithErrorCode.");
+		/// <summary>
+		/// Specifies a custom error code to use if validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="errorCode">The error code to use</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithErrorCode<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorCode) {
+			errorCode.Guard("A error code must be specified when calling WithErrorCode.");
 
-            return rule.Configure(config =>
-            {
-                config.CurrentValidator.ErrorCodeSource = new StaticStringSource(errorCode);
-
-            });
-        }
+			return rule.Configure(config => {
+				config.CurrentValidator.ErrorCodeSource = new StaticStringSource(errorCode);
+			});
+		}
 
 		/// <summary>
 		/// Specifies a custom error message resource to use when validation fails.
@@ -348,6 +346,6 @@ namespace FluentValidation {
 				return new Func<T, object>[0];
 			}
 			return objects.Select(obj => new Func<T, object>(x => obj)).ToArray();
-		}
+		} 
 	}
 }
