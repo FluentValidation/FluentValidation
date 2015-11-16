@@ -114,11 +114,8 @@ namespace FluentValidation.Validators {
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
 			failure.ResourceName = errorSource.ResourceName;
-			failure.ErrorCode = originalErrorSource.ResourceName;
-            if (errorCodeSource != null)
-            {
-                failure.ErrorCode = errorCodeSource.GetString();
-            }
+            failure.ErrorCode = (errorCodeSource != null) ? errorCodeSource.GetString() : originalErrorSource.ResourceName;
+            
 			if (CustomStateProvider != null) {
 				failure.CustomState = CustomStateProvider(context.Instance);
 			}
