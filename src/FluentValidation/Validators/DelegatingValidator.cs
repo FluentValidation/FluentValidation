@@ -52,6 +52,11 @@ namespace FluentValidation.Validators {
 			set { InnerValidator.ErrorMessageSource = value; }
 		}
 
+		public IStringSource ErrorCodeSource {
+			get { return InnerValidator.ErrorCodeSource; }
+			set { InnerValidator.ErrorCodeSource = value; }
+		}
+
 		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			if (condition(context.Instance)) {
 				return InnerValidator.Validate(context);

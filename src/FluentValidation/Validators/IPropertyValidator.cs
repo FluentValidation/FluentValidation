@@ -44,5 +44,6 @@ namespace FluentValidation.Validators {
 		ICollection<Func<object, object, object>> CustomMessageFormatArguments { get; }
 		Func<object, object> CustomStateProvider { get; set; }
 		IStringSource ErrorMessageSource { get; set; }
+		IStringSource ErrorCodeSource { get; set; }
 	}
 }
