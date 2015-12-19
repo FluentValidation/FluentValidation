@@ -40,14 +40,7 @@ namespace FluentValidation.Mvc6
 		}
 
 		public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context) {
-			var modelExplorer = context.ModelExplorer;
-			var metadata = modelExplorer.Metadata;
-
-			var memberName = metadata.PropertyName ?? metadata.ModelType.Name;
-			var containerExplorer = modelExplorer.Container;
-
-			var container = containerExplorer?.Model;
-			var model = container ?? modelExplorer.Model;
+			var model = context.Model;
 
 			var result = _validator.Validate(model);
 
