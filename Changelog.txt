@@ -1,4 +1,4 @@
-6.0 - 
+6.0 - 22 Dec 2015
 Core - Fixed DelegateValidator causes a deadlock when running an async function synchronously.
 Core - Fixed Equal/NotEqual not working with structs
 Core - Additional overload of SetValidator that takes a validatorProvider
