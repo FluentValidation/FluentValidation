@@ -33,8 +33,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
-			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, value, ruleSet);
+			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
 			return testValidationResult.ShouldHaveError();
 		}
 
@@ -45,8 +44,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
-			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, value, ruleSet);
+			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
 			testValidationResult.ShouldNotHaveError();
 		}
 

@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System;
 	using Xunit;
 	using TestHelper;
 
@@ -129,6 +130,21 @@ namespace FluentValidation.Tests {
 			assertionRoot.Property(x => x.Id).ShouldNotHaveValidationError();
 		}
 
+		[Fact]
+		public void TestHelper_should_correctly_handle_explicitly_providing_object_to_validate()
+		{
+			var unitOfMeasure = new UnitOfMeasure
+			{
+				Value = 1
+			};
+
+			var validator = new UnitOfMeasureValidator();
+			var result = validator.Validate(unitOfMeasure);
+
+			result.Errors.Count.ShouldEqual(1);
+			validator.ShouldHaveValidationErrorFor(unit => unit.Type, unitOfMeasure);
+		}
+
 		private class AddressValidator : AbstractValidator<Address> {
 
 		}
@@ -136,5 +152,23 @@ namespace FluentValidation.Tests {
 		private class OrderValidator : AbstractValidator<Order> {
 
 		}
+
+		public class UnitOfMeasure
+		{
+			public int Value { get; set; }
+			public int? Type { get; set; }
+		}
+
+		
+        public class UnitOfMeasureValidator : AbstractValidator<UnitOfMeasure>
+        {
+            public UnitOfMeasureValidator() {
+                RuleFor(unit => unit.Value).GreaterThanOrEqualTo(0);
+
+                RuleFor(unit => unit.Type).NotNull()
+                    .When(unit => unit.Value > 0)
+                    .WithMessage("If a unit of measure's 'Value' is provided, then a 'Type' also needs to be provided.");
+            }
+        }
 	}
 }
