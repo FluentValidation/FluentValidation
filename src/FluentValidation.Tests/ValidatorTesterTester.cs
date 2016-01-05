@@ -131,7 +131,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void TestHelper_should_correctly_handle_explicitly_providing_object_to_validate()
+		public void ShouldHaveValidationError_should_correctly_handle_explicitly_providing_object_to_validate()
 		{
 			var unitOfMeasure = new UnitOfMeasure
 			{
@@ -139,10 +139,35 @@ namespace FluentValidation.Tests {
 			};
 
 			var validator = new UnitOfMeasureValidator();
-			var result = validator.Validate(unitOfMeasure);
 
-			result.Errors.Count.ShouldEqual(1);
 			validator.ShouldHaveValidationErrorFor(unit => unit.Type, unitOfMeasure);
+		}
+
+		[Fact]
+		public void ShouldNotHaveValidationError_should_correctly_handle_explicitly_providing_object_to_validate()
+		{
+			var unitOfMeasure = new UnitOfMeasure
+			{
+				Value = 1,
+				Type = 43
+			};
+
+			var validator = new UnitOfMeasureValidator();
+
+			validator.ShouldNotHaveValidationErrorFor(unit => unit.Type, unitOfMeasure);
+		}
+
+		[Fact]
+		public void ShouldNotHaveValidationError_should_correctly_handle_explicitly_providing_object_to_validate2()
+		{
+			var validator = new Address2Validator();
+			var address = new Address2
+			{
+				StreetNumber = "a",
+				Street = "b"
+			};
+
+			validator.ShouldNotHaveValidationErrorFor(a => a.Street, address);
 		}
 
 		private class AddressValidator : AbstractValidator<Address> {
@@ -170,5 +195,24 @@ namespace FluentValidation.Tests {
                     .WithMessage("If a unit of measure's 'Value' is provided, then a 'Type' also needs to be provided.");
             }
         }
+
+		public class Address2 {
+			public string StreetNumber { get; set; }
+			public string Street { get; set; }
+		}
+
+		public class Address2Validator : AbstractValidator<Address2>
+		{
+			public static string RuleLocationNames = "LocationNames";
+
+			public Address2Validator()
+			{
+				// Cannot have a street number/lot and no street name.
+				RuleFor(address => address.Street)
+					.NotNull()
+					.When(address => !string.IsNullOrWhiteSpace(address.StreetNumber))
+					.WithMessage("A street name is required when a street number has been provided. Eg. Smith Street.");
+			}
+		}
 	}
 }
