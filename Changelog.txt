@@ -1,4 +1,4 @@
-6.0.1 - 5 Jan 2016
+6.0.2 - 5 Jan 2016
 Fix issue with TestHelper not using correct overload. 
 
 6.0 - 22 Dec 2015

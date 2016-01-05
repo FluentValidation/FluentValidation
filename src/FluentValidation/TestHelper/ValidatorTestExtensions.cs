@@ -28,23 +28,29 @@ namespace FluentValidation.TestHelper {
 	public static class ValidationTestExtension {
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-			var testValidationResult = validator.TestValidate(expression, value, ruleSet);
+			var instanceToValidate = Activator.CreateInstance<T>();
+			var testValidationResult = validator.TestValidate(expression, instanceToValidate, value, ruleSet);
 			return testValidationResult.ShouldHaveError();
 		}
 
+		//This one
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
-			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
+			var value = expression.Compile()(objectToTest);
+			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet);
 			return testValidationResult.ShouldHaveError();
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-			var testValidationResult = validator.TestValidate(expression, value, ruleSet);
+				var instanceToValidate = Activator.CreateInstance<T>();
+			var testValidationResult = validator.TestValidate(expression, instanceToValidate, value, ruleSet);
 			testValidationResult.ShouldNotHaveError();
 		}
 
+		//This one
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
-			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
+			var value = expression.Compile()(objectToTest);
+			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet);
 			testValidationResult.ShouldNotHaveError();
 		}
 
@@ -60,8 +66,7 @@ namespace FluentValidation.TestHelper {
 			}
 		}
 
-		private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class {
-			var instanceToValidate = Activator.CreateInstance<T>();
+		private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T instanceToValidate, TValue value, string ruleSet = null) where T : class {
 			var memberAccessor = ((MemberAccessor<T, TValue>) expression);
 			memberAccessor.Set(instanceToValidate, value);
 			var validationResult = validator.Validate(instanceToValidate, null, ruleSet: ruleSet);

@@ -158,9 +158,11 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void ShouldNotHaveValidationError_should_correctly_handle_explicitly_providing_object_to_validate2()
+		public void ShouldNotHaveValidationError_should_correctly_handle_explicitly_providing_object_to_validate_and_other_property_fails_validation()
 		{
 			var validator = new Address2Validator();
+			validator.RuleFor(x => x.StreetNumber).Equal("foo");
+
 			var address = new Address2
 			{
 				StreetNumber = "a",
