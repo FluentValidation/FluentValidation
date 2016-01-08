@@ -38,7 +38,21 @@ namespace FluentValidation.Tests {
 			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
 		}
 
-		[Fact]
+        [Fact]
+        public void Throws_exception_with_a_ruleset() {
+            var validator = new TestValidator {
+                v => v.RuleFor(x => x.Surname).NotNull()
+            };
+
+            const string ruleSetName = "blah";
+            validator.RuleSet(ruleSetName, () => {
+                validator.RuleFor(x => x.Forename).NotNull();
+            });
+
+            typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person(), ruleSetName));
+        }
+
+        [Fact]
 		public void Throws_exception_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
@@ -54,7 +68,31 @@ namespace FluentValidation.Tests {
 			});
 		}
 
-		[Fact]
+        [Fact]
+        public void Throws_exception_with_a_ruleset_async()
+        {
+            var validator = new TestValidator {
+                v => v.RuleFor(x => x.Surname).NotNull()
+            };
+
+            const string ruleSetName = "blah";
+            validator.RuleSet(ruleSetName, () => {
+                validator.RuleFor(x => x.Forename).NotNull();
+            });
+
+            typeof(ValidationException).ShouldBeThrownBy(() => {
+                try
+                {
+                    validator.ValidateAndThrowAsync(new Person(), ruleSetName).Wait();
+                }
+                catch (AggregateException agrEx)
+                {
+                    throw agrEx.InnerException;
+                }
+            });
+        }
+
+        [Fact]
 		public void Does_not_throw_when_valid() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
@@ -63,7 +101,27 @@ namespace FluentValidation.Tests {
 			validator.ValidateAndThrow(new Person {Surname = "foo"});
 		}
 
-		public void Does_not_throw_when_valid_async() {
+        [Fact]
+        public void Does_not_throw_when_valid_and_a_ruleset()
+        {
+            var validator = new TestValidator {
+                v => v.RuleFor(x => x.Surname).NotNull()
+            };
+
+            const string ruleSetName = "blah";
+            validator.RuleSet(ruleSetName, () => {
+                validator.RuleFor(x => x.Forename).NotNull();
+            });
+
+            var person = new Person {
+                Forename = "foo",
+                Surname = "foo"
+            };
+            validator.ValidateAndThrow(person, ruleSetName);
+        }
+
+        [Fact]
+        public void Does_not_throw_when_valid_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
@@ -71,7 +129,27 @@ namespace FluentValidation.Tests {
 			validator.ValidateAndThrowAsync(new Person { Surname = "foo" }).Wait();
 		}
 
-		[Fact]
+        [Fact]
+        public void Does_not_throw_when_valid_and_a_ruleset_async()
+        {
+            var validator = new TestValidator {
+                v => v.RuleFor(x => x.Surname).NotNull()
+            };
+
+            const string ruleSetName = "blah";
+            validator.RuleSet(ruleSetName, () => {
+                validator.RuleFor(x => x.Forename).NotNull();
+            });
+
+            var person = new Person
+            {
+                Forename = "foo",
+                Surname = "foo"
+            };
+            validator.ValidateAndThrowAsync(person, ruleSetName).Wait();
+        }
+
+        [Fact]
 		public void Populates_errors() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
