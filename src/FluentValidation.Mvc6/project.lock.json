@@ -3,9 +3,14 @@
   "version": 2,
   "targets": {
     "DNX,Version=v4.5.1": {
-      "FluentValidation/1.0.0": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.5"
+      "FluentValidation/1.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/NET35/FluentValidation.dll": {}
+        },
+        "runtime": {
+          "lib/NET35/FluentValidation.dll": {}
+        }
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-beta8": {
         "type": "package",
@@ -1103,15 +1108,8 @@
       }
     },
     "DNXCore,Version=v5.0": {
-      "FluentValidation/1.0.0": {
-        "type": "project",
-        "framework": ".NETPlatform,Version=v5.0",
-        "dependencies": {
-          "Microsoft.NETCore": "5.0.1-beta-23409",
-          "Microsoft.NETCore.Platforms": "1.0.1-beta-23409",
-          "Microsoft.NETCore.Targets": "1.0.1-beta-23409",
-          "System.Diagnostics.Contracts": "4.0.0-beta-23019"
-        }
+      "FluentValidation/1.3.0": {
+        "type": "package"
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-beta8": {
         "type": "package",
@@ -3208,9 +3206,14 @@
       }
     },
     "DNX,Version=v4.5.1/win7-x86": {
-      "FluentValidation/1.0.0": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.5"
+      "FluentValidation/1.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/NET35/FluentValidation.dll": {}
+        },
+        "runtime": {
+          "lib/NET35/FluentValidation.dll": {}
+        }
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-beta8": {
         "type": "package",
@@ -4308,9 +4311,14 @@
       }
     },
     "DNX,Version=v4.5.1/win7-x64": {
-      "FluentValidation/1.0.0": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.5"
+      "FluentValidation/1.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/NET35/FluentValidation.dll": {}
+        },
+        "runtime": {
+          "lib/NET35/FluentValidation.dll": {}
+        }
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-beta8": {
         "type": "package",
@@ -5408,15 +5416,8 @@
       }
     },
     "DNXCore,Version=v5.0/win7-x86": {
-      "FluentValidation/1.0.0": {
-        "type": "project",
-        "framework": ".NETPlatform,Version=v5.0",
-        "dependencies": {
-          "Microsoft.NETCore": "5.0.1-beta-23409",
-          "Microsoft.NETCore.Platforms": "1.0.1-beta-23409",
-          "Microsoft.NETCore.Targets": "1.0.1-beta-23409",
-          "System.Diagnostics.Contracts": "4.0.0-beta-23019"
-        }
+      "FluentValidation/1.3.0": {
+        "type": "package"
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-beta8": {
         "type": "package",
@@ -7894,15 +7895,8 @@
       }
     },
     "DNXCore,Version=v5.0/win7-x64": {
-      "FluentValidation/1.0.0": {
-        "type": "project",
-        "framework": ".NETPlatform,Version=v5.0",
-        "dependencies": {
-          "Microsoft.NETCore": "5.0.1-beta-23409",
-          "Microsoft.NETCore.Platforms": "1.0.1-beta-23409",
-          "Microsoft.NETCore.Targets": "1.0.1-beta-23409",
-          "System.Diagnostics.Contracts": "4.0.0-beta-23019"
-        }
+      "FluentValidation/1.3.0": {
+        "type": "package"
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-beta8": {
         "type": "package",
@@ -10381,9 +10375,19 @@
     }
   },
   "libraries": {
-    "FluentValidation/1.0.0": {
-      "type": "project",
-      "path": "../FluentValidation/project.json"
+    "FluentValidation/1.3.0": {
+      "type": "package",
+      "sha512": "MOJrooRXbKmOxMSr+hYJJIUMDZ/ZWgZkNaQdanr8zI8IXE+LGriola3tYgEuGQvndfQQVZHH9FCa62BauxqULA==",
+      "files": [
+        "FluentValidation.1.3.0.nupkg",
+        "FluentValidation.1.3.0.nupkg.sha512",
+        "FluentValidation.nuspec",
+        "lib/NET35/FluentValidation.dll",
+        "lib/NET35/FluentValidation.pdb",
+        "lib/NET35/FluentValidation.XML",
+        "lib/SL4/FluentValidation.Silverlight.dll",
+        "lib/SL4/FluentValidation.Silverlight.pdb"
+      ]
     },
     "Microsoft.AspNet.Antiforgery/1.0.0-beta8": {
       "type": "package",
