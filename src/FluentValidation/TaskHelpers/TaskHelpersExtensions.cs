@@ -515,8 +515,9 @@ namespace System.Threading.Tasks
 		[SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "unused", Justification = "We only call the property getter for its side effect; we don't care about the value.")]
 		private static void MarkExceptionsObserved(this Task task)
 		{
+#if !WIN10
 			Contract.Assert(task.IsCompleted);
-
+#endif
 			Exception unused = task.Exception;
 		}
 
@@ -770,7 +771,9 @@ namespace System.Threading.Tasks
 
 		protected CatchInfoBase(TTask task, CancellationToken cancellationToken)
 		{
+#if !WIN10
 			Contract.Assert(task != null);
+#endif
 			_task = task;
 			if (task.IsFaulted)
 			{

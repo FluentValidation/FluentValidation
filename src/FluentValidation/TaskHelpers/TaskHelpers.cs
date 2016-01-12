@@ -103,8 +103,9 @@ namespace System.Threading.Tasks
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The exception is propagated in a Task.")]
 		internal static Task Iterate(IEnumerable<Task> asyncIterator, CancellationToken cancellationToken = default(CancellationToken), bool disposeEnumerator = true, Func<Task, bool> breakCondition = null)
 		{
+#if !WIN10
 			Contract.Assert(asyncIterator != null);
-
+#endif
 			IEnumerator<Task> enumerator = null;
 			try
 			{
