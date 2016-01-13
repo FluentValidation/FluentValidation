@@ -4,13 +4,8 @@
 		<Configuration Condition="'$(Configuration)'==''" >Release</Configuration>
 		<BuildDir>$(BaseDir)\build</BuildDir>
 		<SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
-		<SolutionFile Condition="'$(vs2015)'=='true'">$(BaseDir)\FluentValidation-vs2015.sln</SolutionFile>
 	</PropertyGroup>
 	
- 
-	
-  
-  
 	<Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
 	
 	<Target Name="PackageRestore">
