@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Changelog.txt = Changelog.txt
 		FluentValidation.snk = FluentValidation.snk
+		src\FluentValidation.Tests-vnext\global.json = src\FluentValidation.Tests-vnext\global.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation", "src\FluentValidation\FluentValidation.csproj", "{DAE0249B-4F69-4AC9-9A17-AA23E0795316}"
@@ -51,7 +52,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Portable40
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Portable", "src\FluentValidation.Tests.Portable\FluentValidation.Tests.Portable.csproj", "{D66A6368-A38E-4BED-BC4D-E56D785B39E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Win10", "src\FluentValidation.Win10\FluentValidation.Win10.csproj", "{61421970-1637-4EF1-837E-EDFF9D6D9A88}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Portable46", "src\FluentValidation.Portable46\FluentValidation.Portable46.csproj", "{61421970-1637-4EF1-837E-EDFF9D6D9A88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
