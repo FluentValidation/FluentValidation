@@ -1,5 +1,6 @@
 6.1 - 
 Overload of ValidateAndThrow supports rulesets.
+Support Universal Win10 apps
 
 6.0.2 - 5 Jan 2016
 Fix issue with TestHelper not using correct overload. 
