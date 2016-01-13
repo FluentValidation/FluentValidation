@@ -11,4 +11,4 @@ This project is licensed under the Apache License 2.0
 http://www.apache.org/licenses/LICENSE-2.0.html
 
 For documentation, binary releases, discussions and the issue tracker please visit the CodePlex site:
-http://fluentvalidation.codeplex.com
+http://github.com/JeremySkinner/FluentValidation
