@@ -1,6 +1,8 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Linq;
+	using System.Linq.Expressions;
+	using Validators;
 
 	/// <summary>
 	/// Selects validators that belong to the specified rulesets.
@@ -23,12 +25,39 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Contextual information</param>
 		/// <returns>Whether or not the validator can execute.</returns>
 		public bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
+			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0) {
+				if (IsModelLevelRule(rule) && HasChildValidator(rule)) {
+					return true;
+				}
+			}
+
 			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length == 0) return true;
 			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0 && rulesetsToExecute.Contains("default", StringComparer.OrdinalIgnoreCase)) return true;
 			if (!string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0 && rulesetsToExecute.Contains(rule.RuleSet)) return true;
 			if (rulesetsToExecute.Contains("*")) return true;
 
 			return false;
+		}
+
+		protected bool HasChildValidator(IValidationRule rule) {
+			foreach (var validator in rule.Validators) {
+				if (validator is ChildValidatorAdaptor) {
+					return true;
+				}
+
+				if (validator is IDelegatingValidator) {
+					if (((IDelegatingValidator) validator).InnerValidator is ChildValidatorAdaptor) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		protected bool IsModelLevelRule(IValidationRule rule) {
+			var propRule = rule as PropertyRule;
+			return propRule != null && propRule.Expression.GetMember() == null && propRule.Expression.IsParameterExpression();
 		}
 	}
 }

@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Internal {
 	using System;
+	using System.Linq.Expressions;
 	using Validators;
 
 	/// <summary>
@@ -59,7 +60,15 @@ namespace FluentValidation.Internal {
 		/// <param name="validator">The validator to set</param>
 		public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator) {
 			validator.Guard("Cannot pass a null validator to SetValidator");
-			SetValidator(new ChildValidatorAdaptor(validator));
+
+			bool isModelLevelRule = rule.Expression.GetMember() == null && rule.Expression.IsParameterExpression();
+			var adaptor = new ChildValidatorAdaptor(validator);
+
+			if (isModelLevelRule) {
+				adaptor.RulesetMode = ChildValidatorAdaptor.RuleSetMode.Include;
+			}
+
+			SetValidator(adaptor);
 			return this;
 		}
 

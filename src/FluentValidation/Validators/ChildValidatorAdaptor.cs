@@ -21,6 +21,8 @@ namespace FluentValidation.Validators {
 			get { return true; }
 		}
 
+		public RuleSetMode RulesetMode { get; set; }
+
 		public ChildValidatorAdaptor(IValidator validator) : this(_ => validator, validator.GetType()) {
 		}
 
@@ -71,6 +73,11 @@ namespace FluentValidation.Validators {
 			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate);
 			newContext.PropertyChain.Add(context.Rule.PropertyName);
 			return newContext;
+		}
+
+		public enum RuleSetMode {
+			PropertyValidator,
+			Include
 		}
 	}
 }

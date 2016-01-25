@@ -42,6 +42,10 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		public static bool IsParameterExpression(this LambdaExpression expression) {
+			return expression.Body.NodeType == ExpressionType.Parameter;
+		}
+
 		/// <summary>
 		/// Gets a MemberInfo from a member expression.
 		/// </summary>
