@@ -173,6 +173,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Messages.cs.resx" />
+    <EmbeddedResource Include="Resources\Messages.fa.resx" />
     <EmbeddedResource Include="Resources\Messages.fi.resx" />
     <EmbeddedResource Include="Resources\Messages.mk.resx" />
     <EmbeddedResource Include="Resources\Messages.ko.resx" />
