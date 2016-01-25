@@ -100,12 +100,6 @@
     <Compile Include="..\FluentValidation\Resources\Messages.Designer.cs">
       <Link>Resources\Messages.Designer.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Resources\Messages.fa.Designer.cs">
-      <Link>Resources\Messages.fa.Designer.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Messages.fa.resx</DependentUpon>
-    </Compile>
     <Compile Include="..\FluentValidation\Resources\StaticStringSource.cs">
       <Link>StaticStringSource.cs</Link>
     </Compile>
@@ -320,8 +314,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.fa.resx">
       <Link>Resources\Messages.fa.resx</Link>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Messages.fa.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.fi.resx">
       <Link>Resources\Messages.fi.resx</Link>
