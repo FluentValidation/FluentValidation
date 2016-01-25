@@ -18,7 +18,9 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Linq;
 	using Internal;
+	using Validators;
 	using Xunit;
 
 	
@@ -120,6 +122,36 @@ namespace FluentValidation.Tests {
 
 		}
 
+		[Fact]
+		public void WithMessage_works_inside_rulesets() {
+			var validator = new TestValidator2();
+			var result = validator.Validate(new Person(), ruleSet: "Names");
+			Assert.Equal("foo", result.Errors[0].ErrorMessage);
+		}
+
+		[Fact]
+		public void Ruleset_selection_should_not_cascade_downwards() {
+			var validator = new TestValidator3();
+			var result = validator.Validate(new Person(), ruleSet: "Names");
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Ruleset_selection_should_cascade_downwards_with_custom_selector() {
+			var validator = new TestValidator3();
+			var result = validator.Validate(new Person(), selector: new IncludeChildValidatorSelector("Names"));
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void Ruleset_selection_should_cascade_downwards_with_custom_selector_set_globally()
+		{
+			var validator = new TestValidator3();
+			var result = validator.Validate(new Person(), selector: new IncludeChildValidatorSelector("Names"));
+			result.IsValid.ShouldBeFalse();
+		}
+
+
 		private class TestValidator : AbstractValidator<Person> {
 			public TestValidator() {
 				RuleSet("Names", () => {
@@ -129,8 +161,46 @@ namespace FluentValidation.Tests {
 
 				RuleFor(x => x.Id).NotEmpty();
 			}
+		}
+
+		private class TestValidator2 : AbstractValidator<Person>
+		{
+			public TestValidator2()
+			{
+				RuleSet("Names", () => {
+					RuleFor(x => x.Surname).NotNull().WithMessage("foo");
+				});
+
+			}
 
 		}
 
+
+		public class TestValidator3 : AbstractValidator<Person> {
+			public TestValidator3() {
+				RuleFor(x => x).SetValidator(new TestValidator2());
+			}
+		}
+
+		public class IncludeChildValidatorSelector : IValidatorSelector {
+			private IValidatorSelector _innerSelector;
+			string[] _rulesetsToExecute;
+
+			public IncludeChildValidatorSelector(params string[] ruleSets) {
+				_rulesetsToExecute = ruleSets;
+				_innerSelector = new RulesetValidatorSelector(ruleSets);
+			}
+
+			public bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
+				if (string.IsNullOrEmpty(rule.RuleSet) && _rulesetsToExecute.Length > 0) {
+					bool isChildValidator = rule.Validators.FirstOrDefault() is ChildValidatorAdaptor;
+					if (isChildValidator) {
+						return true;
+					}
+				}
+
+				return _innerSelector.CanExecute(rule, propertyPath, context);
+			}
+		}
 	}
 }
