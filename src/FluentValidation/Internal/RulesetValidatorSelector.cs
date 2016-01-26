@@ -10,6 +10,10 @@ namespace FluentValidation.Internal {
 	public class RulesetValidatorSelector : IValidatorSelector {
 		readonly string[] rulesetsToExecute;
 
+		public string[] RuleSets {
+			get {  return rulesetsToExecute; }
+		}
+
 		/// <summary>
 		/// Creates a new instance of the RulesetValidatorSelector.
 		/// </summary>
