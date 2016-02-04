@@ -4,6 +4,7 @@ namespace FluentValidation.Validators {
 	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using Internal;
 	using Results;
 
 	public class ChildValidatorAdaptor : NoopPropertyValidator {
@@ -20,8 +21,6 @@ namespace FluentValidation.Validators {
 		public override bool IsAsync {
 			get { return true; }
 		}
-
-		public RuleSetMode RulesetMode { get; set; }
 
 		public ChildValidatorAdaptor(IValidator validator) : this(_ => validator, validator.GetType()) {
 		}
@@ -65,7 +64,8 @@ namespace FluentValidation.Validators {
 			return validationApplicator(newContext, validator);
 		}
 
-		protected virtual IValidator GetValidator(PropertyValidatorContext context) {
+		public virtual IValidator GetValidator(PropertyValidatorContext context) {
+			context.Guard("Cannot pass a null context to GetValidator");
 			return validatorProvider(context.Instance);
 		}
 
@@ -73,11 +73,6 @@ namespace FluentValidation.Validators {
 			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate);
 			newContext.PropertyChain.Add(context.Rule.PropertyName);
 			return newContext;
-		}
-
-		public enum RuleSetMode {
-			PropertyValidator,
-			Include
 		}
 	}
 }
