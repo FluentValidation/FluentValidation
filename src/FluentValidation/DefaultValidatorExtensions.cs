@@ -799,7 +799,8 @@ namespace FluentValidation {
 		/// <param name="propertyExpressions">Expressions to specify the properties to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, params Expression<Func<T, object>>[] propertyExpressions) {
-			var context = new ValidationContext<T>(instance, new PropertyChain(), MemberNameValidatorSelector.FromExpressions(propertyExpressions));
+			var selector = ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(MemberNameValidatorSelector.MemberNamesFromExpressions(propertyExpressions));
+			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
 			return validator.Validate(context);
 		}
 
@@ -810,7 +811,7 @@ namespace FluentValidation {
 		/// <param name="properties">The names of the properties to validate.</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, params string[] properties) {
-			var context = new ValidationContext<T>(instance, new PropertyChain(), new MemberNameValidatorSelector(properties));
+			var context = new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties));
 			return validator.Validate(context);
 		}
 
@@ -820,13 +821,13 @@ namespace FluentValidation {
 			}
 			
 			if(selector == null) {
-				selector = new DefaultValidatorSelector();
+				selector = ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
 			}
 			
 			if(ruleSet != null) {
 				var ruleSetNames = ruleSet.Split(',', ';');
-				selector = new RulesetValidatorSelector(ruleSetNames);
-			}
+				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames);
+			} 
 
 			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
 			return validator.Validate(context);
@@ -840,7 +841,8 @@ namespace FluentValidation {
 		/// <param name="propertyExpressions">Expressions to specify the properties to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, params Expression<Func<T, object>>[] propertyExpressions) {
-			var context = new ValidationContext<T>(instance, new PropertyChain(), MemberNameValidatorSelector.FromExpressions(propertyExpressions));
+			var selector = ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(MemberNameValidatorSelector.MemberNamesFromExpressions(propertyExpressions));
+			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
 			return validator.ValidateAsync(context);
 		}
 
@@ -851,7 +853,7 @@ namespace FluentValidation {
 		/// <param name="properties">The names of the properties to validate.</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, params string[] properties) {
-			var context = new ValidationContext<T>(instance, new PropertyChain(), new MemberNameValidatorSelector(properties));
+			var context = new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties));
 			return validator.ValidateAsync(context);
 		}
 
@@ -861,12 +863,12 @@ namespace FluentValidation {
 			}
 
 			if (selector == null) {
-				selector = new DefaultValidatorSelector();
+				selector = ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
 			}
 
 			if (ruleSet != null) {
 				var ruleSetNames = ruleSet.Split(',', ';');
-				selector = new RulesetValidatorSelector(ruleSetNames);
+				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames);
 			}
 
 			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);

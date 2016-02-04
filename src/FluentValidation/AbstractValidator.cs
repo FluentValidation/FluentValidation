@@ -92,7 +92,7 @@ namespace FluentValidation {
 		/// <param name="instance">The object to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public virtual ValidationResult Validate(T instance) {
-			return Validate(new ValidationContext<T>(instance, new PropertyChain(), new DefaultValidatorSelector()));
+			return Validate(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()));
 		}
 
 		/// <summary>
@@ -101,7 +101,7 @@ namespace FluentValidation {
 		/// <param name="instance">The object to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new CancellationToken()) {
-			return ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), new DefaultValidatorSelector()), cancellation);
+			return ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 		}
 		
 		/// <summary>
@@ -292,6 +292,15 @@ namespace FluentValidation {
         {
             WhenAsync(x => predicate(x).Then(y => !y), action);
         }
+
+		/// <summary>
+		/// Includes the rules from the specified validator
+		/// </summary>
+		public void Include(IValidator<T> rulesToInclude) {
+			rulesToInclude.Guard("Cannot pass null to Include");
+			var rule = IncludeRule.Create<T>(rulesToInclude, () => CascadeMode);
+			AddRule(rule);
+		}
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection of validation rules.

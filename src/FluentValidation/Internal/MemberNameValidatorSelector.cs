@@ -57,6 +57,12 @@ namespace FluentValidation.Internal {
 			return new MemberNameValidatorSelector(members);
 		}
 
+		public static string[] MemberNamesFromExpressions<T>(params Expression<Func<T, object>>[] propertyExpressions) {
+			var members = propertyExpressions.Select(MemberFromExpression).ToArray();
+			return members;
+		}
+
+
 		private static string MemberFromExpression<T>(Expression<Func<T, object>> expression) {
 			var chain = PropertyChain.FromExpression(expression);
 

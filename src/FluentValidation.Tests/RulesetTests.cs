@@ -137,7 +137,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Ruleset_selection_should_cascade_downwards_with_when_setting_child_validator_at_model_level() {
+		public void Ruleset_selection_should_cascade_downwards_with_when_setting_child_validator_using_include_statement() {
 			var validator = new TestValidator3();
 			var result = validator.Validate(new Person(), ruleSet:"Names");
 			result.IsValid.ShouldBeFalse();
@@ -170,7 +170,7 @@ namespace FluentValidation.Tests {
 
 		public class TestValidator3 : AbstractValidator<Person> {
 			public TestValidator3() {
-				RuleFor(x => x).SetValidator(new TestValidator2());
+				Include(new TestValidator2());
 			}
 		}
 
@@ -186,27 +186,5 @@ namespace FluentValidation.Tests {
 				RuleFor(x => x.Person).SetValidator(new TestValidator2());
 			}
 		}
-
-		//
-		//		public class IncludeChildValidatorSelector : IValidatorSelector {
-		//			private IValidatorSelector _innerSelector;
-		//			string[] _rulesetsToExecute;
-		//
-		//			public IncludeChildValidatorSelector(params string[] ruleSets) {
-		//				_rulesetsToExecute = ruleSets;
-		//				_innerSelector = new RulesetValidatorSelector(ruleSets);
-		//			}
-		//
-		//			public bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
-		//				if (string.IsNullOrEmpty(rule.RuleSet) && _rulesetsToExecute.Length > 0) {
-		//					bool isChildValidator = rule.Validators.FirstOrDefault() is ChildValidatorAdaptor;
-		//					if (isChildValidator) {
-		//						return true;
-		//					}
-		//				}
-		//
-		//				return _innerSelector.CanExecute(rule, propertyPath, context);
-		//			}
-		//		}
 	}
 }

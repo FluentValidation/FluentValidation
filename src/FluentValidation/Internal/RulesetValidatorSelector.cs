@@ -30,7 +30,7 @@ namespace FluentValidation.Internal {
 		/// <returns>Whether or not the validator can execute.</returns>
 		public bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
 			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0) {
-				if (IsModelLevelRule(rule) && HasChildValidator(rule)) {
+				if (IsIncludeRule(rule)) {
 					return true;
 				}
 			}
@@ -43,25 +43,8 @@ namespace FluentValidation.Internal {
 			return false;
 		}
 
-		protected bool HasChildValidator(IValidationRule rule) {
-			foreach (var validator in rule.Validators) {
-				if (validator is ChildValidatorAdaptor) {
-					return true;
-				}
-
-				if (validator is IDelegatingValidator) {
-					if (((IDelegatingValidator) validator).InnerValidator is ChildValidatorAdaptor) {
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
-
-		protected bool IsModelLevelRule(IValidationRule rule) {
-			var propRule = rule as PropertyRule;
-			return propRule != null && propRule.Expression.GetMember() == null && propRule.Expression.IsParameterExpression();
+		protected bool IsIncludeRule(IValidationRule rule) {
+			return rule is IncludeRule;
 		}
 	}
 }

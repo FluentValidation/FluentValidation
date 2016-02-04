@@ -36,7 +36,7 @@ namespace FluentValidation.WebApi
 
 		public override IEnumerable<ModelValidationResult> Validate(ModelMetadata metadata, object container) {
 			if (metadata.Model != null) {
-				var selector = new DefaultValidatorSelector();
+				var selector = ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
 				var context = new ValidationContext(metadata.Model, new PropertyChain(), selector);
 
 				var result = validator.Validate(context);

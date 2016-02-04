@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Mvc {
 	using System;
-	using System.Collections.Generic;
-	using System.Reflection;
 	using System.Web.Mvc;
 	using Internal;
 
@@ -64,18 +62,30 @@ namespace FluentValidation.Mvc {
 
 			if(! string.IsNullOrEmpty(RuleSet)) {
 				var rulesets = RuleSet.Split(',', ';');
-				selector = new RulesetValidatorSelector(rulesets);
+				selector = CreateRulesetValidatorSelector(rulesets);
 			}
 			else if(! string.IsNullOrEmpty(Properties)) {
 				var properties = Properties.Split(',', ';');
-				selector = new MemberNameValidatorSelector(properties);
+				selector = CreateMemberNameValidatorSelector(properties);
 			}
 			else {
-				selector = new DefaultValidatorSelector();
+				selector = CreateDefaultValidatorSelector();
 			}
 
 			return selector;
 
+		}
+
+		protected virtual IValidatorSelector CreateRulesetValidatorSelector(string[] ruleSets) {
+			return ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSets);
+		}
+
+		protected virtual IValidatorSelector CreateMemberNameValidatorSelector(string[] properties) {
+			return ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties);
+		}
+
+		protected virtual IValidatorSelector CreateDefaultValidatorSelector() {
+			return ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
 		}
 
 		public IValidatorInterceptor GetInterceptor() {

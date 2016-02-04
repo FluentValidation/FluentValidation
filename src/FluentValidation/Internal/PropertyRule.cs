@@ -400,4 +400,14 @@ namespace FluentValidation.Internal {
 			}
 		}
 	}
+
+	public class IncludeRule : PropertyRule {
+		public IncludeRule(IValidator validator,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
+			AddValidator(new ChildValidatorAdaptor(validator));
+		}
+
+		public static IncludeRule Create<T>(IValidator validator, Func<CascadeMode> cascadeModeThunk) {
+			return new IncludeRule(validator, cascadeModeThunk, typeof(T), typeof(T));
+		}
+	}
 }

@@ -20,7 +20,7 @@ namespace FluentValidation {
 	using Internal;
 
 	public class ValidationContext<T> : ValidationContext {
-		public ValidationContext(T instanceToValidate) : this(instanceToValidate, new PropertyChain(), new DefaultValidatorSelector()) {
+		public ValidationContext(T instanceToValidate) : this(instanceToValidate, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()) {
 			
 		}
 
@@ -36,7 +36,7 @@ namespace FluentValidation {
 	public class ValidationContext {
 
 		public ValidationContext(object instanceToValidate)
-		 : this (instanceToValidate, new PropertyChain(), new DefaultValidatorSelector()){
+		 : this (instanceToValidate, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()){
 			
 		}
 
