@@ -967,5 +967,17 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T,string> CreditCard<T>(this IRuleBuilder<T, string> ruleBuilder) {
 			return ruleBuilder.SetValidator(new CreditCardValidator());
 		}
-	}
+
+        /// <summary>
+        /// Defines a enum value validator on the current rule builder that ensures that the specific value is a valid enum value.
+        /// </summary>
+        /// <typeparam name="T">Type of Enum being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, TProperty> IsInEnum<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+        {
+            return ruleBuilder.SetValidator(new EnumValidator<TProperty>());
+        }
+    }
 }

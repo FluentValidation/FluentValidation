@@ -104,6 +104,7 @@
     <Compile Include="ComplexValidationTester.cs" />
     <Compile Include="ConditionTests.cs" />
     <Compile Include="CollectionValidatorWithParentTests.cs" />
+    <Compile Include="EnumValidatorTests.cs" />
     <Compile Include="CreditCardValidatorTests.cs" />
     <Compile Include="CultureScope.cs" />
     <Compile Include="CustomFailureActionTester.cs" />

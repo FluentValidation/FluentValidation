@@ -142,6 +142,7 @@
     <Compile Include="Validators\AsyncValidatorBase.cs" />
     <Compile Include="Validators\ChildCollectionValidatorAdaptor.cs" />
     <Compile Include="Validators\ChildValidatorAdaptor.cs" />
+    <Compile Include="Validators\EnumValidator.cs" />
     <Compile Include="Validators\CreditCardValidator.cs" />
     <Compile Include="Validators\EmailValidator.cs" />
     <Compile Include="Validators\EqualValidator.cs" />
