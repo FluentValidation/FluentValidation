@@ -1,10 +1,11 @@
-6.2 - 
-Make ChildValidatorADaptor.GetValidator public
+6.2 - 22 Feb 2016
+Make ChildValidatorAdaptor.GetValidator public
 Make some of the private methods in FluentValidationModelValdiatorProvider protected instead of private
 ValidatorSelectors are now globally configurable through ValidatorOptions.ValidatorSelectors 
 ValidatorSelectors can be overriden within the CustomizeValidatorAttribute 
 Added "Include" statement
 Switched "dotnet" nuget library to uap10.0
+Add Enum validator
 
 6.1 - 18 Jan 2016
 Overload of ValidateAndThrow supports rulesets.
