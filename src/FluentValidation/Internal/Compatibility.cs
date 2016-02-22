@@ -105,5 +105,13 @@ namespace FluentValidation.Internal
 			return type.IsGenericType;
 #endif
 		}
+
+		public static bool IsEnum(this Type type) {
+#if PORTABLE || CoreCLR
+			return type.GetTypeInfo().IsEnum;
+#else
+			return type.IsEnum;
+#endif
+		}
 	}
 }

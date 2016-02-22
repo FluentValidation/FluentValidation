@@ -238,6 +238,9 @@
     <Compile Include="..\FluentValidation\Validators\EmptyValidator.cs">
       <Link>EmptyValidator.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Validators\EnumValidator.cs">
+      <Link>EnumValidator.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Validators\EqualValidator.cs">
       <Link>EqualValidator.cs</Link>
     </Compile>
