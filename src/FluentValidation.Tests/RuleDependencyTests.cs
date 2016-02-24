@@ -65,5 +65,23 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
 
+		[Fact]
+		public void Dependent_rules_inside_when() {
+			var validator = new TestValidator();
+			validator.When(o => o != null, () =>
+			{
+				validator.RuleFor(o => o.Age).LessThan(1)
+				.DependentRules(d =>
+				{
+					d.RuleFor(o => o).NotNull();
+				});
+			}); ;
+
+			var result = validator.Validate((Person)null);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		
+
 	}
 }

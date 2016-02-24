@@ -375,26 +375,32 @@ namespace FluentValidation.Internal {
 					var wrappedValidator = new DelegatingValidator(predicate, validator);
 					ReplaceValidator(validator, wrappedValidator);
 				}
+
+				foreach (var dependentRule in DependentRules.ToList()) {
+					dependentRule.ApplyCondition(predicate, applyConditionTo);
+				}
 			}
 			else {
 				var wrappedValidator = new DelegatingValidator(predicate, CurrentValidator);
 				ReplaceValidator(CurrentValidator, wrappedValidator);
 			}
+
+
 		}
 
-		public void ApplyAsyncCondition(Func<object, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators)
-		{
+		public void ApplyAsyncCondition(Func<object, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-			if (applyConditionTo == ApplyConditionTo.AllValidators)
-			{
-				foreach (var validator in Validators.ToList())
-				{
+			if (applyConditionTo == ApplyConditionTo.AllValidators) {
+				foreach (var validator in Validators.ToList()) {
 					var wrappedValidator = new DelegatingValidator(predicate, validator);
 					ReplaceValidator(validator, wrappedValidator);
 				}
+
+				foreach (var dependentRule in DependentRules.ToList()) {
+					dependentRule.ApplyAsyncCondition(predicate, applyConditionTo);
+				}
 			}
-			else
-			{
+			else {
 				var wrappedValidator = new DelegatingValidator(predicate, CurrentValidator);
 				ReplaceValidator(CurrentValidator, wrappedValidator);
 			}
