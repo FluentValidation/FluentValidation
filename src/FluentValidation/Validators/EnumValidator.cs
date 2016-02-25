@@ -10,8 +10,12 @@
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			if (!_enumType.IsEnum()) return false;
-			return Enum.IsDefined(_enumType, context.PropertyValue);
+            if (context.PropertyValue == null) return true;
+
+            Type enumType = Nullable.GetUnderlyingType(_enumType) ?? _enumType;
+
+            if (!enumType.IsEnum()) return false;
+			return Enum.IsDefined(enumType, context.PropertyValue);
 		}
 	}
 }

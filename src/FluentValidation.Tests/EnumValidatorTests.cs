@@ -40,5 +40,37 @@ namespace FluentValidation.Tests
 			var result = validator.Validate(new Person());
 			result.Errors.Single().ErrorMessage.ShouldEqual("Property Gender it not a valid enum value.");
 		}
+
+        [Fact]
+        public void Nullable_enum_valid_when_property_value_is_null()
+        {
+            var validator = new InlineValidator<Foo>();
+             validator.RuleFor(x => x.Gender).IsInEnum();
+            var result = validator.Validate(new Foo());
+            result.IsValid.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Nullable_enum_valid_when_valid_value_specified()
+        {
+            var validator = new InlineValidator<Foo>();
+            validator.RuleFor(x => x.Gender).IsInEnum();
+            var result = validator.Validate(new Foo() { Gender = EnumGender.Male });
+            result.IsValid.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Nullable_enum_invalid_on_wrong_value()
+        {
+            var validator = new InlineValidator<Foo>();
+            validator.RuleFor(x => x.Gender).IsInEnum();
+            var result = validator.Validate(new Foo() { Gender = (EnumGender)42 });
+            result.IsValid.ShouldBeFalse();
+        }
+
+        public class Foo
+        {
+            public EnumGender? Gender { get; set; }
+        }
 	}
 }
