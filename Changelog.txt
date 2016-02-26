@@ -1,4 +1,4 @@
-6.2.1 -
+6.2.1 - 26 Feb 2016
 Fix DependentRules not working inside a top-level call to When
 Fix enum validator to work correctly with nullable enums
 

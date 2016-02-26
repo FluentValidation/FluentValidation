@@ -174,4 +174,7 @@
   <data name="null_error" xml:space="preserve">
     <value>'{PropertyName}' must be empty.</value>
   </data>
+  <data name="enum_error" xml:space="preserve">
+    <value>The value for '{PropertyName}' is invalid.</value>
+  </data>
 </root>
