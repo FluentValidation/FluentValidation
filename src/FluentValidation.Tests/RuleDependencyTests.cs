@@ -80,8 +80,5 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate((Person)null);
 			result.IsValid.ShouldBeTrue();
 		}
-
-		
-
 	}
 }
