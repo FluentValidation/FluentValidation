@@ -89,7 +89,7 @@ namespace FluentValidation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The value for &apos;{PropertyName}&apos; is invalid..
+        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; has a range of values which does not include &apos;{PropertyValue}&apos;..
         /// </summary>
         public static string enum_error {
             get {
