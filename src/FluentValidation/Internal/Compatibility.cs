@@ -61,13 +61,19 @@ namespace FluentValidation.Internal
 #endif
 		}
 
-		public static ValidatorAttribute GetValidatorAttribute(this Type type)
+		public static TAttribute GetCustomAttributeCompatible<TAttribute>(this Type type)
+			where TAttribute : Attribute
 		{
 #if PORTABLE || CoreCLR
-			return type.GetTypeInfo().GetCustomAttribute<ValidatorAttribute>(true);
+			return type.GetTypeInfo().GetCustomAttribute<TAttribute>(true);
 #else
-			return (ValidatorAttribute)Attribute.GetCustomAttribute(type, typeof(ValidatorAttribute));
+			return (TAttribute)Attribute.GetCustomAttribute(type, typeof(TAttribute));
 #endif
+		}
+
+		public static ValidatorAttribute GetValidatorAttribute(this Type type)
+		{
+			return type.GetCustomAttributeCompatible<ValidatorAttribute>();
 		}
 
 		public static ValidatorAttribute GetValidatorAttribute(this ParameterInfo parameterInfo)

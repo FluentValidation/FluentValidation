@@ -1,5 +1,24 @@
+#region License
+// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+#endregion
+
 namespace FluentValidation.Tests
 {
+	using System;
 	using System.Linq;
 	using Xunit;
 
@@ -73,9 +92,191 @@ namespace FluentValidation.Tests
 			result.IsValid.ShouldBeFalse();
 		}
 
-		public class Foo
+		[Fact]
+		public void Flags_enum_valid_when_using_bitwise_value()
+		{
+			var inlineValidator = new InlineValidator<FlagsEnumPoco>();
+			inlineValidator.RuleFor(x => x.SByteValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.ByteValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int16Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt16Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int32Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt32Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int64Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt64Value).IsInEnum();
+
+			var poco = new FlagsEnumPoco();
+			poco.PopulateWithValidValues();
+
+			var result = inlineValidator.Validate(poco);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Flags_enum_invalid_when_using_outofrange_positive_value()
+		{
+			var inlineValidator = new InlineValidator<FlagsEnumPoco>();
+			inlineValidator.RuleFor(x => x.SByteValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.ByteValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int16Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt16Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int32Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt32Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int64Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt64Value).IsInEnum();
+
+			var poco = new FlagsEnumPoco();
+			poco.PopulateWithInvalidPositiveValues();
+
+			var result = inlineValidator.Validate(poco);
+			result.IsValid.ShouldBeFalse();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "ByteValue").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "SByteValue").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "Int16Value").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "UInt16Value").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "Int32Value").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "UInt32Value").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "Int64Value").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "UInt64Value").ShouldNotBeNull();
+		}
+
+		[Fact]
+		public void Flags_enum_invalid_when_using_outofrange_negative_value()
+		{
+			var inlineValidator = new InlineValidator<FlagsEnumPoco>();
+			inlineValidator.RuleFor(x => x.SByteValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.ByteValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int16Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt16Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int32Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt32Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int64Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt64Value).IsInEnum();
+
+			var poco = new FlagsEnumPoco();
+			poco.PopulateWithInvalidNegativeValues();
+
+			var result = inlineValidator.Validate(poco);
+			result.IsValid.ShouldBeFalse();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "SByteValue").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "Int16Value").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "Int32Value").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "Int64Value").ShouldNotBeNull();
+		}
+
+		private class Foo
 		{
 			public EnumGender? Gender { get; set; }
 		}
+
+		#region Flag enum helpers
+		private class FlagsEnumPoco
+		{
+			public SByteEnum SByteValue { get; set; }
+			public ByteEnum ByteValue { get; set; }
+			public Int16Enum Int16Value { get; set; }
+			public UInt16Enum UInt16Value { get; set; }
+			public Int32Enum Int32Value { get; set; }
+			public UInt32Enum UInt32Value { get; set; }
+			public Int64Enum Int64Value { get; set; }
+			public UInt64Enum UInt64Value { get; set; }
+
+			public void PopulateWithValidValues()
+			{
+				SByteValue = SByteEnum.B | SByteEnum.C;
+				ByteValue = ByteEnum.B | ByteEnum.C;
+				Int16Value = Int16Enum.B | Int16Enum.C;
+				UInt16Value = UInt16Enum.B | UInt16Enum.C;
+				Int32Value = Int32Enum.B | Int32Enum.C;
+				UInt32Value = UInt32Enum.B | UInt32Enum.C;
+				Int64Value = Int64Enum.B | Int64Enum.C;
+				UInt64Value = UInt64Enum.B | UInt64Enum.C;
+			}
+
+			public void PopulateWithInvalidPositiveValues()
+			{
+				SByteValue = (SByteEnum)123;
+				ByteValue = (ByteEnum)123;
+				Int16Value = (Int16Enum)123;
+				UInt16Value = (UInt16Enum)123;
+				Int32Value = (Int32Enum)123;
+				UInt32Value = (UInt32Enum)123;
+				Int64Value = (Int64Enum)123;
+				UInt64Value = (UInt64Enum)123;
+			}
+
+			public void PopulateWithInvalidNegativeValues()
+			{
+				SByteValue = (SByteEnum)(-123);
+				Int16Value = (Int16Enum)(-123);
+				Int32Value = (Int32Enum)(-123);
+				Int64Value = (Int64Enum)(-123);
+			}
+		}
+
+		[Flags]
+		private enum SByteEnum : sbyte
+		{
+			A = 0,
+			B = 1,
+			C = 2
+		}
+
+		[Flags]
+		private enum ByteEnum : byte
+		{
+			A = 0,
+			B = 1,
+			C = 2
+		}
+
+		[Flags]
+		private enum Int16Enum : short
+		{
+			A = 0,
+			B = 1,
+			C = 2
+		}
+
+		[Flags]
+		private enum UInt16Enum : ushort
+		{
+			A = 0,
+			B = 1,
+			C = 2
+		}
+
+		[Flags]
+		private enum Int32Enum : int
+		{
+			A = 0,
+			B = 1,
+			C = 2
+		}
+
+		[Flags]
+		private enum UInt32Enum : uint
+		{
+			A = 0,
+			B = 1,
+			C = 2
+		}
+
+		[Flags]
+		private enum Int64Enum : long
+		{
+			A = 0,
+			B = 1,
+			C = 2
+		}
+
+		[Flags]
+		private enum UInt64Enum : ulong
+		{
+			A = 0,
+			B = 1,
+			C = 2
+		}
+		#endregion
 	}
 }
