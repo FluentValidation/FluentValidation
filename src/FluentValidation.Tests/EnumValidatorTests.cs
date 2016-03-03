@@ -62,7 +62,7 @@ namespace FluentValidation.Tests
 		public void When_validation_fails_the_default_error_should_be_set()
 		{
 			var result = validator.Validate(new Person());
-			result.Errors.Single().ErrorMessage.ShouldEqual("The value for 'Gender' is invalid.");
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Gender' has a range of values which does not include '0'.");
 		}
 
 		[Fact]
