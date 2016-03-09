@@ -44,4 +44,13 @@ namespace FluentValidation {
 		/// </summary>
 		CurrentValidator
 	}
+
+     /// <summary>
+     /// Specifies the severity of a rule. 
+     /// </summary>
+	public enum Severity {
+		Error,
+		Warning,
+		Info
+	}
 }

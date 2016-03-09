@@ -41,6 +41,8 @@ namespace FluentValidation.Validators {
 
 		public Func<object, object> CustomStateProvider { get; set; }
 
+		public Severity Severity { get; set; }
+
 		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return customFormatArgs; }
 		}
@@ -120,6 +122,7 @@ namespace FluentValidation.Validators {
 				failure.CustomState = CustomStateProvider(context.Instance);
 			}
 
+			failure.Severity = Severity;
 			return failure;
 		}
 
