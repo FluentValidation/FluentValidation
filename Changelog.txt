@@ -1,5 +1,6 @@
-6.2.2 - 
+6.3 - 
 EnumValidator supports Flags 
+Add ValidationSeverity
 
 6.2.1 - 26 Feb 2016
 Fix DependentRules not working inside a top-level call to When
