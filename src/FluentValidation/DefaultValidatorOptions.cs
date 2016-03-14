@@ -341,6 +341,18 @@ namespace FluentValidation {
 			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = stateProvider.CoerceToNonGeneric());
 		}
 
+          /// Specifies custom severity that should be stored alongside the validation message when validation fails for this rule.
+          /// </summary>
+          /// <typeparam name="T"></typeparam>
+          /// <typeparam name="TProperty"></typeparam>
+          /// <param name="rule"></param>
+          /// <param name="severity"></param>
+          /// <returns></returns>
+          public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Severity severity)
+          {
+              return rule.Configure(config => config.CurrentValidator.Severity = severity);
+          }
+  
 		static Func<T, object>[] ConvertArrayOfObjectsToArrayOfDelegates<T>(object[] objects) {
 			if(objects == null || objects.Length == 0) {
 				return new Func<T, object>[0];

@@ -62,6 +62,11 @@ namespace FluentValidation.Results {
 		/// Custom state associated with the failure.
 		/// </summary>
 		public object CustomState { get; set; }
+
+		/// <summary>
+		/// Custom severity level associated with the failure.
+		/// </summary>
+		public Severity Severity { get; set; }
 		
 		/// <summary>
 		/// Gets or sets the error code.

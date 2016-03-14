@@ -92,6 +92,12 @@ namespace FluentValidation.Validators {
 			set { InnerValidator.CustomStateProvider = value; }
 		}
 
+		public Severity Severity
+		{
+		    get { return InnerValidator.Severity; }
+		    set { InnerValidator.Severity = value; }
+		}
+
 		IPropertyValidator IDelegatingValidator.InnerValidator {
 			get { return InnerValidator; }
 		}

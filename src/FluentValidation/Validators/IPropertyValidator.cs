@@ -43,6 +43,7 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		ICollection<Func<object, object, object>> CustomMessageFormatArguments { get; }
 		Func<object, object> CustomStateProvider { get; set; }
+		Severity Severity { get; set; }
 		IStringSource ErrorMessageSource { get; set; }
 		IStringSource ErrorCodeSource { get; set; }
 	}
