@@ -122,7 +122,7 @@ namespace FluentValidation.Mvc {
 			return modelValidators;
 		}
 
-		protected ModelValidator GetModelValidator(ModelMetadata meta, ControllerContext context, PropertyRule rule, IPropertyValidator propertyValidator) {
+		protected virtual ModelValidator GetModelValidator(ModelMetadata meta, ControllerContext context, PropertyRule rule, IPropertyValidator propertyValidator) {
 			var type = propertyValidator.GetType();
 			
 			var factory = validatorFactories
@@ -133,13 +133,13 @@ namespace FluentValidation.Mvc {
 			return factory(meta, context, rule, propertyValidator);
 		}
 
-		protected ModelValidator CreateNotNullValidatorForProperty(ModelMetadata metadata, ControllerContext cc) {
+		protected virtual ModelValidator CreateNotNullValidatorForProperty(ModelMetadata metadata, ControllerContext cc) {
 			return new RequiredFluentValidationPropertyValidator(metadata, cc, null, new NotNullValidator());
 		}
 
 
 
-		protected IEnumerable<ModelValidator> GetValidatorsForModel(ModelMetadata metadata, ControllerContext context, IValidator validator) {
+		protected virtual IEnumerable<ModelValidator> GetValidatorsForModel(ModelMetadata metadata, ControllerContext context, IValidator validator) {
 			if (validator != null) {
 				yield return new FluentValidationModelValidator(metadata, context, validator);
 			}
