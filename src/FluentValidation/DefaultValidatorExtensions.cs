@@ -45,8 +45,8 @@ namespace FluentValidation {
 		}
 
         /// <summary>
-		/// Defines a 'not null' validator on the current rule builder. 
-		/// Validation will fail if the property is null.
+		/// Defines a 'null' validator on the current rule builder. 
+		/// Validation will fail if the property is not null.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
