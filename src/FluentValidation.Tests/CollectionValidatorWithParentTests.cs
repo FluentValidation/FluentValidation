@@ -186,6 +186,38 @@ namespace FluentValidation.Tests
 			results.Errors[0].PropertyName.ShouldEqual("Orders2[0].ProductName");
 		}
 
+
+		[Fact]
+		public void Should_work_with_top_level_collection_validator()
+		{
+			var personValidator = new InlineValidator<Person>();
+			personValidator.RuleFor(x => x.Surname).NotNull();
+
+			var validator = new InlineValidator<List<Person>>();
+			validator.RuleFor(x => x).SetCollectionValidator(personValidator);
+
+
+			var results = validator.Validate(new List<Person> { new Person(), new Person(), new Person { Surname = "Bishop"} });
+			results.Errors.Count.ShouldEqual(2);
+			results.Errors[0].PropertyName.ShouldEqual("x[0].Surname");
+		}
+
+		[Fact]
+		public void Should_work_with_top_level_collection_validator_and_overriden_name()
+		{
+			var personValidator = new InlineValidator<Person>();
+			personValidator.RuleFor(x => x.Surname).NotNull();
+
+			var validator = new InlineValidator<List<Person>>();
+			validator.RuleFor(x => x).SetCollectionValidator(personValidator).OverridePropertyName("test");
+
+
+			var results = validator.Validate(new List<Person> { new Person(), new Person(), new Person { Surname = "Bishop" } });
+			results.Errors.Count.ShouldEqual(2);
+			results.Errors[0].PropertyName.ShouldEqual("test[0].Surname");
+		}
+
+
 		public class OrderValidator : AbstractValidator<Order>
 		{
 			public OrderValidator(Person person)

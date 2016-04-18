@@ -1,6 +1,7 @@
 6.3 - 
 EnumValidator supports Flags 
 Add ValidationSeverity
+Add support for collection validators on model-level rules
 
 6.2.1 - 26 Feb 2016
 Fix DependentRules not working inside a top-level call to When
