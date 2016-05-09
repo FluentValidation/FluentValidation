@@ -57,6 +57,7 @@
     <Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net45%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
 		<Copy SourceFiles="@(Portable40Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net40%2Bsl50%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
 		<Copy SourceFiles="@(Portable46Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\uap10.0\%(RecursiveDir)"/>
+		<Copy SourceFiles="@(Portable46Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\netstandard1.3\%(RecursiveDir)"/>
 
 		<!--<Copy SourceFiles="@(KBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\aspnetcore50\%(RecursiveDir)"/>-->
 		
@@ -72,7 +73,7 @@
 		</GetAssemblyIdentity>
 
  		 <PropertyGroup>
-      <NugetVersion Condition="'$(NugetVersion)'==''">%(AsmInfo.Version)</NugetVersion>
+      <NugetVersion Condition="'$(NugetVersion)'==''">%(AsmInfo.Version)-alpha</NugetVersion>
     </PropertyGroup>
     
     <Message Text="Nuget version: $(NugetVersion)" />
