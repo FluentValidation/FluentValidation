@@ -32,9 +32,9 @@ namespace FluentValidation {
 	/// Extension methods that provide the default set of validators.
 	/// </summary>
 	public static class DefaultValidatorExtensions {
-		/// <summary>
-		/// Defines a 'null' validator on the current rule builder. 
-		/// Validation will fail if the property is not null.
+    /// <summary>
+		/// Defines a 'not null' validator on the current rule builder. 
+		/// Validation will fail if the property is null.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -43,10 +43,11 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> NotNull<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 			return ruleBuilder.SetValidator(new NotNullValidator());
 		}
-
-        /// <summary>
-		/// Defines a 'not null' validator on the current rule builder. 
-		/// Validation will fail if the property is null.
+	
+		
+		/// <summary>
+		/// Defines a 'null' validator on the current rule builder. 
+		/// Validation will fail if the property is not null.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
