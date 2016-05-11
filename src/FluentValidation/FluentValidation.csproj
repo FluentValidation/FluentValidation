@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="AbstractValidator.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="DefaultValue.cs" />
     <Compile Include="Internal\Compatibility.cs" />
     <Compile Include="IParameterValidatorFactory.cs" />
     <Compile Include="TaskHelpers\TaskHelpers.cs" />
