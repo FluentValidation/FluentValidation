@@ -74,7 +74,6 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
-			ValidatorOptions.ResourceProviderType = null;
 
 			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 		}
@@ -97,7 +96,6 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(new Person());
-			ValidatorOptions.ResourceProviderType = null;
 
 			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
 		}
@@ -110,7 +108,6 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(new Person());
-			ValidatorOptions.ResourceProviderType = null;
 
 			results.Errors.Single().ErrorMessage.ShouldEqual("foo");
 		}
@@ -126,7 +123,6 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(new Person());
-			ValidatorOptions.ResourceProviderType = null;
 
 			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
 		}
@@ -138,7 +134,6 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
-            ValidatorOptions.ResourceProviderType = null;
 
 			result.Errors.Single().ErrorMessage.ShouldEqual("Test 1");
 		}
@@ -161,7 +156,6 @@ namespace FluentValidation.Tests {
 
             var descriptor = validator.CreateDescriptor();
             var resourceType = descriptor.GetMembersWithValidators().First().First().ErrorMessageSource.ResourceType;
-			ValidatorOptions.ResourceProviderType = null;
 
 			Assert.Equal(typeof (TestMessages), resourceType);
 

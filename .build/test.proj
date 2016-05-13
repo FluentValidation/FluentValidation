@@ -21,7 +21,7 @@
     
 
   <Target Name="default">
-    <xunit Assemblies="@(TestAssemblies)"  />
+    <xunit Assemblies="@(TestAssemblies)" ParallelizeAssemblies="false" ParallelizeTestCollections="false" />
   </Target>
 
 </Project>

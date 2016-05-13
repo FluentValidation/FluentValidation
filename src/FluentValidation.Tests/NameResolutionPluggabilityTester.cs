@@ -13,7 +13,6 @@ namespace FluentValidation.Tests {
 			};
 
 			var error = validator.Validate(new Person()).Errors.Single();
-			ValidatorOptions.PropertyNameResolver = null;
 			error.PropertyName.ShouldEqual("foo");
 		}
 
