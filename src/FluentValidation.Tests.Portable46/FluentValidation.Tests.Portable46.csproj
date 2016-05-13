@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{97575721-CF26-4CE3-B201-DAC6242C8725}</ProjectGuid>
+    <ProjectGuid>{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FluentValidation.Tests</RootNamespace>
     <AssemblyName>FluentValidation.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -17,7 +17,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PORTABLE40; PORTABLETESTS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;PORTABLE46</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -25,7 +25,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;PORTABLE40; PORTABLETESTS</DefineConstants>
+    <DefineConstants>TRACE;PORTABLE46</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -41,6 +41,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
@@ -223,6 +224,12 @@
     <Compile Include="..\FluentValidation.Tests\StandalonePropertyValidationTester.cs">
       <Link>StandalonePropertyValidationTester.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation.Tests\TaskHelpers\TaskHelpers.cs">
+      <Link>TaskHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\FluentValidation.Tests\TaskHelpers\TaskHelpersExtensions.cs">
+      <Link>TaskHelpersExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation.Tests\TestExtensions.cs">
       <Link>TestExtensions.cs</Link>
     </Compile>
@@ -256,23 +263,16 @@
     <Compile Include="..\FluentValidation.Tests\ValidatorTesterTester.cs">
       <Link>ValidatorTesterTester.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\TaskHelpers\TaskHelpers.cs">
-      <Link>TaskHelpers.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\TaskHelpers\TaskHelpersExtensions.cs">
-      <Link>TaskHelpersExtensions.cs</Link>
-    </Compile>
-    <Compile Include="Portable40TextExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Portable40\FluentValidation.Portable40.csproj">
-      <Project>{4496ca2c-e818-4758-84da-eaf9bfe48adb}</Project>
-      <Name>FluentValidation.Portable40</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\FluentValidation.Portable46\FluentValidation.Portable46.csproj">
+      <Project>{61421970-1637-4ef1-837e-edff9d6d9a88}</Project>
+      <Name>FluentValidation.Portable46</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\FluentValidation.Tests\TestMessages.fr.resx">

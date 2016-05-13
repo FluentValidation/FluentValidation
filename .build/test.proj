@@ -12,6 +12,7 @@
     <!-- These are the PCL 4.5 tests -->
     <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable\bin\$(Configuration)\FluentValidation.Tests.dll" />
     <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable40\bin\$(Configuration)\FluentValidation.Tests.dll" />
+    <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable46\bin\$(Configuration)\FluentValidation.Tests.dll" />
   </ItemGroup>
 
 <UsingTask

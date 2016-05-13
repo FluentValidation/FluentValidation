@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Portable46
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Portable40", "src\FluentValidation.Tests.Portable40\FluentValidation.Tests.Portable40.csproj", "{97575721-CF26-4CE3-B201-DAC6242C8725}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Portable46", "src\FluentValidation.Tests.Portable46\FluentValidation.Tests.Portable46.csproj", "{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -106,6 +108,10 @@ Global
 		{97575721-CF26-4CE3-B201-DAC6242C8725}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97575721-CF26-4CE3-B201-DAC6242C8725}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97575721-CF26-4CE3-B201-DAC6242C8725}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
