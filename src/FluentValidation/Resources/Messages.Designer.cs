@@ -10,6 +10,7 @@
 
 namespace FluentValidation.Resources {
     using System;
+    using System.Reflection;
     using Internal;
 
 
@@ -40,7 +41,7 @@ namespace FluentValidation.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FluentValidation.Resources.Messages", typeof(Messages).GetAssembly());
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FluentValidation.Resources.Messages", typeof(Messages).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

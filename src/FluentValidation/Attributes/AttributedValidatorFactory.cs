@@ -73,7 +73,7 @@ namespace FluentValidation.Attributes
 				return null;
 			}
 
-			var attribute = type.GetValidatorAttribute();
+			var attribute = type.GetTypeInfo().GetCustomAttribute<ValidatorAttribute>();
 
 			return GetValidator(attribute);
 		}
@@ -91,7 +91,7 @@ namespace FluentValidation.Attributes
 				return null;
 			}
 
-			var attribute = parameterInfo.GetValidatorAttribute();
+			var attribute = parameterInfo.GetCustomAttribute<ValidatorAttribute>();
 
 			return GetValidator(attribute);
 		}

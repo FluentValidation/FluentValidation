@@ -29,19 +29,6 @@ namespace FluentValidation.Internal
 	/// </summary>
 	internal static class Compatibility
 	{
-#if PORTABLE40
-
-		public static PropertyInfo GetRuntimeProperty(this Type type, string propertyName)
-		{
-			return type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance);
-		}
-
-		public static MethodInfo GetRuntimeMethod(this Type type, string name, Type[] parameters)
-		{
-			return type.GetMethod(name, BindingFlags.Instance | BindingFlags.Public);
-		}
-
-#endif
 
 #if PORTABLE || CoreCLR
 
@@ -52,72 +39,7 @@ namespace FluentValidation.Internal
 
 #endif
 
-		public static Func<string> CreateGetter(this PropertyInfo property)
-		{
-#if PORTABLE || CoreCLR
-			return (Func<string>)property.GetMethod.CreateDelegate(typeof(Func<string>));
-#else
-			return (Func<string>)Delegate.CreateDelegate(typeof(Func<string>), property.GetGetMethod());
-#endif
-		}
 
-		public static TAttribute GetCustomAttributeCompatible<TAttribute>(this Type type)
-			where TAttribute : Attribute
-		{
-#if PORTABLE || CoreCLR
-			return type.GetTypeInfo().GetCustomAttribute<TAttribute>(true);
-#else
-			return (TAttribute)Attribute.GetCustomAttribute(type, typeof(TAttribute));
-#endif
-		}
 
-		public static ValidatorAttribute GetValidatorAttribute(this Type type)
-		{
-			return type.GetCustomAttributeCompatible<ValidatorAttribute>();
-		}
-
-		public static ValidatorAttribute GetValidatorAttribute(this ParameterInfo parameterInfo)
-		{
-#if PORTABLE || CoreCLR
-			return parameterInfo.GetCustomAttribute<ValidatorAttribute>(true);
-#else
-			return (ValidatorAttribute)Attribute.GetCustomAttribute(parameterInfo, typeof(ValidatorAttribute));
-#endif
-		}
-
-		public static Assembly GetAssembly(this Type type)
-		{
-#if PORTABLE || CoreCLR
-			return type.GetTypeInfo().Assembly;
-#else
-			return type.Assembly;
-#endif
-		}
-
-		public static MethodInfo GetDeclaredMethod(this Type type, string name)
-		{
-#if PORTABLE || CoreCLR
-			return type.GetTypeInfo().GetDeclaredMethod(name);
-#else
-			return type.GetMethod(name, new Type[0]);
-#endif
-		}
-
-		public static bool IsGenericType(this Type type)
-		{
-#if PORTABLE || CoreCLR
-			return type.GetTypeInfo().IsGenericType;
-#else
-			return type.IsGenericType;
-#endif
-		}
-
-		public static bool IsEnum(this Type type) {
-#if PORTABLE || CoreCLR
-			return type.GetTypeInfo().IsEnum;
-#else
-			return type.IsEnum;
-#endif
-		}
 	}
 }

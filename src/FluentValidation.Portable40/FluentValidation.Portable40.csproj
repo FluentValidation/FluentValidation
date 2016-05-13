@@ -296,6 +296,7 @@
     <Compile Include="..\FluentValidation\Validators\ScalePrecisionValidator.cs">
       <Link>ScalePrecisionValidator.cs</Link>
     </Compile>
+    <Compile Include="Net40Compatibility.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.cs.resx">

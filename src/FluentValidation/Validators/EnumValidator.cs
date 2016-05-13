@@ -19,6 +19,7 @@
 namespace FluentValidation.Validators
 {
 	using System;
+	using System.Reflection;
 	using FluentValidation.Internal;
 	using Resources;
 
@@ -35,9 +36,9 @@ namespace FluentValidation.Validators
 
 			var underlyingEnumType = Nullable.GetUnderlyingType(enumType) ?? enumType;
 
-			if (!underlyingEnumType.IsEnum()) return false;
+			if (!underlyingEnumType.GetTypeInfo().IsEnum) return false;
 
-			if (underlyingEnumType.GetCustomAttributeCompatible<FlagsAttribute>() != null)
+			if (underlyingEnumType.GetTypeInfo().GetCustomAttribute<FlagsAttribute>() != null)
 			{
 				return IsFlagsEnumDefined(underlyingEnumType, context.PropertyValue);
 			}
