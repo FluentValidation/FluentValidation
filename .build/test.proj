@@ -16,7 +16,7 @@
   </ItemGroup>
 
 <UsingTask
-    AssemblyFile="$(BaseDir)\packages\xunit.runner.msbuild.2.0.0\build\portable-net45+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.runner.msbuild.dll"
+    AssemblyFile="$(BaseDir)\packages\xunit.runner.msbuild.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.runner.msbuild.dll"
     TaskName="Xunit.Runner.MSBuild.xunit"/>
     
 
