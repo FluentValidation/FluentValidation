@@ -22,6 +22,10 @@ namespace FluentValidation.Tests {
 
 	public class ModelLevelValidatorTests {
 
+		public ModelLevelValidatorTests() {
+			CultureScope.SetDefaultCulture();
+		}
+
 		[Fact]
 		public void Validates_at_model_level() {
 			var v = new TestValidator();

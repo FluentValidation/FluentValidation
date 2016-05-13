@@ -61,6 +61,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
+			ValidatorOptions.ResourceProviderType = null;
+
 			result.Errors.Single().ErrorMessage.ShouldEqual("'bar' must not be empty.");
 		}
 
