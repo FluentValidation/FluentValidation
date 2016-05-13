@@ -70,9 +70,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Portable\FluentValidation.Portable.csproj">
+    <ProjectReference Include="..\FluentValidation.Portable\FluentValidation.Portable45.csproj">
       <Project>{c16154be-8eb7-4cbf-976c-24ccd8ba3b51}</Project>
-      <Name>FluentValidation.Portable</Name>
+      <Name>FluentValidation.Portable45</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -15,9 +15,9 @@
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
-
+#if!PORTABLE40
 using Xunit.Extensions;
-
+#endif
 namespace FluentValidation.Tests {
 	using System;
 	using System.Globalization;
@@ -73,6 +73,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+#if !PORTABLE40
 		[Theory]
 		[InlineData((string)null)]
 		[InlineData("testperson@gmail.com")]
@@ -91,5 +92,6 @@ namespace FluentValidation.Tests {
 				var result = validator.Validate(new Person {Email = email});
 				result.IsValid.ShouldBeTrue(string.Format("The email address {0} should be valid", email));
 		}
+#endif
 	}
 }

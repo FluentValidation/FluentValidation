@@ -60,6 +60,7 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("The specified condition was not met for 'Forename'.");
 		}
 
+#if!PORTABLE40
 		[Fact]
 		public void When_validation_fails_the_error_code_should_be_set_to_resource_key() {
 			var validator = new TestValidator() {
@@ -85,5 +86,6 @@ namespace FluentValidation.Tests {
 			error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Forename");
 			error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
 		}
+#endif
 	}
 }
