@@ -1,0 +1,43 @@
+{
+  "version": "1.0.0-*",
+  "description": "FluentValidation Unit Tests .NET Core",
+  "authors": [ "FluentValidation Team" ],
+  "packOptions": {
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": ""
+  },
+
+  "buildOptions": {
+    "compile": {
+      "include": [ "../FluentValidation.Tests/**/*.cs" ],
+    },
+    "embed": {
+      "mappings": {
+        "FluentValidation.Tests.TestMessages": "../FluentValidation.Tests/TestMessages.resx",
+        "FluentValidation.Tests.TestMessages.fr": "../FluentValidation.Tests/TestMessages.fr.resx"
+      }
+    }
+  },
+
+  "dependencies": {
+    "xunit": "2.1.0"
+  },
+  "testRunner": "xunit",
+  "frameworks": {
+    "netcoreapp1.0": {
+      "buildOptions": {
+        "define": [ "PORTABLE", "CoreCLR" ]
+      },
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0-rc2-3002702"
+        },
+        "FluentValidation": "99.99.99-wrapped",
+        "dotnet-test-xunit": "1.0.0-dev-140469-38"
+      },
+      "imports": [ "dnxcore50", "portable-net451+win81" ]
+    }
+  }
+}
