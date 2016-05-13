@@ -65,9 +65,6 @@
     <Compile Include="..\FluentValidation.Tests\*.cs" />
     <EmbeddedResource Include="..\FluentValidation.Tests\TestMessages.fr.resx" />
     <EmbeddedResource Include="..\FluentValidation.Tests\TestMessages.resx" />
-    <Compile Include="..\FluentValidation\Internal\Compatibility.cs">
-      <Link>Compatibility.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\TaskHelpers\TaskHelpers.cs">
       <Link>TaskHelpers.cs</Link>
     </Compile>

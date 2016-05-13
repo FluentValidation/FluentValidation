@@ -58,5 +58,9 @@ namespace System.Reflection {
 		public TAttribute GetCustomAttribute<TAttribute>() where TAttribute : Attribute {
 			return (TAttribute)Attribute.GetCustomAttribute(_type, typeof(TAttribute));
 		}
+
+		public bool IsAssignableFrom(TypeInfo other) {
+			return _type.IsAssignableFrom(other._type);
+		}
 	}
 }
