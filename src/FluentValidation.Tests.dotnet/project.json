@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-*",
   "description": "FluentValidation Unit Tests .NET Core",
-  "authors": [ "FluentValidation Team" ],
+  "authors": [ "Jeremy Skinner" ],
   "packOptions": {
     "tags": [ "" ],
     "projectUrl": "",
@@ -10,7 +10,7 @@
 
   "buildOptions": {
     "compile": {
-      "include": [ "../FluentValidation.Tests/**/*.cs" ],
+      "include": [ "../FluentValidation.Tests/**/*.cs" ]
     },
     "embed": {
       "mappings": {
@@ -35,7 +35,7 @@
           "version": "1.0.0-rc2-3002702"
         },
         "FluentValidation": "99.99.99-wrapped",
-        "dotnet-test-xunit": "1.0.0-dev-140469-38"
+        "dotnet-test-xunit": "1.0.0-rc2-build10015"
       },
       "imports": [ "dnxcore50", "portable-net451+win81" ]
     }
