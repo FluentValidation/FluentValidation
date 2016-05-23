@@ -366,6 +366,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <NuGetTargetMoniker>.NETStandard,Version=v1.3</NuGetTargetMoniker>
+    <NuGetTargetMoniker>.NETStandard,Version=v1.0</NuGetTargetMoniker>
   </PropertyGroup>
 </Project>

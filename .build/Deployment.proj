@@ -22,7 +22,7 @@
 			<Portable40Binaries Include="$(BaseDir)\src\FluentValidation.Portable40\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)$(PackageSuffix)\FluentValidation.WebApi.*" />
 			<Portable46Binaries Include="$(BaseDir)\src\FluentValidation.Portable46\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
-			<NetStandard13Binaries Include="$(BaseDir)\src\FluentValidation.NetStandard\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
+			<NetStandard10Binaries Include="$(BaseDir)\src\FluentValidation.NetStandard\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<!--<KBinaries Include="$(BaseDir)\artifacts\bin\FluentValidation.K\$(Configuration)\aspnetcore50\**\*.*" />-->
 			
 			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
@@ -35,7 +35,7 @@
 		<Copy SourceFiles="@(Portable40Binaries)" DestinationFolder="$(OutputDir)\Portable40" />
 		<Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(OutputDir)\Portable" />
 		<Copy SourceFiles="@(Portable46Binaries)" DestinationFolder="$(OutputDir)\Portable46" />
-		<Copy SourceFiles="@(NetStandard13Binaries)" DestinationFolder="$(OutputDir)\NetStandard13" />
+		<Copy SourceFiles="@(NetStandard10Binaries)" DestinationFolder="$(OutputDir)\NetStandard10" />
 
 		<Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
     <!--<Copy SourceFiles="@(KBinaries)" DestinationFolder="$(OutputDir)\AspNetVNext" />-->
@@ -59,7 +59,7 @@
     <Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net45%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
 		<Copy SourceFiles="@(Portable40Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net40%2Bsl50%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
 		<Copy SourceFiles="@(Portable46Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\uap10.0\%(RecursiveDir)"/>
-		<Copy SourceFiles="@(NetStandard13Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\netstandard1.3\%(RecursiveDir)"/>
+		<Copy SourceFiles="@(NetStandard10Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\netstandard1.0\%(RecursiveDir)"/>
 
 		<!--<Copy SourceFiles="@(KBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\aspnetcore50\%(RecursiveDir)"/>-->
 		
