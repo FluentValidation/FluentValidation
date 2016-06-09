@@ -22,15 +22,12 @@ namespace FluentValidation.MvcCore
         /// <param name="assemblyToScan">assembly to scann for validators.</param>
         /// <param name="additionalAssembliesToScann">Additional assemblies to scann for validators.</param>
         /// <returns>The <see cref="IMvcBuilder"/>.</returns>
-        public static IMvcBuilder AddFluentValidation(this IMvcBuilder builder, Assembly assemblyToScan, params Assembly[] additionalAssembliesToScann)
-        {
-            if (builder == null)
-            {
+        public static IMvcBuilder AddFluentValidation(this IMvcBuilder builder, Assembly assemblyToScan, params Assembly[] additionalAssembliesToScann) {
+            if (builder == null) {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            if (assemblyToScan == null) 
-            {
+            if (assemblyToScan == null) {
                 throw new ArgumentNullException(nameof(assemblyToScan));
             }
 
@@ -38,25 +35,23 @@ namespace FluentValidation.MvcCore
             return builder;
         }
 
-        private static void AddFluentValidationServices(IServiceCollection services, IEnumerable<Assembly> assembliesToScann)
-        {
-             services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<MvcOptions>, FluentValidationMvcOptionsSetup>());
-             services.TryAddSingleton<IValidatorFactory, FluentValidationValidatorFactory>();
-             // add all validators..
-             var openGenericType = typeof(IValidator<>);
-            
-             var validators = from type in assembliesToScann.SelectMany(assembly => assembly.GetTypes())
-						let interfaces = type.GetInterfaces()
-						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
-						let matchingInterface = genericInterfaces.FirstOrDefault()
-						where matchingInterface != null
-						select new { InterfaceType = matchingInterface,  ValidatorType = type };
+        private static void AddFluentValidationServices(IServiceCollection services, IEnumerable<Assembly> assembliesToScann) {
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<MvcOptions>, FluentValidationMvcOptionsSetup>());
+            services.TryAddSingleton<IValidatorFactory, FluentValidationValidatorFactory>();
+            // add all validators..
+            var openGenericType = typeof(IValidator<>);
 
-             foreach (var validator in validators) 
-             {
+            var validators = from type in assembliesToScann.SelectMany(assembly => assembly.GetTypes())
+                             let interfaces = type.GetInterfaces()
+                             let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
+                             let matchingInterface = genericInterfaces.FirstOrDefault()
+                             where matchingInterface != null
+                             select new { InterfaceType = matchingInterface, ValidatorType = type };
+
+            foreach (var validator in validators) {
                 services.TryAddTransient(validator.InterfaceType, validator.ValidatorType);
-             }
+            }
         }
-        
+
     }
 }

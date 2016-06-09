@@ -12,14 +12,12 @@ namespace FluentValidation.MvcCore
     public class FluentValidationMvcOptionsSetup : ConfigureOptions<MvcOptions>
     {
         public FluentValidationMvcOptionsSetup(IServiceProvider serviceProvider)
-            : base(options => ConfigureMvc(options, serviceProvider))
-        {
+            : base(options => ConfigureMvc(options, serviceProvider)) {
         }
 
-        public static void ConfigureMvc(MvcOptions options, IServiceProvider serviceProvider)
-        {
-           var validatorFactory = serviceProvider.GetService<IValidatorFactory>();
-            
+        public static void ConfigureMvc(MvcOptions options, IServiceProvider serviceProvider) {
+            var validatorFactory = serviceProvider.GetService<IValidatorFactory>();
+
             options.ModelValidatorProviders.Add(new FluentValidationModelValidatorProvider(validatorFactory));
         }
     }

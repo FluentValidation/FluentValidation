@@ -13,36 +13,30 @@ namespace FluentValidation.MvcCore
         private IValidatorFactory _ValidatorFactory;
 
         public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory) {
-            if (validatorFactory == null) 
+            if (validatorFactory == null)
                 throw new ArgumentNullException(nameof(validatorFactory));
-                
+
             _ValidatorFactory = validatorFactory;
         }
 
-        public void CreateValidators(ModelValidatorProviderContext context)
-        {
+        public void CreateValidators(ModelValidatorProviderContext context) {
             var validator = CreateValidator(context);
-            if (! IsValidatingProperty(context) && validator != null) 
- 			{ 
- 				context.Results.Add(new ValidatorItem 
-                 { 
-                     Validator = new FluentValidationModelValidator(validator), 
-                     IsReusable = false 
-                 }); 
- 			} 
+            if (!IsValidatingProperty(context) && validator != null) {
+                context.Results.Add(new ValidatorItem {
+                    Validator = new FluentValidationModelValidator(validator),
+                    IsReusable = false
+                });
+            }
         }
 
-        protected virtual IValidator CreateValidator(ModelValidatorProviderContext context)
-        {
-            if (IsValidatingProperty(context))
-            {
+        protected virtual IValidator CreateValidator(ModelValidatorProviderContext context) {
+            if (IsValidatingProperty(context)) {
                 return _ValidatorFactory.GetValidator(context.ModelMetadata.ContainerType);
             }
             return _ValidatorFactory.GetValidator(context.ModelMetadata.ModelType);
         }
 
-        protected virtual bool IsValidatingProperty(ModelValidatorProviderContext context)
-        {
+        protected virtual bool IsValidatingProperty(ModelValidatorProviderContext context) {
             return context.ModelMetadata.ContainerType != null && !string.IsNullOrEmpty(context.ModelMetadata.PropertyName);
         }
     }
@@ -51,13 +45,11 @@ namespace FluentValidation.MvcCore
     {
         private IValidator _validator;
 
-        public FluentValidationModelValidator(IValidator validator)
-        {
+        public FluentValidationModelValidator(IValidator validator) {
             _validator = validator;
         }
 
-        public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context)
-        {
+        public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context) {
             var model = context.Model;
 
             var result = _validator.Validate(model);
@@ -67,8 +59,7 @@ namespace FluentValidation.MvcCore
 
         }
 
-        public bool IsRequired
-        {
+        public bool IsRequired {
             get { return false; }
         }
     }
