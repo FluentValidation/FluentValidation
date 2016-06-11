@@ -165,4 +165,16 @@
   <data name="CreditCardError" xml:space="preserve">
     <value>'{PropertyName}' неверный номер карты.</value>
   </data>
+  <data name="scale_precision_error" xml:space="preserve">
+    <value>'{PropertyName}' не должно быть более {expectedPrecision} цифр всего, с {expectedScale} десятичными знаками. {digits} цифр и {actualScale} десятичных знаков обнаружено.</value>
+  </data>
+  <data name="empty_error" xml:space="preserve">
+    <value>'{PropertyName}' должно быть пусто.</value>
+  </data>
+  <data name="null_error" xml:space="preserve">
+    <value>'{PropertyName}' обязано быть пустым.</value>
+  </data>
+  <data name="enum_error" xml:space="preserve">
+    <value>'{PropertyName}' имеет диапазон значений, который не содержит '{PropertyValue}'.</value>
+  </data>
 </root>
