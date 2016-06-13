@@ -1,0 +1,23 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "FluentValidation Integration with  AspNetCore",
+  "authors": [ "Jeremy Skinner" ],
+  "packExclude": [
+    "**.xproj",
+    "**.user",
+    "**.vspscc"
+  ],
+  "dependencies": {
+    "FluentValidation": "6.2.1",
+    "Microsoft.AspNetCore.Mvc.Core": "1.0.0-rc2-final"
+  },
+
+  "frameworks": {
+    "netstandard1.0": {
+      "imports": [
+        "dnxcore50",
+        "portable-net451+win81"
+      ]
+    }
+  }
+}
