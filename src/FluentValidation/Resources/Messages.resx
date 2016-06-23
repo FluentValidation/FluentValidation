@@ -127,7 +127,7 @@
     <value>'{PropertyName}' must be greater than '{ComparisonValue}'.</value>
   </data>
   <data name="length_error" xml:space="preserve">
-    <value>'{PropertyName}' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters.</value>
+    <value>'{PropertyName}' must be between {MinLength} and {MaxLength} {MaxLengthCharacter}. You entered {TotalLength} {TotalLengthCharacter}.</value>
   </data>
   <data name="lessthanorequal_error" xml:space="preserve">
     <value>'{PropertyName}' must be less than or equal to '{ComparisonValue}'.</value>
@@ -154,7 +154,7 @@
     <value>'{PropertyName}' should be equal to '{ComparisonValue}'.</value>
   </data>
   <data name="exact_length_error" xml:space="preserve">
-    <value>'{PropertyName}' must be {MaxLength} characters in length. You entered {TotalLength} characters.</value>
+    <value>'{PropertyName}' must be {MaxLength} {MaxLengthCharacter} in length. You entered {TotalLength} {TotalLengthCharacter}.</value>
   </data>
   <data name="inclusivebetween_error" xml:space="preserve">
     <value>'{PropertyName}' must be between {From} and {To}. You entered {Value}.</value>
@@ -176,5 +176,11 @@
   </data>
   <data name="enum_error" xml:space="preserve">
     <value>'{PropertyName}' has a range of values which does not include '{PropertyValue}'.</value>
+  </data>
+  <data name="character_plural" xml:space="preserve">
+    <value>characters</value>
+  </data>
+  <data name="character_singular" xml:space="preserve">
+    <value>character</value>
   </data>
 </root>

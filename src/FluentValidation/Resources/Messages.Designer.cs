@@ -63,6 +63,24 @@ namespace FluentValidation.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to characters.
+        /// </summary>
+        public static string character_plural {
+            get {
+                return ResourceManager.GetString("character_plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to character.
+        /// </summary>
+        public static string character_singular {
+            get {
+                return ResourceManager.GetString("character_singular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &apos;{PropertyName}&apos; is not a valid credit card number..
         /// </summary>
         public static string CreditCardError {
@@ -108,7 +126,7 @@ namespace FluentValidation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; must be {MaxLength} characters in length. You entered {TotalLength} characters..
+        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; must be {MaxLength} {MaxLengthCharacter} in length. You entered {TotalLength} {TotalLengthCharacter}..
         /// </summary>
         public static string exact_length_error {
             get {
@@ -153,7 +171,7 @@ namespace FluentValidation.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters..
+        ///   Looks up a localized string similar to &apos;{PropertyName}&apos; must be between {MinLength} and {MaxLength} {MaxLengthCharacter}. You entered {TotalLength} {TotalLengthCharacter}..
         /// </summary>
         public static string length_error {
             get {

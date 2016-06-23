@@ -121,6 +121,30 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void When_the_validator_fails_the_error_message_should_be_grammatically_correct_for_single_length_rule_and_multi_length_input()
+		{
+			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(0, 1) };
+			var result = validator.Validate(new Person() { Surname = ".." });
+			result.Errors.Single().ErrorMessage.ShouldEqual($"'Surname' must be between 0 and 1 character. You entered 2 characters.");
+		}
+
+		[Fact]
+		public void When_the_validator_fails_the_error_message_should_be_grammatically_correct_for_multi_length_rule_and_single_length_input()
+		{
+			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2, 3) };
+			var result = validator.Validate(new Person() { Surname = "." });
+			result.Errors.Single().ErrorMessage.ShouldEqual($"'Surname' must be between 2 and 3 characters. You entered 1 character.");
+		}
+
+		[Fact]
+		public void When_the_validator_fails_the_error_message_should_be_grammatically_correct_for_multi_length_rule_and_multi_length_input()
+		{
+			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2, 3) };
+			var result = validator.Validate(new Person() { Surname = "...." });
+			result.Errors.Single().ErrorMessage.ShouldEqual($"'Surname' must be between 2 and 3 characters. You entered 4 characters.");
+		}
+
+		[Fact]
 		public void Min_and_max_properties_should_be_set() {
 			var validator = new LengthValidator(1, 5);
 			validator.Min.ShouldEqual(1);
