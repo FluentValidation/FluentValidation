@@ -13,6 +13,7 @@
 // See the License for the specific language governing permissions and 
 // limitations under the License.
 // 
+// The latest version of this file can be found at http://www.codeplex.com/FluentValidation
 #endregion
 
 using System;
