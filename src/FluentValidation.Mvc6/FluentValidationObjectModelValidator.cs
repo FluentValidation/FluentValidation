@@ -8,6 +8,8 @@
 	//TODO: Need support for CustomizeValidatorAttribute and client-side
 
 	public class FluentValidationObjectModelValidator : IObjectModelValidator {
+	    public const string InvalidValuePlaceholder = "__FV_InvalidValue";
+
 		private readonly IValidatorFactory _validatorFactory;
 
 		/// <summary>
@@ -50,14 +52,26 @@
 				value.ValidationState = ModelValidationState.Valid;
 			}
 
+           
+
 			// validate the model using Fluent Validation rules
 
 			var result = validator.Validate(model);
 
 			// add all our model errors to the modelstate
 
+		    if (!string.IsNullOrEmpty(prefix)) {
+		        prefix = prefix + ".";
+		    }
+
 			foreach (var modelError in result.Errors) {
-				actionContext.ModelState.AddModelError(modelError.PropertyName, modelError.ErrorMessage);
+                // See if there's already an item in the ModelState for this key. 
+			    if (actionContext.ModelState.ContainsKey(modelError.PropertyName)) {
+			        actionContext.ModelState[modelError.PropertyName].Errors.Clear();
+			    }
+
+
+				actionContext.ModelState.AddModelError(prefix + modelError.PropertyName, modelError.ErrorMessage);
 			}
 		}
 	}

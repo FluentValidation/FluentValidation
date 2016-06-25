@@ -32,7 +32,9 @@ namespace FluentValidation.Tests.Mvc6 {
         public void ConfigureServices(IServiceCollection services)
         {
            
-            services.AddMvc().AddFluentValidation(cfg => {
+            services.AddMvc(setup => {
+                
+            }).AddFluentValidation(cfg => {
                 cfg.ValidatorFactory=new AttributedValidatorFactory();
                 cfg.RegisterValidators = false;
             });

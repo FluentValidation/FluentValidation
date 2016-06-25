@@ -148,19 +148,43 @@
             };
 
             var errors = await GetErrors("Test3", form);
+            errors.GetError("Id").ShouldEqual("Validation failed");
+            
+        }
+
+        [Fact]
+        public async Task Should_not_add_default_message_to_modelstate_prefix()
+        {
+            var form = new FormData {
+                { "test.Id", "" }
+            };
+
+            var errors = await GetErrors("Test3", form);
+
+            errors.Count.ShouldEqual(1);
+            errors.GetError("test.Id").ShouldEqual("Validation failed");
+        }
+
+        [Fact]
+        public async Task Should_not_add_default_message_to_modelstate_not_specified()
+        {
+            var form = new FormData {
+            };
+
+            var errors = await GetErrors("Test3", form);
 
             errors.GetError("Id").ShouldEqual("Validation failed");
         }
 
         [Fact]
-        public async Task Should_not_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified()
+        public async Task Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified()
         {
             var form = new FormData {
                 { "Id", "" }
             };
 
             var result = await GetErrors("Test6", form);
-            result.GetError("Id").ShouldEqual("'Id' must not be empty.");
+            result.GetError("Id").ShouldEqual("The value '' is invalid.");
         }
 
         [Fact]
@@ -192,7 +216,7 @@
                 { "Id", "" }
             };
             var errors = await GetErrors("TestModelWithOverridenPropertyNameValueType", form);
-            errors.GetError("Id").ShouldEqual("'Foo' must not be empty.");
+            errors.GetError("Id").ShouldEqual("'Foo' should not be empty.");
         }
 
         /*[Fact]

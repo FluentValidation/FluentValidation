@@ -145,7 +145,7 @@
     {
         public TestModelWithOverridenPropertyNameValidator()
         {
-            RuleFor(x => x.Id).NotNull().WithName("Foo");
+            RuleFor(x => x.Id).NotEmpty().WithName("Foo");
 
         }
     }
@@ -181,7 +181,7 @@
     {
         public TestModelValidator3()
         {
-            RuleFor(x => x.Id).NotNull().WithMessage("Validation failed");
+            RuleFor(x => x.Id).NotEmpty().WithMessage("Validation failed");
         }
     }
 

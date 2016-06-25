@@ -3,6 +3,7 @@
 	using System.Linq;
 	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
+	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Microsoft.Extensions.DependencyInjection;
 
@@ -46,13 +47,20 @@
 			// clear all model validation providers since fluent validation will be handling everything
 
 			mvcBuilder.AddMvcOptions(
-				options => { options.ModelValidatorProviders.Clear(); });
+			    options => {
+			        options.ModelValidatorProviders.Clear();
+//			        options.ModelBindingMessageProvider.AttemptedValueIsInvalidAccessor = (s, s1) => "FV_1";
+			        //options.ModelBindingMessageProvider.ValueMustNotBeNullAccessor = s => FluentValidationObjectModelValidator.InvalidValuePlaceholder;
+//			        options.ModelBindingMessageProvider.UnknownValueIsInvalidAccessor = s => "FV_3";
+//                    options.ModelBindingMessageProvider.ValueIsInvalidAccessor = s => ;
+                });
 
-			return mvcBuilder;
+
+            return mvcBuilder;
 		}
 	}
 
-    public class FluentValidationMvcConfiguration {
+    public class FluentValidationMvcConfiguration { 
         public IValidatorFactory ValidatorFactory { get; set; }
         public bool RegisterValidators { get; set; } = true;
     }

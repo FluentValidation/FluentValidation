@@ -93,7 +93,7 @@
 
         public static string GetError(this List<SimpleError> errors, string name)
         {
-            return errors.Where(x => x.Name == name).Select(x => x.Message).FirstOrDefault() ?? "";
+            return errors.Where(x => x.Name == name).Select(x => x.Message).SingleOrDefault() ?? "";
         }
     }
 }
