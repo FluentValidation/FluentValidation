@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0-*",
+  "description": "FluentValidation MVC6 Unit Tests .NET Core",
+  "authors": [ "Jeremy Skinner" ],
+  "packOptions": {
+    "tags": [ "" ],
+    "projectUrl": "",
+    "licenseUrl": ""
+  },
+
+  "buildOptions": {
+  },
+
+  "dependencies": {
+    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.TestHost": "1.0.0-rc2-final",
+    "xunit": "2.1.0"
+  },
+  "testRunner": "xunit",
+  "frameworks": {
+    "netcoreapp1.0": {
+      "buildOptions": {
+        "define": [ "PORTABLE", "CoreCLR" ]
+      },
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0-rc2-3002702"
+        },
+        "FluentValidation": "99.99.99-wrapped",
+        "FluentValidation.Mvc6Wrap": "99.99.99-wrapped",
+        "dotnet-test-xunit": "1.0.0-rc2-build10015"
+      },
+      "imports": [ "dnxcore50", "portable-net451+win81" ]
+    }
+  }
+}
