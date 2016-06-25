@@ -39,6 +39,9 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DefaultValidatorFactory.cs" />
     <Compile Include="FluentValidationMvcExtensions.cs" />
     <Compile Include="FluentValidationObjectModelValidator.cs" />
