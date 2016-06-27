@@ -1,11 +1,11 @@
 ﻿{
   "dependencies": {
-    "NETStandard.Library": "1.5.0-rc2-24027",
-    "System.Diagnostics.Contracts": "4.0.1-rc2-24027",
-    "System.Diagnostics.Tools": "4.0.1-rc2-24027",
-    "System.Linq": "4.1.0-rc2-24027",
-    "System.Linq.Expressions": "4.0.11-rc2-24027",
-    "System.Resources.ResourceManager": "4.0.1-rc2-24027"
+    "NETStandard.Library": "1.6.0",
+    "System.Diagnostics.Contracts": "4.0.1",
+    "System.Diagnostics.Tools": "4.0.1",
+    "System.Linq": "4.1.0",
+    "System.Linq.Expressions": "4.1.0",
+    "System.Resources.ResourceManager": "4.0.1"
   },
   "frameworks": {
     "netstandard1.0": {

@@ -16,25 +16,25 @@
 
   "dependencies": {
     "FluentValidation.AspNetCore": "1.0.0-*",
-    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
-    "Microsoft.AspNetCore.TestHost": "1.0.0-rc2-final",
+    "Microsoft.AspNetCore.Mvc": "1.0.0",
+    "Microsoft.AspNetCore.TestHost": "1.0.0",
     "xunit": "2.1.0"
   },
   "testRunner": "xunit",
-  "frameworks": {
-    "netcoreapp1.0": {
-      "buildOptions": {
-        "define": [ "PORTABLE", "CoreCLR" ]
-      },
-      "dependencies": {
-        "Microsoft.NETCore.App": {
-          "type": "platform",
-          "version": "1.0.0-rc2-3002702"
-        },
-        "FluentValidation": "99.99.99-wrapped",
-        "dotnet-test-xunit": "1.0.0-rc2-build10015"
-      },
-      "imports": [ "dnxcore50", "portable-net451+win81" ]
+    "frameworks": {
+        "netcoreapp1.0": {
+            "buildOptions": {
+                "define": [ "PORTABLE", "CoreCLR" ]
+            },
+            "dependencies": {
+                "Microsoft.NETCore.App": {
+                    "type": "platform",
+                    "version": "1.0.0"
+                },
+                "FluentValidation": "99.99.99-wrapped",
+                "dotnet-test-xunit": "2.2.0-preview2-build1029"
+            },
+            "imports": [ "dnxcore50", "portable-net451+win81" ]
+        }
     }
-  }
 }

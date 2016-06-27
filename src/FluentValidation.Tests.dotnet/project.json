@@ -32,14 +32,14 @@
       "buildOptions": {
         "define": [ "PORTABLE", "CoreCLR" ]
       },
-      "dependencies": {
-        "Microsoft.NETCore.App": {
-          "type": "platform",
-          "version": "1.0.0-rc2-3002702"
+        "dependencies": {
+            "Microsoft.NETCore.App": {
+                "type": "platform",
+                "version": "1.0.0"
+            },
+            "FluentValidation": "99.99.99-wrapped",
+            "dotnet-test-xunit": "2.2.0-preview2-build1029"
         },
-        "FluentValidation": "99.99.99-wrapped",
-        "dotnet-test-xunit": "1.0.0-rc2-build10015"
-      },
       "imports": [ "dnxcore50", "portable-net451+win81" ]
     }
   }

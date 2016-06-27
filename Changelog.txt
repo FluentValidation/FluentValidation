@@ -1,8 +1,8 @@
-6.4 - 
+6.4 beta 1 - 28 Jun 2016
 EnumValidator supports Flags 
 Add ValidationSeverity
 Add support for collection validators on model-level rules
-AspNetCore / MVC6
+AspNetCore support
 
 6.2.1 - 26 Feb 2016
 Fix DependentRules not working inside a top-level call to When

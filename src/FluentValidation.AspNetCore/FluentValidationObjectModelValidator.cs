@@ -35,8 +35,8 @@
 			_validatorProvider = new CompositeModelValidatorProvider(validatorProviders);
 		}
 
-		public void Validate(ActionContext actionContext, IModelValidatorProvider validatorProvider,
-			ValidationStateDictionary validationState, string prefix, object model) {
+		public void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model)
+		{
 			if (actionContext == null) {
 				throw new ArgumentNullException(nameof(actionContext));
 			}
@@ -132,5 +132,9 @@
 
 			return attribute ?? new CustomizeValidatorAttribute();
 		}
+
+		
+			
+		
 	}
 }
