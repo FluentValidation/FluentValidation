@@ -1,12 +1,9 @@
-﻿namespace FluentValidation.Tests.Mvc6 {
-    using System;
-    using Attributes;
-    using Internal;
-    using Microsoft.AspNetCore.Mvc;
-    using Mvc;
-    using Results;
+﻿namespace FluentValidation.Tests.AspNetCore {
+	using System;
+	using FluentValidation.Attributes;
+	using Microsoft.CodeAnalysis;
 
-    [Validator(typeof(TestModel5Validator))]
+	[Validator(typeof(TestModel5Validator))]
     public class TestModel5
     {
         public int Id { get; set; }

@@ -1,8 +1,5 @@
-﻿namespace FluentValidation.Mvc
+﻿namespace FluentValidation.AspNetCore
 {
-	using Microsoft.AspNetCore.Mvc;
-	using Results;
-
 	/*/// <summary>
 	/// Specifies an interceptor that can be used to provide hooks that will be called before and after MVC validation occurs.
 	/// </summary>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>FluentValidation.MVC6</id>
+    <version>1.0.0.0</version>
+    <authors>Jeremy Skinner</authors>
+    <licenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</licenseUrl>
+    <projectUrl>http://github.com/JeremySkinner/fluentvalidation</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=FluentValidation&amp;DownloadId=166226</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ASP.NET MVC 6 / AspNetCore integration for FluentValidation</description>
+    <summary>ASP.NET MVC 6 / AspNetCore integration for FluentValidation</summary>
+    <language>en-US</language>
+    <releaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</releaseNotes>
+    <dependencies>
+      <dependency id="FluentValidation.AspNetCore" version="" />
+    </dependencies>
+  </metadata>
+</package>

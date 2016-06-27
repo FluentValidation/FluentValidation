@@ -1,13 +1,13 @@
-namespace FluentValidation.Tests.Mvc6 {
-    using Attributes;
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
-    using Mvc;
+namespace FluentValidation.Tests.AspNetCore {
+	using Microsoft.AspNetCore.Builder;
+	using Microsoft.AspNetCore.Hosting;
+	using Microsoft.Extensions.Configuration;
+	using Microsoft.Extensions.DependencyInjection;
+	using Microsoft.Extensions.Logging;
+	using FluentValidation.AspNetCore;
+	using FluentValidation.Attributes;
 
-    public class Startup
+	public class Startup
     {
         public Startup(IHostingEnvironment env)
         {

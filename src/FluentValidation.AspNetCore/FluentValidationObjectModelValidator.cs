@@ -1,12 +1,11 @@
-﻿namespace FluentValidation.Mvc {
+﻿namespace FluentValidation.AspNetCore {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-
+	using System.Linq;
 	//TODO: Need support for CustomizeValidatorAttribute and client-side
 
 	public class FluentValidationObjectModelValidator : IObjectModelValidator {

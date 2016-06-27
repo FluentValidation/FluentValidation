@@ -1,20 +1,14 @@
-﻿namespace FluentValidation.Tests.Mvc6 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Net.Http;
-    using System.Reflection;
-    using System.Threading.Tasks;
-    using Controllers;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.TestHost;
-    using Newtonsoft.Json;
-    using FluentValidation.Attributes;
-    using Xunit;
-    using Xunit.Abstractions;
+﻿namespace FluentValidation.Tests.AspNetCore {
+	using System;
+	using System.Collections.Generic;
+	using System.Net.Http;
+	using System.Threading.Tasks;
+	using Controllers;
+	using Microsoft.AspNetCore.Hosting;
+	using Microsoft.AspNetCore.TestHost;
+	using Newtonsoft.Json;
+	using Xunit;
+	using Xunit.Abstractions;
 
 	public class MvcIntegrationTests {
         private readonly TestServer _server;

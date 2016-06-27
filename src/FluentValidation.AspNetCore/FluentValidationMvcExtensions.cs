@@ -1,15 +1,13 @@
-﻿namespace FluentValidation.Mvc {
+﻿namespace FluentValidation.AspNetCore {
 	using System;
-	using System.Linq;
 	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc;
-	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
-	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
-	using Microsoft.Extensions.DependencyInjection.Extensions;
+	using FluentValidation;
+	using System.Linq;
 	public static class FluentValidationMvcExtensions {
 		/// <summary>
 		///     Adds Fluent Validation services to the specified

@@ -16,14 +16,10 @@
 // The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 
-namespace FluentValidation.Mvc
+namespace FluentValidation.AspNetCore
 {
-	using System;
-	using System.Threading.Tasks;
-//	using System.Web.Mvc;
+	//	using System.Web.Mvc;
 //	using Internal;
-	using Microsoft.AspNetCore.Mvc;
-	using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 
 //	public class CustomizeValidatorAttribute : ModelBinderAttribute, IModelBinder

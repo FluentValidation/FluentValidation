@@ -1,4 +1,4 @@
-﻿namespace FluentValidation.Tests.Mvc6.dotnet {
+﻿namespace FluentValidation.Tests.AspNetCore {
 	using System.Collections.Generic;
 	using System.Net.Http;
 	using System.Threading.Tasks;
@@ -8,7 +8,7 @@
 	using Newtonsoft.Json;
 	using Xunit;
 
-    public class ServiceProviderTests {
+	public class ServiceProviderTests {
 
 		private readonly TestServer _server;
 		private readonly HttpClient _client;

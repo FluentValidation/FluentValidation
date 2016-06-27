@@ -1,7 +1,8 @@
-﻿namespace FluentValidation.Tests.Mvc6.Controllers {
+﻿namespace FluentValidation.Tests.AspNetCore.Controllers {
 	using System.Collections.Generic;
-	using System.Linq;
+	using AspNetCore;
 	using Microsoft.AspNetCore.Mvc;
+	using System.Linq;
 
 	public class TestController : Controller {
 		public ActionResult SimpleFailure(SimpleModel model) {

@@ -15,7 +15,7 @@
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
-namespace FluentValidation.Mvc {
+namespace FluentValidation.AspNetCore {
 	using System;
 
 	public class ServiceProviderValidatorFactory : ValidatorFactoryBase {

@@ -1,7 +1,7 @@
-﻿namespace FluentValidation.Tests.Mvc6 {
-    using System.Collections.Generic;
+﻿namespace FluentValidation.Tests.AspNetCore {
+	using System.Collections.Generic;
 
-    public class FormData : Dictionary<string,string> {
+	public class FormData : Dictionary<string,string> {
         
     }
 }
