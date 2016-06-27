@@ -77,7 +77,7 @@
 		</GetAssemblyIdentity>
 
  		 <PropertyGroup>
-      <NugetVersion Condition="'$(NugetVersion)'==''">%(AsmInfo.Version)-alpha</NugetVersion>
+      <NugetVersion Condition="'$(NugetVersion)'==''">%(AsmInfo.Version)</NugetVersion>
     </PropertyGroup>
     
     <Message Text="Nuget version: $(NugetVersion)" />
