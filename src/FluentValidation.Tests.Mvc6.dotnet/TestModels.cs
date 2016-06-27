@@ -137,7 +137,7 @@
     {
         public TestModelWithOverridenMessageValueTypeValidator()
         {
-            RuleFor(x => x.Id).NotNull().WithMessage("Foo");
+            RuleFor(x => x.Id).NotEmpty().WithMessage("Foo");
         }
     }
 

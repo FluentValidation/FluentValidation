@@ -174,8 +174,8 @@
                 { "Id", "" }
             };
 
-            var result = await GetErrors("TestModelWithoutValidator", form);
-            result.GetError("Id").ShouldEqual("A value is required.");
+            var result = await GetErrors("WithoutValidator", form);
+            result.GetError("Id").ShouldEqual("The value '' is invalid.");
         }
 
         [Fact]
