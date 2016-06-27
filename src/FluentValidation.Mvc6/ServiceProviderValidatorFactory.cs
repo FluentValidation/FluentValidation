@@ -18,10 +18,10 @@
 namespace FluentValidation.Mvc {
 	using System;
 
-	public class FluentValidationValidatorFactory : ValidatorFactoryBase {
+	public class ServiceProviderValidatorFactory : ValidatorFactoryBase {
 		private readonly IServiceProvider _serviceProvider;
 
-		public FluentValidationValidatorFactory(IServiceProvider serviceProvider) {
+		public ServiceProviderValidatorFactory(IServiceProvider serviceProvider) {
 			_serviceProvider = serviceProvider;
 		}
 

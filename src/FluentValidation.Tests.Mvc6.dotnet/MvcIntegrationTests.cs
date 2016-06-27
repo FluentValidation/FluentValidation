@@ -14,14 +14,17 @@
     using Newtonsoft.Json;
     using FluentValidation.Attributes;
     using Xunit;
+    using Xunit.Abstractions;
 
-    public class MvcIntegrationTests {
+	public class MvcIntegrationTests {
         private readonly TestServer _server;
         private readonly HttpClient _client;
+		private readonly ITestOutputHelper _output;
 
-        public MvcIntegrationTests()
+		public MvcIntegrationTests(ITestOutputHelper output)
         {
-            _server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+			this._output = output;
+			_server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
             _client = _server.CreateClient();
         }
 
@@ -55,13 +58,7 @@
             return JsonConvert.DeserializeObject<List<SimpleError>>(response);
         }
 
-
-       
-
-
-
-
-        /*[Fact, Ignore("MVC5 changed validation behaviour sutbley causing this to fail. Investigate for a future release. ")]
+        [Fact]
 		public async Task Should_add_all_errors_in_one_go() {
 			var form = new FormData {
 				{ "Email", "foo" },
@@ -71,20 +68,12 @@
 				{ "Address1", null }
 			};
 
-			var context = new ModelBindingContext {
-				ModelName = "test",
-				ModelMetadata = CreateMetaData(typeof(TestModel4)),
-				ModelState = new ModelStateDictionary(),
-				FallbackToEmptyPrefix = true,
-				ValueProvider = form.ToValueProvider(),
-			};
+	        var result = await GetErrors("Test4", form);
 
-			binder.BindModel(controllerContext, context);
-
-			context.ModelState.IsValidField("Email").ShouldBeFalse(); //Email validation failed
-			context.ModelState.IsValidField("DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
-			context.ModelState.IsValidField("Surname").ShouldBeFalse(); //cross-property
-		}*/
+			result.IsValidField("Email").ShouldBeFalse(); //Email validation failed
+			result.IsValidField("DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
+			result.IsValidField("Surname").ShouldBeFalse(); //cross-property
+		}
 
        
         [Fact]
@@ -124,21 +113,11 @@
             result.GetError("Name").ShouldEqual("Validation Failed");
         }
 
-        /*[Fact]
-        public async Task Should_not_fail_when_no_validator_can_be_found()
-        {
-            var bindingContext = new ModelBindingContext
-            {
-                ModelName = "test",
-                ModelMetadata = CreateMetaData(typeof(TestModel2)),
-
-                ModelState = new ModelStateDictionary(),
-                FallbackToEmptyPrefix = true,
-                ValueProvider = new FormData().ToValueProvider()
-            };
-
-            binder.BindModel(controllerContext, bindingContext).ShouldNotBeNull();
-        }*/
+        [Fact]
+        public async Task Should_not_fail_when_no_validator_can_be_found() {
+	        var result = await PostResponse("/Test/Test2", new FormData());
+	        result.ShouldEqual("not null");
+        }
 
         [Fact]
         public async Task Should_not_add_default_message_to_modelstate()
@@ -148,6 +127,7 @@
             };
 
             var errors = await GetErrors("Test3", form);
+	        errors.Count.ShouldEqual(1);
             errors.GetError("Id").ShouldEqual("Validation failed");
             
         }
@@ -161,11 +141,11 @@
 
             var errors = await GetErrors("Test3", form);
 
-            errors.Count.ShouldEqual(1);
+	        errors.Count.ShouldEqual(1);
             errors.GetError("test.Id").ShouldEqual("Validation failed");
-        }
+		}
 
-        [Fact]
+		[Fact]
         public async Task Should_not_add_default_message_to_modelstate_not_specified()
         {
             var form = new FormData {
@@ -219,7 +199,12 @@
             errors.GetError("Id").ShouldEqual("'Foo' should not be empty.");
         }
 
-        /*[Fact]
+	    [Fact]
+	    public void Falls_back_to_default_behaviou() {
+		    
+	    }
+
+      /*  [Fact]
         public async Task Should_add_default_message_to_modelstate_when_both_fv_and_DataAnnotations_have_implicit_required_validation_disabled()
         {
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
@@ -245,179 +230,100 @@
 
             provider.AddImplicitRequiredValidator = true;
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = true;
-        }*/
-
-       /* [Fact]
-        public async Task Should_only_validate_specified_ruleset()
-        {
-            var form = new FormData {
-                { "Email", "foo" },
-                { "Surname", "foo" },
-                { "Forename", "foo" },
-            };
-
-            var context = new ModelBindingContext
-            {
-                ModelName = "test",
-                ModelMetadata = CreateMetaData(typeof(RulesetTestModel)),
-                ModelState = new ModelStateDictionary(),
-                FallbackToEmptyPrefix = true,
-                ValueProvider = form.ToValueProvider(),
-            };
-
-            var binder = new CustomizeValidatorAttribute { RuleSet = "Names" };
-            binder.BindModel(controllerContext, context);
-
-            context.ModelState.IsValidField("Forename").ShouldBeFalse();
-            context.ModelState.IsValidField("Surname").ShouldBeFalse();
-            context.ModelState.IsValidField("Email").ShouldBeTrue();
-        }*/
-
-       /* [Fact]
-        public async Task Should_only_validate_specified_properties()
-        {
-            var form = new FormData {
-                { "Email", "foo" },
-                { "Surname", "foo" },
-                { "Forename", "foo" },
-            };
-
-            var context = new ModelBindingContext
-            {
-                ModelName = "test",
-                ModelMetadata = CreateMetaData(typeof(PropertiesTestModel)),
-                ModelState = new ModelStateDictionary(),
-                FallbackToEmptyPrefix = true,
-                ValueProvider = form.ToValueProvider(),
-            };
-
-            var binder = new CustomizeValidatorAttribute { Properties = "Surname,Forename" };
-            binder.BindModel(controllerContext, context);
-
-            context.ModelState.IsValidField("Forename").ShouldBeFalse();
-            context.ModelState.IsValidField("Surname").ShouldBeFalse();
-            context.ModelState.IsValidField("Email").ShouldBeTrue();
-
         }
 */
-     /*   [Fact]
-        public async Task When_interceptor_specified_Intercepts_validation()
-        {
-            var form = new FormData {
-                { "Email", "foo" },
-                { "Surname", "foo" },
-                { "Forename", "foo" },
-            };
+//        [Fact]
+//        public async Task Should_only_validate_specified_ruleset()
+//        {
+//            var form = new FormData {
+//                { "Email", "foo" },
+//                { "Surname", "foo" },
+//                { "Forename", "foo" },
+//            };
+//
+//	        var results = await GetErrors("RulsetTest", form);
+//            results.IsValidField("Forename").ShouldBeFalse();
+//            results.IsValidField("Surname").ShouldBeFalse();
+//            results.IsValidField("Email").ShouldBeTrue();
+//        }
 
-            var context = new ModelBindingContext
-            {
-                ModelName = "test",
-                ModelMetadata = CreateMetaData(typeof(PropertiesTestModel)),
-                ModelState = new ModelStateDictionary(),
-                FallbackToEmptyPrefix = true,
-                ValueProvider = form.ToValueProvider(),
-            };
-
-            var binder = new CustomizeValidatorAttribute { Interceptor = typeof(SimplePropertyInterceptor) };
-            binder.BindModel(controllerContext, context);
-
-            context.ModelState.IsValidField("Forename").ShouldBeFalse();
-            context.ModelState.IsValidField("Surname").ShouldBeFalse();
-            context.ModelState.IsValidField("Email").ShouldBeTrue();
-
-        }
-*/
-  /*      [Fact]
-        public async Task When_interceptor_specified_Intercepts_validation_provides_custom_errors()
-        {
-            var form = new FormData {
-                { "Email", "foo" },
-                { "Surname", "foo" },
-                { "Forename", "foo" },
-            };
-
-            var context = new ModelBindingContext
-            {
-                ModelName = "test",
-                ModelMetadata = CreateMetaData(typeof(PropertiesTestModel)),
-                ModelState = new ModelStateDictionary(),
-                FallbackToEmptyPrefix = true,
-                ValueProvider = form.ToValueProvider(),
-            };
-            var binder = new CustomizeValidatorAttribute { Interceptor = typeof(ClearErrorsInterceptor) };
-            binder.BindModel(controllerContext, context);
-
-            context.ModelState.IsValid.ShouldBeTrue();
-        }
-*/
-       /* [Fact]
-        public async Task When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked()
-        {
-            var form = new FormData {
-                { "Email", "foo" },
-                { "Surname", "foo" },
-                { "Forename", "foo" },
-            };
-
-            var context = new ModelBindingContext
-            {
-                ModelName = "test",
-                ModelMetadata = CreateMetaData(typeof(PropertiesTestModel2)),
-                ModelState = new ModelStateDictionary(),
-                FallbackToEmptyPrefix = true,
-                ValueProvider = form.ToValueProvider(),
-            };
-
-            binder.BindModel(controllerContext, context);
-
-            context.ModelState.IsValid.ShouldBeTrue();
-        }
-*/
-  /*      [Fact]
-        public async Task Validator_customizations_should_only_apply_to_single_parameter()
-        {
-            var form = new FormData {
-                { "first.Email", "foo" },
-                { "first.Surname", "foo" },
-                { "first.Forename", "foo" },
-                { "second.Email", "foo" },
-                { "second.Surname", "foo" },
-                { "second.Forename", "foo" }
-            };
-
-            var modelstate = new ModelStateDictionary();
-
-            var firstContext = new ModelBindingContext
-            {
-                ModelName = "first",
-                ModelMetadata = CreateMetaData(typeof(RulesetTestModel)),
-                ModelState = modelstate,
-                FallbackToEmptyPrefix = true,
-                ValueProvider = form.ToValueProvider(),
-            };
-
-            var secondContext = new ModelBindingContext
-            {
-                ModelName = "second",
-                ModelMetadata = CreateMetaData(typeof(RulesetTestModel)),
-                ModelState = modelstate,
-                FallbackToEmptyPrefix = true,
-                ValueProvider = form.ToValueProvider()
-            };
-
-            // Use the customizations for the first 
-            var binder = new CustomizeValidatorAttribute { RuleSet = "Names" };
-            binder.BindModel(controllerContext, firstContext);
-
-            // ...but not for the second.
-            this.binder.BindModel(controllerContext, secondContext);
-
-            //customizations should only apply to the first validator 
-            modelstate.IsValidField("first.Forename").ShouldBeFalse();
-            modelstate.IsValidField("first.Surname").ShouldBeFalse();
-            modelstate.IsValidField("second.Forename").ShouldBeTrue();
-            modelstate.IsValidField("second.Surname").ShouldBeTrue();
-        }*/
+//        [Fact]
+//        public async Task Should_only_validate_specified_properties()
+//        {
+//            var form = new FormData {
+//                { "Email", "foo" },
+//                { "Surname", "foo" },
+//                { "Forename", "foo" },
+//            };
+//
+//	        var result = await GetErrors("PropertyTest", form);
+//
+//			result.IsValidField("Forename").ShouldBeFalse();
+//            result.IsValidField("Surname").ShouldBeFalse();
+//            result.IsValidField("Email").ShouldBeTrue();
+//
+//        }
+//        [Fact]
+//        public async Task When_interceptor_specified_Intercepts_validation()
+//        {
+//            var form = new FormData {
+//                { "Email", "foo" },
+//                { "Surname", "foo" },
+//                { "Forename", "foo" },
+//            };
+//			var result = await GetErrors("InterceptorTest", form);
+//
+//            result.IsValidField("Forename").ShouldBeFalse();
+//            result.IsValidField("Surname").ShouldBeFalse();
+//            result.IsValidField("Email").ShouldBeTrue();
+//        }
+//
+//        [Fact]
+//        public async Task When_interceptor_specified_Intercepts_validation_provides_custom_errors()
+//        {
+//            var form = new FormData {
+//                { "Email", "foo" },
+//                { "Surname", "foo" },
+//                { "Forename", "foo" },
+//            };
+//
+//			var result = await GetErrors("ClearErrorsInterceptorTest", form);
+//
+//			result.Count.ShouldEqual(0);
+//        }
+//        [Fact]
+//        public async Task When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked()
+//        {
+//            var form = new FormData {
+//                { "Email", "foo" },
+//                { "Surname", "foo" },
+//                { "Forename", "foo" },
+//            };
+//
+//			var result = await GetErrors("BuiltInInterceptorTest", form);
+//
+//	        result.Count.ShouldEqual(0);
+//        }
+//        [Fact]
+//        public async Task Validator_customizations_should_only_apply_to_single_parameter()
+//        {
+//            var form = new FormData {
+//                { "first.Email", "foo" },
+//                { "first.Surname", "foo" },
+//                { "first.Forename", "foo" },
+//                { "second.Email", "foo" },
+//                { "second.Surname", "foo" },
+//                { "second.Forename", "foo" }
+//            };
+//
+//	        var result = await GetErrors("TwoParameters", form);
+//
+//            //customizations should only apply to the first validator 
+//            result.IsValidField("first.Forename").ShouldBeFalse();
+//            result.IsValidField("first.Surname").ShouldBeFalse();
+//            result.IsValidField("second.Forename").ShouldBeTrue();
+//            result.IsValidField("second.Surname").ShouldBeTrue();
+//        }
 
 
 

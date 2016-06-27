@@ -1,5 +1,6 @@
 namespace FluentValidation.Tests.Mvc6 {
     using Attributes;
+    using Controllers;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -7,9 +8,9 @@ namespace FluentValidation.Tests.Mvc6 {
     using Microsoft.Extensions.Logging;
     using Mvc;
 
-    public class Startup
+    public class StartupWithContainer
     {
-        public Startup(IHostingEnvironment env)
+        public StartupWithContainer(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder();
             /*    .SetBasePath(env.ContentRootPath)
@@ -35,7 +36,7 @@ namespace FluentValidation.Tests.Mvc6 {
             services.AddMvc(setup => {
                 
             }).AddFluentValidation(cfg => {
-	            cfg.ValidatorFactoryType = typeof(AttributedValidatorFactory);
+	            cfg.RegisterValidatorsFromAssemblyContaining<TestController>();
             });
 
 //            // Add application services.

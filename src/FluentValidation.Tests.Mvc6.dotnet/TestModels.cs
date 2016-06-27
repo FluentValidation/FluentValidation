@@ -23,7 +23,7 @@
         }
     }
 
-    public class SimplePropertyInterceptor : IValidatorInterceptor
+   /* public class SimplePropertyInterceptor : IValidatorInterceptor
     {
         readonly string[] properties = new[] { "Surname", "Forename" };
 
@@ -50,16 +50,16 @@
         {
             return new ValidationResult();
         }
-    }
+    }*/
 
-    [Validator(typeof(PropertiesValidator2))]
+   /* [Validator(typeof(PropertiesValidator2))]
     public class PropertiesTestModel2
     {
         public string Email { get; set; }
         public string Surname { get; set; }
         public string Forename { get; set; }
-    }
-
+    }*/
+/*
     public class PropertiesValidator2 : AbstractValidator<PropertiesTestModel2>, IValidatorInterceptor
     {
         public PropertiesValidator2()
@@ -78,7 +78,7 @@
         {
             return new ValidationResult(); //empty errors
         }
-    }
+    }*/
 
 
     [Validator(typeof(PropertiesValidator))]

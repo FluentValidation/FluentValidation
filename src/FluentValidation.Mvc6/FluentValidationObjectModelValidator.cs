@@ -1,7 +1,9 @@
 ﻿namespace FluentValidation.Mvc {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
@@ -11,17 +13,23 @@
 	    public const string InvalidValuePlaceholder = "__FV_InvalidValue";
 
 		private readonly IValidatorFactory _validatorFactory;
+		private IModelMetadataProvider _modelMetadataProvider;
+		private readonly ValidatorCache _validatorCache;
+		private CompositeModelValidatorProvider _validatorProvider;
 
 		/// <summary>
 		///     Initializes a new instance of <see cref="FluentValidationObjectModelValidator" />.
 		/// </summary>
-		public FluentValidationObjectModelValidator(IModelMetadataProvider modelMetadataProvider,
+		public FluentValidationObjectModelValidator(IModelMetadataProvider modelMetadataProvider, IList<IModelValidatorProvider> validatorProviders,
 			IValidatorFactory validatorFactory) {
 			if (modelMetadataProvider == null) {
 				throw new ArgumentNullException(nameof(modelMetadataProvider));
 			}
 
 			_validatorFactory = validatorFactory;
+			_modelMetadataProvider = modelMetadataProvider;
+			_validatorCache = new ValidatorCache();
+			_validatorProvider = new CompositeModelValidatorProvider(validatorProviders);
 		}
 
 		public void Validate(ActionContext actionContext, IModelValidatorProvider validatorProvider,
@@ -30,17 +38,24 @@
 				throw new ArgumentNullException(nameof(actionContext));
 			}
 
-			// would model ever be null ??
+			IValidator validator = null;
 
-			if (model == null) {
-				return;
+			if (model != null) {
+				validator = _validatorFactory.GetValidator(model.GetType());
 			}
 
-			// get our IValidator
-
-			var validator = _validatorFactory.GetValidator(model.GetType());
-
 			if (validator == null) {
+				// Use default impl if FV doesn't have a validator for the type.
+				var visitor = new ValidationVisitor(
+						   actionContext,
+						   _validatorProvider,
+						   _validatorCache,
+						   _modelMetadataProvider,
+						   validationState);
+
+				var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
+//				visitor.Validate(metadata, prefix, model);
+
 				return;
 			}
 
@@ -66,13 +81,19 @@
 
 			foreach (var modelError in result.Errors) {
                 // See if there's already an item in the ModelState for this key. 
-			    if (actionContext.ModelState.ContainsKey(modelError.PropertyName)) {
-			        actionContext.ModelState[modelError.PropertyName].Errors.Clear();
+			    if (actionContext.ModelState.ContainsKey(prefix + modelError.PropertyName)) {
+			        actionContext.ModelState[prefix + modelError.PropertyName].Errors.Clear();
 			    }
 
 
 				actionContext.ModelState.AddModelError(prefix + modelError.PropertyName, modelError.ErrorMessage);
 			}
+
+
+			// Otherwise:
+			/*
+				
+						 */
 		}
 	}
 }

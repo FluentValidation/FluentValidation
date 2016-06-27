@@ -2,11 +2,14 @@
 	using System;
 	using System.Linq;
 	using System.Reflection;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Microsoft.Extensions.DependencyInjection;
-
+	using Microsoft.Extensions.Options;
+	using Microsoft.Extensions.DependencyInjection.Extensions;
 	public static class FluentValidationMvcExtensions {
 		/// <summary>
 		///     Adds Fluent Validation services to the specified
@@ -24,44 +27,62 @@
 
 		    expr(config);
 
-		    if (config.RegisterValidators) {
-		        //TODO: JS Need to check if this works
-		        var validators =
-		            typeof(FluentValidationObjectModelValidator)
-		                .GetTypeInfo().Assembly
-		                .GetTypes()
-		                .Where(t => typeof(IValidator).IsAssignableFrom(t));
+			if (config.AssemblyToRegister != null) {
+				RegisterTypes(config.AssemblyToRegister, mvcBuilder);
+			}
 
-		        foreach (var validator in validators) {
-		            mvcBuilder.Services.AddTransient(validator);
-		        }
-		    }
+			mvcBuilder.Services.Add(ServiceDescriptor.Singleton(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 
-		    // add the fluent validation object model validator
-
-			mvcBuilder.Services.Add(ServiceDescriptor.Transient<IObjectModelValidator>(serviceProvider =>
-				new FluentValidationObjectModelValidator(
-					serviceProvider.GetRequiredService<IModelMetadataProvider>(),
-				config.ValidatorFactory ?? new FluentValidationValidatorFactory(serviceProvider.GetRequiredService<IServiceProvider>()))));
+			mvcBuilder.Services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
+				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
+				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
+				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, s.GetRequiredService<IValidatorFactory>());
+			}));
+			
 
 			// clear all model validation providers since fluent validation will be handling everything
 
 			mvcBuilder.AddMvcOptions(
 			    options => {
 			        options.ModelValidatorProviders.Clear();
-//			        options.ModelBindingMessageProvider.AttemptedValueIsInvalidAccessor = (s, s1) => "FV_1";
-			        //options.ModelBindingMessageProvider.ValueMustNotBeNullAccessor = s => FluentValidationObjectModelValidator.InvalidValuePlaceholder;
-//			        options.ModelBindingMessageProvider.UnknownValueIsInvalidAccessor = s => "FV_3";
-//                    options.ModelBindingMessageProvider.ValueIsInvalidAccessor = s => ;
-                });
 
+                });
 
             return mvcBuilder;
 		}
+
+		private static void RegisterTypes(Assembly assemblyToRegister, IMvcBuilder mvcBuilder) {
+			var openGenericType = typeof(IValidator<>);
+
+			var query = from type in assemblyToRegister.GetTypes()
+						let interfaces = type.GetInterfaces()
+						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
+						let matchingInterface = genericInterfaces.FirstOrDefault()
+						where matchingInterface != null
+						select new { matchingInterface, type };
+
+			foreach (var pair in query) {
+				mvcBuilder.Services.Add(ServiceDescriptor.Singleton(pair.matchingInterface, pair.type));
+			}
+		}
 	}
 
-    public class FluentValidationMvcConfiguration { 
-        public IValidatorFactory ValidatorFactory { get; set; }
-        public bool RegisterValidators { get; set; } = true;
+    public class FluentValidationMvcConfiguration {
+	    public Type ValidatorFactoryType { get; set; }
+		internal Assembly AssemblyToRegister { get; set; }
+
+	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>() {
+		    return RegisterValidatorsFromAssemblyContaining(typeof(T));
+	    }
+
+	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type) {
+		    return RegisterValidatorsFromAssembly(type.GetTypeInfo().Assembly);
+	    }
+
+	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly) {
+		    ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
+		    AssemblyToRegister = assembly;
+		    return this;
+	    }
     }
 }
