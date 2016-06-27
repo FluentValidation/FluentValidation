@@ -24,7 +24,7 @@
 			<Portable46Binaries Include="$(BaseDir)\src\FluentValidation.Portable46\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<NetStandard10Binaries Include="$(BaseDir)\src\FluentValidation.NetStandard\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<!--<KBinaries Include="$(BaseDir)\artifacts\bin\FluentValidation.K\$(Configuration)\aspnetcore50\**\*.*" />-->
-			
+			<AspNetCoreBinaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.5\FluentValidation.AspNetCore.*" />
 			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
 		</ItemGroup>
 
@@ -36,7 +36,7 @@
 		<Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(OutputDir)\Portable" />
 		<Copy SourceFiles="@(Portable46Binaries)" DestinationFolder="$(OutputDir)\Portable46" />
 		<Copy SourceFiles="@(NetStandard10Binaries)" DestinationFolder="$(OutputDir)\NetStandard10" />
-
+    <Copy SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(OutputDir)\AspNetCore" />
 		<Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
     <!--<Copy SourceFiles="@(KBinaries)" DestinationFolder="$(OutputDir)\AspNetVNext" />-->
 	</Target>
@@ -55,6 +55,7 @@
 		<Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC5$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.WebApi$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)" />
+ <Copy Condition="'$(PackageSuffix)'==''" SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.AspNetCore.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.AspNetCore"  />
 
     <Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net45%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
 		<Copy SourceFiles="@(Portable40Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net40%2Bsl50%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
@@ -67,6 +68,7 @@
 		<!-- Copy the source files to the package dir -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\Net45\%(RecursiveDir)" />
 		<Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\lib\Net45" />
+			<Copy Condition="'$(PackageSuffix)'==''"  SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.AspNetCore\lib\netstandard1.5" />
 		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\lib\Net45" />
 		
 		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
@@ -99,12 +101,24 @@
 			XmlFileName="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\FluentValidation.WebApi$(PackageSuffix).nuspec"
 			XPath="/package/metadata/version"
 			Value="$(NugetVersion)" />
+			
+				<XmlUpdate Condition="'$(PackageSuffix)'==''" 
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.AspNetCore\FluentValidation.AspNetCore.nuspec"
+			XPath="/package/metadata/version"
+			Value="$(NugetVersion)" />
 
 		<!-- Also need to insert the version number into the MVC3 dependencies section -->
 
 	<XmlUpdate
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\FluentValidation.MVC5$(PackageSuffix).nuspec"
+			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation$(PackageSuffix)']/@version"
+			Value="$(NugetVersion)" />
+			
+	<XmlUpdate Condition="'$(PackageSuffix)'==''" 
+		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
+			XmlFileName="$(PackageDir)\temp\FluentValidation.ASpNetCore\FluentValidation.AspnetCore.nuspec"
 			XPath="/package/metadata/dependencies/dependency[@id='FluentValidation$(PackageSuffix)']/@version"
 			Value="$(NugetVersion)" />
 
@@ -122,6 +136,9 @@
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
 		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\FluentValidation.WebApi$(PackageSuffix).nuspec" />
+		    	
+	<Exec WorkingDirectory="$(BuildDir)\Packages" Condition="'$(PackageSuffix)'==''" 
+		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.AspNetCore\FluentValidation.AspNetCore.nuspec" />
 
 		<RemoveDir Directories="$(PackageDir)\temp" />
 	</Target>

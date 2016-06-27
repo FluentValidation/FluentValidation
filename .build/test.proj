@@ -22,8 +22,8 @@
 
   <Target Name="default">
     <xunit Assemblies="@(TestAssemblies)" ParallelizeAssemblies="false" ParallelizeTestCollections="false" />
-    <exec Command="dotnet test" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.dotnet" />
-    <exec Command="dotnet test" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
+    <exec Command="dotnet test --no-build" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.dotnet" />
+    <exec Command="dotnet test --no-build" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
   </Target>
 
 </Project>

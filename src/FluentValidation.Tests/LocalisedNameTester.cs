@@ -26,6 +26,10 @@ namespace FluentValidation.Tests {
 
     public class LocalisedNameTester : IDisposable {
 
+	    public LocalisedNameTester() {
+		    CultureScope.SetDefaultCulture();
+	    }
+
 		public void Dispose() {
 			ValidatorOptions.ResourceProviderType = null;
 		}

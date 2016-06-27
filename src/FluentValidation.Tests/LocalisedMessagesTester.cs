@@ -33,6 +33,7 @@ namespace FluentValidation.Tests {
 		public LocalisedMessagesTester() {
 			// ensure the resource provider is reset after any tests that use it.
 			ValidatorOptions.ResourceProviderType = null;
+			CultureScope.SetDefaultCulture();
 		}
 
         public void Dispose()

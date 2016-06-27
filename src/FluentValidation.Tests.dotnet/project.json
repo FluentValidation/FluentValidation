@@ -8,17 +8,20 @@
     "licenseUrl": ""
   },
 
-  "buildOptions": {
-    "compile": {
-      "include": [ "../FluentValidation.Tests/**/*.cs" ]
+    "buildOptions": {
+        "copyToOutput": {
+            "include": [ "xunit.runner.json" ]
+        },
+        "compile": {
+            "include": [ "../FluentValidation.Tests/**/*.cs" ]
+        },
+        "embed": {
+            "mappings": {
+                "FluentValidation.Tests.TestMessages": "../FluentValidation.Tests/TestMessages.resx",
+                "FluentValidation.Tests.TestMessages.fr": "../FluentValidation.Tests/TestMessages.fr.resx"
+            }
+        }
     },
-    "embed": {
-      "mappings": {
-        "FluentValidation.Tests.TestMessages": "../FluentValidation.Tests/TestMessages.resx",
-        "FluentValidation.Tests.TestMessages.fr": "../FluentValidation.Tests/TestMessages.fr.resx"
-      }
-    }
-  },
 
   "dependencies": {
     "xunit": "2.1.0"

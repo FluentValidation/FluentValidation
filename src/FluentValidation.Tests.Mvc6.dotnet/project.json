@@ -8,8 +8,11 @@
     "licenseUrl": ""
   },
 
-  "buildOptions": {
-  },
+    "buildOptions": {
+        "copyToOutput": {
+            "include": [ "xunit.runner.json" ]
+        }
+    },
 
   "dependencies": {
     "FluentValidation.AspNetCore": "1.0.0-*",
