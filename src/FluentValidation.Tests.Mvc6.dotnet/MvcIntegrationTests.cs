@@ -192,11 +192,11 @@
             var errors = await GetErrors("TestModelWithOverridenPropertyNameValueType", form);
             errors.GetError("Id").ShouldEqual("'Foo' should not be empty.");
         }
-
-	    [Fact]
-	    public void Falls_back_to_default_behaviou() {
-		    
-	    }
+//
+//	    [Fact]
+//	    public void Falls_back_to_default_behaviou() {
+//		    
+//	    }
 
       /*  [Fact]
         public async Task Should_add_default_message_to_modelstate_when_both_fv_and_DataAnnotations_have_implicit_required_validation_disabled()
@@ -226,98 +226,98 @@
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = true;
         }
 */
-//        [Fact]
-//        public async Task Should_only_validate_specified_ruleset()
-//        {
-//            var form = new FormData {
-//                { "Email", "foo" },
-//                { "Surname", "foo" },
-//                { "Forename", "foo" },
-//            };
-//
-//	        var results = await GetErrors("RulsetTest", form);
-//            results.IsValidField("Forename").ShouldBeFalse();
-//            results.IsValidField("Surname").ShouldBeFalse();
-//            results.IsValidField("Email").ShouldBeTrue();
-//        }
+        [Fact]
+        public async Task Should_only_validate_specified_ruleset()
+        {
+            var form = new FormData {
+                { "Email", "foo" },
+                { "Surname", "foo" },
+                { "Forename", "foo" },
+            };
 
-//        [Fact]
-//        public async Task Should_only_validate_specified_properties()
-//        {
-//            var form = new FormData {
-//                { "Email", "foo" },
-//                { "Surname", "foo" },
-//                { "Forename", "foo" },
-//            };
-//
-//	        var result = await GetErrors("PropertyTest", form);
-//
-//			result.IsValidField("Forename").ShouldBeFalse();
-//            result.IsValidField("Surname").ShouldBeFalse();
-//            result.IsValidField("Email").ShouldBeTrue();
-//
-//        }
-//        [Fact]
-//        public async Task When_interceptor_specified_Intercepts_validation()
-//        {
-//            var form = new FormData {
-//                { "Email", "foo" },
-//                { "Surname", "foo" },
-//                { "Forename", "foo" },
-//            };
-//			var result = await GetErrors("InterceptorTest", form);
-//
-//            result.IsValidField("Forename").ShouldBeFalse();
-//            result.IsValidField("Surname").ShouldBeFalse();
-//            result.IsValidField("Email").ShouldBeTrue();
-//        }
-//
-//        [Fact]
-//        public async Task When_interceptor_specified_Intercepts_validation_provides_custom_errors()
-//        {
-//            var form = new FormData {
-//                { "Email", "foo" },
-//                { "Surname", "foo" },
-//                { "Forename", "foo" },
-//            };
-//
-//			var result = await GetErrors("ClearErrorsInterceptorTest", form);
-//
-//			result.Count.ShouldEqual(0);
-//        }
-//        [Fact]
-//        public async Task When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked()
-//        {
-//            var form = new FormData {
-//                { "Email", "foo" },
-//                { "Surname", "foo" },
-//                { "Forename", "foo" },
-//            };
-//
-//			var result = await GetErrors("BuiltInInterceptorTest", form);
-//
-//	        result.Count.ShouldEqual(0);
-//        }
-//        [Fact]
-//        public async Task Validator_customizations_should_only_apply_to_single_parameter()
-//        {
-//            var form = new FormData {
-//                { "first.Email", "foo" },
-//                { "first.Surname", "foo" },
-//                { "first.Forename", "foo" },
-//                { "second.Email", "foo" },
-//                { "second.Surname", "foo" },
-//                { "second.Forename", "foo" }
-//            };
-//
-//	        var result = await GetErrors("TwoParameters", form);
-//
-//            //customizations should only apply to the first validator 
-//            result.IsValidField("first.Forename").ShouldBeFalse();
-//            result.IsValidField("first.Surname").ShouldBeFalse();
-//            result.IsValidField("second.Forename").ShouldBeTrue();
-//            result.IsValidField("second.Surname").ShouldBeTrue();
-//        }
+	        var results = await GetErrors("RulesetTest", form);
+            results.IsValidField("Forename").ShouldBeFalse();
+            results.IsValidField("Surname").ShouldBeFalse();
+            results.IsValidField("Email").ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task Should_only_validate_specified_properties()
+        {
+            var form = new FormData {
+                { "Email", "foo" },
+                { "Surname", "foo" },
+                { "Forename", "foo" },
+            };
+
+	        var result = await GetErrors("PropertyTest", form);
+
+			result.IsValidField("Forename").ShouldBeFalse();
+            result.IsValidField("Surname").ShouldBeFalse();
+            result.IsValidField("Email").ShouldBeTrue();
+
+        }
+        [Fact]
+        public async Task When_interceptor_specified_Intercepts_validation()
+        {
+            var form = new FormData {
+                { "Email", "foo" },
+                { "Surname", "foo" },
+                { "Forename", "foo" },
+            };
+			var result = await GetErrors("InterceptorTest", form);
+
+            result.IsValidField("Forename").ShouldBeFalse();
+            result.IsValidField("Surname").ShouldBeFalse();
+            result.IsValidField("Email").ShouldBeTrue();
+        }
+
+        [Fact]
+        public async Task When_interceptor_specified_Intercepts_validation_provides_custom_errors()
+        {
+            var form = new FormData {
+                { "Email", "foo" },
+                { "Surname", "foo" },
+                { "Forename", "foo" },
+            };
+
+			var result = await GetErrors("ClearErrorsInterceptorTest", form);
+
+			result.Count.ShouldEqual(0);
+        }
+        [Fact]
+        public async Task When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked()
+        {
+            var form = new FormData {
+                { "Email", "foo" },
+                { "Surname", "foo" },
+                { "Forename", "foo" },
+            };
+
+			var result = await GetErrors("BuiltInInterceptorTest", form);
+
+	        result.Count.ShouldEqual(0);
+        }
+        [Fact]
+        public async Task Validator_customizations_should_only_apply_to_single_parameter()
+        {
+            var form = new FormData {
+                { "first.Email", "foo" },
+                { "first.Surname", "foo" },
+                { "first.Forename", "foo" },
+                { "second.Email", "foo" },
+                { "second.Surname", "foo" },
+                { "second.Forename", "foo" }
+            };
+
+	        var result = await GetErrors("TwoParameters", form);
+
+            //customizations should only apply to the first validator 
+            result.IsValidField("first.Forename").ShouldBeFalse();
+            result.IsValidField("first.Surname").ShouldBeFalse();
+            result.IsValidField("second.Forename").ShouldBeTrue();
+            result.IsValidField("second.Surname").ShouldBeTrue();
+        }
 
 
 

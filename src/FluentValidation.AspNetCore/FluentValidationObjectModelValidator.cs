@@ -6,6 +6,10 @@
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using System.Linq;
+	using System.Reflection;
+	using Microsoft.AspNetCore.Mvc.Controllers;
+	using FluentValidation;
+
 	//TODO: Need support for CustomizeValidatorAttribute and client-side
 
 	public class FluentValidationObjectModelValidator : IObjectModelValidator {
@@ -53,7 +57,7 @@
 						   validationState);
 
 				var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
-//				visitor.Validate(metadata, prefix, model);
+				visitor.Validate(metadata, prefix, model);
 
 				return;
 			}
@@ -66,15 +70,30 @@
 				value.ValidationState = ModelValidationState.Valid;
 			}
 
-           
 
-			// validate the model using Fluent Validation rules
+			var customizations = GetCustomizations(actionContext, model.GetType(), prefix);
 
-			var result = validator.Validate(model);
+			var selector = customizations.ToValidatorSelector();
+			var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
+			var context = new FluentValidation.ValidationContext(model, new FluentValidation.Internal.PropertyChain(), selector);
 
-			// add all our model errors to the modelstate
+			if (interceptor != null)
+			{
+				// Allow the user to provide a customized context
+				// However, if they return null then just use the original context.
+				context = interceptor.BeforeMvcValidation((ControllerContext)actionContext, context) ?? context;
+			}
 
-		    if (!string.IsNullOrEmpty(prefix)) {
+			var result = validator.Validate(context);
+
+			if (interceptor != null)
+			{
+				// allow the user to provice a custom collection of failures, which could be empty.
+				// However, if they return null then use the original collection of failures. 
+				result = interceptor.AfterMvcValidation((ControllerContext)actionContext, context, result) ?? result;
+			}
+
+			if (!string.IsNullOrEmpty(prefix)) {
 		        prefix = prefix + ".";
 		    }
 
@@ -93,6 +112,25 @@
 			/*
 				
 						 */
+		}
+
+		private CustomizeValidatorAttribute GetCustomizations(ActionContext actionContext, Type type, string prefix) {
+			var descriptors = actionContext.ActionDescriptor.Parameters
+				.Where(x => x.ParameterType == type)
+				.Where(x => (x.BindingInfo != null && x.BindingInfo.BinderModelName != null && x.BindingInfo.BinderModelName == prefix) || x.Name == prefix || (prefix == string.Empty && x.BindingInfo?.BinderModelName == null))
+				.OfType<ControllerParameterDescriptor>()
+				.ToList();
+
+			CustomizeValidatorAttribute attribute = null;
+
+			if (descriptors.Count == 1) {
+				attribute = descriptors[0].ParameterInfo.GetCustomAttributes(typeof(CustomizeValidatorAttribute), true).FirstOrDefault() as CustomizeValidatorAttribute;
+			}
+			if (descriptors.Count > 1) {
+				// We found more than 1 matching with same prefix and name. 
+			}
+
+			return attribute ?? new CustomizeValidatorAttribute();
 		}
 	}
 }

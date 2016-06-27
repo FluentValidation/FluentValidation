@@ -18,113 +18,78 @@
 
 namespace FluentValidation.AspNetCore
 {
-	//	using System.Web.Mvc;
-//	using Internal;
+	using System;
+	using Microsoft.AspNetCore.Mvc;
+	using FluentValidation.Internal;
+	using System.Reflection;
+	using Microsoft.AspNetCore.Mvc.ModelBinding;
 
+	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	public class CustomizeValidatorAttribute : Attribute
+	{
+		public string RuleSet { get; set; }
+		public string Properties { get; set; }
+		public Type Interceptor { get; set; }
 
-//	public class CustomizeValidatorAttribute : ModelBinderAttribute, IModelBinder
-//	{
-//		public string RuleSet { get; set; }
-//		public string Properties { get; set; }
-//		public Type Interceptor { get; set; }
-//
-//		public CustomizeValidatorAttribute() {
-//			base.BinderType = typeof(CustomizeValidatorBinder);
-//		}
-//
-//		private const string key = "_FV_CustomizeValidator";
-//
-//		public override IModelBinder GetBinder()
-//		{
-//			return this;
-//		}
-//
-//		public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
-//		{
-//			// Originally I thought about storing this inside ModelMetadata.AdditionalValues.
-//			// Unfortunately, DefaultModelBinder overwrites this property internally.
-//			// So anything added to AdditionalValues will not be passed to the ValidatorProvider.
-//			// This is a very poor design decision. 
-//			// The only piece of information that is passed all the way down to the validator is the controller context.
-//			// So we resort to storing the attribute in HttpContext.Items. 
-//			// Horrible, horrible, horrible hack. Horrible.
-//			controllerContext.HttpContext.Items[key] = this;
-//
-//			var innerBinder = ModelBinders.Binders.GetBinder(bindingContext.ModelType);
-//			var result = innerBinder.BindModel(controllerContext, bindingContext);
-//
-//			controllerContext.HttpContext.Items.Remove(key);
-//
-//			return result;
-//		}
-//
-//		public static CustomizeValidatorAttribute GetFromControllerContext(ControllerContext context)
-//		{
-//			return context.HttpContext.Items[key] as CustomizeValidatorAttribute;
-//		}
-//
-//		/// <summary>
-//		/// Builds a validator selector from the options specified in the attribute's properties.
-//		/// </summary>
-//		public IValidatorSelector ToValidatorSelector()
-//		{
-//			IValidatorSelector selector;
-//
-//			if (!string.IsNullOrEmpty(RuleSet))
-//			{
-//				var rulesets = RuleSet.Split(',', ';');
-//				selector = CreateRulesetValidatorSelector(rulesets);
-//			}
-//			else if (!string.IsNullOrEmpty(Properties))
-//			{
-//				var properties = Properties.Split(',', ';');
-//				selector = CreateMemberNameValidatorSelector(properties);
-//			}
-//			else
-//			{
-//				selector = CreateDefaultValidatorSelector();
-//			}
-//
-//			return selector;
-//
-//		}
-//
-//		protected virtual IValidatorSelector CreateRulesetValidatorSelector(string[] ruleSets)
-//		{
-//			return ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSets);
-//		}
-//
-//		protected virtual IValidatorSelector CreateMemberNameValidatorSelector(string[] properties)
-//		{
-//			return ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties);
-//		}
-//
-//		protected virtual IValidatorSelector CreateDefaultValidatorSelector()
-//		{
-//			return ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
-//		}
-//
-//		public IValidatorInterceptor GetInterceptor()
-//		{
-//			if (Interceptor == null) return null;
-//
-//			if (!typeof(IValidatorInterceptor).IsAssignableFrom(Interceptor))
-//			{
-//				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
-//			}
-//
-//			var instance = Activator.CreateInstance(Interceptor) as IValidatorInterceptor;
-//
-//			if (instance == null)
-//			{
-//				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
-//			}
-//
-//			return instance;
-//		}
-//
-//		public Task BindModelAsync(ModelBindingContext bindingContext) {
-//			throw new NotImplementedException();
-//		}
-//	}
+		/// <summary>
+		/// Builds a validator selector from the options specified in the attribute's properties.
+		/// </summary>
+		public IValidatorSelector ToValidatorSelector()
+		{
+			IValidatorSelector selector;
+
+			if (!string.IsNullOrEmpty(RuleSet))
+			{
+				var rulesets = RuleSet.Split(',', ';');
+				selector = CreateRulesetValidatorSelector(rulesets);
+			}
+			else if (!string.IsNullOrEmpty(Properties))
+			{
+				var properties = Properties.Split(',', ';');
+				selector = CreateMemberNameValidatorSelector(properties);
+			}
+			else
+			{
+				selector = CreateDefaultValidatorSelector();
+			}
+
+			return selector;
+
+		}
+
+		protected virtual IValidatorSelector CreateRulesetValidatorSelector(string[] ruleSets)
+		{
+			return ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSets);
+		}
+
+		protected virtual IValidatorSelector CreateMemberNameValidatorSelector(string[] properties)
+		{
+			return ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties);
+		}
+
+		protected virtual IValidatorSelector CreateDefaultValidatorSelector()
+		{
+			return ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
+		}
+
+		public IValidatorInterceptor GetInterceptor()
+		{
+			if (Interceptor == null) return null;
+
+			if (!typeof(IValidatorInterceptor) .GetTypeInfo().IsAssignableFrom(Interceptor))
+			{
+				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
+			}
+
+			var instance = Activator.CreateInstance(Interceptor) as IValidatorInterceptor;
+
+			if (instance == null)
+			{
+				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
+			}
+
+			return instance;
+		}
+
+	}
 }

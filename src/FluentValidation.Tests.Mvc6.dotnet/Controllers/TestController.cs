@@ -1,9 +1,9 @@
 ﻿namespace FluentValidation.Tests.AspNetCore.Controllers {
 	using System.Collections.Generic;
-	using AspNetCore;
+	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc;
 	using System.Linq;
-
+	
 	public class TestController : Controller {
 		public ActionResult SimpleFailure(SimpleModel model) {
 			return TestResult();
@@ -53,7 +53,7 @@
 			return TestResult();
 		}
 
-		/*	public ActionResult RulesetTest([CustomizeValidator(RuleSet = "Names")] RulesetTestModel test) {
+			public ActionResult RulesetTest([CustomizeValidator(RuleSet = "Names")] RulesetTestModel test) {
 				return TestResult();
 			}
 
@@ -72,11 +72,9 @@
 			public ActionResult BuiltInInterceptorTest(PropertiesTestModel2 test) {
 				return TestResult();
 			}
-			*/
-		/*	public ActionResult TwoParameters([CustomizeValidator(RuleSet = "Names")]RulesetTestModel first, RulesetTestModel second) {
+			public ActionResult TwoParameters([CustomizeValidator(RuleSet = "Names")]RulesetTestModel first, RulesetTestModel second) {
 				return TestResult();
 			}
-	*/
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 

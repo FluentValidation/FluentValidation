@@ -1,7 +1,10 @@
 ﻿namespace FluentValidation.Tests.AspNetCore {
 	using System;
+	using FluentValidation;
 	using FluentValidation.Attributes;
-	using Microsoft.CodeAnalysis;
+	using FluentValidation.AspNetCore;
+	using FluentValidation.Results;
+	using Microsoft.AspNetCore.Mvc;
 
 	[Validator(typeof(TestModel5Validator))]
     public class TestModel5
@@ -20,13 +23,13 @@
         }
     }
 
-   /* public class SimplePropertyInterceptor : IValidatorInterceptor
+    public class SimplePropertyInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor
     {
         readonly string[] properties = new[] { "Surname", "Forename" };
 
         public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context)
         {
-            var newContext = context.Clone(selector: new MemberNameValidatorSelector(properties));
+            var newContext = context.Clone(selector: new FluentValidation.Internal.MemberNameValidatorSelector(properties));
             return newContext;
         }
 
@@ -36,7 +39,7 @@
         }
     }
 
-    public class ClearErrorsInterceptor : IValidatorInterceptor
+    public class ClearErrorsInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor
     {
         public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context)
         {
@@ -47,16 +50,15 @@
         {
             return new ValidationResult();
         }
-    }*/
+    }
 
-   /* [Validator(typeof(PropertiesValidator2))]
+    [Validator(typeof(PropertiesValidator2))]
     public class PropertiesTestModel2
     {
         public string Email { get; set; }
         public string Surname { get; set; }
         public string Forename { get; set; }
-    }*/
-/*
+    }
     public class PropertiesValidator2 : AbstractValidator<PropertiesTestModel2>, IValidatorInterceptor
     {
         public PropertiesValidator2()
@@ -75,7 +77,7 @@
         {
             return new ValidationResult(); //empty errors
         }
-    }*/
+    }
 
 
     [Validator(typeof(PropertiesValidator))]
