@@ -5,6 +5,7 @@
 		<BuildDir>$(BaseDir)\build</BuildDir>
 		<SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
 		<NugetVersion Condition="'$(NugetVersion)'==''" ></NugetVersion>
+		<SignPackages Condition="'$(SignPackages)'==''">False</SignPackages>
 	</PropertyGroup>
 	
 	<Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
@@ -15,7 +16,7 @@
 	
 	<Target Name="Compile" DependsOnTargets="PackageRestore">
 		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration)"  Targets="Rebuild" />
-  	<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" />
+  	<MSBuild Condition="'$(SignPackages)'=='True'" Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" />
 	</Target>
 
 	<Target Name="Test">
@@ -26,6 +27,6 @@
     <RemoveDir Directories="$(BuildDir)" />
 		
 		<MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);NugetVersion=$(NugetVersion)" />
-    <MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);NugetVersion=$(NugetVersion);PackageSuffix=-signed" />
+    <MSBuild Condition="'$(SignPackages)'=='True'" Projects="Deployment.proj" Properties="Configuration=$(Configuration);NugetVersion=$(NugetVersion);PackageSuffix=-signed" />
   </Target>
 </Project>
