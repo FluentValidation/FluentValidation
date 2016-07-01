@@ -18,10 +18,8 @@
 
 namespace FluentValidation {
 	using System;
-#if !WINDOWS_PHONE
 	using System.ComponentModel;
 	//using System.ComponentModel.DataAnnotations;
-#endif
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
@@ -73,15 +71,12 @@ namespace FluentValidation {
 
 			string name = null;
 
-#if !WINDOWS_PHONE
 			name = (from attr in attributes
 			        where attr.type.Name == "DisplayAttribute"
 			        let method = attr.type.GetRuntimeMethod("GetName", new Type[0]) 
 			        where method != null
 			        select method.Invoke(attr.attr, null) as string).FirstOrDefault();
-#endif
 
-#if !SILVERLIGHT
 			if (string.IsNullOrEmpty(name)) {
 				name = (from attr in attributes
 				        where attr.type.Name == "DisplayNameAttribute"
@@ -89,7 +84,6 @@ namespace FluentValidation {
 				        where property != null
 				        select property.GetValue(attr.attr, null) as string).FirstOrDefault();
 			}
-#endif
 
 			return name;
 		}

@@ -145,27 +145,5 @@ namespace FluentValidation.Internal {
 		public static Action<object> CoerceToNonGeneric<T>(this Action<T> action) {
 			return x => action((T)x);
 		}
-
-#if WINDOWS_PHONE
-		// WP7 doesn't support expression tree compilation.
-		// As a workaround, this extension method falls back to delegate compilation. 
-		// However, it only supports simple property references, ie x => x.SomeProperty
-
-		internal static TDelegate Compile<TDelegate>(this Expression<TDelegate> expression) {
-			var compiledDelegate = CompilePropertyGetterExpression(expression, typeof(TDelegate));
-			return (TDelegate)compiledDelegate;
-		}
-
-		static object CompilePropertyGetterExpression(LambdaExpression expression, Type delegateType) {
-			var member = expression.GetMember() as PropertyInfo;
-
-			if (member == null) {
-				throw new NotSupportedException("FluentValidation for WP7 can only be used with expressions that reference public properties, ie x => x.SomeProperty");
-			}
-
-			var compiledDelegate = Delegate.CreateDelegate(delegateType, member.GetGetMethod());
-			return compiledDelegate;
-		}
-#endif
 	}
 }
