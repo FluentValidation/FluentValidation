@@ -69,7 +69,7 @@
 		<!-- Copy the source files to the package dir -->
 		<Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\Net45\%(RecursiveDir)" />
 		<Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\lib\Net45" />
-			<Copy Condition="'$(PackageSuffix)'==''"  SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.AspNetCore\lib\netstandard1.5" />
+			<Copy Condition="'$(PackageSuffix)'==''"  SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.AspNetCore\lib\netstandard1.6" />
 		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\lib\Net45" />
 		
 		<!-- Get the version number of the main FV assembly to insert into the nuspec files -->
