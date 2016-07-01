@@ -16,6 +16,7 @@
 // The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 
+#pragma warning disable 618
 namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;

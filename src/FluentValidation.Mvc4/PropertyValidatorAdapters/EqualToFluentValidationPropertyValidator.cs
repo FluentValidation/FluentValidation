@@ -33,7 +33,9 @@
 
 
 				string message = formatter.BuildMessage(EqualValidator.ErrorMessageSource.GetString());
+#pragma warning disable 618
 				yield return new ModelClientValidationEqualToRule(message, CompareAttribute.FormatPropertyForClientValidation(propertyToCompare.Name)) ;
+#pragma warning restore 618
 			}
 		}
 	}

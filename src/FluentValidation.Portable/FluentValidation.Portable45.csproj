@@ -23,7 +23,8 @@
     <DefineConstants>TRACE;DEBUG;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\FluentValidation.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -340,7 +341,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.zh-CN.resx">
       <Link>Resources\Messages.zh-CN.resx</Link>
-      <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.zh-CN.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

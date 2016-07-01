@@ -55,6 +55,7 @@ namespace FluentValidation.Validators {
 			originalErrorSource = errorSource = new StaticStringSource(errorMessage);
 		}
 
+		[Obsolete]
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
 			originalErrorSource = errorSource = LocalizedStringSource.CreateFromExpression(errorMessageResourceSelector, new FallbackAwareResourceAccessorBuilder());
 		}

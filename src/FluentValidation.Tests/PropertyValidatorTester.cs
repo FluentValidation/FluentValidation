@@ -35,7 +35,9 @@ namespace FluentValidation.Tests {
 		}
 
 		private class FooValidator:PropertyValidator {
+#pragma warning disable 612
 			public FooValidator() : base(() => "foo") {
+#pragma warning restore 612
 				
 			}
 

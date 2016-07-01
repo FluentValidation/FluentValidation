@@ -26,7 +26,6 @@ namespace FluentValidation.Validators {
 
 	public class PropertyValidatorContext {
 		private readonly MessageFormatter messageFormatter = new MessageFormatter();
-		private bool propertyValueSet;
 		private readonly Lazy<object> propertyValueContainer;
 
 		public ValidationContext ParentContext { get; private set; }

@@ -57,7 +57,7 @@ namespace FluentValidation {
 			return Validate((T)instance);
 		}
 
-		Task<ValidationResult> IValidator.ValidateAsync(object instance, CancellationToken cancellation = new CancellationToken()) {
+		Task<ValidationResult> IValidator.ValidateAsync(object instance, CancellationToken cancellation) {
 			instance.Guard("Cannot pass null to Validate.");
 			if (!((IValidator) this).CanValidateInstancesOfType(instance.GetType())) {
 				throw new InvalidOperationException(string.Format("Cannot validate instances of type '{0}'. This validator can only validate instances of type '{1}'.", instance.GetType().Name, typeof (T).Name));
@@ -100,6 +100,7 @@ namespace FluentValidation {
 		/// Validates the specified instance asynchronously
 		/// </summary>
 		/// <param name="instance">The object to validate</param>
+		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new CancellationToken()) {
 			return ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
@@ -120,6 +121,7 @@ namespace FluentValidation {
 		/// Validates the specified instance asynchronously.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
+		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate");
@@ -169,6 +171,12 @@ namespace FluentValidation {
 			return ruleBuilder;
 		}
 
+		/// <summary>
+		/// Invokes a rule for each item in the collection
+		/// </summary>
+		/// <typeparam name="TProperty">Type of property</typeparam>
+		/// <param name="expression">Expression representing the collection to validate</param>
+		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TProperty> RuleForEach<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression) {
 			expression.Guard("Cannot pass null to RuleForEach");
 			var rule = CollectionPropertyRule<TProperty>.Create(expression, () => CascadeMode);
@@ -319,6 +327,10 @@ namespace FluentValidation {
 		}
 	}
 
+	/// <summary>
+	/// Container class for dependent rule definitions
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public class	DependentRules<T> : AbstractValidator<T> {
 	}
 }

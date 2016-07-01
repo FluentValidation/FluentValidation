@@ -22,6 +22,9 @@ namespace FluentValidation {
 	using Internal;
 	using Validators;
 
+	/// <summary>
+	/// Extension methods for collection validation rules 
+	/// </summary>
 	public static class CollectionValidatorExtensions {
 		/// <summary>
 		/// Associates an instance of IValidator with the current property rule and is used to validate each item within the collection.

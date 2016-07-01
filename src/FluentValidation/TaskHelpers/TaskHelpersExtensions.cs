@@ -839,7 +839,7 @@ namespace System.Threading.Tasks
 		// </summary>
 		// <param name="task">The task to return.</param>
 		[SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This would result in poor usability.")]
-		public CatchResult Task(Task task)
+		public new CatchResult Task(Task task)
 		{
 			return new CatchResult { Task = task };
 		}
@@ -894,7 +894,7 @@ namespace System.Threading.Tasks
 		// </summary>
 		// <param name="task">The task to return.</param>
 		[SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic", Justification = "This would result in poor usability.")]
-		public CatchResult Task(Task<T> task)
+		public new CatchResult Task(Task<T> task)
 		{
 			return new CatchResult { Task = task };
 		}
