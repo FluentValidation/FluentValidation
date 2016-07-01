@@ -21,9 +21,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 
-[assembly: AssemblyTitle("FluentValidation.Mvc")]
-[assembly: AssemblyDescription("FluentValidation.Mvc")]
-[assembly: AssemblyProduct("FluentValidation.Mvc")]
+[assembly: AssemblyTitle("FluentValidation.AspNetCore")]
+[assembly: AssemblyDescription("FluentValidation.AspNetCore")]
+[assembly: AssemblyProduct("FluentValidation.AspNetCore")]
 [assembly: AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2016")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]

@@ -24,7 +24,7 @@
 			<Portable46Binaries Include="$(BaseDir)\src\FluentValidation.Portable46\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<NetStandard10Binaries Include="$(BaseDir)\src\FluentValidation.NetStandard\bin\$(Configuration)$(PackageSuffix)\**\*.*" />
 			<!--<KBinaries Include="$(BaseDir)\artifacts\bin\FluentValidation.K\$(Configuration)\aspnetcore50\**\*.*" />-->
-			<AspNetCoreBinaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.5\FluentValidation.AspNetCore.*" />
+			<AspNetCoreBinaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.*" />
 			<Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
 		</ItemGroup>
 
