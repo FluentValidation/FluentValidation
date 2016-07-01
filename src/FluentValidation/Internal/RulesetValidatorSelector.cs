@@ -10,6 +10,9 @@ namespace FluentValidation.Internal {
 	public class RulesetValidatorSelector : IValidatorSelector {
 		readonly string[] rulesetsToExecute;
 
+		/// <summary>
+		/// Rule sets
+		/// </summary>
 		public string[] RuleSets {
 			get {  return rulesetsToExecute; }
 		}
@@ -43,6 +46,11 @@ namespace FluentValidation.Internal {
 			return false;
 		}
 
+		/// <summary>
+		/// Checks if the rule is an IncludeRule
+		/// </summary>
+		/// <param name="rule"></param>
+		/// <returns></returns>
 		protected bool IsIncludeRule(IValidationRule rule) {
 			return rule is IncludeRule;
 		}

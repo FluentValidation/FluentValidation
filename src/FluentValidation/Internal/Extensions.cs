@@ -42,6 +42,11 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		/// <summary>
+		/// Checks if the expression is a parameter expression
+		/// </summary>
+		/// <param name="expression"></param>
+		/// <returns></returns>
 		public static bool IsParameterExpression(this LambdaExpression expression) {
 			return expression.Body.NodeType == ExpressionType.Parameter;
 		}
@@ -109,6 +114,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+#pragma warning disable 1591 
 		public static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {
 			return x => func((T)x);
 		} 
@@ -145,5 +151,7 @@ namespace FluentValidation.Internal {
 		public static Action<object> CoerceToNonGeneric<T>(this Action<T> action) {
 			return x => action((T)x);
 		}
+#pragma warning restore 1591
+
 	}
 }

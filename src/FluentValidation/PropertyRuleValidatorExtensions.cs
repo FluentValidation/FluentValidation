@@ -24,6 +24,9 @@ namespace FluentValidation {
 	using Internal;
 	using Validators;
 
+	/// <summary>
+	/// Extensions for property rules
+	/// </summary>
 	public static class  PropertyRuleValidatorExtensions {
 		/// <summary>
 		/// Replace the first validator of this type and remove all the others.

@@ -57,6 +57,12 @@ namespace FluentValidation.Internal {
 			return new MemberNameValidatorSelector(members);
 		}
 
+		/// <summary>
+		/// Gets member names from expressions
+		/// </summary>
+		/// <param name="propertyExpressions"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
 		public static string[] MemberNamesFromExpressions<T>(params Expression<Func<T, object>>[] propertyExpressions) {
 			var members = propertyExpressions.Select(MemberFromExpression).ToArray();
 			return members;

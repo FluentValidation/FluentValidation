@@ -86,6 +86,7 @@ namespace FluentValidation.Internal {
 		/// Performs validation asynchronously using a validation context and returns a collection of Validation Failures.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
+		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
 		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			return asyncFunc(context.InstanceToValidate, context, cancellation);
@@ -117,6 +118,7 @@ namespace FluentValidation.Internal {
 		/// When overloaded performs validation asynchronously using a validation context and returns a collection of Validation Failures.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
+		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
 		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
 			if (!context.Selector.CanExecute(this, "", context) || !condition(context.InstanceToValidate)) {
@@ -137,12 +139,22 @@ namespace FluentValidation.Internal {
 			return ValidateAsync(newContext, cancellation);
 		}
 
+		/// <summary>
+		/// Applies a condition to the validator.
+		/// </summary>
+		/// <param name="predicate"></param>
+		/// <param name="applyConditionTo"></param>
 		public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// For custom rules within the DelegateValidator, we ignore ApplyConditionTo - this is only relevant to chained rules using RuleFor.
 			var originalCondition = this.condition;
 			this.condition = x => predicate(x) && originalCondition(x);
 		}
 
+		/// <summary>
+		/// Applies a condition asynchronously to the validator
+		/// </summary>
+		/// <param name="predicate"></param>
+		/// <param name="applyConditionTo"></param>
 		public void ApplyAsyncCondition(Func<object, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators)
 		{
 			// For custom rules within the DelegateValidator, we ignore ApplyConditionTo - this is only relevant to chained rules using RuleFor.

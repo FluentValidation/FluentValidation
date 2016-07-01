@@ -1,4 +1,5 @@
-﻿namespace FluentValidation
+﻿#pragma warning disable 1591
+namespace FluentValidation.Internal
 {
 	using System;
 	using System.Linq;

@@ -24,6 +24,7 @@ namespace FluentValidation.TestHelper {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using Internal;
 	using Results;
 
 	internal class TestPropertyChain<TValue, TValue1> : ITestPropertyChain<TValue> {

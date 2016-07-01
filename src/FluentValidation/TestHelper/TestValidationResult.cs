@@ -21,8 +21,10 @@
 namespace FluentValidation.TestHelper {
 	using System.Linq;
 	using System.Reflection;
+	using Internal;
 	using Results;
 
+#pragma warning disable 1591
 	public class TestValidationResult<T, TValue> where T : class {
 		public ValidationResult Result { get; private set; }
 		public MemberAccessor<T, TValue> MemberAccessor { get; private set; }
@@ -39,4 +41,6 @@ namespace FluentValidation.TestHelper {
 			}
 		}
 	}
+#pragma warning restore 1591
+
 }

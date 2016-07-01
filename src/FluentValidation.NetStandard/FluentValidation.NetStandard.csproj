@@ -168,9 +168,6 @@
     <Compile Include="..\FluentValidation\Internal\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\IFluentInterface.cs">
-      <Link>IFluentInterface.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\Internal\IValidatorSelector.cs">
       <Link>IValidatorSelector.cs</Link>
     </Compile>

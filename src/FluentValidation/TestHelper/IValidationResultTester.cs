@@ -18,6 +18,7 @@
 
 #endregion
 
+#pragma warning disable 1591
 namespace FluentValidation.TestHelper {
 	using System.Collections.Generic;
 	using System.Reflection;

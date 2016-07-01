@@ -96,7 +96,6 @@
     <Compile Include="Internal\DelegateValidator.cs" />
     <Compile Include="Internal\Extensions.cs" />
     <Compile Include="Internal\IConfigurable.cs" />
-    <Compile Include="Internal\IFluentInterface.cs" />
     <Compile Include="Internal\InstanceCache.cs" />
     <Compile Include="Internal\RulesetValidatorSelector.cs" />
     <Compile Include="Internal\TrackingCollection.cs" />

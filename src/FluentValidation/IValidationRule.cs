@@ -53,8 +53,18 @@ namespace FluentValidation {
 		/// <returns>A collection of validation failures</returns>
 		Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation);
 
+		/// <summary>
+		/// Applies a condition to the rule
+		/// </summary>
+		/// <param name="predicate"></param>
+		/// <param name="applyConditionTo"></param>
 		void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 
+		/// <summary>
+		/// Applies a condition to the rule asynchronously
+		/// </summary>
+		/// <param name="predicate"></param>
+		/// <param name="applyConditionTo"></param>
 		void ApplyAsyncCondition(Func<object, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 	}
 }

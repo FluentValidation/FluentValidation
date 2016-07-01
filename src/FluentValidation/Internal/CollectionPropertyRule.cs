@@ -26,7 +26,20 @@ namespace FluentValidation.Internal {
 	using Results;
 	using Validators;
 
+	/// <summary>
+	/// Rule definition for collection properties
+	/// </summary>
+	/// <typeparam name="TProperty"></typeparam>
 	public class CollectionPropertyRule<TProperty> : PropertyRule {
+		/// <summary>
+		/// Initializes new instance of the CollectionPropertyRule class
+		/// </summary>
+		/// <param name="member"></param>
+		/// <param name="propertyFunc"></param>
+		/// <param name="expression"></param>
+		/// <param name="cascadeModeThunk"></param>
+		/// <param name="typeToValidate"></param>
+		/// <param name="containerType"></param>
 		public CollectionPropertyRule(MemberInfo member, Func<object, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) : base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate, containerType) {
 		}
 
@@ -40,6 +53,14 @@ namespace FluentValidation.Internal {
 			return new CollectionPropertyRule<TProperty>(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
 		}
 
+		/// <summary>
+		/// Invokes the validator asynchronously
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="validator"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="cancellation"></param>
+		/// <returns></returns>
 		protected override Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
 
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
@@ -76,6 +97,13 @@ namespace FluentValidation.Internal {
 			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 		}
 
+		/// <summary>
+		/// Invokes the validator
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="validator"></param>
+		/// <param name="propertyName"></param>
+		/// <returns></returns>
 		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(ValidationContext context, Validators.IPropertyValidator validator, string propertyName) {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			var results = new List<ValidationFailure>();

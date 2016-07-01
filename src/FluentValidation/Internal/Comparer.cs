@@ -19,11 +19,16 @@
 namespace FluentValidation.Internal {
 	using System;
 
+	/// <summary>
+	/// Custom logic for performing comparisons
+	/// </summary>
 	public static class Comparer {
 		/// <summary>
 		/// Tries to compare the two objects.
 		/// </summary>
+		/// <param name="valueToCompare"></param>
 		/// <param name="result">The resulting comparison value.</param>
+		/// <param name="value"></param>
 		/// <returns>True if all went well, otherwise False.</returns>
 		public static bool TryCompare(IComparable value, IComparable valueToCompare, out int result) {
 			try {

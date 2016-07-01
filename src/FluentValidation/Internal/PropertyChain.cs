@@ -44,10 +44,19 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		/// <summary>
+		/// Creates a new PropertyChain
+		/// </summary>
+		/// <param name="memberNames"></param>
 		public PropertyChain(IEnumerable<string> memberNames) {
 			this.memberNames.AddRange(memberNames);
 		}
 
+		/// <summary>
+		/// Creates a PropertyChain from a lambda expresion
+		/// </summary>
+		/// <param name="expression"></param>
+		/// <returns></returns>
 		public static PropertyChain FromExpression(LambdaExpression expression) {
 			var memberNames = new Stack<string>();
 
@@ -132,6 +141,9 @@ namespace FluentValidation.Internal {
 			return chain.ToString();
 		}
 
+		/// <summary>
+		/// Number of member names in the chain
+		/// </summary>
 		public int Count {
 			get { return memberNames.Count; }
 		}

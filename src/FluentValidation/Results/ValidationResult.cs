@@ -21,23 +21,34 @@ namespace FluentValidation.Results {
 	using System.Collections.Generic;
 	using System.Linq;
 
+	/// <summary>
+	/// The result of running a validator
+	/// </summary>
 #if !SILVERLIGHT && !PORTABLE && !PORTABLE40 && !CoreCLR
 	[Serializable]
 #endif
 	public class ValidationResult {
 		private readonly List<ValidationFailure> errors = new List<ValidationFailure>();
+		/// <summary>
+		/// Whether validation succeeded
+		/// </summary>
+		public virtual bool IsValid => Errors.Count == 0;
 
-		public virtual bool IsValid {
-			get { return Errors.Count == 0; }
-		}
+		/// <summary>
+		/// A collection of errors
+		/// </summary>
+		public IList<ValidationFailure> Errors => errors;
 
-		public IList<ValidationFailure> Errors {
-			get { return errors; }
-		}
-
+		/// <summary>
+		/// Creates a new validationResult
+		/// </summary>
 		public ValidationResult() {
 		}
 
+		/// <summary>
+		/// Creates a new ValidationResult from a collection of failures
+		/// </summary>
+		/// <param name="failures"></param>
 		public ValidationResult(IEnumerable<ValidationFailure> failures) {
 			errors.AddRange(failures.Where(failure => failure != null));
 		}

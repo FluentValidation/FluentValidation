@@ -87,6 +87,8 @@ namespace FluentValidation {
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, int min, int max) {
 			return ruleBuilder.SetValidator(new LengthValidator(min, max));
@@ -98,6 +100,8 @@ namespace FluentValidation {
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, int> min, Func<T, int> max)
 		{
@@ -110,6 +114,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="exactLength"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, int exactLength) {
 			return ruleBuilder.SetValidator(new ExactLengthValidator(exactLength));
@@ -121,6 +126,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="exactLength"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, int> exactLength)
 		{
@@ -808,6 +814,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Validates certain properties of the specified instance.
 		/// </summary>
+		/// <param name="validator"></param>
 		/// <param name="instance">The object to validate</param>
 		/// <param name="properties">The names of the properties to validate.</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
@@ -816,6 +823,15 @@ namespace FluentValidation {
 			return validator.Validate(context);
 		}
 
+		/// <summary>
+		/// Validates an object using either a custom validator selector or a ruleset.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="validator"></param>
+		/// <param name="instance"></param>
+		/// <param name="selector"></param>
+		/// <param name="ruleSet"></param>
+		/// <returns></returns>
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, IValidatorSelector selector = null, string ruleSet = null) {
 			if(selector != null && ruleSet != null) {
 				throw new InvalidOperationException("Cannot specify both an IValidatorSelector and a RuleSet.");
@@ -850,6 +866,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Validates certain properties of the specified instance asynchronously.
 		/// </summary>
+		/// <param name="validator"></param>
 		/// <param name="instance">The object to validate</param>
 		/// <param name="properties">The names of the properties to validate.</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
@@ -858,6 +875,15 @@ namespace FluentValidation {
 			return validator.ValidateAsync(context);
 		}
 
+		/// <summary>
+		/// Validates an object asynchronously using a custom valdiator selector or a ruleset
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="validator"></param>
+		/// <param name="instance"></param>
+		/// <param name="selector"></param>
+		/// <param name="ruleSet"></param>
+		/// <returns></returns>
 		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, IValidatorSelector selector = null, string ruleSet = null) {
 			if (selector != null && ruleSet != null) {
 				throw new InvalidOperationException("Cannot specify both an IValidatorSelector and a RuleSet.");

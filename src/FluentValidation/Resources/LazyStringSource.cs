@@ -18,18 +18,36 @@
 namespace FluentValidation.Resources {
 	using System;
 
+	/// <summary>
+	/// Lazily loads the string
+	/// </summary>
 	public class LazyStringSource : IStringSource {
 		readonly Func<string> _stringProvider;
 
+		/// <summary>
+		/// Creates a new LazyStringSource
+		/// </summary>
+		/// <param name="stringProvider"></param>
 		public LazyStringSource(Func<string> stringProvider) {
 			_stringProvider = stringProvider;
 		}
 
+		/// <summary>
+		/// Gets the value
+		/// </summary>
+		/// <returns></returns>
 		public string GetString() {
 			return _stringProvider();
 		}
 
+		/// <summary>
+		/// Resource type
+		/// </summary>
 		public string ResourceName { get { return null; } }
+
+		/// <summary>
+		/// Resource name
+		/// </summary>
 		public Type ResourceType { get { return null; } }
 	}
 }

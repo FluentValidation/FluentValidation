@@ -25,21 +25,40 @@ namespace FluentValidation {
 	using System.Reflection;
 	using Internal;
 
+	/// <summary>
+	/// Validator runtime options
+	/// </summary>
 	public static class ValidatorOptions {
+		/// <summary>
+		/// Default cascade mode
+		/// </summary>
 		public static CascadeMode CascadeMode = CascadeMode.Continue;
+
+		/// <summary>
+		/// Default resource provider
+		/// </summary>
 		public static Type ResourceProviderType;
 
 		private static ValidatorSelectorOptions validatorSelectorOptions = new ValidatorSelectorOptions();
+		/// <summary>
+		/// Customizations of validator selector
+		/// </summary>
 		public static ValidatorSelectorOptions ValidatorSelectors { get { return validatorSelectorOptions; } }
 
 		private static Func<Type, MemberInfo, LambdaExpression, string> propertyNameResolver = DefaultPropertyNameResolver;
 		private static Func<Type, MemberInfo, LambdaExpression, string> displayNameResolver = DefaultDisplayNameResolver;
 
+		/// <summary>
+		/// Pluggable logic for resolving property names
+		/// </summary>
 		public static Func<Type, MemberInfo, LambdaExpression, string> PropertyNameResolver {
 			get { return propertyNameResolver; }
 			set { propertyNameResolver = value ?? DefaultPropertyNameResolver; }
 		}
 
+		/// <summary>
+		/// Pluggable logic for resolving display names
+		/// </summary>
 		public static Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver {
 			get { return displayNameResolver; }
 			set { displayNameResolver = value ?? DefaultDisplayNameResolver; }
@@ -89,21 +108,33 @@ namespace FluentValidation {
 		}
 	}
 
+	/// <summary>
+	/// ValidatorSelector options
+	/// </summary>
 	public class ValidatorSelectorOptions {
 		private Func<IValidatorSelector>  defaultValidatorSelector = () => new DefaultValidatorSelector();
 		private Func<string[], IValidatorSelector> memberNameValidatorSelector = properties => new MemberNameValidatorSelector(properties);
 		private Func<string[], IValidatorSelector> rulesetValidatorSelector = ruleSets => new RulesetValidatorSelector(ruleSets);
 
+		/// <summary>
+		/// Factory func for creating the default validator selector
+		/// </summary>
 		public Func<IValidatorSelector> DefaultValidatorSelectorFactory {
 			get { return defaultValidatorSelector; }
 			set { defaultValidatorSelector = value ?? (() => new DefaultValidatorSelector()); }
 		}
 
+		/// <summary>
+		/// Factory func for creating the member validator selector
+		/// </summary>
 		public Func<string[], IValidatorSelector> MemberNameValidatorSelectorFactory {
 			get { return memberNameValidatorSelector; }
 			set { memberNameValidatorSelector = value ?? (properties => new MemberNameValidatorSelector(properties)); }
 		}
 
+		/// <summary>
+		/// Factory func for creating the ruleset validator selector
+		/// </summary>
 		public Func<string[], IValidatorSelector> RulesetValidatorSelectorFactory {
 			get { return rulesetValidatorSelector; }
 			set { rulesetValidatorSelector = value ?? (ruleSets => new RulesetValidatorSelector(ruleSets)); }

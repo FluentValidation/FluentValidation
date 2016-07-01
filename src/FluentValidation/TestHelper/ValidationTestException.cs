@@ -16,6 +16,7 @@
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
+#pragma warning disable 1591
 namespace FluentValidation.TestHelper {
 	using System;
 

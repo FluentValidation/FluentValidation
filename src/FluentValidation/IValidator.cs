@@ -40,6 +40,7 @@ namespace FluentValidation {
 		/// Validate the specified instance asynchronously
 		/// </summary>
 		/// <param name="instance">The instance to validate</param>
+		/// <param name="cancellation"></param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new CancellationToken());
 

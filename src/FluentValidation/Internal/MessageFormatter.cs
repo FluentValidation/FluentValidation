@@ -66,10 +66,16 @@ namespace FluentValidation.Internal {
 			get { return this.AdditionalArguments != null && this.AdditionalArguments.Length > 0; }
 		}
 
+		/// <summary>
+		/// Additional arguments to use
+		/// </summary>
 		public object[] AdditionalArguments {
 			get { return this.additionalArgs; }
 		}
 
+		/// <summary>
+		/// Additional placeholder values
+		/// </summary>
 		public Dictionary<string, object> PlaceholderValues {
 			get { return this.placeholderValues; }
 		}

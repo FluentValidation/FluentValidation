@@ -273,6 +273,7 @@ namespace FluentValidation.Internal {
 		/// Performs asynchronous validation using a validation context and returns a collection of Validation Failures.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
+		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
 		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
 			try {
@@ -356,6 +357,14 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		/// <summary>
+		/// Invokes the validator asynchronously 
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="validator"></param>
+		/// <param name="propertyName"></param>
+		/// <param name="cancellation"></param>
+		/// <returns></returns>
 		protected virtual Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
 			return validator.ValidateAsync(new PropertyValidatorContext(context, this, propertyName), cancellation);
 		}
@@ -368,6 +377,11 @@ namespace FluentValidation.Internal {
 			return validator.Validate(propertyContext);
 		}
 
+		/// <summary>
+		/// Applies a condition to the rule
+		/// </summary>
+		/// <param name="predicate"></param>
+		/// <param name="applyConditionTo"></param>
 		public void ApplyCondition(Func<object, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
@@ -388,6 +402,11 @@ namespace FluentValidation.Internal {
 
 		}
 
+		/// <summary>
+		/// Applies the condition to the rule asynchronously
+		/// </summary>
+		/// <param name="predicate"></param>
+		/// <param name="applyConditionTo"></param>
 		public void ApplyAsyncCondition(Func<object, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
@@ -407,11 +426,28 @@ namespace FluentValidation.Internal {
 		}
 	}
 
+	/// <summary>
+	/// Include rule
+	/// </summary>
 	public class IncludeRule : PropertyRule {
+		/// <summary>
+		/// Creates a new IncludeRule
+		/// </summary>
+		/// <param name="validator"></param>
+		/// <param name="cascadeModeThunk"></param>
+		/// <param name="typeToValidate"></param>
+		/// <param name="containerType"></param>
 		public IncludeRule(IValidator validator,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
 			AddValidator(new ChildValidatorAdaptor(validator));
 		}
 
+		/// <summary>
+		/// Creates a new include rule from an existing validator
+		/// </summary>
+		/// <param name="validator"></param>
+		/// <param name="cascadeModeThunk"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
 		public static IncludeRule Create<T>(IValidator validator, Func<CascadeMode> cascadeModeThunk) {
 			return new IncludeRule(validator, cascadeModeThunk, typeof(T), typeof(T));
 		}
