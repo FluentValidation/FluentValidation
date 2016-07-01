@@ -186,7 +186,7 @@ namespace FluentValidation.Tests {
 		}
 
 		private class MyPropertyValidator : PropertyValidator {
-			public MyPropertyValidator() : base(() => MyOverridenResources.notempty_error) {
+			public MyPropertyValidator() : base(nameof(MyOverridenResources.notempty_error), typeof(MyOverridenResources)) {
 				
 			}
 

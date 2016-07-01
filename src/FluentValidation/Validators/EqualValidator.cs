@@ -28,24 +28,24 @@ namespace FluentValidation.Validators {
 		readonly Func<object, object> func;
 		readonly IEqualityComparer comparer;
 
-		public EqualValidator(object valueToCompare) : base(() => Messages.equal_error) {
+		public EqualValidator(object valueToCompare) : base(nameof(Messages.equal_error), typeof(Messages)) {
 			this.ValueToCompare = valueToCompare;
 		}
 
 		public EqualValidator(object valueToCompare, IEqualityComparer comparer)
-			: base(() => Messages.equal_error) {
+			: base(nameof(Messages.equal_error), typeof(Messages)) {
 			ValueToCompare = valueToCompare;
 			this.comparer = comparer;
 		}
 
 		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member)
-			: base(() => Messages.equal_error)  {
+			: base(nameof(Messages.equal_error), typeof(Messages))  {
 			func = comparisonProperty;
 			MemberToCompare = member;
 		}
 
 		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member, IEqualityComparer comparer)
-			: base(() => Messages.equal_error) {
+			: base(nameof(Messages.equal_error), typeof(Messages)) {
 			func = comparisonProperty;
 			MemberToCompare = member;
 			this.comparer = comparer;

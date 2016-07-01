@@ -29,25 +29,25 @@ namespace FluentValidation.Validators {
 		readonly Func<object, object> func;
 
 		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare)
-			: base(() => Messages.notequal_error) {
+			: base(nameof(Messages.notequal_error), typeof(Messages)) {
 			this.func = func;
 			MemberToCompare = memberToCompare;
 		}
 
 		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare, IEqualityComparer equalityComparer)
-			: base(() => Messages.notequal_error) {
+			: base(nameof(Messages.notequal_error), typeof(Messages)) {
 			this.func = func;
 			this.comparer = equalityComparer;
 			MemberToCompare = memberToCompare;
 		}
 
 		public NotEqualValidator(object comparisonValue)
-			: base(() => Messages.notequal_error) {
+			: base(nameof(Messages.notequal_error), typeof(Messages)) {
 			ValueToCompare = comparisonValue;
 		}
 
 		public NotEqualValidator(object comparisonValue, IEqualityComparer equalityComparer)
-			: base(() => Messages.notequal_error) {
+			: base(nameof(Messages.notequal_error), typeof(Messages)) {
 			ValueToCompare = comparisonValue;
 			comparer = equalityComparer;
 		}

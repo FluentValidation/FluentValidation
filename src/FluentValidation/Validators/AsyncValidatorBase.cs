@@ -17,10 +17,6 @@ namespace FluentValidation.Validators {
 			: base(errorMessage) {
 		}
 
-		protected AsyncValidatorBase(Expression<Func<string>> errorMessageResourceSelector)
-			: base(errorMessageResourceSelector) {
-		}
-
 		protected override bool IsValid(PropertyValidatorContext context) {
 			return IsValidAsync(context, new CancellationToken()).Result;
 		}

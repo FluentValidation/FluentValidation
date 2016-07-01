@@ -28,13 +28,13 @@ namespace FluentValidation.Validators {
 
 		readonly Func<object, object> valueToCompareFunc;
 
-		protected AbstractComparisonValidator(IComparable value, Expression<Func<string>> errorMessageSelector) : base(errorMessageSelector) {
+		protected AbstractComparisonValidator(IComparable value, string resourceName, Type resourceType) : base(resourceName, resourceType) {
 			value.Guard("value must not be null.");
 			ValueToCompare = value;
 		}
 
-		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, Expression<Func<string>> errorMessageSelector)
-			: base(errorMessageSelector) {
+		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, string resourceName, Type resourceType)
+			: base(resourceName, resourceType) {
 			this.valueToCompareFunc = valueToCompareFunc;
 			this.MemberToCompare = member;
 		}

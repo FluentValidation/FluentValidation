@@ -31,34 +31,34 @@ namespace FluentValidation.Validators {
 		readonly Func<object, string> expressionFunc;
 		readonly Func<object, Regex> regexFunc;
 
-		public RegularExpressionValidator(string expression) : base(() => Messages.regex_error) {
+		public RegularExpressionValidator(string expression) : base(nameof(Messages.regex_error), typeof(Messages)) {
 			this.expression = expression;
 		}
 
-		public RegularExpressionValidator(Regex regex) : base(() => Messages.regex_error) {
+		public RegularExpressionValidator(Regex regex) : base(nameof(Messages.regex_error), typeof(Messages)) {
 			this.expression = regex.ToString();
 			this.regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(string expression, RegexOptions options) : base(() => Messages.regex_error) {
+		public RegularExpressionValidator(string expression, RegexOptions options) : base(nameof(Messages.regex_error), typeof(Messages)) {
 			this.expression = expression;
 			this.regexOptions = options;
 		}
 
 		public RegularExpressionValidator(Func<object, string> expression)
-			: base(() => Messages.regex_error)
+			: base(nameof(Messages.regex_error), typeof(Messages))
 		{
 			this.expressionFunc = expression;
 		}
 
 		public RegularExpressionValidator(Func<object, Regex> regex)
-			: base(() => Messages.regex_error)
+			: base(nameof(Messages.regex_error), typeof(Messages))
 		{
 			this.regexFunc = regex;
 		}
 
 		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options)
-			: base(() => Messages.regex_error)
+			: base(nameof(Messages.regex_error), typeof(Messages))
 		{
 			this.expressionFunc = expression;
 			this.regexOptions = options;

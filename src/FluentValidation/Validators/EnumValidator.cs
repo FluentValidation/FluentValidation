@@ -27,7 +27,7 @@ namespace FluentValidation.Validators
 	{
 		private readonly Type enumType;
 
-		public EnumValidator(Type enumType) : base(() => Messages.enum_error) {
+		public EnumValidator(Type enumType) : base(nameof(Messages.enum_error), typeof(Messages)) {
 			this.enumType = enumType;
 		}
 

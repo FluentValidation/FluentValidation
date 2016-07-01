@@ -1,3 +1,6 @@
+7.0 - 
+
+
 6.4 beta 1 - 28 Jun 2016
 EnumValidator supports Flags 
 Add ValidationSeverity

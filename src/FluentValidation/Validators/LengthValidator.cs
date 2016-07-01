@@ -29,10 +29,10 @@ namespace FluentValidation.Validators {
 		public Func<object, int> MinFunc { get; set; }
 		public Func<object, int> MaxFunc { get; set; }
 
-		public LengthValidator(int min, int max) : this(min, max, () => Messages.length_error) {
+		public LengthValidator(int min, int max) : this(min, max, nameof(Messages.length_error), typeof(Messages)) {
 		}
 
-		public LengthValidator(int min, int max, Expression<Func<string>> errorMessageResourceSelector) : base(errorMessageResourceSelector) {
+		public LengthValidator(int min, int max, string resourceName, Type resourceType) : base(resourceName, resourceType) {
 			Max = max;
 			Min = min;
 
@@ -42,10 +42,10 @@ namespace FluentValidation.Validators {
 		}
 
 		public LengthValidator(Func<object, int> min, Func<object, int> max)
-			: this(min, max, () => Messages.length_error) {
+			: this(min, max, nameof(Messages.length_error), typeof(Messages)) {
 		}
 
-		public LengthValidator(Func<object, int> min, Func<object, int> max, Expression<Func<string>> errorMessageResourceSelector) : base(errorMessageResourceSelector) {
+		public LengthValidator(Func<object, int> min, Func<object, int> max, string resourceName, Type resourceType) : base(resourceName, resourceType) {
 			MaxFunc = max;
 			MinFunc = min;
 		}
@@ -75,54 +75,54 @@ namespace FluentValidation.Validators {
 	}
 
 	public class ExactLengthValidator : LengthValidator {
-		public ExactLengthValidator(int length) : base(length,length, () => Messages.exact_length_error) {
+		public ExactLengthValidator(int length) : base(length,length, nameof(Messages.exact_length_error), typeof(Messages)) {
 			
 		}
 
 		public ExactLengthValidator(Func<object, int> length)
-			: base(length, length, () => Messages.exact_length_error) {
+			: base(length, length, nameof(Messages.exact_length_error), typeof(Messages)) {
 
 		}
 	}
 
 	public class MaximumLengthValidator : LengthValidator {
-		public MaximumLengthValidator(int max) : this(max, () => Messages.length_error) {
+		public MaximumLengthValidator(int max) : this(max, nameof(Messages.length_error), typeof(Messages)) {
 
 		}
 
-		public MaximumLengthValidator(int max, Expression<Func<string>> errorMessageResourceSelector)
-			: base(0, max, errorMessageResourceSelector) {
+		public MaximumLengthValidator(int max, string resourceName, Type resourceType)
+			: base(0, max, resourceName, resourceType) {
 
 		}
 
 		public MaximumLengthValidator(Func<object, int> max) : 
-			this(max, () => Messages.length_error) { 
+			this(max, nameof(Messages.length_error), typeof(Messages)) { 
 
 		}
 
-		public MaximumLengthValidator(Func<object, int> max, Expression<Func<string>> errorMessageResourceSelector)
-			: base(obj => 0, max, errorMessageResourceSelector) {
+		public MaximumLengthValidator(Func<object, int> max, string resourceName, Type resourceType)
+			: base(obj => 0, max, resourceName, resourceType) {
 
 		}
 	}
 
 	public class MinimumLengthValidator : LengthValidator {
-		public MinimumLengthValidator(int min) : this(min, () => Messages.length_error) {
+		public MinimumLengthValidator(int min) : this(min, nameof(Messages.length_error), typeof(Messages)) {
 
 		}
 
-		public MinimumLengthValidator(int min, Expression<Func<string>> errorMessageResourceSelector) 
-			: base(min, -1, errorMessageResourceSelector) {
+		public MinimumLengthValidator(int min, string resourceName, Type resourceType) 
+			: base(min, -1, resourceName, resourceType) {
 
 		}
 
 		public MinimumLengthValidator(Func<object, int> min)
-			: this(min, () => Messages.length_error) {
+			: this(min, nameof(Messages.length_error), typeof(Messages)) {
 
 		}
 
-		public MinimumLengthValidator(Func<object, int> min, Expression<Func<string>> errorMessageResourceSelector)
-			: base(min, obj => -1, errorMessageResourceSelector) {
+		public MinimumLengthValidator(Func<object, int> min, string resourceName, Type resourceType)
+			: base(min, obj => -1, resourceName, resourceType) {
 
 		}
 	}

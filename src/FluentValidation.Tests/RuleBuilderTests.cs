@@ -246,7 +246,7 @@ namespace FluentValidation.Tests {
 		}
 
 		class TestPropertyValidator : PropertyValidator {
-			public TestPropertyValidator() : base(() => Messages.notnull_error) {
+			public TestPropertyValidator() : base(nameof(Messages.notnull_error), typeof(Messages)) {
 				
 			}
 
