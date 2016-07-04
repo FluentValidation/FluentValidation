@@ -13,13 +13,20 @@
 },
 
     "frameworks": {
-      "netstandard1.6": {
-        "dependencies": {
-          "FluentValidation": {
-            "target": "project"
-          }
+        "netstandard1.6": {
+            "dependencies": {
+                "FluentValidation": {
+                    "target": "project"
+                }
+            },
+            "imports": "dnxcore50"
         },
-        "imports": "dnxcore50"
-      }
+        "net451": {
+            "dependencies": {
+                "FluentValidation": {
+                    "target": "project"
+                }
+            }
+        }
     }
-  }
+}

@@ -1,5 +1,4 @@
-6.4 -
-Deprecate use of resource expressions in custom property validators.
+6.4 - 
 
 6.4 beta 1 - 28 Jun 2016
 EnumValidator supports Flags 
