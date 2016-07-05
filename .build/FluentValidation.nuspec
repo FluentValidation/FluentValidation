@@ -32,36 +32,36 @@
       </group>
       <group targetFramework="portable-net40+sl50+wp80+win8+wpa81" />
       <group targetFramework="portable-net45+win8+wp8+wpa81">
-        <dependency id="System.Collections" version="4.0.11" />
-        <dependency id="System.Diagnostics.Debug" version="4.0.11" />
-        <dependency id="System.Diagnostics.Tools" version="4.0.1" />
-        <dependency id="System.Globalization" version="4.0.11" />
-        <dependency id="System.Linq" version="4.1.0" />
-        <dependency id="System.Linq.Expressions" version="4.0.11" />
-        <dependency id="System.Reflection" version="4.1.0" />
-        <dependency id="System.Reflection.Extensions" version="4.0.1" />
-        <dependency id="System.Resources.ResourceManager" version="4.0.1" />
-        <dependency id="System.Runtime" version="4.1.0" />
-        <dependency id="System.Runtime.Extensions" version="4.1.0" />
-        <dependency id="System.Text.RegularExpressions" version="4.0.12" />
-        <dependency id="System.Threading" version="4.0.11" />
-        <dependency id="System.Threading.Tasks" version="4.0.11" />
+        <dependency id="System.Collections" version="4.0.10" />
+        <dependency id="System.Diagnostics.Debug" version="4.0.10" />
+        <dependency id="System.Diagnostics.Tools" version="4.0.0" />
+        <dependency id="System.Globalization" version="4.0.10" />
+        <dependency id="System.Linq" version="4.0.0" />
+        <dependency id="System.Linq.Expressions" version="4.0.10" />
+        <dependency id="System.Reflection" version="4.0.10" />
+        <dependency id="System.Reflection.Extensions" version="4.0.0" />
+        <dependency id="System.Resources.ResourceManager" version="4.0.0" />
+        <dependency id="System.Runtime" version="4.0.20" />
+        <dependency id="System.Runtime.Extensions" version="4.0.10" />
+        <dependency id="System.Text.RegularExpressions" version="4.0.10" />
+        <dependency id="System.Threading" version="4.0.10" />
+        <dependency id="System.Threading.Tasks" version="4.0.10" />
       </group>
       <group targetFramework="uap10.0">
-        <dependency id="System.Collections" version="4.0.11" />
-        <dependency id="System.Diagnostics.Debug" version="4.0.11" />
-        <dependency id="System.Diagnostics.Tools" version="4.0.1" />
-        <dependency id="System.Globalization" version="4.0.11" />
-        <dependency id="System.Linq" version="4.1.0" />
-        <dependency id="System.Linq.Expressions" version="4.0.11" />
-        <dependency id="System.Reflection" version="4.1.0" />
-        <dependency id="System.Reflection.Extensions" version="4.0.1" />
-        <dependency id="System.Resources.ResourceManager" version="4.0.1" />
-        <dependency id="System.Runtime" version="4.1.0" />
-        <dependency id="System.Runtime.Extensions" version="4.1.0" />
-        <dependency id="System.Text.RegularExpressions" version="4.0.12" />
-        <dependency id="System.Threading" version="4.0.11" />
-        <dependency id="System.Threading.Tasks" version="4.0.11" />
+        <dependency id="System.Collections" version="4.0.10" />
+        <dependency id="System.Diagnostics.Debug" version="4.0.10" />
+        <dependency id="System.Diagnostics.Tools" version="4.0.0" />
+        <dependency id="System.Globalization" version="4.0.10" />
+        <dependency id="System.Linq" version="4.0.0" />
+        <dependency id="System.Linq.Expressions" version="4.0.10" />
+        <dependency id="System.Reflection" version="4.0.10" />
+        <dependency id="System.Reflection.Extensions" version="4.0.0" />
+        <dependency id="System.Resources.ResourceManager" version="4.0.0" />
+        <dependency id="System.Runtime" version="4.0.20" />
+        <dependency id="System.Runtime.Extensions" version="4.0.10" />
+        <dependency id="System.Text.RegularExpressions" version="4.0.10" />
+        <dependency id="System.Threading" version="4.0.10" />
+        <dependency id="System.Threading.Tasks" version="4.0.10" />
       </group>
     </dependencies>
   </metadata>
