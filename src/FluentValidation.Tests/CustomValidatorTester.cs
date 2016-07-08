@@ -40,7 +40,7 @@ namespace FluentValidation.Tests {
 		}
 
 		public void Returns_single_failure_async() {
-			validator.CustomAsync(person => TaskHelpers.FromResult(new ValidationFailure("Surname", "Fail", null)));
+			validator.CustomAsync(async person => new ValidationFailure("Surname", "Fail", null));
 			var result = validator.ValidateAsync(new Person()).Result;
 
 			result.IsValid.ShouldBeFalse();
@@ -59,7 +59,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void When_the_async_lambda_returns_null_then_the_validation_should_succeed()
 		{
-			validator.CustomAsync(person => TaskHelpers.FromResult<ValidationFailure>(null));
+			validator.CustomAsync(async person => null);
 			var result = validator.ValidateAsync(new Person()).Result;
 
 			result.IsValid.ShouldBeTrue();
@@ -89,8 +89,8 @@ namespace FluentValidation.Tests {
 		public void CustomAsync_within_ruleset()
 		{
 			var validator = new InlineValidator<Person>();
-			validator.RuleSet("foo", () => validator.CustomAsync(x => TaskHelpers.FromResult(new ValidationFailure("x", "y"))));
-			validator.RuleSet("bar", () => validator.CustomAsync(x => TaskHelpers.FromResult(new ValidationFailure("x", "y"))));
+			validator.RuleSet("foo", () => validator.CustomAsync(async x => new ValidationFailure("x", "y")));
+			validator.RuleSet("bar", () => validator.CustomAsync(async x =>new ValidationFailure("x", "y")));
 
 			var result = validator.ValidateAsync(new Person(), ruleSet: "foo").Result;
 			result.Errors.Count.ShouldEqual(1);

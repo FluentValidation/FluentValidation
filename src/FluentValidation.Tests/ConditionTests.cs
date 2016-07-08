@@ -91,7 +91,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Async_condition_is_applied_to_all_validators_in_the_chain() {
 			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(x => TaskHelpers.FromResult(x.Id > 0))
+				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(async x => x.Id > 0)
 			};
 
 			var result = validator.ValidateAsync(new Person()).Result;
@@ -111,7 +111,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Async_condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
 			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(x => TaskHelpers.FromResult(x.Id > 0), ApplyConditionTo.CurrentValidator)
+				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(async x => x.Id > 0, ApplyConditionTo.CurrentValidator)
 			};
 
 			var result = validator.ValidateAsync(new Person()).Result;
@@ -126,7 +126,7 @@ namespace FluentValidation.Tests {
 
 		class TestConditionAsyncValidator : AbstractValidator<Person> {
 			public TestConditionAsyncValidator() {
-				RuleFor(x => x.Forename).NotNull().WhenAsync(x => TaskHelpers.FromResult(x.Id == 0));
+				RuleFor(x => x.Forename).NotNull().WhenAsync(async x => x.Id == 0);
 			}
 		}
 
@@ -138,7 +138,7 @@ namespace FluentValidation.Tests {
 
 		class InverseConditionAsyncValidator : AbstractValidator<Person> {
 			public InverseConditionAsyncValidator() {
-				RuleFor(x => x.Forename).NotNull().UnlessAsync(x => TaskHelpers.FromResult(x.Id == 0));
+				RuleFor(x => x.Forename).NotNull().UnlessAsync(async x => x.Id == 0);
 			}
 		}
 	}

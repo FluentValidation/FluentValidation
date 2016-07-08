@@ -115,22 +115,22 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void MustAsync_should_create_AsyncPredicteValidator() {
-			validator.RuleFor(x => x.Surname).MustAsync((x, cancel) => TaskHelpers.FromResult(true));
+			validator.RuleFor(x => x.Surname).MustAsync(async (x, cancel) => true);
 			AssertValidator<AsyncPredicateValidator>();
 		}
 
 		[Fact]
 		public void MustAsync_should_create_AsyncPredicateValidator_with_context() {
-			validator.RuleFor(x => x.Surname).MustAsync((x, val) => TaskHelpers.FromResult(true));
+			validator.RuleFor(x => x.Surname).MustAsync(async (x, val) => true);
 			AssertValidator<AsyncPredicateValidator>();
 		}
 
 		[Fact]
 		public void MustAsync_should_create_AsyncPredicateValidator_with_PropertyValidatorContext() {
 			var hasPropertyValidatorContext = false;
-			this.validator.RuleFor(x => x.Surname).MustAsync((x, val, ctx, cancel) => {
+			this.validator.RuleFor(x => x.Surname).MustAsync(async (x, val, ctx, cancel) => {
 				hasPropertyValidatorContext = ctx != null;
-				return TaskHelpers.FromResult(true);
+				return true;
 			});
 			this.validator.ValidateAsync(new Person {
 				Surname = "Surname"

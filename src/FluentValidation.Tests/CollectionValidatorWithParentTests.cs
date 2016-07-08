@@ -129,7 +129,7 @@ namespace FluentValidation.Tests
 		[Fact]
 		public void Async_condition_should_work_with_child_collection() {
 			var validator = new TestValidator() {
-				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y)).WhenAsync(x => TaskHelpers.FromResult(x.Orders.Count == 4 /*there are only 3*/))
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y)).WhenAsync(async x => x.Orders.Count == 4 /*there are only 3*/)
 			};
 
 			var result = validator.ValidateAsync(person).Result;
@@ -248,7 +248,7 @@ namespace FluentValidation.Tests
 
 			private Func<string, CancellationToken, Task<bool>> BeOneOfTheChildrensEmailAddress(Person person)
 			{
-				return (productName, cancel) => TaskHelpers.FromResult(person.Children.Any(child => child.Email == productName));
+				return async (productName, cancel) => person.Children.Any(child => child.Email == productName);
 			}
 		}
 	}

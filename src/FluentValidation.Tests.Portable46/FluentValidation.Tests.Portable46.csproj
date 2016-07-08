@@ -232,12 +232,6 @@
     <Compile Include="..\FluentValidation.Tests\StandalonePropertyValidationTester.cs">
       <Link>StandalonePropertyValidationTester.cs</Link>
     </Compile>
-    <Compile Include="..\FluentValidation.Tests\TaskHelpers\TaskHelpers.cs">
-      <Link>TaskHelpers.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Tests\TaskHelpers\TaskHelpersExtensions.cs">
-      <Link>TaskHelpersExtensions.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation.Tests\TestExtensions.cs">
       <Link>TestExtensions.cs</Link>
     </Compile>

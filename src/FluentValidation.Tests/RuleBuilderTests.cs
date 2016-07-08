@@ -134,7 +134,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Calling_when_async_should_replace_current_validator_with_predicate_validator() {
 			var validator = new TestPropertyValidator();
-			builder.SetValidator(validator).WhenAsync(x => TaskHelpers.FromResult(true));
+			builder.SetValidator(validator).WhenAsync(async x => true);
 			builder.Rule.CurrentValidator.ShouldBe<DelegatingValidator>();
 
 			var predicateValidator = (DelegatingValidator) builder.Rule.CurrentValidator;
@@ -172,8 +172,11 @@ namespace FluentValidation.Tests {
 		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator()
 		{
 			var person = new Person { Surname = "Foo" };
-		    var validator = new Mock<AsyncValidatorBase>(MockBehavior.Loose, Messages.predicate_error) {CallBase = true};
-			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()));
+			TaskCompletionSource<IEnumerable<ValidationFailure>> tcs = new TaskCompletionSource<IEnumerable<ValidationFailure>>();
+			tcs.SetResult(Enumerable.Empty<ValidationFailure>());
+
+			var validator = new Mock<AsyncValidatorBase>(MockBehavior.Loose, Messages.predicate_error) {CallBase = true};
+			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
 			builder.SetValidator(validator.Object);
 
 			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
@@ -208,7 +211,7 @@ namespace FluentValidation.Tests {
 		public void Nullable_object_with_async_condition_should_not_throw()
 		{
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value));
-			builder.GreaterThanOrEqualTo(3).WhenAsync(x => TaskHelpers.FromResult(x.NullableInt != null));
+			builder.GreaterThanOrEqualTo(3).WhenAsync(async x => x.NullableInt != null);
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
