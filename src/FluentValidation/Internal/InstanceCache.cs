@@ -19,10 +19,11 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq.Expressions;
+	using System.Reflection;
 
 	/// <summary>
 	/// Instancace cache.
-	/// TODO: This isn't actually completely thread safe. It would be much better to use ConcurrentDictionary, but this isn't available in Silverlight/WP7.
 	/// </summary>
 	public class InstanceCache {
 		readonly Dictionary<Type, object> cache = new Dictionary<Type, object>();
@@ -61,4 +62,48 @@ namespace FluentValidation.Internal {
 			}
 		}
 	}
+
+	/// <summary>
+	/// Member accessor cache.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public static class AccessorCache<T>
+	{
+		private static readonly Dictionary<MemberInfo, Delegate> _cache = new Dictionary<MemberInfo, Delegate>();
+		private static readonly object _locker = new object();
+
+		/// <summary>
+		/// Gets an accessor func based on an expression
+		/// </summary>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="member">The member represented by the expression</param>
+		/// <param name="expression"></param>
+		/// <returns>Accessor func</returns>
+		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression)
+		{
+			if (member == null)
+			{
+				return null;
+			}
+
+			Delegate func;
+			if (_cache.TryGetValue(member, out func))
+			{
+				return (Func<T, TProperty>)func;
+			}
+
+			lock (_locker)
+			{
+				if (_cache.TryGetValue(member, out func))
+				{
+					return (Func<T, TProperty>)func;
+				}
+
+				func = expression.Compile();
+				_cache[member] = func;
+				return (Func<T, TProperty>)func;
+			}
+		}
+	}
+
 }
