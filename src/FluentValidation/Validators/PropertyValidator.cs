@@ -99,8 +99,8 @@ namespace FluentValidation.Validators {
 
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
-		protected virtual Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			return TaskHelpers.FromResult(IsValid(context));
+		protected virtual async Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			return IsValid(context);
 		}
 
 		/// <summary>

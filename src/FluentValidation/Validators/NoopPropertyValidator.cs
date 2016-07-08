@@ -43,8 +43,8 @@ namespace FluentValidation.Validators {
 
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
-		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			return TaskHelpers.FromResult(Validate(context));
+		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			return Validate(context);
 		}
 
 		public virtual ICollection<Func<object, object, object>> CustomMessageFormatArguments {

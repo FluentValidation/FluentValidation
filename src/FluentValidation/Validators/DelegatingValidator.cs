@@ -64,19 +64,20 @@ namespace FluentValidation.Validators {
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
-		public Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+		public async  Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			if (!condition(context.Instance))
-				return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+				return Enumerable.Empty<ValidationFailure>();
 
 			if (asyncCondition == null)
-				return InnerValidator.ValidateAsync(context, cancellation);
+				return await InnerValidator.ValidateAsync(context, cancellation);
 
-			return asyncCondition(context.Instance)
-				.Then(shouldValidate => 
-					shouldValidate
-						? InnerValidator.ValidateAsync(context, cancellation)
-						: TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()),
-					runSynchronously: true);
+			bool shouldValidate = await asyncCondition(context.Instance);
+
+			if (shouldValidate) {
+				return await InnerValidator.ValidateAsync(context, cancellation);
+			}
+
+			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {

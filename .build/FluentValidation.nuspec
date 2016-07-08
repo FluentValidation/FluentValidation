@@ -30,7 +30,9 @@
         <dependency id="System.Threading" version="4.0.11" />
         <dependency id="System.Threading.Tasks" version="4.0.11" />
       </group>
-      <group targetFramework="portable-net40+sl50+wp80+win8+wpa81" />
+      <group targetFramework="portable-net40+sl50+wp80+win8+wpa81">
+        <dependency id="Microsoft.Bcl.Async" version="1.0.168" />
+      </group>
       <group targetFramework="portable-net45+win8+wp8+wpa81">
         <dependency id="System.Collections" version="4.0.10" />
         <dependency id="System.Diagnostics.Debug" version="4.0.10" />

@@ -159,16 +159,13 @@ namespace FluentValidation.Internal {
 		{
 			// For custom rules within the DelegateValidator, we ignore ApplyConditionTo - this is only relevant to chained rules using RuleFor.
 			var originalCondition = this.asyncCondition;
-			this.asyncCondition = x => predicate(x).Then(result => {
-					if (!result)
-						return TaskHelpers.FromResult(false);
 
-					if (originalCondition == null)
-						return TaskHelpers.FromResult(true);
-
-					return originalCondition(x);
-				},
-				runSynchronously: true);
+			this.asyncCondition = async x => {
+				var result = await predicate(x);
+				if (!result) return false;
+				if (originalCondition == null) return true;
+				return await originalCondition(x);
+			};
 		}
 	}
 }

@@ -922,12 +922,11 @@ namespace FluentValidation {
 		/// <param name="validator">The validator this method is extending.</param>
 		/// <param name="instance">The instance of the type we are validating.</param>
 		/// <param name="ruleSet">Optional: a ruleset when need to validate against.</param>
-		public static Task ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance, string ruleSet = null) {
-			return validator
-				.ValidateAsync(instance, ruleSet: ruleSet)
-				.Then(r => r.IsValid
-					? TaskHelpers.Completed()
-					: TaskHelpers.FromError(new ValidationException(r.Errors)));
+		public static async Task ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance, string ruleSet = null) {
+			var result = await validator.ValidateAsync(instance, ruleSet: ruleSet);
+			if (!result.IsValid) {
+				throw new ValidationException(result.Errors);
+			}
 		}
 
 	    /// <summary>
