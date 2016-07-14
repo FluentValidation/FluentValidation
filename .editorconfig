@@ -1,0 +1,9 @@
+# top-most EditorConfig file
+root = true
+
+[*.cs]
+indent_style = tab
+
+[*.{nuspec,config}]
+indent_style = space
+indent_size = 2
