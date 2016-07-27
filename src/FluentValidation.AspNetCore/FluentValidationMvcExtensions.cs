@@ -14,6 +14,49 @@
 		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />.
 		/// </summary>
 		/// <returns>
+		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder" /> that can be used to further configure the
+		///     MVC services.
+		/// </returns>
+		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression=null) {
+			var expr = configurationExpression ?? delegate { };
+			var config = new FluentValidationMvcConfiguration();
+
+			expr(config);
+
+			if (config.AssemblyToRegister != null)
+			{
+				RegisterTypes(config.AssemblyToRegister, mvcBuilder.Services);
+			}
+
+			RegisterServices(mvcBuilder.Services, config);
+			// clear all model validation providers since fluent validation will be handling everything
+
+			mvcBuilder.AddMvcOptions(
+				options => {
+					options.ModelValidatorProviders.Clear();
+
+				});
+
+			return mvcBuilder;
+		}
+
+		private static void RegisterServices(IServiceCollection services, FluentValidationMvcConfiguration config) {
+			services.Add(ServiceDescriptor.Singleton(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
+
+			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
+				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
+				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
+				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, s.GetRequiredService<IValidatorFactory>());
+			}));
+
+
+		}
+
+		/// <summary>
+		///     Adds Fluent Validation services to the specified
+		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />.
+		/// </summary>
+		/// <returns>
 		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" /> that can be used to further configure the
 		///     MVC services.
 		/// </returns>
@@ -26,20 +69,12 @@
 		    expr(config);
 
 			if (config.AssemblyToRegister != null) {
-				RegisterTypes(config.AssemblyToRegister, mvcBuilder);
+				RegisterTypes(config.AssemblyToRegister, mvcBuilder.Services);
 			}
 
-			mvcBuilder.Services.Add(ServiceDescriptor.Singleton(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
-
-			mvcBuilder.Services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
-				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
-				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, s.GetRequiredService<IValidatorFactory>());
-			}));
-			
+			RegisterServices(mvcBuilder.Services, config);
 
 			// clear all model validation providers since fluent validation will be handling everything
-
 			mvcBuilder.AddMvcOptions(
 			    options => {
 			        options.ModelValidatorProviders.Clear();
@@ -49,7 +84,7 @@
             return mvcBuilder;
 		}
 
-		private static void RegisterTypes(Assembly assemblyToRegister, IMvcBuilder mvcBuilder) {
+		private static void RegisterTypes(Assembly assemblyToRegister, IServiceCollection services) {
 			var openGenericType = typeof(IValidator<>);
 
 			var query = from type in assemblyToRegister.GetTypes()
@@ -60,7 +95,7 @@
 						select new { matchingInterface, type };
 
 			foreach (var pair in query) {
-				mvcBuilder.Services.Add(ServiceDescriptor.Singleton(pair.matchingInterface, pair.type));
+				services.Add(ServiceDescriptor.Singleton(pair.matchingInterface, pair.type));
 			}
 		}
 	}
