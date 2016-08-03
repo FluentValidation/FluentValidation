@@ -95,7 +95,7 @@
 						select new { matchingInterface, type };
 
 			foreach (var pair in query) {
-				services.Add(ServiceDescriptor.Singleton(pair.matchingInterface, pair.type));
+				services.Add(ServiceDescriptor.Transient(pair.matchingInterface, pair.type));
 			}
 		}
 	}
