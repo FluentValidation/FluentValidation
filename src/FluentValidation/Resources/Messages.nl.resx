@@ -156,4 +156,7 @@
   <data name="exact_length_error" xml:space="preserve">
     <value>De lengte van '{PropertyName}' moet {MaxLength} karakters zijn. Er zijn {TotalLength} karakters ingevoerd.</value>
   </data>
+  <data name="enum_error" xml:space="preserve">
+    <value>'{PropertyValue}' komt niet voor in het bereik van '{PropertyName}'.</value>
+  </data>
 </root>
