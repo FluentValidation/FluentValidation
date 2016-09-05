@@ -118,7 +118,7 @@ namespace FluentValidation.Internal {
 		/// Creates a string representation of a property chain.
 		/// </summary>
 		public override string ToString() {
-			return string.Join(".", memberNames.ToArray());
+			return string.Join(ValidatorOptions.PropertyChainSeparator, memberNames.ToArray());
 		}
 
 		/// <summary>

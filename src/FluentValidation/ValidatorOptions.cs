@@ -35,6 +35,11 @@ namespace FluentValidation {
 		public static CascadeMode CascadeMode = CascadeMode.Continue;
 
 		/// <summary>
+		/// Default property chain separator
+		/// </summary>
+		public static string PropertyChainSeparator = ".";
+
+		/// <summary>
 		/// Default resource provider
 		/// </summary>
 		public static Type ResourceProviderType;
