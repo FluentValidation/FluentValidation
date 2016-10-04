@@ -8,6 +8,7 @@
 	using Microsoft.Extensions.Options;
 	using FluentValidation;
 	using System.Linq;
+	using System.Collections.Generic;
 	public static class FluentValidationMvcExtensions {
 		/// <summary>
 		///     Adds Fluent Validation services to the specified
@@ -23,9 +24,9 @@
 
 			expr(config);
 
-			if (config.AssemblyToRegister != null)
+			if (config.AssembliesToRegister.Count > 0)
 			{
-				RegisterTypes(config.AssemblyToRegister, mvcBuilder.Services);
+				RegisterTypes(config.AssembliesToRegister, mvcBuilder.Services);
 			}
 
 			RegisterServices(mvcBuilder.Services, config);
@@ -68,8 +69,8 @@
 
 		    expr(config);
 
-			if (config.AssemblyToRegister != null) {
-				RegisterTypes(config.AssemblyToRegister, mvcBuilder.Services);
+			if (config.AssembliesToRegister.Count > 0) {
+				RegisterTypes(config.AssembliesToRegister, mvcBuilder.Services);
 			}
 
 			RegisterServices(mvcBuilder.Services, config);
@@ -84,10 +85,11 @@
             return mvcBuilder;
 		}
 
-		private static void RegisterTypes(Assembly assemblyToRegister, IServiceCollection services) {
+		private static void RegisterTypes(IEnumerable<Assembly> assembliesToRegister, IServiceCollection services) {
 			var openGenericType = typeof(IValidator<>);
 
-			var query = from type in assemblyToRegister.GetTypes()
+			var query = from a in assembliesToRegister.Distinct()
+                        from type in a.GetTypes()
 						let interfaces = type.GetInterfaces()
 						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
 						let matchingInterface = genericInterfaces.FirstOrDefault()
@@ -102,7 +104,7 @@
 
     public class FluentValidationMvcConfiguration {
 	    public Type ValidatorFactoryType { get; set; }
-		internal Assembly AssemblyToRegister { get; set; }
+	    internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
 
 	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>() {
 		    return RegisterValidatorsFromAssemblyContaining(typeof(T));
@@ -114,7 +116,7 @@
 
 	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly) {
 		    ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
-		    AssemblyToRegister = assembly;
+		    AssembliesToRegister.Add(assembly);
 		    return this;
 	    }
     }
