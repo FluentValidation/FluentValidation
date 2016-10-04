@@ -16,12 +16,13 @@
 // The latest version of this file can be found at http://fluentvalidation.codeplex.com
 #endregion
 namespace FluentValidation.Tests.WebApi {
-	using System;
-	using System.Collections.Generic;
-	using Attributes;
-	using Results;
+    using System;
+    using System.Collections.Generic;
+    using Attributes;
+    using Results;
+    using System.Net.Http;
 
-	[Validator(typeof(TestModel5Validator))]
+    [Validator(typeof(TestModel5Validator))]
 	public class TestModel5 {
 		public int Id { get; set; }
 		public bool SomeBool { get; set; }
@@ -137,6 +138,31 @@ namespace FluentValidation.Tests.WebApi {
     public class TestModel9Validator : AbstractValidator<TestModel9> {
         public TestModel9Validator() {
             RuleFor(m => m.Name).NotEmpty();
+        }
+    }
+    
+    [Validator(typeof(TestModel10Validator))]
+    public class TestModel10
+    {
+        public string Host { get; set; }
+    }
+
+    public class TestModel10Validator : AbstractValidator<TestModel10>
+    {
+        public TestModel10Validator()
+        {
+            RuleFor(m => m.Host).Must((model, value, context) =>
+            {
+                if (context.ParentContext.ExtraProperties != null)
+                {
+                    object request;
+                    if (context.ParentContext.ExtraProperties.TryGetValue("request", out request))
+                    {
+                        return ((HttpRequestMessage)request).RequestUri.Host == value;
+                    }
+                }
+                return false;
+            });
         }
     }
 }

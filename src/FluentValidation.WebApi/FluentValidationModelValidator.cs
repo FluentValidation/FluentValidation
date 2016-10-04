@@ -35,20 +35,27 @@ namespace FluentValidation.WebApi
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(ModelMetadata metadata, object container) {
-			if (metadata.Model != null) {
-				var selector = ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
-				var context = new ValidationContext(metadata.Model, new PropertyChain(), selector);
-
-				var result = validator.Validate(context);
-
-				if (!result.IsValid) {
-					return ConvertValidationResultToModelValidationResults(result);
-				}
-			}
-			return Enumerable.Empty<ModelValidationResult>();
+            return Validate(metadata, container, null);
 		}
 
-		protected virtual IEnumerable<ModelValidationResult> ConvertValidationResultToModelValidationResults(ValidationResult result) {
+        public IEnumerable<ModelValidationResult> Validate(ModelMetadata metadata, object container, IDictionary<string, object> extraProperties)
+        {
+            if (metadata.Model != null)
+            {
+                var selector = ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
+                var context = new ValidationContext(metadata.Model, new PropertyChain(), selector, extraProperties);
+
+                var result = validator.Validate(context);
+
+                if (!result.IsValid)
+                {
+                    return ConvertValidationResultToModelValidationResults(result);
+                }
+            }
+            return Enumerable.Empty<ModelValidationResult>();
+        }
+
+        protected virtual IEnumerable<ModelValidationResult> ConvertValidationResultToModelValidationResults(ValidationResult result) {
 			return result.Errors.Select(x => new ModelValidationResult
 			{
 				MemberName = x.PropertyName,

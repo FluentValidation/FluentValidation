@@ -17,13 +17,14 @@
 #endregion
 
 namespace FluentValidation {
-	using Internal;
+    using Internal;
+    using System.Collections.Generic;
 
-	/// <summary>
-	/// Validation context
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public class ValidationContext<T> : ValidationContext {
+    /// <summary>
+    /// Validation context
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class ValidationContext<T> : ValidationContext {
 		/// <summary>
 		/// Creates a new validation context
 		/// </summary>
@@ -38,8 +39,8 @@ namespace FluentValidation {
 		/// <param name="instanceToValidate"></param>
 		/// <param name="propertyChain"></param>
 		/// <param name="validatorSelector"></param>
-		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector)
-			: base(instanceToValidate, propertyChain, validatorSelector) {
+		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, IDictionary<string, object> extraProperties = null)
+			: base(instanceToValidate, propertyChain, validatorSelector, extraProperties) {
 
 			InstanceToValidate = instanceToValidate;
 		}
@@ -70,8 +71,9 @@ namespace FluentValidation {
 		/// <param name="instanceToValidate"></param>
 		/// <param name="propertyChain"></param>
 		/// <param name="validatorSelector"></param>
-		public ValidationContext(object instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector) {
-			PropertyChain = new PropertyChain(propertyChain);
+		public ValidationContext(object instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, IDictionary<string, object> extraProperties = null) {
+            ExtraProperties = extraProperties;
+            PropertyChain = new PropertyChain(propertyChain);
 			InstanceToValidate = instanceToValidate;
 			Selector = validatorSelector;
 		}
@@ -92,6 +94,8 @@ namespace FluentValidation {
 		/// Whether this is a child context
 		/// </summary>
 		public virtual bool IsChildContext { get; internal set; }
+
+        public IDictionary<string, object> ExtraProperties { get; private set; }
 
 		/// <summary>
 		/// Creates a new ValidationContext based on this one
