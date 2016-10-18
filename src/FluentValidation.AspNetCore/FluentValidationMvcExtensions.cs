@@ -89,7 +89,7 @@
 			var openGenericType = typeof(IValidator<>);
 
 			var query = from a in assembliesToRegister.Distinct()
-                        from type in a.GetTypes()
+                        from type in a.GetTypes().Where(c => !(c.GetTypeInfo().IsAbstract || c.GetTypeInfo().IsGenericTypeDefinition))
 						let interfaces = type.GetInterfaces()
 						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
 						let matchingInterface = genericInterfaces.FirstOrDefault()
