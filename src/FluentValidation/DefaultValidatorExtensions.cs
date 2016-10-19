@@ -376,7 +376,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) {
 			predicate.Guard("Cannot pass a null predicate to Must.");
-			return ruleBuilder.SetValidator(new AsyncPredicateValidator((instance, property, propertyValidatorContext, cancel) => predicate((T) instance, (TProperty) property, propertyValidatorContext, cancel)));
+			return ruleBuilder.SetValidator(ValidatorOptions.AsyncValidatorFactory((instance, property, propertyValidatorContext, cancel) => predicate((T) instance, (TProperty) property, propertyValidatorContext, cancel)));
 		}
 
 		/// <summary>

@@ -6,18 +6,20 @@ namespace FluentValidation.Validators
 	using FluentValidation.Internal;
 	using FluentValidation.Resources;
 
+	public delegate Task<bool> AsyncPredicate(object instance, object property, PropertyValidatorContext propertyValidatorContext, CancellationToken cancelToken);
+
 	/// <summary>
 	/// Asynchronous custom validator
 	/// </summary>
 	public class AsyncPredicateValidator : AsyncValidatorBase
 	{
-		private readonly Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate;
+		private readonly AsyncPredicate predicate;
 
 		/// <summary>
 		/// Creates a new ASyncPredicateValidator
 		/// </summary>
 		/// <param name="predicate"></param>
-		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate)
+		public AsyncPredicateValidator(AsyncPredicate predicate)
 			: base(nameof(Messages.predicate_error), typeof(Messages))
 		{
 			predicate.Guard("A predicate must be specified.");
