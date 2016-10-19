@@ -65,7 +65,16 @@ namespace FluentValidation.Validators {
 				context.MessageFormatter
 					.AppendArgument("MinLength", Min)
 					.AppendArgument("MaxLength", Max)
-					.AppendArgument("TotalLength", length);
+					.AppendArgument("TotalLength", length)
+					.AppendArgument("MinLengthCharacter", Min == 1
+						? Messages.character_singular
+						: Messages.character_plural)
+					.AppendArgument("MaxLengthCharacter", Max == 1
+						? Messages.character_singular
+						: Messages.character_plural)
+					.AppendArgument("TotalLengthCharacter", length == 1
+						? Messages.character_singular
+						: Messages.character_plural);
 
 				return false;
 			}
