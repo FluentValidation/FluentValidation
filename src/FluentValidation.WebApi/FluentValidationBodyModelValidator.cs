@@ -170,10 +170,21 @@ namespace FluentValidation.WebApi
 			string key = null;
 
 			foreach (ModelValidator validator in validationContext.ActionContext.GetValidators(metadata)) {
-				// we use this flag to determine if we use the "patched" version or the default
-				var isFluentModelValidator = validator is FluentValidationModelValidator;
-				
-				foreach (ModelValidationResult error in validator.Validate(metadata, container)) {
+				var fluentValidator = validator as FluentValidationModelValidator;
+                IEnumerable<ModelValidationResult> errors;
+                if (fluentValidator != null)
+                {
+                    errors = fluentValidator.Validate(metadata, container, new Dictionary<string, object>
+                    {
+                        { "request", validationContext.ActionContext.Request }
+                    });
+                }
+                else
+                {
+                    errors = validator.Validate(metadata, container);
+                }
+
+                foreach (ModelValidationResult error in errors) {
 					if (key == null) {
 						key = validationContext.RootPrefix;
 
@@ -188,8 +199,8 @@ namespace FluentValidation.WebApi
 						 For fluent validation we use validationContext.ModelState.ContainsKey(key)
 						 This is to avoid missing errors in the ModelState in case the binder added errors before the validation
 						*/
-						if ((!isFluentModelValidator && !validationContext.ModelState.IsValidField(key)) ||
-							(isFluentModelValidator && validationContext.ModelState.ContainsKey(key))) {
+						if ((fluentValidator != null && !validationContext.ModelState.IsValidField(key)) ||
+							(fluentValidator == null && validationContext.ModelState.ContainsKey(key))) {
 							return false;
 						}
 					}
@@ -199,7 +210,7 @@ namespace FluentValidation.WebApi
 					 For fluent validation we use: CreatePropertyModelName(key, error.MemberName)
 					 This gets the errors group by property
 					*/
-					validationContext.ModelState.AddModelError(isFluentModelValidator ? CreatePropertyModelName(key, error.MemberName) : key, error.Message);
+					validationContext.ModelState.AddModelError(fluentValidator != null ? CreatePropertyModelName(key, error.MemberName) : key, error.Message);
 					isValid = false;
 				}
 			}

@@ -28,8 +28,11 @@ namespace FluentValidation.Tests.WebApi {
 	using FluentValidation.WebApi;
 
 	public abstract class WebApiBaseTest {
-		protected List<SimpleError> InvokeTest<T>(string input, string contentType = "application/x-www-form-urlencoded") {
-			const string baseAddress = "http://dummyname/";
+        protected const string baseHost = "dummyname";
+        protected const string baseAddress = "http://" + baseHost + "/";
+
+        protected List<SimpleError> InvokeTest<T>(string input, string contentType = "application/x-www-form-urlencoded") {
+			
 
 			string className = typeof(T).Name;
 
