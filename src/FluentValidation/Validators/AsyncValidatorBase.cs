@@ -18,7 +18,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			return IsValidAsync(context, new CancellationToken()).Result;
+			return Task.Run(() => IsValidAsync(context, new CancellationToken())).Result;
 		}
 
 		protected abstract override Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation);
