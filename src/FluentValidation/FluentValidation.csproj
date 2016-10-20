@@ -111,6 +111,7 @@
     <Compile Include="Resources\LazyStringSource.cs" />
     <Compile Include="Resources\LocalizedStringSource.cs" />
     <Compile Include="Resources\StaticStringSource.cs" />
+    <Compile Include="TaskHelpers\AsyncHelpers.cs" />
     <Compile Include="TaskHelpers\TaskHelpers.cs" />
     <Compile Include="TaskHelpers\TaskHelpersExtensions.cs" />
     <Compile Include="TestHelper\TestPropertyChain.cs" />
