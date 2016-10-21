@@ -1,13 +1,12 @@
 6.4 - 
-Core - Performance improvements for validatior instantiation
+Performance improvements for validatior instantiation
+AspNetCore support
 AspNetCore - Add AddFluentValidation extension method for IMvcCoreBuilder
 AspNetCore - Switch to transient container reigstration by default 
-
-6.4 beta 1 - 28 Jun 2016
 EnumValidator supports Flags 
 Add ValidationSeverity
 Add support for collection validators on model-level rules
-AspNetCore support
+Fixes/cleanup to RegexValidator and LengthValidator 
 
 6.2.1 - 26 Feb 2016
 Fix DependentRules not working inside a top-level call to When
