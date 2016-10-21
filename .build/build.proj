@@ -22,6 +22,10 @@
 	<Target Name="Test">
     <MSBuild Projects="test.proj" Properties="Configuration=$(Configuration)" />
 	</Target>
+	
+	<Target Name="TestMvcCore">
+    <MSBuild Projects="test.proj" Properties="Configuration=$(Configuration)" Targets="TestMvcCore" />
+	</Target>
 
   <Target Name="Deploy">
     <RemoveDir Directories="$(BuildDir)" />

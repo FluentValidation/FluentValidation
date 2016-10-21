@@ -25,5 +25,9 @@
     <exec Command="dotnet test --no-build" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.dotnet" />
     <exec Command="dotnet test --no-build" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
   </Target>
+  
+  <Target Name="TestMvcCore">
+    <exec Command="dotnet test --no-build" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
+  </Target>
 
 </Project>

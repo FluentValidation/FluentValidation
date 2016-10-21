@@ -53,28 +53,33 @@
 			return TestResult();
 		}
 
-			public ActionResult RulesetTest([CustomizeValidator(RuleSet = "Names")] RulesetTestModel test) {
-				return TestResult();
-			}
+		public ActionResult RulesetTest([CustomizeValidator(RuleSet = "Names")] RulesetTestModel test) {
+			return TestResult();
+		}
 
-			public ActionResult PropertyTest([CustomizeValidator(Properties="Surname,Forename")]PropertiesTestModel test) {
-				return TestResult();
-			}
+		public ActionResult PropertyTest([CustomizeValidator(Properties="Surname,Forename")]PropertiesTestModel test) {
+			return TestResult();
+		}
 
-			public ActionResult InterceptorTest([CustomizeValidator(Interceptor = typeof(SimplePropertyInterceptor))] PropertiesTestModel test) {
-				return TestResult();
-			}
+		public ActionResult InterceptorTest([CustomizeValidator(Interceptor = typeof(SimplePropertyInterceptor))] PropertiesTestModel test) {
+			return TestResult();
+		}
 
-			public ActionResult ClearErrorsInterceptorTest([CustomizeValidator(Interceptor = typeof(ClearErrorsInterceptor))] PropertiesTestModel test) {
-				return TestResult();
-			}
+		public ActionResult ClearErrorsInterceptorTest([CustomizeValidator(Interceptor = typeof(ClearErrorsInterceptor))] PropertiesTestModel test) {
+			return TestResult();
+		}
 
-			public ActionResult BuiltInInterceptorTest(PropertiesTestModel2 test) {
-				return TestResult();
-			}
-			public ActionResult TwoParameters([CustomizeValidator(RuleSet = "Names")]RulesetTestModel first, RulesetTestModel second) {
-				return TestResult();
-			}
+		public ActionResult BuiltInInterceptorTest(PropertiesTestModel2 test) {
+			return TestResult();
+		}
+		public ActionResult TwoParameters([CustomizeValidator(RuleSet = "Names")]RulesetTestModel first, RulesetTestModel second) {
+			return TestResult();
+		}
+
+		public ActionResult Lifecycle(LifecycleTestModel model) {
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 
