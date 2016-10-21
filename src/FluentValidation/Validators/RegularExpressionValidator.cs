@@ -26,12 +26,13 @@ namespace FluentValidation.Validators {
 
 	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
 		readonly string expression;
-		readonly RegexOptions regexOptions = RegexOptions.None;
-		readonly Func<object, string> expressionFunc;
 		readonly Func<object, Regex> regexFunc;
 
 		public RegularExpressionValidator(string expression) : base(nameof(Messages.regex_error), typeof(Messages)) {
 			this.expression = expression;
+
+			var regex = new Regex(expression);
+			this.regexFunc = x => regex;
 		}
 
 		public RegularExpressionValidator(Regex regex) : base(nameof(Messages.regex_error), typeof(Messages)) {
@@ -41,40 +42,30 @@ namespace FluentValidation.Validators {
 
 		public RegularExpressionValidator(string expression, RegexOptions options) : base(nameof(Messages.regex_error), typeof(Messages)) {
 			this.expression = expression;
-			this.regexOptions = options;
+			var regex = new Regex(expression, options);
+			this.regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(Func<object, string> expression)
+		public RegularExpressionValidator(Func<object, string> expressionFunc)
 			: base(nameof(Messages.regex_error), typeof(Messages)) {
-			this.expressionFunc = expression;
+			this.regexFunc = x => new Regex(expressionFunc(x));
 		}
 
-		public RegularExpressionValidator(Func<object, Regex> regex)
+		public RegularExpressionValidator(Func<object, Regex> regexFunc)
 			: base(nameof(Messages.regex_error), typeof(Messages)) {
-			this.regexFunc = regex;
+			this.regexFunc = regexFunc;
 		}
 
 		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options)
 			: base(nameof(Messages.regex_error), typeof(Messages)) {
-			this.expressionFunc = expression;
-			this.regexOptions = options;
+
+			this.regexFunc = x => new Regex(expression(x), options);
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			Regex regex = null;
-
-			if (regexFunc != null) {
-				regex = regexFunc(context.Instance);
-			}
-			else if (expressionFunc != null) {
-				regex = new Regex(expressionFunc(context.Instance), regexOptions);
-			}
-			else {
-				regex = new Regex(expression, regexOptions);
-			}
-
-
-			if (context.PropertyValue != null && !regex.IsMatch((string) context.PropertyValue)) {
+			var regex = regexFunc(context.Instance);
+			
+			if (regex != null && context.PropertyValue != null && !regex.IsMatch((string) context.PropertyValue)) {
 				context.MessageFormatter.AppendArgument("RegularExpression", regex.ToString());
 				return false;
 			}
