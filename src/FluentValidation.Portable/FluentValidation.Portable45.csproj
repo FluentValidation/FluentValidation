@@ -99,6 +99,9 @@
     <Compile Include="..\FluentValidation\Resources\StaticStringSource.cs">
       <Link>StaticStringSource.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\TaskHelpers\AsyncHelpers.cs">
+      <Link>AsyncHelpers.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\TaskHelpers\TaskHelpers.cs">
       <Link>TaskHelpers.cs</Link>
     </Compile>
