@@ -42,7 +42,15 @@
 		}
 
 		private static void RegisterServices(IServiceCollection services, FluentValidationMvcConfiguration config) {
-			services.Add(ServiceDescriptor.Singleton(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
+			if (config.ValidatorFactory != null) {
+				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type. 
+				var factory = config.ValidatorFactory;
+				services.Add(ServiceDescriptor.Singleton(s => factory));
+			}
+			else {
+				services.Add(ServiceDescriptor.Singleton(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
+			}
+
 
 			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
@@ -104,6 +112,7 @@
 
     public class FluentValidationMvcConfiguration {
 	    public Type ValidatorFactoryType { get; set; }
+		public IValidatorFactory ValidatorFactory { get; set; }
 	    internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
 
 	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>() {
