@@ -25,9 +25,8 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
-		string expression;
+		readonly string expression;
 		readonly RegexOptions? regexOptions;
-		
 		readonly Func<object, string> expressionFunc;
 		readonly Func<object, Regex> regexFunc;
 
@@ -72,13 +71,11 @@ namespace FluentValidation.Validators {
 				if (regexFunc != null)
 				{
 					Regex regexOrig = regexFunc(context.Instance);
-					expression = regexOrig.ToString();
 					regex = new Regex(regexOrig.ToString(), regexOptions.Value);
 				}
 				else if (expressionFunc != null)
 				{
-					expression = expressionFunc(context.Instance);
-					regex = new Regex(expression, regexOptions.Value);
+					regex = new Regex(expressionFunc(context.Instance), regexOptions.Value);
 				}
 				else
 				{
@@ -90,12 +87,10 @@ namespace FluentValidation.Validators {
 				if (regexFunc != null)
 				{
 					regex = regexFunc(context.Instance);
-					expression = regex.ToString();
 				}
 				else if (expressionFunc != null)
 				{
-					expression = expressionFunc(context.Instance);
-					regex = new Regex(expression);
+					regex = new Regex(expressionFunc(context.Instance));
 				}
 				else
 				{
