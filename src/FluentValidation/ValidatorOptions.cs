@@ -61,6 +61,16 @@ namespace FluentValidation {
 			set { propertyNameResolver = value ?? DefaultPropertyNameResolver; }
 		}
 
+		private static IValidationContextFactory validationContextFactory = new DefaultValidationContextFactory();
+		/// <summary>
+		/// Pluggable logic for the creation of a validation context
+		/// </summary>
+		public static IValidationContextFactory ValidationContextFactory
+		{
+			get { return validationContextFactory; }
+			set { validationContextFactory = value ?? validationContextFactory; }
+		}
+
 		/// <summary>
 		/// Pluggable logic for resolving display names
 		/// </summary>

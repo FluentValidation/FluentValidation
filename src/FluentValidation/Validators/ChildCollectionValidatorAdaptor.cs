@@ -83,7 +83,7 @@ namespace FluentValidation.Validators {
 
 		TResult ValidateInternal<TResult>(
 			PropertyValidatorContext context,
-			Func<IEnumerable<Tuple<ValidationContext, IValidator>>, TResult> validatorApplicator,
+			Func<IEnumerable<Tuple<IValidationContext, IValidator>>, TResult> validatorApplicator,
 			TResult emptyResult
 		) {
 			var collection = context.PropertyValue as IEnumerable;

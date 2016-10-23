@@ -23,7 +23,7 @@ namespace FluentValidation {
 	/// Validation context
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class ValidationContext<T> : ValidationContext {
+	public class ValidationContext<T> : ValidationContext, IValidationContext<T> {
 		/// <summary>
 		/// Creates a new validation context
 		/// </summary>
@@ -38,10 +38,11 @@ namespace FluentValidation {
 		/// <param name="instanceToValidate"></param>
 		/// <param name="propertyChain"></param>
 		/// <param name="validatorSelector"></param>
-		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector)
+		/// <param name="isChildContext"></param>
+		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, bool isChildContext = false)
 			: base(instanceToValidate, propertyChain, validatorSelector) {
-
 			InstanceToValidate = instanceToValidate;
+			IsChildContext = isChildContext;
 		}
 
 		/// <summary>
@@ -53,7 +54,7 @@ namespace FluentValidation {
 	/// <summary>
 	/// Validation context
 	/// </summary>
-	public class ValidationContext {
+	public class ValidationContext : IValidationContext {
 
 		/// <summary>
 		/// Creates a new validation context
@@ -91,7 +92,20 @@ namespace FluentValidation {
 		/// <summary>
 		/// Whether this is a child context
 		/// </summary>
-		public virtual bool IsChildContext { get; internal set; }
+		public bool IsChildContext { get; protected internal set; }
+
+		/// <summary>
+		/// Creates a new ValidationContext based on this one
+		/// </summary>
+		/// <param name="chain"></param>
+		/// <param name="instanceToValidate"></param>
+		/// <param name="selector"></param>
+		/// <param name="isChildContext"></param>
+		/// <returns></returns>
+		public virtual IValidationContext<TType> Clone<TType>(PropertyChain chain = null, TType instanceToValidate = default(TType), IValidatorSelector selector = null, bool? isChildContext = null)
+		{
+			return ValidatorOptions.ValidationContextFactory.Get(Equals(instanceToValidate, default(TType)) ? (TType)InstanceToValidate : instanceToValidate, chain ?? PropertyChain, selector ?? Selector, isChildContext ?? IsChildContext);
+		}
 
 		/// <summary>
 		/// Creates a new ValidationContext based on this one
@@ -100,8 +114,8 @@ namespace FluentValidation {
 		/// <param name="instanceToValidate"></param>
 		/// <param name="selector"></param>
 		/// <returns></returns>
-		public ValidationContext Clone(PropertyChain chain = null, object instanceToValidate = null, IValidatorSelector selector = null) {
-			return new ValidationContext(instanceToValidate ?? this.InstanceToValidate, chain ?? this.PropertyChain, selector ?? this.Selector);
+		public virtual IValidationContext Clone(PropertyChain chain = null, object instanceToValidate = null, IValidatorSelector selector = null) {
+			return ValidatorOptions.ValidationContextFactory.Get(instanceToValidate ?? InstanceToValidate, chain ?? PropertyChain, selector ?? Selector);
 		}
 
 		/// <summary>
@@ -109,10 +123,8 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="instanceToValidate"></param>
 		/// <returns></returns>
-		public ValidationContext CloneForChildValidator(object instanceToValidate) {
-			return new ValidationContext(instanceToValidate, PropertyChain, Selector) {
-				IsChildContext = true
-			};
+		public virtual IValidationContext CloneForChildValidator(object instanceToValidate) {
+			return ValidatorOptions.ValidationContextFactory.Get(instanceToValidate, PropertyChain, Selector, true);
 		}
 	}
 }

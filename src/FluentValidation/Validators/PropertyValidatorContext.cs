@@ -28,7 +28,7 @@ namespace FluentValidation.Validators {
 		private readonly MessageFormatter messageFormatter = new MessageFormatter();
 		private readonly Lazy<object> propertyValueContainer;
 
-		public ValidationContext ParentContext { get; private set; }
+		public IValidationContext ParentContext { get; private set; }
 		public PropertyRule Rule { get; private set; }
 		public string PropertyName { get; private set; }
 		
@@ -50,7 +50,7 @@ namespace FluentValidation.Validators {
 			get { return propertyValueContainer.Value; }
 		}
 
-		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName) {
+		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
@@ -58,7 +58,7 @@ namespace FluentValidation.Validators {
 		}
 
 
-		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue)
+		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue)
 		{
 			ParentContext = parentContext;
 			Rule = rule;

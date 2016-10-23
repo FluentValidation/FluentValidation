@@ -13,7 +13,7 @@ namespace FluentValidation.Mvc {
 		/// <param name="controllerContext">Controller Context</param>
 		/// <param name="validationContext">Validation Context</param>
 		/// <returns>Validation Context</returns>
-		ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext);
+		IValidationContext BeforeMvcValidation(ControllerContext controllerContext, IValidationContext validationContext);
 
 		/// <summary>
 		/// Invoked after MVC validation takes place which allows the result to be customized.
@@ -23,6 +23,6 @@ namespace FluentValidation.Mvc {
 		/// <param name="validationContext">Validation Context</param>
 		/// <param name="result">The result of validation.</param>
 		/// <returns>Validation Context</returns>
-		ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result);
+		ValidationResult AfterMvcValidation(ControllerContext controllerContext, IValidationContext validationContext, ValidationResult result);
 	}
 }

@@ -31,7 +31,7 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyPath">Property path (eg Customer.Address.Line1)</param>
 		/// <param name="context">Contextual information</param>
 		/// <returns>Whether or not the validator can execute.</returns>
-		public bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
+		public bool CanExecute(IValidationRule rule, string propertyPath, IValidationContext context) {
 			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0) {
 				if (IsIncludeRule(rule)) {
 					return true;

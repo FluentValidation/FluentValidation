@@ -25,7 +25,7 @@ namespace FluentValidation.Mvc {
 			if (Metadata.Model != null) {
 				var selector = customizations.ToValidatorSelector();
 				var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
-				var context = new ValidationContext(Metadata.Model, new PropertyChain(), selector);
+				var context = ValidatorOptions.ValidationContextFactory.Get(Metadata.Model, new PropertyChain(), selector);
 
 				if(interceptor != null) {
 					// Allow the user to provide a customized context

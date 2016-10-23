@@ -519,22 +519,22 @@ namespace FluentValidation.Tests.Mvc5 {
 		private class SimplePropertyInterceptor : IValidatorInterceptor {
 			readonly string[] properties = new[] { "Surname", "Forename" };
 
-			public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context) {
+			public IValidationContext BeforeMvcValidation(ControllerContext cc, IValidationContext context) {
 				var newContext = context.Clone(selector: new MemberNameValidatorSelector(properties));
 				return newContext;
 			}
 
-			public ValidationResult AfterMvcValidation(ControllerContext cc, ValidationContext context, ValidationResult result) {
+			public ValidationResult AfterMvcValidation(ControllerContext cc, IValidationContext context, ValidationResult result) {
 				return result;
 			}
 		}
 
 		private class ClearErrorsInterceptor : IValidatorInterceptor {
-			public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context) {
+			public IValidationContext BeforeMvcValidation(ControllerContext cc, IValidationContext context) {
 				return null;
 			}
 
-			public ValidationResult AfterMvcValidation(ControllerContext cc, ValidationContext context, ValidationResult result) {
+			public ValidationResult AfterMvcValidation(ControllerContext cc, IValidationContext context, ValidationResult result) {
 				return new ValidationResult();
 			}
 		}
@@ -553,11 +553,11 @@ namespace FluentValidation.Tests.Mvc5 {
 				RuleFor(x => x.Forename).NotEqual("foo");
 			}
 
-			public ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext) {
+			public IValidationContext BeforeMvcValidation(ControllerContext controllerContext, IValidationContext validationContext) {
 				return validationContext;
 			}
 
-			public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result) {
+			public ValidationResult AfterMvcValidation(ControllerContext controllerContext, IValidationContext validationContext, ValidationResult result) {
 				return new ValidationResult(); //empty errors
 			}
 		}
