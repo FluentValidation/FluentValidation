@@ -159,7 +159,7 @@ namespace FluentValidation.Tests {
 
 			var result = v.Validate(orders);
 			result.Errors.Count.ShouldEqual(4);
-			result.Errors[0].PropertyName.ShouldEqual("[0].ProductName");
+			result.Errors[0].PropertyName.ShouldEqual("x[0].ProductName");
 		}
 	
 		public class OrderValidator : AbstractValidator<Order> {
