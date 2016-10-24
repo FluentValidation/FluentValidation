@@ -80,6 +80,10 @@
 			return TestResult();
 		}
 
+		public ActionResult Collection(List<CollectionTestModel> model) {
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 

@@ -147,6 +147,20 @@ namespace FluentValidation.Tests {
 			var results = validator.Validate(person);
 			results.Errors[0].PropertyName.ShouldEqual("Orders2[0].ProductName");
 		}
+
+		[Fact]
+		public void Top_level_collection() {
+			var v = new InlineValidator<IEnumerable<Order>>();
+			v.RuleFor(x => x).SetCollectionValidator(new OrderValidator());
+			var orders = new List<Order> {
+				new Order(),
+				new Order()
+			};
+
+			var result = v.Validate(orders);
+			result.Errors.Count.ShouldEqual(4);
+			result.Errors[0].PropertyName.ShouldEqual("[0].ProductName");
+		}
 	
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {

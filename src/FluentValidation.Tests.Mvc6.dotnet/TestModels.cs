@@ -238,4 +238,15 @@
 			});
 		}
 	}
+
+	[Validator(typeof(CollectionTestModelValidator))]
+	public class CollectionTestModel {
+		public string Name { get; set; }
+	}
+
+	public class CollectionTestModelValidator : AbstractValidator<CollectionTestModel> {
+		public CollectionTestModelValidator() {
+			RuleFor(x => x.Name).NotEqual("foo");
+		}
+	}
 }

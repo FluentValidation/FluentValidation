@@ -42,9 +42,18 @@
 			}
 
 			IValidator validator = null;
+			var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
+
+			bool prependPrefix = true;
 
 			if (model != null) {
-				validator = _validatorFactory.GetValidator(model.GetType());
+				if (metadata.IsCollectionType) {
+					validator = BuildCollectionValidator(prefix, metadata);
+					prependPrefix = false;
+				}
+				else {
+					validator = _validatorFactory.GetValidator(metadata.ModelType);
+				}
 			}
 
 			if (validator == null) {
@@ -56,7 +65,6 @@
 						   _modelMetadataProvider,
 						   validationState);
 
-				var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
 				visitor.Validate(metadata, prefix, model);
 
 				return;
@@ -98,13 +106,14 @@
 		    }
 
 			foreach (var modelError in result.Errors) {
-                // See if there's already an item in the ModelState for this key. 
-			    if (actionContext.ModelState.ContainsKey(prefix + modelError.PropertyName)) {
-			        actionContext.ModelState[prefix + modelError.PropertyName].Errors.Clear();
+				string key = prependPrefix ? prefix + modelError.PropertyName : modelError.PropertyName;
+
+				// See if there's already an item in the ModelState for this key. 
+				if (actionContext.ModelState.ContainsKey(key)) {
+			        actionContext.ModelState[key].Errors.Clear();
 			    }
 
-
-				actionContext.ModelState.AddModelError(prefix + modelError.PropertyName, modelError.ErrorMessage);
+				actionContext.ModelState.AddModelError(key, modelError.ErrorMessage);
 			}
 
 
@@ -133,8 +142,20 @@
 			return attribute ?? new CustomizeValidatorAttribute();
 		}
 
-		
-			
-		
+		private IValidator BuildCollectionValidator(string prefix, ModelMetadata collectionMetadata) {
+			var elementValidator = _validatorFactory.GetValidator(collectionMetadata.ElementType);
+			if (elementValidator == null) return null;
+
+			var type = typeof(MvcCollectionValidator<>).MakeGenericType(collectionMetadata.ElementType);
+			var validator = (IValidator)Activator.CreateInstance(type, elementValidator, prefix);
+			return validator;
+		}
+
+	}
+
+	internal class MvcCollectionValidator<T> : AbstractValidator<IEnumerable<T>> {
+		public MvcCollectionValidator(IValidator<T> validator, string prefix) {
+			RuleFor(x => x).SetCollectionValidator(validator).OverridePropertyName(prefix);
+		}
 	}
 }
