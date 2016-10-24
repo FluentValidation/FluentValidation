@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation {
+	using System.Collections.Generic;
 	using Internal;
 
 	/// <summary>
@@ -54,6 +55,8 @@ namespace FluentValidation {
 	/// Validation context
 	/// </summary>
 	public class ValidationContext {
+
+		public Dictionary<string, object> RootContextData { get; private set; } = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Creates a new validation context
@@ -101,7 +104,9 @@ namespace FluentValidation {
 		/// <param name="selector"></param>
 		/// <returns></returns>
 		public ValidationContext Clone(PropertyChain chain = null, object instanceToValidate = null, IValidatorSelector selector = null) {
-			return new ValidationContext(instanceToValidate ?? this.InstanceToValidate, chain ?? this.PropertyChain, selector ?? this.Selector);
+			return new ValidationContext(instanceToValidate ?? this.InstanceToValidate, chain ?? this.PropertyChain, selector ?? this.Selector) {
+				RootContextData = RootContextData
+			};
 		}
 
 		/// <summary>
@@ -111,7 +116,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public ValidationContext CloneForChildValidator(object instanceToValidate) {
 			return new ValidationContext(instanceToValidate, PropertyChain, Selector) {
-				IsChildContext = true
+				IsChildContext = true,
+				RootContextData = RootContextData
 			};
 		}
 	}
