@@ -21,7 +21,7 @@ namespace FluentValidation.Validators {
 #if PORTABLE40
 			return IsValidAsync(context, new CancellationToken()).Result;
 #else
-			return AsyncHelpers.RunSync(() => IsValidAsync(context, new CancellationToken()));
+			return Task.Run(() => IsValidAsync(context, new CancellationToken())).GetAwaiter().GetResult();
 #endif
 		}
 
