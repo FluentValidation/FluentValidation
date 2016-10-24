@@ -135,7 +135,7 @@ namespace FluentValidation.Internal {
 		}
 
 		Task<IEnumerable<ValidationFailure>> ValidateAsyncInternal(IValidationContext context, CancellationToken cancellation) {
-			var newContext = ValidatorOptions.ValidationContextFactory.Get((T) context.InstanceToValidate, context.PropertyChain, context.Selector);
+			var newContext = context.Clone<T>(isChildContext : false);
 			return ValidateAsync(newContext, cancellation);
 		}
 
