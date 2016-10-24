@@ -66,23 +66,19 @@ namespace FluentValidation {
 			return ValidateAsync((T) instance, cancellation);
 		}
 
-		ValidationResult IValidator.Validate(ValidationContext context)
+		ValidationResult IValidator.Validate(IValidationContext context)
 		{
 			context.Guard("Cannot pass null to Validate");
 
-			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector) {
-				IsChildContext = context.IsChildContext
-			};
+			var newContext = context.Clone<T>();
 
 			return Validate(newContext);
 		}
 
-		Task<ValidationResult> IValidator.ValidateAsync(ValidationContext context, CancellationToken cancellation) {
+		Task<ValidationResult> IValidator.ValidateAsync(IValidationContext context, CancellationToken cancellation) {
 			context.Guard("Cannot pass null to Validate");
 
-			var newContext = new ValidationContext<T>((T) context.InstanceToValidate, context.PropertyChain, context.Selector) {
-				IsChildContext = context.IsChildContext
-			};
+			var newContext = context.Clone<T>();
 
 			return ValidateAsync(newContext, cancellation);
 		}
@@ -93,7 +89,7 @@ namespace FluentValidation {
 		/// <param name="instance">The object to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public virtual ValidationResult Validate(T instance) {
-			return Validate(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()));
+			return Validate(ValidatorOptions.ValidationContextFactory.Get(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()));
 		}
 
 		/// <summary>
@@ -103,7 +99,7 @@ namespace FluentValidation {
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new CancellationToken()) {
-			return ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
+			return ValidateAsync(ValidatorOptions.ValidationContextFactory.Get(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 		}
 		
 		/// <summary>
@@ -111,7 +107,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		public virtual ValidationResult Validate(ValidationContext<T> context) {
+		public virtual ValidationResult Validate(IValidationContext<T> context) {
 			context.Guard("Cannot pass null to Validate");
 			var failures = nestedValidators.SelectMany(x => x.Validate(context)).ToList();
 			return new ValidationResult(failures);
@@ -123,7 +119,7 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+		public virtual Task<ValidationResult> ValidateAsync(IValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate");
 			var failures = new List<ValidationFailure>();
 			
@@ -202,7 +198,7 @@ namespace FluentValidation {
 		/// If the validation rule succeeds, it should return null.
 		/// </summary>
 		/// <param name="customValidator">A lambda that executes custom validation rules</param>
-		public void Custom(Func<T, ValidationContext<T>, ValidationFailure> customValidator) {
+		public void Custom(Func<T, IValidationContext<T>, ValidationFailure> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom");
 			AddRule(new DelegateValidator<T>((x, ctx) => new[] { customValidator(x, ctx) }));
 		}
@@ -224,7 +220,7 @@ namespace FluentValidation {
 		/// If the validation rule succeeds, it should return null.
 		/// </summary>
 		/// <param name="customValidator">A lambda that executes custom validation rules</param>
-		public void CustomAsync(Func<T, ValidationContext<T>, CancellationToken, Task<ValidationFailure>> customValidator) {
+		public void CustomAsync(Func<T, IValidationContext<T>, CancellationToken, Task<ValidationFailure>> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom");
 			AddRule(new DelegateValidator<T>((x, ctx, cancel) => customValidator(x, ctx, cancel).Then(f => new[] {f}.AsEnumerable(), runSynchronously: true)));
 		}

@@ -807,7 +807,7 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, params Expression<Func<T, object>>[] propertyExpressions) {
 			var selector = ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(MemberNameValidatorSelector.MemberNamesFromExpressions(propertyExpressions));
-			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
+			var context = ValidatorOptions.ValidationContextFactory.Get(instance, new PropertyChain(), selector);
 			return validator.Validate(context);
 		}
 
@@ -819,7 +819,7 @@ namespace FluentValidation {
 		/// <param name="properties">The names of the properties to validate.</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public static ValidationResult Validate<T>(this IValidator<T> validator, T instance, params string[] properties) {
-			var context = new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties));
+			var context = ValidatorOptions.ValidationContextFactory.Get(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties));
 			return validator.Validate(context);
 		}
 
@@ -846,7 +846,7 @@ namespace FluentValidation {
 				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames);
 			} 
 
-			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
+			var context = ValidatorOptions.ValidationContextFactory.Get(instance, new PropertyChain(), selector);
 			return validator.Validate(context);
 		}
 
@@ -859,7 +859,7 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures</returns>
 		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, params Expression<Func<T, object>>[] propertyExpressions) {
 			var selector = ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(MemberNameValidatorSelector.MemberNamesFromExpressions(propertyExpressions));
-			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
+			var context = ValidatorOptions.ValidationContextFactory.Get(instance, new PropertyChain(), selector);
 			return validator.ValidateAsync(context);
 		}
 
@@ -871,7 +871,7 @@ namespace FluentValidation {
 		/// <param name="properties">The names of the properties to validate.</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, params string[] properties) {
-			var context = new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties));
+			var context = ValidatorOptions.ValidationContextFactory.Get(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties));
 			return validator.ValidateAsync(context);
 		}
 
@@ -898,7 +898,7 @@ namespace FluentValidation {
 				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames);
 			}
 
-			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
+			var context = ValidatorOptions.ValidationContextFactory.Get(instance, new PropertyChain(), selector);
 			return validator.ValidateAsync(context);
 		}
 

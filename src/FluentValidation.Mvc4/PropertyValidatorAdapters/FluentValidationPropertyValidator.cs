@@ -41,7 +41,7 @@ namespace FluentValidation.Mvc {
 					DisplayName = Rule == null ? null : Rule.DisplayName,
 				};
 
-				var fakeParentContext = new ValidationContext(container);
+				var fakeParentContext = ValidatorOptions.ValidationContextFactory.Get(container);
 				var context = new PropertyValidatorContext(fakeParentContext, fakeRule, Metadata.PropertyName);
 				var result = Validator.Validate(context);
 

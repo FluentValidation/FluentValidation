@@ -46,7 +46,7 @@ namespace FluentValidation.Validators {
 			);
 		}
 
-		private TResult ValidateInternal<TResult>(PropertyValidatorContext context, Func<ValidationContext, IValidator, TResult> validationApplicator, TResult emptyResult) {
+		private TResult ValidateInternal<TResult>(PropertyValidatorContext context, Func<IValidationContext, IValidator, TResult> validationApplicator, TResult emptyResult) {
 			var instanceToValidate = context.PropertyValue;
 
 			if (instanceToValidate == null) {
@@ -69,7 +69,7 @@ namespace FluentValidation.Validators {
 			return validatorProvider(context.Instance);
 		}
 
-		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
+		protected IValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
 			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate);
 			newContext.PropertyChain.Add(context.Rule.PropertyName);
 			return newContext;

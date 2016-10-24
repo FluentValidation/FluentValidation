@@ -221,7 +221,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext context) {
+		public virtual IEnumerable<ValidationFailure> Validate(IValidationContext context) {
 			string displayName = GetDisplayName();
 
 			if (PropertyName == null && displayName == null) {
@@ -279,7 +279,7 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
-		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
+		public Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation) {
 			try {
 				var displayName = GetDisplayName();
 
@@ -369,14 +369,14 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName"></param>
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
-		protected virtual Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
+		protected virtual Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
 			return validator.ValidateAsync(new PropertyValidatorContext(context, this, propertyName), cancellation);
 		}
 
 		/// <summary>
 		/// Invokes a property validator using the specified validation context.
 		/// </summary>
-		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator, string propertyName) {
+		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(IValidationContext context, IPropertyValidator validator, string propertyName) {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			return validator.Validate(propertyContext);
 		}

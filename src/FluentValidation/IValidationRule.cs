@@ -43,7 +43,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		IEnumerable<ValidationFailure> Validate(ValidationContext context);
+		IEnumerable<ValidationFailure> Validate(IValidationContext context);
 
 		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures asynchronoulsy.
@@ -51,7 +51,7 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A collection of validation failures</returns>
-		Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation);
+		Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation);
 
 		/// <summary>
 		/// Applies a condition to the rule

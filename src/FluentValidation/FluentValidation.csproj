@@ -99,6 +99,8 @@
     <Compile Include="Internal\InstanceCache.cs" />
     <Compile Include="Internal\RulesetValidatorSelector.cs" />
     <Compile Include="Internal\TrackingCollection.cs" />
+    <Compile Include="IValidationContext.cs" />
+    <Compile Include="IValidationContextFactory.cs" />
     <Compile Include="IValidationRule.cs" />
     <Compile Include="Internal\MemberNameValidatorSelector.cs" />
     <Compile Include="Internal\MessageFormatter.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="IValidatorFactory.cs" />
     <Compile Include="TestHelper\ValidationTestException.cs" />
     <Compile Include="TestHelper\ValidatorTestExtensions.cs" />
+    <Compile Include="DefaultValidationContextFactory.cs" />
     <Compile Include="ValidationException.cs" />
     <Compile Include="ValidatorFactoryBase.cs" />
     <Compile Include="ValidatorOptions.cs" />
