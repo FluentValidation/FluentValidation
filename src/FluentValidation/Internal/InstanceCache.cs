@@ -80,7 +80,6 @@ namespace FluentValidation.Internal {
 			{
 				return null;
 			}
-			System.Collections.Concurrent.ConcurrentDictionary<string, string> d;
  			Delegate func;
 
 			lock (_locker)
