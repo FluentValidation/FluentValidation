@@ -110,7 +110,9 @@ namespace FluentValidation.Internal {
 				return Enumerable.Empty<ValidationFailure>();
 			}
 
-			var newContext = new ValidationContext<T>((T) context.InstanceToValidate, context.PropertyChain, context.Selector);
+			var newContext = new ValidationContext<T>((T) context.InstanceToValidate, context.PropertyChain, context.Selector) {
+				RootContextData = context.RootContextData
+			};
 			return Validate(newContext);
 		}
 
@@ -135,7 +137,9 @@ namespace FluentValidation.Internal {
 		}
 
 		Task<IEnumerable<ValidationFailure>> ValidateAsyncInternal(ValidationContext context, CancellationToken cancellation) {
-			var newContext = new ValidationContext<T>((T) context.InstanceToValidate, context.PropertyChain, context.Selector);
+			var newContext = new ValidationContext<T>((T) context.InstanceToValidate, context.PropertyChain, context.Selector) {
+				RootContextData = context.RootContextData
+			};
 			return ValidateAsync(newContext, cancellation);
 		}
 

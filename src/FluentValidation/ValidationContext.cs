@@ -56,7 +56,7 @@ namespace FluentValidation {
 	/// </summary>
 	public class ValidationContext {
 
-		public Dictionary<string, object> RootContextData { get; private set; } = new Dictionary<string, object>();
+		public Dictionary<string, object> RootContextData { get; internal set; } = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Creates a new validation context

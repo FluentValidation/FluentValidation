@@ -71,7 +71,8 @@ namespace FluentValidation {
 			context.Guard("Cannot pass null to Validate");
 
 			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector) {
-				IsChildContext = context.IsChildContext
+				IsChildContext = context.IsChildContext,
+				RootContextData = context.RootContextData
 			};
 
 			return Validate(newContext);
@@ -81,7 +82,8 @@ namespace FluentValidation {
 			context.Guard("Cannot pass null to Validate");
 
 			var newContext = new ValidationContext<T>((T) context.InstanceToValidate, context.PropertyChain, context.Selector) {
-				IsChildContext = context.IsChildContext
+				IsChildContext = context.IsChildContext,
+				RootContextData = context.RootContextData
 			};
 
 			return ValidateAsync(newContext, cancellation);
