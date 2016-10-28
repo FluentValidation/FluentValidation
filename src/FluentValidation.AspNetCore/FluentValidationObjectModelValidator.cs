@@ -14,6 +14,7 @@
 
 	public class FluentValidationObjectModelValidator : IObjectModelValidator {
 	    public const string InvalidValuePlaceholder = "__FV_InvalidValue";
+		public const string ModelKeyPrefix = "__FV_Prefix_";
 
 		private readonly IValidatorFactory _validatorFactory;
 		private IModelMetadataProvider _modelMetadataProvider;
@@ -106,7 +107,14 @@
 		    }
 
 			foreach (var modelError in result.Errors) {
-				string key = prependPrefix ? prefix + modelError.PropertyName : modelError.PropertyName;
+				string key = modelError.PropertyName;
+
+				if (prependPrefix) {
+					key = prefix + key;
+				}
+				else {
+					key = key.Replace(ModelKeyPrefix, string.Empty);
+				}
 
 				// See if there's already an item in the ModelState for this key. 
 				if (actionContext.ModelState.ContainsKey(key)) {
@@ -155,6 +163,7 @@
 
 	internal class MvcCollectionValidator<T> : AbstractValidator<IEnumerable<T>> {
 		public MvcCollectionValidator(IValidator<T> validator, string prefix) {
+			if (string.IsNullOrEmpty(prefix)) prefix = FluentValidationObjectModelValidator.ModelKeyPrefix;
 			RuleFor(x => x).SetCollectionValidator(validator).OverridePropertyName(prefix);
 		}
 	}
