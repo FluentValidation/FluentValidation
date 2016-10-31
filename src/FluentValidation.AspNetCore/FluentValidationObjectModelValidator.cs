@@ -10,7 +10,7 @@
 	using Microsoft.AspNetCore.Mvc.Controllers;
 	using FluentValidation;
 
-	//TODO: Need support for CustomizeValidatorAttribute and client-side
+	//TODO: Need support for client-side
 
 	public class FluentValidationObjectModelValidator : IObjectModelValidator {
 	    public const string InvalidValuePlaceholder = "__FV_InvalidValue";
@@ -26,6 +26,7 @@
 		/// </summary>
 		public FluentValidationObjectModelValidator(IModelMetadataProvider modelMetadataProvider, IList<IModelValidatorProvider> validatorProviders,
 			IValidatorFactory validatorFactory) {
+
 			if (modelMetadataProvider == null) {
 				throw new ArgumentNullException(nameof(modelMetadataProvider));
 			}
@@ -126,12 +127,6 @@
 
 				actionContext.ModelState.AddModelError(key, modelError.ErrorMessage);
 			}
-
-
-			// Otherwise:
-			/*
-				
-						 */
 		}
 
 		private CustomizeValidatorAttribute GetCustomizations(ActionContext actionContext, Type type, string prefix) {
