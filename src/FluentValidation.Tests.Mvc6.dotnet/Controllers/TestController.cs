@@ -84,6 +84,10 @@
 			return TestResult();
 		}
 
+		public ActionResult MultipleErrors(MultipleErrorsModel model) {
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 

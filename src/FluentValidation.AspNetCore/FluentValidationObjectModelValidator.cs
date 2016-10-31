@@ -106,6 +106,8 @@
 		        prefix = prefix + ".";
 		    }
 
+			var clearedErrorsState = new HashSet<string>();
+
 			foreach (var modelError in result.Errors) {
 				string key = modelError.PropertyName;
 
@@ -117,9 +119,10 @@
 				}
 
 				// See if there's already an item in the ModelState for this key. 
-				if (actionContext.ModelState.ContainsKey(key)) {
+				if (actionContext.ModelState.ContainsKey(key) && !clearedErrorsState.Contains(key)) {
 			        actionContext.ModelState[key].Errors.Clear();
-			    }
+					clearedErrorsState.Add(key);
+				}
 
 				actionContext.ModelState.AddModelError(key, modelError.ErrorMessage);
 			}
