@@ -14,6 +14,7 @@
 
 	public class FluentValidationObjectModelValidator : IObjectModelValidator {
 	    public const string InvalidValuePlaceholder = "__FV_InvalidValue";
+		public const string ModelKeyPrefix = "__FV_Prefix_";
 
 		private readonly IValidatorFactory _validatorFactory;
 		private IModelMetadataProvider _modelMetadataProvider;
@@ -42,9 +43,18 @@
 			}
 
 			IValidator validator = null;
+			var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
+
+			bool prependPrefix = true;
 
 			if (model != null) {
-				validator = _validatorFactory.GetValidator(model.GetType());
+				if (metadata.IsCollectionType) {
+					validator = BuildCollectionValidator(prefix, metadata);
+					prependPrefix = false;
+				}
+				else {
+					validator = _validatorFactory.GetValidator(metadata.ModelType);
+				}
 			}
 
 			if (validator == null) {
@@ -56,7 +66,6 @@
 						   _modelMetadataProvider,
 						   validationState);
 
-				var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
 				visitor.Validate(metadata, prefix, model);
 
 				return;
@@ -98,13 +107,21 @@
 		    }
 
 			foreach (var modelError in result.Errors) {
-                // See if there's already an item in the ModelState for this key. 
-			    if (actionContext.ModelState.ContainsKey(prefix + modelError.PropertyName)) {
-			        actionContext.ModelState[prefix + modelError.PropertyName].Errors.Clear();
+				string key = modelError.PropertyName;
+
+				if (prependPrefix) {
+					key = prefix + key;
+				}
+				else {
+					key = key.Replace(ModelKeyPrefix, string.Empty);
+				}
+
+				// See if there's already an item in the ModelState for this key. 
+				if (actionContext.ModelState.ContainsKey(key)) {
+			        actionContext.ModelState[key].Errors.Clear();
 			    }
 
-
-				actionContext.ModelState.AddModelError(prefix + modelError.PropertyName, modelError.ErrorMessage);
+				actionContext.ModelState.AddModelError(key, modelError.ErrorMessage);
 			}
 
 
@@ -133,8 +150,21 @@
 			return attribute ?? new CustomizeValidatorAttribute();
 		}
 
-		
-			
-		
+		private IValidator BuildCollectionValidator(string prefix, ModelMetadata collectionMetadata) {
+			var elementValidator = _validatorFactory.GetValidator(collectionMetadata.ElementType);
+			if (elementValidator == null) return null;
+
+			var type = typeof(MvcCollectionValidator<>).MakeGenericType(collectionMetadata.ElementType);
+			var validator = (IValidator)Activator.CreateInstance(type, elementValidator, prefix);
+			return validator;
+		}
+
+	}
+
+	internal class MvcCollectionValidator<T> : AbstractValidator<IEnumerable<T>> {
+		public MvcCollectionValidator(IValidator<T> validator, string prefix) {
+			if (string.IsNullOrEmpty(prefix)) prefix = FluentValidationObjectModelValidator.ModelKeyPrefix;
+			RuleFor(x => x).SetCollectionValidator(validator).OverridePropertyName(prefix);
+		}
 	}
 }

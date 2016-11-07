@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
+	using System.Text.RegularExpressions;
 	using System.Threading;
 	using Xunit;
 	using Validators;
@@ -141,6 +142,35 @@ namespace FluentValidation.Tests {
 
 			var result = v.Validate(new Person { Forename = "", AnotherRegex = new System.Text.RegularExpressions.Regex(@"^\w\d$") });
 			result.Errors.Single().ErrorMessage.ShouldEqual(@"test ^\w\d$");
+		}
+
+
+		[Fact]
+		public void Uses_regex_object()
+		{
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Matches(new Regex(@"^\w\d$")));
+			string input = "S3";
+			var result = validator.Validate(new Person { Surname = input });
+			result.IsValid.ShouldBeTrue();
+		}
+
+
+		[Fact]
+		public void Uses_lazily_loaded_expression() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Matches(x => @"^\w\d$"));
+			string input = "S3";
+			var result = validator.Validate(new Person { Surname = input });
+			result.IsValid.ShouldBeTrue();
+		}
+
+
+		[Fact]
+		public void Uses_lazily_loaded_expression_with_options()
+		{
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Matches(@"^\w\d$", RegexOptions.Compiled));
+			string input = "S3";
+			var result = validator.Validate(new Person { Surname = input });
+			result.IsValid.ShouldBeTrue();
 		}
 	}
 }

@@ -228,4 +228,25 @@
         }
     }
 
+	// No attribute- only resolved using service provider. 
+	public class LifecycleTestModel {  }
+
+	public class LifecycleTestValidator : AbstractValidator<LifecycleTestModel> {
+		public LifecycleTestValidator() {
+			Custom(x => {
+				return new ValidationFailure("Foo", GetHashCode().ToString());
+			});
+		}
+	}
+
+	[Validator(typeof(CollectionTestModelValidator))]
+	public class CollectionTestModel {
+		public string Name { get; set; }
+	}
+
+	public class CollectionTestModelValidator : AbstractValidator<CollectionTestModel> {
+		public CollectionTestModelValidator() {
+			RuleFor(x => x.Name).NotEqual("foo");
+		}
+	}
 }

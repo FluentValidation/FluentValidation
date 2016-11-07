@@ -18,6 +18,13 @@
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
 			if(!ShouldGenerateClientSideRules()) yield break;
 
+			// Don't generate clientside rules if min/max are lazily loaded. 
+			var lengthVal = LengthValidator as LengthValidator;
+
+			if (lengthVal != null && lengthVal.MaxFunc != null && lengthVal.MinFunc != null) {
+				yield break;
+			}
+
 			var formatter = new MessageFormatter()
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("MinLength", LengthValidator.Min)

@@ -47,10 +47,6 @@ namespace FluentValidation.Internal {
 		public object GetOrCreateInstance(Type type, Func<Type, object> factory) {
 			object existingInstance;
 
-			if(cache.TryGetValue(type, out existingInstance)) {
-				return existingInstance;
-			}
-
 			lock(locker) {
 				if (cache.TryGetValue(type, out existingInstance)) {
 					return existingInstance;
@@ -79,18 +75,12 @@ namespace FluentValidation.Internal {
 		/// <param name="member">The member represented by the expression</param>
 		/// <param name="expression"></param>
 		/// <returns>Accessor func</returns>
-		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression)
-		{
+		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {
 			if (member == null)
 			{
 				return null;
 			}
-
-			Delegate func;
-			if (_cache.TryGetValue(member, out func))
-			{
-				return (Func<T, TProperty>)func;
-			}
+ 			Delegate func;
 
 			lock (_locker)
 			{

@@ -53,18 +53,21 @@ namespace FluentValidation.Validators {
 		protected override bool IsValid(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) return true;
 
+			var min = Min;
+			var max = Max;
+
 			if (MaxFunc != null && MinFunc != null)
 			{
-				Max = MaxFunc(context.Instance);
-				Min = MinFunc(context.Instance);
+				max = MaxFunc(context.Instance);
+				min = MinFunc(context.Instance);
 			}
 
 			int length = context.PropertyValue.ToString().Length;
 
-			if (length < Min || (length > Max && Max != -1)) {
+			if (length < min || (length > max && max != -1)) {
 				context.MessageFormatter
-					.AppendArgument("MinLength", Min)
-					.AppendArgument("MaxLength", Max)
+					.AppendArgument("MinLength", min)
+					.AppendArgument("MaxLength", max)
 					.AppendArgument("TotalLength", length);
 
 				return false;

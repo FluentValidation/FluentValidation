@@ -104,9 +104,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccessorCacheTests.cs" />
     <Compile Include="AssemblyScannerTester.cs" />
     <Compile Include="AttributedValidatorFactoryTester.cs" />
-    <Compile Include="CacheBenchmark.cs" />
     <Compile Include="CascadingFailuresTester.cs" />
     <Compile Include="ChainedValidationTester.cs" />
     <Compile Include="ChainingValidatorsTester.cs" />

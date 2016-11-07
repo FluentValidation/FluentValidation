@@ -33,6 +33,22 @@
 			result.GetError("test.Name").ShouldEqual("Validation Failed");
 		}
 
+		[Fact]
+		public async Task Validators_should_be_transient() {
+			var result = await GetErrors("Lifecycle", new FormData());
+			var hashCode1 = result.GetError("Foo");
+
+			var result2 = await GetErrors("Lifecycle", new FormData());
+			var hashCode2 = result2.GetError("Foo");
+
+			Assert.NotNull(hashCode1);
+			Assert.NotNull(hashCode2);
+			Assert.NotEqual("", hashCode1);
+			Assert.NotEqual("", hashCode2);
+
+			Assert.NotEqual(hashCode1, hashCode2);
+		}
+
 		private async Task<List<SimpleError>> GetErrors(string action, Dictionary<string, string> form)
 		{
 

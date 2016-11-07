@@ -28,7 +28,8 @@ namespace FluentValidation.Results {
 	[Serializable]
 #endif
 	public class ValidationResult {
-		private readonly List<ValidationFailure> errors = new List<ValidationFailure>();
+		private readonly IList<ValidationFailure> errors;
+
 		/// <summary>
 		/// Whether validation succeeded
 		/// </summary>
@@ -43,14 +44,18 @@ namespace FluentValidation.Results {
 		/// Creates a new validationResult
 		/// </summary>
 		public ValidationResult() {
+			this.errors = new List<ValidationFailure>();
 		}
 
 		/// <summary>
 		/// Creates a new ValidationResult from a collection of failures
 		/// </summary>
-		/// <param name="failures"></param>
+		/// <param name="failures">List of <see cref="ValidationFailure"/> which is later available through <see cref="Errors"/>. This list get's copied.</param>
+		/// <remarks>
+		/// Every caller is responsible for not adding <c>null</c> to the list.
+		/// </remarks>
 		public ValidationResult(IEnumerable<ValidationFailure> failures) {
-			errors.AddRange(failures.Where(failure => failure != null));
+			errors = failures.Where(failure => failure != null).ToList();
 		}
 	}
 }

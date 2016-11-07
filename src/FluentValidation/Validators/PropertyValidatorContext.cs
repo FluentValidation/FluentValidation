@@ -25,7 +25,7 @@ namespace FluentValidation.Validators {
 	using Internal;
 
 	public class PropertyValidatorContext {
-		private readonly MessageFormatter messageFormatter = new MessageFormatter();
+		private MessageFormatter messageFormatter;
 		private readonly Lazy<object> propertyValueContainer;
 
 		public ValidationContext ParentContext { get; private set; }
@@ -40,8 +40,9 @@ namespace FluentValidation.Validators {
 			get { return ParentContext.InstanceToValidate; }
 		}
 
-		public MessageFormatter MessageFormatter {
-			get { return messageFormatter; }
+		public MessageFormatter MessageFormatter
+		{
+			get { return messageFormatter ?? (messageFormatter = new MessageFormatter()); }
 		}
 
 		//Lazily load the property value
@@ -56,7 +57,6 @@ namespace FluentValidation.Validators {
 			PropertyName = propertyName;
 			propertyValueContainer = new Lazy<object>( () => rule.PropertyFunc(parentContext.InstanceToValidate));
 		}
-
 
 		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue)
 		{

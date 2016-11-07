@@ -319,7 +319,33 @@
             result.IsValidField("second.Surname").ShouldBeTrue();
         }
 
+		[Fact]
+		public async Task Validates_collection() {
+			var form = new FormData {
+				{"model[0].Name", "foo"},
+				{"model[1].Name", "foo"},
+			};
+
+			var result = await GetErrors("Collection", form);
+
+			result.Count.ShouldEqual(2);
+			result[0].Name.ShouldEqual("model[0].Name");
+		}
+
+		[Fact]
+		public async Task Validates_collection_without_prefix() {
+			var form = new FormData {
+				{"[0].Name", "foo"},
+				{"[1].Name", "foo"},
+			};
+
+			var result = await GetErrors("Collection", form);
+
+			result.Count.ShouldEqual(2);
+			result[0].Name.ShouldEqual("[0].Name");
+		}
 
 
-    }
+
+	}
 }
