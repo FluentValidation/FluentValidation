@@ -346,6 +346,15 @@
 		}
 
 
+		[Fact]
+		public async Task Returns_multiple_errors_for_same_property() {
+			var form = new FormData() {
+				{"model.Name", "baz"}
+			};
 
+			var result = await GetErrors("MultipleErrors",form);
+
+			result.Count.ShouldEqual(2);
+		}
 	}
 }

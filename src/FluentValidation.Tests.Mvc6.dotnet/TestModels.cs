@@ -249,4 +249,15 @@
 			RuleFor(x => x.Name).NotEqual("foo");
 		}
 	}
+
+	[Validator(typeof(MultipleErrorsModelValidator))]
+	public class MultipleErrorsModel {
+		public string Name { get; set; }
+	}
+
+	public class MultipleErrorsModelValidator : AbstractValidator<MultipleErrorsModel> {
+		public MultipleErrorsModelValidator() {
+			RuleFor(x => x.Name).Equal("foo").Equal("bar");
+		}
+	}
 }
