@@ -19,12 +19,10 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
-	using System.Text.RegularExpressions;
+	using System.Text;
 	using System.Threading.Tasks;
-	using Validators;
 
 	/// <summary>
 	/// Useful extensions
@@ -85,16 +83,34 @@ namespace FluentValidation.Internal {
 			return toUnwrap as MemberExpression;
 		}
 
-
 		/// <summary>
 		/// Splits pascal case, so "FooBar" would become "Foo Bar"
 		/// </summary>
-		public static string SplitPascalCase(this string input) {
-			if (string.IsNullOrEmpty(input)) {
+		public static string SplitPascalCase(this string input)
+		{
+			if (string.IsNullOrEmpty(input))
+			{
 				return input;
 			}
-			return Regex.Replace(input, "([A-Z])", " $1").Trim();
+
+			var retVal = new StringBuilder(input.Length + 5);
+
+			foreach (var currentChar in input)
+			{
+				if (char.IsUpper(currentChar))
+				{
+					retVal.Append(' ');
+					retVal.Append(currentChar);					
+				}
+				else
+				{
+					retVal.Append(currentChar);
+				}
+			}
+
+			return retVal.ToString().Trim();
 		}
+
 		/// <summary>
 		/// Helper method to construct a constant expression from a constant.
 		/// </summary>

@@ -31,7 +31,7 @@ namespace FluentValidation.Tests {
 	    }
 
 		public void Dispose() {
-			ValidatorOptions.ResourceProviderType = null;
+			CultureScope.SetDefaultCulture();
 		}
 
 		[Fact]

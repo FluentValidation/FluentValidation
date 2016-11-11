@@ -19,7 +19,6 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
 
@@ -27,7 +26,7 @@ namespace FluentValidation.Internal {
 	/// Represents a chain of properties
 	/// </summary>
 	public class PropertyChain {
-		readonly List<string> memberNames = new List<string>();
+		readonly List<string> memberNames = new List<string>(2);
 
 		/// <summary>
 		/// Creates a new PropertyChain.
@@ -39,7 +38,8 @@ namespace FluentValidation.Internal {
 		/// Creates a new PropertyChain based on another.
 		/// </summary>
 		public PropertyChain(PropertyChain parent) {
-			if(parent != null) {
+			if(parent != null
+				&& parent.memberNames.Count > 0) {
 				memberNames.AddRange(parent.memberNames);				
 			}
 		}
@@ -118,7 +118,15 @@ namespace FluentValidation.Internal {
 		/// Creates a string representation of a property chain.
 		/// </summary>
 		public override string ToString() {
-			return string.Join(ValidatorOptions.PropertyChainSeparator, memberNames.ToArray());
+			// Performance: Calling string.Join causes much overhead when it's not needed.
+			switch (memberNames.Count) {
+				case 0:
+					return string.Empty;
+				case 1:
+					return memberNames[0];
+				default:
+					return string.Join(ValidatorOptions.PropertyChainSeparator, memberNames);
+			}			
 		}
 
 		/// <summary>
@@ -136,6 +144,10 @@ namespace FluentValidation.Internal {
 		/// Builds a property path.
 		/// </summary>
 		public string BuildPropertyName(string propertyName) {
+			if (memberNames.Count == 0) {
+				return propertyName;
+			}
+
 			var chain = new PropertyChain(this);
 			chain.Add(propertyName);
 			return chain.ToString();
