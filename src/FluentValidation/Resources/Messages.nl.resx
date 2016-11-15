@@ -159,4 +159,22 @@
   <data name="enum_error" xml:space="preserve">
     <value>'{PropertyValue}' komt niet voor in het bereik van '{PropertyName}'.</value>
   </data>
+  <data name="CreditCardError" xml:space="preserve">
+    <value>'{PropertyName}' is geen geldig credit card nummer.</value>
+  </data>
+  <data name="empty_error" xml:space="preserve">
+    <value>'{PropertyName}' hoort leegt te zijn.</value>
+  </data>
+  <data name="exclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' moet na {From} komen en voor {To} liggen. Je hebt ingevuld {Value}.</value>
+  </data>
+  <data name="inclusivebetween_error" xml:space="preserve">
+    <value>'{PropertyName}' moet tussen {From} en {To} liggen. Je hebt ingevuld {Value}.</value>
+  </data>
+  <data name="null_error" xml:space="preserve">
+    <value>'{PropertyName}' moet leeg zijn.</value>
+  </data>
+  <data name="scale_precision_error" xml:space="preserve">
+    <value>'{PropertyName}' mag in totaal niet meer dan {expectedPrecision} decimalen nauwkeurig zijn, met een grote van {expectedScale} gehele getallen. Er zijn {digits} decimalen en een grote van {actualScale} gehele getallen gevonden.</value>
+  </data>
 </root>
