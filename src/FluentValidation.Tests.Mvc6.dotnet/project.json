@@ -14,12 +14,13 @@
         }
     },
 
-  "dependencies": {
-    "FluentValidation.AspNetCore": "1.0.0-*",
-    "Microsoft.AspNetCore.Mvc": "1.0.0",
-    "Microsoft.AspNetCore.TestHost": "1.0.0",
-    "xunit": "2.1.0"
-  },
+    "dependencies": {
+        "FluentValidation.AspNetCore": "1.0.0-*",
+        "Microsoft.AspNetCore.Mvc": "1.1.0",
+        "Microsoft.AspNetCore.TestHost": "1.1.0",
+        "xunit": "2.2.0-beta4-build3444",
+        "Microsoft.DotNet.InternalAbstractions": "1.0.0"
+    },
   "testRunner": "xunit",
     "frameworks": {
         "netcoreapp1.0": {
