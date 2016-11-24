@@ -82,15 +82,16 @@ namespace FluentValidation.WebApi
 
 		internal static bool IsSimpleType(Type type)
 		{
-			return type.IsPrimitive ||
-				   type.Equals(typeof(string)) ||
+            return type.IsPrimitive ||
+                   (type.IsArray && type.GetElementType().IsPrimitive) ||
+                   type.Equals(typeof(string)) ||
 				   type.Equals(typeof(DateTime)) ||
 				   type.Equals(typeof(Decimal)) ||
 				   type.Equals(typeof(Guid)) ||
 				   type.Equals(typeof(DateTimeOffset)) ||
 				   type.Equals(typeof(TimeSpan));
-		}
-
+        }
+		
 		private bool ValidateNodeAndChildren(ModelMetadata metadata, ValidationContext validationContext, object container) {
 			object model = metadata.Model;
 			bool isValid = true;
