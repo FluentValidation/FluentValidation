@@ -31,8 +31,8 @@ namespace FluentValidation.Tests {
 		private const int value = 1;
 
 		public LessThanOrEqualToValidatorTester() {
+			CultureScope.SetDefaultCulture();
 			validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThanOrEqualTo(value));
-            CultureScope.SetDefaultCulture();
         }
 
 		[Fact]
