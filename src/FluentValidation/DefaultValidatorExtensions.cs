@@ -1002,5 +1002,16 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> IsInEnum<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 			return ruleBuilder.SetValidator(new EnumValidator(typeof(TProperty)));
 		}
+        /// <summary>
+        /// Defines a IBAN validator for the current rule builder that ensures that the specified string is a valid IBAN account number.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
+        /// <param name="ruleBuilder">The rule builder.</param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, TProperty> IsIBAN<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+        {
+            return ruleBuilder.SetValidator(new IbanValidator());
+        }
     }
 }
