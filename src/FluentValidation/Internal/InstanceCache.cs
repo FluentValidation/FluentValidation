@@ -65,7 +65,7 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="T"></typeparam>
 	public static class AccessorCache<T>
 	{
-		private static readonly Dictionary<MemberInfo, Delegate> _cache = new Dictionary<MemberInfo, Delegate>();
+		private static readonly Dictionary<Key, Delegate> _cache = new Dictionary<Key, Delegate>();
 		private static readonly object _locker = new object();
 
 		/// <summary>
@@ -82,18 +82,46 @@ namespace FluentValidation.Internal {
 			}
  			Delegate func;
 
-			lock (_locker)
-			{
-				if (_cache.TryGetValue(member, out func))
+			lock (_locker) {
+                var key = new Key(member, expression);
+				if (_cache.TryGetValue(key, out func))
 				{
 					return (Func<T, TProperty>)func;
 				}
 
 				func = expression.Compile();
-				_cache[member] = func;
+				_cache[key] = func;
 				return (Func<T, TProperty>)func;
 			}
 		}
+
+	    private class Key {
+	        private readonly MemberInfo memberInfo;
+	        private readonly string expressionDebugView;
+
+	        public Key(MemberInfo member, Expression expression) {
+	            memberInfo = member;
+	            expressionDebugView = expression.ToString();
+	        }
+
+	        protected bool Equals(Key other) {
+	            return Equals(memberInfo, other.memberInfo) && string.Equals(expressionDebugView, other.expressionDebugView);
+	        }
+
+	        public override bool Equals(object obj) {
+	            if (ReferenceEquals(null, obj)) return false;
+	            if (ReferenceEquals(this, obj)) return true;
+	            if (obj.GetType() != this.GetType()) return false;
+	            return Equals((Key) obj);
+	        }
+
+	        public override int GetHashCode() {
+	            unchecked {
+	                return ((memberInfo != null ? memberInfo.GetHashCode() : 0)*397) ^ (expressionDebugView != null ? expressionDebugView.GetHashCode() : 0);
+	            }
+	        }
+	    }
+
 	}
 
 }

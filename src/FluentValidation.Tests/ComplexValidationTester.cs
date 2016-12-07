@@ -133,15 +133,46 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		//[Fact]
-		//public void Should_not_infinite_loop() {
-		//	var val = new InfiniteLoopValidator();
-		//	var target = new InfiniteLoop();
-		//	target.Property = new InfiniteLoop2 {Property = target};
-		//	val.Validate(target);
-		//}
+        [Fact]
+        public void Can_directly_validate_multiple_fields_of_same_type()
+        {
+            var sut = new TestObjectValidator();
+            var testObject = new TestObject {
+                Foo2 = new TestDetailObject() { Surname = "Bar" }
+            };
+            
+            //Should not throw
+            sut.Validate(testObject);
+        }
 
-		private static string PointlessMethod() { return null; }
+        public class TestObject
+        {
+            public TestDetailObject Foo1 { get; set; }
+            public TestDetailObject Foo2 { get; set; }
+        }
+
+	    public class TestDetailObject {
+	        public string Surname { get; set; }
+	    }
+
+        public class TestObjectValidator : AbstractValidator<TestObject>
+        {
+            public TestObjectValidator()
+            {
+                RuleFor(x => x.Foo1.Surname).NotEmpty().When(x => x.Foo1 != null);
+                RuleFor(x => x.Foo2.Surname).NotEmpty();
+            }
+        }
+
+        //[Fact]
+        //public void Should_not_infinite_loop() {
+        //	var val = new InfiniteLoopValidator();
+        //	var target = new InfiniteLoop();
+        //	target.Property = new InfiniteLoop2 {Property = target};
+        //	val.Validate(target);
+        //}
+
+        private static string PointlessMethod() { return null; }
 
 		public class PersonValidator : AbstractValidator<Person> {
 			public PersonValidator() {
