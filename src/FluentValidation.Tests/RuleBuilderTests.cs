@@ -184,7 +184,7 @@ namespace FluentValidation.Tests {
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
 
 		}
-
+#if !PORTABLE40
 		[Fact]
 		public async Task TestAsyncWithDependentRules_SyncEntry()
 		{
@@ -226,10 +226,11 @@ namespace FluentValidation.Tests {
 			Assert.True(result.Errors.Count(x => x.PropertyName == "Address") == 1, "Address");
 			Assert.True(result.Errors.Count(x => x.PropertyName == "Age") == 1, "Age");
 		}
+#endif
        
 #endif
 
-	[Fact]
+		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
 			builder.Rule.GetDisplayName().ShouldEqual("Date Of Birth");

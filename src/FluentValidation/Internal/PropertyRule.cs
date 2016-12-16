@@ -340,7 +340,7 @@ namespace FluentValidation.Internal {
 					}
 					else
 					{
-						RunDependentRules(failures, context, cancellation);
+						RunDependentRulesAsync(failures, context, cancellation);
 					}
 
 					return TaskHelpers.FromResult(failures.AsEnumerable());
@@ -366,7 +366,7 @@ namespace FluentValidation.Internal {
 						}
 						else
 						{
-							RunDependentRules(failures, context, cancellation);
+							RunDependentRulesAsync(failures, context, cancellation);
 						}
 
 						return failures.AsEnumerable();
@@ -379,7 +379,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		private void RunDependentRules(List<ValidationFailure> failures, ValidationContext context, CancellationToken cancellation)
+		private void RunDependentRulesAsync(List<ValidationFailure> failures, ValidationContext context, CancellationToken cancellation)
 		{
 			foreach (var dependentRule in DependentRules)
 			{
