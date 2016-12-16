@@ -7,6 +7,7 @@ EnumValidator supports Flags
 Add ValidationSeverity
 Add support for collection validators on model-level rules
 Fixes/cleanup to RegexValidator and LengthValidator 
+Async validators should run dependent rules
 
 6.2.1 - 26 Feb 2016
 Fix DependentRules not working inside a top-level call to When
