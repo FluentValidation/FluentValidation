@@ -322,13 +322,25 @@ namespace FluentValidation.Internal {
 					}
 				}
 
-				var asyncValidators = validators.Where(v => v.IsAsync).ToList();
+				//if StopOnFirstFailure triggered then we exit
+				if (fastExit && failures.Count > 0) {
+					// Callback if there has been at least one property validator failed.
+					OnFailure(context.InstanceToValidate);
 
-				//if there's no async validators or StopOnFirstFailure triggered then we exit
-				if (asyncValidators.Count == 0 || fastExit) {
+					return TaskHelpers.FromResult(failures.AsEnumerable());
+				}
+
+				var asyncValidators = validators.Where(v => v.IsAsync).ToList();
+                
+				// if there's no async validators then we exit
+				if (asyncValidators.Count == 0) {
 					if (failures.Count > 0) {
 						// Callback if there has been at least one property validator failed.
 						OnFailure(context.InstanceToValidate);
+					}
+					else
+					{
+						RunDependentRules(failures, context, cancellation);
 					}
 
 					return TaskHelpers.FromResult(failures.AsEnumerable());
@@ -352,6 +364,11 @@ namespace FluentValidation.Internal {
 						if (failures.Count > 0) {
 							OnFailure(context.InstanceToValidate);
 						}
+						else
+						{
+							RunDependentRules(failures, context, cancellation);
+						}
+
 						return failures.AsEnumerable();
 					},
 						runSynchronously: true
@@ -359,6 +376,14 @@ namespace FluentValidation.Internal {
 			}
 			catch (Exception ex) {
 				return TaskHelpers.FromError<IEnumerable<ValidationFailure>>(ex);
+			}
+		}
+
+		private void RunDependentRules(List<ValidationFailure> failures, ValidationContext context, CancellationToken cancellation)
+		{
+			foreach (var dependentRule in DependentRules)
+			{
+				dependentRule.ValidateAsync(context, cancellation).Then(x => { failures.AddRange(x); }, cancellation, true);
 			}
 		}
 
