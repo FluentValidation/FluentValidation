@@ -18,7 +18,11 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override void OnActionExecuting(ActionExecutingContext filterContext) {
-			filterContext.HttpContext.Items[key] = ruleSets;
+			SetRulesetForClientValidation(filterContext.HttpContext, ruleSets);
+		}
+
+		public static void SetRulesetForClientValidation(HttpContextBase context, string[] ruleSets) {
+			context.Items[key] = ruleSets;
 		}
 
 		public static string[] GetRuleSetsForClientValidation(HttpContextBase context) {
