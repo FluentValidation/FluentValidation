@@ -24,7 +24,7 @@ namespace FluentValidation {
 	using System.Reflection;
     using Internal;
 
-#if !PORTABLE && !PORTABLE40 && !CoreCLR
+#if (!PORTABLE && !PORTABLE40 && !CoreCLR) || NETSTANDARD
 	/// <summary>
 	/// Class that can be used to find all the validators from a collection of types.
 	/// </summary>
@@ -42,7 +42,11 @@ namespace FluentValidation {
 		/// Finds all the validators in the specified assembly.
 		/// </summary>
 		public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly) {
+#if NETSTANDARD
+			return new AssemblyScanner(assembly.ExportedTypes);
+#else
 			return new AssemblyScanner(assembly.GetExportedTypes());
+#endif
 		}
 
 		/// <summary>
@@ -55,13 +59,21 @@ namespace FluentValidation {
 		private IEnumerable<AssemblyScanResult> Execute() {
 			var openGenericType = typeof(IValidator<>);
 
+#if NETSTANDARD
+			var query = from type in types
+						let interfaces = type.GetTypeInfo().ImplementedInterfaces
+						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
+						let matchingInterface = genericInterfaces.FirstOrDefault()
+						where matchingInterface != null
+						select new AssemblyScanResult(matchingInterface, type);
+#else
 			var query = from type in types
 						let interfaces = type.GetInterfaces()
 						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
 						let matchingInterface = genericInterfaces.FirstOrDefault()
 						where matchingInterface != null
 						select new AssemblyScanResult(matchingInterface, type);
-
+#endif
 			return query;
 		}
 
@@ -113,4 +125,4 @@ namespace FluentValidation {
 
 	}
 #endif
-}
+		}
