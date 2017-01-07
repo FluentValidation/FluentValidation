@@ -36,7 +36,30 @@ namespace FluentValidation.Tests {
 			validator.ShouldHaveValidationErrorFor(x => x.Forename, (string)null);
 		}
 
-		[Fact]
+        [Fact]
+        public void ShouldHaveValidationError_Should_support_nested_properties() {
+            validator.RuleFor(x => x.Address.Line1).NotNull();
+            validator.ShouldHaveValidationErrorFor(x => x.Address.Line1, new Person {
+                Address = new Address {
+                    Line1 = null,
+                },
+            });
+        }
+
+        [Fact]
+        public void ShouldNotHaveValidationError_Should_support_nested_properties()
+        {
+            validator.RuleFor(x => x.Address.Line1).NotNull();
+            validator.ShouldNotHaveValidationErrorFor(x => x.Address.Line1, new Person
+            {
+                Address = new Address
+                {
+                    Line1 = "anything",
+                },
+            });
+        }
+
+        [Fact]
 		public void ShouldHaveValidationError_Should_throw_when_there_are_no_validation_errors() {
 			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldHaveValidationErrorFor(x => x.Forename, "test"));
 		}
