@@ -19,9 +19,11 @@
 #endregion
 
 namespace FluentValidation.TestHelper {
-	using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 	using System.Linq;
-	using System.Reflection;
+    using System.Linq.Expressions;
+    using System.Reflection;
 	using Results;
 
 	class ValidationResultTester<T, TValue> : IValidationResultTester where T : class {
@@ -32,13 +34,43 @@ namespace FluentValidation.TestHelper {
 		}
 
 		string GetPropertyName(IEnumerable<MemberInfo> properties) {
-			return string.Join(".", new[] {testValidationResult.MemberAccessor != null ? testValidationResult.MemberAccessor.Member : null}
-				.Concat(properties)
+			return string.Join(".", 
+                GetMemberNames().Concat(properties
 				.Where(x => x != null)
-				.Select(x => x.Name));
+				.Select(x => x.Name)));
 		}
 
-		public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
+	    private IEnumerable<string> GetMemberNames() {
+	        if (testValidationResult.MemberAccessor == null) {
+	            return Enumerable.Empty<string>();
+	        }
+
+            var memberNames = new Stack<string>();
+
+            var getMemberExp = new Func<Expression, MemberExpression>(toUnwrap => {
+
+                if (toUnwrap is UnaryExpression)
+                {
+                    return ((UnaryExpression)toUnwrap).Operand as MemberExpression;
+                }
+                else if (toUnwrap is LambdaExpression) {
+                    return ((LambdaExpression)toUnwrap).Body as MemberExpression;
+                }
+
+                return toUnwrap as MemberExpression;
+            });
+
+            var memberExp = getMemberExp(this.testValidationResult.MemberAccessor);
+
+            while (memberExp != null)
+            {
+                memberNames.Push(memberExp.Member.Name);
+                memberExp = getMemberExp(memberExp.Expression);
+            }
+	        return memberNames;
+	    }
+
+        public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
 
 			var failures = testValidationResult.Result.Errors.Where(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
