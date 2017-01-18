@@ -114,7 +114,8 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
-			context.Guard("Cannot pass null to Validate");
+			context.Guard("Cannot pass null to Validate.");
+			context.InstanceToValidate.Guard("Cannot a pass null model to validate");
 			var failures = nestedValidators.SelectMany(x => x.Validate(context));
 			return new ValidationResult(failures);
 		}
@@ -127,6 +128,8 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate");
+			context.InstanceToValidate.Guard("Cannot pass null mode");
+
 			var failures = new List<ValidationFailure>();
 			
 			return TaskHelpers.Iterate(
