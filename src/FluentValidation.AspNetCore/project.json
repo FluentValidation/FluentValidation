@@ -1,4 +1,4 @@
-﻿{
+{
  
 
   "dependencies": {
@@ -14,21 +14,19 @@
 
     "frameworks": {
         "netstandard1.6": {
-          "dependencies": {
-            "FluentValidation.NetStandard": {
-              "target": "project"
-            }
-
-          },
+            "dependencies": {
+                "FluentValidation.NetStandard": {
+                    "target": "project"
+                }
+            },
             "imports": "dnxcore50"
         },
         "net451": {
-          "dependencies": {
-            "FluentValidation.NetStandard": {
-              "target": "project"
+            "dependencies": {
+                "FluentValidation.NetStandard": {
+                    "target": "project"
+                }
             }
-
-          }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace FluentValidation.AspNetCore {
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+
+namespace FluentValidation.AspNetCore {
 	using System;
 	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc;
@@ -35,7 +37,6 @@
 			mvcBuilder.AddMvcOptions(
 				options => {
 					options.ModelValidatorProviders.Clear();
-
 				});
 
 			return mvcBuilder;
@@ -51,12 +52,19 @@
 				services.Add(ServiceDescriptor.Singleton(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 			}
 
-
 			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
 				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
 				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, s.GetRequiredService<IValidatorFactory>());
 			}));
+
+			if (config.ClientsideEnabled)
+			{
+				services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<MvcViewOptions>, FluentValidationViewOptionsSetup>(s =>
+					{
+						return new FluentValidationViewOptionsSetup(s.GetService<IValidatorFactory>(), config.ClientsideConfig);
+					}));
+			}
 
 
 		}
@@ -87,7 +95,6 @@
 			mvcBuilder.AddMvcOptions(
 			    options => {
 			        options.ModelValidatorProviders.Clear();
-
                 });
 
             return mvcBuilder;
@@ -110,10 +117,31 @@
 		}
 	}
 
-    public class FluentValidationMvcConfiguration {
+	internal class FluentValidationViewOptionsSetup : IConfigureOptions<MvcViewOptions>
+	{
+		private readonly IValidatorFactory _factory;
+		private readonly Action<FluentValidationClientModelValidatorProvider> _action;
+
+		public FluentValidationViewOptionsSetup(IValidatorFactory factory, Action<FluentValidationClientModelValidatorProvider> action)
+		{
+			_factory = factory;
+			_action = action;
+		}
+
+		public void Configure(MvcViewOptions options)
+		{
+			var provider = new FluentValidationClientModelValidatorProvider(_factory);
+			_action(provider);
+			options.ClientModelValidatorProviders.Add(provider);
+		}
+	}
+
+	public class FluentValidationMvcConfiguration {
 	    public Type ValidatorFactoryType { get; set; }
 		public IValidatorFactory ValidatorFactory { get; set; }
 	    internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
+	    internal bool ClientsideEnabled = true;
+	    internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};
 
 	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>() {
 		    return RegisterValidatorsFromAssemblyContaining(typeof(T));
@@ -128,5 +156,14 @@
 		    AssembliesToRegister.Add(assembly);
 		    return this;
 	    }
-    }
+
+	    public FluentValidationMvcConfiguration ConfigureClientsideValidation(Action<FluentValidationClientModelValidatorProvider> clientsideConfig=null, bool enabled=true) {
+		    if (clientsideConfig != null) {
+			    ClientsideConfig = clientsideConfig;
+		    }
+		    ClientsideEnabled = enabled;
+		    return this;
+	    }
+		
+	}
 }
