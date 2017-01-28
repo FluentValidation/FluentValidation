@@ -68,16 +68,16 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Dependent_rules_inside_when() {
 			var validator = new TestValidator();
-			validator.When(o => o != null, () =>
+			validator.When(o => o.Forename != null, () =>
 			{
 				validator.RuleFor(o => o.Age).LessThan(1)
 				.DependentRules(d =>
 				{
-					d.RuleFor(o => o).NotNull();
+					d.RuleFor(o => o.Forename).NotNull();
 				});
 			}); ;
 
-			var result = validator.Validate((Person)null);
+			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
 	}

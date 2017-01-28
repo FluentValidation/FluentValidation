@@ -189,18 +189,18 @@ namespace FluentValidation.Tests {
 		public async Task TestAsyncWithDependentRules_SyncEntry()
 		{
 			var validator = new TestValidator();
-			validator.RuleFor(o => o)
+			validator.RuleFor(o => o.Forename)
 				.NotNull()
 				.DependentRules(d => {
 					d.RuleFor(o => o.Address).NotNull();
 					d.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
 				});
 
-			var result = await validator.ValidateAsync((Person)null);
+			var result = await validator.ValidateAsync(new Person());
 			Assert.Equal(1, result.Errors.Count);
-			Assert.True(result.Errors.Any(x => x.PropertyName==""));
+			Assert.True(result.Errors.Any(x => x.PropertyName=="Forename"));
 
-			result = await validator.ValidateAsync(new Person());
+			result = await validator.ValidateAsync(new Person() {Forename="Foo"});
 			Assert.Equal(2, result.Errors.Count);
 			Assert.True(result.Errors.Count(x =>x.PropertyName =="Address") == 1, "Address");
 			Assert.True(result.Errors.Count(x =>x.PropertyName =="Age") == 1, "Age");
@@ -211,17 +211,17 @@ namespace FluentValidation.Tests {
 		{
 			var validator = new TestValidator();
 			validator.RuleFor(o => o)
-				.MustAsync(async (p, ct) => await Task.FromResult(p != null))
+				.MustAsync(async (p, ct) => await Task.FromResult(p.Forename != null))
 				.DependentRules(d => {
 					d.RuleFor(o => o.Address).NotNull();
 					d.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
 				});
 
-			var result = await validator.ValidateAsync((Person)null);
+			var result = await validator.ValidateAsync(new Person());
 			Assert.Equal(1, result.Errors.Count);
 			Assert.True(result.Errors.Any(x => x.PropertyName == ""));
 
-			result = await validator.ValidateAsync(new Person());
+			result = await validator.ValidateAsync(new Person() {Forename="Foo"});
 			Assert.Equal(2, result.Errors.Count);
 			Assert.True(result.Errors.Count(x => x.PropertyName == "Address") == 1, "Address");
 			Assert.True(result.Errors.Count(x => x.PropertyName == "Age") == 1, "Age");
