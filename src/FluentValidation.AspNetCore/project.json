@@ -3,7 +3,7 @@
 
   "dependencies": {
     "Microsoft.AspNetCore.Mvc": "1.1.0",
-    "NETStandard.Library": "1.6.0"
+    "NETStandard.Library": "1.6.1"
   },
 
   "buildOptions": {
@@ -14,19 +14,21 @@
 
     "frameworks": {
         "netstandard1.6": {
-            "dependencies": {
-                "FluentValidation": {
-                    "target": "project"
-                }
-            },
+          "dependencies": {
+            "FluentValidation.NetStandard": {
+              "target": "project"
+            }
+
+          },
             "imports": "dnxcore50"
         },
         "net451": {
-            "dependencies": {
-                "FluentValidation": {
-                    "target": "project"
-                }
+          "dependencies": {
+            "FluentValidation.NetStandard": {
+              "target": "project"
             }
+
+          }
         }
     }
 }
