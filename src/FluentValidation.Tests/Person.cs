@@ -56,7 +56,9 @@ namespace FluentValidation.Tests
 
 		public string CreditCard { get; set; }
 
-		public int? OtherNullableInt { get; set; }
+        public string IbanAccount { get; set; }
+
+        public int? OtherNullableInt { get; set; }
 
 		public string Regex { get; set; }
 

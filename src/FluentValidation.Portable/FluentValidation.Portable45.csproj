@@ -240,6 +240,9 @@
     <Compile Include="..\FluentValidation\Validators\ExclusiveBetweenValidator.cs">
       <Link>ExclusiveBetweenValidator.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation\Validators\IbanValidator.cs">
+      <Link>IbanValidator.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Validators\InclusiveBetweenValidator.cs">
       <Link>InclusiveBetweenValidator.cs</Link>
     </Compile>

@@ -149,6 +149,7 @@
     <Compile Include="Validators\ExclusiveBetweenValidator.cs" />
     <Compile Include="Validators\GreaterThanOrEqualValidator.cs" />
     <Compile Include="Validators\GreaterThanValidator.cs" />
+    <Compile Include="Validators\IbanValidator.cs" />
     <Compile Include="Validators\InclusiveBetweenValidator.cs" />
     <Compile Include="Validators\LessThanOrEqualValidator.cs" />
     <Compile Include="Validators\LessThanValidator.cs" />
