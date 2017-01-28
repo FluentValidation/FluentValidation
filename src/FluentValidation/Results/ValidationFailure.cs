@@ -23,7 +23,7 @@ namespace FluentValidation.Results {
 	/// <summary>
 	/// Defines a validation failure
 	/// </summary>
-#if !SILVERLIGHT && !PORTABLE && !PORTABLE40 && !CoreCLR
+#if !PORTABLE && !PORTABLE40 && !NETSTANDARD
 	[Serializable]
 #endif
 	public class ValidationFailure {
