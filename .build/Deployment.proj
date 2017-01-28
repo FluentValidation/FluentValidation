@@ -34,9 +34,9 @@
 		<Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC5" />
 		<Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi" />
 		<Copy SourceFiles="@(Portable40Binaries)" DestinationFolder="$(OutputDir)\Portable40" />
-		<Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(OutputDir)\Portable" />
-		<Copy SourceFiles="@(Portable46Binaries)" DestinationFolder="$(OutputDir)\Portable46" />
-		<Copy SourceFiles="@(NetStandard10Binaries)" DestinationFolder="$(OutputDir)\NetStandard10" />
+		<Copy SourceFiles="@(PortableBinaries)" DestinationFolder="$(OutputDir)\Portable\%(RecursiveDir)" />
+		<Copy SourceFiles="@(Portable46Binaries)" DestinationFolder="$(OutputDir)\Portable46\%(RecursiveDir)" />
+		<Copy SourceFiles="@(NetStandard10Binaries)" DestinationFolder="$(OutputDir)\NetStandard10\%(RecursiveDir)" />
     <Copy SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(OutputDir)\AspNetCore" />
     <Copy SourceFiles="@(AspNetCore451Binaries)" DestinationFolder="$(OutputDir)\AspNetCore451" />
 		<Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
