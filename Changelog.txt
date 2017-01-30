@@ -6,7 +6,8 @@ Add ValidationSeverity
 Add support for collection validators on model-level rules
 Fixes/cleanup to RegexValidator and LengthValidator 
 Async validators should run dependent rules
-Clearer exception message when passing a null instance into the root-level Validate method.
+Clearer exception message when passing a null instance into the root-level Validate method
+Additional overloads and clarity for WithMessage/WithLocalizedMessage overloads
 
 6.2.1 - 26 Feb 2016
 Fix DependentRules not working inside a top-level call to When
