@@ -30,19 +30,9 @@
 				.AppendArgument("MinLength", LengthValidator.Min)
 				.AppendArgument("MaxLength", LengthValidator.Max);
 
-			var messageNeedsSplitting = LengthValidator.ErrorMessageSource.ResourceType == typeof(Messages);
-			string message;
+			string message = LengthValidator.ErrorMessageSource.GetString();
 
-			try {
-				message = LengthValidator.ErrorMessageSource.GetString(null);
-			}
-			catch (FluentValidationMessageFormatException) {
-				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				message = Messages.length_error;
-				messageNeedsSplitting = true;
-			}
-
-			if(messageNeedsSplitting) {
+			if(LengthValidator.ErrorMessageSource.ResourceType == typeof(Messages)) {
 				// If we're using the default resources then the mesage for length errors will have two parts, eg:
 				// '{PropertyName}' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters.
 				// We can't include the "TotalLength" part of the message because this information isn't available at the time the message is constructed.

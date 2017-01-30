@@ -2,7 +2,6 @@
 	using System.Collections.Generic;
 	using System.Web.Mvc;
 	using Internal;
-	using Resources;
 	using Validators;
 
 	internal class CreditCardFluentValidationPropertyValidator : FluentValidationPropertyValidator {
@@ -14,16 +13,8 @@
 			if (!ShouldGenerateClientSideRules()) yield break;
 
 			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
-			string message;
-			try {
-				message = Validator.ErrorMessageSource.GetString(null);
-			}
-			catch (FluentValidationMessageFormatException) {
-				message = Messages.CreditCardError;
-			}
-			message = formatter.BuildMessage(message);
-
-
+			string message = formatter.BuildMessage(Validator.ErrorMessageSource.GetString());
+			
 			yield return new ModelClientValidationRule {
 			                                           	ValidationType = "creditcard",
 			                                           	ErrorMessage = message

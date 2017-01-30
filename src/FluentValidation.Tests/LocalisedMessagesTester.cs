@@ -234,15 +234,6 @@ namespace FluentValidation.Tests {
             Assert.Equal(typeof(Messages), resourceType);
 
         }
-		
-		[Fact]
-		public void Uses_func_to_get_message() {
-			var validator = new TestValidator();
-			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => "el foo");
-
-			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("el foo");
-		}
 
 		private class MyResources {
 			public static string notempty_error {

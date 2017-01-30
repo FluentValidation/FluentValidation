@@ -112,7 +112,7 @@ namespace FluentValidation.Internal {
 			
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
-			DisplayName = new LazyStringSource(x => ValidatorOptions.DisplayNameResolver(containerType, member, expression));
+			DisplayName = new LazyStringSource(() => ValidatorOptions.DisplayNameResolver(containerType, member, expression));
 		}
 
 		/// <summary>
@@ -207,7 +207,7 @@ namespace FluentValidation.Internal {
 			string result = null;
 
 			if (DisplayName != null) {
-				result = DisplayName.GetString(null /*We don't have a model object at this point*/);
+				result = DisplayName.GetString();
 			}
 
 			if (result == null) {

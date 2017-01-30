@@ -18,7 +18,6 @@
 
 namespace FluentValidation {
 	using System;
-	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Threading.Tasks;
@@ -75,7 +74,8 @@ namespace FluentValidation {
 		/// <param name="formatArgs">Additional arguments to be specified when formatting the custom error message.</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage, params object[] formatArgs) {
-			return rule.WithMessage(x => string.Format(errorMessage, formatArgs));
+			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(formatArgs);
+			return rule.WithMessage(errorMessage, funcs);
 		}
 
 		/// <summary>
@@ -85,12 +85,15 @@ namespace FluentValidation {
 		/// <param name="errorMessage">The error message to use</param>
 		/// <param name="funcs">Additional property values to be included when formatting the custom error message.</param>
 		/// <returns></returns>
-		[Obsolete("Use WithMessage(x => $\"My message with format {x.Foo} {x.Bar}\")")]
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage, params Func<T, object>[] funcs) {
 			errorMessage.Guard("A message must be specified when calling WithMessage.");
 
-			return rule.WithMessage(x => {
-				return string.Format(errorMessage, funcs.Select(func => func(x)).ToArray());
+			return rule.Configure(config => {
+				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
+
+				funcs
+					.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
+					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
 			});
 		}
 
@@ -110,20 +113,6 @@ namespace FluentValidation {
 				funcs
 					.Select(func => new Func<object, object, object>((instance, value) => func((T)instance, (TProperty)value)))
 					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
-			});
-		}
-
-		/// <summary>
-		/// Specifies a custom error message to use when validation fails.
-		/// </summary>
-		/// <param name="rule">The current rule</param>
-		/// <param name="messageProvider">Delegate that will be invoked to retrieve the localized message. </param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
-			messageProvider.Guard("A messageProvider must be provided.");
-			Func<object, string> newFunc = x => messageProvider((T)x);
-			return rule.Configure(config => {
-				config.CurrentValidator.ErrorMessageSource = new LazyStringSource(newFunc);
 			});
 		}
 
@@ -216,7 +205,6 @@ namespace FluentValidation {
 			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(formatArgs);
 			return rule.WithLocalizedMessage(resourceType, resourceName, funcs);
 		}
-
 
 		/// <summary>
 		/// Specifies a custom error message resource to use when validation fails.

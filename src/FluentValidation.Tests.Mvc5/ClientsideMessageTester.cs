@@ -171,14 +171,7 @@ namespace FluentValidation.Tests.Mvc5 {
 		
 		}
 
-		[Fact]
-		public void Falls_back_to_default_message_when_no_context_available_to_custom_message_format() {
-			validator.RuleFor(x => x.Name).NotNull().WithMessage(x => $"Foo {x.Name}");
-			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("'Name' should not be empty.");
-		}
-
-		[Fact]
+	    [Fact]
 	    public void Should_only_use_rules_from_Default_ruleset() {
 	        validator.RuleSet("Foo", () => {
 				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
@@ -298,7 +291,7 @@ namespace FluentValidation.Tests.Mvc5 {
 			}
 
 			public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context) {
-				yield return new ModelClientValidationRule { ErrorMessage = this.ErrorMessageSource.GetString(null) };
+				yield return new ModelClientValidationRule { ErrorMessage = this.ErrorMessageSource.GetString() };
 			}
 		}
 	}

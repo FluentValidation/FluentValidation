@@ -2,7 +2,6 @@
 	using System.Collections.Generic;
 	using System.Web.Mvc;
 	using Internal;
-	using Resources;
 	using Validators;
 
 	internal class RegularExpressionFluentValidationPropertyValidator : FluentValidationPropertyValidator {
@@ -21,16 +20,7 @@
 			if (string.IsNullOrEmpty(RegexValidator.Expression)) yield break;
 
 			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
-			string message;
-			try {
-				message = RegexValidator.ErrorMessageSource.GetString(null);
-			}
-			catch (FluentValidationMessageFormatException) {
-				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				message = Messages.regex_error;
-			}
-			message = formatter.BuildMessage(message);
-
+			string message = formatter.BuildMessage(RegexValidator.ErrorMessageSource.GetString());
 			yield return new ModelClientValidationRegexRule(message, RegexValidator.Expression);
 		}
 	}

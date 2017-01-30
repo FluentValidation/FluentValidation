@@ -2,7 +2,6 @@
 	using System.Collections.Generic;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using Resources;
 	using Validators;
 
 	internal class EmailClientValidator : ClientValidatorBase {
@@ -15,16 +14,7 @@
 
 		public override void AddValidation(ClientModelValidationContext context) {
 			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
-
-			string messageTemplate;
-			try {
-				messageTemplate = EmailValidator.ErrorMessageSource.GetString(null);
-			}
-			catch (FluentValidationMessageFormatException) {
-				messageTemplate = Messages.email_error;
-			}
-
-			string message = formatter.BuildMessage(messageTemplate);
+			string message = formatter.BuildMessage(EmailValidator.ErrorMessageSource.GetString());
 			MergeAttribute(context.Attributes, "data-val", "true");
 			MergeAttribute(context.Attributes, "email", message);
 		}

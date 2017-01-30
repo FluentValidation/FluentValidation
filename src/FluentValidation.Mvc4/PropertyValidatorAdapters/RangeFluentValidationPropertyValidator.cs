@@ -22,19 +22,9 @@
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
 
-			var messageNeedsSplitting = RangeValidator.ErrorMessageSource.ResourceType == typeof(Messages);
-			
-			string message;
-			try {
-				message = RangeValidator.ErrorMessageSource.GetString(null);
-			}
-			catch (FluentValidationMessageFormatException){
-				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				message = Messages.inclusivebetween_error;
-				messageNeedsSplitting = true;
-			}
+			string message = RangeValidator.ErrorMessageSource.GetString();
 
-			if (messageNeedsSplitting) {
+			if (RangeValidator.ErrorMessageSource.ResourceType == typeof(Messages)) {
 				// If we're using the default resources then the mesage for length errors will have two parts, eg:
 				// '{PropertyName}' must be between {From} and {To}. You entered {Value}.
 				// We can't include the "Value" part of the message because this information isn't available at the time the message is constructed.

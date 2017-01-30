@@ -28,7 +28,7 @@ namespace FluentValidation.Resources {
 		/// Construct the error message template
 		/// </summary>
 		/// <returns>Error message template</returns>
-		string GetString(object context);
+		string GetString();
 
 		/// <summary>
 		/// The name of the resource if localized.
