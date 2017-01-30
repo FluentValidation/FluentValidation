@@ -11,7 +11,7 @@
     <description>ASP.NET MVC 6 / AspNetCore integration for FluentValidation</description>
     <summary>ASP.NET MVC 6 / AspNetCore integration for FluentValidation</summary>
     <language>en-US</language>
-    <releaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</releaseNotes>
+    <releaseNotes>Plesae install the FluentValidation.AspNetCore package instead.</releaseNotes>
     <dependencies>
       <dependency id="FluentValidation.AspNetCore" version="" />
     </dependencies>
