@@ -22,13 +22,21 @@ namespace FluentValidation.Resources {
 	/// Lazily loads the string
 	/// </summary>
 	public class LazyStringSource : IStringSource {
-		readonly Func<string> _stringProvider;
+		readonly Func<object, string> _stringProvider;
 
 		/// <summary>
 		/// Creates a new LazyStringSource
 		/// </summary>
 		/// <param name="stringProvider"></param>
+		[Obsolete("Use constructor that takes a Func<object, string>")]
 		public LazyStringSource(Func<string> stringProvider) {
+			_stringProvider = x => stringProvider();
+		}
+
+		/// <summary>
+		/// Creates a LazyStringSource
+		/// </summary>
+		public LazyStringSource(Func<object, string> stringProvider) {
 			_stringProvider = stringProvider;
 		}
 
@@ -36,8 +44,13 @@ namespace FluentValidation.Resources {
 		/// Gets the value
 		/// </summary>
 		/// <returns></returns>
-		public string GetString() {
-			return _stringProvider();
+		public string GetString(object context) {
+			try {
+				return _stringProvider(context);
+			}
+			catch (NullReferenceException ex) {
+				throw new FluentValidationMessageFormatException("Could not build error message- the message makes use of properties from the containing object, but the containing object was null.", ex);
+			}
 		}
 
 		/// <summary>
@@ -49,5 +62,14 @@ namespace FluentValidation.Resources {
 		/// Resource name
 		/// </summary>
 		public Type ResourceType { get { return null; } }
+
+	}
+
+	public class FluentValidationMessageFormatException : Exception {
+		public FluentValidationMessageFormatException(string message) : base(message) {
+		}
+
+		public FluentValidationMessageFormatException(string message, Exception innerException) : base(message, innerException) {
+		}
 	}
 }

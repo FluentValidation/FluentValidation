@@ -18,6 +18,7 @@
 
 namespace FluentValidation {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Threading.Tasks;
@@ -50,7 +51,7 @@ namespace FluentValidation {
 		/// <param name="rule"></param>
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Action<T> onFailure) {
+		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
 			return rule.Configure(config => {
 				config.OnFailure = onFailure.CoerceToNonGeneric();
 			});
@@ -91,13 +92,12 @@ namespace FluentValidation {
 			return rule.Configure(config => {
 				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
 
-				funcs
-					.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
+				funcs.Select(func => new Func<object, object, object>((instance, value) => func((T) instance)))
 					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
 			});
 		}
 
-		/// <summary>
+	/// <summary>
 		/// Specifies a custom error message to use if validation fails.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
@@ -113,6 +113,20 @@ namespace FluentValidation {
 				funcs
 					.Select(func => new Func<object, object, object>((instance, value) => func((T)instance, (TProperty)value)))
 					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
+			});
+		}
+
+		/// <summary>
+		/// Specifies a custom error message to use when validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="messageProvider">Delegate that will be invoked to retrieve the localized message. </param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
+			messageProvider.Guard("A messageProvider must be provided.");
+			Func<object, string> newFunc = x => messageProvider((T)x);
+			return rule.Configure(config => {
+				config.CurrentValidator.ErrorMessageSource = new LazyStringSource(newFunc);
 			});
 		}
 
@@ -205,6 +219,7 @@ namespace FluentValidation {
 			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(formatArgs);
 			return rule.WithLocalizedMessage(resourceType, resourceName, funcs);
 		}
+
 
 		/// <summary>
 		/// Specifies a custom error message resource to use when validation fails.

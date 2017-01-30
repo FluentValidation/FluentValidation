@@ -2,6 +2,7 @@
 	using System.Collections.Generic;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+	using Resources;
 	using Validators;
 
 	internal class RegexClientValidator : ClientValidatorBase {
@@ -11,9 +12,16 @@
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {
-			var regexVal = Validator as RegularExpressionValidator;
+			var regexVal = (RegularExpressionValidator)Validator;
 			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
-			string message = formatter.BuildMessage(regexVal.ErrorMessageSource.GetString());
+			string messageTemplate;
+			try {
+				messageTemplate = regexVal.ErrorMessageSource.GetString(null);
+			}
+			catch (FluentValidationMessageFormatException) {
+				messageTemplate = Messages.regex_error;
+			}
+			string message = formatter.BuildMessage(messageTemplate);
 
 			MergeAttribute(context.Attributes, "data-val", "true");
 			MergeAttribute(context.Attributes, "data-val-regex", message);

@@ -3,6 +3,7 @@
 	using System.Reflection;
 	using System.Web.Mvc;
 	using Internal;
+	using Resources;
 	using Validators;
 
 	internal class EqualToFluentValidationPropertyValidator : FluentValidationPropertyValidator {
@@ -32,7 +33,16 @@
 					.AppendArgument("ComparisonValue", comparisonDisplayName);
 
 
-				string message = formatter.BuildMessage(EqualValidator.ErrorMessageSource.GetString());
+				string message;
+				try {
+					message = EqualValidator.ErrorMessageSource.GetString(null);
+					
+				}
+				catch (FluentValidationMessageFormatException) {
+					// User provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
+					message = Messages.equal_error;
+				}
+				message = formatter.BuildMessage(message);
 #pragma warning disable 618
 				yield return new ModelClientValidationEqualToRule(message, CompareAttribute.FormatPropertyForClientValidation(propertyToCompare.Name)) ;
 #pragma warning restore 618

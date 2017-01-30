@@ -2,6 +2,7 @@
 	using System.Collections.Generic;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+	using Resources;
 	using Validators;
 
 	internal class RequiredClientValidator : ClientValidatorBase{
@@ -16,7 +17,14 @@
 
 		private string GetErrorMessage(ClientModelValidationContext context) {
 			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
-			var message = formatter.BuildMessage(Validator.ErrorMessageSource.GetString());
+			string messageTemplate;
+			try {
+				messageTemplate = Validator.ErrorMessageSource.GetString(null);
+			}
+			catch (FluentValidationMessageFormatException) {
+				messageTemplate = Messages.notempty_error;
+			}
+			var message = formatter.BuildMessage(messageTemplate);
 			return message;
 		}
 	}

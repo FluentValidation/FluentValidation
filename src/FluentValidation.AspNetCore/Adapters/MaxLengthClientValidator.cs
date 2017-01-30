@@ -1,6 +1,7 @@
 ﻿namespace FluentValidation.AspNetCore {
     using Internal;
     using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+    using Resources;
     using Validators;
 
     internal class MaxLengthClientValidator : AbstractComparisonClientValidator<LessThanOrEqualValidator> {
@@ -23,5 +24,9 @@
 			MergeAttribute(context.Attributes, "data-val-minlength", GetErrorMessage(context));
 			MergeAttribute(context.Attributes, "data-val-minlength-max", MaxValue.ToString());
 		}
-	}
+
+	    protected override string GetDefaultMessage() {
+			return Messages.lessthanorequal_error;
+		}
+    }
 }

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using Internal;
+    using Resources;
     using Validators;
 
     internal abstract class AbstractComparisonFluentValidationPropertyValidator<TValidator> : FluentValidationPropertyValidator 
@@ -26,8 +27,17 @@
             var formatter = new MessageFormatter()
                 .AppendPropertyName(Rule.GetDisplayName())
                 .AppendArgument("ComparisonValue", AbstractComparisonValidator.ValueToCompare);
-            var message = formatter.BuildMessage(AbstractComparisonValidator.ErrorMessageSource.GetString());
-            yield return new ModelClientValidationRangeRule(message, MinValue, MaxValue);
+            string message;
+	        try {
+		        message = AbstractComparisonValidator.ErrorMessageSource.GetString(null);
+	        }
+	        catch (FluentValidationMessageFormatException) {
+		        message = GetDefaultMessage();
+	        }
+	        message = formatter.BuildMessage(message);
+	        yield return new ModelClientValidationRangeRule(message, MinValue, MaxValue);
         }
+
+	    protected abstract string GetDefaultMessage();
     }
 }

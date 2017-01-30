@@ -1,6 +1,7 @@
 ﻿namespace FluentValidation.Mvc {
     using System.Web.Mvc;
     using Internal;
+    using Resources;
     using Validators;
 
     internal class MaxFluentValidationPropertyValidator : AbstractComparisonFluentValidationPropertyValidator<LessThanOrEqualValidator> {
@@ -16,5 +17,9 @@
         public MaxFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule propertyDescription, IPropertyValidator validator)
             : base(metadata, controllerContext, propertyDescription, validator) {
         }
+
+	    protected override string GetDefaultMessage() {
+		    return Messages.lessthanorequal_error;
+	    }
     }
 }

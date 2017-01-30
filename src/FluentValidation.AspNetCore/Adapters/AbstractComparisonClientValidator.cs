@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Internal;
     using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+    using Resources;
     using Validators;
 
     internal abstract class AbstractComparisonClientValidator<TValidator> : ClientValidatorBase 
@@ -23,9 +24,19 @@
 			var formatter = new MessageFormatter()
 			  .AppendPropertyName(Rule.GetDisplayName())
 			  .AppendArgument("ComparisonValue", AbstractComparisonValidator.ValueToCompare);
-			var message = formatter.BuildMessage(AbstractComparisonValidator.ErrorMessageSource.GetString());
+
+			string message;
+			try {
+				message = AbstractComparisonValidator.ErrorMessageSource.GetString(null);
+			}
+			catch (FluentValidationMessageFormatException) {
+				message = GetDefaultMessage();
+			}
+			message = formatter.BuildMessage(message);
 
 			return message;
 		}
-	}
+
+	    protected abstract string GetDefaultMessage();
+    }
 }

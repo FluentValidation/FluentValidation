@@ -37,7 +37,7 @@ namespace FluentValidation.Resources {
 		/// Construct the error message template
 		/// </summary>
 		/// <returns>Error message template</returns>
-		public string GetString() {
+		public string GetString(object context) {
 			return message;
 		}
 

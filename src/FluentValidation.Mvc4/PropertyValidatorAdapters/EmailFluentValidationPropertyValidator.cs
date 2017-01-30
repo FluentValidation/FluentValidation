@@ -2,6 +2,7 @@
 	using System.Collections.Generic;
 	using System.Web.Mvc;
 	using Internal;
+	using Resources;
 	using Validators;
 
 	internal class EmailFluentValidationPropertyValidator : FluentValidationPropertyValidator {
@@ -17,7 +18,15 @@
 			if (!ShouldGenerateClientSideRules()) yield break;
 
 			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
-			string message = formatter.BuildMessage(EmailValidator.ErrorMessageSource.GetString());
+			string message;
+			try {
+				message = EmailValidator.ErrorMessageSource.GetString(null);
+			}
+			catch (FluentValidationMessageFormatException) {
+				// User provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
+				message = Messages.email_error;
+			}
+			message = formatter.BuildMessage(message);
 			
 			yield return new ModelClientValidationRule {
 			                                           	ValidationType = "email",
