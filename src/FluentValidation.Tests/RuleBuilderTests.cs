@@ -67,13 +67,13 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_set_cutom_property_name() {
 			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
-			Assert.Equal(builder.Rule.DisplayName.GetString(), "Foo");
+			Assert.Equal(builder.Rule.DisplayName.GetString(null), "Foo");
 		}
 
 		[Fact]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-			builder.Rule.CurrentValidator.ErrorMessageSource.GetString().ShouldEqual("Bar");
+			builder.Rule.CurrentValidator.ErrorMessageSource.GetString(null).ShouldEqual("Bar");
 		}
 
 		[Fact]
@@ -93,7 +93,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_if_message_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithMessage(null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithMessage((string)null));
 		}
 
 		[Fact]

@@ -2,6 +2,7 @@
 	using System.Collections.Generic;
 	using System.Web.Mvc;
 	using Internal;
+	using Resources;
 	using Validators;
 
 	internal class RequiredFluentValidationPropertyValidator : FluentValidationPropertyValidator {
@@ -16,7 +17,15 @@
 			if (!ShouldGenerateClientSideRules()) yield break;
 
 			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
-			var message = formatter.BuildMessage(Validator.ErrorMessageSource.GetString());
+			string message;
+			try {
+				message = Validator.ErrorMessageSource.GetString(null);
+			}
+			catch (FluentValidationMessageFormatException) {
+				// User provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
+				message = Messages.notempty_error;
+			}
+			message = formatter.BuildMessage(message);
 			yield return new ModelClientValidationRequiredRule(message);
 		}
 

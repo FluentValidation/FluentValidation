@@ -3,6 +3,7 @@
 	using System.Reflection;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+	using Resources;
 	using Validators;
 
 	internal class EqualToClientValidator : ClientValidatorBase {
@@ -31,7 +32,14 @@
 					.AppendPropertyName(Rule.GetDisplayName())
 					.AppendArgument("ComparisonValue", comparisonDisplayName);
 
-				string message = formatter.BuildMessage(EqualValidator.ErrorMessageSource.GetString());
+				string messageTemplate;
+				try {
+					messageTemplate = EqualValidator.ErrorMessageSource.GetString(null);
+				}
+				catch (FluentValidationMessageFormatException) {
+					messageTemplate = Messages.equal_error;
+				}
+				string message = formatter.BuildMessage(messageTemplate);
 				MergeAttribute(context.Attributes, "data-val", "true");
 				MergeAttribute(context.Attributes, "data-val-equalto", message);
 				MergeAttribute(context.Attributes, "data-val-equalto-other", propertyToCompare.Name);

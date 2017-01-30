@@ -26,9 +26,18 @@
 				.AppendArgument("MinLength", lengthVal.Min)
 				.AppendArgument("MaxLength", lengthVal.Max);
 
-			string message = lengthVal.ErrorMessageSource.GetString();
+			bool messageNeedsSplitting = lengthVal.ErrorMessageSource.ResourceType == typeof(Messages);
 
-			if (lengthVal.ErrorMessageSource.ResourceType == typeof(Messages))
+			string message;
+			try {
+				message = lengthVal.ErrorMessageSource.GetString(null);
+			}
+			catch (FluentValidationMessageFormatException) {
+				message = Messages.length_error;
+				messageNeedsSplitting = true;
+			}
+
+			if (messageNeedsSplitting)
 			{
 				// If we're using the default resources then the mesage for length errors will have two parts, eg:
 				// '{PropertyName}' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters.
