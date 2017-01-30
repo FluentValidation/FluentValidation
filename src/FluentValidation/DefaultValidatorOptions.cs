@@ -136,6 +136,7 @@ namespace FluentValidation {
 		/// <param name="rule">The current rule</param>
 		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
 		/// <returns></returns>
+		[Obsolete("Use WithLocalizedMessage(Type resourceType, string resourceName) instead.")]
 		public static IRuleBuilderOptions<T,TProperty> WithLocalizedMessage<T,TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Expression<Func<string>> resourceSelector) {
 			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
 			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder());
@@ -148,6 +149,7 @@ namespace FluentValidation {
 		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
 		/// <param name="formatArgs">Custom message format args</param>
 		/// <returns></returns>
+		[Obsolete("Use WithLocalizedMessage(Type resourceType, string resourceName, params object[] formatArgs) instead.")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, params object[] formatArgs) {
 			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(formatArgs);
 			return rule.WithLocalizedMessage(resourceSelector, funcs);
@@ -160,6 +162,7 @@ namespace FluentValidation {
 		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
 		/// <param name="formatArgs">Custom message format args</param>
 		/// <returns></returns>
+		[Obsolete("Use WithLocalizedMessage(Type resourceType, string resourceName, params Func<T, object>[] formatArgs) instead.")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, params Func<T, object>[] formatArgs) {
 			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
 			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder())
@@ -178,6 +181,7 @@ namespace FluentValidation {
 		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
 		/// <param name="resourceAccessorBuilder">The resource accessor builder to use. </param>
 		/// <returns></returns>
+		[Obsolete("Use WithLocalizedMessage(Type resourceType, string resourceName, IResourceAccessorBuilder instead) instead.")]
 		public static IRuleBuilderOptions<T,TProperty> WithLocalizedMessage<T,TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Expression<Func<string>> resourceSelector, IResourceAccessorBuilder resourceAccessorBuilder) {
 			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)");
 		
@@ -186,7 +190,57 @@ namespace FluentValidation {
 			});
 		}
 
-		
+
+		/// <summary>
+		/// Specifies a custom error message resource to use when validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
+		/// <param name="resourceName">Name of resource</param>
+		/// <param name="formatArgs">Custom message format args</param>
+		/// <param name="resourceType">Type of resource representing a resx file</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName, params object[] formatArgs)
+		{
+			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(formatArgs);
+			return rule.WithLocalizedMessage(resourceType, resourceName, funcs);
+		}
+
+		/// <summary>
+		/// Specifies a custom error message resource to use when validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="resourceName">Resource name</param>
+		/// <param name="formatArgs">Custom message format args</param>
+		/// <param name="resourceType">Resource type representing a resx file</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName, params Func<T, object>[] formatArgs)
+		{
+			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
+			return rule.WithLocalizedMessage(resourceType, resourceName)
+				.Configure(cfg => {
+					formatArgs
+						.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
+						.ForEach(cfg.CurrentValidator.CustomMessageFormatArguments.Add);
+				});
+		}
+
+		/// <summary>
+		/// Specifies a custom error message resource to use when validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="resourceType">Resource type representing a resx file</param>
+		/// <param name="resourceName">Name of resource</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName) {
+			resourceType.Guard("A resource type must be provided.");
+			resourceName.Guard("A resource name must be provided.");
+
+			return rule.Configure(config => {
+				config.CurrentValidator.ErrorMessageSource = new LocalizedStringSource(resourceType, resourceName, new StaticResourceAccessorBuilder());
+			});
+		}
+
 
 		/// <summary>
 		/// Specifies a condition limiting when the validator should run. 

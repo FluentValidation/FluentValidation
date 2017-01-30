@@ -85,12 +85,36 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 		}
 
+
 		[Fact]
-		public void When_using_explicitly_localized_message_does_not_fall_back_to_ResourceProvider() {
+		public void Sets_localised_message_via_type_name() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Surname).NotEmpty().WithLocalizedMessage(typeof(MyResources), nameof(MyResources.notempty_error));
+			var result = validator.Validate(new Person());
+
+			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+		}
+
+		[Fact]
+		public void When_using_explicitly_localized_message_does_not_fall_back_to_ResourceProvider_with_expression() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotEmpty().WithLocalizedMessage(() => MyOverridenResources.notempty_error)
+			};
+
+			var results = validator.Validate(new Person());
+
+			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
+		}
+
+		[Fact]
+		public void When_using_explicitly_localized_message_does_not_fall_back_to_ResourceProvider_with_type()
+		{
+			ValidatorOptions.ResourceProviderType = typeof(MyResources);
+
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotEmpty().WithLocalizedMessage(typeof(MyOverridenResources), nameof(MyOverridenResources.notempty_error))
 			};
 
 			var results = validator.Validate(new Person());
@@ -112,7 +136,7 @@ namespace FluentValidation.Tests {
 
 
 		[Fact]
-		public void When_using_explicitly_localized_message_with_custom_validator_does_not_fall_back_to_ResourceProvider() {
+		public void When_using_explicitly_localized_message_with_custom_validator_does_not_fall_back_to_ResourceProvider_expression() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 
 			var validator = new TestValidator {
@@ -126,7 +150,22 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Can_use_placeholders_with_localized_messages() {
+		public void When_using_explicitly_localized_message_with_custom_validator_does_not_fall_back_to_ResourceProvider()
+		{
+			ValidatorOptions.ResourceProviderType = typeof(MyResources);
+
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).SetValidator(new MyPropertyValidator())
+					.WithLocalizedMessage(typeof(MyOverridenResources), nameof(MyOverridenResources.notempty_error))
+			};
+
+			var results = validator.Validate(new Person());
+
+			results.Errors.Single().ErrorMessage.ShouldEqual("bar");
+		}
+
+		[Fact]
+		public void Can_use_placeholders_with_localized_messages_expression() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(() => TestMessages.PlaceholderMessage, 1)
 			};
@@ -137,7 +176,19 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Can_use_placeholders_with_localized_messages_using_expressions() {
+		public void Can_use_placeholders_with_localized_messages()
+		{
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(typeof(TestMessages), nameof(TestMessages.PlaceholderMessage), 1)
+			};
+
+			var result = validator.Validate(new Person());
+
+			result.Errors.Single().ErrorMessage.ShouldEqual("Test 1");
+		}
+
+		[Fact]
+		public void Can_use_placeholders_with_localized_messages_using_expressions_when_resource_is_expression() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(() => TestMessages.PlaceholderMessage, x => 1)
 			};
@@ -146,7 +197,19 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("Test 1");
 		}
 
-	    [Fact]
+		[Fact]
+		public void Can_use_placeholders_with_localized_messages_using_expressions()
+		{
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(typeof(TestMessages), nameof(TestMessages.PlaceholderMessage), x => 1)
+			};
+
+			var result = validator.Validate(new Person());
+			result.Errors.Single().ErrorMessage.ShouldEqual("Test 1");
+		}
+
+
+		[Fact]
 	    public void Setting_global_resource_provider_propogates_to_metadata() {
             ValidatorOptions.ResourceProviderType = typeof(TestMessages);
             var validator = new TestValidator();

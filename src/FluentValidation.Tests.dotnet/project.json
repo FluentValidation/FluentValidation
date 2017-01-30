@@ -37,9 +37,9 @@
                 "type": "platform",
                 "version": "1.0.0"
             },
-          "FluentValidation.NetStandard": {
-            "target": "project"
-          },
+            "FluentValidation.NetStandard": {
+                "target": "project"
+            },
             "dotnet-test-xunit": "2.2.0-preview2-build1029"
         },
       "imports": [ "dnxcore50", "portable-net451+win81" ]
