@@ -14,7 +14,7 @@
     <releaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</releaseNotes>
     <dependencies>
       <dependency id="FluentValidation" version="" />
-			<dependency id="Microsoft.AspNetCore.Mvc" />
+			<dependency id="Microsoft.AspNetCore.Mvc" version="1.1.0" />
     </dependencies>
   </metadata>
 </package>
