@@ -33,28 +33,39 @@
 			_validatorFactory = validatorFactory;
 		}
 
+		public void Add(Type validatorType, FluentValidationClientValidatorFactory factory) {
+			if (validatorType == null) throw new ArgumentNullException(nameof(validatorType));
+			if (factory == null) throw new ArgumentNullException(nameof(factory));
+
+			_validatorFactories[validatorType] = factory;
+		}
+
 		public void CreateValidators(ClientValidatorProviderContext context) {
 			var modelType = context.ModelMetadata.ContainerType;
 
 			if (modelType != null ) {
 				var validator = _validatorFactory.GetValidator(modelType);
-				var descriptor = validator.CreateDescriptor();
-				var propertyName = context.ModelMetadata.PropertyName;
 
-				var validatorsWithRules = from rule in descriptor.GetRulesForMember(propertyName)
-										  let propertyRule = (PropertyRule)rule
-										  let validators = rule.Validators
-										  where validators.Any()
-										  from propertyValidator in validators
-										  let modelValidatorForProperty = GetModelValidator( context, propertyRule, propertyValidator)
-										  where modelValidatorForProperty != null
-										  select modelValidatorForProperty;
+				if (validator != null) {
 
-				foreach (var propVal in validatorsWithRules) {
-					context.Results.Add(new ClientValidatorItem {
-						Validator = propVal,
-						IsReusable = false
-					});
+					var descriptor = validator.CreateDescriptor();
+					var propertyName = context.ModelMetadata.PropertyName;
+
+					var validatorsWithRules = from rule in descriptor.GetRulesForMember(propertyName)
+						let propertyRule = (PropertyRule) rule
+						let validators = rule.Validators
+						where validators.Any()
+						from propertyValidator in validators
+						let modelValidatorForProperty = GetModelValidator(context, propertyRule, propertyValidator)
+						where modelValidatorForProperty != null
+						select modelValidatorForProperty;
+
+					foreach (var propVal in validatorsWithRules) {
+						context.Results.Add(new ClientValidatorItem {
+							Validator = propVal,
+							IsReusable = false
+						});
+					}
 				}
 			}
 		}
