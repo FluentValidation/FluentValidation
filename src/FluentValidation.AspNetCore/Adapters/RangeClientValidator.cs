@@ -17,8 +17,8 @@
 		public override void AddValidation(ClientModelValidationContext context) {
 			MergeAttribute(context.Attributes, "data-val", "true");
 			MergeAttribute(context.Attributes, "data-val-range", GetErrorMessage(context));
-			MergeAttribute(context.Attributes, "data-val-range-max", RangeValidator.From.ToString());
-			MergeAttribute(context.Attributes, "data-val-range-min", RangeValidator.To.ToString());
+			MergeAttribute(context.Attributes, "data-val-range-max", RangeValidator.To.ToString());
+			MergeAttribute(context.Attributes, "data-val-range-min", RangeValidator.From.ToString());
 		}
 
 		private string GetErrorMessage(ClientModelValidationContext context) {
