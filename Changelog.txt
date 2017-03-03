@@ -1,6 +1,6 @@
-6.4 - 
-Performance improvements for validatior instantiation
+6.4 - 3 Mar 2017
 AspNetCore support
+Performance improvements for validatior instantiation
 EnumValidator supports Flags 
 Add ValidationSeverity
 Add support for collection validators on model-level rules
