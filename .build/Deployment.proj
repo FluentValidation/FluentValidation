@@ -149,8 +149,8 @@
 		<Exec WorkingDirectory="$(BuildDir)\Packages" 
 					Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation$(PackageSuffix)\FluentValidation$(PackageSuffix).nuspec" />
 
-	<!--	<Exec WorkingDirectory="$(BuildDir)\Packages"
-		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\FluentValidation.MVC5$(PackageSuffix).nuspec" /> -->
+	<Exec WorkingDirectory="$(BuildDir)\Packages"
+		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)\FluentValidation.MVC5$(PackageSuffix).nuspec" />
 
 		<Exec WorkingDirectory="$(BuildDir)\Packages"
 		    	Command="$(BaseDir)\.nuget\nuget.exe pack $(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)\FluentValidation.WebApi$(PackageSuffix).nuspec" />
