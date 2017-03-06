@@ -17,6 +17,11 @@ For ASP.NET MVC integration:
 ```
 Install-Package FluentValidation.MVC5
 ```
+For ASP.NET Core:
+
+```
+Install-Package FluentValidation.AspNetCore
+```
 
 ### Example
 ```csharp
