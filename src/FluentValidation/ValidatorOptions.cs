@@ -111,6 +111,11 @@ namespace FluentValidation {
 
 			return name;
 		}
+
+		/// <summary>
+		/// Disables the expression accessor cache. Not recommended.
+		/// </summary>
+		public static bool DisableAccessorCache { get; set; }
 	}
 
 	/// <summary>

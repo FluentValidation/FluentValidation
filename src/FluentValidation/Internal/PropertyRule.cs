@@ -131,7 +131,7 @@ namespace FluentValidation.Internal {
 			// Instead we'll use the MemberInfo as the key, but this only works for member expressions.
 			// If this is not a member expression (eg, a RuleFor(x => x) or a RuleFor(x => x.Foo())) then we won't cache the result. 
 			// We could probably make the cache more robust in future. 
-			var compiled = member == null ? expression.Compile() : AccessorCache<T>.GetCachedAccessor(member, expression);
+			var compiled = member == null || ValidatorOptions.DisableAccessorCache ? expression.Compile() : AccessorCache<T>.GetCachedAccessor(member, expression);
 
 			return new PropertyRule(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
 		}

@@ -47,6 +47,19 @@
 			Assert.NotEqual(member1, member3);
 		}
 
+		[Fact]
+		public void Identifies_if_memberexp_acts_on_model_instance()
+		{
+			Expression<Func<Person, string>> expr1 = x => DoStuffToPerson(x).Surname;
+			Expression<Func<Person, string>> expr2 = x => x.Surname;
+
+			expr1.GetMember().ShouldBeNull();
+			expr2.GetMember().ShouldNotBeNull();
+		}
+
+		private Person DoStuffToPerson(Person p) {
+			return p;
+		}
 		[Fact(Skip = "Manual benchmark")]
 		public void Bemchmark()
 		{

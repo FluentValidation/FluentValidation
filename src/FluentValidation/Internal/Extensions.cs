@@ -72,6 +72,10 @@ namespace FluentValidation.Internal {
 				return null;
 			}
 
+			if (memberExp.Expression.NodeType != ExpressionType.Parameter) {
+				return null; // We don't care if we're not acting upon the model instance. 
+			}
+
 			return memberExp.Member;
 		}
 
