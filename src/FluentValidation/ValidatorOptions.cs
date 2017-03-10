@@ -24,6 +24,7 @@ namespace FluentValidation {
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Internal;
+	using Validators;
 
 	/// <summary>
 	/// Validator runtime options
@@ -52,6 +53,8 @@ namespace FluentValidation {
 
 		private static Func<Type, MemberInfo, LambdaExpression, string> propertyNameResolver = DefaultPropertyNameResolver;
 		private static Func<Type, MemberInfo, LambdaExpression, string> displayNameResolver = DefaultDisplayNameResolver;
+		private static Func<AsyncPredicate, IPropertyValidator> asyncValidatorFactory = CreateAsyncValidator;
+
 
 		/// <summary>
 		/// Pluggable logic for resolving property names
@@ -59,6 +62,15 @@ namespace FluentValidation {
 		public static Func<Type, MemberInfo, LambdaExpression, string> PropertyNameResolver {
 			get { return propertyNameResolver; }
 			set { propertyNameResolver = value ?? DefaultPropertyNameResolver; }
+		}
+
+		/// <summary>
+		/// Pluggable logic for creating a custom async validator
+		/// </summary>
+		public static Func<AsyncPredicate, IPropertyValidator> AsyncValidatorFactory
+		{
+			get { return asyncValidatorFactory; }
+			set { asyncValidatorFactory = value ?? CreateAsyncValidator; }
 		}
 
 		/// <summary>
@@ -110,6 +122,10 @@ namespace FluentValidation {
 			}
 
 			return name;
+		}
+
+		static IPropertyValidator CreateAsyncValidator(AsyncPredicate predicate) {
+			return new AsyncPredicateValidator(predicate);
 		}
 	}
 
