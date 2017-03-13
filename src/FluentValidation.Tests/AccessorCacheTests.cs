@@ -57,6 +57,12 @@
 			expr2.GetMember().ShouldNotBeNull();
 		}
 
+		[Fact]
+		public void Gets_member_for_nested_property() {
+			Expression<Func<Person, string>> expr1 = x => x.Address.Line1;
+			expr1.GetMember().ShouldNotBeNull();
+		}
+
 		private Person DoStuffToPerson(Person p) {
 			return p;
 		}
