@@ -52,7 +52,7 @@
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.MVC5$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.MVC5$(PackageSuffix)" />
     <Copy SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.WebApi$(PackageSuffix).nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.WebApi$(PackageSuffix)" />
  <Copy Condition="'$(PackageSuffix)'==''" SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.AspNetCore.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.AspNetCore"  />
- <Copy Condition="'$(PackageSuffix)'==''" SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.Mvc6.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.Mvc6"  />
+ <!--<Copy Condition="'$(PackageSuffix)'==''" SourceFiles="$(MSBuildProjectDirectory)\FluentValidation.Mvc6.nuspec" DestinationFolder="$(PackageDir)\temp\FluentValidation.Mvc6"  />-->
 
     <Copy SourceFiles="@(Portable40Binaries)" DestinationFolder="$(PackageDir)\temp\FluentValidation$(PackageSuffix)\lib\portable-net40%2Bsl50%2Bwp80%2Bwin8%2Bwpa81\%(RecursiveDir)"/>
 		<!-- Copy the source files to the package dir -->
@@ -101,11 +101,11 @@
 			Value="$(NugetVersion)" />
 
 
-	<XmlUpdate Condition="'$(PackageSuffix)'==''" 
+	<!--<XmlUpdate Condition="'$(PackageSuffix)'==''" 
 		  Namespace="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd"
 			XmlFileName="$(PackageDir)\temp\FluentValidation.Mvc6\FluentValidation.Mvc6.nuspec"
 			XPath="/package/metadata/version"
-			Value="$(NugetVersion)" />
+			Value="$(NugetVersion)" />-->
 		<!-- Also need to insert the version number into the MVC3 dependencies section -->
 
 	<XmlUpdate
