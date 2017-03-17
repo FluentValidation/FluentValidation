@@ -47,7 +47,13 @@
     <RemoveDir Directories="$(BuildDir)" />
     
     <MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages" Targets="Restore;Pack" />
-    	
+    
+    <!-- Remove the test packages. I don't know why it creates these -->
+    <ItemGroup>
+      <DeleteIt Include="$(BuildDir)\Packages\*.Tests.*.nupkg" />
+    </ItemGroup>
+    <Delete Files="@(DeleteIt)" />
+    
     <!-- Old deployment.proj handles zip file package --> 
 		<MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);NugetVersion=$(NugetVersion)" />
   </Target>
