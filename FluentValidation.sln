@@ -22,15 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{0216F6
 	ProjectSection(SolutionItems) = preProject
 		.build\build.proj = .build\build.proj
 		.build\Deployment.proj = .build\Deployment.proj
-		.build\FluentValidation.MVC3-Signed.nuspec = .build\FluentValidation.MVC3-Signed.nuspec
-		.build\FluentValidation.MVC3.nuspec = .build\FluentValidation.MVC3.nuspec
-		.build\FluentValidation.MVC4-Signed.nuspec = .build\FluentValidation.MVC4-Signed.nuspec
-		.build\FluentValidation.MVC4.nuspec = .build\FluentValidation.MVC4.nuspec
-		.build\FluentValidation.MVC5-Signed.nuspec = .build\FluentValidation.MVC5-Signed.nuspec
-		.build\FluentValidation.MVC5.nuspec = .build\FluentValidation.MVC5.nuspec
-		.build\FluentValidation.nuspec = .build\FluentValidation.nuspec
-		.build\FluentValidation.WebApi-Signed.nuspec = .build\FluentValidation.WebApi-Signed.nuspec
-		.build\FluentValidation.WebApi.nuspec = .build\FluentValidation.WebApi.nuspec
 		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
 		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
 	EndProjectSection
