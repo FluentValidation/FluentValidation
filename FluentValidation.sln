@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3906F280-A567-4AD7-A0EF-7253E95E7852}"
 	ProjectSection(SolutionItems) = preProject
@@ -10,12 +10,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		FluentValidation.snk = FluentValidation.snk
 		src\FluentValidation.Tests-vnext\global.json = src\FluentValidation.Tests-vnext\global.json
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation", "src\FluentValidation\FluentValidation.csproj", "{DAE0249B-4F69-4AC9-9A17-AA23E0795316}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests", "src\FluentValidation.Tests\FluentValidation.Tests.csproj", "{E353A6E3-5404-4E1E-B33D-4C7BAE646752}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Portable45", "src\FluentValidation.Portable\FluentValidation.Portable45.csproj", "{C16154BE-8EB7-4CBF-976C-24CCD8BA3B51}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2AE2DFF6-ACA8-4970-ABE2-403563F8EA03}"
 	ProjectSection(SolutionItems) = preProject
@@ -41,6 +35,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{0216F6
 		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation", "src\FluentValidation\FluentValidation.csproj", "{DAE0249B-4F69-4AC9-9A17-AA23E0795316}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests", "src\FluentValidation.Tests\FluentValidation.Tests.csproj", "{E353A6E3-5404-4E1E-B33D-4C7BAE646752}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Portable45", "src\FluentValidation.Portable\FluentValidation.Portable45.csproj", "{C16154BE-8EB7-4CBF-976C-24CCD8BA3B51}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Mvc5", "src\FluentValidation.Mvc5\FluentValidation.Mvc5.csproj", "{23E384EF-5A39-4D73-A8D5-EF48C71C128F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc5", "src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj", "{8FF90023-30A2-410D-A735-498878BDA168}"
@@ -61,14 +61,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Port
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.NetStandard", "src\FluentValidation.NetStandard\FluentValidation.NetStandard.csproj", "{50E89C50-57F3-4AFC-85C6-4DCF2EDEA5FA}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluentValidation.Tests.dotnet", "src\FluentValidation.Tests.dotnet\FluentValidation.Tests.dotnet.xproj", "{FCCE03DA-9FD1-4483-976C-EA6821A1E514}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.dotnet", "src\FluentValidation.Tests.dotnet\FluentValidation.Tests.dotnet.csproj", "{FCCE03DA-9FD1-4483-976C-EA6821A1E514}"
 	ProjectSection(ProjectDependencies) = postProject
 		{50E89C50-57F3-4AFC-85C6-4DCF2EDEA5FA} = {50E89C50-57F3-4AFC-85C6-4DCF2EDEA5FA}
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluentValidation.Tests.AspNetCore.dotnet", "src\FluentValidation.Tests.Mvc6.dotnet\FluentValidation.Tests.AspNetCore.dotnet.xproj", "{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.dotnet", "src\FluentValidation.Tests.Mvc6.dotnet\FluentValidation.Tests.Mvc6.dotnet.csproj", "{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "FluentValidation.AspNetCore", "src\FluentValidation.AspNetCore\FluentValidation.AspNetCore.xproj", "{D8A44C11-51B8-4AA1-9391-C4F89078181C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.AspNetCore", "src\FluentValidation.AspNetCore\FluentValidation.AspNetCore.csproj", "{D8A44C11-51B8-4AA1-9391-C4F89078181C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

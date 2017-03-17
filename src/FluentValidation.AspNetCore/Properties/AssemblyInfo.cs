@@ -24,7 +24,7 @@ using System.Security;
 [assembly: AssemblyTitle("FluentValidation.AspNetCore")]
 [assembly: AssemblyDescription("FluentValidation.AspNetCore")]
 [assembly: AssemblyProduct("FluentValidation.AspNetCore")]
-[assembly: AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2016")]
+[assembly: AssemblyCopyright("Copyright (c) Jeremy Skinner 2008-2017")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
 [assembly: System.Resources.NeutralResourcesLanguage("en")]
