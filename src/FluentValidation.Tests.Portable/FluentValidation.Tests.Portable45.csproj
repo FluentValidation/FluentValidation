@@ -71,13 +71,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Portable\FluentValidation.Portable45.csproj">
-      <Project>{c16154be-8eb7-4cbf-976c-24ccd8ba3b51}</Project>
-      <Name>FluentValidation.Portable45</Name>
-    </ProjectReference>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
+      <Project>{9db6a8b4-5c9a-4ca1-96a5-4e1e4c3a9a44}</Project>
+      <Name>FluentValidation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

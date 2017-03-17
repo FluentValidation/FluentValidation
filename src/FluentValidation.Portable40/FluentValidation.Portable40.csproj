@@ -37,12 +37,8 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
-    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\FluentValidation\AssemblyInfo.cs">
-      <Link>AssemblyInfo.cs</Link>
-    </Compile>
     <Compile Include="..\FluentValidation\CollectionValidatorExtensions.cs">
       <Link>CollectionValidatorExtensions.cs</Link>
     </Compile>
@@ -293,6 +289,7 @@
       <Link>ScalePrecisionValidator.cs</Link>
     </Compile>
     <Compile Include="Net40Compatibility.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\FluentValidation\Resources\Messages.cs.resx">

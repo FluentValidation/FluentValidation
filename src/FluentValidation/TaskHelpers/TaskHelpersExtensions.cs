@@ -1,7 +1,6 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Contracts;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -466,7 +465,7 @@ namespace System.Threading.Tasks
 			else
 			{
 				Func<Exception, Exception> prepForRemoting = null;
-#if !PORTABLE && !PORTABLE40 && !NETSTANDARD
+#if !PORTABLE && !PORTABLE40 && !NETSTANDARD1_0
 				try
 				{
 					if (AppDomain.CurrentDomain.IsFullyTrusted)
@@ -515,9 +514,6 @@ namespace System.Threading.Tasks
 		[SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "unused", Justification = "We only call the property getter for its side effect; we don't care about the value.")]
 		private static void MarkExceptionsObserved(this Task task)
 		{
-#if !WIN10
-			Contract.Assert(task.IsCompleted);
-#endif
 			Exception unused = task.Exception;
 		}
 
@@ -771,9 +767,6 @@ namespace System.Threading.Tasks
 
 		protected CatchInfoBase(TTask task, CancellationToken cancellationToken)
 		{
-#if !WIN10
-			Contract.Assert(task != null);
-#endif
 			_task = task;
 			if (task.IsFaulted)
 			{

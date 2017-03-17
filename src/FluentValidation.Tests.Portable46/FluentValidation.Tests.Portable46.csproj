@@ -271,12 +271,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation.Portable46\FluentValidation.Portable46.csproj">
-      <Project>{61421970-1637-4ef1-837e-edff9d6d9a88}</Project>
-      <Name>FluentValidation.Portable46</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\FluentValidation.Tests\TestMessages.fr.resx">
       <Link>TestMessages.fr.resx</Link>
     </EmbeddedResource>
@@ -286,6 +280,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
+      <Project>{9db6a8b4-5c9a-4ca1-96a5-4e1e4c3a9a44}</Project>
+      <Name>FluentValidation</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -18,11 +18,11 @@
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <ProjectReference Include="..\FluentValidation.NetStandard\FluentValidation.NetStandard.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation.AspNetCore\FluentValidation.AspNetCore.csproj" />
+    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
   </ItemGroup>
 
   <ItemGroup>
