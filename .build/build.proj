@@ -14,10 +14,9 @@
     <Exec Command="$(BaseDir)\.nuget\nuget.exe restore $(SolutionFile)" WorkingDirectory="$(BaseDir)"  />
 	</Target>
 	
-	<Target Name="Compile" DependsOnTargets="PackageRestore">
-		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration)"  Targets="Rebuild" />
-  	<MSBuild Condition="'$(SignPackages)'=='True'" Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PerformSigning=True" Targets="Rebuild" />
-	</Target>
+	<Target Name="Compile">
+		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration)" Targets="Restore;Rebuild" />
+</Target>
 
 	<Target Name="Test">
     <MSBuild Projects="test.proj" Properties="Configuration=$(Configuration)" />
