@@ -11,7 +11,7 @@
   <UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.Zip" />
 	<UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.XmlUpdate" />
 	
-	<Target Name="default" DependsOnTargets="Deploy; PackageZip; CreatePackages" />
+	<Target Name="default" DependsOnTargets="Deploy; PackageZip" />
 	
 	<Target Name="Deploy">
 		
@@ -44,7 +44,6 @@
 		<Message Text="@(FilesToZip)" />
 		<Zip Files="@(FilesToZip)" ZipFileName="$(BuildDir)\FluentValidation$(PackageSuffix).zip" WorkingDirectory="$(OutputDir)" />
 	</Target>
-
 
 	<Target Name="CreatePackages" DependsOnTargets="Deploy">
 		<!-- First copy the nuspec template files to the package dir -->

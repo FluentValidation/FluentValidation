@@ -30,7 +30,7 @@
       <!--<TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Mvc4\bin\$(Configuration)\FluentValidation.Tests.Mvc4.dll" />-->
       <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.WebApi\bin\$(Configuration)\FluentValidation.Tests.WebApi.dll" />
       <!--<TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable\bin\$(Configuration)\FluentValidation.Tests.Portable45.dll" />-->
-      <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable40\bin\$(Configuration)\FluentValidation.Tests.Portable40.dll" />
+      <!--<TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable40\bin\$(Configuration)\FluentValidation.Tests.Portable40.dll" />-->
       <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable46\bin\$(Configuration)\FluentValidation.Tests.Portable46.dll" />
     </ItemGroup>
     
@@ -45,8 +45,10 @@
 
   <Target Name="Deploy">
     <RemoveDir Directories="$(BuildDir)" />
-		
+    
+    <MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages" Targets="Restore;Pack" />
+    	
+    <!-- Old deployment.proj handles zip file package --> 
 		<MSBuild Projects="Deployment.proj" Properties="Configuration=$(Configuration);NugetVersion=$(NugetVersion)" />
-    <MSBuild Condition="'$(SignPackages)'=='True'" Projects="Deployment.proj" Properties="Configuration=$(Configuration);NugetVersion=$(NugetVersion);PackageSuffix=-signed" />
   </Target>
 </Project>
