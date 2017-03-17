@@ -45,11 +45,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.WebApi", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.WebApi", "src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj", "{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Portable40", "src\FluentValidation.Portable40\FluentValidation.Portable40.csproj", "{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Portable45", "src\FluentValidation.Tests.Portable\FluentValidation.Tests.Portable45.csproj", "{D66A6368-A38E-4BED-BC4D-E56D785B39E3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Portable40", "src\FluentValidation.Tests.Portable40\FluentValidation.Tests.Portable40.csproj", "{97575721-CF26-4CE3-B201-DAC6242C8725}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Portable46", "src\FluentValidation.Tests.Portable46\FluentValidation.Tests.Portable46.csproj", "{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}"
 EndProject
@@ -87,18 +83,10 @@ Global
 		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4496CA2C-E818-4758-84DA-EAF9BFE48ADB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D66A6368-A38E-4BED-BC4D-E56D785B39E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D66A6368-A38E-4BED-BC4D-E56D785B39E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D66A6368-A38E-4BED-BC4D-E56D785B39E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D66A6368-A38E-4BED-BC4D-E56D785B39E3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{97575721-CF26-4CE3-B201-DAC6242C8725}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{97575721-CF26-4CE3-B201-DAC6242C8725}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{97575721-CF26-4CE3-B201-DAC6242C8725}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{97575721-CF26-4CE3-B201-DAC6242C8725}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DE44BB1-F8A9-421C-B20E-37B83EEF5B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
