@@ -1,164 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{23E384EF-5A39-4D73-A8D5-EF48C71C128F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FluentValidation.Mvc</RootNamespace>
+    <TargetFramework>net45</TargetFramework>
     <AssemblyName>FluentValidation.Mvc</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
+    <RootNamespace>FluentValidation.Mvc</RootNamespace>
+    <PackageId>FluentValidation.Mvc5</PackageId>
+    <Authors>Jeremy Skinner</Authors>
+    <Company />
+    <Description>ASP.NET MVC 5 integration for FluentValidation</Description>
+    <Copyright>Copyright (c) Jeremy Skinner 2008-2017</Copyright>
+    <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
+    <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
+    <PackageIconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=FluentValidation&amp;amp;DownloadId=166226</PackageIconUrl>
+    <PackageReleaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</PackageReleaseNotes>
+    <NeutralLanguage>en</NeutralLanguage>
+    <RepositoryUrl>http://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\FluentValidation.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
+    <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.0" />
+  </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
+    </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.0\lib\net45\System.Web.Helpers.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.Mvc.5.2.0\lib\net45\System.Web.Mvc.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.Razor.3.2.0\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.0\lib\net45\System.Web.WebPages.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Microsoft.AspNet.WebPages.3.2.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
-    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\CustomizeValidatorAttribute.cs">
-      <Link>CustomizeValidatorAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\FluentValidationModelValidator.cs">
-      <Link>FluentValidationModelValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\FluentValidationModelValidatorProvider.cs">
-      <Link>FluentValidationModelValidatorProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\IValidatorInterceptor.cs">
-      <Link>IValidatorInterceptor.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\AbstractComparisonFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\AbstractComparisonFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\CreditCardFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\CreditCardFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\EmailFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\EmailFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\EqualToFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\EqualToFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\FluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\FluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\MaxFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\MaxFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\MinFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\MinFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\RangeFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\RangeFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\RegularExpressionFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\RegularExpressionFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\RequiredFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\RequiredFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\PropertyValidatorAdapters\StringLengthFluentValidationPropertyValidator.cs">
-      <Link>PropertyValidatorAdaptors\StringLengthFluentValidationPropertyValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\RuleSetForClientSideMessagesAttribute.cs">
-      <Link>RuleSetForClientSideMessagesAttribute.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation.Mvc4\ValidationResultExtension.cs">
-      <Link>ValidationResultExtension.cs</Link>
-    </Compile>
-    <Compile Include="AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\FluentValidation.snk">
-      <Link>FluentValidation.snk</Link>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj">
-      <Project>{DAE0249B-4F69-4AC9-9A17-AA23E0795316}</Project>
-      <Name>FluentValidation</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <PropertyGroup>
-    <SignAssembly Condition="'$(PerformSigning)'=='True'">true</SignAssembly>
-    <OutputPath Condition="'$(PerformSigning)'=='True'">bin\$(Configuration)-Signed\</OutputPath>
-  </PropertyGroup>
-  <Target Name="Pack"></Target>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

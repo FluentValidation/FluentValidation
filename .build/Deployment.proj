@@ -17,9 +17,9 @@
 		
 		<ItemGroup>
 			<MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)$(PackageSuffix)\netstandard1.0\**\*.*" />
-			<Mvc5Binaries Include="$(BaseDir)\src\FluentValidation.Mvc5\bin\$(Configuration)$(PackageSuffix)\FluentValidation.Mvc.*" />
+			<Mvc5Binaries Include="$(BaseDir)\src\FluentValidation.Mvc5\bin\$(Configuration)$(PackageSuffix)\net45\FluentValidation.Mvc.*" />
 			<!--<Portable40Binaries Include="$(BaseDir)\src\FluentValidation.Portable40\bin\$(Configuration)$(PackageSuffix)\**\*.*" />-->
-			<WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)$(PackageSuffix)\FluentValidation.WebApi.*" />
+			<WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)$(PackageSuffix)\net45\FluentValidation.WebApi.*" />
 			<!--<KBinaries Include="$(BaseDir)\artifacts\bin\FluentValidation.K\$(Configuration)\aspnetcore50\**\*.*" />-->
 			<AspNetCoreBinaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.deps.json" />
 			<AspNetCore451Binaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\net451\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\net451\FluentValidation.AspNetCore.deps.json" />
