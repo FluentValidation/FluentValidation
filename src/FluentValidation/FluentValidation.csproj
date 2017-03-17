@@ -12,7 +12,6 @@
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
 
   <ItemGroup>
