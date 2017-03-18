@@ -358,6 +358,22 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Specifies a custom property name to use within the error message.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="nameProvider">Func used to retrieve the property's display name</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> nameProvider) {
+			nameProvider.Guard("A nameProvider WithName.");
+
+			Func<object, string> newFunc = x => nameProvider((T)x);
+
+			return rule.Configure(config => {
+				config.DisplayName = new LazyStringSource(newFunc);
+			});
+		}
+
+		/// <summary>
 		/// Specifies a localized name for the error message. 
 		/// </summary>
 		/// <param name="rule">The current rule</param>
@@ -397,7 +413,7 @@ namespace FluentValidation {
 		/// <param name="propertyName">The property name to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string propertyName) {
-			propertyName.Guard("A property name must be specified when calling WithNamePropertyName.");
+			propertyName.Guard("A property name must be specified when calling OverridePropertyName.");
 			return rule.Configure(config => config.PropertyName = propertyName);
 		}
 
