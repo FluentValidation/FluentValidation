@@ -34,7 +34,6 @@ namespace FluentValidation
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, IResourceAccessorBuilder resourceAccessorBuilder = null) {
 			resourceSelector.Guard("A resource selector must be specified.");
 			// default to the static resource accessor builder - explicit resources configured with WithLocalizedName should take precedence over ResourceProviderType.
-			resourceAccessorBuilder = resourceAccessorBuilder ?? new StaticResourceAccessorBuilder();
 
 			return rule.Configure(config => {
 				config.DisplayName = LocalizedStringSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
@@ -50,7 +49,7 @@ namespace FluentValidation
 		[Obsolete("Use WithLocalizedMessage(Type resourceType, string resourceName) instead.")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector) {
 			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
-			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder());
+			return rule.WithLocalizedMessage(resourceSelector, (IResourceAccessorBuilder)null);
 		}
 
 		/// <summary>
@@ -73,7 +72,7 @@ namespace FluentValidation
 		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
 		/// <param name="resourceAccessorBuilder">The resource accessor builder to use. </param>
 		/// <returns></returns>
-		[Obsolete("Use WithLocalizedMessage(Type resourceType, string resourceName, IResourceAccessorBuilder instead) instead.")]
+		[Obsolete("Use WithLocalizedMessage(Type resourceType, string resourceName) instead.")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, IResourceAccessorBuilder resourceAccessorBuilder) {
 			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)");
 
@@ -92,7 +91,7 @@ namespace FluentValidation
 		[Obsolete("Use WithLocalizedMessage(Type resourceType, string resourceName, params Func<T, object>[] formatArgs) instead.")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, params Func<T, object>[] formatArgs) {
 			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
-			return rule.WithLocalizedMessage(resourceSelector, new StaticResourceAccessorBuilder())
+			return rule.WithLocalizedMessage(resourceSelector, (IResourceAccessorBuilder)null)
 				.Configure(cfg => {
 					formatArgs
 						.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
@@ -102,5 +101,18 @@ namespace FluentValidation
 		}
 
 
+	}
+}
+
+namespace FluentValidation.Resources {
+	/// <summary>
+	/// Builds a delegate for retrieving a localised resource from a resource type and property name.
+	/// </summary>
+	[Obsolete("This functionality has been merged into LocalizedStringSource")]
+	public interface IResourceAccessorBuilder {
+		/// <summary>
+		/// Gets a function that can be used to retrieve a message from a resource type and resource name.
+		/// </summary>
+		ResourceAccessor GetResourceAccessor(Type resourceType, string resourceName);
 	}
 }

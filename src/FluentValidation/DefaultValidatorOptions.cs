@@ -190,7 +190,7 @@ namespace FluentValidation {
 			resourceName.Guard("A resource name must be provided.");
 
 			return rule.Configure(config => {
-				config.CurrentValidator.ErrorMessageSource = new LocalizedStringSource(resourceType, resourceName, new StaticResourceAccessorBuilder());
+				config.CurrentValidator.ErrorMessageSource = new LocalizedStringSource(resourceType, resourceName);
 			});
 		}
 
@@ -324,7 +324,7 @@ namespace FluentValidation {
 		    resourceName.Guard("A resource name must be specified.");
 			
 			return rule.Configure(config => {
-				config.DisplayName = new LocalizedStringSource(resourceType, resourceName, new StaticResourceAccessorBuilder()); 
+				config.DisplayName = new LocalizedStringSource(resourceType, resourceName); 
 			});
 		}
 

@@ -71,7 +71,7 @@ namespace FluentValidation.Tests {
 			ValidatorOptions.ResourceProviderType = typeof(OverrideResources);
 
 			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedName(() => MyResources.CustomProperty, new FallbackAwareResourceAccessorBuilder())
+				v => v.RuleFor(x => x.Surname).NotNull().Configure(cfg => cfg.DisplayName = new OverridableLocalizedStringSource(typeof(MyResources), "CustomProperty"))
 			};
 
 			var result = validator.Validate(new Person());

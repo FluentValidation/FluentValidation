@@ -98,7 +98,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_if_property_name_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithName(null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithName((string)null));
 		}
 
 		[Fact]

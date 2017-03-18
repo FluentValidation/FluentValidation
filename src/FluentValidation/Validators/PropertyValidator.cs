@@ -48,7 +48,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			originalErrorSource = errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName, new FallbackAwareResourceAccessorBuilder());
+			originalErrorSource = errorSource = new OverridableLocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
 
 		protected PropertyValidator(string errorMessage) {
@@ -57,7 +57,7 @@ namespace FluentValidation.Validators {
 
 		[Obsolete("Use the constructor that takes a Type resourceType and string resourceName")]
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
-			originalErrorSource = errorSource = LocalizedStringSource.CreateFromExpression(errorMessageResourceSelector, new FallbackAwareResourceAccessorBuilder());
+			originalErrorSource = errorSource = OverridableLocalizedStringSource.CreateFromExpression(errorMessageResourceSelector);
 		}
 
 		public IStringSource ErrorMessageSource {
