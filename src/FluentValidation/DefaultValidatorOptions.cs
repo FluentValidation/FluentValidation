@@ -363,6 +363,7 @@ namespace FluentValidation {
 		/// <param name="rule">The current rule</param>
 		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
 		/// <param name="resourceAccessorBuilder">Resource accessor builder to use</param>
+		[Obsolete("Use WithLocalizedName(Type resourceType, string resourceName) instead")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedName<T,TProperty>(this IRuleBuilderOptions<T,TProperty> rule, Expression<Func<string>> resourceSelector, IResourceAccessorBuilder resourceAccessorBuilder = null) {
 			resourceSelector.Guard("A resource selector must be specified.");
 			// default to the static resource accessor builder - explicit resources configured with WithLocalizedName should take precedence over ResourceProviderType.
@@ -370,6 +371,21 @@ namespace FluentValidation {
 			
 			return rule.Configure(config => {
 				config.DisplayName = LocalizedStringSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
+			});
+		}
+
+	    /// <summary>
+	    /// Specifies a localized name for the error message. 
+	    /// </summary>
+	    /// <param name="rule">The current rule</param>
+	    /// <param name="resourceType">The type of the generated resource file</param>
+	    /// <param name="resourceName">The name of the resource to use</param>
+	    public static IRuleBuilderOptions<T, TProperty> WithLocalizedName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName) {
+			resourceType.Guard("A resource type must be specified.");
+		    resourceName.Guard("A resource name must be specified.");
+			
+			return rule.Configure(config => {
+				config.DisplayName = new LocalizedStringSource(resourceType, resourceName, new StaticResourceAccessorBuilder()); 
 			});
 		}
 

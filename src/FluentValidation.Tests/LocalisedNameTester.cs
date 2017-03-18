@@ -37,6 +37,16 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Uses_localized_name() {
 			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedName(typeof(MyResources), nameof(MyResources.CustomProperty))
+			};
+
+			var result = validator.Validate(new Person());
+			result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
+		}
+
+		[Fact]
+		public void Uses_localized_name_expression() {
+			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().WithLocalizedName(() => MyResources.CustomProperty)
 			};
 
