@@ -19,6 +19,8 @@
 namespace FluentValidation.Tests.Mvc5 {
 	using System;
 	using System.Collections;
+	using System.ComponentModel;
+	using System.ComponentModel.DataAnnotations;
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
@@ -28,8 +30,9 @@ namespace FluentValidation.Tests.Mvc5 {
 	using Internal;
 	using Moq;
 	using Mvc;
-	using Results;
-    using Xunit;
+	using Xunit;
+	using ValidationContext = FluentValidation.ValidationContext;
+	using ValidationResult = Results.ValidationResult;
 
 	public class ModelBinderTester : IDisposable {
 		FluentValidationModelValidatorProvider provider;
@@ -116,6 +119,19 @@ namespace FluentValidation.Tests.Mvc5 {
 
 		public class TestModel6Validator : AbstractValidator<TestModel6> {
 			public TestModel6Validator() {
+				//This ctor is intentionally blank.
+			}
+		}
+
+
+		[Validator(typeof(TestModel7Validator))]
+		public class TestModel7 {
+			[Display(ResourceType = typeof(TestMessages), Name="PropertyName")]
+			public int Id { get; set; }
+		}
+
+		public class TestModel7Validator : AbstractValidator<TestModel7> {
+			public TestModel7Validator() {
 				//This ctor is intentionally blank.
 			}
 		}
@@ -287,6 +303,7 @@ namespace FluentValidation.Tests.Mvc5 {
 			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("A value is required.");
 		}
 
+
 		[Fact]
 		public void Allows_override_of_required_message_for_non_nullable_value_types() {
 			var form = new FormCollection {
@@ -355,6 +372,32 @@ namespace FluentValidation.Tests.Mvc5 {
 			provider.AddImplicitRequiredValidator = true;
 			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = true;
 		}
+
+		[Fact]
+		public void Should_use_name_from_Dataannotations_if_no_rule_is_found_and_displayattribute_is_present() {
+			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
+			provider.AddImplicitRequiredValidator = true;
+
+			var form = new FormCollection {
+				{ "Id", "" }
+			};
+
+			var bindingContext = new ModelBindingContext {
+				ModelName = "test",
+				ModelMetadata = CreateMetaData(typeof(TestModel7)),
+				ModelState = new ModelStateDictionary(),
+				FallbackToEmptyPrefix = true,
+				ValueProvider = form.ToValueProvider()
+			};
+
+			binder.BindModel(controllerContext, bindingContext);
+
+			bindingContext.ModelState["Id"].Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
+
+
+			DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = true;
+		}
+
 
 		[Fact]
 		public void Should_only_validate_specified_ruleset() {

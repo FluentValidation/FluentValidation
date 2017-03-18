@@ -23,6 +23,7 @@ namespace FluentValidation.Mvc {
 	using System.Web.Mvc;
 	using Attributes;
 	using Internal;
+	using Resources;
 	using Validators;
 
 	public delegate ModelValidator FluentValidationModelValidationFactory(ModelMetadata metadata, ControllerContext context, PropertyRule rule, IPropertyValidator validator);
@@ -134,7 +135,12 @@ namespace FluentValidation.Mvc {
 		}
 
 		protected virtual ModelValidator CreateNotNullValidatorForProperty(ModelMetadata metadata, ControllerContext cc) {
-			return new RequiredFluentValidationPropertyValidator(metadata, cc, null, new NotNullValidator());
+
+			var fakeRule = new PropertyRule(null, x => metadata.Model, null, null, metadata.ModelType, null) {
+				PropertyName = metadata.PropertyName,
+				DisplayName = new StaticStringSource(metadata.GetDisplayName()),
+			};
+			return new RequiredFluentValidationPropertyValidator(metadata, cc, fakeRule, new NotNullValidator());
 		}
 
 
