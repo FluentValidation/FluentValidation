@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.0</TargetFramework>
+    <TargetFrameworks>netstandard1.0;net45</TargetFrameworks>
     <Authors>Jeremy Skinner</Authors>
     <Company />
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
