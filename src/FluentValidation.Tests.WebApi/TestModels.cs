@@ -139,4 +139,19 @@ namespace FluentValidation.Tests.WebApi {
             RuleFor(m => m.Name).NotEmpty();
         }
     }
+
+    [Validator(typeof(TestModel10Validator))]
+    public class TestModel10
+    {
+        public string Name { get; set; }
+        public TestModel Child { get; set; }
+    }
+
+    public class TestModel10Validator : AbstractValidator<TestModel10>
+    {
+        public TestModel10Validator()
+        {
+            RuleFor(m => m.Name).NotEmpty();
+        }
+    }
 }

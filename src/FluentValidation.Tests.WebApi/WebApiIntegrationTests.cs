@@ -95,5 +95,13 @@ namespace FluentValidation.Tests.WebApi {
             result.IsValidField("model.Name").ShouldBeFalse();
             result.IsValidField("model.Children[0].Name").ShouldBeFalse();
 	    }
-	}
+
+        [Fact]
+        public void Should_validate_child_properties()
+        {
+            var result = InvokeTest<TestModel10>(@"{Child: {}}", "application/json");
+
+            result.IsValidField("model.Child.Name").ShouldBeFalse();
+        }
+    }
 }
