@@ -20,9 +20,11 @@
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {
-			MergeAttribute(context.Attributes, "data-val", "true");
-			MergeAttribute(context.Attributes, "data-val-minlength", GetErrorMessage(context));
-			MergeAttribute(context.Attributes, "data-val-minlength-max", MaxValue.ToString());
+			if (MaxValue != null) {
+				MergeAttribute(context.Attributes, "data-val", "true");
+				MergeAttribute(context.Attributes, "data-val-minlength", GetErrorMessage(context));
+				MergeAttribute(context.Attributes, "data-val-minlength-max", MaxValue.ToString());
+			}
 		}
 
 	    protected override string GetDefaultMessage() {
