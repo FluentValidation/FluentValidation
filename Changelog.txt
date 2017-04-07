@@ -4,6 +4,9 @@ Deprecated IResourceAccessorBuilder and merged the functionality into LocalizedS
 Deprecated all uses of expression-based localization. Use resourcename/resourcetype instead
 Resolved issue with possible NullReferenceException in the AspNetCore clientside integration for length validators
 Don't clear the ModelValidatorProviders collection by default in the AspNetCore integration (added new ClearValidatorProviders property to control this behaviour)
+Assemblies are now signed
+AssemblyVersion is no longer automatically incremented to avoid binding redirects
+Removed the old FluentValidation.snk and replaced with FluentValidation-dev.snk (nuget releases use a separate snk not stored in git) 
 
 6.4.1 - 15 Mar 2017
 Resolve issue where the accessor cache would incorrectly cache certain expressions on method calls that return members
