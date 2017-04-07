@@ -22,7 +22,7 @@
 	</Target>
 	
 	<Target Name="Compile">
-		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration)" Targets="Restore;Rebuild" />
+		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version)" Targets="Restore;Rebuild" />
 </Target>
 
 	<Target Name="Test">
