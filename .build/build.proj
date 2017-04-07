@@ -7,6 +7,8 @@
     <SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
 		<SignPackages Condition="'$(SignPackages)'==''">False</SignPackages>
     <MSBuildExtensions>$(BaseDir)\packages\MSBuildTasks.1.5.0.235\tools\msbuild.community.tasks.dll</MSBuildExtensions>
+    <KeyFile>$(BaseDir)\src\FluentValidation-dev.snk</KeyFile>
+    <KeyFile Condition="Exists('$(UserProfile)\Dropbox\FluentValidation-Release.snk')">$(UserProfile)\Dropbox\FluentValidation-Release.snk</KeyFile>
   </PropertyGroup>
 	
 	<UsingTask
@@ -14,6 +16,9 @@
     TaskName="Xunit.Runner.MSBuild.xunit"/>
   <UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.Zip" />
 
+  <Target Name="key">
+    <Message Text="Using key file: $(KeyFile)" />
+  </Target>
 
   <Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
 	
@@ -22,7 +27,7 @@
 	</Target>
 	
 	<Target Name="Compile">
-		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version)" Targets="Restore;Rebuild" />
+		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Restore;Rebuild" />
 </Target>
 
 	<Target Name="Test">
