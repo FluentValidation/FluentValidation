@@ -34,11 +34,12 @@ namespace FluentValidation.AspNetCore {
 			RegisterServices(mvcBuilder.Services, config);
 			// clear all model validation providers since fluent validation will be handling everything
 
-			mvcBuilder.AddMvcOptions(
-				options => {
-					options.ModelValidatorProviders.Clear();
-				});
-
+			if (config.ClearValidatorProviders) {
+				mvcBuilder.AddMvcOptions(
+					options => {
+						options.ModelValidatorProviders.Clear();
+					});
+			}
 			return mvcBuilder;
 		}
 
@@ -92,12 +93,13 @@ namespace FluentValidation.AspNetCore {
 			RegisterServices(mvcBuilder.Services, config);
 
 			// clear all model validation providers since fluent validation will be handling everything
-			mvcBuilder.AddMvcOptions(
-			    options => {
-			        options.ModelValidatorProviders.Clear();
-                });
-
-            return mvcBuilder;
+			if (config.ClearValidatorProviders) {
+				mvcBuilder.AddMvcOptions(
+					options => {
+						options.ModelValidatorProviders.Clear();
+					});
+			}
+			return mvcBuilder;
 		}
 
 		private static void RegisterTypes(IEnumerable<Assembly> assembliesToRegister, IServiceCollection services) {
@@ -140,7 +142,9 @@ namespace FluentValidation.AspNetCore {
 	    public Type ValidatorFactoryType { get; set; }
 		public IValidatorFactory ValidatorFactory { get; set; }
 	    internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
-	    internal bool ClientsideEnabled = true;
+		public bool ClearValidatorProviders { get; set; }
+
+		internal bool ClientsideEnabled = true;
 	    internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};
 
 	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>() {
