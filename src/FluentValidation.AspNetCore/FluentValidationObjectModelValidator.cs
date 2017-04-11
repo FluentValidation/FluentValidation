@@ -33,7 +33,6 @@ namespace FluentValidation.AspNetCore {
 	    public const string InvalidValuePlaceholder = "__FV_InvalidValue";
 		public const string ModelKeyPrefix = "__FV_Prefix_";
 
-		private readonly IValidatorFactory _validatorFactory;
 		private IModelMetadataProvider _modelMetadataProvider;
 		private readonly ValidatorCache _validatorCache;
 		private CompositeModelValidatorProvider _validatorProvider;
@@ -41,14 +40,12 @@ namespace FluentValidation.AspNetCore {
 		/// <summary>
 		///     Initializes a new instance of <see cref="FluentValidationObjectModelValidator" />.
 		/// </summary>
-		public FluentValidationObjectModelValidator(IModelMetadataProvider modelMetadataProvider, IList<IModelValidatorProvider> validatorProviders,
-			IValidatorFactory validatorFactory) {
+		public FluentValidationObjectModelValidator(IModelMetadataProvider modelMetadataProvider, IList<IModelValidatorProvider> validatorProviders) {
 
 			if (modelMetadataProvider == null) {
 				throw new ArgumentNullException(nameof(modelMetadataProvider));
 			}
 
-			_validatorFactory = validatorFactory;
 			_modelMetadataProvider = modelMetadataProvider;
 			_validatorCache = new ValidatorCache();
 			_validatorProvider = new CompositeModelValidatorProvider(validatorProviders);
@@ -59,6 +56,7 @@ namespace FluentValidation.AspNetCore {
 			if (actionContext == null) {
 				throw new ArgumentNullException(nameof(actionContext));
 			}
+			var validatorFactory = (IValidatorFactory)actionContext.HttpContext.RequestServices.GetService(typeof(IValidatorFactory));
 
 			IValidator validator = null;
 			var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
@@ -67,11 +65,11 @@ namespace FluentValidation.AspNetCore {
 
 			if (model != null) {
 				if (metadata.IsCollectionType) {
-					validator = BuildCollectionValidator(prefix, metadata);
+					validator = BuildCollectionValidator(prefix, metadata, validatorFactory);
 					prependPrefix = false;
 				}
 				else {
-					validator = _validatorFactory.GetValidator(metadata.ModelType);
+					validator = validatorFactory.GetValidator(metadata.ModelType);
 				}
 			}
 
@@ -166,8 +164,8 @@ namespace FluentValidation.AspNetCore {
 			return attribute ?? new CustomizeValidatorAttribute();
 		}
 
-		private IValidator BuildCollectionValidator(string prefix, ModelMetadata collectionMetadata) {
-			var elementValidator = _validatorFactory.GetValidator(collectionMetadata.ElementType);
+		private IValidator BuildCollectionValidator(string prefix, ModelMetadata collectionMetadata, IValidatorFactory validatorFactory) {
+			var elementValidator = validatorFactory.GetValidator(collectionMetadata.ElementType);
 			if (elementValidator == null) return null;
 
 			var type = typeof(MvcCollectionValidator<>).MakeGenericType(collectionMetadata.ElementType);

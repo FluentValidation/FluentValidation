@@ -53,7 +53,7 @@
   <Target Name="Deploy">
     <RemoveDir Directories="$(BuildDir)" />
     
-    <MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages" Targets="Restore;Pack" />
+    <MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages;AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Restore;Pack" />
     
     <!-- Remove the test packages. I don't know why it creates these -->
     <ItemGroup>

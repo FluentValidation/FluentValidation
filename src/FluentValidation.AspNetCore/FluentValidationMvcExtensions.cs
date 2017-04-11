@@ -65,16 +65,16 @@ namespace FluentValidation.AspNetCore {
 			if (config.ValidatorFactory != null) {
 				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type. 
 				var factory = config.ValidatorFactory;
-				services.Add(ServiceDescriptor.Singleton(s => factory));
+				services.Add(ServiceDescriptor.Scoped(s => factory));
 			}
 			else {
-				services.Add(ServiceDescriptor.Singleton(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
+				services.Add(ServiceDescriptor.Scoped(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 			}
 
 			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
 				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, s.GetRequiredService<IValidatorFactory>());
+				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders);
 			}));
 
 			if (config.ClientsideEnabled)
