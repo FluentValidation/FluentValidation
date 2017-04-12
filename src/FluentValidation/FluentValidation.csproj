@@ -5,7 +5,7 @@
     <Authors>Jeremy Skinner</Authors>
     <Company />
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
-    <Copyright>Copyright (c) Jeremy Skinner 2008-2016</Copyright>
+    <Copyright>Copyright (c) Jeremy Skinner 2008-2017</Copyright>
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=FluentValidation&amp;amp;DownloadId=166226</PackageIconUrl>
     <PackageReleaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</PackageReleaseNotes>

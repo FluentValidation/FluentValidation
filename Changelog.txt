@@ -7,6 +7,7 @@ Don't clear the ModelValidatorProviders collection by default in the AspNetCore 
 Assemblies are now signed
 AssemblyVersion is no longer automatically incremented to avoid binding redirects
 Removed the old FluentValidation.snk and replaced with FluentValidation-dev.snk (nuget releases use a separate snk not stored in git) 
+Ensure IValidatorFactory is resolved from request scope in asp.net core integration
 
 6.4.1 - 15 Mar 2017
 Resolve issue where the accessor cache would incorrectly cache certain expressions on method calls that return members
