@@ -146,6 +146,30 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Defines a length validator on the current rule builder, but only for string properties.
+		/// Validation will fail if the length of the string is larger than the length specified.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, string> MaximumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int maximumLength)
+		{
+			return ruleBuilder.SetValidator(new MaximumLengthValidator(maximumLength));
+		}
+
+		/// <summary>
+		/// Defines a length validator on the current rule builder, but only for string properties.
+		/// Validation will fail if the length of the string is less than the length specified.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, string> MinimumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int minimumLength)
+		{
+			return ruleBuilder.SetValidator(new MinimumLengthValidator(minimumLength));
+		}
+
+		/// <summary>
 		/// Defines a regular expression validator on the current rule builder, but only for string properties.
 		/// Validation will fail if the value returned by the lambda does not match the regular expression.
 		/// </summary>
