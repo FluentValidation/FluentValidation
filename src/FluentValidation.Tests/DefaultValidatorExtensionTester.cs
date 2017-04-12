@@ -64,6 +64,18 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Length_should_create_MaximumLengthValidator() {
+			validator.RuleFor(x => x.Surname).MaximumLength(5);
+			AssertValidator<MaximumLengthValidator>();
+		}
+
+		[Fact]
+		public void Length_should_create_MinimumLengthValidator() {
+			validator.RuleFor(x => x.Surname).MinimumLength(5);
+			AssertValidator<MinimumLengthValidator>();
+		}
+
+		[Fact]
 		public void NotEqual_should_create_NotEqualValidator_with_explicit_value() {
 			validator.RuleFor(x => x.Surname).NotEqual("Foo");
 			AssertValidator<NotEqualValidator>();
