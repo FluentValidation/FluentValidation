@@ -20,6 +20,8 @@
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyFile>../FluentValidation-Dev.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+    <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.Mvc.xml</DocumentationFile>
+
   </PropertyGroup>
 
   <ItemGroup>

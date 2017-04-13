@@ -22,6 +22,8 @@
     <AssemblyOriginatorKeyFile>../FluentValidation-Dev.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
     <SignAssembly>True</SignAssembly>
+    <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.AspNetCore.xml</DocumentationFile>
+
   </PropertyGroup>
 
   <ItemGroup>

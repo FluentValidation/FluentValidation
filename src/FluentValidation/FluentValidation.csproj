@@ -16,10 +16,23 @@
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyFile>../FluentValidation-Dev.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+    <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-  
+
+ 
+    <ItemGroup>
+      <Content Include="bin\$(Configuration)\$(TargetFramework)\**\FluentValidation.resources.dll">
+        <!--<CopyToOutputDirectory>Always</CopyToOutputDirectory>-->
+        <!--<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>-->
+        <PackagePath>lib\</PackagePath>
+      </Content>
+    </ItemGroup>
+
+
+
+
 </Project>
