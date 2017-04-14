@@ -25,11 +25,11 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class LessThanValidator : AbstractComparisonValidator {
-		public LessThanValidator(IComparable value) : base(value, nameof(Messages.lessthan_error), typeof(Messages)) {
+		public LessThanValidator(IComparable value) : base(value) {
 		}
 
 		public LessThanValidator(Func<object, object> valueToCompareFunc, MemberInfo member)
-			: base(valueToCompareFunc, member, nameof(Messages.lessthan_error), typeof(Messages)) {
+			: base(valueToCompareFunc, member) {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {

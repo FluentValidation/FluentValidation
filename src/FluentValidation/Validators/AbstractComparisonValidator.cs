@@ -36,7 +36,7 @@ namespace FluentValidation.Validators {
 		/// <param name="value"></param>
 		/// <param name="resourceName"></param>
 		/// <param name="resourceType"></param>
-		protected AbstractComparisonValidator(IComparable value, string resourceName, Type resourceType) : base(resourceName, resourceType) {
+		protected AbstractComparisonValidator(IComparable value) {
 			value.Guard("value must not be null.");
 			ValueToCompare = value;
 		}
@@ -46,8 +46,7 @@ namespace FluentValidation.Validators {
 		/// <param name="member"></param>
 		/// <param name="resourceName"></param>
 		/// <param name="resourceType"></param>
-		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, string resourceName, Type resourceType)
-			: base(resourceName, resourceType) {
+		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member) { 
 			this.valueToCompareFunc = valueToCompareFunc;
 			this.MemberToCompare = member;
 		}

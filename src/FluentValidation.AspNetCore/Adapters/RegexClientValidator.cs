@@ -36,7 +36,7 @@ namespace FluentValidation.AspNetCore {
 				messageTemplate = regexVal.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				messageTemplate = Messages.regex_error;
+				messageTemplate = ValidatorOptions.LanguageManager.GetStringForValidator<RegularExpressionValidator>();
 			}
 			string message = formatter.BuildMessage(messageTemplate);
 

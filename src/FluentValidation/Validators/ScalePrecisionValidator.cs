@@ -36,20 +36,6 @@ namespace FluentValidation.Validators
     public class ScalePrecisionValidator : PropertyValidator
     {
         public ScalePrecisionValidator(int scale, int precision)
-            : this(scale, precision, nameof(Messages.scale_precision_error), typeof(Messages))
-        {
-            Init(scale, precision);
-        }
-
-        public ScalePrecisionValidator(
-            int scale, int precision, string errorMessageResourceName, Type errorMessageResourceType)
-            : base(errorMessageResourceName, errorMessageResourceType)
-        {
-            Init(scale, precision);
-        }
-
-        public ScalePrecisionValidator(int scale, int precision, string errorMessage)
-            : base(errorMessage)
         {
             Init(scale, precision);
         }

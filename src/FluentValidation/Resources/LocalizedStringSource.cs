@@ -147,6 +147,7 @@ namespace FluentValidation.Resources {
 	/// Version of LocalizedStringSource that allows the specified ResourceType to be replaced by the default resource type specified in ValidatorOptions.ResourceProviderType.
 	/// This is typically only used by the default validator types built into FV, or if you're building a library of validators. Don't use it in rule definitions. 
 	/// </summary>
+	[Obsolete]
     public class OverridableLocalizedStringSource : LocalizedStringSource {
         public OverridableLocalizedStringSource(Type resourceType, string resourceName) : base(resourceType, resourceName) {
         }

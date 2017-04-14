@@ -27,9 +27,6 @@ namespace FluentValidation.Validators {
 	public class CreditCardValidator : PropertyValidator {
 		// This logic was taken from the CreditCardAttribute in the ASP.NET MVC3 source.
 
-		public CreditCardValidator() : base(nameof(Messages.CreditCardError), typeof(Messages)) {
-		}
-
 		protected override bool IsValid(PropertyValidatorContext context) {
 			var value = context.PropertyValue as string;
 

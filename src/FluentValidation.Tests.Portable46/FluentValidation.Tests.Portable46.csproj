@@ -157,6 +157,9 @@
     <Compile Include="..\FluentValidation.Tests\InstanceCacheTester.cs">
       <Link>InstanceCacheTester.cs</Link>
     </Compile>
+    <Compile Include="..\FluentValidation.Tests\LanguageManagerTests.cs">
+      <Link>LanguageManagerTests.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation.Tests\LengthValidatorTests.cs">
       <Link>LengthValidatorTests.cs</Link>
     </Compile>
@@ -287,8 +290,8 @@
       <Name>FluentValidation</Name>
     </ProjectReference>
   </ItemGroup>
-  <Target Name="Pack"></Target>
-
+  <Target Name="Pack">
+  </Target>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

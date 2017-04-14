@@ -20,8 +20,9 @@ namespace FluentValidation.Tests {
 	using System;
 	using Xunit;
 	using TestHelper;
+	using Validators;
 
-	
+
 	public class ValidatorTesterTester {
 		private TestValidator validator;
 
@@ -125,7 +126,8 @@ namespace FluentValidation.Tests {
 
 			var assertionRoot = testValidator.TestValidate(new Person(), "Names").Which;
 
-			assertionRoot.Property(x => x.Forename).ShouldHaveValidationError().WithErrorCode("notnull_error");
+			assertionRoot.Property(x => x.Forename).ShouldHaveValidationError()
+				.WithErrorCode("notnull_error");
 			assertionRoot.Property(x => x.Surname).ShouldHaveValidationError().WithErrorCode("notnull_error");
 			assertionRoot.Property(x => x.Id).ShouldNotHaveValidationError();
 		}

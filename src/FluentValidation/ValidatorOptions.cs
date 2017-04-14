@@ -24,6 +24,7 @@ namespace FluentValidation {
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Internal;
+	using Resources;
 
 	/// <summary>
 	/// Validator runtime options
@@ -42,7 +43,14 @@ namespace FluentValidation {
 		/// <summary>
 		/// Default resource provider
 		/// </summary>
+		[Obsolete("Resource provider type is no longer recommended for overriding translations. Instead use the LanguageManager property.")]
 		public static Type ResourceProviderType;
+
+		/// <summary>
+		/// Default language manager 
+		/// </summary>
+		public static LanguageManager LanguageManager { get; } = new LanguageManager();
+
 
 		private static ValidatorSelectorOptions validatorSelectorOptions = new ValidatorSelectorOptions();
 		/// <summary>
@@ -116,6 +124,7 @@ namespace FluentValidation {
 		/// Disables the expression accessor cache. Not recommended.
 		/// </summary>
 		public static bool DisableAccessorCache { get; set; }
+
 	}
 
 	/// <summary>

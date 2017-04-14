@@ -24,7 +24,7 @@
 			}
 			catch (FluentValidationMessageFormatException) {
 				// User provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				message = Messages.email_error;
+				message = ValidatorOptions.LanguageManager.GetStringForValidator<EmailValidator>();
 			}
 			message = formatter.BuildMessage(message);
 			

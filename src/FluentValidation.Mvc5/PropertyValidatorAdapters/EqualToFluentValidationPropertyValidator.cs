@@ -40,7 +40,7 @@
 				}
 				catch (FluentValidationMessageFormatException) {
 					// User provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-					message = Messages.equal_error;
+					message = ValidatorOptions.LanguageManager.GetStringForValidator<EqualValidator>();
 				}
 				message = formatter.BuildMessage(message);
 #pragma warning disable 618

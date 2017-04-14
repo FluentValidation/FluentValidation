@@ -50,7 +50,7 @@ namespace FluentValidation.Tests {
 
 				foreach (var culture in new[] { "en", "de", "fr", "es", "de", "it", "nl", "pl", "pt", "ru", "sv" }) {
 					Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
-					var message = Messages.ResourceManager.GetString("notempty_error");
+					var message = ValidatorOptions.LanguageManager.GetStringForValidator<NotEmptyValidator>();
 					var errorMessage = new MessageFormatter().AppendPropertyName("Surname").BuildMessage(message);
 					Debug.WriteLine(errorMessage);
 					var result = validator.Validate(new Person{Surname = null});
@@ -222,7 +222,7 @@ namespace FluentValidation.Tests {
 
 	    }
 
-        [Fact]
+       /* [Fact]
         public void Not_Setting_global_resource_provider_uses_default_messages_in_metadata()
         {
             var validator = new TestValidator();
@@ -233,7 +233,7 @@ namespace FluentValidation.Tests {
 
             Assert.Equal(typeof(Messages), resourceType);
 
-        }
+        }*/
 		
 		[Fact]
 		public void Uses_func_to_get_message() {

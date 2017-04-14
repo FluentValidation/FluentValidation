@@ -20,9 +20,6 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class NullValidator : PropertyValidator, INullValidator {
-		public NullValidator() : base(nameof(Messages.null_error), typeof(Messages)) {
-		}
-
 		protected override bool IsValid(PropertyValidatorContext context) {
 			if (context.PropertyValue != null) {
 				return false;

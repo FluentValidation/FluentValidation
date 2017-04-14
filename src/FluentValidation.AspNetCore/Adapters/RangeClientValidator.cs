@@ -45,7 +45,7 @@ namespace FluentValidation.AspNetCore {
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
-			var messageNeedsSplitting = RangeValidator.ErrorMessageSource.ResourceType == typeof(Messages);
+			var messageNeedsSplitting = RangeValidator.ErrorMessageSource.ResourceType == typeof(LanguageManager);
 
 			string message;
 
@@ -53,7 +53,7 @@ namespace FluentValidation.AspNetCore {
 				message = RangeValidator.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				message = Messages.inclusivebetween_error;
+				message =ValidatorOptions.LanguageManager.GetStringForValidator<InclusiveBetweenValidator>();
 				messageNeedsSplitting = true;
 			}
 

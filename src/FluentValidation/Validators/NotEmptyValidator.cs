@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
     public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
 		readonly object defaultValueForType;
 
-		public NotEmptyValidator(object defaultValueForType) : base(nameof(Messages.notempty_error), typeof(Messages)) {
+		public NotEmptyValidator(object defaultValueForType) {
 			this.defaultValueForType = defaultValueForType;
 		}
 

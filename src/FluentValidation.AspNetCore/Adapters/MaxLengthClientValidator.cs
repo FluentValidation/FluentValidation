@@ -45,7 +45,7 @@ namespace FluentValidation.AspNetCore {
 		}
 
 	    protected override string GetDefaultMessage() {
-			return Messages.lessthanorequal_error;
-		}
+		    return ValidatorOptions.LanguageManager.GetStringForValidator<LessThanOrEqualValidator>();
+	    }
     }
 }

@@ -47,6 +47,14 @@ namespace FluentValidation.Validators {
 			get { return customFormatArgs ?? (customFormatArgs = new List<Func<object, object, object>>()); }
 		}
 
+		protected PropertyValidator() {
+			originalErrorSource = errorSource = new LanguageStringSource(GetType());
+		}
+
+		protected PropertyValidator(IStringSource errorMessaSource) {
+			originalErrorSource = errorSource = errorMessaSource;
+		}
+
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
 			originalErrorSource = errorSource = new OverridableLocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
@@ -127,7 +135,7 @@ namespace FluentValidation.Validators {
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
 			failure.ResourceName = errorSource.ResourceName;
-			failure.ErrorCode = (errorCodeSource != null) ? errorCodeSource.GetString(context.Instance) : originalErrorSource.ResourceName;
+			failure.ErrorCode = (errorCodeSource != null) ? errorCodeSource.GetString(context.Instance) : LanguageManager.BackwardsCompatibilityCodeMapping(originalErrorSource.ResourceName);
 
 			if (CustomStateProvider != null) {
 				failure.CustomState = CustomStateProvider(context.Instance);

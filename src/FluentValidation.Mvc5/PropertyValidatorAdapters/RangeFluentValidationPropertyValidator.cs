@@ -22,7 +22,7 @@
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
 
-			var messageNeedsSplitting = RangeValidator.ErrorMessageSource.ResourceType == typeof(Messages);
+			var messageNeedsSplitting = RangeValidator.ErrorMessageSource.ResourceType == typeof(LanguageManager);
 			
 			string message;
 			try {
@@ -30,7 +30,7 @@
 			}
 			catch (FluentValidationMessageFormatException){
 				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				message = Messages.inclusivebetween_error;
+				message = ValidatorOptions.LanguageManager.GetStringForValidator<InclusiveBetweenValidator>();
 				messageNeedsSplitting = true;
 			}
 

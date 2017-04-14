@@ -23,7 +23,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class ExclusiveBetweenValidator : PropertyValidator, IBetweenValidator {
-		public ExclusiveBetweenValidator(IComparable from, IComparable to) : base(nameof(Messages.exclusivebetween_error), typeof(Messages)) {
+		public ExclusiveBetweenValidator(IComparable from, IComparable to) {
 			To = to;
 			From = from;
 

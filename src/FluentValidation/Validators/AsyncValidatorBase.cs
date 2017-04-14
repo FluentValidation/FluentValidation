@@ -5,8 +5,10 @@ namespace FluentValidation.Validators {
 	using System.Threading.Tasks;
 
 	public abstract class AsyncValidatorBase : PropertyValidator {
-		public override bool IsAsync {
-			get { return true; }
+		public override bool IsAsync => true;
+
+		protected AsyncValidatorBase() : base() {
+			
 		}
 
 		protected AsyncValidatorBase(string errorMessageResourceName, Type errorMessageResourceType)

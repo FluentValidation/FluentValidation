@@ -43,14 +43,14 @@ namespace FluentValidation.AspNetCore {
 				.AppendArgument("MinLength", lengthVal.Min)
 				.AppendArgument("MaxLength", lengthVal.Max);
 
-			bool messageNeedsSplitting = lengthVal.ErrorMessageSource.ResourceType == typeof(Messages);
+			bool messageNeedsSplitting = lengthVal.ErrorMessageSource.ResourceType == typeof(LanguageManager);
 
 			string message;
 			try {
 				message = lengthVal.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				message = Messages.length_error;
+				message = ValidatorOptions.LanguageManager.GetStringForValidator<LengthValidator>();
 				messageNeedsSplitting = true;
 			}
 

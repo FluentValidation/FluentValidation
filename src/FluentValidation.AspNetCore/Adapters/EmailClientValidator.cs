@@ -38,7 +38,7 @@ namespace FluentValidation.AspNetCore {
 				messageTemplate = EmailValidator.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				messageTemplate = Messages.email_error;
+				messageTemplate = ValidatorOptions.LanguageManager.GetStringForValidator<EmailValidator>();
 			}
 
 			string message = formatter.BuildMessage(messageTemplate);

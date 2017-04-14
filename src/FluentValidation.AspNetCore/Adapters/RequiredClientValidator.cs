@@ -39,7 +39,7 @@ namespace FluentValidation.AspNetCore {
 				messageTemplate = Validator.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				messageTemplate = Messages.notempty_error;
+				messageTemplate = ValidatorOptions.LanguageManager.GetStringForValidator<NotEmptyValidator>();
 			}
 			var message = formatter.BuildMessage(messageTemplate);
 			return message;

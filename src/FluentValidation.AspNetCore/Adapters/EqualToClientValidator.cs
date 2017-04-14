@@ -54,7 +54,7 @@ namespace FluentValidation.AspNetCore {
 					messageTemplate = EqualValidator.ErrorMessageSource.GetString(null);
 				}
 				catch (FluentValidationMessageFormatException) {
-					messageTemplate = Messages.equal_error;
+					messageTemplate = ValidatorOptions.LanguageManager.GetStringForValidator<EqualValidator>();
 				}
 				string message = formatter.BuildMessage(messageTemplate);
 				MergeAttribute(context.Attributes, "data-val", "true");

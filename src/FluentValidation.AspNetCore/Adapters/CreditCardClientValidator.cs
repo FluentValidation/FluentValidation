@@ -34,7 +34,7 @@ namespace FluentValidation.AspNetCore
 				message = Validator.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				message = Messages.CreditCardError;
+				message = ValidatorOptions.LanguageManager.GetStringForValidator<CreditCardValidator>();
 			}
 			message = formatter.BuildMessage(message);
 			MergeAttribute(context.Attributes, "data-val", "true");

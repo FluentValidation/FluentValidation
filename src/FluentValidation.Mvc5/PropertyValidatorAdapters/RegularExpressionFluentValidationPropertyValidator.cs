@@ -27,7 +27,7 @@
 			}
 			catch (FluentValidationMessageFormatException) {
 				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				message = Messages.regex_error;
+				message = ValidatorOptions.LanguageManager.GetStringForValidator<RegularExpressionValidator>();
 			}
 			message = formatter.BuildMessage(message);
 
