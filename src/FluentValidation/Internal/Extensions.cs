@@ -105,26 +105,21 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Splits pascal case, so "FooBar" would become "Foo Bar"
 		/// </summary>
-		public static string SplitPascalCase(this string input)
-		{
+		public static string SplitPascalCase(this string input) {
 			if (string.IsNullOrEmpty(input))
-			{
 				return input;
-			}
 
 			var retVal = new StringBuilder(input.Length + 5);
 
-			foreach (var currentChar in input)
-			{
-				if (char.IsUpper(currentChar))
-				{
-					retVal.Append(' ');
-					retVal.Append(currentChar);					
+			for (int i = 0; i < input.Length; ++i) {
+				var currentChar = input[i];
+				if (char.IsUpper(currentChar)) {
+					if ((i > 1 && !char.IsUpper(input[i - 1]))
+							|| (i + 1 < input.Length && !char.IsUpper(input[i + 1])))
+						retVal.Append(' ');
 				}
-				else
-				{
-					retVal.Append(currentChar);
-				}
+
+				retVal.Append(currentChar);
 			}
 
 			return retVal.ToString().Trim();
