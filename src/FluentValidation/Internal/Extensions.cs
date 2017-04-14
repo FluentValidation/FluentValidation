@@ -23,6 +23,8 @@ namespace FluentValidation.Internal {
 	using System.Reflection;
 	using System.Text;
 	using System.Threading.Tasks;
+	using System.Text.RegularExpressions;
+	using System.Linq;
 
 	/// <summary>
 	/// Useful extensions
