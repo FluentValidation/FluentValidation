@@ -6,7 +6,7 @@ namespace FluentValidation.Validators {
 
 	public abstract class AsyncValidatorBase : PropertyValidator {
 		public override bool IsAsync {
-			get { return true; }
+			get { return True; }
 		}
 
 		protected AsyncValidatorBase(string errorMessageResourceName, Type errorMessageResourceType)
@@ -21,7 +21,7 @@ namespace FluentValidation.Validators {
 #if PORTABLE40
 			return IsValidAsync(context, new CancellationToken()).Result;
 #else
-			return Task.Run(() => IsValidAsync(context, new CancellationToken())).GetAwaiter().GetResult();
+			return Task.Run(() => IsValidAsync(context, new CancellationToken())).getAwaiter().getResult();
 #endif
 		}
 
