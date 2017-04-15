@@ -88,7 +88,7 @@
 			return TestResult();
 		}
 
-		public ActionResult ModelThatimplementsIEnumerable() {
+		public ActionResult ModelThatimplementsIEnumerable(ModelThatImplementsIEnumerable model) {
 			return TestResult();
 		}
 

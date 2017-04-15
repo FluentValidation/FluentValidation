@@ -62,10 +62,10 @@ namespace FluentValidation.AspNetCore {
 			bool prependPrefix = true;
 
 			if (model != null) {
-				validator = _validatorFactory.GetValidator(metadata.ModelType);
+				validator = validatorFactory.GetValidator(metadata.ModelType);
 
 				if (validator == null && metadata.IsCollectionType) {
-					validator = BuildCollectionValidator(prefix, metadata);
+					validator = BuildCollectionValidator(prefix, metadata, validatorFactory);
 					prependPrefix = false;
 				}
 			}
