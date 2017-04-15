@@ -49,12 +49,11 @@
 			bool prependPrefix = true;
 
 			if (model != null) {
-				if (metadata.IsCollectionType) {
+				validator = _validatorFactory.GetValidator(metadata.ModelType);
+
+				if (validator == null && metadata.IsCollectionType) {
 					validator = BuildCollectionValidator(prefix, metadata);
 					prependPrefix = false;
-				}
-				else {
-					validator = _validatorFactory.GetValidator(metadata.ModelType);
 				}
 			}
 
