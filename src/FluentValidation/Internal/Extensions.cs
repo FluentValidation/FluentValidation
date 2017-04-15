@@ -23,6 +23,8 @@ namespace FluentValidation.Internal {
 	using System.Reflection;
 	using System.Text;
 	using System.Threading.Tasks;
+	using System.Text.RegularExpressions;
+	using System.Linq;
 
 	/// <summary>
 	/// Useful extensions
@@ -102,32 +104,22 @@ namespace FluentValidation.Internal {
 			return toUnwrap;
 		}
 
+		private static Regex _pascalRe = new Regex(@"((^|\p{Lu})\P{Lu}+)|(\p{Lu}+(?=\p{Lu}|$))");
+        
 		/// <summary>
 		/// Splits pascal case, so "FooBar" would become "Foo Bar"
 		/// </summary>
 		public static string SplitPascalCase(this string input)
 		{
-			if (string.IsNullOrEmpty(input))
-			{
+			if (String.IsNullOrEmpty(input))
 				return input;
-			}
 
-			var retVal = new StringBuilder(input.Length + 5);
-
-			foreach (var currentChar in input)
-			{
-				if (char.IsUpper(currentChar))
-				{
-					retVal.Append(' ');
-					retVal.Append(currentChar);					
-				}
-				else
-				{
-					retVal.Append(currentChar);
-				}
-			}
-
-			return retVal.ToString().Trim();
+			
+			var matches = _pascalRe.Matches(input);
+			if (matches.Count == 0)
+				return input;
+			else
+				return String.Join(" ", matches.Cast<Match>().Select(m => m.Value));
 		}
 
 		/// <summary>
