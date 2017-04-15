@@ -88,6 +88,10 @@
 			return TestResult();
 		}
 
+		public ActionResult ModelThatimplementsIEnumerable() {
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 

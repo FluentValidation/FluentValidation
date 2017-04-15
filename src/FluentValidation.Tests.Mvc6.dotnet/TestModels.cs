@@ -1,5 +1,7 @@
 ﻿namespace FluentValidation.Tests.AspNetCore {
 	using System;
+	using System.Collections;
+	using System.Collections.Generic;
 	using FluentValidation;
 	using FluentValidation.Attributes;
 	using FluentValidation.AspNetCore;
@@ -259,5 +261,38 @@
 		public MultipleErrorsModelValidator() {
 			RuleFor(x => x.Name).Equal("foo").Equal("bar");
 		}
+	}
+
+	public class ModelThatImplementsIEnumerableValidator : AbstractValidator<ModelThatImplementsIEnumerable> {
+		public ModelThatImplementsIEnumerableValidator() {
+			RuleFor(x => x.Name).NotNull().WithMessage("Foo");
+		}
+	}
+
+	public class ModelThatImplementsIEnumerable : IEnumerable<ModelPartOfIenumerable> {
+
+		public string Name { get; set; }
+
+		private List<ModelPartOfIenumerable> _something = new List<ModelPartOfIenumerable> {
+			new ModelPartOfIenumerable(),
+			new ModelPartOfIenumerable()
+		};
+		IEnumerator IEnumerable.GetEnumerator() {
+			return GetEnumerator();
+		}
+
+		public IEnumerator<ModelPartOfIenumerable> GetEnumerator() {
+			return _something.GetEnumerator();
+		}
+	}
+
+	public class PartofEnumerableValidator : AbstractValidator<ModelPartOfIenumerable> {
+		public PartofEnumerableValidator() {
+			RuleFor(x => x.Name).NotNull().WithMessage("Bar");
+		}
+	}
+
+	public class ModelPartOfIenumerable {
+		public string Name { get; set; }
 	}
 }

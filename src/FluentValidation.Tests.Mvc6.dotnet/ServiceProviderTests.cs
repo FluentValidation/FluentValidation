@@ -49,6 +49,12 @@
 			Assert.NotEqual(hashCode1, hashCode2);
 		}
 
+		[Fact]
+		public async Task Gets_validator_for_model_not_underlying_collection_type() {
+			var result = await GetErrors("ModelThatimplementsIEnumerable", new FormData());
+			result.GetError("Name").ShouldEqual("Foo");
+		}
+
 		private async Task<List<SimpleError>> GetErrors(string action, Dictionary<string, string> form)
 		{
 
