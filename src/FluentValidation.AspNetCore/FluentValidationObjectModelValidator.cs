@@ -27,8 +27,6 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc.Controllers;
 	using FluentValidation;
 
-	//TODO: Need support for client-side
-
 	public class FluentValidationObjectModelValidator : IObjectModelValidator {
 	    public const string InvalidValuePlaceholder = "__FV_InvalidValue";
 		public const string ModelKeyPrefix = "__FV_Prefix_";
@@ -64,12 +62,11 @@ namespace FluentValidation.AspNetCore {
 			bool prependPrefix = true;
 
 			if (model != null) {
-				if (metadata.IsCollectionType) {
-					validator = BuildCollectionValidator(prefix, metadata, validatorFactory);
+				validator = _validatorFactory.GetValidator(metadata.ModelType);
+
+				if (validator == null && metadata.IsCollectionType) {
+					validator = BuildCollectionValidator(prefix, metadata);
 					prependPrefix = false;
-				}
-				else {
-					validator = validatorFactory.GetValidator(metadata.ModelType);
 				}
 			}
 
