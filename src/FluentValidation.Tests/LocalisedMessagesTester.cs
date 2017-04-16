@@ -244,6 +244,20 @@ namespace FluentValidation.Tests {
 			result.Errors[0].ErrorMessage.ShouldEqual("el foo");
 		}
 
+		[Fact]
+		public void Overrides_localization_key() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Forename).SetValidator(new CustomNotNull());
+			var result = validator.Validate(new Person());
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' is not a valid credit card number.");
+		}
+
+		private class CustomNotNull : NotNullValidator {
+			protected override string GetLocalizationKey() {
+				return nameof(CreditCardValidator); //just pick some other validator
+			}
+		}
+
 		private class MyResources {
 			public static string notempty_error {
 				get { return "foo"; }

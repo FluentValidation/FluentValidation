@@ -13,10 +13,6 @@
 			_key = key;
 		}
 
-		public LanguageStringSource(Type type) : this(type.Name) {
-			
-		}
-
 		public string GetString(object context) {
 			return ValidatorOptions.LanguageManager.GetString(_key, CultureInfo.CurrentUICulture);
 		}

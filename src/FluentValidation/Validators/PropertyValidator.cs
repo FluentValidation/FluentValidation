@@ -48,7 +48,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator() {
-			originalErrorSource = errorSource = new LanguageStringSource(GetType());
+			originalErrorSource = errorSource = new LanguageStringSource(GetLocalizationKey());
 		}
 
 		protected PropertyValidator(IStringSource errorMessaSource) {
@@ -66,6 +66,10 @@ namespace FluentValidation.Validators {
 		[Obsolete("Use the constructor that takes a Type resourceType and string resourceName")]
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
 			originalErrorSource = errorSource = OverridableLocalizedStringSource.CreateFromExpression(errorMessageResourceSelector);
+		}
+
+		protected virtual string GetLocalizationKey() {
+			return GetType().Name;
 		}
 
 		public IStringSource ErrorMessageSource {

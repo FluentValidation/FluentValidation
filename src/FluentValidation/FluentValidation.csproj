@@ -24,12 +24,12 @@
   </ItemGroup>
 
  
-    <ItemGroup>
+    <!--<ItemGroup>
       <Content Include="bin\$(Configuration)\$(TargetFramework)\**\FluentValidation.resources.dll">
-        <!--<CopyToOutputDirectory>Always</CopyToOutputDirectory>-->
-        <!--<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>-->
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
         <PackagePath>lib\</PackagePath>
       </Content>
-    </ItemGroup>
+    </ItemGroup>-->
 
 </Project>

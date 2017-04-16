@@ -293,7 +293,7 @@ namespace FluentValidation.Tests {
 		}
 
 		class TestPropertyValidator : PropertyValidator {
-			public TestPropertyValidator() : base(new LanguageStringSource(typeof(NotNullValidator))) {
+			public TestPropertyValidator() : base(new LanguageStringSource(nameof(NotNullValidator))) {
 				
 			}
 
