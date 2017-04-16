@@ -93,7 +93,19 @@ namespace FluentValidation.WebApi
         }
 		
 		private bool ValidateNodeAndChildren(ModelMetadata metadata, ValidationContext validationContext, object container) {
-			object model = metadata.Model;
+
+			object model = null;
+
+			try {
+				model = metadata.Model;
+			}
+			catch {
+				// Retrieving the model failed - typically caused by a property getter throwing
+				// Being unable to retrieve a property is not a validation error - many properties can only be retrieved if certain conditions are met
+				// For example, Uri.AbsoluteUri throws for relative URIs but it shouldn't be considered a validation error
+				return true;
+			}
+
 			bool isValid = true;
 
 			// Optimization: we don't need to recursively traverse the graph for null and primitive types
