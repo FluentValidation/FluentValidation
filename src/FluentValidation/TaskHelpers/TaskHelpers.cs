@@ -58,14 +58,6 @@ namespace System.Threading.Tasks
 		// <summary>
 		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
 		// </summary>
-		private static Task FromErrors(IEnumerable<Exception> exceptions)
-		{
-			return FromErrors<AsyncVoid>(exceptions);
-		}
-
-		// <summary>
-		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
-		// </summary>
 		internal static Task<TResult> FromErrors<TResult>(IEnumerable<Exception> exceptions)
 		{
 			TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
