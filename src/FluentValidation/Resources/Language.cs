@@ -27,18 +27,16 @@ namespace FluentValidation.Resources {
 		/// Name of language (culture code)
 		/// </summary>
 		public abstract string Name { get; }
-		/// <summary>
-		/// Localized strings held by this language
-		/// </summary>
-		public Dictionary<string, string> Translations { get; } = new Dictionary<string, string>();
+
+		private readonly Dictionary<string, string> _translations = new Dictionary<string, string>();
 
 		/// <summary>
 		/// Adds a translation
 		/// </summary>
 		/// <param name="key"></param>
 		/// <param name="message"></param>
-		public void Translate(string key, string message) {
-			Translations[key] = message;
+		public virtual void Translate(string key, string message) {
+			_translations[key] = message;
 		}
 		
 		/// <summary>
@@ -46,8 +44,23 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="message"></param>
-		public void Translate<T>(string message) {
-			Translations[typeof(T).Name] = message;
+		public virtual void Translate<T>(string message) {
+			_translations[typeof(T).Name] = message;
+		}
+
+		/// <summary>
+		/// Gets the localized version of a string with a specific key.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public virtual string GetTranslation(string key) {
+			string value;
+
+			if (_translations.TryGetValue(key, out value)) {
+				return value;
+			}
+
+			return null;
 		}
 	}
 }

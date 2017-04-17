@@ -209,7 +209,7 @@ namespace FluentValidation.Tests {
 		}
 
 
-		[Fact]
+		[Fact(Skip = "This was true prior to 7.0. Need to rethink if we still want this behaviour. I suggest not as the ResourceProviderType is deprecated.")]
 	    public void Setting_global_resource_provider_propogates_to_metadata() {
             ValidatorOptions.ResourceProviderType = typeof(TestMessages);
             var validator = new TestValidator();

@@ -18,20 +18,6 @@
 		}
 
 		public string ResourceName => _key;
-
-		// For backwards compatibility with < 7
-		public Type ResourceType
-		{
-			get
-			{
-#pragma warning disable 618
-
-				if (ValidatorOptions.ResourceProviderType != null) {
-					return ValidatorOptions.ResourceProviderType;
-				}
-#pragma warning restore 618
-				return typeof(LanguageManager);
-			}
-		}
+		public Type ResourceType => typeof(LanguageManager);
 	}
 }

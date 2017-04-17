@@ -30,7 +30,8 @@ namespace FluentValidation.Resources {
 	/// </summary>
 	public class LanguageManager {
 		private readonly Dictionary<string, Language> _languages = new Dictionary<string, Language>();
-		private Language _default;
+		private Language _fallback;
+		private CultureInfo _cultureToUse = null;
 
 		/// <summary>
 		/// Creates a new instance of the LanguageManager class.
@@ -61,13 +62,18 @@ namespace FluentValidation.Resources {
 				_languages[language.Name] = language;
 			}
 
-			_default = _languages["en"];
+			_fallback = _languages["en"];
 		}
 
 		/// <summary>
 		/// Whether localization is enabled.
 		/// </summary>
 		public bool Enabled { get; set; } = true;
+
+		/// <summary>
+		/// Default culture to use for all requests to the LanguageManager. If not specified, uses the current UI culture. 
+		/// </summary>
+		public CultureInfo Culture { get; set; }
 
 		/// <summary>
 		/// Provides a collection of all supported languages.
@@ -95,34 +101,6 @@ namespace FluentValidation.Resources {
 		public void Clear() {
 			_languages.Clear();
 		}
-
-		/// <summary>
-		/// Sets the fallback language to use when translating a string that can't be found in other languages.
-		/// </summary>
-		/// <param name="culture"></param>
-		public void SetFallbackLanguage(CultureInfo culture) {
-			string code = culture.Name;
-
-			if (!culture.IsNeutralCulture && !_languages.ContainsKey(code)) {
-				code = culture.Parent.Name;
-			}
-
-			if (_languages.ContainsKey(code)) {
-				_default = _languages[code];
-			}
-			else {
-				throw new InvalidOperationException("Could not set language to {code} as this language is not registered with FluentValidation. Please ensure this language is registered by calling AddLanguage.");
-			}
-		}
-
-		/// <summary>
-		/// Sets the fallback language to use when translating a string that can't be found in other languages.
-		/// </summary>
-		/// <param name="language"></param>
-		public void SetFallbackLanguage(Language language) {
-			language.Guard(nameof(language));
-			_default = language;
-		}
 		 
 		/// <summary>
 		/// Gets the default message for a property validato
@@ -130,7 +108,7 @@ namespace FluentValidation.Resources {
 		/// <typeparam name="T">The validator type</typeparam>
 		/// <returns>The translated string</returns>
 		public string GetStringForValidator<T>() where T:IPropertyValidator {
-			return GetString(typeof(T).Name, CultureInfo.CurrentUICulture);
+			return GetString(typeof(T).Name);
 		}
 
 		/// <summary>
@@ -152,7 +130,7 @@ namespace FluentValidation.Resources {
 			}
 #pragma warning restore 618
 
-			culture = culture ?? CultureInfo.CurrentUICulture;
+			culture = culture ?? Culture ?? CultureInfo.CurrentUICulture;
 
 			string code = culture.Name;
 
@@ -162,12 +140,12 @@ namespace FluentValidation.Resources {
 
 			var languageToUse = Enabled && _languages.ContainsKey(code) 
 				? _languages[code] 
-				: _default;
+				: _fallback;
 
-			string value = null;
+			string value = languageToUse.GetTranslation(key);
 
-			if (!languageToUse.Translations.TryGetValue(key, out value) && languageToUse != _default) {
-				_default.Translations.TryGetValue(key, out value);
+			if (string.IsNullOrEmpty(value) && languageToUse != _fallback) {
+				value = _fallback.GetTranslation(key);
 			}
 
 			return value ?? string.Empty;
