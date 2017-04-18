@@ -42,7 +42,6 @@ namespace FluentValidation {
 			});
 		}
 
-
 		/// <summary>
 		/// Specifies a custom action to be invoked when the validator fails. 
 		/// </summary>
@@ -65,55 +64,6 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage) {
 			return rule.WithMessage(errorMessage, null as object[]);
-		}
-
-		/// <summary>
-		/// Specifies a custom error message to use if validation fails.
-		/// </summary>
-		/// <param name="rule">The current rule</param>
-		/// <param name="errorMessage">The error message to use</param>
-		/// <param name="formatArgs">Additional arguments to be specified when formatting the custom error message.</param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage, params object[] formatArgs) {
-			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(formatArgs);
-			return rule.WithMessage(errorMessage, funcs);
-		}
-
-		/// <summary>
-		/// Specifies a custom error message to use if validation fails.
-		/// </summary>
-		/// <param name="rule">The current rule</param>
-		/// <param name="errorMessage">The error message to use</param>
-		/// <param name="funcs">Additional property values to be included when formatting the custom error message.</param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage, params Func<T, object>[] funcs) {
-			errorMessage.Guard("A message must be specified when calling WithMessage.");
-
-			return rule.Configure(config => {
-				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
-
-				funcs.Select(func => new Func<object, object, object>((instance, value) => func((T) instance)))
-					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
-			});
-		}
-
-	/// <summary>
-		/// Specifies a custom error message to use if validation fails.
-		/// </summary>
-		/// <param name="rule">The current rule</param>
-		/// <param name="errorMessage">The error message to use</param>
-		/// <param name="funcs">Additional property values to use when formatting the custom error message.</param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage, params Func<T, TProperty, object>[] funcs) {
-			errorMessage.Guard("A message must be specified when calling WithMessage.");
-
-			return rule.Configure(config => {
-				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
-
-				funcs
-					.Select(func => new Func<object, object, object>((instance, value) => func((T)instance, (TProperty)value)))
-					.ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
-			});
 		}
 
 		/// <summary>
@@ -148,40 +98,6 @@ namespace FluentValidation {
 		/// Specifies a custom error message resource to use when validation fails.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
-		/// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
-		/// <param name="resourceName">Name of resource</param>
-		/// <param name="formatArgs">Custom message format args</param>
-		/// <param name="resourceType">Type of resource representing a resx file</param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName, params object[] formatArgs) {
-			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(formatArgs);
-			return rule.WithLocalizedMessage(resourceType, resourceName, funcs);
-		}
-
-
-		/// <summary>
-		/// Specifies a custom error message resource to use when validation fails.
-		/// </summary>
-		/// <param name="rule">The current rule</param>
-		/// <param name="resourceName">Resource name</param>
-		/// <param name="formatArgs">Custom message format args</param>
-		/// <param name="resourceType">Resource type representing a resx file</param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName, params Func<T, object>[] formatArgs)
-		{
-			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
-			return rule.WithLocalizedMessage(resourceType, resourceName)
-				.Configure(cfg => {
-					formatArgs
-						.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
-						.ForEach(cfg.CurrentValidator.CustomMessageFormatArguments.Add);
-				});
-		}
-
-		/// <summary>
-		/// Specifies a custom error message resource to use when validation fails.
-		/// </summary>
-		/// <param name="rule">The current rule</param>
 		/// <param name="resourceType">Resource type representing a resx file</param>
 		/// <param name="resourceName">Name of resource</param>
 		/// <returns></returns>
@@ -193,7 +109,6 @@ namespace FluentValidation {
 				config.CurrentValidator.ErrorMessageSource = new LocalizedStringSource(resourceType, resourceName);
 			});
 		}
-
 
 		/// <summary>
 		/// Specifies a condition limiting when the validator should run. 
@@ -255,7 +170,6 @@ namespace FluentValidation {
 			return rule.WhenAsync(x => predicate(x).Then(y => !y), applyConditionTo);
 		}
 
-
 		/// <summary>
 		/// Triggers an action when the rule passes. Typically used to configure dependent rules. This applies to all preceding rules in the chain. 
 		/// </summary>
@@ -308,23 +222,6 @@ namespace FluentValidation {
 
 			return rule.Configure(config => {
 				config.DisplayName = new LazyStringSource(newFunc);
-			});
-		}
-
-		
-
-	    /// <summary>
-	    /// Specifies a localized name for the error message. 
-	    /// </summary>
-	    /// <param name="rule">The current rule</param>
-	    /// <param name="resourceType">The type of the generated resource file</param>
-	    /// <param name="resourceName">The name of the resource to use</param>
-	    public static IRuleBuilderOptions<T, TProperty> WithLocalizedName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName) {
-			resourceType.Guard("A resource type must be specified.");
-		    resourceName.Guard("A resource name must be specified.");
-			
-			return rule.Configure(config => {
-				config.DisplayName = new LocalizedStringSource(resourceType, resourceName); 
 			});
 		}
 
