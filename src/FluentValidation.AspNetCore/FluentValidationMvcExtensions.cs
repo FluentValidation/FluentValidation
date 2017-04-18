@@ -28,6 +28,7 @@ namespace FluentValidation.AspNetCore {
 	using System.Linq;
 	using System.Collections.Generic;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
+	using Resources;
 
 	public static class FluentValidationMvcExtensions {
 		/// <summary>
@@ -161,6 +162,11 @@ namespace FluentValidation.AspNetCore {
 		public IValidatorFactory ValidatorFactory { get; set; }
 	    internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
 		public bool ClearValidatorProviders { get; set; }
+
+		public bool LocalizationEnabled {
+			get => ValidatorOptions.LanguageManager.Enabled;
+			set => ValidatorOptions.LanguageManager.Enabled = value;
+		}
 
 		internal bool ClientsideEnabled = true;
 	    internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};
