@@ -41,6 +41,7 @@ namespace FluentValidation.Validators {
 		/// Arg 1: Instance being validated
 		/// Arg 2: Property value
 		/// </summary>
+		[Obsolete("Use WithMessage/WithName overloads that take an explicit delegate rather than a collection of args.")]
 		ICollection<Func<object, object, object>> CustomMessageFormatArguments { get; }
 		Func<object, object> CustomStateProvider { get; set; }
 		Severity Severity { get; set; }

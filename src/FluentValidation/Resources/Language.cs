@@ -44,8 +44,8 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="message"></param>
-		public virtual void Translate<T>(string message) {
-			_translations[typeof(T).Name] = message;
+		public void Translate<T>(string message) {
+			Translate(typeof(T).Name, message);
 		}
 
 		/// <summary>

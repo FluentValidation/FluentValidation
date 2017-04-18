@@ -56,7 +56,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			originalErrorSource = errorSource = new OverridableLocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
+			originalErrorSource = errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
 
 		protected PropertyValidator(string errorMessage) {
@@ -81,7 +81,7 @@ namespace FluentValidation.Validators {
 
 				errorSource = value;
 
-				if (value is LocalizedStringSource) {
+				if (value is LanguageStringSource) {
 					originalErrorSource = value;
 				}
 			}

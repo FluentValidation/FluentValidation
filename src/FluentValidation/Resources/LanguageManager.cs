@@ -107,7 +107,7 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		/// <typeparam name="T">The validator type</typeparam>
 		/// <returns>The translated string</returns>
-		public string GetStringForValidator<T>() where T:IPropertyValidator {
+		public string GetStringForValidator<T>() {
 			return GetString(typeof(T).Name);
 		}
 
