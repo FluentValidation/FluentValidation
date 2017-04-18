@@ -25,15 +25,6 @@ namespace FluentValidation.Resources {
 		readonly Func<object, string> _stringProvider;
 
 		/// <summary>
-		/// Creates a new LazyStringSource
-		/// </summary>
-		/// <param name="stringProvider"></param>
-		[Obsolete("Use constructor that takes a Func<object, string>")]
-		public LazyStringSource(Func<string> stringProvider) {
-			_stringProvider = x => stringProvider();
-		}
-
-		/// <summary>
 		/// Creates a LazyStringSource
 		/// </summary>
 		public LazyStringSource(Func<object, string> stringProvider) {
