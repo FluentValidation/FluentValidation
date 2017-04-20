@@ -118,7 +118,7 @@ namespace FluentValidation.Resources {
 		/// <param name="key">The key</param>
 		/// <param name="culture">The culture to translate into</param>
 		/// <returns></returns>
-		public string GetString(string key, CultureInfo culture=null) {
+		public virtual string GetString(string key, CultureInfo culture=null) {
 			// For backwards compatibility with < 7.0 ResourceProvider
 #pragma warning disable 618
 			if (ValidatorOptions.ResourceProviderType != null) {
