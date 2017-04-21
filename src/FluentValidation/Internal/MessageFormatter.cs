@@ -82,16 +82,12 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Additional arguments to use
 		/// </summary>
-		public object[] AdditionalArguments {
-			get { return this.additionalArguments; }
-		}
+		public object[] AdditionalArguments => this.additionalArguments;
 
 		/// <summary>
 		/// Additional placeholder values
 		/// </summary>
-		public Dictionary<string, object> PlaceholderValues {
-			get { return this.placeholderValues; }
-		}
+		public Dictionary<string, object> PlaceholderValues => this.placeholderValues;
 
 		static string ReplacePlaceholderWithValue(string template, string key, object value) {
 			string placeholder =  GetPlaceholder(key);

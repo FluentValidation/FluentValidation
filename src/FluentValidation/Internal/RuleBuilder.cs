@@ -27,20 +27,16 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
 	public class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty> {
-		readonly PropertyRule rule;
-
 		/// <summary>
 		/// The rule being created by this RuleBuilder.
 		/// </summary>
-		public PropertyRule Rule {
-			get { return rule; }
-		}
+		public PropertyRule Rule { get; }
 
 		/// <summary>
 		/// Creates a new instance of the <see cref="RuleBuilder{T,TProperty}">RuleBuilder</see> class.
 		/// </summary>
 		public RuleBuilder(PropertyRule rule) {
-			this.rule = rule;
+			this.Rule = rule;
 		}
 
 		/// <summary>
@@ -50,7 +46,7 @@ namespace FluentValidation.Internal {
 		/// <returns></returns>
 		public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator validator) {
 			validator.Guard("Cannot pass a null validator to SetValidator.");
-			rule.AddValidator(validator);
+			Rule.AddValidator(validator);
 			return this;
 		}
 
@@ -77,12 +73,12 @@ namespace FluentValidation.Internal {
 		}
 
 		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
-			configurator(rule);
+			configurator(Rule);
 			return this;
 		}
 
 		IRuleBuilderInitial<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderInitial<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
-			configurator(rule);
+			configurator(Rule);
 			return this;
 		}
 	}

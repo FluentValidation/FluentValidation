@@ -13,9 +13,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Rule sets
 		/// </summary>
-		public string[] RuleSets {
-			get {  return rulesetsToExecute; }
-		}
+		public string[] RuleSets => rulesetsToExecute;
 
 		/// <summary>
 		/// Creates a new instance of the RulesetValidatorSelector.

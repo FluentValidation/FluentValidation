@@ -156,8 +156,6 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Number of member names in the chain
 		/// </summary>
-		public int Count {
-			get { return memberNames.Count; }
-		}
+		public int Count => memberNames.Count;
 	}
 }

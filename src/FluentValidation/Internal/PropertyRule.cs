@@ -89,9 +89,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Validators associated with this rule.
 		/// </summary>
-		public IEnumerable<IPropertyValidator> Validators {
-			get { return validators; }
-		}
+		public IEnumerable<IPropertyValidator> Validators => validators;
 
 		/// <summary>
 		/// Creates a new property rule.
