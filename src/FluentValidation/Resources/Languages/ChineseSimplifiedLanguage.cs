@@ -19,7 +19,7 @@
 namespace FluentValidation.Resources {
 	using Validators;
 
-	public class ChineseSimplifiedLanguage : Language {
+	internal class ChineseSimplifiedLanguage : Language {
 		public override string Name => "zh-CN";
 
 		public ChineseSimplifiedLanguage() {

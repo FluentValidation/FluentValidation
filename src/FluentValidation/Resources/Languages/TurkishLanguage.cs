@@ -19,7 +19,7 @@
 namespace FluentValidation.Resources {
 	using Validators;
 
-	public class TurkishLanguage : Language {
+	internal class TurkishLanguage : Language {
 		public override string Name => "tr";
 
 		public TurkishLanguage() {

@@ -19,7 +19,7 @@
 namespace FluentValidation.Resources {
 	using Validators;
 
-	public class KoreanLanguage : Language {
+	internal class KoreanLanguage : Language {
 		public override string Name => "ko";
 
 		public KoreanLanguage() {

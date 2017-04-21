@@ -19,7 +19,7 @@
 namespace FluentValidation.Resources {
 	using Validators;
 
-	public class EnglishLanguage : Language {
+	internal class EnglishLanguage : Language {
 		public override string Name => "en";
 
 		public EnglishLanguage() {

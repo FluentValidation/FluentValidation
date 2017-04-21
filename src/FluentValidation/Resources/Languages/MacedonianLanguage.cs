@@ -19,7 +19,7 @@
 namespace FluentValidation.Resources {
 	using Validators;
 
-	public class MacedonianLanguage : Language {
+	internal class MacedonianLanguage : Language {
 		public override string Name => "mk";
 
 		public MacedonianLanguage() {
