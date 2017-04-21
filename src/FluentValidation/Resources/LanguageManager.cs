@@ -79,21 +79,10 @@ namespace FluentValidation.Resources {
 		/// Provides a collection of all supported languages.
 		/// </summary>
 		/// <returns></returns>
-		public IEnumerable<Language> GetSupportedLanguages() {
-			return _languages.Values.ToArray();
+		public IEnumerable<string> GetSupportedLanguages() {
+			return _languages.Keys;
 		}
 
-		/// <summary>
-		/// Adds a new language to FluentValidation's language list
-		/// </summary>
-		/// <param name="language">The language to add</param>
-		public void AddLanguage(Language language) {
-			language.Guard(nameof(language));
-			language.Name.Guard("Language must specify a valid culture code as its Name");
-
-			_languages[language.Name] = language;
-
-		}
 
 		/// <summary>
 		/// Removes all languages except the default. 
@@ -181,7 +170,7 @@ namespace FluentValidation.Resources {
 			if (string.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
 
 			if (!_languages.ContainsKey(language)) {
-				AddLanguage(new GenericLanguage(language));
+				_languages[language] = new GenericLanguage(language);
 			}
 
 			_languages[language].Translate(key, message);

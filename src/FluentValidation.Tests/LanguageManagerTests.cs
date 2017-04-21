@@ -1,4 +1,5 @@
 ﻿namespace FluentValidation.Tests {
+	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
 	using Resources;
@@ -6,7 +7,7 @@
 	using Xunit;
 
 	public class LanguageManagerTests {
-		private LanguageManager _languages;
+		private ILanguageManager _languages;
 
 		public LanguageManagerTests() {
 			_languages = new LanguageManager();
@@ -54,15 +55,6 @@
 		}
 
 		[Fact]
-		public void Uses_english_when_all_translations_removed() {
-			using (new CultureScope("fr")) {
-				_languages.Clear();
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("'{PropertyName}' must not be empty.");
-			}
-		}
-
-		[Fact]
 		public void Always_use_specific_language() {
 			_languages.Culture = new CultureInfo("fr-FR");
 			var msg = _languages.GetStringForValidator<NotNullValidator>();
@@ -81,17 +73,34 @@
 		[Fact]
 		public void Can_replace_message() {
 			using (new CultureScope("en-US")) {
-				_languages.AddTranslation("en", "NotNullValidator", "foo");
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var custom = new CustomLanguageManager();
+				var msg = custom.GetStringForValidator<NotNullValidator>();
 				msg.ShouldEqual("foo");
 			}
 		}
 
-		[Fact]
-		public void Can_override_language_lookup() {
-			
-		}
+		public class CustomLanguageManager : ILanguageManager {
 
+			public CustomLanguageManager() {
+				_inner.AddTranslation("en", "NotNullValidator", "foo");
+			}
+
+			private LanguageManager _inner = new LanguageManager();
+
+			public bool Enabled {
+				get => _inner.Enabled;
+				set => _inner.Enabled = value;
+			}
+
+			public CultureInfo Culture {
+				get => _inner.Culture;
+				set => _inner.Culture = value;
+			}
+
+			public string GetString(string key, CultureInfo culture = null) {
+				return _inner.GetString(key, culture);
+			}
+		}
 
 	}
 }
