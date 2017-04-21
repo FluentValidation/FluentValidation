@@ -1,5 +1,6 @@
 ﻿namespace FluentValidation.Tests {
 	using System.Globalization;
+	using System.Linq;
 	using Resources;
 	using Validators;
 	using Xunit;
@@ -77,18 +78,20 @@
 			}
 		}
 
-		private class NotTranslateValidator : PropertyValidator {
-			protected override bool IsValid(PropertyValidatorContext context) {
-				return true;
+		[Fact]
+		public void Can_replace_message() {
+			using (new CultureScope("en-US")) {
+				_languages.AddTranslation("en", "NotNullValidator", "foo");
+				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				msg.ShouldEqual("foo");
 			}
 		}
 
-		private class TestLanguage : Language {
-			public override string Name => "test";
-
-			public TestLanguage() {
-				Translate<NotTranslateValidator>("foo");
-			}
+		[Fact]
+		public void Can_override_language_lookup() {
+			
 		}
+
+
 	}
 }

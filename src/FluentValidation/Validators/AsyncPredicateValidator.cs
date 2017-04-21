@@ -17,7 +17,7 @@ namespace FluentValidation.Validators
 		/// Creates a new ASyncPredicateValidator
 		/// </summary>
 		/// <param name="predicate"></param>
-		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate)
+		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) : base(new LanguageStringSource(nameof(AsyncPredicateValidator)))
 		{
 			predicate.Guard("A predicate must be specified.");
 			this.predicate = predicate;

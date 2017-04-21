@@ -184,5 +184,17 @@ namespace FluentValidation.Resources {
 			return name;
 		}
 
+		public void AddTranslation(string language, string key, string message) {
+			if(string.IsNullOrEmpty(language)) throw new ArgumentNullException(nameof(language));
+			if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
+			if (string.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
+
+			if (!_languages.ContainsKey(language)) {
+				AddLanguage(new GenericLanguage(language));
+			}
+
+			_languages[language].Translate(key, message);
+
+		}
 	}
 }

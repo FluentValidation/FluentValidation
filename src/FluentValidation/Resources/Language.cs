@@ -63,4 +63,12 @@ namespace FluentValidation.Resources {
 			return null;
 		}
 	}
+
+	public class GenericLanguage : Language {
+		public GenericLanguage(string name) {
+			Name = name;
+		}
+
+		public override string Name { get; }
+	}
 }
