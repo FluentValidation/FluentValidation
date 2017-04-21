@@ -79,26 +79,9 @@
 			}
 		}
 
-		public class CustomLanguageManager : ILanguageManager {
-
+		public class CustomLanguageManager : LanguageManager {
 			public CustomLanguageManager() {
-				_inner.AddTranslation("en", "NotNullValidator", "foo");
-			}
-
-			private LanguageManager _inner = new LanguageManager();
-
-			public bool Enabled {
-				get => _inner.Enabled;
-				set => _inner.Enabled = value;
-			}
-
-			public CultureInfo Culture {
-				get => _inner.Culture;
-				set => _inner.Culture = value;
-			}
-
-			public string GetString(string key, CultureInfo culture = null) {
-				return _inner.GetString(key, culture);
+				AddTranslation("en", "NotNullValidator", "foo");
 			}
 		}
 
