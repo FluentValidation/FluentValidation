@@ -49,7 +49,10 @@ namespace FluentValidation {
 		/// <summary>
 		/// Default language manager 
 		/// </summary>
-		public static LanguageManager LanguageManager { get; } = new LanguageManager();
+		public static ILanguageManager LanguageManager {
+			get => languageManager;
+			set => languageManager = value ?? throw new ArgumentNullException("value");
+		}
 
 
 		private static ValidatorSelectorOptions validatorSelectorOptions = new ValidatorSelectorOptions();
@@ -60,6 +63,7 @@ namespace FluentValidation {
 
 		private static Func<Type, MemberInfo, LambdaExpression, string> propertyNameResolver = DefaultPropertyNameResolver;
 		private static Func<Type, MemberInfo, LambdaExpression, string> displayNameResolver = DefaultDisplayNameResolver;
+		private static ILanguageManager languageManager = new LanguageManager();
 
 		/// <summary>
 		/// Pluggable logic for resolving property names

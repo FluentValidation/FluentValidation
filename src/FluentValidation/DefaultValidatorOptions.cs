@@ -261,7 +261,16 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Severity severity) {
 			return rule.Configure(config => config.CurrentValidator.Severity = severity);
 		}
-  
+
+		/// <summary>
+		/// Gets the default message for a property validato
+		/// </summary>
+		/// <typeparam name="T">The validator type</typeparam>
+		/// <returns>The translated string</returns>
+		public static string GetStringForValidator<T>(this ILanguageManager languageManager) {
+			return languageManager.GetString(typeof(T).Name);
+		}
+
 		internal static Func<T, object>[] ConvertArrayOfObjectsToArrayOfDelegates<T>(object[] objects) {
 			if(objects == null || objects.Length == 0) {
 				return new Func<T, object>[0];

@@ -28,7 +28,7 @@ namespace FluentValidation.Resources {
 	/// <summary>
 	/// Allows the default error message translations to be managed. 
 	/// </summary>
-	public class LanguageManager {
+	public class LanguageManager : ILanguageManager {
 		private readonly Dictionary<string, Language> _languages = new Dictionary<string, Language>();
 		private Language _fallback;
 		private CultureInfo _cultureToUse = null;
@@ -100,15 +100,6 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		public void Clear() {
 			_languages.Clear();
-		}
-		 
-		/// <summary>
-		/// Gets the default message for a property validato
-		/// </summary>
-		/// <typeparam name="T">The validator type</typeparam>
-		/// <returns>The translated string</returns>
-		public string GetStringForValidator<T>() {
-			return GetString(typeof(T).Name);
 		}
 
 		/// <summary>
