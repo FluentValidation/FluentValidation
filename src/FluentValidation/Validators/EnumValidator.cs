@@ -27,7 +27,7 @@ namespace FluentValidation.Validators
 	{
 		private readonly Type enumType;
 
-		public EnumValidator(Type enumType) {
+		public EnumValidator(Type enumType) : base(new LanguageStringSource(nameof(EnumValidator))) {
 			this.enumType = enumType;
 		}
 

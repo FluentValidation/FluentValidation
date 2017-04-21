@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
     public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
 		readonly object defaultValueForType;
 
-		public NotEmptyValidator(object defaultValueForType) {
+		public NotEmptyValidator(object defaultValueForType) : base(new LanguageStringSource(nameof(NotEmptyValidator))) {
 			this.defaultValueForType = defaultValueForType;
 		}
 

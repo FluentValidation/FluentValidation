@@ -28,22 +28,22 @@ namespace FluentValidation.Validators {
 		readonly IEqualityComparer comparer;
 		readonly Func<object, object> func;
 
-		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare) {
+		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare) : base(new LanguageStringSource(nameof(NotEqualValidator))) {
 			this.func = func;
 			MemberToCompare = memberToCompare;
 		}
 
-		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare, IEqualityComparer equalityComparer) {
+		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare, IEqualityComparer equalityComparer) : base(new LanguageStringSource(nameof(NotEqualValidator))) {
 			this.func = func;
 			this.comparer = equalityComparer;
 			MemberToCompare = memberToCompare;
 		}
 
-		public NotEqualValidator(object comparisonValue) {
+		public NotEqualValidator(object comparisonValue) : base(new LanguageStringSource(nameof(NotEqualValidator))) {
 			ValueToCompare = comparisonValue;
 		}
 
-		public NotEqualValidator(object comparisonValue, IEqualityComparer equalityComparer) {
+		public NotEqualValidator(object comparisonValue, IEqualityComparer equalityComparer) :base(new LanguageStringSource(nameof(NotEqualValidator)) ){
 			ValueToCompare = comparisonValue;
 			comparer = equalityComparer;
 		}

@@ -245,18 +245,22 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Overrides_localization_key() {
+		public void Formats_string_with_placeholders() {
 			var validator = new TestValidator();
-			validator.RuleFor(x => x.Forename).SetValidator(new CustomNotNull());
+			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => string.Format("{{PropertyName}} {0}", x.AnotherInt));
 			var result = validator.Validate(new Person());
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' is not a valid credit card number.");
+			result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
 		}
 
-		private class CustomNotNull : NotNullValidator {
-			protected override string GetLocalizationKey() {
-				return nameof(CreditCardValidator); //just pick some other validator
-			}
+
+		[Fact]
+		public void Formats_string_with_placeholders_when_you_cant_edit_the_string() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => string.Format("{{PropertyName}} {0}", x.AnotherInt));
+			var result = validator.Validate(new Person());
+			result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
 		}
+
 
 		private class MyResources {
 			public static string notempty_error {

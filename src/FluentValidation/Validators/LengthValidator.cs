@@ -29,7 +29,7 @@ namespace FluentValidation.Validators {
 		public Func<object, int> MinFunc { get; set; }
 		public Func<object, int> MaxFunc { get; set; }
 
-		public LengthValidator(int min, int max) {
+		public LengthValidator(int min, int max) : base(new LanguageStringSource(nameof(LengthValidator))) {
 			Max = max;
 			Min = min;
 
@@ -39,7 +39,22 @@ namespace FluentValidation.Validators {
 		}
 
 
-		public LengthValidator(Func<object, int> min, Func<object, int> max) {
+		public LengthValidator(Func<object, int> min, Func<object, int> max) : base(new LanguageStringSource(nameof(LengthValidator))) {
+			MaxFunc = max;
+			MinFunc = min;
+		}
+
+		internal LengthValidator(int min, int max, IStringSource errorSource) : base(errorSource) {
+			Max = max;
+			Min = min;
+
+			if (max != -1 && max < min) {
+				throw new ArgumentOutOfRangeException("max", "Max should be larger than min.");
+			}
+		}
+
+
+		internal LengthValidator(Func<object, int> min, Func<object, int> max, IStringSource errorSource) : base(errorSource) {
 			MaxFunc = max;
 			MinFunc = min;
 		}
@@ -72,24 +87,24 @@ namespace FluentValidation.Validators {
 	}
 
 	public class ExactLengthValidator : LengthValidator {
-		public ExactLengthValidator(int length) : base(length,length) {
+		public ExactLengthValidator(int length) : base(length,length,new LanguageStringSource(nameof(ExactLengthValidator))) {
 			
 		}
 
 		public ExactLengthValidator(Func<object, int> length)
-			: base(length, length) {
+			: base(length, length, new LanguageStringSource(nameof(ExactLengthValidator))) {
 
 		}
 	}
 
 	public class MaximumLengthValidator : LengthValidator {
 		public MaximumLengthValidator(int max)
-			: base(0, max) {
+			: base(0, max, new LanguageStringSource(nameof(MaximumLengthValidator))) {
 
 		}
 
 		public MaximumLengthValidator(Func<object, int> max)
-			: base(obj => 0, max) {
+			: base(obj => 0, max, new LanguageStringSource(nameof(MaximumLengthValidator))) {
 
 		}
 	}
@@ -97,12 +112,12 @@ namespace FluentValidation.Validators {
 	public class MinimumLengthValidator : LengthValidator {
 
 		public MinimumLengthValidator(int min) 
-			: base(min, -1) {
+			: base(min, -1, new LanguageStringSource(nameof(MinimumLengthValidator))) {
 
 		}
 
 		public MinimumLengthValidator(Func<object, int> min)
-			: base(min, obj => -1) {
+			: base(min, obj => -1, new LanguageStringSource(nameof(MinimumLengthValidator))) {
 
 		}
 	}

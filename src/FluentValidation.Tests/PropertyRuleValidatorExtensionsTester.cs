@@ -1,4 +1,4 @@
-#region License
+/*#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -82,4 +82,4 @@ namespace FluentValidation.Tests {
 			Assert.Equal(0, result.Errors.Count);
 		}
 	}
-}
+}*/

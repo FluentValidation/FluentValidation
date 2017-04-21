@@ -35,7 +35,7 @@ namespace FluentValidation.Validators
     /// </summary>
     public class ScalePrecisionValidator : PropertyValidator
     {
-        public ScalePrecisionValidator(int scale, int precision)
+        public ScalePrecisionValidator(int scale, int precision) : base(new LanguageStringSource(nameof(ScalePrecisionValidator)))
         {
             Init(scale, precision);
         }

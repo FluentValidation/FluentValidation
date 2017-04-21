@@ -28,33 +28,33 @@ namespace FluentValidation.Validators {
 		readonly string expression;
 		readonly Func<object, Regex> regexFunc;
 
-		public RegularExpressionValidator(string expression) {
+		public RegularExpressionValidator(string expression) :base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 			this.expression = expression;
 
 			var regex = new Regex(expression);
 			this.regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(Regex regex) {
+		public RegularExpressionValidator(Regex regex) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 			this.expression = regex.ToString();
 			this.regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(string expression, RegexOptions options) {
+		public RegularExpressionValidator(string expression, RegexOptions options) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 			this.expression = expression;
 			var regex = new Regex(expression, options);
 			this.regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(Func<object, string> expressionFunc) {
+		public RegularExpressionValidator(Func<object, string> expressionFunc) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 			this.regexFunc = x => new Regex(expressionFunc(x));
 		}
 
-		public RegularExpressionValidator(Func<object, Regex> regexFunc) {
+		public RegularExpressionValidator(Func<object, Regex> regexFunc) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 			this.regexFunc = regexFunc;
 		}
 
-		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options) {
+		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 
 			this.regexFunc = x => new Regex(expression(x), options);
 		}
