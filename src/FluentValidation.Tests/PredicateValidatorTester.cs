@@ -62,7 +62,7 @@ namespace FluentValidation.Tests {
 
 #if!PORTABLE40
 		[Fact]
-		public void When_validation_fails_the_error_code_should_be_set_to_resource_key() {
+		public void When_validation_fails_metadata_should_be_set_on_failure() {
 			var validator = new TestValidator() {
 													v => v.RuleFor(x => x.Forename)
 														.Must(forename => forename == "Jeremy")
@@ -70,11 +70,12 @@ namespace FluentValidation.Tests {
 												};
 
 			var result = validator.Validate(new Person() { Forename = "test" });
-			var error = result.Errors.SingleOrDefault(e => e.ErrorCode == "ValueOfForPropertyNameIsNotValid");
+			var error = result.Errors.Single();
 
 			error.ShouldNotBeNull();
 			error.PropertyName.ShouldEqual("Forename");
 			error.AttemptedValue.ShouldEqual("test");
+			error.ErrorCode.ShouldEqual("PredicateValidator");
 
 			error.FormattedMessageArguments.Length.ShouldEqual(1);
 			error.FormattedMessageArguments[0].ShouldEqual("test");

@@ -70,7 +70,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2) };
 			
 			var result = validator.Validate(new Person() { Surname = "test" });
-			var error = result.Errors.SingleOrDefault(e => e.ErrorCode == "exact_length_error");
+			var error = result.Errors.SingleOrDefault(e => e.ErrorCode == "ExactLengthValidator");
 
 			error.ShouldNotBeNull();
 			error.PropertyName.ShouldEqual("Surname");

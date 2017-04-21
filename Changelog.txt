@@ -12,6 +12,7 @@ Rewrote the localization support not to require satellite assemblies
 Fix issue in WebApi integration where a property getter that throws an exception causes validation to fail
 Fix issue in AspNetCore integration where we tried to resolve a collection validator in some situations where a class validator should be used
 Improve SplitPascalCase method to support uppercase character sequences
+ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overriden
 
 6.4.1 - 15 Mar 2017
 Resolve issue where the accessor cache would incorrectly cache certain expressions on method calls that return members

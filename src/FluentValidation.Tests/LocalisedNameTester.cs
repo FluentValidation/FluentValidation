@@ -67,19 +67,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Overwrites_resoruce_type_when_using_custom_ResourceProvider_and_custom_ResourceAccessorProvider() {
-			ValidatorOptions.ResourceProviderType = typeof(OverrideResources);
-
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull().Configure(cfg => cfg.DisplayName = new OverridableLocalizedStringSource(typeof(MyResources), "CustomProperty"))
-			};
-
-			var result = validator.Validate(new Person());
-
-			result.Errors.Single().ErrorMessage.ShouldEqual("'bar' must not be empty.");
-		}
-
-		[Fact]
 		public void Uses_localized_name_from_display_attribute() {
 			using (new CultureScope("en-us")) {
 				var validator = new InlineValidator<Person2> {

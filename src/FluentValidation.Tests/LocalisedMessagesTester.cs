@@ -123,19 +123,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Custom_property_validators_should_respect_ResourceProvider() {
-			ValidatorOptions.ResourceProviderType = typeof(MyResources);
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).SetValidator(new MyPropertyValidator())
-			};
-
-			var results = validator.Validate(new Person());
-
-			results.Errors.Single().ErrorMessage.ShouldEqual("foo");
-		}
-
-
-		[Fact]
 		public void When_using_explicitly_localized_message_with_custom_validator_does_not_fall_back_to_ResourceProvider_expression() {
 			ValidatorOptions.ResourceProviderType = typeof(MyResources);
 
