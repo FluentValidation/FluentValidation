@@ -52,10 +52,6 @@ namespace FluentValidation.WebApi
 
 		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, IEnumerable<ModelValidatorProvider> validatorProviders)
 		{
-			if (IsValidatingProperty(metadata)) {
-				yield break;
-			}
-
 			IValidator validator = ValidatorFactory.GetValidator(metadata.ModelType);
 			
 			if (validator == null) {
@@ -63,10 +59,6 @@ namespace FluentValidation.WebApi
 			}
 
 			yield return new FluentValidationModelValidator(validatorProviders, validator);
-		}
-
-		protected virtual bool IsValidatingProperty(ModelMetadata metadata) {
-			return metadata.ContainerType != null && !string.IsNullOrEmpty(metadata.PropertyName);
 		}
 	}
 }
