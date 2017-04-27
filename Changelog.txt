@@ -14,6 +14,7 @@ Fix issue in AspNetCore integration where we tried to resolve a collection valid
 Improve SplitPascalCase method to support uppercase character sequences
 ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overriden
 Fix incorrect clientside validation attributes generated for email validator and credit card validator in the asp.net core integration
+Fix child model validation in webapi integration
 
 6.4.1 - 15 Mar 2017
 Resolve issue where the accessor cache would incorrectly cache certain expressions on method calls that return members
