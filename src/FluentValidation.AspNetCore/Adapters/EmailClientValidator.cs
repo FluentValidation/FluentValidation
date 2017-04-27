@@ -43,7 +43,7 @@ namespace FluentValidation.AspNetCore {
 
 			string message = formatter.BuildMessage(messageTemplate);
 			MergeAttribute(context.Attributes, "data-val", "true");
-			MergeAttribute(context.Attributes, "email", message);
+			MergeAttribute(context.Attributes, "data-val-email", message);
 		}
 	}
 }

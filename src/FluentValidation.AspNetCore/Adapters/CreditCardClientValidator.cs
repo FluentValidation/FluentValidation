@@ -38,7 +38,7 @@ namespace FluentValidation.AspNetCore
 			}
 			message = formatter.BuildMessage(message);
 			MergeAttribute(context.Attributes, "data-val", "true");
-			MergeAttribute(context.Attributes, "creditcard", message);
+			MergeAttribute(context.Attributes, "data-val-creditcard", message);
 		}
 	}
 }
