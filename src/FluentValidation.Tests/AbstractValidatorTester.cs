@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -200,6 +201,17 @@ namespace FluentValidation.Tests {
 				nonGenericValidator.Validate("foo"));
 		}
 
+		[Fact]
+		public void RuleForeach_with_null_instances() {
+			var model = new Person {
+				NickNames = new string[] { null }
+			};
+
+			validator.RuleForEach(x => x.NickNames).NotNull();
+			var result = validator.Validate(model);
+			Console.WriteLine(result.Errors[0].ErrorMessage);
+			result.IsValid.ShouldBeFalse();
+		}
 
 		private class DerivedPerson : Person { }
 
