@@ -14,7 +14,7 @@
     <Copyright>Copyright (c) Jeremy Skinner 2008-2017</Copyright>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
-    <PackageIconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=FluentValidation&amp;amp;DownloadId=166226</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <RepositoryUrl>http://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
