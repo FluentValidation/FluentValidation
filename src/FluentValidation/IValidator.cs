@@ -26,7 +26,7 @@ namespace FluentValidation {
 	using Results;
 
 	/// <summary>
-	/// Defines a validator for a particualr type.
+	/// Defines a validator for a particular type.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public interface IValidator<in T> : IValidator {
