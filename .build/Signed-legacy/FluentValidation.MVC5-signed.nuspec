@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>FluentValidation.MVC5-Signed</id>
+    <version>7.0.0.0</version>
+    <authors>Jeremy Skinner</authors>
+    <licenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</licenseUrl>
+    <projectUrl>http://github.com/JeremySkinner/fluentvalidation</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ASP.NET MVC 5 integration for FluentValidation</description>
+    <summary>ASP.NET MVC 5 integration for FluentValidation</summary>
+    <language>en-US</language>
+    <releaseNotes>This package is deprecated. Please use the FluentValidation package instead. </releaseNotes>
+    <dependencies>
+      <dependency id="FluentValidation.MVC5" version="7.*" />
+		</dependencies>
+  </metadata>
+</package>
