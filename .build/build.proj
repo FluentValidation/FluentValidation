@@ -34,10 +34,7 @@
     <ItemGroup>
       <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll" />
       <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Mvc5\bin\$(Configuration)\FluentValidation.Tests.Mvc5.dll" />
-      <!--<TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Mvc4\bin\$(Configuration)\FluentValidation.Tests.Mvc4.dll" />-->
       <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.WebApi\bin\$(Configuration)\FluentValidation.Tests.WebApi.dll" />
-      <!--<TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable\bin\$(Configuration)\FluentValidation.Tests.Portable45.dll" />-->
-      <!--<TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable40\bin\$(Configuration)\FluentValidation.Tests.Portable40.dll" />-->
       <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable46\bin\$(Configuration)\FluentValidation.Tests.Portable46.dll" />
     </ItemGroup>
     
@@ -68,9 +65,7 @@
     <ItemGroup>
       <MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\netstandard1.0\**\*.*" />
       <Mvc5Binaries Include="$(BaseDir)\src\FluentValidation.Mvc5\bin\$(Configuration)\net45\FluentValidation.Mvc.*" />
-      <!--<Portable40Binaries Include="$(BaseDir)\src\FluentValidation.Portable40\bin\$(Configuration)\**\*.*" />-->
       <WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)\net45\FluentValidation.WebApi.*" />
-      <!--<KBinaries Include="$(BaseDir)\artifacts\bin\FluentValidation.K\$(Configuration)\aspnetcore50\**\*.*" />-->
       <AspNetCoreBinaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.deps.json" />
       <AspNetCore451Binaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\net451\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\net451\FluentValidation.AspNetCore.deps.json" />
       <Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
@@ -80,12 +75,9 @@
     <Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation\%(RecursiveDir)"  />
     <Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC5" />
     <Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi" />
-    <!--<Copy SourceFiles="@(Portable40Binaries)" DestinationFolder="$(OutputDir)\Portable40" />-->
     <Copy SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(OutputDir)\AspNetCore" />
     <Copy SourceFiles="@(AspNetCore451Binaries)" DestinationFolder="$(OutputDir)\AspNetCore451" />
     <Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
-    <!--<Copy SourceFiles="@(KBinaries)" DestinationFolder="$(OutputDir)\AspNetVNext" />-->
-
 
     <ItemGroup>
       <FilesToZip Include="$(OutputDir)\**\*.*" />
