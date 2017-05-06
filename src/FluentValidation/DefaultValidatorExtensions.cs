@@ -939,6 +939,19 @@ namespace FluentValidation {
 			}
 		}
 
+        /// <summary>
+        /// Performs validation with rules and then throws an exception if validation fails.
+        /// </summary>
+        public static void ValidateAndThrow<T>(this IValidator<T> validator, T instance, string ruleset)
+        {
+            var result = validator.Validate(instance, ruleSet:ruleset);
+
+            if (!result.IsValid)
+            {
+                throw new ValidationException(result.Errors);
+            }
+        }
+
 		/// <summary>
 		/// Performs validation asynchronously and then throws an exception if validation fails.
 		/// </summary>
