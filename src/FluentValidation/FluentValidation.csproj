@@ -9,12 +9,23 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
-      FluentValidation 7.0 is a major release that contains several breaking changes, especially with Localization. If you use FluentValidation's support for localization please read the updated documentation:
-      
-    https://github.com/JeremySkinner/FluentValidation/wiki/f.-Localization
-    
-    
-    
+      FluentValidation 7.0 is a major release that contains several breaking changes, especially with Localization. If you use FluentValidation's support for localization please read the updated documentation: https://github.com/JeremySkinner/FluentValidation/wiki/f.-Localization
+
+* Localization rewrite to not require satellite assemblies   
+* Switch to Netstandard based build process
+* Deprecated IResourceAccessorBuilder and merged the functionality into LocalizedStringSource
+* Deprecated all uses of expression-based localization. Use resourcename/resourcetype instead
+* Resolved issue with possible NullReferenceException in the AspNetCore clientside integration for length validators
+* Don't clear the ModelValidatorProviders collection by default in the AspNetCore integration (added new ClearValidatorProviders property to control this behaviour)
+* Assemblies are now signed
+* Fix - Ensure IValidatorFactory is resolved from request scope in asp.net core integration
+* Fix - Property getter that throws an exception causes validation to fail in WebApi integration
+* Fix - Issue in AspNetCore integration where we tried to resolve a collection validator in some situations where a class validator should be used
+* Improve splitting of PascalCased property names to support uppercase character sequences
+* ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overriden
+* Fix - Incorrect clientside validation attributes generated for email validator and credit card validator in the asp.net core integration
+* Fix - Child model validation now works in webapi integration
+
    Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt </PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
