@@ -1,4 +1,4 @@
-7.0 - 
+7.0 - 19 May 2017
 Switch to Netstandard based build process
 Deprecated IResourceAccessorBuilder and merged the functionality into LocalizedStringSource
 Deprecated all uses of expression-based localization. Use resourcename/resourcetype instead
