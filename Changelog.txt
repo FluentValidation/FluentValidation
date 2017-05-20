@@ -1,3 +1,6 @@
+7.1 - 
+Improve message for MinimumLength and MaximumLength validators in English (other translations would be welcome).
+
 7.0 - 19 May 2017
 Switch to Netstandard based build process
 Deprecated IResourceAccessorBuilder and merged the functionality into LocalizedStringSource

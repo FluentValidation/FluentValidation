@@ -1,4 +1,4 @@
-#region License
+/*#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -16,18 +16,22 @@
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests.Mvc5 {
+namespace FluentValidation.Tests.AspNetCore {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
 	using System.Linq.Expressions;
-	using System.Web;
-	using System.Web.Mvc;
+	using FluentValidation.AspNetCore;
 	using Internal;
-	using Moq;
-	using Mvc;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Filters;
+	using Microsoft.AspNetCore.Mvc.Internal;
+	using Microsoft.AspNetCore.Mvc.ModelBinding;
+	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+	using Mvc6.dotnet;
 	using Validators;
     using Xunit;
 
@@ -36,8 +40,7 @@ namespace FluentValidation.Tests.Mvc5 {
 		ControllerContext controllerContext;
 
 		public ClientsideMessageTester() {
-			System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
-            System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("en-us");
+			CultureScope.SetDefaultCulture();
 
             validator = new InlineValidator<TestModel>();
 			controllerContext = CreateControllerContext();
@@ -215,66 +218,73 @@ namespace FluentValidation.Tests.Mvc5 {
 			rules.Count().ShouldEqual(1);
 			rules.Single().ErrorMessage.ShouldEqual("second");
 	    }
+//
+//		[Fact]
+//		public void Should_use_rules_from_specified_ruleset() {
+//			validator.RuleSet("Foo", () => {
+//				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
+//			});
+//			validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
+//
+//			var filter = new RuleSetForClientSideMessagesAttribute("Foo");
+//			filter.OnActionExecuting(new ActionExecutingContext { HttpContext = controllerContext.HttpContext });
+//
+//			var rules = GetClientRules(x => x.Name);
+//			rules.Count().ShouldEqual(1);
+//			rules.Single().ErrorMessage.ShouldEqual("first");
+//		}
+//
+//		[Fact]
+//		public void Should_use_rules_from_multiple_rulesets() {
+//			validator.RuleSet("Foo", () => {
+//				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
+//			});
+//
+//			validator.RuleSet("Bar", () => {
+//				validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
+//			});
+//
+//			validator.RuleFor(x => x.Name).NotNull().WithMessage("third");
+//
+//			var filter = new RuleSetForClientSideMessagesAttribute("Foo", "Bar");
+//			filter.OnActionExecuting(new ActionExecutingContext {HttpContext = controllerContext.HttpContext});
+//
+//			var rules = GetClientRules(x => x.Name);
+//			rules.Count().ShouldEqual(2);
+//		}
 
-		[Fact]
-		public void Should_use_rules_from_specified_ruleset() {
-			validator.RuleSet("Foo", () => {
-				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
-			});
-			validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
-
-			var filter = new RuleSetForClientSideMessagesAttribute("Foo");
-			filter.OnActionExecuting(new ActionExecutingContext { HttpContext = controllerContext.HttpContext });
-
-			var rules = GetClientRules(x => x.Name);
-			rules.Count().ShouldEqual(1);
-			rules.Single().ErrorMessage.ShouldEqual("first");
-		}
-
-		[Fact]
-		public void Should_use_rules_from_multiple_rulesets() {
-			validator.RuleSet("Foo", () => {
-				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
-			});
-
-			validator.RuleSet("Bar", () => {
-				validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
-			});
-
-			validator.RuleFor(x => x.Name).NotNull().WithMessage("third");
-
-			var filter = new RuleSetForClientSideMessagesAttribute("Foo", "Bar");
-			filter.OnActionExecuting(new ActionExecutingContext {HttpContext = controllerContext.HttpContext});
-
-			var rules = GetClientRules(x => x.Name);
-			rules.Count().ShouldEqual(2);
-		}
-
-		[Fact]
-		public void Should_use_rules_from_default_ruleset_and_specified_ruleset() {
-			validator.RuleSet("Foo", () => {
-				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
-			});
-
-			validator.RuleSet("Bar", () => {
-				validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
-			});
-
-			validator.RuleFor(x => x.Name).NotNull().WithMessage("third");
-
-			var filter = new RuleSetForClientSideMessagesAttribute("Foo", "default");
-			filter.OnActionExecuting(new ActionExecutingContext { HttpContext = controllerContext.HttpContext });
-
-			var rules = GetClientRules(x => x.Name);
-			rules.Count().ShouldEqual(2);
-		}
+//		[Fact]
+//		public void Should_use_rules_from_default_ruleset_and_specified_ruleset() {
+//			validator.RuleSet("Foo", () => {
+//				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
+//			});
+//
+//			validator.RuleSet("Bar", () => {
+//				validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
+//			});
+//
+//			validator.RuleFor(x => x.Name).NotNull().WithMessage("third");
+//
+//			var filter = new RuleSetForClientSideMessagesAttribute("Foo", "default");
+//			filter.OnActionExecuting(new ActionExecutingContext { HttpContext = controllerContext.HttpContext });
+//
+//			var rules = GetClientRules(x => x.Name);
+//			rules.Count().ShouldEqual(2);
+//		}
 
 		private ModelClientValidationRule GetClientRule(Expression<Func<TestModel, object>> expression) {
+
+			var clientProvider = new FluentValidationClientModelValidatorProvider(new MockValidatorFactory(validator));
+			var ctx = new ClientValidatorProviderContext(new DefaultModelMetadata(new EmptyModelMetadataProvider(), new DefaultCompositeMetadataDetailsProvider(Enumerable.Empty<IMetadataDetailsProvider>()), new DefaultMetadataDetails(new ModelMetadataIdentity(), new ModelAttributes(Enumerable.Empty<object>()))), new List<ClientValidatorItem>());
+			clientProvider.CreateValidators(ctx);
+			return ctx.Results.Single();
+
+
+
+
 			var propertyName = expression.GetMember().Name;
 			var metadata = new DataAnnotationsModelMetadataProvider().GetMetadataForProperty(null, typeof(TestModel), propertyName);
 
-			var factory = new Mock<IValidatorFactory>();
-			factory.Setup(x => x.GetValidator(typeof(TestModel))).Returns(validator);
 
 			var provider = new FluentValidationModelValidatorProvider(factory.Object);
 			var propertyValidator = provider.GetValidators(metadata, controllerContext).Single();
@@ -323,5 +333,24 @@ namespace FluentValidation.Tests.Mvc5 {
 				yield return new ModelClientValidationRule { ErrorMessage = this.ErrorMessageSource.GetString(null) };
 			}
 		}
+
+		private class MockValidatorFactory : IValidatorFactory {
+			private IValidator testValidator;
+
+			public MockValidatorFactory(IValidator testValidator) {
+				this.testValidator = testValidator;
+			}
+
+			public IValidator<T> GetValidator<T>() {
+				return (IValidator<T>) GetValidator(typeof(T));
+			}
+
+			public IValidator GetValidator(Type type) {
+				if (type == typeof(TestModel)) {
+					return testValidator;
+				}
+				return null;
+			}
+		}
 	}
-}
+}*/

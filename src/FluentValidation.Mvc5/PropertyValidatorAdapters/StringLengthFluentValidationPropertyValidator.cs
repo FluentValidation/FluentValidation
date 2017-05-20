@@ -38,7 +38,15 @@
 			}
 			catch (FluentValidationMessageFormatException) {
 				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				message = ValidatorOptions.LanguageManager.GetStringForValidator<LengthValidator>();
+				if (lengthVal is MinimumLengthValidator) {
+					message = ValidatorOptions.LanguageManager.GetStringForValidator<MinimumLengthValidator>();
+				} else if (lengthVal is MaximumLengthValidator) {
+					message = ValidatorOptions.LanguageManager.GetStringForValidator<MaximumLengthValidator>();
+				} else if (lengthVal is ExactLengthValidator) {
+					message = ValidatorOptions.LanguageManager.GetStringForValidator<ExactLengthValidator>();
+				} else {
+					message = ValidatorOptions.LanguageManager.GetStringForValidator<LengthValidator>();
+				}
 				messageNeedsSplitting = true;
 			}
 
