@@ -1,5 +1,6 @@
-7.1 - 
+7.0.1 - 23 May 2017
 Improve message for MinimumLength and MaximumLength validators in English (other translations would be welcome).
+Added FluentValidationModelValidatorProvider.DisableDiscoveryOfPropertyValidators for backwards compatibility
 
 7.0 - 19 May 2017
 Switch to Netstandard based build process

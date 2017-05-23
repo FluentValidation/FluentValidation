@@ -18,7 +18,7 @@ if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\2017\Enterprise\MSBuild\15
 echo Using MSBuild from %MSBUILD%
 
 rem /p:NugetVersion=6.4.1
-%MSBUILD% .build\build.proj /p:Version=7.0.0 %*
+%MSBUILD% .build\build.proj /p:Version=7.0.1 %*
 goto end
 
 :publish
