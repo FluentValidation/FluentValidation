@@ -33,7 +33,12 @@ namespace FluentValidation.WebApi
 
 	public class FluentValidationModelValidatorProvider : ModelValidatorProvider {
 		public IValidatorFactory ValidatorFactory { get; set; }
-		public bool SkipPropertyValidators { get; set; } = false;
+
+
+		/// <summary>
+		/// Enabling this maintains compatibility with FluentValidation 6.4, where discovery of validators was limited to top level models. 
+		/// </summary>
+		public bool DisableDiscoveryOfPropertyValidators { get; set; } = false;
 
 		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory = null) {
 			ValidatorFactory = validatorFactory ?? new AttributedValidatorFactory();
@@ -53,7 +58,7 @@ namespace FluentValidation.WebApi
 
 		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, IEnumerable<ModelValidatorProvider> validatorProviders)
 		{
-			if (SkipPropertyValidators && IsValidatingProperty(metadata)) {
+			if (DisableDiscoveryOfPropertyValidators && IsValidatingProperty(metadata)) {
 				yield break;
 			}
 
