@@ -36,12 +36,17 @@ namespace FluentValidation.AspNetCore {
 			// email must come before regex.
 			{ typeof(IEmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
 			{ typeof(IRegularExpressionValidator), (context, rule, validator) => new RegexClientValidator(rule, validator) },
-			{ typeof(ILengthValidator), (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
+			{ typeof(MaximumLengthValidator), (context, rule, validator) => new MaxLengthClientValidator(rule, validator) },
+			{ typeof(MinimumLengthValidator), (context, rule, validator) => new MinLengthClientValidator(rule, validator) },
+			{ typeof(LengthValidator), (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
+			{ typeof(ExactLengthValidator), (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
 			{ typeof(InclusiveBetweenValidator), (context, rule, validator) => new RangeClientValidator(rule, validator) },
-			{ typeof(GreaterThanOrEqualValidator), (context, rule, validator) => new MinLengthClientValidator(rule, validator) },
-			{ typeof(LessThanOrEqualValidator), (context, rule, validator) => new MaxLengthClientValidator(rule, validator) },
+			{ typeof(GreaterThanOrEqualValidator), (context, rule, validator) => new RangeMinClientValidator(rule, validator) },
+			{ typeof(LessThanOrEqualValidator), (context, rule, validator) => new RangeMaxClientValidator(rule, validator) },
 			{ typeof(EqualValidator), (context, rule, validator) => new EqualToClientValidator(rule, validator) },
-			{ typeof(CreditCardValidator), (context, description, validator) => new CreditCardClientValidator(description, validator) }
+			{ typeof(CreditCardValidator), (context, rule, validator) => new CreditCardClientValidator(rule, validator) },
+			
+
 		};
 
 		IValidatorFactory _validatorFactory;

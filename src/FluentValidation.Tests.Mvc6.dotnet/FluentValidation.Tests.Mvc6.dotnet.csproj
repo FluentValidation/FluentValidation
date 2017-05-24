@@ -12,6 +12,9 @@
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>
     <StartupObject />
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,6 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Views\Clientside\Inputs.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Views\_ViewImports.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -30,14 +39,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="15.0.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0-beta5-build1225" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="1.1.1" />
-    <PackageReference Include="xunit" Version="2.2.0-beta5-build3474" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="1.1.2" />
+    <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="Microsoft.DotNet.InternalAbstractions" Version="1.0.0" />
   </ItemGroup>
+
+  <Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
+    <ItemGroup>
+      <DepsFilePaths Include="$([System.IO.Path]::ChangeExtension('%(_ResolvedProjectReferencePaths.FullPath)', '.deps.json'))" />
+    </ItemGroup>
+
+    <Copy SourceFiles="%(DepsFilePaths.FullPath)" DestinationFolder="$(OutputPath)" Condition="Exists('%(DepsFilePaths.FullPath)')" />
+  </Target>
 
   <ItemGroup>
     <Compile Update="TestMessages.Designer.cs">

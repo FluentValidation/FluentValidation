@@ -1,4 +1,4 @@
-﻿#region License
+﻿/*#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -34,7 +34,7 @@ namespace FluentValidation.AspNetCore {
         protected abstract Object MinValue { get; }
         protected abstract Object MaxValue { get; }
 
-        protected AbstractComparisonClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+        protected AbstractComparisonClientValidator(PropertyRule rule, TValidator validator) : base(rule, validator) {
         }
 
 		protected string GetErrorMessage(ClientModelValidationContext context) {
@@ -56,4 +56,4 @@ namespace FluentValidation.AspNetCore {
 
 	    protected abstract string GetDefaultMessage();
     }
-}
+}*/
