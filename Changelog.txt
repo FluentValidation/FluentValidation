@@ -1,4 +1,4 @@
-7.0.2 - 
+7.0.2 - 26 May 2017
 Various fixes to clientside validation in asp.net core
 
 7.0.1 - 23 May 2017
