@@ -1,3 +1,6 @@
+7.0.2 - 
+Various fixes to clientside validation in asp.net core
+
 7.0.1 - 23 May 2017
 Improve message for MinimumLength and MaximumLength validators in English (other translations would be welcome).
 Added FluentValidationModelValidatorProvider.DisableDiscoveryOfPropertyValidators for backwards compatibility

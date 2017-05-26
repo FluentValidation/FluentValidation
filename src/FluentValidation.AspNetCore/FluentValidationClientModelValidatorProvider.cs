@@ -88,6 +88,26 @@ namespace FluentValidation.AspNetCore {
 							IsReusable = false
 						});
 					}
+
+					
+					HandleNonNullableValueTypeRequiredRule(context);
+
+				}
+			}
+		}
+
+		// If the property is a non-nullable value type, then MVC will have already generated a Required rule.
+		// If we've provided our own Requried rule, then remove the MVC one.
+		protected virtual void HandleNonNullableValueTypeRequiredRule(ClientValidatorProviderContext context) {
+			bool isNonNullableValueType = !TypeAllowsNullValue(context.ModelMetadata.ModelType);
+
+			if (isNonNullableValueType) {
+				bool fvHasRequiredRule = context.Results.Any(x => x.Validator is RequiredClientValidator);
+
+				if (fvHasRequiredRule) {
+					var dataAnnotationsRequiredRule = context.Results
+						.FirstOrDefault(x => x.Validator is Microsoft.AspNetCore.Mvc.DataAnnotations.Internal.RequiredAttributeAdapter);
+					context.Results.Remove(dataAnnotationsRequiredRule);
 				}
 			}
 		}
@@ -102,6 +122,10 @@ namespace FluentValidation.AspNetCore {
 				.FirstOrDefault();
 
 			return factory?.Invoke(context, rule, propertyValidator);
+		}
+
+		private bool TypeAllowsNullValue(Type type) {
+			return (!type.GetTypeInfo().IsValueType || Nullable.GetUnderlyingType(type) != null);
 		}
 	}
 
