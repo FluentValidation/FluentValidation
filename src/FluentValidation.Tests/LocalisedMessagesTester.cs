@@ -248,6 +248,14 @@ namespace FluentValidation.Tests {
 			result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
 		}
 
+		[Fact]
+		public void Uses_string_format_with_property_value() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Forename).Equal("Foo").WithMessage((x, forename) => $"Hello {forename}");
+			var result = validator.Validate(new Person {Forename = "Jeremy"});
+			result.Errors[0].ErrorMessage.ShouldEqual("Hello Jeremy");
+		}
+
 
 		private class MyResources {
 			public static string notempty_error {

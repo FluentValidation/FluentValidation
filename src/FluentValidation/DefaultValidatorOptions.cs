@@ -81,6 +81,31 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Specifies a custom error message to use when validation fails.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="messageProvider">Delegate that will be invoked to retrieve the localized message. </param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, string> messageProvider) {
+			messageProvider.Guard("A messageProvider must be provided.");
+
+			Func<object, string> newFunc = instance => {
+				Func<object, object> propertyFunc = null;
+
+				rule.Configure(cfg => {
+					propertyFunc = cfg.PropertyFunc;
+				});
+
+				var propValue = propertyFunc(instance);
+				return messageProvider((T) instance, (TProperty)propValue);
+			};
+
+			return rule.Configure(config => {
+				config.CurrentValidator.ErrorMessageSource = new LazyStringSource(newFunc);
+			});
+		}
+
+		/// <summary>
 		/// Specifies a custom error code to use if validation fails.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
