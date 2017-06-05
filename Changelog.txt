@@ -1,5 +1,6 @@
-7.0.3 - 
-Missing overload for WithMessage
+7.0.3 - 7 June 2017
+Added missing overload for WithMessage
+Ensure LanguageManager.Culture takes precedence over the current thread's culture
 
 7.0.2 - 26 May 2017
 Various fixes to clientside validation in asp.net core
