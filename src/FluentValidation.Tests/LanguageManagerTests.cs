@@ -62,6 +62,16 @@
 		}
 
 		[Fact]
+		public void Always_use_specific_language_with_string_source() {
+			ValidatorOptions.LanguageManager.Culture = new CultureInfo("fr-FR");
+			var stringSource = new LanguageStringSource(nameof(NotNullValidator));
+			var msg = stringSource.GetString(null);
+			ValidatorOptions.LanguageManager.Culture = null;
+
+			msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
+		}
+
+		[Fact]
 		public void Disables_localization() {
 			using (new CultureScope("fr")) {
 				_languages.Enabled = false;
@@ -73,11 +83,13 @@
 		[Fact]
 		public void Can_replace_message() {
 			using (new CultureScope("en-US")) {
+				
 				var custom = new CustomLanguageManager();
 				var msg = custom.GetStringForValidator<NotNullValidator>();
 				msg.ShouldEqual("foo");
 			}
 		}
+
 
 		public class CustomLanguageManager : LanguageManager {
 			public CustomLanguageManager() {

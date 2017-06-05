@@ -14,7 +14,7 @@
 		}
 
 		public string GetString(object context) {
-			return ValidatorOptions.LanguageManager.GetString(_key, CultureInfo.CurrentUICulture);
+			return ValidatorOptions.LanguageManager.GetString(_key);
 		}
 
 		public string ResourceName => _key;
