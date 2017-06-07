@@ -13,7 +13,7 @@
 
 * Localization rewrite to not require satellite assemblies   
 * Switch to Netstandard based build process
-* Assemblies are now signed
+* Assemblies are now signed / strong named
 * Fix - Possible NullReferenceException in the AspNetCore clientside integration for length validators
 * Fix - Don't clear the ModelValidatorProviders collection by default in the AspNetCore integration (added new ClearValidatorProviders property to control this behaviour)
 * Fix - Ensure IValidatorFactory is resolved from request scope in asp.net core integration
