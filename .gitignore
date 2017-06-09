@@ -19,3 +19,4 @@ artifacts/
 TestResults/
 .vs/
 *.lock.json
+*.ncrunch*

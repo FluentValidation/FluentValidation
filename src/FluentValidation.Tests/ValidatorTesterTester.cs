@@ -101,7 +101,7 @@ namespace FluentValidation.Tests {
 				validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator))
 			);
 
-			ex.Message.ShouldEqual("Expected property 'Address' to have a child validator of type 'AddressValidator.'");
+			ex.Message.ShouldEqual("Expected property 'Address' to have a child validator of type 'AddressValidator.'. Instead found 'none'");
 		}
 
 
@@ -117,7 +117,18 @@ namespace FluentValidation.Tests {
 				validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator))
 			);
 
-			ex.Message.ShouldEqual("Expected property 'Orders' to have a child validator of type 'OrderValidator.'");
+			ex.Message.ShouldEqual("Expected property 'Orders' to have a child validator of type 'OrderValidator.'. Instead found 'none'");
+		}
+
+		[Fact]
+		public void ShouldHaveChildValidator_should_throw_when_property_has_a_different_child_validator()
+		{
+			validator.RuleFor(x => x.Address).SetValidator(new AddressValidator());
+			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
+				validator.ShouldHaveChildValidator(x => x.Address, typeof(OrderValidator))
+			);
+
+			ex.Message.ShouldEqual("Expected property 'Address' to have a child validator of type 'OrderValidator.'. Instead found 'AddressValidator'");
 		}
 
 		[Fact]

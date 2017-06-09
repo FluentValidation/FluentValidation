@@ -63,7 +63,8 @@ namespace FluentValidation.TestHelper {
 			childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
 			if (childValidatorTypes.All(x => x != childValidatorType)) {
-				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'", expressionMemberName, childValidatorType.Name));
+				var childValidatorNames = childValidatorTypes.Any() ? string.Join(", ", childValidatorTypes.Select(x => x.Name)) : "none";
+				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'. Instead found '{2}'", expressionMemberName, childValidatorType.Name, childValidatorNames));
 			}
 		}
 
