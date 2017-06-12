@@ -115,7 +115,7 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
 			context.Guard("Cannot pass null to Validate.");
-			context.InstanceToValidate.Guard("Cannot pass null model to Validate.");
+			EnsureInstanceNotNull(context.InstanceToValidate);
 			var failures = nestedValidators.SelectMany(x => x.Validate(context));
 			return new ValidationResult(failures);
 		}
@@ -128,7 +128,7 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate");
-			context.InstanceToValidate.Guard("Cannot pass null model to ValidateAsync.");
+			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			var failures = new List<ValidationFailure>();
 			
@@ -333,6 +333,14 @@ namespace FluentValidation {
 
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
+		}
+
+		/// <summary>
+		/// Throws an exception if the instance being validated is null.
+		/// </summary>
+		/// <param name="instanceToValidate"></param>
+		protected virtual void EnsureInstanceNotNull(object instanceToValidate) {
+			instanceToValidate.Guard("Cannot pass null model to Validate.");
 		}
 	}
 
