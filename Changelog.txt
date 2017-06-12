@@ -1,3 +1,7 @@
+7.x - 
+Merged pull request - improved messages in ShouldHaveChildValidator test extension
+Merged pull request - test helper works with nested properties
+
 7.0.3 - 7 June 2017
 Added missing overload for WithMessage
 Ensure LanguageManager.Culture takes precedence over the current thread's culture
