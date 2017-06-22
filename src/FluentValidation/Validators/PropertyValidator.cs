@@ -39,7 +39,7 @@ namespace FluentValidation.Validators {
 			get { return false; }
 		}
 
-		public Func<object, object> CustomStateProvider { get; set; }
+		public Func<PropertyValidatorContext, object> CustomStateProvider { get; set; }
 
 		public Severity Severity { get; set; }
 
@@ -136,7 +136,7 @@ namespace FluentValidation.Validators {
 				: GetType().Name;
 
 			if (CustomStateProvider != null) {
-				failure.CustomState = CustomStateProvider(context.Instance);
+				failure.CustomState = CustomStateProvider(context);
 			}
 
 			failure.Severity = Severity;

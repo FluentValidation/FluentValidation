@@ -272,7 +272,26 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState");
-			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = stateProvider.CoerceToNonGeneric());
+			var wrapper = new Func<PropertyValidatorContext, object>(ctx => stateProvider((T) ctx.Instance));
+			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = wrapper);
+		}
+
+		/// <summary>
+		/// Specifies custom state that should be stored alongside the validation message when validation fails for this rule.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="stateProvider"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, object> stateProvider) {
+			stateProvider.Guard("A lambda expression must be passed to WithState");
+
+			var wrapper = new Func<PropertyValidatorContext, object>(ctx => {
+				return stateProvider((T) ctx.Instance, (TProperty) ctx.PropertyValue);
+			});
+
+			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = wrapper);
 		}
 
 		///<summary>

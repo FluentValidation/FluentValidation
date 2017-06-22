@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using Xunit;
 
@@ -55,6 +56,13 @@ namespace FluentValidation.Tests {
 			validator.Validate(person);
 
 			resultPerson.ShouldBeTheSameAs(person);
+		}
+
+		[Fact]
+		public void Can_Provide_state_for_item_in_collection() {
+			validator.RuleForEach(x => x.Children).NotNull().WithState((person, child) => "test");
+			var result = validator.Validate(new Person {Children = new List<Person> {null}});
+			result.Errors[0].CustomState.ToString().ShouldEqual("test");
 		}
 	}
 }
