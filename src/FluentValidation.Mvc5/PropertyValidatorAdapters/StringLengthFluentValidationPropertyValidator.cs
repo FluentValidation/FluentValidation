@@ -61,7 +61,14 @@
 
 			message = formatter.BuildMessage(message);
 
-			yield return new ModelClientValidationStringLengthRule(message, LengthValidator.Min, LengthValidator.Max) ;
+			ModelClientValidationRule rule;
+			if (lengthVal is MinimumLengthValidator)
+				rule = new ModelClientValidationMinLengthRule(message, LengthValidator.Min);
+			else if (lengthVal is MaximumLengthValidator)
+				rule = new ModelClientValidationMaxLengthRule(message, LengthValidator.Max);
+			else
+				rule = new ModelClientValidationStringLengthRule(message, LengthValidator.Min, LengthValidator.Max);
+			yield return rule;
 		}
 	}
 }

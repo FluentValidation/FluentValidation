@@ -2,6 +2,7 @@
 Merged pull request - improved messages in ShouldHaveChildValidator test extension
 Merged pull request - test helper works with nested properties
 Added additional overload of WithState that accepts a property value
+Fixed StringLengthFluentValidationPropertyValidator generating the wrong comparison values when used in conjunction with the MaxLengthValidator and MinLengthValidator
 *Breaking change* Signature change of PropertyValidator.CustomStateProvider
 
 7.0.3 - 7 June 2017
