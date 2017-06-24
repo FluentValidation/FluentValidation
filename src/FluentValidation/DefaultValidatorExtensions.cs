@@ -1025,5 +1025,13 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> IsInEnum<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 			return ruleBuilder.SetValidator(new EnumValidator(typeof(TProperty)));
 		}
-    }
+
+		public static IRuleBuilderInitial<T, TProperty> Custom<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<TProperty, CustomContext> action) {
+			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new CustomValidator<TProperty>(action));
+		}
+
+		public static IRuleBuilderInitial<T, TProperty> CustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CustomContext, CancellationToken, Task> action) {
+			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new CustomValidator<TProperty>(action));
+		}
+	}
 }

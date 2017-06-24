@@ -35,8 +35,12 @@ namespace FluentValidation.Internal {
 		}
 
 		internal static void Guard(this string str, string message) {
-			if (string.IsNullOrEmpty(str)) {
+			if (str == null) {
 				throw new ArgumentNullException(message);
+			}
+
+			if (string.IsNullOrEmpty(str)) {
+				throw new ArgumentException(message);
 			}
 		}
 

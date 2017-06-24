@@ -196,7 +196,7 @@ namespace FluentValidation {
 		/// If the validation rule succeeds, it should return null.
 		/// </summary>
 		/// <param name="customValidator">A lambda that executes custom validation rules.</param>
-		[Obsolete("Use model-level RuleFor(x => x) instead")]
+		[Obsolete("Use model-level RuleFor(x => x).Custom((x, context) => {}) instead")]
 		public void Custom(Func<T, ValidationFailure> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom");
 			AddRule(new DelegateValidator<T>(x => new[] { customValidator(x) }));
@@ -208,7 +208,7 @@ namespace FluentValidation {
 		/// If the validation rule succeeds, it should return null.
 		/// </summary>
 		/// <param name="customValidator">A lambda that executes custom validation rules</param>
-		[Obsolete("Use model-level RuleFor(x => x) instead")]
+		[Obsolete("Use model-level RuleFor(x => x).Custom((x, context) => {}) instead")]
 		public void Custom(Func<T, ValidationContext<T>, ValidationFailure> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom");
 			AddRule(new DelegateValidator<T>((x, ctx) => new[] { customValidator(x, ctx) }));
@@ -220,7 +220,7 @@ namespace FluentValidation {
 		/// If the validation rule succeeds, it should return null.
 		/// </summary>
 		/// <param name="customValidator">A lambda that executes custom validation rules.</param>
-		[Obsolete("Use model-level RuleFor(x => x) instead")]
+		[Obsolete("Use model-level RuleFor(x => x).CustomAsync(await (x,context,cancellation) => {}) instead")]
 		public void CustomAsync(Func<T, Task<ValidationFailure>> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom");
 			AddRule(new DelegateValidator<T>(x => customValidator(x).Then(f => new[] {f}.AsEnumerable(), runSynchronously: true)));
@@ -232,7 +232,7 @@ namespace FluentValidation {
 		/// If the validation rule succeeds, it should return null.
 		/// </summary>
 		/// <param name="customValidator">A lambda that executes custom validation rules</param>
-		[Obsolete("Use model-level RuleFor(x => x) instead")]
+		[Obsolete("Use model-level RuleFor(x => x).CustomAsync(await (x,context,cancellation) => {}) instead")]
 		public void CustomAsync(Func<T, ValidationContext<T>, CancellationToken, Task<ValidationFailure>> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom");
 			AddRule(new DelegateValidator<T>((x, ctx, cancel) => customValidator(x, ctx, cancel).Then(f => new[] {f}.AsEnumerable(), runSynchronously: true)));

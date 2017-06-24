@@ -1,9 +1,10 @@
-7.x - 
+7.1-beta1 - 24 June 2017 
 Merged pull request - improved messages in ShouldHaveChildValidator test extension
 Merged pull request - test helper works with nested properties
 Added additional overload of WithState that accepts a property value
 Fixed StringLengthFluentValidationPropertyValidator generating the wrong comparison values when used in conjunction with the MaxLengthValidator and MinLengthValidator
 *Breaking change* Signature change of PropertyValidator.CustomStateProvider
+Add new RuleFor().Custom validator method as a replacement of the root-level Custom method
 
 7.0.3 - 7 June 2017
 Added missing overload for WithMessage

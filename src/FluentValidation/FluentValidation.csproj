@@ -11,9 +11,10 @@
     <PackageReleaseNotes>
       FluentValidation 7.0 is a major release that contains several breaking changes, especially with Localization. If you use FluentValidation's support for localization please read the updated documentation: https://github.com/JeremySkinner/FluentValidation/wiki/f.-Localization
 
-* Localization rewrite to not require satellite assemblies   
+* Localization rewrite to not require satellite assemblies
+* New 'Custom' rule method replaces the root-level Custom method
 * Switch to Netstandard based build process
-* Assemblies are now signed / strong named
+* Assemblies are now signed / strongly named
 * Fix - Possible NullReferenceException in the AspNetCore clientside integration for length validators
 * Fix - Don't clear the ModelValidatorProviders collection by default in the AspNetCore integration (added new ClearValidatorProviders property to control this behaviour)
 * Fix - Ensure IValidatorFactory is resolved from request scope in asp.net core integration
@@ -23,6 +24,7 @@
 * Fix - Child model validation now works in webapi integration
 * Improve splitting of PascalCased property names to support uppercase character sequences
 * ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overriden
+* Additional overload of WithState allows access to collection item when used with RuleForEach 
 
    Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt </PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>

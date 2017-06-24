@@ -55,7 +55,7 @@ namespace FluentValidation.Validators {
 			get { return false; }
 		}
 
-		public Func<object, object> CustomStateProvider {
+		public Func<PropertyValidatorContext, object> CustomStateProvider {
 			get { return null; }
 			set { }
 		}
