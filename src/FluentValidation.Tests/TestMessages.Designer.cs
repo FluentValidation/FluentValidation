@@ -43,7 +43,7 @@ namespace FluentValidation.Tests {
                 if (object.ReferenceEquals(resourceMan, null)) {
 
 	                Assembly assembly;
-#if CoreCLR
+#if CoreCLR || NETCOREAPP1_1
 	                assembly = typeof (TestMessages).GetTypeInfo().Assembly;
 #else
 					assembly = typeof(TestMessages).Assembly;

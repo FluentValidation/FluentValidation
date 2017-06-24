@@ -23,7 +23,7 @@ namespace FluentValidation.Tests {
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
-#if !CoreCLR
+#if !CoreCLR && !NETCOREAPP1_1
 	using Moq;
 #endif
 	using Xunit;
@@ -140,7 +140,7 @@ namespace FluentValidation.Tests {
 			var predicateValidator = (DelegatingValidator) builder.Rule.CurrentValidator;
 			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
 		}
-#if !CoreCLR
+#if !CoreCLR && !NETCOREAPP1_1
 		[Fact]
 		public void Calling_validate_should_delegate_to_underlying_validator() {
 			var person = new Person {Surname = "Foo"};
@@ -153,7 +153,7 @@ namespace FluentValidation.Tests {
 
 		}
 #endif
-#if! CoreCLR
+#if !CoreCLR && !NETCOREAPP1_1
 		[Fact]
 		public void Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
 			var person = new Person { Surname = "Foo" };
@@ -167,7 +167,7 @@ namespace FluentValidation.Tests {
 
 		}
 #endif
-#if !CoreCLR
+#if !CoreCLR && !NETCOREAPP1_1
 		[Fact]
 		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator()
 		{

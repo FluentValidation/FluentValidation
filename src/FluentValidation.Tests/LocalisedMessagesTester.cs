@@ -40,7 +40,7 @@ namespace FluentValidation.Tests {
 			CultureScope.SetDefaultCulture();
 		}
 
-#if!CoreCLR
+#if !CoreCLR && !NETCOREAPP1_1
 		[Fact]
 		public void Correctly_assigns_default_localized_error_message() {
 

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>FluentValidation MVC6 Unit Tests .NET Core</Description>
     <Authors>Jeremy Skinner</Authors>
-    <TargetFramework>netcoreapp1.0</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>FluentValidation.Tests.Mvc6.dotnet</AssemblyName>
     <PackageId>FluentValidation.Tests.Mvc6.dotnet</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -78,6 +78,14 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
     <DefineConstants>$(DefineConstants);PORTABLE;CoreCLR</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
   </PropertyGroup>
 
 </Project>
