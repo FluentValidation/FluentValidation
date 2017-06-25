@@ -122,19 +122,9 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		private static void RegisterTypes(IEnumerable<Assembly> assembliesToRegister, IServiceCollection services) {
-			var openGenericType = typeof(IValidator<>);
-
-			var query = from a in assembliesToRegister.Distinct()
-                        from type in a.GetTypes().Where(c => !(c.GetTypeInfo().IsAbstract || c.GetTypeInfo().IsGenericTypeDefinition))
-						let interfaces = type.GetInterfaces()
-						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
-						let matchingInterface = genericInterfaces.FirstOrDefault()
-						where matchingInterface != null
-						select new { matchingInterface, type };
-
-			foreach (var pair in query) {
-				services.Add(ServiceDescriptor.Transient(pair.matchingInterface, pair.type));
-			}
+			AssemblyScanner.FindValidatorsInAssemblies(assembliesToRegister).ForEach(pair => {
+				services.Add(ServiceDescriptor.Transient(pair.InterfaceType, pair.ValidatorType));
+			});
 		}
 	}
 

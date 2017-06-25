@@ -48,6 +48,17 @@ namespace FluentValidation {
 			return new AssemblyScanner(assembly.GetExportedTypes());
 #endif
 		}
+		/// <summary>
+		/// Finds all the validators in the specified assemblies
+		/// </summary>
+		public static AssemblyScanner FindValidatorsInAssemblies(IEnumerable<Assembly> assemblies) {
+#if NETSTANDARD1_0
+			var types = assemblies.SelectMany(x => x.ExportedTypes.Distinct());
+#else
+			var types = assemblies.SelectMany(x => x.GetExportedTypes().Distrinct());
+#endif
+			return new AssemblyScanner(types);
+		}
 
 		/// <summary>
 		/// Finds all the validators in the assembly containing the specified type.
