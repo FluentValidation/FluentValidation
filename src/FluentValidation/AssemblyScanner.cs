@@ -55,7 +55,7 @@ namespace FluentValidation {
 #if NETSTANDARD1_0
 			var types = assemblies.SelectMany(x => x.ExportedTypes.Distinct());
 #else
-			var types = assemblies.SelectMany(x => x.GetExportedTypes().Distrinct());
+			var types = assemblies.SelectMany(x => x.GetExportedTypes().Distinct());
 #endif
 			return new AssemblyScanner(types);
 		}
