@@ -61,6 +61,7 @@ namespace FluentValidation {
 
 #if NETSTANDARD1_0
 			var query = from type in types
+						where !type.GetTypeInfo().IsAbstract && !type.GetTypeInfo().IsGenericTypeDefinition
 						let interfaces = type.GetTypeInfo().ImplementedInterfaces
 						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
 						let matchingInterface = genericInterfaces.FirstOrDefault()
@@ -68,6 +69,7 @@ namespace FluentValidation {
 						select new AssemblyScanResult(matchingInterface, type);
 #else
 			var query = from type in types
+						where !type.IsAbstract && !type.IsGenericTypeDefinition
 						let interfaces = type.GetInterfaces()
 						let genericInterfaces = interfaces.Where(i => i.GetTypeInfo().IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
 						let matchingInterface = genericInterfaces.FirstOrDefault()

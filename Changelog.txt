@@ -1,3 +1,6 @@
+7.x - 
+AssemblyScanner now excludes abstract and generic types. 
+
 7.1-beta1 - 24 June 2017 
 Merged pull request - improved messages in ShouldHaveChildValidator test extension
 Merged pull request - test helper works with nested properties
