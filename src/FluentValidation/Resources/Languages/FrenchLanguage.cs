@@ -29,7 +29,7 @@ namespace FluentValidation.Resources {
 			Translate<LengthValidator>("'{PropertyName}' doit contenir entre {MinLength} et {MaxLength} caractères. {TotalLength} caractères ont été saisis.");
 			Translate<MinimumLengthValidator>("'{PropertyName}' doit contenir entre {MinLength} et {MaxLength} caractères. {TotalLength} caractères ont été saisis.");
 			Translate<MaximumLengthValidator>("'{PropertyName}' doit contenir entre {MinLength} et {MaxLength} caractères. {TotalLength} caractères ont été saisis.");
-			Translate<LessThanOrEqualValidator>("'{PropertyName}' doit être plus petit ou égal à '{ComparisonValue}' sein.");
+			Translate<LessThanOrEqualValidator>("'{PropertyName}' doit être plus petit ou égal à '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' doit être plus petit à '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("'{PropertyName}' ne doit pas être vide.");
 			Translate<NotEqualValidator>("'{PropertyName}' ne doit pas être égal à '{ComparisonValue}'.");
