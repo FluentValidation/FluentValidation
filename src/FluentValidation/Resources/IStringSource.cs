@@ -40,4 +40,9 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		Type ResourceType { get; }
 	}
+
+	/// <summary>
+	/// Marker interface that indicates a PropertyValidatorContext should be passed to GetString
+	/// </summary>
+	internal interface IContextAwareStringSource {  }
 }

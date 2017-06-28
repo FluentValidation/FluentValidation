@@ -151,7 +151,12 @@ namespace FluentValidation.Validators {
 				context.MessageFormatter.AppendAdditionalArguments(additionalArguments);
 			}
 
-			string error = context.MessageFormatter.BuildMessage(errorSource.GetString(context.Instance));
+
+			// For backwards compatibility, only pass in the PropertyValidatorContext if the string source implements IContextAwareStringSource
+			// otherwise fall back to old behaviour of passing the instance. 
+			object stringSourceContext = errorSource is IContextAwareStringSource ? context : context.Instance;
+
+			string error = context.MessageFormatter.BuildMessage(errorSource.GetString(stringSourceContext));
 			return error;
 		}
 

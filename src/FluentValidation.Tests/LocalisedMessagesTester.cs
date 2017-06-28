@@ -256,6 +256,17 @@ namespace FluentValidation.Tests {
 			result.Errors[0].ErrorMessage.ShouldEqual("Hello Jeremy");
 		}
 
+		[Fact]
+		public void Does_not_throw_InvalidCastException_when_using_RuleForEach() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleForEach(x => x.NickNames)
+				.Must(x => false)
+				.WithMessage((parent, name) => "x");
+
+			var result = validator.Validate(new Person() {NickNames = new[] {"What"}});
+			result.Errors.Single().ErrorMessage.ShouldEqual("x");
+		}
+
 
 		private class MyResources {
 			public static string notempty_error {

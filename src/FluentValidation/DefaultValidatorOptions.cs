@@ -89,19 +89,14 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.");
 
-			Func<object, string> newFunc = instance => {
-				Func<object, object> propertyFunc = null;
-
-				rule.Configure(cfg => {
-					propertyFunc = cfg.PropertyFunc;
-				});
-
-				var propValue = propertyFunc(instance);
-				return messageProvider((T) instance, (TProperty)propValue);
-			};
-
 			return rule.Configure(config => {
-				config.CurrentValidator.ErrorMessageSource = new LazyStringSource(newFunc);
+
+				Func<PropertyValidatorContext, string> newFunc = context => {
+					return messageProvider((T)context.Instance, (TProperty)context.PropertyValue);
+				};
+
+
+				config.CurrentValidator.ErrorMessageSource = new ContextAwareLazyStringSource(newFunc);
 			});
 		}
 
