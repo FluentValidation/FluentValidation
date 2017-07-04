@@ -23,7 +23,7 @@ namespace FluentValidation.Resources {
 		public override string Name => "nl";
 
 		public DutchLanguage() {
-			Translate<EmailValidator>("'{PropertyName}' is geen geldig email address.");
+			Translate<EmailValidator>("'{PropertyName}' is geen geldig email adres.");
 			Translate<EqualValidator>("'{PropertyName}' moet gelijk zijn aan '{ComparisonValue}'.");
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' moet meer dan of gelijk zijn aan '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' moet groter zijn dan '{ComparisonValue}'.");
@@ -40,7 +40,7 @@ namespace FluentValidation.Resources {
 			Translate<ExactLengthValidator>("De lengte van '{PropertyName}' moet {MaxLength} karakters zijn. Er zijn {TotalLength} karakters ingevoerd.");
 			Translate<EnumValidator>("'{PropertyValue}' komt niet voor in het bereik van '{PropertyName}'.");
 			Translate<CreditCardValidator>("'{PropertyName}' is geen geldig credit card nummer.");
-			Translate<EmptyValidator>("'{PropertyName}' hoort leegt te zijn.");
+			Translate<EmptyValidator>("'{PropertyName}' hoort leeg te zijn.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' moet na {From} komen en voor {To} liggen. Je hebt ingevuld {Value}.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' moet tussen {From} en {To} liggen. Je hebt ingevuld {Value}.");
 			Translate<NullValidator>("'{PropertyName}' moet leeg zijn.");
