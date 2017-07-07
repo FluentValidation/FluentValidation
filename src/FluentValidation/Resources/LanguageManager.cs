@@ -56,6 +56,7 @@ namespace FluentValidation.Resources {
 				new SpanishLanguage(), 
 				new SwedishLanguage(), 
 				new TurkishLanguage(), 
+				new HindiLanguage()
 			};
 
 			foreach (var language in languages) {
