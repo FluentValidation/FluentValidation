@@ -115,7 +115,7 @@ namespace FluentValidation.Internal {
 
 				if (collectionPropertyValue != null) {
 					foreach (var element in collectionPropertyValue) {
-						var newContext = context.CloneForChildValidator(context.InstanceToValidate);
+						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate);
 						newContext.PropertyChain.Add(propertyName);
 						newContext.PropertyChain.AddIndexer(count++);
 

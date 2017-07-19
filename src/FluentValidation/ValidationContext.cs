@@ -97,6 +97,11 @@ namespace FluentValidation {
 		public virtual bool IsChildContext { get; internal set; }
 
 		/// <summary>
+		/// Whether this is a child collection context.
+		/// </summary>
+		public virtual bool IsChildCollectionContext { get; internal set; }
+
+		/// <summary>
 		/// Creates a new ValidationContext based on this one
 		/// </summary>
 		/// <param name="chain"></param>
@@ -120,5 +125,19 @@ namespace FluentValidation {
 				RootContextData = RootContextData
 			};
 		}
+
+		/// <summary>
+		/// Creates a new validation context for use with a child collection validator
+		/// </summary>
+		/// <param name="instanceToValidate"></param>
+		/// <returns></returns>
+		public ValidationContext CloneForChildCollectionValidator(object instanceToValidate) {
+			return new ValidationContext(instanceToValidate, null, Selector) {
+				IsChildContext = true,
+				IsChildCollectionContext = true,
+				RootContextData = RootContextData
+			};
+		}
+
 	}
 }

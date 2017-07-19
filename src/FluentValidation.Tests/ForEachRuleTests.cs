@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 namespace FluentValidation.Tests {
+	using System.Collections.Generic;
+	using System.Linq;
 	using Validators;
 	using Xunit;
 
@@ -101,5 +103,61 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new request());
 			result.Errors.Count.ShouldEqual(0);
 		}
+
+		[Fact]
+		public void Should_not_scramble_property_name_when_using_collection_validators_several_levels_deep() {
+			var v = new ApplicationViewModelValidator();
+			var result = v.Validate(new ApplicationViewModel());
+
+			result.Errors.Single().PropertyName.ShouldEqual("TradingExperience[0].Questions[0].SelectedAnswerID");
+		}
+
+
+		public class ApplicationViewModel {
+			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> { new ApplicationGroup() };
+
+		}
+
+		public class ApplicationGroup {
+			public List<Question> Questions = new List<Question> { new Question() };
+		}
+
+		public class Question {
+			public int SelectedAnswerID { get; set; }
+		}
+		public class ApplicationViewModelValidator : AbstractValidator<ApplicationViewModel>  {
+			public ApplicationViewModelValidator() {
+				RuleForEach(x => x.TradingExperience)
+					.SetValidator(new AppropriatenessGroupViewModelValidator());
+			}
+		}
+
+		public class AppropriatenessGroupViewModelValidator : AbstractValidator<ApplicationGroup> {
+
+			public AppropriatenessGroupViewModelValidator() {
+
+				RuleForEach(m => m.Questions)
+					.SetValidator(new AppropriatenessQuestionViewModelValidator());
+			}
+		}
+
+		public class AppropriatenessQuestionViewModelValidator : AbstractValidator<Question> {
+			public AppropriatenessQuestionViewModelValidator() {
+				RuleFor(m => m.SelectedAnswerID)
+					.SetValidator(new AppropriatenessAnswerViewModelRequiredValidator()); ;
+			}
+		}
+
+		public class AppropriatenessAnswerViewModelRequiredValidator : PropertyValidator {
+
+			public AppropriatenessAnswerViewModelRequiredValidator()
+				: base("Error message here.") {
+			}
+
+			protected override bool IsValid(PropertyValidatorContext context) {
+				return false;
+			}
+		}
+		
 	}
 }

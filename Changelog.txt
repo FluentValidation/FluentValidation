@@ -1,3 +1,6 @@
+7.1.1 - 
+Resolved issue where incorrect property name was generated when using RuleForEach combined with SetValidator
+
 7.1 - 28 June 2017 
 Merged pull request - improved messages in ShouldHaveChildValidator test extension
 Merged pull request - test helper works with nested properties
