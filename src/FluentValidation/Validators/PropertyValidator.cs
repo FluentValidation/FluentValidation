@@ -48,10 +48,14 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
+			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
 			originalErrorSource = errorSource = errorMessageSource;
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
+			errorMessageResourceName.Guard("errorMessageResourceName must be specified.");
+			errorMessageResourceType.Guard("errorMessageResourceType must be specified.");
+
 			originalErrorSource = errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
 
