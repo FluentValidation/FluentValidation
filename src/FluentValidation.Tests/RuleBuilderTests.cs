@@ -184,49 +184,6 @@ namespace FluentValidation.Tests {
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
 
 		}
-#if !PORTABLE40
-		[Fact]
-		public async Task TestAsyncWithDependentRules_SyncEntry()
-		{
-			var validator = new TestValidator();
-			validator.RuleFor(o => o.Forename)
-				.NotNull()
-				.DependentRules(d => {
-					d.RuleFor(o => o.Address).NotNull();
-					d.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
-				});
-
-			var result = await validator.ValidateAsync(new Person());
-			Assert.Equal(1, result.Errors.Count);
-			Assert.True(result.Errors.Any(x => x.PropertyName=="Forename"));
-
-			result = await validator.ValidateAsync(new Person() {Forename="Foo"});
-			Assert.Equal(2, result.Errors.Count);
-			Assert.True(result.Errors.Count(x =>x.PropertyName =="Address") == 1, "Address");
-			Assert.True(result.Errors.Count(x =>x.PropertyName =="Age") == 1, "Age");
-		}
-        
-		[Fact]
-		public async Task TestAsyncWithDependentRules_AsyncEntry()
-		{
-			var validator = new TestValidator();
-			validator.RuleFor(o => o)
-				.MustAsync(async (p, ct) => await Task.FromResult(p.Forename != null))
-				.DependentRules(d => {
-					d.RuleFor(o => o.Address).NotNull();
-					d.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
-				});
-
-			var result = await validator.ValidateAsync(new Person());
-			Assert.Equal(1, result.Errors.Count);
-			Assert.True(result.Errors.Any(x => x.PropertyName == ""));
-
-			result = await validator.ValidateAsync(new Person() {Forename="Foo"});
-			Assert.Equal(2, result.Errors.Count);
-			Assert.True(result.Errors.Count(x => x.PropertyName == "Address") == 1, "Address");
-			Assert.True(result.Errors.Count(x => x.PropertyName == "Age") == 1, "Age");
-		}
-#endif
        
 #endif
 

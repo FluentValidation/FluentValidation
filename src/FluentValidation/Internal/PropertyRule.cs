@@ -338,7 +338,8 @@ namespace FluentValidation.Internal {
 					}
 					else
 					{
-						RunDependentRulesAsync(failures, context, cancellation);
+						return RunDependentRulesAsync(failures, context, cancellation)
+							.Then(() => failures.AsEnumerable(), cancellationToken: cancellation);
 					}
 
 					return TaskHelpers.FromResult(failures.AsEnumerable());
@@ -358,13 +359,13 @@ namespace FluentValidation.Internal {
 						validations,
 						breakCondition: _ => cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0,
 						cancellationToken: cancellation
-					).Then(() => {
+					).Then(async () => {
 						if (failures.Count > 0) {
 							OnFailure(context.InstanceToValidate);
 						}
 						else
 						{
-							RunDependentRulesAsync(failures, context, cancellation);
+							await RunDependentRulesAsync(failures, context, cancellation);
 						}
 
 						return failures.AsEnumerable();
@@ -377,12 +378,9 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		private void RunDependentRulesAsync(List<ValidationFailure> failures, ValidationContext context, CancellationToken cancellation)
-		{
-			foreach (var dependentRule in DependentRules)
-			{
-				dependentRule.ValidateAsync(context, cancellation).Then(x => { failures.AddRange(x); }, cancellation, true);
-			}
+		private Task RunDependentRulesAsync(List<ValidationFailure> failures, ValidationContext context, CancellationToken cancellation) {
+			var validations = DependentRules.Select(v => v.ValidateAsync(context, cancellation).Then(fs => failures.AddRange(fs), runSynchronously: true));
+			return TaskHelpers.Iterate(validations, cancellationToken: cancellation);
 		}
 
 		/// <summary>

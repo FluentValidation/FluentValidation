@@ -1,5 +1,6 @@
-7.1.1 - 
+7.1.1 - 25 July 2017 
 Resolved issue where incorrect property name was generated when using RuleForEach combined with SetValidator
+Resolved an issue where nesting async validators inside DependentRules didn't wait for completion
 
 7.1 - 28 June 2017 
 Merged pull request - improved messages in ShouldHaveChildValidator test extension

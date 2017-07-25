@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Xunit;
 
 	public class RuleDependencyTests {
@@ -79,6 +80,94 @@ namespace FluentValidation.Tests {
 
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
+		}
+
+#if !PORTABLE40
+		[Fact]
+		public async Task TestAsyncWithDependentRules_SyncEntry() {
+			var validator = new TestValidator();
+			validator.RuleFor(o => o.Forename)
+				.NotNull()
+				.DependentRules(d => {
+					d.RuleFor(o => o.Address).NotNull();
+					d.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
+				});
+
+			var result = await validator.ValidateAsync(new Person());
+			Assert.Equal(1, result.Errors.Count);
+			Assert.True(result.Errors.Any(x => x.PropertyName == "Forename"));
+
+			result = await validator.ValidateAsync(new Person() { Forename = "Foo" });
+			Assert.Equal(2, result.Errors.Count);
+			Assert.True(result.Errors.Count(x => x.PropertyName == "Address") == 1, "Address");
+			Assert.True(result.Errors.Count(x => x.PropertyName == "Age") == 1, "Age");
+		}
+
+		[Fact]
+		public async Task TestAsyncWithDependentRules_AsyncEntry() {
+			var validator = new TestValidator();
+			validator.RuleFor(o => o)
+				.MustAsync(async (p, ct) => await Task.FromResult(p.Forename != null))
+				.DependentRules(d => {
+					d.RuleFor(o => o.Address).NotNull();
+					d.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
+				});
+
+			var result = await validator.ValidateAsync(new Person());
+			Assert.Equal(1, result.Errors.Count);
+			Assert.True(result.Errors.Any(x => x.PropertyName == ""));
+
+			result = await validator.ValidateAsync(new Person() { Forename = "Foo" });
+			Assert.Equal(2, result.Errors.Count);
+			Assert.True(result.Errors.Count(x => x.PropertyName == "Address") == 1, "Address");
+			Assert.True(result.Errors.Count(x => x.PropertyName == "Age") == 1, "Age");
+		}
+#endif
+
+		[Fact]
+		public void Async_inside_dependent_rules() {
+			var validator = new AsyncValidator();
+			var result = validator.ValidateAsync(0).Result;
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void Async_inside_dependent_rules_when_parent_rule_not_async() {
+			var validator = new AsyncValidator2();
+			var result = validator.ValidateAsync(0).Result;
+			result.IsValid.ShouldBeFalse();
+		}
+
+
+		class AsyncValidator : AbstractValidator<int> {
+			public AsyncValidator() {
+				RuleFor(model => model)
+					.MustAsync(async (ie, ct) => {
+						await Task.Delay(500);
+						return true;
+					})
+					.DependentRules(dependentRules => {
+						dependentRules.RuleFor(m => m)
+							.MustAsync(async (ie, ct) => {
+								await Task.Delay(1000);
+								return false;
+							});
+					});
+			}
+		}
+
+		class AsyncValidator2 : AbstractValidator<int> {
+			public AsyncValidator2() {
+				RuleFor(model => model)
+					.Must((ie) => true)
+					.DependentRules(dependentRules => {
+						dependentRules.RuleFor(m => m)
+							.MustAsync(async (ie, ct) => {
+								await Task.Delay(1000);
+								return false;
+							});
+					});
+			}
 		}
 	}
 }
