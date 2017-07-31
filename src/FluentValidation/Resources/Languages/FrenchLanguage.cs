@@ -25,12 +25,12 @@ namespace FluentValidation.Resources {
 		public FrenchLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' n'est pas une adresse email valide.");
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' doit être plus grand ou égal à '{ComparisonValue}'.");
-			Translate<GreaterThanValidator>("'{PropertyName}' doit être plus grand à '{ComparisonValue}'.");
+			Translate<GreaterThanValidator>("'{PropertyName}' doit être plus grand que '{ComparisonValue}'.");
 			Translate<LengthValidator>("'{PropertyName}' doit contenir entre {MinLength} et {MaxLength} caractères. {TotalLength} caractères ont été saisis.");
 			Translate<MinimumLengthValidator>("'{PropertyName}' doit contenir entre {MinLength} et {MaxLength} caractères. {TotalLength} caractères ont été saisis.");
 			Translate<MaximumLengthValidator>("'{PropertyName}' doit contenir entre {MinLength} et {MaxLength} caractères. {TotalLength} caractères ont été saisis.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' doit être plus petit ou égal à '{ComparisonValue}'.");
-			Translate<LessThanValidator>("'{PropertyName}' doit être plus petit à '{ComparisonValue}'.");
+			Translate<LessThanValidator>("'{PropertyName}' doit être plus petit que '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("'{PropertyName}' ne doit pas être vide.");
 			Translate<NotEqualValidator>("'{PropertyName}' ne doit pas être égal à '{ComparisonValue}'.");
 			Translate<NotNullValidator>("'{PropertyName}' ne doit pas avoir la valeur null.");
