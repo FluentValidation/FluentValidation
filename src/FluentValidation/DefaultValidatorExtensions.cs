@@ -246,6 +246,11 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(new EmailValidator());
 		}
 
+		public static IRuleBuilderOptions<T, string> Phone<T>(this IRuleBuilder<T, string> ruleBuilder)
+		{
+			return ruleBuilder.SetValidator(new PhoneValidator());
+		}
+
 		/// <summary>
 		/// Defines a 'not equal' validator on the current rule builder.
 		/// Validation will fail if the specified value is equal to the value of the property.
