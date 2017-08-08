@@ -10,7 +10,7 @@ namespace FluentValidation.Validators
     public class PhoneValidator : PropertyValidator, IRegularExpressionValidator
 	{
 		private readonly Regex regex;
-		private string expression = "((^(([(][0-9]{3}[)][-. ]?|[0-9]{3}[-. ]?)[0-9]{3}[-. ]?[0-9]{4})$)|(^(([(][0]{3}[)][-. ]?|[0]{3}[-. ]?)[0]{3}[-. ]?[0]{4})$))";
+		private string expression = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$";
 
 		public PhoneValidator() : base(new LanguageStringSource(nameof(PhoneValidator))) {
 			regex = new Regex(expression, RegexOptions.IgnoreCase);
