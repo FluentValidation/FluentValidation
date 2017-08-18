@@ -364,6 +364,30 @@
 			result.Count.ShouldEqual(2);
 		}
 
+		[Fact(Skip = "AspNetCore does not allow multiple validation strategies to be mixed on the same property.")]
+//		[Fact]
+		public async Task Uses_both_dataannotations_and_fv_on_same_property() {
+			var result = await GetErrors("MultipleValidationStrategies2", new FormData());
+			result.Count.ShouldEqual(2);
+		}
+
+		[Fact]
+		public async void Mixes_DataAnnotations_with_FV_on_explicitly_set_child_validator() {
+			var result = await GetErrors("MultipleValidationStrategies3", new FormData());
+			result.Count.ShouldEqual(3);
+		}
+
+
+		[Fact]
+		public async Task Does_not_use_both_dataannotations_and_fv_in_same_model_when_MVC_val_disabled() {
+			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithMvcValidationDisabled>());
+			_client = _server.CreateClient();
+
+			var result = await GetErrors("MultipleValidationStrategies", new FormData());
+			result.Count.ShouldEqual(1);
+			result[0].Message.ShouldEqual("'Some Other Property' must not be empty.");
+		}
+
 		[Fact]
 		public async Task Uses_DataAnnotations_when_no_FV_validatior_defined() {
 			var result = await GetErrors("DataAnnotations", new FormData());
@@ -372,21 +396,68 @@
 		}
 
 		[Fact]
-		public async void Does_not_implicitly_run_child_validator_by_defualt() {
-			var result = await GetErrors("ImplicitChildValidator1", new FormData());
+		public async void Does_not_implicitly_run_child_validator_by_default() {
+			var result = await GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(0);
 		}
 
-		[Fact]
-		public async Task Does_not_use_both_dataannotations_and_fv_in_same_model_when_MVC_val_disabled() {
-			 _server = new TestServer(new WebHostBuilder().UseStartup<StartupWithMvcValidationDisabled>());
+		[Fact(Skip = "Implicit child validation not supported yet")]
+		public async void Executes_implicit_child_validator_when_enabled() {
+			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
 			_client = _server.CreateClient();
 
-			var result = await GetErrors("MultipleValidationStrategies", new FormData());
+			var result = await GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
-			result[0].Message.ShouldEqual("'Some Other Property' must not be empty.");
+			result[0].Name.ShouldEqual("Child.Name");
 		}
 
+		[Fact]
+		public async void Can_mix_FV_with_IValidatableObject() {
+			var result = await GetErrors("ImplementsIValidatableObject", new FormData());
+			result.Count.ShouldEqual(2);
+		}
+
+
+		[Fact(Skip = "Implicit child validation not supported yet")]
+		public async void Executes_implicit_child_validator_and_mixes_with_DataAnnotations() {
+			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_client = _server.CreateClient();
+
+			var result = await GetErrors("ImplicitChildWithDataAnnotations", new FormData());
+			result.Count.ShouldEqual(2);
+		}
+
+		[Fact(Skip = "Implicit child validation not supported yet")]
+		public async void Executes_implicit_child_validator_and_mixes_with_IValidatableObject() {
+			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_client = _server.CreateClient();
+
+			var result = await GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
+			result.Count.ShouldEqual(3);
+		}
+
+
+		[Fact(Skip = "Implicit child validation not supported yet")]
+		public async void Executes_implicit_child_validator_when_enabled_does_not_execute_multiple_times() {
+			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_client = _server.CreateClient();
+
+			var result = await GetErrors("ImplicitChildValidator", new FormData());
+			result.Count.ShouldEqual(1);
+
+			result = await GetErrors("ImplicitChildValidator", new FormData());
+			result.Count.ShouldEqual(1);
+		}
+
+
+		[Fact]
+		public async void ImplicitValidation_enabled_but_validator_explicitly_set_only_exeuctes_once() {
+			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_client = _server.CreateClient();
+
+			var result = await GetErrors("ImplicitAndExplicitChildValidator", new FormData());
+			result.Count.ShouldEqual(1);
+		}
 
 	}
 }

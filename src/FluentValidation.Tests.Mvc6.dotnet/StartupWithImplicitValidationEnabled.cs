@@ -7,9 +7,9 @@ namespace FluentValidation.Tests.AspNetCore {
 	using FluentValidation.AspNetCore;
 	using FluentValidation.Attributes;
 
-	public class StartupWithMvcValidationDisabled
+	public class StartupWithImplicitValidationEnabled
     {
-        public StartupWithMvcValidationDisabled(IHostingEnvironment env)
+        public StartupWithImplicitValidationEnabled(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder();
             Configuration = builder.Build();
@@ -24,7 +24,7 @@ namespace FluentValidation.Tests.AspNetCore {
                 
             }).AddFluentValidation(cfg => {
 	            cfg.ValidatorFactoryType = typeof(AttributedValidatorFactory);
-	            cfg.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+//	            cfg.ImplicitlyValidateChildProperties = true;
             });
         }
 

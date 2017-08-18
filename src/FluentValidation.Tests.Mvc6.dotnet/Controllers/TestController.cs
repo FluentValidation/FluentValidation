@@ -96,11 +96,35 @@
 			return TestResult();
 		}
 
+		public ActionResult MultipleValidationStrategies2(MultiValidationModel2 model) {
+			return TestResult();
+		}
+
+		public ActionResult MultipleValidationStrategies3(MultiValidationModel3 model) {
+			return TestResult();
+		}
+
 		public ActionResult DataAnnotations(DataAnnotationsModel model) {
 			return TestResult();
 		}
 
-		public ActionResult ImplicitChildValidator1(ParentModel model) {
+		public ActionResult ImplicitChildValidator(ParentModel model) {
+			return TestResult();
+		}
+
+		public ActionResult ImplementsIValidatableObject(ImplementsIValidatableObjectModel model) {
+			return TestResult();
+		}
+
+		public ActionResult ImplicitChildImplementsIValidatableObject(ParentModel2 model) {
+			return TestResult();
+		}
+
+		public ActionResult ImplicitChildWithDataAnnotations(ParentModel3 model) {
+			return TestResult();
+		}
+
+		public ActionResult ImplicitAndExplicitChildValidator(ParentModel4 model) {
 			return TestResult();
 		}
 

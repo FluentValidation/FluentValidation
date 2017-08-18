@@ -76,7 +76,8 @@ namespace FluentValidation.AspNetCore {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
 				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
 				var modelValidator= new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders);
-				modelValidator.RunDefaultMvcValidation = config.RunDefaultMvcValidation;
+				modelValidator.RunDefaultMvcValidation = config.RunDefaultMvcValidationAfterFluentValidationExecutes;
+//				modelValidator.ImplicitlyValidateChildProperties = config.ImplicitlyValidateChildProperties;
 				return modelValidator;
 			}));
 
@@ -147,44 +148,5 @@ namespace FluentValidation.AspNetCore {
 			_action(provider);
 			options.ClientModelValidatorProviders.Add(provider);
 		}
-	}
-
-	public class FluentValidationMvcConfiguration {
-	    public Type ValidatorFactoryType { get; set; }
-		public IValidatorFactory ValidatorFactory { get; set; }
-	    internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
-		public bool ClearValidatorProviders { get; set; }
-		public bool RunDefaultMvcValidation { get; set; } = true;
-
-		public bool LocalizationEnabled {
-			get => ValidatorOptions.LanguageManager.Enabled;
-			set => ValidatorOptions.LanguageManager.Enabled = value;
-		}
-
-		internal bool ClientsideEnabled = true;
-	    internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};
-
-	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>() {
-		    return RegisterValidatorsFromAssemblyContaining(typeof(T));
-	    }
-
-	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type) {
-		    return RegisterValidatorsFromAssembly(type.GetTypeInfo().Assembly);
-	    }
-
-	    public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly) {
-		    ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
-		    AssembliesToRegister.Add(assembly);
-		    return this;
-	    }
-
-	    public FluentValidationMvcConfiguration ConfigureClientsideValidation(Action<FluentValidationClientModelValidatorProvider> clientsideConfig=null, bool enabled=true) {
-		    if (clientsideConfig != null) {
-			    ClientsideConfig = clientsideConfig;
-		    }
-		    ClientsideEnabled = enabled;
-		    return this;
-	    }
-		
 	}
 }
