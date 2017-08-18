@@ -92,6 +92,14 @@
 			return TestResult();
 		}
 
+		public ActionResult MultipleValidationStrategies(MultiValidationModel model) {
+			return TestResult();
+		}
+
+		public ActionResult DataAnnotations(DataAnnotationsModel model) {
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 

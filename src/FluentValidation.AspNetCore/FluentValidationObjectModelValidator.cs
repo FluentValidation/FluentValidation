@@ -49,6 +49,11 @@ namespace FluentValidation.AspNetCore {
 			_validatorProvider = new CompositeModelValidatorProvider(validatorProviders);
 		}
 
+		/// <summary>
+		/// Whether or not to run the default MVC validation pipeline after FluentValidation has executed. Default is true. 
+		/// </summary>
+		public bool RunDefaultMvcValidation { get; set; } = true;
+
 		public void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model)
 		{
 			if (actionContext == null) {
@@ -72,25 +77,18 @@ namespace FluentValidation.AspNetCore {
 
 			if (validator == null) {
 				// Use default impl if FV doesn't have a validator for the type.
-				var visitor = new ValidationVisitor(
-						   actionContext,
-						   _validatorProvider,
-						   _validatorCache,
-						   _modelMetadataProvider,
-						   validationState);
-
-				visitor.Validate(metadata, prefix, model);
+				RunDefaultValidation(actionContext, validationState, prefix, model, metadata);
 
 				return;
 			}
-
-			foreach (var value in actionContext.ModelState.Values
-				.Where(v => v.ValidationState == ModelValidationState.Unvalidated)) {
-				// Set all unvalidated states to valid. If we end up adding an error below then that properties state
-				// will become ModelValidationState.Invalid and will set ModelState.IsValid to false
-
-				value.ValidationState = ModelValidationState.Valid;
-			}
+//
+//			foreach (var value in actionContext.ModelState.Values
+//				.Where(v => v.ValidationState == ModelValidationState.Unvalidated)) {
+//				// Set all unvalidated states to valid. If we end up adding an error below then that properties state
+//				// will become ModelValidationState.Invalid and will set ModelState.IsValid to false
+//
+//				value.ValidationState = ModelValidationState.Valid;
+//			}
 
 
 			var customizations = GetCustomizations(actionContext, model.GetType(), prefix);
@@ -140,6 +138,22 @@ namespace FluentValidation.AspNetCore {
 				keysProcessed.Add(key);
 				actionContext.ModelState.AddModelError(key, modelError.ErrorMessage);
 			}
+
+			// Now allow the default MVC validation to run.  
+			if (RunDefaultMvcValidation) {
+				RunDefaultValidation(actionContext, validationState, prefix, model, metadata);
+			}
+		}
+
+		protected virtual void RunDefaultValidation(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model, ModelMetadata metadata) {
+			var visitor = new ValidationVisitor(
+				actionContext,
+				_validatorProvider,
+				_validatorCache,
+				_modelMetadataProvider,
+				validationState);
+
+			visitor.Validate(metadata, prefix, model);
 		}
 
 		private CustomizeValidatorAttribute GetCustomizations(ActionContext actionContext, Type type, string prefix) {

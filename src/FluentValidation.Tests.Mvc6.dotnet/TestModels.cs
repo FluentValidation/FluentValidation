@@ -2,11 +2,14 @@
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+	using System.ComponentModel.DataAnnotations;
 	using FluentValidation;
 	using FluentValidation.Attributes;
 	using FluentValidation.AspNetCore;
 	using FluentValidation.Results;
 	using Microsoft.AspNetCore.Mvc;
+	using ValidationContext = FluentValidation.ValidationContext;
+	using ValidationResult = Results.ValidationResult;
 
 	[Validator(typeof(TestModel5Validator))]
     public class TestModel5
@@ -293,6 +296,27 @@
 	}
 
 	public class ModelPartOfIenumerable {
+		public string Name { get; set; }
+	}
+
+	[Validator(typeof(MultiValidationValidator))]
+	public class MultiValidationModel {
+		[Required]
+		public string Name { get; set; }
+
+
+		public string SomeOtherProperty { get; set; }
+
+	}
+
+	public class MultiValidationValidator : AbstractValidator<MultiValidationModel> {
+		public MultiValidationValidator() {
+			RuleFor(x => x.SomeOtherProperty).NotNull();
+		}
+	}
+
+	public class DataAnnotationsModel {
+		[Required]
 		public string Name { get; set; }
 	}
 }

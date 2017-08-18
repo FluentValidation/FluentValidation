@@ -353,8 +353,20 @@
 			};
 
 			var result = await GetErrors("MultipleErrors",form);
-
 			result.Count.ShouldEqual(2);
+		}
+
+		[Fact]
+		public async Task Uses_both_dataannotations_and_fv_in_same_model() {
+			var result = await GetErrors("MultipleValidationStrategies", new FormData());
+			result.Count.ShouldEqual(2);
+		}
+
+		[Fact]
+		public async Task Uses_DataAnnotations_when_no_FV_validatior_defined() {
+			var result = await GetErrors("DataAnnotations", new FormData());
+			result.Count.ShouldEqual(1);
+			result[0].Message.ShouldEqual("The Name field is required.");
 		}
 	}
 }

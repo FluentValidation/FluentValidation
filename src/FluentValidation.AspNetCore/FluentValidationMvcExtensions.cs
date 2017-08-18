@@ -75,7 +75,9 @@ namespace FluentValidation.AspNetCore {
 			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
 				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders);
+				var modelValidator= new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders);
+				modelValidator.RunDefaultMvcValidation = config.RunDefaultMvcValidation;
+				return modelValidator;
 			}));
 
 			if (config.ClientsideEnabled)
@@ -152,6 +154,7 @@ namespace FluentValidation.AspNetCore {
 		public IValidatorFactory ValidatorFactory { get; set; }
 	    internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
 		public bool ClearValidatorProviders { get; set; }
+		public bool RunDefaultMvcValidation { get; set; } = true;
 
 		public bool LocalizationEnabled {
 			get => ValidatorOptions.LanguageManager.Enabled;
