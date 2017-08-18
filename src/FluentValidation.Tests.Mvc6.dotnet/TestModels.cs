@@ -319,4 +319,22 @@
 		[Required]
 		public string Name { get; set; }
 	}
+
+	[Validator(typeof(ParentModelValidator))]
+	public class ParentModel {
+		public ChildModel Child { get; set; } = new ChildModel();
+	}
+
+	[Validator(typeof(ChildModelValidator))]
+	public class ChildModel {
+		public string Name { get; set; }
+	}
+
+	public class ParentModelValidator : AbstractValidator<ParentModel> { }
+
+	public class ChildModelValidator : AbstractValidator<ChildModel> {
+		public ChildModelValidator() {
+			RuleFor(x => x.Name).NotNull();
+		}
+	}
 }

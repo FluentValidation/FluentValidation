@@ -1,34 +1,16 @@
-﻿#region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
-// limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
-#endregion
-namespace FluentValidation.AspNetCore {
+﻿namespace FluentValidation.AspNetCore {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
+	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Controllers;
 	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using System.Linq;
-	using System.Reflection;
-	using Microsoft.AspNetCore.Mvc.Controllers;
-	using FluentValidation;
 
 	public class FluentValidationObjectModelValidator : IObjectModelValidator {
-	    public const string InvalidValuePlaceholder = "__FV_InvalidValue";
+		public const string InvalidValuePlaceholder = "__FV_InvalidValue";
 		public const string ModelKeyPrefix = "__FV_Prefix_";
 
 		private IModelMetadataProvider _modelMetadataProvider;
@@ -49,12 +31,11 @@ namespace FluentValidation.AspNetCore {
 		/// </summary>
 		public bool RunDefaultMvcValidation { get; set; } = true;
 
-		public void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model)
-		{
+		public void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model) {
 			if (actionContext == null) {
 				throw new ArgumentNullException(nameof(actionContext));
 			}
-			var validatorFactory = (IValidatorFactory)actionContext.HttpContext.RequestServices.GetService(typeof(IValidatorFactory));
+			var validatorFactory = (IValidatorFactory) actionContext.HttpContext.RequestServices.GetService(typeof(IValidatorFactory));
 
 			IValidator validator = null;
 			var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
@@ -83,25 +64,23 @@ namespace FluentValidation.AspNetCore {
 			var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
 			var context = new FluentValidation.ValidationContext(model, new FluentValidation.Internal.PropertyChain(), selector);
 
-			if (interceptor != null)
-			{
+			if (interceptor != null) {
 				// Allow the user to provide a customized context
 				// However, if they return null then just use the original context.
-				context = interceptor.BeforeMvcValidation((ControllerContext)actionContext, context) ?? context;
+				context = interceptor.BeforeMvcValidation((ControllerContext) actionContext, context) ?? context;
 			}
 
 			var result = validator.Validate(context);
 
-			if (interceptor != null)
-			{
+			if (interceptor != null) {
 				// allow the user to provice a custom collection of failures, which could be empty.
 				// However, if they return null then use the original collection of failures. 
-				result = interceptor.AfterMvcValidation((ControllerContext)actionContext, context, result) ?? result;
+				result = interceptor.AfterMvcValidation((ControllerContext) actionContext, context, result) ?? result;
 			}
 
 			if (!string.IsNullOrEmpty(prefix)) {
-		        prefix = prefix + ".";
-		    }
+				prefix = prefix + ".";
+			}
 
 			var keysProcessed = new HashSet<string>();
 
@@ -166,10 +145,9 @@ namespace FluentValidation.AspNetCore {
 			if (elementValidator == null) return null;
 
 			var type = typeof(MvcCollectionValidator<>).MakeGenericType(collectionMetadata.ElementType);
-			var validator = (IValidator)Activator.CreateInstance(type, elementValidator, prefix);
+			var validator = (IValidator) Activator.CreateInstance(type, elementValidator, prefix);
 			return validator;
 		}
-
 	}
 
 	internal class MvcCollectionValidator<T> : AbstractValidator<IEnumerable<T>> {

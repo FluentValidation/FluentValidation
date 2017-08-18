@@ -1,15 +1,15 @@
 namespace FluentValidation.Tests.AspNetCore {
-	using Controllers;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Hosting;
 	using Microsoft.Extensions.Configuration;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Logging;
 	using FluentValidation.AspNetCore;
+	using FluentValidation.Attributes;
 
-	public class StartupWithContainer
+	public class StartupWithMvcValidationDisabled
     {
-        public StartupWithContainer(IHostingEnvironment env)
+        public StartupWithMvcValidationDisabled(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder();
             Configuration = builder.Build();
@@ -23,7 +23,8 @@ namespace FluentValidation.Tests.AspNetCore {
             services.AddMvc(setup => {
                 
             }).AddFluentValidation(cfg => {
-	            cfg.RegisterValidatorsFromAssemblyContaining<TestController>();
+	            cfg.ValidatorFactoryType = typeof(AttributedValidatorFactory);
+	            cfg.RunDefaultMvcValidation = false;
             });
         }
 

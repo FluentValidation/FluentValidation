@@ -11,12 +11,14 @@
 	using Xunit.Abstractions;
 
 	public class MvcIntegrationTests {
-        private readonly TestServer _server;
-        private readonly HttpClient _client;
+        private TestServer _server;
+        private HttpClient _client;
 		private readonly ITestOutputHelper _output;
 
 		public MvcIntegrationTests(ITestOutputHelper output)
         {
+			CultureScope.SetDefaultCulture();
+
 			this._output = output;
 			_server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
             _client = _server.CreateClient();
@@ -368,5 +370,23 @@
 			result.Count.ShouldEqual(1);
 			result[0].Message.ShouldEqual("The Name field is required.");
 		}
+
+		[Fact]
+		public async void Does_not_implicitly_run_child_validator_by_defualt() {
+			var result = await GetErrors("ImplicitChildValidator1", new FormData());
+			result.Count.ShouldEqual(0);
+		}
+
+		[Fact]
+		public async Task Does_not_use_both_dataannotations_and_fv_in_same_model_when_MVC_val_disabled() {
+			 _server = new TestServer(new WebHostBuilder().UseStartup<StartupWithMvcValidationDisabled>());
+			_client = _server.CreateClient();
+
+			var result = await GetErrors("MultipleValidationStrategies", new FormData());
+			result.Count.ShouldEqual(1);
+			result[0].Message.ShouldEqual("'Some Other Property' must not be empty.");
+		}
+
+
 	}
 }

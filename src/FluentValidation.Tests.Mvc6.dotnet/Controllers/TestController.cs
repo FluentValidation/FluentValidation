@@ -100,6 +100,10 @@
 			return TestResult();
 		}
 
+		public ActionResult ImplicitChildValidator1(ParentModel model) {
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 
