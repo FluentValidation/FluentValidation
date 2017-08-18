@@ -39,12 +39,7 @@ namespace FluentValidation.AspNetCore {
 		///     Initializes a new instance of <see cref="FluentValidationObjectModelValidator" />.
 		/// </summary>
 		public FluentValidationObjectModelValidator(IModelMetadataProvider modelMetadataProvider, IList<IModelValidatorProvider> validatorProviders) {
-
-			if (modelMetadataProvider == null) {
-				throw new ArgumentNullException(nameof(modelMetadataProvider));
-			}
-
-			_modelMetadataProvider = modelMetadataProvider;
+			_modelMetadataProvider = modelMetadataProvider ?? throw new ArgumentNullException(nameof(modelMetadataProvider));
 			_validatorCache = new ValidatorCache();
 			_validatorProvider = new CompositeModelValidatorProvider(validatorProviders);
 		}
@@ -81,15 +76,6 @@ namespace FluentValidation.AspNetCore {
 
 				return;
 			}
-//
-//			foreach (var value in actionContext.ModelState.Values
-//				.Where(v => v.ValidationState == ModelValidationState.Unvalidated)) {
-//				// Set all unvalidated states to valid. If we end up adding an error below then that properties state
-//				// will become ModelValidationState.Invalid and will set ModelState.IsValid to false
-//
-//				value.ValidationState = ModelValidationState.Valid;
-//			}
-
 
 			var customizations = GetCustomizations(actionContext, model.GetType(), prefix);
 
