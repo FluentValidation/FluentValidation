@@ -41,7 +41,6 @@
     <xunit Assemblies="@(TestAssemblies)" ParallelizeAssemblies="false" ParallelizeTestCollections="false" />
     <exec Command="dotnet test --no-build --configuration=$(Configuration)" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.dotnet" />
     <exec Command="dotnet test --no-build --configuration=$(Configuration)" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
-   <!-- <exec Command="dotnet test --no-build --configuration=$(Configuration)" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.netcoreapp2" /> -->
 	</Target>
 	
 	<Target Name="TestMvcCore">
@@ -54,11 +53,11 @@
     <MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages;AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Restore;Pack" />
     
     <!-- Remove the test packages. I don't know why it creates these -->
-    <ItemGroup>
+    <!--<ItemGroup>
       <DeleteIt Include="$(BuildDir)\Packages\*.Tests.*.nupkg" />
     </ItemGroup>
     <Delete Files="@(DeleteIt)" />
-
+-->
     <CallTarget Targets="PackageZip"></CallTarget>
   </Target>
 

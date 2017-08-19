@@ -209,7 +209,7 @@
 		}
 	}
 
-	public class CustomValidationVisitor : ValidationVisitor {
+	internal class CustomValidationVisitor : ValidationVisitor {
 
 		private ModelStateDictionary _modelState;
 		private ValidatorCache _validatorCache;
