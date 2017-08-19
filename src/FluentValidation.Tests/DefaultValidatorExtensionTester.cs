@@ -210,7 +210,6 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.OtherNullableInt);
 			AssertValidator<GreaterThanOrEqualValidator>();
 		}
-#if !PORTABLE40
 		[Fact]
 		public void MustAsync_should_not_throw_InvalidCastException() {
 			var model = new Model
@@ -222,7 +221,6 @@ namespace FluentValidation.Tests {
 			var result = validator.ValidateAsync(model).Result;
 			result.IsValid.ShouldBeTrue();
 		}
-#endif
 		private void AssertValidator<TValidator>() {
 			var rule = (PropertyRule)validator.First();
 			rule.CurrentValidator.ShouldBe<TValidator>();
@@ -233,7 +231,6 @@ namespace FluentValidation.Tests {
 			public IEnumerable<Guid> Ids { get; set; }
 		}
 
-#if !PORTABLE40
 		class AsyncModelTestValidator : AbstractValidator<Model>
 		{
 			public AsyncModelTestValidator()
@@ -242,7 +239,6 @@ namespace FluentValidation.Tests {
 					.MustAsync((g, cancel) => Task.FromResult(true));
 			}
 		}
-#endif
 	}
 
 }

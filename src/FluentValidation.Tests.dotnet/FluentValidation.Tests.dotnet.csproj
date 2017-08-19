@@ -5,7 +5,6 @@
     <Authors>Jeremy Skinner</Authors>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>FluentValidation.Tests.dotnet</AssemblyName>
-    <PackageId>FluentValidation.Tests.dotnet</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net451+win81</PackageTargetFallback>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
@@ -13,7 +12,8 @@
     <OutputTypeEx>library</OutputTypeEx>
     <StartupObject />
     <RootNamespace>FluentValidation.Tests</RootNamespace>
-  </PropertyGroup>
+	  <IsPackable>false</IsPackable>
+	</PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\FluentValidation.Tests\**\*.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />

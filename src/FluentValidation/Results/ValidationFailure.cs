@@ -23,7 +23,7 @@ namespace FluentValidation.Results {
 	/// <summary>
 	/// Defines a validation failure
 	/// </summary>
-#if !PORTABLE && !PORTABLE40 && !NETSTANDARD1_0
+#if !NETSTANDARD1_0
 	[Serializable]
 #endif
 	public class ValidationFailure {

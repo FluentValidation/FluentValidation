@@ -1,11 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>FluentValidation MVC6 Unit Tests .NET Core</Description>
-    <Authors>Jeremy Skinner</Authors>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>FluentValidation.Tests.Mvc6.dotnet</AssemblyName>
-    <PackageId>FluentValidation.Tests.Mvc6.dotnet</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net451+win81</PackageTargetFallback>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
@@ -15,6 +12,7 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+		<IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

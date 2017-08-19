@@ -82,7 +82,6 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-#if !PORTABLE40
 		[Fact]
 		public async Task TestAsyncWithDependentRules_SyncEntry() {
 			var validator = new TestValidator();
@@ -122,7 +121,6 @@ namespace FluentValidation.Tests {
 			Assert.True(result.Errors.Count(x => x.PropertyName == "Address") == 1, "Address");
 			Assert.True(result.Errors.Count(x => x.PropertyName == "Age") == 1, "Age");
 		}
-#endif
 
 		[Fact]
 		public void Async_inside_dependent_rules() {

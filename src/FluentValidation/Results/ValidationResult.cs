@@ -24,7 +24,7 @@ namespace FluentValidation.Results {
 	/// <summary>
 	/// The result of running a validator
 	/// </summary>
-#if !PORTABLE && !PORTABLE40 && !NETSTANDARD1_0
+#if !NETSTANDARD1_0
 	[Serializable]
 #endif
 	public class ValidationResult {

@@ -66,11 +66,7 @@ namespace FluentValidation.Tests {
 			var descriptor = validator.CreateDescriptor();
 			var propertyValidator = descriptor.GetValidatorsForMember("Forename").Cast<EqualValidator>().Single();
 
-#if CoreCLR
-			propertyValidator.MemberToCompare.ShouldEqual(typeof (Person).GetRuntimeProperty("Surname"));
-#else
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
-#endif
 		}
 
 		[Fact]

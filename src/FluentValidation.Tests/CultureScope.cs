@@ -26,7 +26,7 @@ namespace FluentValidation.Tests {
 
 		public CultureScope(CultureInfo culture) {
 
-#if !CoreCLR && !NETCOREAPP1_1
+#if !NETCOREAPP2_0 && !NETCOREAPP1_1
 			_originalCulture = Thread.CurrentThread.CurrentCulture;
 			_originalUiCulture = Thread.CurrentThread.CurrentUICulture;
 
@@ -48,7 +48,7 @@ namespace FluentValidation.Tests {
 		public void Dispose() {
 			ValidatorOptions.ResourceProviderType = null;
 
-#if !CoreCLR && !NETCOREAPP1_1
+#if !NETCOREAPP2_0 && !NETCOREAPP1_1
 			Thread.CurrentThread.CurrentCulture = _originalCulture;
 			Thread.CurrentThread.CurrentUICulture = _originalUiCulture;
 #else
@@ -59,7 +59,7 @@ namespace FluentValidation.Tests {
 
 		public static void SetDefaultCulture() {
 			ValidatorOptions.ResourceProviderType = null;
-#if !CoreCLR && !NETCOREAPP1_1
+#if !NETCOREAPP2_0 && !NETCOREAPP1_1
 			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 #else
