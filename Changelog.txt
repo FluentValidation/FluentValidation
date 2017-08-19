@@ -1,3 +1,7 @@
+7.2 - 
+Updated AspNetCore integration to support IValidatableObject
+Updated AspNetCore integration to allow mixing multiple validation strategies in the same model
+
 7.1.1 - 25 July 2017 
 Resolved issue where incorrect property name was generated when using RuleForEach combined with SetValidator
 Resolved an issue where nesting async validators inside DependentRules didn't wait for completion
