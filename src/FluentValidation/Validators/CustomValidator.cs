@@ -70,7 +70,7 @@
 		/// <param name="propertyName">The property name</param>
 		/// <param name="errorMessage">The error mesage</param>
 		public void AddFailure(string propertyName, string errorMessage) {
-			propertyName.Guard("An error message must be specified when calling AddFailure.");
+			if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 			errorMessage.Guard("An error message must be specified when calling AddFailure.");
 			AddFailure(new ValidationFailure(propertyName, errorMessage));
 		}
