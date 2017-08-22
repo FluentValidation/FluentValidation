@@ -29,6 +29,7 @@ namespace FluentValidation.Internal {
 	/// Custom IValidationRule for performing custom logic.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
+	[Obsolete("Use RuleFor(x => x).Custom((x,ctx) => ...) instead")]
 	public class DelegateValidator<T> : IValidationRule {
 		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
 		private readonly Func<T, ValidationContext<T>, CancellationToken, Task<IEnumerable<ValidationFailure>>> asyncFunc;
