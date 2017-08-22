@@ -174,6 +174,11 @@
 		}
 
 		private CustomizeValidatorAttribute GetCustomizations(ActionContext actionContext, Type type, string prefix) {
+
+			if (actionContext?.ActionDescriptor?.Parameters == null) {
+				return new CustomizeValidatorAttribute();
+			}
+
 			var descriptors = actionContext.ActionDescriptor.Parameters
 				.Where(x => x.ParameterType == type)
 				.Where(x => (x.BindingInfo != null && x.BindingInfo.BinderModelName != null && x.BindingInfo.BinderModelName == prefix) || x.Name == prefix || (prefix == string.Empty && x.BindingInfo?.BinderModelName == null))
