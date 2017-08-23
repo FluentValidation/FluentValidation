@@ -10,7 +10,6 @@
 
 namespace FluentValidation.Tests {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace FluentValidation.Tests {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FluentValidation.Tests.TestMessages", typeof(TestMessages).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FluentValidation.Tests.TestMessages", typeof(TestMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

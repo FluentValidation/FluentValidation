@@ -13,6 +13,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PreserveCompilationContext>true</PreserveCompilationContext>
 		<IsPackable>false</IsPackable>
+		<RootNamespace>FluentValidation.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

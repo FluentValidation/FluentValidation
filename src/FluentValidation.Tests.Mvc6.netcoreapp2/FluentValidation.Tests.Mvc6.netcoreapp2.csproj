@@ -24,11 +24,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0-preview-20170628-02" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.Mvc.TagHelpers" Version="2.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="2.0.0" />
-
 	</ItemGroup>
 
 	<Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
@@ -57,13 +54,8 @@
 	<ItemGroup>
 		<Compile Include="..\FluentValidation.Tests.Mvc6.dotnet\**\*.cs" Exclude="..\FluentValidation.Tests.Mvc6.dotnet\obj\**\*.cs" />
 		<None Include="..\FluentValidation.Tests.Mvc6.dotnet\**\*.cshtml" />
+		<Compile Remove="..\FluentValidation.Tests.Mvc6.dotnet\TestMessages.Designer.cs" />
 		<Compile Include="..\FluentValidation.Tests\CultureScope.cs" Link="CultureScope.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <EmbeddedResource Include="..\FluentValidation.Tests.Mvc6.dotnet\TestMessages.resx" Link="TestMessages.resx">
-	    <Generator>ResXFileCodeGenerator</Generator>
-	  </EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
