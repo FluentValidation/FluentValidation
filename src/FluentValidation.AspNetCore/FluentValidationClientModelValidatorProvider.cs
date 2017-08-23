@@ -23,6 +23,7 @@ namespace FluentValidation.AspNetCore {
 	using System.Reflection;
 	using FluentValidation.Internal;
 	using FluentValidation.Validators;
+	using Microsoft.AspNetCore.Http;
 
 	public delegate IClientModelValidator FluentValidationClientValidatorFactory(ClientValidatorProviderContext context, PropertyRule rule, IPropertyValidator validator);
 
@@ -50,9 +51,11 @@ namespace FluentValidation.AspNetCore {
 		};
 
 		IValidatorFactory _validatorFactory;
+		IHttpContextAccessor _httpContextAccessor;
 
-		public FluentValidationClientModelValidatorProvider(IValidatorFactory validatorFactory) {
+		public FluentValidationClientModelValidatorProvider(IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor) {
 			_validatorFactory = validatorFactory;
+			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public void Add(Type validatorType, FluentValidationClientValidatorFactory factory) {
@@ -82,13 +85,22 @@ namespace FluentValidation.AspNetCore {
 						where modelValidatorForProperty != null
 						select modelValidatorForProperty;
 
-					foreach (var propVal in validatorsWithRules) {
+					var list = validatorsWithRules.ToList();
+
+					foreach (var propVal in list) {
 						context.Results.Add(new ClientValidatorItem {
 							Validator = propVal,
 							IsReusable = false
 						});
 					}
 
+					// Must ensure there is at least 1 ClientValidatorItem, set to IsReusable = false
+					// otherwise MVC will cache the list of validators, assuming there will always be 0 validators for that property
+					// Which isn't true - we may be using the RulesetForClientsideMessages attribute (or some other mechanism) that can change the client validators that are available 
+					// depending on some context. 
+					if (list.Count == 0) {
+						context.Results.Add(new ClientValidatorItem { IsReusable = false });
+					}
 					
 					HandleNonNullableValueTypeRequiredRule(context);
 
@@ -121,7 +133,17 @@ namespace FluentValidation.AspNetCore {
 				.Select(x => x.Value)
 				.FirstOrDefault();
 
-			return factory?.Invoke(context, rule, propertyValidator);
+			if (factory != null) {
+				var ruleSetToGenerateClientSideRules = RuleSetForClientSideMessagesAttribute.GetRuleSetsForClientValidation(_httpContextAccessor.HttpContext);
+				bool executeDefaultRule = (ruleSetToGenerateClientSideRules.Contains("default", StringComparer.OrdinalIgnoreCase) && string.IsNullOrEmpty(rule.RuleSet));
+				bool shouldExecute = ruleSetToGenerateClientSideRules.Contains(rule.RuleSet) || executeDefaultRule;
+
+				if (shouldExecute) {
+					return factory.Invoke(context, rule, propertyValidator);
+				}
+			}
+
+			return null;
 		}
 
 		private bool TypeAllowsNullValue(Type type) {

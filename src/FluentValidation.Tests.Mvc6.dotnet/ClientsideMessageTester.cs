@@ -42,19 +42,15 @@ namespace FluentValidation.Tests.AspNetCore {
 	public class ClientsideFixture {
 		private TestServer _server;
 		private HttpClient _client;
-		private XDocument _doc = null;
 
 		public ClientsideFixture() {
 			_server = MvcIntegrationTests.BuildTestServer<StartupWithContainer>();
 			_client = _server.CreateClient();
 		}
 
-		public async Task<XDocument> GetClientsideMessages() {
-			if (_doc != null) return _doc;
-
-			var output = await GetResponse("/Clientside/Inputs");
-			_doc= XDocument.Parse(output);
-			return _doc;
+		public async Task<XDocument> GetClientsideMessages(string action = "/Clientside/Inputs") {
+			var output = await GetResponse(action);
+			return XDocument.Parse(output);
 		}
 
 		public async Task<string> GetResponse(string url,
@@ -84,6 +80,21 @@ namespace FluentValidation.Tests.AspNetCore {
 			}
 
 			return attr.Value;
+		}
+
+		public async Task<string[]> RunRuleseActions(string action) {
+
+			var doc = await GetClientsideMessages(action);
+
+			var elems = doc.Root.Elements("input")
+				.Where(x => x.Attribute("name").Value.StartsWith("CustomName"));
+
+			var results = elems.Select(x => x.Attribute("data-val-required"))
+				.Where(x => x != null)
+				.Select(x => x.Value)
+				.ToArray();
+
+			return results;
 		}
 
 
@@ -233,77 +244,37 @@ namespace FluentValidation.Tests.AspNetCore {
 			msg.ShouldEqual("'Message With Context' should not be empty.");
 		}
 
-//		[Fact]
-//	    public async Task Should_only_use_rules_from_Default_ruleset() {
-//	        validator.RuleSet("Foo", () => {
-//				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
-//	        });
-//			validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
-//
-//			// Client-side rules are only generated from the default ruleset
-//			// unless explicitly specified.
-//			// so in this case, only the second NotNull should make it through
-//
-//			var rules = GetClientRules(x => x.Name);
-//			rules.Count().ShouldEqual(1);
-//			rules.Single().ErrorMessage.ShouldEqual("second");
-//	    }
-		//
-		//		[Fact]
-		//		public async Task Should_use_rules_from_specified_ruleset() {
-		//			validator.RuleSet("Foo", () => {
-		//				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
-		//			});
-		//			validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
-		//
-		//			var filter = new RuleSetForClientSideMessagesAttribute("Foo");
-		//			filter.OnActionExecuting(new ActionExecutingContext { HttpContext = controllerContext.HttpContext });
-		//
-		//			var rules = GetClientRules(x => x.Name);
-		//			rules.Count().ShouldEqual(1);
-		//			rules.Single().ErrorMessage.ShouldEqual("first");
-		//		}
-		//
-		//		[Fact]
-		//		public async Task Should_use_rules_from_multiple_rulesets() {
-		//			validator.RuleSet("Foo", () => {
-		//				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
-		//			});
-		//
-		//			validator.RuleSet("Bar", () => {
-		//				validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
-		//			});
-		//
-		//			validator.RuleFor(x => x.Name).NotNull().WithMessage("third");
-		//
-		//			var filter = new RuleSetForClientSideMessagesAttribute("Foo", "Bar");
-		//			filter.OnActionExecuting(new ActionExecutingContext {HttpContext = controllerContext.HttpContext});
-		//
-		//			var rules = GetClientRules(x => x.Name);
-		//			rules.Count().ShouldEqual(2);
-		//		}
+		[Fact]
+	    public async Task Should_only_use_rules_from_Default_ruleset() {
+			var msg = await _fixture.RunRuleseActions("/ClientSide/DefaultRuleset");
+			msg.Length.ShouldEqual(1);
+			msg[0].ShouldEqual("third");
+	    }
+		
+		[Fact]
+		public async Task Should_use_rules_from_specified_ruleset() {
+			var msg = await _fixture.RunRuleseActions("/ClientSide/SpecifiedRuleset");
+			msg.Length.ShouldEqual(1);
+			msg[0].ShouldEqual("first");
+		}
+		
+		[Fact]
+		public async Task Should_use_rules_from_multiple_rulesets() {
+			var msgs = await _fixture.RunRuleseActions("/ClientSide/MultipleRulesets");
+			msgs.Length.ShouldEqual(2);
+			msgs[0].ShouldEqual("first");
+			msgs[1].ShouldEqual("second");
+		}
 
-		//		[Fact]
-		//		public async Task Should_use_rules_from_default_ruleset_and_specified_ruleset() {
-		//			validator.RuleSet("Foo", () => {
-		//				validator.RuleFor(x => x.Name).NotNull().WithMessage("first");
-		//			});
-		//
-		//			validator.RuleSet("Bar", () => {
-		//				validator.RuleFor(x => x.Name).NotNull().WithMessage("second");
-		//			});
-		//
-		//			validator.RuleFor(x => x.Name).NotNull().WithMessage("third");
-		//
-		//			var filter = new RuleSetForClientSideMessagesAttribute("Foo", "default");
-		//			filter.OnActionExecuting(new ActionExecutingContext { HttpContext = controllerContext.HttpContext });
-		//
-		//			var rules = GetClientRules(x => x.Name);
-		//			rules.Count().ShouldEqual(2);
-		//		}
+		[Fact]
+		public async Task Should_use_rules_from_default_ruleset_and_specified_ruleset() {
+			var msgs = await _fixture.RunRuleseActions("/ClientSide/DefaultAndSpecified");
+			msgs.Length.ShouldEqual(2);
+			msgs[0].ShouldEqual("first");
+			msgs[1].ShouldEqual("third");
+		}
 
-
-
+		
 	}
 
 	public class ClientsideModel {
@@ -329,6 +300,26 @@ namespace FluentValidation.Tests.AspNetCore {
 		public string MessageWithContext { get; set; }
 		public int CustomNameValueType { get; set; }
 		public string LocalizedName { get; set; }
+	}
+
+	public class ClientsideRulesetModel {
+		public string CustomName1 { get; set; }
+		public string CustomName2 { get; set; }
+		public string CustomName3 { get; set; }
+	}
+
+	public class ClientsideRulesetValidator : AbstractValidator<ClientsideRulesetModel> {
+		public ClientsideRulesetValidator() {
+			RuleSet("Foo", () => {
+				RuleFor(x => x.CustomName1).NotNull().WithMessage("first");
+			});
+			RuleSet("Bar", () => {
+				RuleFor(x => x.CustomName2).NotNull().WithMessage("second");
+			});
+
+			RuleFor(x => x.CustomName3).NotNull().WithMessage("third");
+
+		}
 	}
 
 	public class ClientsideModelValidator : AbstractValidator<ClientsideModel> {

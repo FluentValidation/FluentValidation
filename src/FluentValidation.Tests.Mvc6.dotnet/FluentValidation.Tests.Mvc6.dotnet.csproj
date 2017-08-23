@@ -21,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Views\Clientside\RuleSet.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Views\Clientside\Inputs.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
