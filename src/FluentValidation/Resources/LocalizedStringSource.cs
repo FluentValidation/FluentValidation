@@ -35,7 +35,6 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		/// <param name="resourceType">The resource type</param>
 		/// <param name="resourceName">The resource name</param>
-		/// <param name="resourceAccessorBuilder">Strategy used to construct the resource accessor</param>
 		public LocalizedStringSource(Type resourceType, string resourceName) {
 			var resourceAccessor = BuildResourceAccessor(resourceType, resourceName);
 
@@ -177,7 +176,6 @@ namespace FluentValidation.Resources {
 		/// Creates a OverridableLocalizedStringSource from an expression: () => MyResources.SomeResourceName
 		/// </summary>
 		/// <param name="expression">The expression </param>
-		/// <param name="resourceProviderSelectionStrategy">Strategy used to construct the resource accessor</param>
 		/// <returns>Error message source</returns>
 		public static IStringSource CreateFromExpression(Expression<Func<string>> expression) {
 			var constant = expression.Body as ConstantExpression;

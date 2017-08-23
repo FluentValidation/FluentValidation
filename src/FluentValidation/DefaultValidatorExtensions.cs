@@ -150,6 +150,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="maximumLength"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> MaximumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int maximumLength)
 		{
@@ -162,6 +163,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="minimumLength"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, string> MinimumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int minimumLength)
 		{

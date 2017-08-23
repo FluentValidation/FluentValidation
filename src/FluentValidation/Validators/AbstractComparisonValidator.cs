@@ -35,18 +35,17 @@ namespace FluentValidation.Validators {
 		/// <summary>
 		/// </summary>
 		/// <param name="value"></param>
-		/// <param name="resourceName"></param>
-		/// <param name="resourceType"></param>
+		/// <param name="errorSource"></param>
 		protected AbstractComparisonValidator(IComparable value, IStringSource errorSource) : base(errorSource) {
 			value.Guard("value must not be null.");
 			ValueToCompare = value;
 		}
+
 		/// <summary>
 		/// </summary>
 		/// <param name="valueToCompareFunc"></param>
 		/// <param name="member"></param>
-		/// <param name="resourceName"></param>
-		/// <param name="resourceType"></param>
+		/// <param name="errorSource"></param>
 		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, IStringSource errorSource) : base(errorSource) { 
 			this.valueToCompareFunc = valueToCompareFunc;
 			this.MemberToCompare = member;

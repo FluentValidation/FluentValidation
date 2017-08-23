@@ -91,7 +91,6 @@ namespace FluentValidation.Tests.AspNetCore {
 
 	public class ClientsideMessageTester : IClassFixture<ClientsideFixture> {
 		private readonly ClientsideFixture _fixture;
-		InlineValidator<TestModel> validator;
 
 		public ClientsideMessageTester(ClientsideFixture fixture) {
 			this._fixture = fixture;

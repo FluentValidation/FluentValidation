@@ -174,7 +174,6 @@ namespace FluentValidation
 	    /// Specifies a custom error message resource to use when validation fails.
 	    /// </summary>
 	    /// <param name="rule">The current rule</param>
-	    /// <param name="resourceSelector">The resource to use as an expression, eg () => Messages.MyResource</param>
 	    /// <param name="resourceName">Name of resource</param>
 	    /// <param name="formatArgs">Custom message format args</param>
 	    /// <param name="resourceType">Type of resource representing a resx file</param>
