@@ -15,12 +15,20 @@
         private HttpClient _client;
 		private readonly ITestOutputHelper _output;
 
+		public static TestServer BuildTestServer<T>() where T : class {
+			return new TestServer(new WebHostBuilder()
+#if NETCOREAPP2_0
+					.UseDefaultServiceProvider((context, options) => options.ValidateScopes = true)
+#endif
+				.UseStartup<T>());
+		}
+
 		public MvcIntegrationTests(ITestOutputHelper output)
         {
 			CultureScope.SetDefaultCulture();
 
 			this._output = output;
-			_server = new TestServer(new WebHostBuilder().UseStartup<Startup>());
+	        _server = BuildTestServer<Startup>();
             _client = _server.CreateClient();
         }
 
@@ -380,7 +388,7 @@
 
 		[Fact]
 		public async Task Does_not_use_both_dataannotations_and_fv_in_same_model_when_MVC_val_disabled() {
-			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithMvcValidationDisabled>());
+			_server = BuildTestServer<StartupWithMvcValidationDisabled>();
 			_client = _server.CreateClient();
 
 			var result = await GetErrors("MultipleValidationStrategies", new FormData());
@@ -403,7 +411,7 @@
 
 		[Fact(Skip = "Implicit child validation not supported yet")]
 		public async void Executes_implicit_child_validator_when_enabled() {
-			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
 			_client = _server.CreateClient();
 
 			var result = await GetErrors("ImplicitChildValidator", new FormData());
@@ -420,7 +428,7 @@
 
 		[Fact(Skip = "Implicit child validation not supported yet")]
 		public async void Executes_implicit_child_validator_and_mixes_with_DataAnnotations() {
-			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
 			_client = _server.CreateClient();
 
 			var result = await GetErrors("ImplicitChildWithDataAnnotations", new FormData());
@@ -429,7 +437,7 @@
 
 		[Fact(Skip = "Implicit child validation not supported yet")]
 		public async void Executes_implicit_child_validator_and_mixes_with_IValidatableObject() {
-			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
 			_client = _server.CreateClient();
 
 			var result = await GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
@@ -439,7 +447,7 @@
 
 		[Fact(Skip = "Implicit child validation not supported yet")]
 		public async void Executes_implicit_child_validator_when_enabled_does_not_execute_multiple_times() {
-			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
 			_client = _server.CreateClient();
 
 			var result = await GetErrors("ImplicitChildValidator", new FormData());
@@ -452,7 +460,7 @@
 
 		[Fact]
 		public async void ImplicitValidation_enabled_but_validator_explicitly_set_only_exeuctes_once() {
-			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithImplicitValidationEnabled>());
+			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
 			_client = _server.CreateClient();
 
 			var result = await GetErrors("ImplicitAndExplicitChildValidator", new FormData());

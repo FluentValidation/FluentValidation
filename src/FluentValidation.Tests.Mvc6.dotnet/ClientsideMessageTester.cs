@@ -36,7 +36,6 @@ namespace FluentValidation.Tests.AspNetCore {
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Microsoft.AspNetCore.TestHost;
-	using Mvc6.dotnet;
 	using Validators;
     using Xunit;
 
@@ -46,11 +45,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		private XDocument _doc = null;
 
 		public ClientsideFixture() {
-			_server = new TestServer(
-				new WebHostBuilder()
-					//				.UseContentRoot(contentRoot)
-					.UseStartup<StartupWithContainer>()
-			);
+			_server = MvcIntegrationTests.BuildTestServer<StartupWithContainer>();
 			_client = _server.CreateClient();
 		}
 

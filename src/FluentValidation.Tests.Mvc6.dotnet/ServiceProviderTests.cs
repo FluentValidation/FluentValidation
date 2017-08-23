@@ -15,7 +15,7 @@
 
 		public ServiceProviderTests()
 		{
-			_server = new TestServer(new WebHostBuilder().UseStartup<StartupWithContainer>());
+			_server = MvcIntegrationTests.BuildTestServer<StartupWithContainer>();
 			_client = _server.CreateClient();
 		}
 
