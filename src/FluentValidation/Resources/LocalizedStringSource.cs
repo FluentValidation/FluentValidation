@@ -64,6 +64,7 @@ namespace FluentValidation.Resources {
 		/// <param name="expression">The expression </param>
 		/// <param name="resourceProviderSelectionStrategy">Strategy used to construct the resource accessor</param>
 		/// <returns>Error message source</returns>
+		[Obsolete]
 		public static IStringSource CreateFromExpression(Expression<Func<string>> expression, IResourceAccessorBuilder resourceProviderSelectionStrategy) {
 			var constant = expression.Body as ConstantExpression;
 

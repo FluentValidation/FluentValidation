@@ -43,9 +43,11 @@ namespace FluentValidation.Validators {
 
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
+#pragma warning disable 1998
 		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			return Validate(context);
 		}
+#pragma warning restore 1998
 
 		public virtual ICollection<Func<object, object, object>> CustomMessageFormatArguments {
 			get { return new List<Func<object, object, object>>(); }

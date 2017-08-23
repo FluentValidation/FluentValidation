@@ -31,9 +31,7 @@ namespace FluentValidation.Validators {
 	public abstract class PropertyValidator : IPropertyValidator {
 		private List<Func<object, object, object>> customFormatArgs;
 		private IStringSource errorSource;
-		private IStringSource originalErrorSource;
 		private IStringSource errorCodeSource;
-		private IStringSource originalErrorCodeSource;
 
 		public virtual bool IsAsync {
 			get { return false; }
@@ -49,23 +47,23 @@ namespace FluentValidation.Validators {
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
 			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
-			originalErrorSource = errorSource = errorMessageSource;
+			errorSource = errorMessageSource;
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
 			errorMessageResourceName.Guard("errorMessageResourceName must be specified.");
 			errorMessageResourceType.Guard("errorMessageResourceType must be specified.");
 
-			originalErrorSource = errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
+			errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			originalErrorSource = errorSource = new StaticStringSource(errorMessage);
+			errorSource = new StaticStringSource(errorMessage);
 		}
 
 		[Obsolete("Use the constructor that takes a Type resourceType and string resourceName")]
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
-			originalErrorSource = errorSource = OverridableLocalizedStringSource.CreateFromExpression(errorMessageResourceSelector);
+			errorSource = OverridableLocalizedStringSource.CreateFromExpression(errorMessageResourceSelector);
 		}
 
 		public IStringSource ErrorMessageSource {
@@ -77,9 +75,7 @@ namespace FluentValidation.Validators {
 
 				errorSource = value;
 
-				if (value is LanguageStringSource) {
-					originalErrorSource = value;
-				}
+				
 			}
 		}
 
@@ -109,9 +105,11 @@ namespace FluentValidation.Validators {
 
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
+#pragma warning disable 1998
 		protected virtual async Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			return IsValid(context);
 		}
+#pragma warning restore 1998
 
 		/// <summary>
 		/// Prepares the <see cref="MessageFormatter"/> of <paramref name="context"/> for an upcoming <see cref="ValidationFailure"/>.

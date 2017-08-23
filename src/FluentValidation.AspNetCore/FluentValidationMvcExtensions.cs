@@ -53,7 +53,9 @@ namespace FluentValidation.AspNetCore {
 			RegisterServices(mvcBuilder.Services, config);
 			// clear all model validation providers since fluent validation will be handling everything
 
+#pragma warning disable CS0612 // Type or member is obsolete
 			if (config.ClearValidatorProviders) {
+#pragma warning restore CS0612 // Type or member is obsolete
 				mvcBuilder.AddMvcOptions(
 					options => {
 						options.ModelValidatorProviders.Clear();
@@ -115,7 +117,9 @@ namespace FluentValidation.AspNetCore {
 			RegisterServices(mvcBuilder.Services, config);
 
 			// clear all model validation providers since fluent validation will be handling everything
+#pragma warning disable CS0612 // Type or member is obsolete
 			if (config.ClearValidatorProviders) {
+#pragma warning restore CS0612 // Type or member is obsolete
 				mvcBuilder.AddMvcOptions(
 					options => {
 						options.ModelValidatorProviders.Clear();

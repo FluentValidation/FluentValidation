@@ -63,7 +63,9 @@ namespace FluentValidation {
 		/// <param name="errorMessage">The error message to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage) {
-			return rule.WithMessage(errorMessage, null as object[]);
+			return rule.Configure(config => {
+				config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
+			});
 		}
 
 		/// <summary>

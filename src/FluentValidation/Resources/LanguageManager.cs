@@ -31,7 +31,6 @@ namespace FluentValidation.Resources {
 	public class LanguageManager : ILanguageManager {
 		private readonly Dictionary<string, Language> _languages = new Dictionary<string, Language>();
 		private Language _fallback;
-		private CultureInfo _cultureToUse = null;
 
 		/// <summary>
 		/// Creates a new instance of the LanguageManager class.
