@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
-    <AssemblyName>FluentValidation.Tests2</AssemblyName>
+    <AssemblyName>FluentValidation.Tests</AssemblyName>
     <!--<PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net451+win81</PackageTargetFallback>-->
     <!--<RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>-->
     <RootNamespace>FluentValidation.Tests</RootNamespace>
