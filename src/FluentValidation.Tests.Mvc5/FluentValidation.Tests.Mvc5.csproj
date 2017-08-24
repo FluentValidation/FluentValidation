@@ -55,7 +55,7 @@
 
   <ItemGroup>
     <EmbeddedResource Update="TestMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
