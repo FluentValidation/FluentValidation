@@ -5,66 +5,46 @@
 		<BuildDir>$(BaseDir)\build</BuildDir>
     <OutputDir>$(BuildDir)\$(Configuration)</OutputDir>
     <SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
-		<SignPackages Condition="'$(SignPackages)'==''">False</SignPackages>
-    <MSBuildExtensions>$(BaseDir)\packages\MSBuildTasks.1.5.0.235\tools\msbuild.community.tasks.dll</MSBuildExtensions>
-    <KeyFile>$(BaseDir)\src\FluentValidation-dev.snk</KeyFile>
+		<KeyFile>$(BaseDir)\src\FluentValidation-dev.snk</KeyFile>
     <KeyFile Condition="Exists('$(UserProfile)\Dropbox\FluentValidation-Release.snk')">$(UserProfile)\Dropbox\FluentValidation-Release.snk</KeyFile>
   </PropertyGroup>
 	
-	<UsingTask
-    AssemblyFile="$(BaseDir)\packages\xunit.runner.msbuild.2.1.0\build\portable-net45+win8+wp8+wpa81\xunit.runner.msbuild.dll"
-    TaskName="Xunit.Runner.MSBuild.xunit"/>
-  <UsingTask AssemblyFile="$(MSBuildExtensions)" TaskName="MSBuild.Community.Tasks.Zip" />
-
   <Target Name="key">
-    <Message Text="Using key file: $(KeyFile)" />
+    <Message Text="Using key file: $(KeyFile)" Importance="High"/>
   </Target>
 
   <Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
-	
-	<Target Name="PackageRestore">
-    <Exec Command="$(BaseDir)\.nuget\nuget.exe restore $(SolutionFile)" WorkingDirectory="$(BaseDir)"  />
-	</Target>
-	
-	<Target Name="Compile">
+  
+  <Target Name="Compile">
 		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Restore;Rebuild" />
-</Target>
+	</Target>
 
 	<Target Name="Test">
     <ItemGroup>
-      <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests\bin\$(Configuration)\FluentValidation.Tests.dll" />
-      <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Mvc5\bin\$(Configuration)\FluentValidation.Tests.Mvc5.dll" />
-      <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.WebApi\bin\$(Configuration)\FluentValidation.Tests.WebApi.dll" />
-      <TestAssemblies Include="$(BaseDir)\src\FluentValidation.Tests.Portable46\bin\$(Configuration)\FluentValidation.Tests.Portable46.dll" />
+     <Files Include="$(BaseDir)\src\FluentValidation.Tests" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.dotnet" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc5" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.netcoreapp2" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.WebApi" />
     </ItemGroup>
-    
-    <xunit Assemblies="@(TestAssemblies)" ParallelizeAssemblies="false" ParallelizeTestCollections="false" />
-    <exec Command="dotnet test --no-build --configuration=$(Configuration)" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.dotnet" />
-    <exec Command="dotnet test --no-build --configuration=$(Configuration)" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
-      <exec Command="dotnet test --no-build --configuration=$(Configuration)" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.netcoreapp2" />
-	</Target>
 	
-	<Target Name="TestMvcCore">
-    <exec Command="dotnet test --no-build --configuration=$(Configuration)" WorkingDirectory="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
+    <exec command="dotnet test %(Files.Identity) --no-build --configuration=$(configuration)" />
+   
 	</Target>
 
   <Target Name="Deploy">
     <RemoveDir Directories="$(BuildDir)" />
     
     <MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages;AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Restore;Pack" />
-    
-    <!-- Remove the test packages. I don't know why it creates these -->
-    <!--<ItemGroup>
-      <DeleteIt Include="$(BuildDir)\Packages\*.Tests.*.nupkg" />
-    </ItemGroup>
-    <Delete Files="@(DeleteIt)" />
--->
-    <CallTarget Targets="PackageZip"></CallTarget>
+   
+    <CallTarget Targets="CopyToOutput"></CallTarget>
   </Target>
 
-  <Target Name="PackageZip">
+  <Target Name="CopyToOutput">
     <ItemGroup>
       <MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\netstandard1.0\**\*.*" />
+      <MainBinaries45 Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\net45\**\*.*" />
       <Mvc5Binaries Include="$(BaseDir)\src\FluentValidation.Mvc5\bin\$(Configuration)\net45\FluentValidation.Mvc.*" />
       <WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)\net45\FluentValidation.WebApi.*" />
       <AspNetCoreBinaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.deps.json" />
@@ -73,18 +53,13 @@
     </ItemGroup>
 
     <!-- Copy to the output directory -->
-    <Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation\%(RecursiveDir)"  />
+    <Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation-netstandard10\%(RecursiveDir)"  />
+    <Copy SourceFiles="@(MainBinaries45)" DestinationFolder="$(OutputDir)\FluentValidation-net45\%(RecursiveDir)"  />
     <Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC5" />
     <Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi" />
-    <Copy SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(OutputDir)\AspNetCore" />
-    <Copy SourceFiles="@(AspNetCore451Binaries)" DestinationFolder="$(OutputDir)\AspNetCore451" />
+    <Copy SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(OutputDir)\AspNetCore-netstandard16" />
+    <Copy SourceFiles="@(AspNetCore451Binaries)" DestinationFolder="$(OutputDir)\AspNetCore-net451" />
     <Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
 
-    <ItemGroup>
-      <FilesToZip Include="$(OutputDir)\**\*.*" />
-    </ItemGroup>
-    <Message Text="@(FilesToZip)" />
-    
-    <Zip Files="@(FilesToZip)" ZipFileName="$(BuildDir)\FluentValidation.zip" WorkingDirectory="$(OutputDir)" />
   </Target>
 </Project>
