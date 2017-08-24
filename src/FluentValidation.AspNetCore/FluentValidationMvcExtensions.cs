@@ -84,8 +84,6 @@ namespace FluentValidation.AspNetCore {
 				return modelValidator;
 			}));
 
-			// Ensure the HttpContextAccessor is registered (by default it isn't, but may have been added by features such as AddIdentity)
-			services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 			if (config.ClientsideEnabled)
 			{

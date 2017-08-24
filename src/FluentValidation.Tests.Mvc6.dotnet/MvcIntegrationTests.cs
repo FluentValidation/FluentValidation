@@ -10,56 +10,16 @@
 	using Xunit;
 	using Xunit.Abstractions;
 
-	public class MvcIntegrationTests {
-        private TestServer _server;
-        private HttpClient _client;
+	public class MvcIntegrationTests : IClassFixture<WebAppFixture<Startup>> {
 		private readonly ITestOutputHelper _output;
+		private readonly WebAppFixture<Startup> _webApp;
 
-		public static TestServer BuildTestServer<T>() where T : class {
-			return new TestServer(new WebHostBuilder()
-#if NETCOREAPP2_0
-					.UseDefaultServiceProvider((context, options) => options.ValidateScopes = true)
-#endif
-				.UseStartup<T>());
-		}
-
-		public MvcIntegrationTests(ITestOutputHelper output)
+		public MvcIntegrationTests(ITestOutputHelper output, WebAppFixture<Startup> webApp)
         {
 			CultureScope.SetDefaultCulture();
 
 			this._output = output;
-	        _server = BuildTestServer<Startup>();
-            _client = _server.CreateClient();
-        }
-
-        private async Task<string> GetResponse(string url,
-            string querystring = "")
-        {
-            if (!String.IsNullOrEmpty(querystring))
-            {
-                url += "?" + querystring;
-            }
-
-            var response = await _client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        private async Task<string> PostResponse(string url,
-            Dictionary<string,string> form) {
-
-            var c = new FormUrlEncodedContent(form);
-
-            var response = await _client.PostAsync(url, c);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync();
-        }
-
-        private async Task<List<SimpleError>> GetErrors(string action, Dictionary<string,string> form) {
-
-            var response = await PostResponse($"/Test/{action}", form);
-            return JsonConvert.DeserializeObject<List<SimpleError>>(response);
+	        this._webApp = webApp;
         }
 
         [Fact]
@@ -72,7 +32,7 @@
 				{ "Address1", null }
 			};
 
-	        var result = await GetErrors("Test4", form);
+	        var result = await _webApp.GetErrors("Test4", form);
 
 			result.IsValidField("Email").ShouldBeFalse(); //Email validation failed
 			result.IsValidField("DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
@@ -88,7 +48,7 @@
                 { "Id", "0" }
             };
 
-            var result = await GetErrors("Test5", form);
+            var result = await _webApp.GetErrors("Test5", form);
             result.IsValidField("SomeBool").ShouldBeFalse(); //Complex rule
             result.IsValidField("Id").ShouldBeFalse(); //NotEmpty for non-nullable value type
         }
@@ -100,7 +60,7 @@
                 { "test.Name", null }
             };
 
-            var result = await GetErrors("Test1", form);
+            var result = await _webApp.GetErrors("Test1", form);
             
             result.IsValidField("test.Name").ShouldBeFalse();
             result.GetError("test.Name").ShouldEqual("Validation Failed");
@@ -113,13 +73,13 @@
                 { "Name", null }
             };
 
-            var result = await GetErrors("Test1a", form);
+            var result = await _webApp.GetErrors("Test1a", form);
             result.GetError("Name").ShouldEqual("Validation Failed");
         }
 
         [Fact]
         public async Task Should_not_fail_when_no_validator_can_be_found() {
-	        var result = await PostResponse("/Test/Test2", new FormData());
+	        var result = await _webApp.PostResponse("/Test/Test2", new FormData());
 	        result.ShouldEqual("not null");
         }
 
@@ -130,7 +90,7 @@
                 { "Id", "" }
             };
 
-            var errors = await GetErrors("Test3", form);
+            var errors = await _webApp.GetErrors("Test3", form);
 	        errors.Count.ShouldEqual(1);
             errors.GetError("Id").ShouldEqual("Validation failed");
             
@@ -143,7 +103,7 @@
                 { "test.Id", "" }
             };
 
-            var errors = await GetErrors("Test3", form);
+            var errors = await _webApp.GetErrors("Test3", form);
 
 	        errors.Count.ShouldEqual(1);
             errors.GetError("test.Id").ShouldEqual("Validation failed");
@@ -155,7 +115,7 @@
             var form = new FormData {
             };
 
-            var errors = await GetErrors("Test3", form);
+            var errors = await _webApp.GetErrors("Test3", form);
 
             errors.GetError("Id").ShouldEqual("Validation failed");
         }
@@ -167,7 +127,7 @@
                 { "Id", "" }
             };
 
-            var result = await GetErrors("Test6", form);
+            var result = await _webApp.GetErrors("Test6", form);
             result.GetError("Id").ShouldEqual("The value '' is invalid.");
         }
 
@@ -178,7 +138,7 @@
                 { "Id", "" }
             };
 
-            var result = await GetErrors("WithoutValidator", form);
+            var result = await _webApp.GetErrors("WithoutValidator", form);
             result.GetError("Id").ShouldEqual("The value '' is invalid.");
         }
 
@@ -189,7 +149,7 @@
                 { "Id", "" }
             };
 
-            var errors = await GetErrors("TestModelWithOverridenMessageValueType", form);
+            var errors = await _webApp.GetErrors("TestModelWithOverridenMessageValueType", form);
             errors.GetError("Id").ShouldEqual("Foo");
         }
 
@@ -199,7 +159,7 @@
             var form = new FormData {
                 { "Id", "" }
             };
-            var errors = await GetErrors("TestModelWithOverridenPropertyNameValueType", form);
+            var errors = await _webApp.GetErrors("TestModelWithOverridenPropertyNameValueType", form);
             errors.GetError("Id").ShouldEqual("'Foo' should not be empty.");
         }
 //
@@ -245,7 +205,7 @@
                 { "Forename", "foo" },
             };
 
-	        var results = await GetErrors("RulesetTest", form);
+	        var results = await _webApp.GetErrors("RulesetTest", form);
             results.IsValidField("Forename").ShouldBeFalse();
             results.IsValidField("Surname").ShouldBeFalse();
             results.IsValidField("Email").ShouldBeTrue();
@@ -260,7 +220,7 @@
                 { "Forename", "foo" },
             };
 
-	        var result = await GetErrors("PropertyTest", form);
+	        var result = await _webApp.GetErrors("PropertyTest", form);
 
 			result.IsValidField("Forename").ShouldBeFalse();
             result.IsValidField("Surname").ShouldBeFalse();
@@ -275,7 +235,7 @@
                 { "Surname", "foo" },
                 { "Forename", "foo" },
             };
-			var result = await GetErrors("InterceptorTest", form);
+			var result = await _webApp.GetErrors("InterceptorTest", form);
 
             result.IsValidField("Forename").ShouldBeFalse();
             result.IsValidField("Surname").ShouldBeFalse();
@@ -291,7 +251,7 @@
                 { "Forename", "foo" },
             };
 
-			var result = await GetErrors("ClearErrorsInterceptorTest", form);
+			var result = await _webApp.GetErrors("ClearErrorsInterceptorTest", form);
 
 			result.Count.ShouldEqual(0);
         }
@@ -304,7 +264,7 @@
                 { "Forename", "foo" },
             };
 
-			var result = await GetErrors("BuiltInInterceptorTest", form);
+			var result = await _webApp.GetErrors("BuiltInInterceptorTest", form);
 
 	        result.Count.ShouldEqual(0);
         }
@@ -320,7 +280,7 @@
                 { "second.Forename", "foo" }
             };
 
-	        var result = await GetErrors("TwoParameters", form);
+	        var result = await _webApp.GetErrors("TwoParameters", form);
 
             //customizations should only apply to the first validator 
             result.IsValidField("first.Forename").ShouldBeFalse();
@@ -336,7 +296,7 @@
 				{"model[1].Name", "foo"},
 			};
 
-			var result = await GetErrors("Collection", form);
+			var result = await _webApp.GetErrors("Collection", form);
 
 			result.Count.ShouldEqual(2);
 			result[0].Name.ShouldEqual("model[0].Name");
@@ -349,7 +309,7 @@
 				{"[1].Name", "foo"},
 			};
 
-			var result = await GetErrors("Collection", form);
+			var result = await _webApp.GetErrors("Collection", form);
 
 			result.Count.ShouldEqual(2);
 			result[0].Name.ShouldEqual("[0].Name");
@@ -362,108 +322,102 @@
 				{"model.Name", "baz"}
 			};
 
-			var result = await GetErrors("MultipleErrors",form);
+			var result = await _webApp.GetErrors("MultipleErrors",form);
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact]
 		public async Task Uses_both_dataannotations_and_fv_in_same_model() {
-			var result = await GetErrors("MultipleValidationStrategies", new FormData());
+			var result = await _webApp.GetErrors("MultipleValidationStrategies", new FormData());
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact(Skip = "AspNetCore does not allow multiple validation strategies to be mixed on the same property.")]
 //		[Fact]
 		public async Task Uses_both_dataannotations_and_fv_on_same_property() {
-			var result = await GetErrors("MultipleValidationStrategies2", new FormData());
+			var result = await _webApp.GetErrors("MultipleValidationStrategies2", new FormData());
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact]
 		public async void Mixes_DataAnnotations_with_FV_on_explicitly_set_child_validator() {
-			var result = await GetErrors("MultipleValidationStrategies3", new FormData());
+			var result = await _webApp.GetErrors("MultipleValidationStrategies3", new FormData());
 			result.Count.ShouldEqual(3);
 		}
 
 
 		[Fact]
 		public async Task Does_not_use_both_dataannotations_and_fv_in_same_model_when_MVC_val_disabled() {
-			_server = BuildTestServer<StartupWithMvcValidationDisabled>();
-			_client = _server.CreateClient();
+			var app = new WebAppFixture<StartupWithMvcValidationDisabled>();
 
-			var result = await GetErrors("MultipleValidationStrategies", new FormData());
+			var result = await app.GetErrors("MultipleValidationStrategies", new FormData());
 			result.Count.ShouldEqual(1);
 			result[0].Message.ShouldEqual("'Some Other Property' must not be empty.");
 		}
 
 		[Fact]
 		public async Task Uses_DataAnnotations_when_no_FV_validatior_defined() {
-			var result = await GetErrors("DataAnnotations", new FormData());
+			var result = await _webApp.GetErrors("DataAnnotations", new FormData());
 			result.Count.ShouldEqual(1);
 			result[0].Message.ShouldEqual("The Name field is required.");
 		}
 
 		[Fact]
 		public async void Does_not_implicitly_run_child_validator_by_default() {
-			var result = await GetErrors("ImplicitChildValidator", new FormData());
+			var result = await _webApp.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(0);
 		}
 
 		[Fact(Skip = "Implicit child validation not supported yet")]
 		public async void Executes_implicit_child_validator_when_enabled() {
-			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
-			_client = _server.CreateClient();
+			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await GetErrors("ImplicitChildValidator", new FormData());
+			var result = await app.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 			result[0].Name.ShouldEqual("Child.Name");
 		}
 
 		[Fact]
 		public async void Can_mix_FV_with_IValidatableObject() {
-			var result = await GetErrors("ImplementsIValidatableObject", new FormData());
+			var result = await _webApp.GetErrors("ImplementsIValidatableObject", new FormData());
 			result.Count.ShouldEqual(2);
 		}
 
 
 		[Fact(Skip = "Implicit child validation not supported yet")]
 		public async void Executes_implicit_child_validator_and_mixes_with_DataAnnotations() {
-			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
-			_client = _server.CreateClient();
+			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await GetErrors("ImplicitChildWithDataAnnotations", new FormData());
+			var result = await app.GetErrors("ImplicitChildWithDataAnnotations", new FormData());
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact(Skip = "Implicit child validation not supported yet")]
 		public async void Executes_implicit_child_validator_and_mixes_with_IValidatableObject() {
-			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
-			_client = _server.CreateClient();
+			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
+			var result = await app.GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
 			result.Count.ShouldEqual(3);
 		}
 
 
 		[Fact(Skip = "Implicit child validation not supported yet")]
 		public async void Executes_implicit_child_validator_when_enabled_does_not_execute_multiple_times() {
-			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
-			_client = _server.CreateClient();
+			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await GetErrors("ImplicitChildValidator", new FormData());
+			var result = await app.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 
-			result = await GetErrors("ImplicitChildValidator", new FormData());
+			result = await app.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 		}
 
 
 		[Fact]
 		public async void ImplicitValidation_enabled_but_validator_explicitly_set_only_exeuctes_once() {
-			_server = BuildTestServer<StartupWithImplicitValidationEnabled>();
-			_client = _server.CreateClient();
+			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await GetErrors("ImplicitAndExplicitChildValidator", new FormData());
+			var result = await app.GetErrors("ImplicitAndExplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 		}
 

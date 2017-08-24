@@ -67,6 +67,9 @@
 		<None Update="..\FluentValidation.Tests.Mvc6.dotnet\Views\Clientside\Inputs.cshtml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
+		<None Update="..\FluentValidation.Tests.Mvc6.dotnet\Views\Clientside\RuleSet.cshtml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="..\FluentValidation.Tests.Mvc6.dotnet\Views\_ViewImports.cshtml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

@@ -21,6 +21,8 @@ namespace FluentValidation.Tests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using Xunit;
     using Results;
 
@@ -79,5 +81,7 @@ namespace FluentValidation.Tests
         {
             return errors.Count() == 0;
         }
-    }
+
+		
+	}
 }

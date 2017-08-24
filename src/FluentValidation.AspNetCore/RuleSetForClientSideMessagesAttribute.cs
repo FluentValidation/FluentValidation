@@ -19,6 +19,12 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		public override void OnActionExecuting(ActionExecutingContext filterContext) {
+			var contextAccessor = filterContext.HttpContext.RequestServices.GetService(typeof(IHttpContextAccessor));
+
+			if(contextAccessor == null) {
+				throw new InvalidOperationException("Cannot use the RuleSetForClientSideMessagesAttribute unless the IHttpContextAccessor is registered with the service provider. Make sure the provider is registered by calling services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); in your Startup class's ConfigureServices method");
+			}
+
 			SetRulesetForClientValidation(filterContext.HttpContext, ruleSets);
 		}
 
@@ -27,13 +33,10 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		public static string[] GetRuleSetsForClientValidation(HttpContext context) {
-			// If the httpContext is null (for example, if IHttpContextProvider hasn't been registered) then throw an error
+			// If the httpContext is null (for example, if IHttpContextProvider hasn't been registered) then just assume default ruleset.
+			// This is OK because if we're actually using the attribute, the OnActionExecuting will have caught the fact that the provider is not registered. 
 
-			if (context == null) {
-				throw new Exception("RuleSetForClientSideMessagesAttribute without an HttpContext. Please ensure that the IHttpContextProvider has been registered in your application startup routine.");
-			}
-
-			return context.Items[key] as string[] ?? new string[] { null };
+			return context?.Items[key] as string[] ?? new string[] { null };
 		}
 	}
 }

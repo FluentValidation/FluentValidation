@@ -8,15 +8,13 @@
 	using Newtonsoft.Json;
 	using Xunit;
 
-	public class ServiceProviderTests {
+	public class ServiceProviderTests : IClassFixture<WebAppFixture<StartupWithContainer>> {
+		private readonly WebAppFixture<StartupWithContainer> _webApp;
 
-		private readonly TestServer _server;
-		private readonly HttpClient _client;
 
-		public ServiceProviderTests()
+		public ServiceProviderTests(WebAppFixture<StartupWithContainer> webApp)
 		{
-			_server = MvcIntegrationTests.BuildTestServer<StartupWithContainer>();
-			_client = _server.CreateClient();
+			_webApp = webApp;
 		}
 
 
@@ -27,7 +25,7 @@
 				{ "test.Name", null }
 			};
 
-			var result = await GetErrors("Test1", form);
+			var result = await _webApp.GetErrors("Test1", form);
 
 			result.IsValidField("test.Name").ShouldBeFalse();
 			result.GetError("test.Name").ShouldEqual("Validation Failed");
@@ -35,10 +33,10 @@
 
 		[Fact]
 		public async Task Validators_should_be_transient() {
-			var result = await GetErrors("Lifecycle", new FormData());
+			var result = await _webApp.GetErrors("Lifecycle", new FormData());
 			var hashCode1 = result.GetError("Foo");
 
-			var result2 = await GetErrors("Lifecycle", new FormData());
+			var result2 = await _webApp.GetErrors("Lifecycle", new FormData());
 			var hashCode2 = result2.GetError("Foo");
 
 			Assert.NotNull(hashCode1);
@@ -51,28 +49,9 @@
 
 		[Fact]
 		public async Task Gets_validator_for_model_not_underlying_collection_type() {
-			var result = await GetErrors("ModelThatimplementsIEnumerable", new FormData());
+			var result = await _webApp.GetErrors("ModelThatimplementsIEnumerable", new FormData());
 			result.GetError("Name").ShouldEqual("Foo");
 		}
 
-		private async Task<List<SimpleError>> GetErrors(string action, Dictionary<string, string> form)
-		{
-
-			var response = await PostResponse($"/Test/{action}", form);
-			return JsonConvert.DeserializeObject<List<SimpleError>>(response);
-		}
-
-
-		private async Task<string> PostResponse(string url,
-		  Dictionary<string, string> form)
-		{
-
-			var c = new FormUrlEncodedContent(form);
-
-			var response = await _client.PostAsync(url, c);
-			response.EnsureSuccessStatusCode();
-
-			return await response.Content.ReadAsStringAsync();
-		}
 	}
 }

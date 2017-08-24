@@ -21,11 +21,9 @@ namespace FluentValidation.Tests.AspNetCore {
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.Globalization;
-	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Net.Http;
 	using System.Threading.Tasks;
-	using System.Xml.Linq;
 	using FluentValidation.AspNetCore;
 	using Internal;
 	using Microsoft.AspNetCore.Hosting;
@@ -39,166 +37,103 @@ namespace FluentValidation.Tests.AspNetCore {
 	using Validators;
     using Xunit;
 
-	public class ClientsideFixture {
-		private TestServer _server;
-		private HttpClient _client;
+	public class ClientsideMessageTester : IClassFixture<ClientsideFixture<StartupWithContainer>> {
+		private readonly ClientsideFixture<StartupWithContainer> _webApp;
 
-		public ClientsideFixture() {
-			_server = MvcIntegrationTests.BuildTestServer<StartupWithContainer>();
-			_client = _server.CreateClient();
-		}
-
-		public async Task<XDocument> GetClientsideMessages(string action = "/Clientside/Inputs") {
-			var output = await GetResponse(action);
-			return XDocument.Parse(output);
-		}
-
-		public async Task<string> GetResponse(string url,
-			string querystring = "") {
-			if (!String.IsNullOrEmpty(querystring)) {
-				url += "?" + querystring;
-			}
-
-			var response = await _client.GetAsync(url);
-			response.EnsureSuccessStatusCode();
-			return await response.Content.ReadAsStringAsync();
-		}
-
-		public async Task<string> GetErrorMessage(string name, string attribute) {
-			var doc = await GetClientsideMessages();
-			var elem = doc.Root.Elements("input")
-				.Where(x => x.Attribute("name").Value == name).SingleOrDefault();
-
-			if (elem == null) {
-				throw new Exception("Could not find element with name " + name);
-			}
-
-			var attr = elem.Attribute(attribute);
-
-			if (attr == null || string.IsNullOrEmpty(attr.Value)) {
-				throw new Exception("Could not find attr " + attribute);
-			}
-
-			return attr.Value;
-		}
-
-		public async Task<string[]> RunRuleseActions(string action) {
-
-			var doc = await GetClientsideMessages(action);
-
-			var elems = doc.Root.Elements("input")
-				.Where(x => x.Attribute("name").Value.StartsWith("CustomName"));
-
-			var results = elems.Select(x => x.Attribute("data-val-required"))
-				.Where(x => x != null)
-				.Select(x => x.Value)
-				.ToArray();
-
-			return results;
-		}
-
-
-	}
-
-	public class ClientsideMessageTester : IClassFixture<ClientsideFixture> {
-		private readonly ClientsideFixture _fixture;
-
-		public ClientsideMessageTester(ClientsideFixture fixture) {
-			this._fixture = fixture;
+		public ClientsideMessageTester(ClientsideFixture<StartupWithContainer> webApp) {
+			_webApp = webApp;
 			CultureScope.SetDefaultCulture();
-
-			
 		}
 
 		[Fact]
 		public async Task NotEmpty_uses_simplified_message_for_clientside_validation() {
-			var msg = await _fixture.GetErrorMessage("Required", "data-val-required");
+			var msg = await _webApp.GetClientsideMessage("Required", "data-val-required");
 			msg.ShouldEqual("'Required' should not be empty.");
 		}
 
 		[Fact]
 		public async Task NotNull_uses_simplified_message_for_clientside_validation() {
-			var msg = await _fixture.GetErrorMessage("Required2", "data-val-required");
+			var msg = await _webApp.GetClientsideMessage("Required2", "data-val-required");
 			msg.ShouldEqual("'Required2' should not be empty.");
 		}
 
 		[Fact]
 		public async Task RegexValidator_uses_simplified_message_for_clientside_validation() {
-			var msg = await _fixture.GetErrorMessage("RegEx", "data-val-regex");
+			var msg = await _webApp.GetClientsideMessage("RegEx", "data-val-regex");
 			msg.ShouldEqual("'Reg Ex' is not in the correct format.");
 		}
 
 		[Fact]
 		public async Task EmailValidator_uses_simplified_message_for_clientside_validation() {
-			var msg = await _fixture.GetErrorMessage("Email", "data-val-email");
+			var msg = await _webApp.GetClientsideMessage("Email", "data-val-email");
 			msg.ShouldEqual("'Email' is not a valid email address.");
 		}
 
 		[Fact]
 		public async Task LengthValidator_uses_simplified_message_for_clientside_validatation() {
-			var msg = await _fixture.GetErrorMessage("Length", "data-val-length");
+			var msg = await _webApp.GetClientsideMessage("Length", "data-val-length");
 			msg.ShouldEqual("'Length' must be between 1 and 4 characters.");
 		}
 
 		[Fact]
 		public async Task MinLengthValidator_uses_simplified_message_for_clientside_validatation() {
-			var msg = await _fixture.GetErrorMessage("MinLength", "data-val-minlength");
+			var msg = await _webApp.GetClientsideMessage("MinLength", "data-val-minlength");
 			msg.ShouldEqual("'Min Length' must be more than 1 characters.");
 		}
 
 		[Fact]
 		public async Task MaxengthValidator_uses_simplified_message_for_clientside_validatation() {
-			var msg = await _fixture.GetErrorMessage("MaxLength", "data-val-maxlength");
+			var msg = await _webApp.GetClientsideMessage("MaxLength", "data-val-maxlength");
 			msg.ShouldEqual("'Max Length' must be less than 2 characters.");
 		}
 
 		[Fact]
 		public async Task ExactLengthValidator_uses_simplified_message_for_clientside_validation() {
 
-			var msg = await _fixture.GetErrorMessage("ExactLength", "data-val-length");
+			var msg = await _webApp.GetClientsideMessage("ExactLength", "data-val-length");
 			msg.ShouldEqual("'Exact Length' must be 4 characters in length.");
 		}
 
 
 		[Fact]
 		public async Task InclusiveBetween_validator_uses_simplified_message_for_clientside_validation() {
-			var msg = await _fixture.GetErrorMessage("Range", "data-val-range");
+			var msg = await _webApp.GetClientsideMessage("Range", "data-val-range");
 			msg.ShouldEqual("'Range' must be between 1 and 5.");
 		}
 
         [Fact]
         public async Task GreaterThanOrEqualTo_validator_uses_simplified_message_for_clientside_validation() {
-	        var msg = await _fixture.GetErrorMessage("GreaterThanOrEqual", "data-val-range");
+	        var msg = await _webApp.GetClientsideMessage("GreaterThanOrEqual", "data-val-range");
 	        msg.ShouldEqual("'Greater Than Or Equal' must be greater than or equal to '1'.");
         }
 
         [Fact]
         public async Task LessThanOrEqualTo_validator_uses_simplified_message_for_clientside_validation() {
-			var msg = await _fixture.GetErrorMessage("LessThanOrEqual", "data-val-range");
+			var msg = await _webApp.GetClientsideMessage("LessThanOrEqual", "data-val-range");
 	        msg.ShouldEqual("'Less Than Or Equal' must be less than or equal to '10'.");
         }
 
 		[Fact]
 		public async Task EqualValidator_with_property_uses_simplified_message_for_clientside_validation() {
-			var msg = await _fixture.GetErrorMessage("EqualTo", "data-val-equalto");
+			var msg = await _webApp.GetClientsideMessage("EqualTo", "data-val-equalto");
 			msg.ShouldEqual("'Equal To' should be equal to 'Required'.");
 		}
 
 		[Fact]
 		public async Task Should_not_munge_custom_message() {
-			var msg = await _fixture.GetErrorMessage("LengthWithMessage", "data-val-length");
+			var msg = await _webApp.GetClientsideMessage("LengthWithMessage", "data-val-length");
 			msg.ShouldEqual("Foo");
 		}
 
 		[Fact]
 		public async Task Custom_validation_message_with_placeholders() {
-			var msg = await _fixture.GetErrorMessage("CustomPlaceholder", "data-val-required");
+			var msg = await _webApp.GetClientsideMessage("CustomPlaceholder", "data-val-required");
 			msg.ShouldEqual("Custom Placeholder is null.");
 		}
 
 		[Fact]
 		public async Task Custom_validation_message_for_length() {
-			var msg = await _fixture.GetErrorMessage("LengthCustomPlaceholders", "data-val-length");
+			var msg = await _webApp.GetClientsideMessage("LengthCustomPlaceholders", "data-val-length");
 			msg.ShouldEqual("Must be between 1 and 5.");
 		}
 
@@ -211,13 +146,13 @@ namespace FluentValidation.Tests.AspNetCore {
 
 		[Fact]
 		public async Task CreditCard_creates_clientside_message() {
-			var msg = await _fixture.GetErrorMessage("CreditCard", "data-val-creditcard");
+			var msg = await _webApp.GetClientsideMessage("CreditCard", "data-val-creditcard");
 			msg.ShouldEqual("'Credit Card' is not a valid credit card number.");
 		}
 
 		[Fact]
 		public async Task Overrides_property_name_for_clientside_rule() {
-			var msg = await _fixture.GetErrorMessage("CustomName", "data-val-required");
+			var msg = await _webApp.GetClientsideMessage("CustomName", "data-val-required");
 
 			msg.ShouldEqual("'Foo' must not be empty.");
 
@@ -225,14 +160,14 @@ namespace FluentValidation.Tests.AspNetCore {
 
 		[Fact]
 		public async Task Overrides_property_name_for_clientside_rule_using_localized_name() {
-			var msg = await _fixture.GetErrorMessage("LocalizedName", "data-val-required");
+			var msg = await _webApp.GetClientsideMessage("LocalizedName", "data-val-required");
 
 			msg.ShouldEqual("'Localised Error' must not be empty.");
 		}
 
 		[Fact]
 		public async Task Overrides_property_name_for_non_nullable_value_type() {
-			var msg = await _fixture.GetErrorMessage("CustomNameValueType", "data-val-required");
+			var msg = await _webApp.GetClientsideMessage("CustomNameValueType", "data-val-required");
 
 			msg.ShouldEqual("'Foo' must not be empty.");
 		
@@ -240,27 +175,27 @@ namespace FluentValidation.Tests.AspNetCore {
 
 		[Fact]
 		public async Task Falls_back_to_default_message_when_no_context_available_to_custom_message_format() {
-			var msg = await _fixture.GetErrorMessage("MessageWithContext", "data-val-required");
+			var msg = await _webApp.GetClientsideMessage("MessageWithContext", "data-val-required");
 			msg.ShouldEqual("'Message With Context' should not be empty.");
 		}
 
 		[Fact]
 	    public async Task Should_only_use_rules_from_Default_ruleset() {
-			var msg = await _fixture.RunRuleseActions("/ClientSide/DefaultRuleset");
+			var msg = await _webApp.RunRulesetAction("/ClientSide/DefaultRuleset");
 			msg.Length.ShouldEqual(1);
 			msg[0].ShouldEqual("third");
 	    }
 		
 		[Fact]
 		public async Task Should_use_rules_from_specified_ruleset() {
-			var msg = await _fixture.RunRuleseActions("/ClientSide/SpecifiedRuleset");
+			var msg = await _webApp.RunRulesetAction("/ClientSide/SpecifiedRuleset");
 			msg.Length.ShouldEqual(1);
 			msg[0].ShouldEqual("first");
 		}
 		
 		[Fact]
 		public async Task Should_use_rules_from_multiple_rulesets() {
-			var msgs = await _fixture.RunRuleseActions("/ClientSide/MultipleRulesets");
+			var msgs = await _webApp.RunRulesetAction("/ClientSide/MultipleRulesets");
 			msgs.Length.ShouldEqual(2);
 			msgs[0].ShouldEqual("first");
 			msgs[1].ShouldEqual("second");
@@ -268,88 +203,32 @@ namespace FluentValidation.Tests.AspNetCore {
 
 		[Fact]
 		public async Task Should_use_rules_from_default_ruleset_and_specified_ruleset() {
-			var msgs = await _fixture.RunRuleseActions("/ClientSide/DefaultAndSpecified");
+			var msgs = await _webApp.RunRulesetAction("/ClientSide/DefaultAndSpecified");
 			msgs.Length.ShouldEqual(2);
 			msgs[0].ShouldEqual("first");
 			msgs[1].ShouldEqual("third");
 		}
 
+		[Fact]
+		public async Task Throws_exception_if_IHttpContextProvider_not_registered() {
+			var app = new ClientsideFixture<StartupWithContainerWithoutHttpContextAccessor>();
+
+			bool thrown = false;
+			Exception ex = new Exception();
+
+			try {
+				var msg = await app.RunRulesetAction("/ClientSide/SpecifiedRuleset");
+			}
+			catch (InvalidOperationException e) {
+				thrown = true;
+				ex = e;
+			}
+
+			thrown.ShouldBeTrue();
+			ex.Message.ShouldEqual("Cannot use the RuleSetForClientSideMessagesAttribute unless the IHttpContextAccessor is registered with the service provider. Make sure the provider is registered by calling services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); in your Startup class's ConfigureServices method");
+		}
 		
 	}
 
-	public class ClientsideModel {
-		public string CreditCard { get; set; }
-		public string Email { get; set; }
-		public string EqualTo { get; set; }
-		public string MaxLength { get; set; }
-		public string MinLength { get; set; }
-		public int Range { get; set; }
-		public string RegEx { get; set; }
-		public string Required { get; set; }
-		public string Length { get; set; }
-		public string Required2 { get; set; }
-		public string ExactLength { get; set; }
-		public int GreaterThan { get; set; }
-		public int GreaterThanOrEqual { get; set; }
-		public int LessThan { get; set; }
-		public int LessThanOrEqual { get; set; }
-		public string LengthWithMessage { get; set; }
-		public string CustomPlaceholder { get; set; }
-		public string LengthCustomPlaceholders { get; set; }
-		public string CustomName { get; set; }
-		public string MessageWithContext { get; set; }
-		public int CustomNameValueType { get; set; }
-		public string LocalizedName { get; set; }
-	}
-
-	public class ClientsideRulesetModel {
-		public string CustomName1 { get; set; }
-		public string CustomName2 { get; set; }
-		public string CustomName3 { get; set; }
-	}
-
-	public class ClientsideRulesetValidator : AbstractValidator<ClientsideRulesetModel> {
-		public ClientsideRulesetValidator() {
-			RuleSet("Foo", () => {
-				RuleFor(x => x.CustomName1).NotNull().WithMessage("first");
-			});
-			RuleSet("Bar", () => {
-				RuleFor(x => x.CustomName2).NotNull().WithMessage("second");
-			});
-
-			RuleFor(x => x.CustomName3).NotNull().WithMessage("third");
-
-		}
-	}
-
-	public class ClientsideModelValidator : AbstractValidator<ClientsideModel> {
-		public ClientsideModelValidator() {
-			RuleFor(x => x.CreditCard).CreditCard();
-			RuleFor(x => x.Email).EmailAddress();
-			RuleFor(x => x.EqualTo).Equal(x => x.Required);
-			RuleFor(x => x.MaxLength).MaximumLength(2);
-			RuleFor(x => x.MinLength).MinimumLength(1);
-			RuleFor(x => x.Range).InclusiveBetween(1, 5);
-			RuleFor(x => x.RegEx).Matches("[0-9]");
-			RuleFor(x => x.Required).NotEmpty();
-			RuleFor(x => x.Required2).NotEmpty();
-
-			RuleFor(x => x.Length).Length(1, 4);
-			RuleFor(x => x.ExactLength).Length(4);
-			RuleFor(x => x.LessThan).LessThan(10);
-			RuleFor(x => x.LessThanOrEqual).LessThanOrEqualTo(10);
-			RuleFor(x => x.GreaterThan).GreaterThan(1);
-			RuleFor(x => x.GreaterThanOrEqual).GreaterThanOrEqualTo(1);
-
-			RuleFor(x => x.LengthWithMessage).Length(1, 10).WithMessage("Foo");
-			RuleFor(x => x.CustomPlaceholder).NotNull().WithMessage("{PropertyName} is null.");
-			RuleFor(x => x.LengthCustomPlaceholders).Length(1, 5).WithMessage("Must be between {MinLength} and {MaxLength}.");
-
-			RuleFor(x => x.CustomName).NotNull().WithName("Foo");
-			RuleFor(x => x.LocalizedName).NotNull().WithLocalizedName(() => TestMessages.notnull_error);
-			RuleFor(x => x.CustomNameValueType).NotNull().WithName("Foo");
-			RuleFor(x => x.MessageWithContext).NotNull().WithMessage(x => $"Foo {x.Required}");
-
-		}
-	}
+	
 }
