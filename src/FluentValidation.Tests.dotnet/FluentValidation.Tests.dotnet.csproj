@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\FluentValidation.Tests\**\*.cs" Exclude="bin\**;obj\**;**\*.xproj;packages\**" />
+    <Compile Include="..\FluentValidation.Tests\**\*.cs" Exclude="..\FluentValidation.Tests\obj\**\*.cs" />
     <EmbeddedResource Include="..\FluentValidation.Tests\TestMessages.fr.resx" Link="TestMessages.fr.resx">
     </EmbeddedResource>
     <EmbeddedResource Include="..\FluentValidation.Tests\TestMessages.resx" Link="TestMessages.resx">
@@ -29,9 +29,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0-preview-20170106-08" />
     <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="15.0.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0-beta5-build1225" />
-    <PackageReference Include="xunit" Version="2.2.0-beta5-build3474" />
-  </ItemGroup>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+		<PackageReference Include="Moq" Version="4.7.99" />
+
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
@@ -39,10 +41,6 @@
 
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputType>Library</OutputType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);PORTABLE;CoreCLR</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

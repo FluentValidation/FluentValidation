@@ -23,9 +23,7 @@ namespace FluentValidation.Tests {
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
-#if !NETCOREAPP1_1
 	using Moq;
-#endif
 	using Xunit;
 	using Resources;
 	using Results;
@@ -140,7 +138,6 @@ namespace FluentValidation.Tests {
 			var predicateValidator = (DelegatingValidator) builder.Rule.CurrentValidator;
 			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
 		}
-#if !NETCOREAPP1_1
 		[Fact]
 		public void Calling_validate_should_delegate_to_underlying_validator() {
 			var person = new Person {Surname = "Foo"};
@@ -152,8 +149,6 @@ namespace FluentValidation.Tests {
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 
 		}
-#endif
-#if !NETCOREAPP1_1
 		[Fact]
 		public void Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
 			var person = new Person { Surname = "Foo" };
@@ -166,8 +161,6 @@ namespace FluentValidation.Tests {
 
 
 		}
-#endif
-#if !NETCOREAPP1_1
 		[Fact]
 		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator()
 		{
@@ -185,7 +178,6 @@ namespace FluentValidation.Tests {
 
 		}
        
-#endif
 
 		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
