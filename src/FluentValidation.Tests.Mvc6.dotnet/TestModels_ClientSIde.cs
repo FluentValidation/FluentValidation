@@ -1,4 +1,4 @@
-﻿namespace FluentValidation.Tests {
+﻿namespace FluentValidation.Tests.AspNetCore {
 	public class ClientsideModel {
 		public string CreditCard { get; set; }
 		public string Email { get; set; }
