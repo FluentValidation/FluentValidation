@@ -190,6 +190,27 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().PropertyName.ShouldEqual("Surname");
 		}
 
+		[Fact]
+		public void New_Custom_When_property_name_omitted_infers_property_name_nested() {
+			var addressValidator = new InlineValidator<Address>();
+			addressValidator.RuleFor(x => x.Line1).Custom((x, ctx) => {
+				ctx.AddFailure("Error");
+			});
+			
+			validator.RuleFor(x => x.Address)
+				.SetValidator(addressValidator);
+
+			var result = validator.Validate(new Person { Address = new Address() });
+			result.Errors.Single().PropertyName.ShouldEqual("Address.Line1");
+		}
+
+		[Fact]
+		public void New_custom_uses_empty_property_name_for_model_level_rule() {
+			validator.RuleFor(x => x).Custom((x, ctx) => ctx.AddFailure("Foo"));
+			var result = validator.Validate(new Person());
+			result.Errors.Single().PropertyName.ShouldEqual(string.Empty);
+		}
+
 		private class NestedOrderValidator : AbstractValidator<Order> {
 			public NestedOrderValidator() {
 				Custom((x, ctx) => {

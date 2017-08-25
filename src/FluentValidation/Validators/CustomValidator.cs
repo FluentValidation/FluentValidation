@@ -70,9 +70,8 @@
 		/// <param name="propertyName">The property name</param>
 		/// <param name="errorMessage">The error mesage</param>
 		public void AddFailure(string propertyName, string errorMessage) {
-			if (propertyName == null) throw new ArgumentNullException(nameof(propertyName));
 			errorMessage.Guard("An error message must be specified when calling AddFailure.");
-			AddFailure(new ValidationFailure(propertyName, errorMessage));
+			AddFailure(new ValidationFailure(propertyName ?? string.Empty, errorMessage));
 		}
 
 		/// <summary>
@@ -81,7 +80,7 @@
 		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string errorMessage) {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.");
-			AddFailure(_context.Rule.PropertyName, errorMessage);
+			AddFailure(ParentContext.PropertyChain.BuildPropertyName(Rule.PropertyName), errorMessage);
 		}
 
 		/// <summary>

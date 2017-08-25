@@ -1028,10 +1028,27 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(new EnumValidator(typeof(TProperty)));
 		}
 
+
+		/// <summary>
+		/// Defines a custom validation rule
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="action"></param>
+		/// <returns></returns>
 		public static IRuleBuilderInitial<T, TProperty> Custom<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<TProperty, CustomContext> action) {
 			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new CustomValidator<TProperty>(action));
 		}
 
+		/// <summary>
+		/// Defines a custom validation rule
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="action"></param>
+		/// <returns></returns>
 		public static IRuleBuilderInitial<T, TProperty> CustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CustomContext, CancellationToken, Task> action) {
 			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new CustomValidator<TProperty>(action));
 		}

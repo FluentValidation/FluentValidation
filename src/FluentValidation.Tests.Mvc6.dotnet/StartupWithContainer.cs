@@ -27,7 +27,6 @@ namespace FluentValidation.Tests.AspNetCore {
             }).AddFluentValidation(cfg => {
 	            cfg.RegisterValidatorsFromAssemblyContaining<TestController>();
             });
-
 	        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
