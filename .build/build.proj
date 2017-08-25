@@ -21,15 +21,15 @@
 
 	<Target Name="Test">
     <ItemGroup>
-     <Files Include="$(BaseDir)\src\FluentValidation.Tests" />
-      <Files Include="$(BaseDir)\src\FluentValidation.Tests.dotnet" />
-      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc5" />
-      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet" />
-      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.netcoreapp2" />
-      <Files Include="$(BaseDir)\src\FluentValidation.Tests.WebApi" />
+     <Files Include="$(BaseDir)\src\FluentValidation.Tests\FluentValidation.Tests.csproj" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.dotnet\FluentValidation.Tests.dotnet.csproj" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.dotnet\FluentValidation.Tests.Mvc6.dotnet.csproj" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.netcoreapp2\FluentValidation.Tests.Mvc6.netcoreapp2.csproj" />
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj" />
     </ItemGroup>
 	
-    <exec command="dotnet test %(Files.Identity) --no-build --configuration=$(configuration)" />
+    <MSBuild Projects="%(Files.Identity)" Properties="VSTestNoBuild=True;Configuration=$(Configuration)" Targets="VSTest" />
    
 	</Target>
 
