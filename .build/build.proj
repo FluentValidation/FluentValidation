@@ -1,4 +1,4 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="default">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="Build">
 	<PropertyGroup>
 		<BaseDir>$(MSBuildProjectDirectory)\..</BaseDir>
 		<Configuration Condition="'$(Configuration)'==''" >Release</Configuration>
@@ -13,10 +13,14 @@
     <Message Text="Using key file: $(KeyFile)" Importance="High"/>
   </Target>
 
-  <Target Name="default" DependsOnTargets="Compile; Test; Deploy" />
+  <Target Name="Build" DependsOnTargets="Compile; Test; Deploy" />
+  
+  <Target Name="Restore">
+    <MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Restore" />
+  </Target>
   
   <Target Name="Compile">
-		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Restore;Rebuild" />
+		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Rebuild" />
 	</Target>
 
 	<Target Name="Test">
