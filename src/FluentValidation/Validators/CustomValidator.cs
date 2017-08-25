@@ -80,7 +80,7 @@
 		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string errorMessage) {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.");
-			AddFailure(ParentContext.PropertyChain.BuildPropertyName(Rule.PropertyName), errorMessage);
+			AddFailure(_context.PropertyName, errorMessage);
 		}
 
 		/// <summary>
