@@ -8,13 +8,36 @@
     <Copyright>Copyright (c) Jeremy Skinner 2008-2017</Copyright>
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
-    <PackageReleaseNotes>
-      FluentValidation 7.0 is a major release that contains several breaking changes, especially with Localization. If you use FluentValidation's support for localization please read the updated documentation: https://github.com/JeremySkinner/FluentValidation/wiki/f.-Localization
+    <PackageReleaseNotes>Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt 
+    
+Changes in 7.2:
+* Updated AspNetCore integration to support IValidatableObject
+* Updated AspNetCore integration to allow mixing multiple validation strategies in the same model
+* Updated AspNetCore integration to support RulesetForClientsideMessagesAttribute
+    
+Changes in 7.1.1:
+* Fix - Incorrect property name was generated when using RuleForEach combined with SetValidator
+* Fix - Nesting async validators inside DependentRules didn't wait for completion
+
+Changes in 7.1:
+* New RuleFor().Custom() method as a replacement for the old, deprecated Custom method
+* Improved messages in the ShouldHaveChildValidator test extension   
+* Test helper works with nested properties
+* Additional overload of WithState allows access to collection item when used with RuleForEach 
+* Fix - Wrong values were generated as part of the MVC5 clientside integration for MinLength and MaxLength validators
+* Fix - AssemblyScanner now excludes abstract and generic types
+* Fix - InvalidCastException when using lazy WithMessage combined with RuleForEach
+* WithState enhanced to allow access to the ValidationContext
+
+
+Changes in 7.0:
+
+7.0 is a major release that contains several breaking changes, especially with Localization. If you use FluentValidation's support for localization please read the updated documentation: https://github.com/JeremySkinner/FluentValidation/wiki/f.-Localization
 
 * Localization rewrite to not require satellite assemblies
 * New 'Custom' rule method replaces the root-level Custom method
 * Switch to Netstandard based build process
-* Assemblies are now signed / strongly named
+* Assemblies are now signed / strongly named - see https://github.com/JeremySkinner/FluentValidation/wiki/l.-Strong-naming-and-signed-packages
 * Fix - Possible NullReferenceException in the AspNetCore clientside integration for length validators
 * Fix - Don't clear the ModelValidatorProviders collection by default in the AspNetCore integration (added new ClearValidatorProviders property to control this behaviour)
 * Fix - Ensure IValidatorFactory is resolved from request scope in asp.net core integration
@@ -24,7 +47,7 @@
 * Fix - Child model validation now works in webapi integration
 * Improve splitting of PascalCased property names to support uppercase character sequences
 * ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overriden
-* Additional overload of WithState allows access to collection item when used with RuleForEach 
+
 
    Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt </PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
