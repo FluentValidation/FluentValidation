@@ -53,10 +53,6 @@ namespace FluentValidation.Validators {
 			get { return new List<Func<object, object, object>>(); }
 		}
 
-		public virtual bool SupportsStandaloneValidation {
-			get { return false; }
-		}
-
 		public Func<PropertyValidatorContext, object> CustomStateProvider {
 			get { return null; }
 			set { }
