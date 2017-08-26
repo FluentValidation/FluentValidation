@@ -96,7 +96,7 @@
 
 		public PropertyRule Rule => _context.Rule;
 		public string PropertyName => _context.PropertyName;
-		public string DisplayName => _context.PropertyDescription;
+		public string DisplayName => _context.DisplayName;
 		public MessageFormatter MessageFormatter => _context.MessageFormatter;
 		public ValidationContext ParentContext => _context.ParentContext;
 	}

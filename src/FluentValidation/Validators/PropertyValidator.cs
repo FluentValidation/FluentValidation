@@ -116,7 +116,7 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		/// <param name="context">The validator context</param>
 		protected virtual void PrepareMessageFormatterForValidationError(PropertyValidatorContext context) {
-			context.MessageFormatter.AppendPropertyName(context.PropertyDescription);
+			context.MessageFormatter.AppendPropertyName(context.DisplayName);
 			context.MessageFormatter.AppendPropertyValue(context.PropertyValue);
 		}
 
@@ -163,16 +163,8 @@ namespace FluentValidation.Validators {
 		}
 
 		public IStringSource ErrorCodeSource {
-			get { return errorCodeSource; }
-			set
-			{
-				if (value == null)
-				{
-					throw new ArgumentNullException("value");
-				}
-
-				errorCodeSource = value;
-			}
+			get => errorCodeSource;
+			set => errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));
 		}
 	}
 }

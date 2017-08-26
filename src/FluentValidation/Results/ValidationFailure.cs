@@ -86,7 +86,6 @@ namespace FluentValidation.Results {
 
 		/// <summary>
 		/// Gets or sets the formatted message placeholder values.
-		/// Similar placeholders are defined in fluent validation library (check documentation)
 		/// </summary>
 		public Dictionary<string, object> FormattedMessagePlaceholderValues { get; set; }
 

@@ -31,25 +31,19 @@ namespace FluentValidation.Validators {
 		public ValidationContext ParentContext { get; private set; }
 		public PropertyRule Rule { get; private set; }
 		public string PropertyName { get; private set; }
-		
-		public string PropertyDescription {
-			get { return Rule.GetDisplayName(); } 
-		}
 
-		public object Instance {
-			get { return ParentContext.InstanceToValidate; }
-		}
+		[Obsolete("Use DisplaName instead")]
+		public string PropertyDescription => DisplayName;
 
-		public MessageFormatter MessageFormatter
-		{
-			get { return messageFormatter ?? (messageFormatter = new MessageFormatter()); }
-		}
+		public string DisplayName => Rule.GetDisplayName();
+
+		public object Instance => ParentContext.InstanceToValidate;
+
+		public MessageFormatter MessageFormatter => messageFormatter ?? (messageFormatter = new MessageFormatter());
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
-		public object PropertyValue {
-			get { return propertyValueContainer.Value; }
-		}
+		public object PropertyValue => propertyValueContainer.Value;
 
 		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName) {
 			ParentContext = parentContext;
