@@ -24,9 +24,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.WebApi", "src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj", "{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.dotnet", "src\FluentValidation.Tests.dotnet\FluentValidation.Tests.dotnet.csproj", "{FCCE03DA-9FD1-4483-976C-EA6821A1E514}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.netcoreapp1", "src\FluentValidation.Tests.netcoreapp1\FluentValidation.Tests.netcoreapp1.csproj", "{FCCE03DA-9FD1-4483-976C-EA6821A1E514}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.dotnet", "src\FluentValidation.Tests.Mvc6.dotnet\FluentValidation.Tests.Mvc6.dotnet.csproj", "{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.netcoreapp1", "src\FluentValidation.Tests.Mvc6.netcoreapp1\FluentValidation.Tests.Mvc6.netcoreapp1.csproj", "{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.AspNetCore", "src\FluentValidation.AspNetCore\FluentValidation.AspNetCore.csproj", "{D8A44C11-51B8-4AA1-9391-C4F89078181C}"
 EndProject
