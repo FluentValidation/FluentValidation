@@ -149,7 +149,7 @@ namespace FluentValidation.Tests {
 		public void When_the_maxlength_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).MaximumLength(4));
 			var result = validator.Validate(new Person { Surname = "abcde" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be less than 4 characters. You entered 5 characters.");
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be less than 5 characters. You entered 5 characters.");
 		}
 	}
 }
