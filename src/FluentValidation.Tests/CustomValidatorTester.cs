@@ -211,6 +211,20 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().PropertyName.ShouldEqual(string.Empty);
 		}
 
+		[Fact]
+		public void Runs_async_rule_synchronously_when_validator_invoked_synchronously() {
+			validator.RuleFor(x => x.Forename).CustomAsync(async (x, context, cancel) => context.AddFailure("foo"));
+			var result = validator.Validate(new Person());
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Fact]
+		public async void Runs_sync_rule_asynchronously_when_validator_invoked_asynchronously() {
+			validator.RuleFor(x => x.Forename).Custom((x, context) => context.AddFailure("foo"));
+			var result = await validator.ValidateAsync(new Person());
+			result.Errors.Count.ShouldEqual(1);
+		}
+
 		private class NestedOrderValidator : AbstractValidator<Order> {
 			public NestedOrderValidator() {
 				Custom((x, ctx) => {

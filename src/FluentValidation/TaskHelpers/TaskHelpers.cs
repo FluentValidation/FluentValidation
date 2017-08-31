@@ -184,6 +184,20 @@ namespace System.Threading.Tasks
 			}
 		}
 
+		internal static Task RunSynchronously(Action action, CancellationToken cancellationToken = default(CancellationToken)) {
+			if (cancellationToken.IsCancellationRequested) {
+				return Canceled<object>();
+			}
+
+			try {
+				action();
+				return FromResult<object>(null);
+			} catch (Exception e) {
+				return FromError<object>(e);
+			}
+		}
+
+
 		// <summary>
 		// Overload of RunSynchronously that avoids a call to Unwrap(). 
 		// This overload is useful when func() starts doing some synchronous work and then hits IO and 
