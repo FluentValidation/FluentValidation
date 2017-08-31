@@ -129,6 +129,15 @@ namespace FluentValidation.Validators {
 			: base(min, obj => -1, new LanguageStringSource(nameof(MinimumLengthValidator))) {
 
 		}
+
+		protected override bool IsValid(PropertyValidatorContext context) {
+			var result = base.IsValid(context);
+			if (!result) {
+				var currentMin = (int)context.MessageFormatter.PlaceholderValues["MinLength"];
+				context.MessageFormatter.PlaceholderValues["MinLength"] = currentMin - 1;
+			}
+			return result;
+		}
 	}
 
 	public interface ILengthValidator : IPropertyValidator {
