@@ -306,9 +306,7 @@ namespace FluentValidation.Resources {
 		}
 
 		public string GetString(object context) {
-			var pvc = context as PropertyValidatorContext;
-
-			if (pvc != null) {
+			if (context is PropertyValidatorContext pvc) {
 				// For backwards compatibility, only pass in the PropertyValidatorContext if the string source implements IContextAwareStringSource
 				// otherwise fall back to old behaviour of passing the instance. 
 				object contextForInner = _inner is IContextAwareStringSource ? pvc : pvc.Instance;

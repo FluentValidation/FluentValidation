@@ -48,12 +48,12 @@ namespace FluentValidation.Resources {
 		/// <summary>
 		/// Resource type
 		/// </summary>
-		public string ResourceName { get { return null; } }
+		public string ResourceName => null;
 
 		/// <summary>
 		/// Resource name
 		/// </summary>
-		public Type ResourceType { get { return null; } }
+		public Type ResourceType => null;
 	}
 
 	// Internal for now as I'm not sure I like the duplication. Might be better to have the breaking change and merge this with LazyStringSource.
@@ -82,12 +82,12 @@ namespace FluentValidation.Resources {
 		/// <summary>
 		/// Resource type
 		/// </summary>
-		public string ResourceName { get { return null; } }
+		public string ResourceName => null;
 
 		/// <summary>
 		/// Resource name
 		/// </summary>
-		public Type ResourceType { get { return null; } }
+		public Type ResourceType => null;
 	}
 
 	public class FluentValidationMessageFormatException : Exception {

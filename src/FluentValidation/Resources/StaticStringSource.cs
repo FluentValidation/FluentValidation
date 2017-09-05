@@ -44,15 +44,11 @@ namespace FluentValidation.Resources {
 		/// <summary>
 		/// The name of the resource if localized.
 		/// </summary>
-		public string ResourceName {
-			get { return null; }
-		}
+		public string ResourceName => null;
 
 		/// <summary>
 		/// The type of the resource provider if localized.
 		/// </summary>
-		public Type ResourceType {
-			get { return null; }
-		}
+		public Type ResourceType => null;
 	}
 }
