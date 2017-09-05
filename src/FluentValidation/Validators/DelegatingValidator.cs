@@ -79,10 +79,6 @@ namespace FluentValidation.Validators {
 
 			return Enumerable.Empty<ValidationFailure>();
 		}
-		[Obsolete]
-		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
-			get { return InnerValidator.CustomMessageFormatArguments; }
-		}
 
 		public bool SupportsStandaloneValidation {
 			get { return false; }

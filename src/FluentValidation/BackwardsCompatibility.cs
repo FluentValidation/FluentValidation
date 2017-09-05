@@ -92,13 +92,12 @@ namespace FluentValidation
 		[Obsolete("Use WithMessage(x => string.Format(ResourceType.ResourceName, args) instead.")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, params Func<T, object>[] formatArgs) {
 			// We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
-			return rule.WithLocalizedMessage(resourceSelector, (IResourceAccessorBuilder)null)
-				.Configure(cfg => {
-					formatArgs
-						.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
-						.ForEach(cfg.CurrentValidator.CustomMessageFormatArguments.Add);
-				});
+			return rule.Configure(config => {
+				var funcs = formatArgs
+					.Select(func => new Func<object, object, object>((instance, value) => func((T) instance))).ToList();
 
+				config.CurrentValidator.ErrorMessageSource = new BackwardsCompatFormatArgStringSource(LocalizedStringSource.CreateFromExpression(resourceSelector, null), funcs); ;
+			});
 		}
 
 	    /// <summary>
@@ -143,11 +142,9 @@ namespace FluentValidation
 		    errorMessage.Guard("A message must be specified when calling WithMessage.");
 
 		    return rule.Configure(config => {
-			    config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
-
-			    funcs.Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
-				    .ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
-		    });
+			    var placeholders = funcs.Select(func => new Func<object, object, object>((instance, value) => func((T) instance))).ToList();
+			    config.CurrentValidator.ErrorMessageSource = new BackwardsCompatFormatArgStringSource(new StaticStringSource(errorMessage), placeholders);
+			});
 	    }
 
 		/// <summary>
@@ -162,12 +159,13 @@ namespace FluentValidation
 		    errorMessage.Guard("A message must be specified when calling WithMessage.");
 
 		    return rule.Configure(config => {
-			    config.CurrentValidator.ErrorMessageSource = new StaticStringSource(errorMessage);
 
-			    funcs
-				    .Select(func => new Func<object, object, object>((instance, value) => func((T)instance, (TProperty)value)))
-				    .ForEach(config.CurrentValidator.CustomMessageFormatArguments.Add);
-		    });
+			    var placeholders = funcs
+				    .Select(func => new Func<object, object, object>((instance, value) => func((T) instance, (TProperty) value))).ToList();
+
+				config.CurrentValidator.ErrorMessageSource = new BackwardsCompatFormatArgStringSource(new StaticStringSource(errorMessage), placeholders);
+
+			});
 	    }
 
 	    /// <summary>
@@ -194,13 +192,13 @@ namespace FluentValidation
 	    /// <returns></returns>
 	    [Obsolete("Use WithMessage(x => string.Format(ResourceType.ResourceName, x.Arg1, x.Arg2)")]
 	    public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName, params Func<T, object>[] formatArgs) {
-		    // We use the StaticResourceAccessorBuilder here because we don't want calls to WithLocalizedMessage to be overriden by the ResourceProviderType.
-		    return rule.WithLocalizedMessage(resourceType, resourceName)
-			    .Configure(cfg => {
-				    formatArgs
-					    .Select(func => new Func<object, object, object>((instance, value) => func((T)instance)))
-					    .ForEach(cfg.CurrentValidator.CustomMessageFormatArguments.Add);
-			    });
+		    resourceType.Guard("A resource type must be provided.");
+		    resourceName.Guard("A resource name must be provided.");
+
+		    return rule.Configure(config => {
+			    var funcs = formatArgs.Select(func => new Func<object, object, object>((instance, value) => func((T) instance))).ToList();
+				config.CurrentValidator.ErrorMessageSource = new BackwardsCompatFormatArgStringSource(new LocalizedStringSource(resourceType, resourceName), funcs);
+		    });
 	    }
 
 
@@ -284,6 +282,9 @@ namespace FluentValidation
 }
 
 namespace FluentValidation.Resources {
+	using System.Linq;
+	using Validators;
+
 	/// <summary>
 	/// Builds a delegate for retrieving a localised resource from a resource type and property name.
 	/// </summary>
@@ -293,5 +294,44 @@ namespace FluentValidation.Resources {
 		/// Gets a function that can be used to retrieve a message from a resource type and resource name.
 		/// </summary>
 		ResourceAccessor GetResourceAccessor(Type resourceType, string resourceName);
+	}
+
+	internal class BackwardsCompatFormatArgStringSource : IStringSource, IContextAwareStringSource {
+		private IStringSource _inner;
+		private List<Func<object, object, object>> _customFormatArgs;
+
+		public BackwardsCompatFormatArgStringSource(IStringSource inner, List<Func<object, object, object>> funcs) {
+			_inner = inner;
+			_customFormatArgs = funcs;
+		}
+
+		public string GetString(object context) {
+			var pvc = context as PropertyValidatorContext;
+
+			if (pvc != null) {
+				// For backwards compatibility, only pass in the PropertyValidatorContext if the string source implements IContextAwareStringSource
+				// otherwise fall back to old behaviour of passing the instance. 
+				object contextForInner = _inner is IContextAwareStringSource ? pvc : pvc.Instance;
+
+				//Apply the message format args to the MessageFormatter. Workflow looks like this:
+				// -> PropertyValidator calls GetString
+				// -> GetString adds to MessageFormmater
+				// -> PropertyValidator calls MessageFormatter.Build passing in the string already appended. 
+
+				if (_customFormatArgs != null &&
+				    _customFormatArgs.Count > 0) {
+					var additionalArguments = _customFormatArgs.Select(func => func(pvc.Instance, pvc.PropertyValue)).ToArray();
+					pvc.MessageFormatter.AppendAdditionalArguments(additionalArguments);
+				}
+
+				return _inner.GetString(contextForInner);
+			}
+
+			return _inner.GetString(context);
+		}
+
+		public string ResourceName => _inner.ResourceName;
+
+		public Type ResourceType => _inner.ResourceType;
 	}
 }

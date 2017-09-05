@@ -29,7 +29,6 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public abstract class PropertyValidator : IPropertyValidator {
-		private List<Func<object, object, object>> customFormatArgs;
 		private IStringSource errorSource;
 		private IStringSource errorCodeSource;
 
@@ -40,10 +39,6 @@ namespace FluentValidation.Validators {
 		public Func<PropertyValidatorContext, object> CustomStateProvider { get; set; }
 
 		public Severity Severity { get; set; }
-
-		public ICollection<Func<object, object, object>> CustomMessageFormatArguments {
-			get { return customFormatArgs ?? (customFormatArgs = new List<Func<object, object, object>>()); }
-		}
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
 			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
@@ -146,14 +141,6 @@ namespace FluentValidation.Validators {
 		}
 
 		string BuildErrorMessage(PropertyValidatorContext context) {
-			// Performance: If we got no args we can skip adding nothing to the MessageFormatter.
-			if (this.customFormatArgs != null &&
-				this.customFormatArgs.Count > 0) {
-				var additionalArguments = customFormatArgs.Select(func => func(context.Instance, context.PropertyValue)).ToArray();
-				context.MessageFormatter.AppendAdditionalArguments(additionalArguments);
-			}
-
-
 			// For backwards compatibility, only pass in the PropertyValidatorContext if the string source implements IContextAwareStringSource
 			// otherwise fall back to old behaviour of passing the instance. 
 			object stringSourceContext = errorSource is IContextAwareStringSource ? context : context.Instance;
