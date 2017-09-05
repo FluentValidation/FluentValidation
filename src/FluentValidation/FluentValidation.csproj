@@ -15,6 +15,7 @@ Changes in 7.2:
 * Updated AspNetCore integration to allow mixing multiple validation strategies in the same model
 * Updated AspNetCore integration to support RulesetForClientsideMessagesAttribute
 * Fix - Property names were not generated properly for nested types when using AddFailure inside a Custom validator
+* Fix - NullReferenceException when using CustomAsync but the validator is invoked synchronously
 
 Changes in 7.1.1:
 * Fix - Incorrect property name was generated when using RuleForEach combined with SetValidator
