@@ -41,7 +41,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Property associated with this rule.
 		/// </summary>
-		public MemberInfo Member { get; private set; }
+		public MemberInfo Member { get; }
 
 		/// <summary>
 		/// Function that can be invoked to retrieve the value of the property.
