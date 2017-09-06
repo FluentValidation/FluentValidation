@@ -256,7 +256,8 @@ namespace FluentValidation {
 		/// <param name="propertyName">The property name to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string propertyName) {
-			propertyName.Guard("A property name must be specified when calling OverridePropertyName.");
+			// Allow string.Empty as this could be a model-level rule. 
+			if (propertyName == null) throw new ArgumentNullException(nameof(propertyName), "A property name must be specified when calling OverridePropertyName."); 
 			return rule.Configure(config => config.PropertyName = propertyName);
 		}
 
