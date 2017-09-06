@@ -44,8 +44,8 @@ namespace FluentValidation {
 		/// Sets the cascade mode for all rules within this validator.
 		/// </summary>
 		public CascadeMode CascadeMode {
-			get { return cascadeMode(); }
-			set { cascadeMode = () => value; }
+			get => cascadeMode();
+			set => cascadeMode = () => value;
 		}
 
 		ValidationResult IValidator.Validate(object instance) {
@@ -66,8 +66,7 @@ namespace FluentValidation {
 			return ValidateAsync((T) instance, cancellation);
 		}
 
-		ValidationResult IValidator.Validate(ValidationContext context)
-		{
+		ValidationResult IValidator.Validate(ValidationContext context) {
 			context.Guard("Cannot pass null to Validate");
 
 			var newContext = new ValidationContext<T>((T)context.InstanceToValidate, context.PropertyChain, context.Selector) {
@@ -280,36 +279,33 @@ namespace FluentValidation {
 			When(x => !predicate(x), action);
 		}
 
-        /// <summary>
-        /// Defines an asynchronous condition that applies to several rules
-        /// </summary>
-        /// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
-        /// <param name="action">Action that encapsulates the rules.</param>
-        /// <returns></returns>
-        public void WhenAsync(Func<T, Task<bool>> predicate, Action action)
-        {
-            var propertyRules = new List<IValidationRule>();
+		/// <summary>
+		/// Defines an asynchronous condition that applies to several rules
+		/// </summary>
+		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
+		/// <param name="action">Action that encapsulates the rules.</param>
+		/// <returns></returns>
+		public void WhenAsync(Func<T, Task<bool>> predicate, Action action) {
+			var propertyRules = new List<IValidationRule>();
 
-            Action<IValidationRule> onRuleAdded = propertyRules.Add;
+			Action<IValidationRule> onRuleAdded = propertyRules.Add;
 
-            using (nestedValidators.OnItemAdded(onRuleAdded))
-            {
-                action();
-            }
+			using (nestedValidators.OnItemAdded(onRuleAdded)) {
+				action();
+			}
 
-            // Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
-            propertyRules.ForEach(x => x.ApplyAsyncCondition(predicate.CoerceToNonGeneric()));
-        }
+			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
+			propertyRules.ForEach(x => x.ApplyAsyncCondition(predicate.CoerceToNonGeneric()));
+		}
 
-        /// <summary>
-        /// Defines an inverse asynchronous condition that applies to several rules
-        /// </summary>
-        /// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
-        /// <param name="action">Action that encapsulates the rules</param>
-        public void UnlessAsync(Func<T, Task<bool>> predicate, Action action)
-        {
-            WhenAsync(x => predicate(x).Then(y => !y), action);
-        }
+		/// <summary>
+		/// Defines an inverse asynchronous condition that applies to several rules
+		/// </summary>
+		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
+		/// <param name="action">Action that encapsulates the rules</param>
+		public void UnlessAsync(Func<T, Task<bool>> predicate, Action action) {
+			WhenAsync(x => predicate(x).Then(y => !y), action);
+		}
 
 		/// <summary>
 		/// Includes the rules from the specified validator
