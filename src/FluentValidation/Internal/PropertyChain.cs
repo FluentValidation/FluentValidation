@@ -26,7 +26,7 @@ namespace FluentValidation.Internal {
 	/// Represents a chain of properties
 	/// </summary>
 	public class PropertyChain {
-		readonly List<string> memberNames = new List<string>(2);
+		readonly List<string> _memberNames = new List<string>(2);
 
 		/// <summary>
 		/// Creates a new PropertyChain.
@@ -39,8 +39,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public PropertyChain(PropertyChain parent) {
 			if(parent != null
-				&& parent.memberNames.Count > 0) {
-				memberNames.AddRange(parent.memberNames);				
+				&& parent._memberNames.Count > 0) {
+				_memberNames.AddRange(parent._memberNames);				
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="memberNames"></param>
 		public PropertyChain(IEnumerable<string> memberNames) {
-			this.memberNames.AddRange(memberNames);
+			this._memberNames.AddRange(memberNames);
 		}
 
 		/// <summary>
@@ -84,7 +84,7 @@ namespace FluentValidation.Internal {
 		/// <param name="member">Member to add</param>
 		public void Add(MemberInfo member) {
 			if(member != null) 
-				memberNames.Add(member.Name);
+				_memberNames.Add(member.Name);
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName">Name of the property to add</param>
 		public void Add(string propertyName) {
 			if(!string.IsNullOrEmpty(propertyName))
-				memberNames.Add(propertyName);
+				_memberNames.Add(propertyName);
 		}
 
 		/// <summary>
@@ -104,14 +104,14 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="indexer"></param>
 		public void AddIndexer(object indexer) {
-			if(memberNames.Count == 0) {
+			if(_memberNames.Count == 0) {
 				throw new InvalidOperationException("Could not apply an Indexer because the property chain is empty.");
 			}
 
-			string last = memberNames[memberNames.Count - 1];
+			string last = _memberNames[_memberNames.Count - 1];
 			last += "[" + indexer + "]";
 
-			memberNames[memberNames.Count - 1] = last;
+			_memberNames[_memberNames.Count - 1] = last;
 		}
 
 		/// <summary>
@@ -119,13 +119,13 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public override string ToString() {
 			// Performance: Calling string.Join causes much overhead when it's not needed.
-			switch (memberNames.Count) {
+			switch (_memberNames.Count) {
 				case 0:
 					return string.Empty;
 				case 1:
-					return memberNames[0];
+					return _memberNames[0];
 				default:
-					return string.Join(ValidatorOptions.PropertyChainSeparator, memberNames);
+					return string.Join(ValidatorOptions.PropertyChainSeparator, _memberNames);
 			}			
 		}
 
@@ -144,7 +144,7 @@ namespace FluentValidation.Internal {
 		/// Builds a property path.
 		/// </summary>
 		public string BuildPropertyName(string propertyName) {
-			if (memberNames.Count == 0) {
+			if (_memberNames.Count == 0) {
 				return propertyName;
 			}
 
@@ -156,6 +156,6 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Number of member names in the chain
 		/// </summary>
-		public int Count => memberNames.Count;
+		public int Count => _memberNames.Count;
 	}
 }
