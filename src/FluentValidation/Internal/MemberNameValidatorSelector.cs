@@ -36,6 +36,11 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
+		/// Member names that are validated.
+		/// </summary>
+		public IEnumerable<string> MemberNames => this.memberNames;
+
+		/// <summary>
 		/// Determines whether or not a rule should execute.
 		/// </summary>
 		/// <param name="rule">The rule</param>
