@@ -50,11 +50,9 @@ namespace FluentValidation.AspNetCore {
 
 		};
 
-		IValidatorFactory _validatorFactory;
 		IHttpContextAccessor _httpContextAccessor;
 
-		public FluentValidationClientModelValidatorProvider(IValidatorFactory validatorFactory, IHttpContextAccessor httpContextAccessor) {
-			_validatorFactory = validatorFactory;
+		public FluentValidationClientModelValidatorProvider(IHttpContextAccessor httpContextAccessor) {
 			_httpContextAccessor = httpContextAccessor;
 		}
 
@@ -68,8 +66,10 @@ namespace FluentValidation.AspNetCore {
 		public void CreateValidators(ClientValidatorProviderContext context) {
 			var modelType = context.ModelMetadata.ContainerType;
 
+			var validatorFactory = (IValidatorFactory)_httpContextAccessor.HttpContext.RequestServices.GetService(typeof(IValidatorFactory));
+
 			if (modelType != null ) {
-				var validator = _validatorFactory.GetValidator(modelType);
+				var validator = validatorFactory.GetValidator(modelType);
 
 				if (validator != null) {
 

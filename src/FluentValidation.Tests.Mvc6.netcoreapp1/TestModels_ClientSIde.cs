@@ -44,8 +44,13 @@
 		}
 	}
 
+	public class ClientsideScopedDependency {  }
+
+
 	public class ClientsideModelValidator : AbstractValidator<ClientsideModel> {
-		public ClientsideModelValidator() {
+		// Need to inject a scoped dependency here to validate that we allow scoped dependencies when generating clientside rules, as MvcViewOptionSetup is always resolved from root container.
+		// So we may end up with a cannot resolve from root provider error if things aren't configured properly.
+		public ClientsideModelValidator(ClientsideScopedDependency dep) {
 			RuleFor(x => x.CreditCard).CreditCard();
 			RuleFor(x => x.Email).EmailAddress();
 			RuleFor(x => x.EqualTo).Equal(x => x.Required);

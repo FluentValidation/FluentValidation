@@ -57,20 +57,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="..\FluentValidation.Tests.Mvc6.dotnet\**\*.cs" Exclude="..\FluentValidation.Tests.Mvc6.dotnet\obj\**\*.cs" />
-		<None Include="..\FluentValidation.Tests.Mvc6.dotnet\**\*.cshtml" />
-		<Compile Remove="..\FluentValidation.Tests.Mvc6.dotnet\TestMessages.Designer.cs" />
+		<Compile Include="..\FluentValidation.Tests.Mvc6.netcoreapp1\**\*.cs" Exclude="..\FluentValidation.Tests.Mvc6.netcoreapp1\obj\**\*.cs" />
+		<None Include="..\FluentValidation.Tests.Mvc6.netcoreapp1\**\*.cshtml" />
+		<Compile Remove="..\FluentValidation.Tests.Mvc6.netcoreapp1\TestMessages.Designer.cs" />
 		<Compile Include="..\FluentValidation.Tests\CultureScope.cs" Link="CultureScope.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Update="..\FluentValidation.Tests.Mvc6.dotnet\Views\Clientside\Inputs.cshtml">
+		<None Update="..\FluentValidation.Tests.Mvc6.netcoreapp1\Views\Clientside\Inputs.cshtml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="..\FluentValidation.Tests.Mvc6.dotnet\Views\Clientside\RuleSet.cshtml">
+		<None Update="..\FluentValidation.Tests.Mvc6.netcoreapp1\Views\Clientside\RuleSet.cshtml">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
-		<None Update="..\FluentValidation.Tests.Mvc6.dotnet\Views\_ViewImports.cshtml">
+		<None Update="..\FluentValidation.Tests.Mvc6.netcoreapp1\Views\_ViewImports.cshtml">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 		<None Update="xunit.runner.json">

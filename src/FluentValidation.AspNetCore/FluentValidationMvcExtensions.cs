@@ -89,7 +89,7 @@ namespace FluentValidation.AspNetCore {
 			{
 				services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<MvcViewOptions>, FluentValidationViewOptionsSetup>(s =>
 					{
-						return new FluentValidationViewOptionsSetup(s.GetService<IValidatorFactory>(), config.ClientsideConfig, s.GetService<IHttpContextAccessor>());
+						return new FluentValidationViewOptionsSetup(config.ClientsideConfig, s.GetService<IHttpContextAccessor>());
 					}));
 			}
 
@@ -139,20 +139,18 @@ namespace FluentValidation.AspNetCore {
 
 	internal class FluentValidationViewOptionsSetup : IConfigureOptions<MvcViewOptions>
 	{
-		private readonly IValidatorFactory _factory;
 		private readonly Action<FluentValidationClientModelValidatorProvider> _action;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public FluentValidationViewOptionsSetup(IValidatorFactory factory, Action<FluentValidationClientModelValidatorProvider> action, IHttpContextAccessor httpContextAccessor)
+		public FluentValidationViewOptionsSetup(Action<FluentValidationClientModelValidatorProvider> action, IHttpContextAccessor httpContextAccessor)
 		{
-			_factory = factory;
 			_action = action;
 			_httpContextAccessor = httpContextAccessor;
 		}
 
 		public void Configure(MvcViewOptions options)
 		{
-			var provider = new FluentValidationClientModelValidatorProvider(_factory, _httpContextAccessor);
+			var provider = new FluentValidationClientModelValidatorProvider(_httpContextAccessor);
 			_action(provider);
 			options.ClientModelValidatorProviders.Add(provider);
 		}
