@@ -1,9 +1,11 @@
-7.2 - 
+7.2 - 5 October 2017 
 Updated AspNetCore integration to support IValidatableObject
 Updated AspNetCore integration to allow mixing multiple validation strategies in the same model
 Updated AspNetCore integration to work with RulesetForClientsideMessagesAttribute, like MVC5
 Resolved issue with auto generating property names for nested types in the CustomValidator when using AddFailure
 Resolved issue where Custom sync/async invocation caused a NullReferenceException
+Resolved an issue with AspNetCore clientside integration being resolved from the root-level service provider
+Allow string.Empty in OverridePropertyName
 
 7.1.1 - 25 July 2017 
 Resolved issue where incorrect property name was generated when using RuleForEach combined with SetValidator

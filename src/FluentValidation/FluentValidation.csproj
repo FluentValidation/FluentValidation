@@ -8,14 +8,15 @@
     <Copyright>Copyright (c) Jeremy Skinner 2008-2017</Copyright>
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
-    <PackageReleaseNotes>Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt 
-    
+    <PackageReleaseNotes>
 Changes in 7.2:
 * Updated AspNetCore integration to support IValidatableObject
 * Updated AspNetCore integration to allow mixing multiple validation strategies in the same model
 * Updated AspNetCore integration to support RulesetForClientsideMessagesAttribute
 * Fix - Property names were not generated properly for nested types when using AddFailure inside a Custom validator
 * Fix - NullReferenceException when using CustomAsync but the validator is invoked synchronously
+* Fix - Clientside integration in AspNetCore being resolved from the root-level service provider
+* Fix - Allow empty string to be passed to OverridePropertyName 
 
 Changes in 7.1.1:
 * Fix - Incorrect property name was generated when using RuleForEach combined with SetValidator
@@ -30,7 +31,6 @@ Changes in 7.1:
 * Fix - AssemblyScanner now excludes abstract and generic types
 * Fix - InvalidCastException when using lazy WithMessage combined with RuleForEach
 * WithState enhanced to allow access to the ValidationContext
-
 
 Changes in 7.0:
 
@@ -49,7 +49,6 @@ Changes in 7.0:
 * Fix - Child model validation now works in webapi integration
 * Improve splitting of PascalCased property names to support uppercase character sequences
 * ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overriden
-
 
    Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt </PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
