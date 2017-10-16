@@ -36,7 +36,11 @@ namespace FluentValidation.AspNetCore {
 			// If the httpContext is null (for example, if IHttpContextProvider hasn't been registered) then just assume default ruleset.
 			// This is OK because if we're actually using the attribute, the OnActionExecuting will have caught the fact that the provider is not registered. 
 
-			return context?.Items[key] as string[] ?? new string[] { null };
+			if (context?.Items != null && context.Items.ContainsKey(key)) {
+				return context?.Items[key] as string[] ?? new string[] { null };
+
+			}
+			return new string[] {null};
 		}
 	}
 }
