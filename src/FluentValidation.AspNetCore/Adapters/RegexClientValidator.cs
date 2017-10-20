@@ -30,7 +30,7 @@ namespace FluentValidation.AspNetCore {
 
 		public override void AddValidation(ClientModelValidationContext context) {
 			var regexVal = (RegularExpressionValidator)Validator;
-			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
+			var formatter = ValidatorOptions.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
 			string messageTemplate;
 			try {
 				messageTemplate = regexVal.ErrorMessageSource.GetString(null);

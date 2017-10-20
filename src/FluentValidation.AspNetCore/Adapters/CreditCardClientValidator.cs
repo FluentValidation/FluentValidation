@@ -28,7 +28,7 @@ namespace FluentValidation.AspNetCore
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {
-			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
+			var formatter = ValidatorOptions.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
 			string message;
 			try {
 				message = Validator.ErrorMessageSource.GetString(null);

@@ -38,7 +38,7 @@ namespace FluentValidation.AspNetCore {
         }
 
 		protected string GetErrorMessage(ClientModelValidationContext context) {
-			var formatter = new MessageFormatter()
+			var formatter = ValidatorOptions.MessageFormatterFactory()
 			  .AppendPropertyName(Rule.GetDisplayName())
 			  .AppendArgument("ComparisonValue", AbstractComparisonValidator.ValueToCompare);
 

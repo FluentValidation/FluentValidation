@@ -17,7 +17,7 @@
 		public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
 			if (!ShouldGenerateClientSideRules()) yield break;
 
-			var formatter = new MessageFormatter()
+			var formatter = ValidatorOptions.MessageFormatterFactory()
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);

@@ -24,7 +24,7 @@
         public override IEnumerable<ModelClientValidationRule> GetClientValidationRules() {
             if (!ShouldGenerateClientSideRules()) yield break;
 
-            var formatter = new MessageFormatter()
+            var formatter = ValidatorOptions.MessageFormatterFactory()
                 .AppendPropertyName(Rule.GetDisplayName())
                 .AppendArgument("ComparisonValue", AbstractComparisonValidator.ValueToCompare);
             string message;

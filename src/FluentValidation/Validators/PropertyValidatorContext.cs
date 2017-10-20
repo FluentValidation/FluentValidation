@@ -39,7 +39,7 @@ namespace FluentValidation.Validators {
 
 		public object Instance => ParentContext.InstanceToValidate;
 
-		public MessageFormatter MessageFormatter => messageFormatter ?? (messageFormatter = new MessageFormatter());
+		public MessageFormatter MessageFormatter => messageFormatter ?? (messageFormatter = ValidatorOptions.MessageFormatterFactory());
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained

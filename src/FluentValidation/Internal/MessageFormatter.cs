@@ -19,6 +19,10 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public const string PropertyValue = "PropertyValue";
 
+		public MessageFormatter() {
+			
+		}
+
 		/// <summary>
 		/// Adds a value for a validation message placeholder.
 		/// </summary>
@@ -65,7 +69,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="messageTemplate">Message template</param>
 		/// <returns>The message with placeholders replaced with their appropriate values</returns>
-		public string BuildMessage(string messageTemplate) {
+		public virtual string BuildMessage(string messageTemplate) {
 
 			string result = messageTemplate;
 
@@ -89,12 +93,12 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
 
-		static string ReplacePlaceholderWithValue(string template, string key, object value) {
+		protected virtual string ReplacePlaceholderWithValue(string template, string key, object value) {
 			string placeholder =  GetPlaceholder(key);
 			return template.Replace(placeholder, value?.ToString());
 		}
 
-		static string GetPlaceholder(string key) {
+		protected string GetPlaceholder(string key) {
 			// Performance: String concat causes much overhead when not needed. Concatting constants results in constants being compiled.
 			switch (key) {
 				case PropertyName:

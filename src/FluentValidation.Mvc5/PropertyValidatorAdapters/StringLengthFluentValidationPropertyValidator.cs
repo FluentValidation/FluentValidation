@@ -25,7 +25,7 @@
 				yield break;
 			}
 
-			var formatter = new MessageFormatter()
+			var formatter = ValidatorOptions.MessageFormatterFactory()
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("MinLength", LengthValidator.Min)
 				.AppendArgument("MaxLength", LengthValidator.Max);

@@ -33,7 +33,7 @@ namespace FluentValidation.AspNetCore {
 
 	    private string GetErrorMessage(LengthValidator lengthVal, ClientModelValidationContext context) {
 
-		    var formatter = new MessageFormatter()
+		    var formatter = ValidatorOptions.MessageFormatterFactory()
 			    .AppendPropertyName(Rule.GetDisplayName())
 			    .AppendArgument("MinLength", lengthVal.Min)
 			    .AppendArgument("MaxLength", lengthVal.Max);

@@ -20,7 +20,7 @@
 
 			if (string.IsNullOrEmpty(RegexValidator.Expression)) yield break;
 
-			var formatter = new MessageFormatter().AppendPropertyName(Rule.GetDisplayName());
+			var formatter = ValidatorOptions.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
 			string message;
 			try {
 				message = RegexValidator.ErrorMessageSource.GetString(null);

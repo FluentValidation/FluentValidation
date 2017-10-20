@@ -63,6 +63,16 @@ namespace FluentValidation {
 		private static Func<Type, MemberInfo, LambdaExpression, string> _displayNameResolver = DefaultDisplayNameResolver;
 		private static ILanguageManager _languageManager = new LanguageManager();
 
+		private static Func<MessageFormatter> _messageFormatterFactory = () => new MessageFormatter();
+
+		/// <summary>
+		/// Specifies a factory for creating MessageFormatter instances.
+		/// </summary>
+		public static Func<MessageFormatter> MessageFormatterFactory {
+			get => _messageFormatterFactory;
+			set => _messageFormatterFactory = value ?? (() => new MessageFormatter());
+		}
+
 		/// <summary>
 		/// Pluggable logic for resolving property names
 		/// </summary>

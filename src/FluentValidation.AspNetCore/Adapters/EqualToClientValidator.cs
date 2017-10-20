@@ -45,7 +45,7 @@ namespace FluentValidation.AspNetCore {
 					ValidatorOptions.DisplayNameResolver(Rule.TypeToValidate, propertyToCompare, null)
 					?? propertyToCompare.Name.SplitPascalCase();
 
-				var formatter = new MessageFormatter()
+				var formatter = ValidatorOptions.MessageFormatterFactory()
 					.AppendPropertyName(Rule.GetDisplayName())
 					.AppendArgument("ComparisonValue", comparisonDisplayName);
 
