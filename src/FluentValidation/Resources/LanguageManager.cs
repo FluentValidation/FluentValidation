@@ -41,6 +41,7 @@ namespace FluentValidation.Resources {
 				new FinnishLanguage(),
 				new FrenchLanguage(),
 				new GermanLanguage(),
+				new GeorgianLanguage(),
 				new ItalianLanguage(),
 				new KoreanLanguage(),
 				new MacedonianLanguage(),
