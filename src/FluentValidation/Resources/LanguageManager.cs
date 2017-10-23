@@ -1,32 +1,28 @@
 ﻿#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 namespace FluentValidation.Resources {
 	using System;
 	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
 	using System.Globalization;
-	using System.Linq;
-	using System.Reflection;
-	using Internal;
 	using Validators;
 
 	/// <summary>
-	/// Allows the default error message translations to be managed. 
+	/// Allows the default error message translations to be managed.
 	/// </summary>
 	public class LanguageManager : ILanguageManager {
 		private readonly Dictionary<string, Language> _languages = new Dictionary<string, Language>();
@@ -37,24 +33,25 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		public LanguageManager() {
 			var languages = new Language[] {
-				new EnglishLanguage(), 
+				new EnglishLanguage(),
 				new ChineseSimplifiedLanguage(),
-				new CzechLanguage(), 
+				new CzechLanguage(),
 				new DanishLanguage(),
-				new DutchLanguage(), 
-				new FinnishLanguage(), 
-				new FrenchLanguage(), 
-				new GermanLanguage(), 
-				new ItalianLanguage(), 
-				new KoreanLanguage(), 
-				new MacedonianLanguage(), 
-				new PersianLanguage(), 
-				new PolishLanguage(), 
-				new PortugueseLanguage(), 
-				new RussianLanguage(), 
-				new SpanishLanguage(), 
-				new SwedishLanguage(), 
-				new TurkishLanguage(), 
+				new DutchLanguage(),
+				new FinnishLanguage(),
+				new FrenchLanguage(),
+				new GermanLanguage(),
+				new ItalianLanguage(),
+				new KoreanLanguage(),
+				new MacedonianLanguage(),
+				new PersianLanguage(),
+				new PolishLanguage(),
+				new PortugueseLanguage(),
+				new RomanianLanguage(),
+				new RussianLanguage(),
+				new SpanishLanguage(),
+				new SwedishLanguage(),
+				new TurkishLanguage(),
 				new HindiLanguage()
 			};
 
@@ -71,7 +68,7 @@ namespace FluentValidation.Resources {
 		public bool Enabled { get; set; } = true;
 
 		/// <summary>
-		/// Default culture to use for all requests to the LanguageManager. If not specified, uses the current UI culture. 
+		/// Default culture to use for all requests to the LanguageManager. If not specified, uses the current UI culture.
 		/// </summary>
 		public CultureInfo Culture { get; set; }
 
@@ -85,7 +82,7 @@ namespace FluentValidation.Resources {
 
 
 		/// <summary>
-		/// Removes all languages except the default. 
+		/// Removes all languages except the default.
 		/// </summary>
 		public void Clear() {
 			_languages.Clear();
@@ -118,8 +115,8 @@ namespace FluentValidation.Resources {
 				code = culture.Parent.Name;
 			}
 
-			var languageToUse = Enabled && _languages.ContainsKey(code) 
-				? _languages[code] 
+			var languageToUse = Enabled && _languages.ContainsKey(code)
+				? _languages[code]
 				: _fallback;
 
 			string value = languageToUse.GetTranslation(key);
