@@ -1,6 +1,7 @@
-7.2.1 - 
+7.2.1 - 24 October 2017
 Introduce MessageFormatterFactory 
 Additional language translations
+Additional checks to ensure HttpContext is registered
 
 7.2 - 5 October 2017 
 Updated AspNetCore integration to support IValidatableObject
