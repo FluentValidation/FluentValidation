@@ -25,6 +25,9 @@ namespace FluentValidation {
 	/// <summary>
 	/// An exception that represents failed validation
 	/// </summary>
+#if !NETSTANDARD1_0
+	[Serializable]
+#endif
 	public class ValidationException : Exception {
 		/// <summary>
 		/// Validation errors

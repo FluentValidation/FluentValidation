@@ -1,3 +1,6 @@
+7.x - 
+Marked ValidationException as serializable when running on full framework
+
 7.2.1 - 24 October 2017
 Introduce MessageFormatterFactory 
 Additional language translations
