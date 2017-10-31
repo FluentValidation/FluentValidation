@@ -329,6 +329,7 @@
 		[Fact]
 		public async Task Uses_both_dataannotations_and_fv_in_same_model() {
 			var result = await _webApp.GetErrors("MultipleValidationStrategies", new FormData());
+			_output.WriteLine(JsonConvert.SerializeObject(result));
 			result.Count.ShouldEqual(2);
 		}
 
@@ -342,6 +343,7 @@
 		[Fact]
 		public async void Mixes_DataAnnotations_with_FV_on_explicitly_set_child_validator() {
 			var result = await _webApp.GetErrors("MultipleValidationStrategies3", new FormData());
+			_output.WriteLine(JsonConvert.SerializeObject(result));
 			result.Count.ShouldEqual(3);
 		}
 
@@ -368,7 +370,7 @@
 			result.Count.ShouldEqual(0);
 		}
 
-		[Fact(Skip = "Implicit child validation not supported yet")]
+		[Fact]
 		public async void Executes_implicit_child_validator_when_enabled() {
 			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
@@ -384,7 +386,7 @@
 		}
 
 
-		[Fact(Skip = "Implicit child validation not supported yet")]
+		[Fact]
 		public async void Executes_implicit_child_validator_and_mixes_with_DataAnnotations() {
 			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
@@ -392,7 +394,7 @@
 			result.Count.ShouldEqual(2);
 		}
 
-		[Fact(Skip = "Implicit child validation not supported yet")]
+		[Fact]
 		public async void Executes_implicit_child_validator_and_mixes_with_IValidatableObject() {
 			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
@@ -401,7 +403,7 @@
 		}
 
 
-		[Fact(Skip = "Implicit child validation not supported yet")]
+		[Fact]
 		public async void Executes_implicit_child_validator_when_enabled_does_not_execute_multiple_times() {
 			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 

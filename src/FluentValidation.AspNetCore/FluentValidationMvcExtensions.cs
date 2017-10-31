@@ -28,6 +28,7 @@ namespace FluentValidation.AspNetCore {
 	using System.Linq;
 	using System.Collections.Generic;
 	using Microsoft.AspNetCore.Http;
+	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
 	using Resources;
 
@@ -62,6 +63,12 @@ namespace FluentValidation.AspNetCore {
 						options.ModelValidatorProviders.Clear();
 					});
 			}
+
+			mvcBuilder.AddMvcOptions(options => {
+				options.ModelMetadataDetailsProviders.Add(new FVBindingMetadataProvider());
+				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.RunDefaultMvcValidationAfterFluentValidationExecutes ? options.ModelValidatorProviders : null));
+			});
+
 			return mvcBuilder;
 		}
 
@@ -75,13 +82,14 @@ namespace FluentValidation.AspNetCore {
 				services.Add(ServiceDescriptor.Transient(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 			}
 
-			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
+//			services.AddSingleton<IObjectModelValidator, FVObjectModelValidator2>();
+			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FVObjectModelValidator2>(s => {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
 				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-				var modelValidator= new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders);
-				modelValidator.RunDefaultMvcValidation = config.RunDefaultMvcValidationAfterFluentValidationExecutes;
-//				modelValidator.ImplicitlyValidateChildProperties = config.ImplicitlyValidateChildProperties;
-				return modelValidator;
+//				var modelValidator= new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders);
+//				modelValidator.RunDefaultMvcValidation = config.RunDefaultMvcValidationAfterFluentValidationExecutes;
+
+				return new FVObjectModelValidator2(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
 			}));
 
 
@@ -127,6 +135,11 @@ namespace FluentValidation.AspNetCore {
 						options.ModelValidatorProviders.Clear();
 					});
 			}
+			mvcBuilder.AddMvcOptions(options => {
+				options.ModelMetadataDetailsProviders.Add(new FVBindingMetadataProvider());
+				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.RunDefaultMvcValidationAfterFluentValidationExecutes ? options.ModelValidatorProviders : null));
+			});
+
 			return mvcBuilder;
 		}
 
