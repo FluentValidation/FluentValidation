@@ -1,11 +1,6 @@
 ﻿namespace FluentValidation.Tests.AspNetCore {
-	using System;
-	using System.Collections.Generic;
-	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Controllers;
-	using Microsoft.AspNetCore.Hosting;
-	using Microsoft.AspNetCore.TestHost;
 	using Newtonsoft.Json;
 	using Xunit;
 	using Xunit.Abstractions;
@@ -420,7 +415,7 @@
 
 
 		[Fact]
-		public async void ImplicitValidation_enabled_but_validator_explicitly_set_only_exeuctes_once() {
+		public async void ImplicitValidation_enabled_but_validator_explicitly_only_includes_error_message_once() {
 //			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
 			var result = await _webApp.GetErrors("ImplicitAndExplicitChildValidator", new FormData());
