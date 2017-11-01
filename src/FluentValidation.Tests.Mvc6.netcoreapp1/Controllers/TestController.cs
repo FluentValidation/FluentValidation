@@ -128,6 +128,10 @@
 			return TestResult();
 		}
 
+		public ActionResult DictionaryParameter(Dictionary<int, TestModel> model) {
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 

@@ -49,14 +49,14 @@
 			_runMvcValidation = runMvcValidation;
 			_validatorCache = new ValidatorCache();
 			_fvProvider = validatorProviders.SingleOrDefault(x => x is FluentValidationModelValidatorProvider) as FluentValidationModelValidatorProvider;
-			_compositeProvider = new CompositeModelValidatorProvider(validatorProviders.Except(new IModelValidatorProvider[]{ _fvProvider }).ToList());
+			_compositeProvider = new CompositeModelValidatorProvider(validatorProviders); //.Except(new IModelValidatorProvider[]{ _fvProvider }).ToList());
 		}
 
 		public void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model) {
 
 			// This is all to work around the default "Required" messages.
 
-			var entries = new List<KeyValuePair<ModelStateEntry, ModelError>>();
+			var requiredErrorsNotHandledByFv = new List<KeyValuePair<ModelStateEntry, ModelError>>();
 			
 			foreach (KeyValuePair<string, ModelStateEntry> entry in actionContext.ModelState) {
 
@@ -72,7 +72,7 @@
 					foreach (ModelError err in errorsToModify) {
 						entry.Value.Errors.Clear();
 						entry.Value.ValidationState = ModelValidationState.Unvalidated;
-						entries.Add(new KeyValuePair<ModelStateEntry, ModelError>(entry.Value, new ModelError(err.ErrorMessage.Replace("_FV_REQUIRED|", string.Empty)))); ;
+						requiredErrorsNotHandledByFv.Add(new KeyValuePair<ModelStateEntry, ModelError>(entry.Value, new ModelError(err.ErrorMessage.Replace("_FV_REQUIRED|", string.Empty)))); ;
 					}
 				}
 				
@@ -84,31 +84,20 @@
 
 			var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
 
-			// First run validation using only the FV validator. Once that's done, allow everything else to run. 
+			var validatorProvider = _runMvcValidation ? _compositeProvider : _fvProvider;
+
 			var visitor = new ValidationVisitor2(
 				actionContext,
-				_fvProvider,
+				validatorProvider,
 				_validatorCache,
 				_modelMetadataProvider,
 				validationState);
 
 			visitor.Validate(metadata, prefix, model);
 
-			// and everything else 
-
-			if (_runMvcValidation) {
-				visitor = new ValidationVisitor2(
-					actionContext,
-					_compositeProvider, // all except the FV provider
-					_validatorCache,
-					_modelMetadataProvider,
-					validationState);
-
-				visitor.Validate(metadata, prefix, model);
-			}
 
 			// Re-add errors that we took out if FV didn't add a key. 
-			foreach (var pair in entries) {
+			foreach (var pair in requiredErrorsNotHandledByFv) {
 				if (pair.Key.ValidationState != ModelValidationState.Invalid) {
 					pair.Key.Errors.Add(pair.Value);
 					pair.Key.ValidationState = ModelValidationState.Invalid;

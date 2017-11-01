@@ -334,8 +334,7 @@
 			result.Count.ShouldEqual(2);
 		}
 
-		[Fact(Skip = "AspNetCore does not allow multiple validation strategies to be mixed on the same property.")]
-//		[Fact]
+		[Fact]
 		public async Task Uses_both_dataannotations_and_fv_on_same_property() {
 			var result = await _webApp.GetErrors("MultipleValidationStrategies2", new FormData());
 			result.Count.ShouldEqual(2);
@@ -366,16 +365,17 @@
 		}
 
 		[Fact]
-		public async void Does_not_implicitly_run_child_validator_by_default() {
-			var result = await _webApp.GetErrors("ImplicitChildValidator", new FormData());
+		public async void Does_not_implicitly_run_child_validator_when_disabled() {
+			var webApp = new WebAppFixture<StartupWithImplicitValidationDisabled>();
+			var result = await webApp.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(0);
 		}
 
 		[Fact]
 		public async void Executes_implicit_child_validator_when_enabled() {
-			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
+//			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await app.GetErrors("ImplicitChildValidator", new FormData());
+			var result = await _webApp.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 			result[0].Name.ShouldEqual("Child.Name");
 		}
@@ -390,17 +390,17 @@
 
 		[Fact]
 		public async void Executes_implicit_child_validator_and_mixes_with_DataAnnotations() {
-			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
+//			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await app.GetErrors("ImplicitChildWithDataAnnotations", new FormData());
+			var result = await _webApp.GetErrors("ImplicitChildWithDataAnnotations", new FormData());
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact]
 		public async void Executes_implicit_child_validator_and_mixes_with_IValidatableObject() {
-			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
+//			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await app.GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
+			var result = await _webApp.GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
 
 			result.Count.ShouldEqual(3);
@@ -409,23 +409,57 @@
 
 		[Fact]
 		public async void Executes_implicit_child_validator_when_enabled_does_not_execute_multiple_times() {
-			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
+//			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await app.GetErrors("ImplicitChildValidator", new FormData());
+			var result = await _webApp.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 
-			result = await app.GetErrors("ImplicitChildValidator", new FormData());
+			result = await _webApp.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 		}
 
 
 		[Fact]
 		public async void ImplicitValidation_enabled_but_validator_explicitly_set_only_exeuctes_once() {
-			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
+//			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
-			var result = await app.GetErrors("ImplicitAndExplicitChildValidator", new FormData());
+			var result = await _webApp.GetErrors("ImplicitAndExplicitChildValidator", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result,Formatting.Indented));
 			result.Count.ShouldEqual(1);
+		}
+
+		[Fact]
+		public async void Validates_dictionary_with_prefix() {
+			var form = new FormData {
+				{ "model[0].Key", "0"  },
+				{ "model[0].Value.Name", null  },
+
+				{ "model[1].Key", "1"  },
+				{ "model[1].Value.Name", null  },
+
+				{ "model[2].Key", "2"  },
+				{ "model[2].Value.Name", "boop"  }
+
+
+			};
+			var result = await _webApp.GetErrors("DictionaryParameter", form);
+			_output.WriteLine(JsonConvert.SerializeObject(result));
+
+			result.Count.ShouldEqual(2);
+		}
+
+		[Fact]
+		public async void Validates_dictionary_without_prefix() {
+			var form = new FormData {
+				{ "[0].Name", null },
+				{ "[1].Name", null },
+				{ "[2].Name", "whoop" },
+
+			};
+			var result = await _webApp.GetErrors("DictionaryParameter", form);
+			_output.WriteLine(JsonConvert.SerializeObject(result));
+
+			result.Count.ShouldEqual(2);
 		}
 
 	}

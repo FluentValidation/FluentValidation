@@ -7,6 +7,7 @@ namespace FluentValidation.Tests.AspNetCore {
 	using FluentValidation.AspNetCore;
 	using FluentValidation.Attributes;
 
+/*
 	public class StartupWithImplicitValidationEnabled
     {
         public StartupWithImplicitValidationEnabled(IHostingEnvironment env)
@@ -39,4 +40,5 @@ namespace FluentValidation.Tests.AspNetCore {
             });
         }
     }
+*/
 }
