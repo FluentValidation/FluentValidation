@@ -43,7 +43,7 @@
 		public void Falls_back_to_parent_culture() {
 			using (new CultureScope("fr-FR")) {
 				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("Niste upisali '{PropertyName}'");
+				msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
 			}
 		}
 
