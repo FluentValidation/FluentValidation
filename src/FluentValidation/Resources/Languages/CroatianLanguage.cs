@@ -34,9 +34,9 @@ namespace FluentValidation.Resources
 			Translate<MaximumLengthValidator>("'{PropertyName}' mora biti manji od {MaxLength} karaktera. Upisali ste {TotalLength} karaktera.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' mora biti manji ili jednak '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' mora biti manji od '{ComparisonValue}'.");
-			Translate<NotEmptyValidator>("'{PropertyName}' ne smije biti praazan.");
+			Translate<NotEmptyValidator>("'{PropertyName}' ne smije biti prazan.");
 			Translate<NotEqualValidator>("'{PropertyName}' ne smije biti jednak '{ComparisonValue}'.");
-			Translate<NotNullValidator>("'{PropertyName}' ne smije biti nepopunjen.");
+			Translate<NotNullValidator>("Niste upisali '{PropertyName}'");
 			Translate<PredicateValidator>("'{PropertyName}' nije validan.");
 			Translate<AsyncPredicateValidator>("'{PropertyName}' nije validan.");
 			Translate<RegularExpressionValidator>("'{PropertyName}' nije u odgovarajućem formatu.");
@@ -45,7 +45,7 @@ namespace FluentValidation.Resources
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' mora biti između {From} i {To}. Upisali ste {Value}.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' mora biti između {From} i {To} (exclusive). Upisali ste {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' nije odgovarajuća kreditna kartica.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' ne smije imati više od {expectedPrecision} znamenki, sa dopuštenjem od {expectedScale} decimalna mjesta. {digits} znamenki i {actualScale} decimalna mjesta.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' ne smije imati više od {expectedPrecision} znamenki, sa dopuštenjem od {expectedScale} decimalna mjesta. Upisali ste {digits} znamenki i {actualScale} decimalna mjesta.");
 			Translate<EmptyValidator>("'{PropertyName}' mora biti prazan.");
 			Translate<NullValidator>("'{PropertyName}' mora biti prazan.");
 			Translate<EnumValidator>("'{PropertyName}' ima raspon vrijednosti koji ne uključuje '{PropertyValue}'.");
