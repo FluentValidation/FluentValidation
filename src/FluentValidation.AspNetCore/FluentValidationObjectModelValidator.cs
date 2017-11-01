@@ -22,13 +22,10 @@ namespace FluentValidation.AspNetCore {
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
 	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.Controllers;
 	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
-	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 	internal class FVObjectModelValidator2 : IObjectModelValidator {
@@ -92,7 +89,7 @@ namespace FluentValidation.AspNetCore {
 
 			var validatorProvider = _runMvcValidation ? _compositeProvider : _fvProvider;
 
-			var visitor = new ValidationVisitor2(
+			var visitor = new ValidationVisitorFork(
 				actionContext,
 				validatorProvider,
 				_validatorCache,
