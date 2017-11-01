@@ -38,7 +38,7 @@
 		/// <summary>
 		/// Whether or not child properties should be implicitly validated if a matching validator can be found. By default this is false, and you should wire up child validators using SetValidator.
 		/// </summary>
-//		public bool ImplicitlyValidateChildProperties { get; set; }
+		public bool ImplicitlyValidateChildProperties { get; set; }
 
 		internal bool ClientsideEnabled = true;
 		internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};

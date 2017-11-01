@@ -24,7 +24,7 @@ namespace FluentValidation.Tests.AspNetCore {
                 
             }).AddFluentValidation(cfg => {
 	            cfg.ValidatorFactoryType = typeof(AttributedValidatorFactory);
-//	            cfg.ImplicitlyValidateChildProperties = true;
+	            cfg.ImplicitlyValidateChildProperties = true;
             });
         }
 

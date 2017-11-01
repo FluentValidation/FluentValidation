@@ -66,7 +66,7 @@ namespace FluentValidation.AspNetCore {
 
 			mvcBuilder.AddMvcOptions(options => {
 				options.ModelMetadataDetailsProviders.Add(new FVBindingMetadataProvider());
-				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.RunDefaultMvcValidationAfterFluentValidationExecutes ? options.ModelValidatorProviders : null));
+				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.RunDefaultMvcValidationAfterFluentValidationExecutes ? options.ModelValidatorProviders : null, config.ImplicitlyValidateChildProperties));
 			});
 
 			return mvcBuilder;
@@ -137,7 +137,7 @@ namespace FluentValidation.AspNetCore {
 			}
 			mvcBuilder.AddMvcOptions(options => {
 				options.ModelMetadataDetailsProviders.Add(new FVBindingMetadataProvider());
-				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.RunDefaultMvcValidationAfterFluentValidationExecutes ? options.ModelValidatorProviders : null));
+				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.RunDefaultMvcValidationAfterFluentValidationExecutes ? options.ModelValidatorProviders : null, config.ImplicitlyValidateChildProperties));
 			});
 
 			return mvcBuilder;

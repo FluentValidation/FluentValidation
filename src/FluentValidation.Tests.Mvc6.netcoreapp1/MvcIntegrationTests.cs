@@ -323,6 +323,7 @@
 			};
 
 			var result = await _webApp.GetErrors("MultipleErrors",form);
+			_output.WriteLine(JsonConvert.SerializeObject(result,Formatting.Indented));
 			result.Count.ShouldEqual(2);
 		}
 
@@ -382,6 +383,7 @@
 		[Fact]
 		public async void Can_mix_FV_with_IValidatableObject() {
 			var result = await _webApp.GetErrors("ImplementsIValidatableObject", new FormData());
+			_output.WriteLine(JsonConvert.SerializeObject(result,Formatting.Indented));
 			result.Count.ShouldEqual(2);
 		}
 
@@ -399,6 +401,8 @@
 			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
 			var result = await app.GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
+			_output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
+
 			result.Count.ShouldEqual(3);
 		}
 
@@ -420,6 +424,7 @@
 			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
 
 			var result = await app.GetErrors("ImplicitAndExplicitChildValidator", new FormData());
+			_output.WriteLine(JsonConvert.SerializeObject(result,Formatting.Indented));
 			result.Count.ShouldEqual(1);
 		}
 
