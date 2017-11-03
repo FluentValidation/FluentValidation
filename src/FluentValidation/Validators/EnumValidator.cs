@@ -109,16 +109,15 @@ namespace FluentValidation.Validators
 			}
 		}
 
-        private static bool EvaluateFlagEnumValues(long value, Type enumType) {
-            long mask = 0;
+		private static bool EvaluateFlagEnumValues(long value, Type enumType) {
+			long mask = 0;
 			foreach (var enumValue in Enum.GetValues(enumType)) {
 				var enumValueAsInt64 = Convert.ToInt64(enumValue);
-				if ((enumValueAsInt64 & value) == enumValueAsInt64)
-                {
+				if ((enumValueAsInt64 & value) == enumValueAsInt64) {
 					mask |= enumValueAsInt64;
-                    if (mask == value)
-                        return true;
-                }
+					if (mask == value)
+						return true;
+				}
 			}
 			return false;
 		}
