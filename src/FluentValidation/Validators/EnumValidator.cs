@@ -61,48 +61,28 @@ namespace FluentValidation.Validators
 					{
 						var typedValue = (short)value;
 
-						if (typedValue < 0)
-						{
-							return false;
-						}
-
-						return EvaluateFlagEnumValues(Convert.ToUInt64(typedValue), enumType);
+						return EvaluateFlagEnumValues(typedValue, enumType);
 					}
 
 				case "Int32":
 					{
 						var typedValue = (int)value;
 
-						if (typedValue < 0)
-						{
-							return false;
-						}
-
-						return EvaluateFlagEnumValues(Convert.ToUInt64(typedValue), enumType);
+						return EvaluateFlagEnumValues(typedValue, enumType);
 					}
 
 				case "Int64":
 					{
 						var typedValue = (long)value;
 
-						if (typedValue < 0)
-						{
-							return false;
-						}
-
-						return EvaluateFlagEnumValues(Convert.ToUInt64(typedValue), enumType);
+						return EvaluateFlagEnumValues(typedValue, enumType);
 					}
 
 				case "SByte":
 					{
 						var typedValue = (sbyte)value;
 
-						if (typedValue < 0)
-						{
-							return false;
-						}
-
-						return EvaluateFlagEnumValues(Convert.ToUInt64(typedValue), enumType);
+						return EvaluateFlagEnumValues(Convert.ToInt64(typedValue), enumType);
 					}
 
 				case "UInt16":
@@ -120,7 +100,7 @@ namespace FluentValidation.Validators
 				case "UInt64":
 					{
 						var typedValue = (ulong)value;
-						return EvaluateFlagEnumValues(typedValue, enumType);
+						return EvaluateFlagEnumValues((long)typedValue, enumType);
 					}
 
 				default:
@@ -129,15 +109,18 @@ namespace FluentValidation.Validators
 			}
 		}
 
-		private static bool EvaluateFlagEnumValues(ulong value, Type enumType) {
-			ulong mask = 0;
-
+        private static bool EvaluateFlagEnumValues(long value, Type enumType) {
+            long mask = 0;
 			foreach (var enumValue in Enum.GetValues(enumType)) {
-				var enumValueAsUInt64 = Convert.ToUInt64(enumValue);
-				mask = mask | enumValueAsUInt64;
+				var enumValueAsInt64 = Convert.ToInt64(enumValue);
+				if ((enumValueAsInt64 & value) == enumValueAsInt64)
+                {
+					mask |= enumValueAsInt64;
+                    if (mask == value)
+                        return true;
+                }
 			}
-
-			return (mask & value) == value;
+			return false;
 		}
-	}
+ 	}
 }
