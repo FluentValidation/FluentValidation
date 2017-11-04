@@ -1,5 +1,9 @@
 7.x - 
 Marked ValidationException as serializable when running on full framework
+Updated EnumValidator's Flags support to handle the ~0 value
+Fixed TestHelper checking for child validator would respond with the wrong type
+
+
 
 7.2.1 - 24 October 2017
 Introduce MessageFormatterFactory 
