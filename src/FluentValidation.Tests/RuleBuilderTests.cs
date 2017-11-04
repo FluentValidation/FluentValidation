@@ -236,6 +236,17 @@ namespace FluentValidation.Tests {
 			results.Single().PropertyName.ShouldEqual("Foo");
 		}
 
+		[Fact]
+		public void Conditional_child_validator_should_register_with_validator_type_not_property() {
+			var builder = new RuleBuilder<Person, Address>(PropertyRule.Create<Person, Address>(x => x.Address));
+			builder.SetValidator(person => new NoopAddressValidator());
+
+			builder.Rule.Validators.OfType<ChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
+		}
+
+		class NoopAddressValidator : AbstractValidator<Address> {
+		}
+
 		class TestPropertyValidator : PropertyValidator {
 			public TestPropertyValidator() : base(new LanguageStringSource(nameof(NotNullValidator))) {
 				
