@@ -101,6 +101,32 @@
 		}
 
 
+		[Fact]
+		public void All_localizatons_have_same_parameters_as_English() {
+
+			LanguageManager manager = (LanguageManager)_languages;
+			var languages = manager.GetSupportedLanguages();
+			var keys = manager.GetSupportedTranslationKeys();
+			
+			Assert.All(languages, l => Assert.All(keys, k => Check_Parameters_Match(l, k)));
+		}
+
+		void Check_Parameters_Match(string languageCode, string translationKey) {
+			string referenceMessage = _languages.GetString(translationKey);
+			string translatedMessage = _languages.GetString(translationKey, CultureInfo.CreateSpecificCulture(languageCode));
+			if (referenceMessage == translatedMessage) return;
+			var referenceParameters = ExtractTemplateParameters(referenceMessage);
+			var translatedParameters = ExtractTemplateParameters(translatedMessage);
+			Assert.False(referenceParameters.Count() != translatedParameters.Count() ||
+				referenceParameters.Except(translatedParameters).Any(),
+				$"Translation for language {languageCode}, key {translationKey} has parameters {string.Join(",", translatedParameters)}, expected {string.Join(",", referenceParameters)}");
+		}
+
+		IEnumerable<string> ExtractTemplateParameters(string message) {
+			message = message.Replace("{{", "").Replace("}}", "");
+			return message.Split('{').Skip(1).Select(s => s.Split('}').First());
+		}
+
 		public class CustomLanguageManager : LanguageManager {
 			public CustomLanguageManager() {
 				AddTranslation("en", "NotNullValidator", "foo");

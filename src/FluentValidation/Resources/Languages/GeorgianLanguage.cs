@@ -21,7 +21,7 @@ namespace FluentValidation.Resources {
 
 	internal class GeorgianLanguage : Language {
 
-		public override string Name => "ge";
+		public override string Name => "ka";
 
 		public GeorgianLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' არ არის ვალიდური იმეილის მისამართი.");

@@ -27,8 +27,8 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' должно быть больше или равно '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' должно быть больше '{ComparisonValue}'.");
 			Translate<LengthValidator>("'{PropertyName}' должно быть длиной от {MinLength} до {MaxLength} символов. Вы ввели {TotalLength} символов.");
-			Translate<MinimumLengthValidator>("'{PropertyName}' должно быть длиной от {MinLength} до {MaxLength} символов. Вы ввели {TotalLength} символов.");
-			Translate<MaximumLengthValidator>("'{PropertyName}' должно быть длиной от {MinLength} до {MaxLength} символов. Вы ввели {TotalLength} символов.");
+			Translate<MinimumLengthValidator>("'{PropertyName}' должно быть длиной от {MinLength} до 1000 символов. Вы ввели {TotalLength} символов.");
+			Translate<MaximumLengthValidator>("'{PropertyName}' должно быть длиной от 0 до {MaxLength} символов. Вы ввели {TotalLength} символов.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' должно быть меньше или равно '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' должно быть меньше '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("'{PropertyName}' не должно быть пусто.");

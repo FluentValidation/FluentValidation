@@ -62,6 +62,10 @@ namespace FluentValidation.Resources {
 
 			return null;
 		}
+
+		internal IEnumerable<string> GetSupportedKeys() {
+			return _translations.Keys;
+		}
 	}
 
 	internal class GenericLanguage : Language {
