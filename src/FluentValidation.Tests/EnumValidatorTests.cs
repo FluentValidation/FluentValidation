@@ -95,35 +95,61 @@ namespace FluentValidation.Tests
 		[Fact]
 		public void Flags_enum_valid_when_using_bitwise_value()
 		{
-			var inlineValidator = new InlineValidator<FlagsEnumPoco>();
-			inlineValidator.RuleFor(x => x.SByteValue).IsInEnum();
-			inlineValidator.RuleFor(x => x.ByteValue).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int16Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt16Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int32Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt32Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int64Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt64Value).IsInEnum();
-
+			var inlineValidator = Create_validator();
 			var poco = new FlagsEnumPoco();
 			poco.PopulateWithValidValues();
 
 			var result = inlineValidator.Validate(poco);
 			result.IsValid.ShouldBeTrue();
+
+			// special case - valid negative value
+			poco.EnumWithNegativesValue = EnumWithNegatives.All;
+			result = inlineValidator.Validate(poco);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Flags_enum_with_overlapping_flags_valid_when_using_bitwise_value()
+		{
+			var inlineValidator = new InlineValidator<FlagsEnumPoco>();
+			inlineValidator.RuleFor(x => x.EnumWithOverlappingFlagsValue).IsInEnum();
+
+			var poco = new FlagsEnumPoco();
+			
+			// test all combinations
+			poco.EnumWithOverlappingFlagsValue = EnumWithOverlappingFlags.A | EnumWithOverlappingFlags.B;
+			inlineValidator.Validate(poco).IsValid.ShouldBeTrue();
+
+			poco.EnumWithOverlappingFlagsValue = EnumWithOverlappingFlags.B | EnumWithOverlappingFlags.C;
+			inlineValidator.Validate(poco).IsValid.ShouldBeTrue();
+
+			poco.EnumWithOverlappingFlagsValue = EnumWithOverlappingFlags.A | EnumWithOverlappingFlags.C;
+			inlineValidator.Validate(poco).IsValid.ShouldBeTrue();
+
+			poco.EnumWithOverlappingFlagsValue = EnumWithOverlappingFlags.A | EnumWithOverlappingFlags.B | EnumWithOverlappingFlags.C;
+			inlineValidator.Validate(poco).IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Flags_enum_validates_correctly_when_using_zero_value()
+		{
+			var inlineValidator = Create_validator();
+
+			var poco = new FlagsEnumPoco();
+
+			// all default to zero
+			var result = inlineValidator.Validate(poco);
+
+			result.Errors.SingleOrDefault(x => x.PropertyName == "EnumWithNegativesValue").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "EnumWithOverlappingFlagsValue").ShouldNotBeNull();
+			result.Errors.Count().ShouldEqual(2);
+			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
 		public void Flags_enum_invalid_when_using_outofrange_positive_value()
 		{
-			var inlineValidator = new InlineValidator<FlagsEnumPoco>();
-			inlineValidator.RuleFor(x => x.SByteValue).IsInEnum();
-			inlineValidator.RuleFor(x => x.ByteValue).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int16Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt16Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int32Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt32Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int64Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt64Value).IsInEnum();
+			var inlineValidator = Create_validator();
 
 			var poco = new FlagsEnumPoco();
 			poco.PopulateWithInvalidPositiveValues();
@@ -137,21 +163,14 @@ namespace FluentValidation.Tests
 			result.Errors.SingleOrDefault(x => x.PropertyName == "Int32Value").ShouldNotBeNull();
 			result.Errors.SingleOrDefault(x => x.PropertyName == "UInt32Value").ShouldNotBeNull();
 			result.Errors.SingleOrDefault(x => x.PropertyName == "Int64Value").ShouldNotBeNull();
-			result.Errors.SingleOrDefault(x => x.PropertyName == "UInt64Value").ShouldNotBeNull();
+			result.Errors.SingleOrDefault(x => x.PropertyName == "UInt64Value").ShouldNotBeNull();			
+			result.Errors.SingleOrDefault(x => x.PropertyName == "EnumWithNegativesValue").ShouldNotBeNull();
 		}
 
 		[Fact]
 		public void Flags_enum_invalid_when_using_outofrange_negative_value()
 		{
-			var inlineValidator = new InlineValidator<FlagsEnumPoco>();
-			inlineValidator.RuleFor(x => x.SByteValue).IsInEnum();
-			inlineValidator.RuleFor(x => x.ByteValue).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int16Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt16Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int32Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt32Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.Int64Value).IsInEnum();
-			inlineValidator.RuleFor(x => x.UInt64Value).IsInEnum();
+			var inlineValidator = Create_validator();
 
 			var poco = new FlagsEnumPoco();
 			poco.PopulateWithInvalidNegativeValues();
@@ -162,6 +181,23 @@ namespace FluentValidation.Tests
 			result.Errors.SingleOrDefault(x => x.PropertyName == "Int16Value").ShouldNotBeNull();
 			result.Errors.SingleOrDefault(x => x.PropertyName == "Int32Value").ShouldNotBeNull();
 			result.Errors.SingleOrDefault(x => x.PropertyName == "Int64Value").ShouldNotBeNull();
+		}
+
+		private InlineValidator<FlagsEnumPoco> Create_validator()
+		{
+			var inlineValidator = new InlineValidator<FlagsEnumPoco>();
+			inlineValidator.RuleFor(x => x.SByteValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.ByteValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int16Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt16Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int32Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt32Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.Int64Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.UInt64Value).IsInEnum();
+			inlineValidator.RuleFor(x => x.EnumWithNegativesValue).IsInEnum();
+			inlineValidator.RuleFor(x => x.EnumWithOverlappingFlagsValue).IsInEnum();
+
+			return inlineValidator;
 		}
 
 		private class Foo
@@ -180,6 +216,8 @@ namespace FluentValidation.Tests
 			public UInt32Enum UInt32Value { get; set; }
 			public Int64Enum Int64Value { get; set; }
 			public UInt64Enum UInt64Value { get; set; }
+			public EnumWithNegatives EnumWithNegativesValue { get; set; }
+			public EnumWithOverlappingFlags EnumWithOverlappingFlagsValue { get; set;}
 
 			public void PopulateWithValidValues()
 			{
@@ -191,6 +229,8 @@ namespace FluentValidation.Tests
 				UInt32Value = UInt32Enum.B | UInt32Enum.C;
 				Int64Value = Int64Enum.B | Int64Enum.C;
 				UInt64Value = UInt64Enum.B | UInt64Enum.C;
+				EnumWithNegativesValue = EnumWithNegatives.Bar;
+				EnumWithOverlappingFlagsValue = EnumWithOverlappingFlags.A;
 			}
 
 			public void PopulateWithInvalidPositiveValues()
@@ -203,6 +243,8 @@ namespace FluentValidation.Tests
 				UInt32Value = (UInt32Enum)123;
 				Int64Value = (Int64Enum)123;
 				UInt64Value = (UInt64Enum)123;
+				EnumWithNegativesValue = (EnumWithNegatives)123;
+				EnumWithOverlappingFlagsValue = (EnumWithOverlappingFlags)123;
 			}
 
 			public void PopulateWithInvalidNegativeValues()
@@ -211,6 +253,8 @@ namespace FluentValidation.Tests
 				Int16Value = (Int16Enum)(-123);
 				Int32Value = (Int32Enum)(-123);
 				Int64Value = (Int64Enum)(-123);
+				EnumWithNegativesValue = (EnumWithNegatives)(-123);
+				EnumWithOverlappingFlagsValue = (EnumWithOverlappingFlags)(-123);
 			}
 		}
 
@@ -276,6 +320,23 @@ namespace FluentValidation.Tests
 			A = 0,
 			B = 1,
 			C = 2
+		}
+
+		[Flags]
+		public enum EnumWithNegatives
+		{
+			All = ~0,
+			Bar = 1,
+			Foo = 2
+		}
+
+		// NB this enum actually confuses the built-in Enum.ToString() functionality - it shows 7 for A|B.
+		[Flags]
+		public enum EnumWithOverlappingFlags
+		{
+			A = 3,
+			B = 4,
+			C = 5
 		}
 		#endregion
 	}
