@@ -1,20 +1,17 @@
 ﻿namespace FluentValidation.AspNetCore {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
-    using System.Threading;
-    using System.Threading.Tasks;
-    //using FluentValidation.Results;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.AspNetCore.Mvc.Controllers;
-    using Microsoft.AspNetCore.Mvc.Internal;
-    using Microsoft.AspNetCore.Mvc.ModelBinding;
-    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using FluentValidation.Validators;
-    public class FluentValidationObjectModelValidator : IObjectModelValidator {
+	using System;
+	using System.Collections.Generic;
+	using System.ComponentModel.DataAnnotations;
+	using System.Linq;
+	using System.Linq.Expressions;
+	using System.Reflection;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Controllers;
+	using Microsoft.AspNetCore.Mvc.Internal;
+	using Microsoft.AspNetCore.Mvc.ModelBinding;
+	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+	public class FluentValidationObjectModelValidator : IObjectModelValidator {
 		public const string InvalidValuePlaceholder = "__FV_InvalidValue";
 		public const string ModelKeyPrefix = "__FV_Prefix_";
 
@@ -200,77 +197,11 @@
 			return attribute ?? new CustomizeValidatorAttribute();
 		}
 
-		private class KeyValuePairValidatorAdaptor<K, V> : IValidator<KeyValuePair<K, V>>
-		{
-			public KeyValuePairValidatorAdaptor(IValidator<V> validator, string prefix) {
-				this.valueValidator = validator;
-			}
-
-			private IValidator<V> valueValidator;
-
-            public CascadeMode CascadeMode { get { return valueValidator.CascadeMode; } set => throw new NotImplementedException(); }
-
-            public Results.ValidationResult Validate(KeyValuePair<K, V> instance)
-            {
-                return valueValidator.Validate(instance.Value);
-            }
-
-            public Task<Results.ValidationResult> ValidateAsync(KeyValuePair<K, V> instance, CancellationToken cancellation = default(CancellationToken))
-            {
-                return valueValidator.ValidateAsync(instance.Value, cancellation);
-            }
-
-            public Results.ValidationResult Validate(object instance)
-            {
-				if (instance is KeyValuePair<K, V>)
-					return Validate((KeyValuePair<K, V>)instance);
-				return valueValidator.Validate(null);
-            }
-
-            public Task<Results.ValidationResult> ValidateAsync(object instance, CancellationToken cancellation = default(CancellationToken))
-            {
-				if (instance is KeyValuePair<K, V>)
-					return ValidateAsync((KeyValuePair<K, V>)instance, cancellation);
-				return valueValidator.ValidateAsync(null, cancellation);
-            }
-
-            public Results.ValidationResult Validate(FluentValidation.ValidationContext context)
-            {
-				return Validate(context.InstanceToValidate);
-            }
-
-            public Task<Results.ValidationResult> ValidateAsync(FluentValidation.ValidationContext context, CancellationToken cancellation = default(CancellationToken))
-            {
-                return ValidateAsync(context.InstanceToValidate, cancellation);
-            }
-
-            public IValidatorDescriptor CreateDescriptor()
-            {
-                return valueValidator.CreateDescriptor();
-            }
-
-            public bool CanValidateInstancesOfType(Type type)
-            {
-                return type == typeof(KeyValuePair<K, V>);
-            }
-        }
-
 		private IValidator BuildCollectionValidator(string prefix, ModelMetadata collectionMetadata, IValidatorFactory validatorFactory) {
-			
-			var elementType = collectionMetadata.ElementType;
 			var elementValidator = validatorFactory.GetValidator(collectionMetadata.ElementType);
-			if (elementValidator == null)
-			{
-				if (elementType.GetGenericTypeDefinition() != typeof(KeyValuePair<,>))
-					return null;
-				Type[] types = collectionMetadata.ElementType.GetGenericArguments();
-				var valueValidator = validatorFactory.GetValidator(types[1]);
-				if (valueValidator == null)
-					return null;
-				Type validatorType = typeof(KeyValuePairValidatorAdaptor<,>).MakeGenericType(types);
-				elementValidator = (IValidator) Activator.CreateInstance(validatorType, valueValidator, prefix);
-			}
-			var type = typeof(MvcCollectionValidator<>).MakeGenericType(elementType);
+			if (elementValidator == null) return null;
+
+			var type = typeof(MvcCollectionValidator<>).MakeGenericType(collectionMetadata.ElementType);
 			var validator = (IValidator) Activator.CreateInstance(type, elementValidator, prefix);
 			return validator;
 		}
