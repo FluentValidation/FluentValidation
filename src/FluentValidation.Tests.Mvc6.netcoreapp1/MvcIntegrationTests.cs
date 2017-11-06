@@ -384,33 +384,34 @@
 		}
 
 		[Fact]
-		public async void Can_validate_using_JSON()
-		{
+		public async void Can_validate_using_JSON() {
 			var result = await _webApp.GetErrorsViaJSON("Test5", new TestModel5());
-			result.IsValidField("SomeBool").ShouldBeFalse(); //Complex rule
-			result.Count.ShouldEqual(2);
+			result.IsValidField("SomeBool").ShouldBeFalse();
+			result.Count.ShouldEqual(2); 
 		}
 
 		[Fact]
-		public async void Can_validate_enumerable()
-		{
-			var list = new List<TestModel5>() 
-            { new TestModel5() { SomeBool = true, Id = 1 }, new TestModel5(), new TestModel5() { SomeBool = true }  };
-
+		public async void Can_validate_enumerable() {
+			var list = new List<TestModel5>() { 
+				new TestModel5() { SomeBool = true, Id = 1 }, 
+				new TestModel5(), new TestModel5() { SomeBool = true } 
+			};
 			var result = await _webApp.GetErrorsViaJSON("UsingEnumerable", list);
-            Console.WriteLine(string.Join("\n", result));
-
-			result.Count.ShouldEqual(2);
+			result.IsValidField("[1].Id").ShouldBeFalse();
+			result.IsValidField("[1].SomeBool").ShouldBeFalse();
+			result.IsValidField("[2].Id").ShouldBeFalse();
+			result.Count.ShouldEqual(3);
 		}
 
 		[Fact]
-		public async void Can_validate_dictionary()
-		{
-			var dictionary = new Dictionary<int, TestModel5>() 
-            { { 0, new TestModel5() { SomeBool = true, Id = 1 } }, { 1, new TestModel5() } };
-
+		public async void Can_validate_dictionary() {
+			var dictionary = new Dictionary<int, TestModel5>() { 
+				{ 123, new TestModel5() { SomeBool = true, Id = 1 } }, 
+				{ 456, new TestModel5() } 
+			};
 			var result = await _webApp.GetErrorsViaJSON("UsingDictionary", dictionary);
-            Console.WriteLine(string.Join("\n", result));
+			result.IsValidField("[456].Id").ShouldBeFalse();
+			result.IsValidField("[456].SomeBool").ShouldBeFalse();
 			result.Count.ShouldEqual(2);
 		}
 

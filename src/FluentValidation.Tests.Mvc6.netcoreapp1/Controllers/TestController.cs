@@ -129,12 +129,10 @@
 		}
 
 		public IActionResult UsingDictionary([FromBody]IDictionary<int, TestModel5> model) {
-			System.Console.WriteLine($"UsingDictionary {model}");
 			return TestResult();
 		}
 
 		public IActionResult UsingEnumerable([FromBody]IEnumerable<TestModel5> model) {
-			System.Console.WriteLine($"UsingEnumerable {model}");
 			return TestResult();
 		}
 
