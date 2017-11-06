@@ -8,6 +8,7 @@
 	using Microsoft.AspNetCore.Hosting;
 	using Microsoft.AspNetCore.TestHost;
 	using Newtonsoft.Json;
+	using System.Text;
 
 	public class WebAppFixture<TStartup> where TStartup : class {
 		public TestServer Server { get; }
@@ -50,6 +51,15 @@
 
 		public async Task<List<SimpleError>> GetErrors(string action, Dictionary<string, string> form) {
 			var response = await PostResponse($"/Test/{action}", form);
+			return JsonConvert.DeserializeObject<List<SimpleError>>(response);
+		}
+
+		public async Task<List<SimpleError>> GetErrorsViaJSON<T>(string action, T model) {
+			var body = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+			var responseMessage = await Client.PostAsync($"/Test/{action}", body);
+			responseMessage.EnsureSuccessStatusCode();
+            var response = await responseMessage.Content.ReadAsStringAsync();
+
 			return JsonConvert.DeserializeObject<List<SimpleError>>(response);
 		}
 	}
