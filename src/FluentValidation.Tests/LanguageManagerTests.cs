@@ -108,12 +108,12 @@
 			var languages = manager.GetSupportedLanguages();
 			var keys = manager.GetSupportedTranslationKeys();
 			
-			Assert.All(languages, l => Assert.All(keys, k => Check_Parameters_Match(l, k)));
+			Assert.All(languages, l => Assert.All(keys, k => CheckParametersMatch(l, k)));
 		}
 
-		void Check_Parameters_Match(string languageCode, string translationKey) {
-			string referenceMessage = _languages.GetString(translationKey);
-			string translatedMessage = _languages.GetString(translationKey, CultureInfo.CreateSpecificCulture(languageCode));
+		void CheckParametersMatch(string languageCode, string translationKey) {
+			var referenceMessage = _languages.GetString(translationKey);
+			var translatedMessage = _languages.GetString(translationKey, CultureInfo.CreateSpecificCulture(languageCode));
 			if (referenceMessage == translatedMessage) return;
 			var referenceParameters = ExtractTemplateParameters(referenceMessage);
 			var translatedParameters = ExtractTemplateParameters(translatedMessage);
