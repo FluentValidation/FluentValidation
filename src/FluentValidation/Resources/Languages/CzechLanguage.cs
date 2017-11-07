@@ -27,8 +27,8 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanOrEqualValidator>("Hodnota pole '{PropertyName}' musí být větší nebo rovna '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("Hodnota pole '{PropertyName}' musí být větší než '{ComparisonValue}'.");
 			Translate<LengthValidator>("Délka pole '{PropertyName}' must be between {MinLength} and {MaxLength} characters. Vy jste zadal {TotalLength} znaků.");
-			Translate<MinimumLengthValidator>("Délka pole '{PropertyName}' must be between {MinLength} and {MaxLength} characters. Vy jste zadal {TotalLength} znaků.");
-			Translate<MaximumLengthValidator>("Délka pole '{PropertyName}' must be between {MinLength} and {MaxLength} characters. Vy jste zadal {TotalLength} znaků.");
+			Translate<MinimumLengthValidator>("Délka pole '{PropertyName}' must be more than {MinLength} characters. Vy jste zadal {TotalLength} znaků.");
+			Translate<MaximumLengthValidator>("Délka pole '{PropertyName}' must be less than {MaxLength} characters. Vy jste zadal {TotalLength} znaků.");
 			Translate<LessThanOrEqualValidator>("Hodnota pole '{PropertyName}' musí být menší nebo rovna '{ComparisonValue}'.");
 			Translate<LessThanValidator>("Hodnota pole '{PropertyName}' musí být menší než '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("Pole '{PropertyName}' nesmí být prázdné");

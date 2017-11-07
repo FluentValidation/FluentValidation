@@ -163,6 +163,10 @@ namespace FluentValidation.Resources {
 			return name;
 		}
 
+		public IEnumerable<string> GetSupportedTranslationKeys() {
+			return _fallback.GetSupportedKeys();
+		}
+
 		public void AddTranslation(string language, string key, string message) {
 			if(string.IsNullOrEmpty(language)) throw new ArgumentNullException(nameof(language));
 			if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));

@@ -27,12 +27,12 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' 必须大于或等于 '{ComparisonValue}'。");
 			Translate<GreaterThanValidator>("'{PropertyName}' 必须大于 '{ComparisonValue}'。");
 			Translate<LengthValidator>("'{PropertyName}' 的长度必须在 {MinLength} 到 {MaxLength} 字符，您已经输入了 {TotalLength} 字符。");
-			Translate<MinimumLengthValidator>("'{PropertyName}' 的长度必须在 {MinLength} 到 {MaxLength} 字符，您已经输入了 {TotalLength} 字符。");
-			Translate<MaximumLengthValidator>("'{PropertyName}' 的长度必须在 {MinLength} 到 {MaxLength} 字符，您已经输入了 {TotalLength} 字符。");
+			Translate<MinimumLengthValidator>("'{PropertyName}' 的长度必须在 {MinLength} 到 1000 字符，您已经输入了 {TotalLength} 字符。");
+			Translate<MaximumLengthValidator>("'{PropertyName}' 的长度必须在 0 到 {MaxLength} 字符，您已经输入了 {TotalLength} 字符。");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' 必须小于或等于 '{ComparisonValue}'。");
 			Translate<LessThanValidator>("'{PropertyName}' 必须小于 '{ComparisonValue}'。");
 			Translate<NotEmptyValidator>("请填写 '{PropertyName}'。");
-			Translate<NotEqualValidator>("'{PropertyName}' 不能和 '{PropertyValue}' 相等。");
+			Translate<NotEqualValidator>("'{PropertyName}' 不能和 '{ComparisonValue}' 相等。");
 			Translate<NotNullValidator>("请填写 '{PropertyName}'。");
 			Translate<PredicateValidator>("指定的条件不符合 '{PropertyName}'。");
 			Translate<AsyncPredicateValidator>("指定的条件不符合 '{PropertyName}'。");
