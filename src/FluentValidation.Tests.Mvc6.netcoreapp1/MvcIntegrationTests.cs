@@ -1,4 +1,6 @@
 ﻿namespace FluentValidation.Tests.AspNetCore {
+	using System;
+	using System.Collections.Generic;
 	using System.Threading.Tasks;
 	using Controllers;
 	using Newtonsoft.Json;
@@ -457,5 +459,39 @@
 			result.Count.ShouldEqual(2);
 		}
 
+
+		[Fact]
+		public async void Can_validate_using_JSON() {
+			var result = await _webApp.GetErrorsViaJSON("Test5", new TestModel5());
+			result.IsValidField("SomeBool").ShouldBeFalse();
+			result.Count.ShouldEqual(2);
+		}
+
+		[Fact]
+		public async void Can_validate_enumerable() {
+			var list = new List<TestModel5>() {
+				new TestModel5() {SomeBool = true, Id = 1},
+				new TestModel5(),
+				new TestModel5() {SomeBool = true}
+			};
+
+			var result = await _webApp.GetErrorsViaJSON("UsingEnumerable", list);
+
+			result.IsValidField("[1].Id").ShouldBeFalse();
+			result.IsValidField("[1].SomeBool").ShouldBeFalse();
+			result.IsValidField("[2].Id").ShouldBeFalse();
+			result.Count.ShouldEqual(3);
+		}
+
+		[Fact]
+		public async void Can_validate_dictionary() {
+			var dictionary = new Dictionary<int, TestModel5>()
+				{{0, new TestModel5() {SomeBool = true, Id = 1}}, {1, new TestModel5()}};
+
+			var result = await _webApp.GetErrorsViaJSON("UsingDictionaryWithJsonBody", dictionary);
+			result.Count.ShouldEqual(2);
+			result.IsValidField("[456].Id").ShouldBeFalse();
+			result.IsValidField("[456].SomeBool").ShouldBeFalse();
+		}
 	}
 }

@@ -132,6 +132,16 @@
 			return TestResult();
 		}
 
+		public IActionResult UsingDictionaryWithJsonBody([FromBody]IDictionary<int, TestModel5> model)
+		{
+			return TestResult();
+		}
+
+		public IActionResult UsingEnumerable([FromBody]IEnumerable<TestModel5> model)
+		{
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 
