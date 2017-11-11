@@ -9,6 +9,13 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.3:
+* Major changes to AspNetCore integration including better support for collections and implicit validation (opt-in) 
+* Marked ValidationException as serializable when running on full framework
+* Fix - Updated EnumValidator's Flags support to handle the ~0 value
+* Fix - TestHelper checking for child validator would respond with the wrong type
+* Fix - Updated translations for some validators
+
 Changes in 7.2:
 * Updated AspNetCore integration to support IValidatableObject
 * Updated AspNetCore integration to allow mixing multiple validation strategies in the same model
