@@ -1,75 +1,83 @@
 ﻿namespace FluentValidation.AspNetCore {
+	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
 	using System.Linq;
+	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Controllers;
 	using Microsoft.AspNetCore.Mvc.DataAnnotations.Internal;
+	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-
-/*
 	/// <summary>
 	/// ModelValidatorProvider implementation only used for child properties.
 	/// </summary>
 	internal class FluentValidationModelValidatorProvider : IModelValidatorProvider {
-
-		private IModelValidatorProvider _inner;
 		private readonly bool _shouldExecute;
-		private IValidatorFactory _validatorFactory;
-		private CustomizeValidatorAttribute _customizations;
+		private bool _implicitValidationEnabled;
 
-		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory, CustomizeValidatorAttribute customizations, IModelValidatorProvider inner) {
-			_validatorFactory = validatorFactory;
-			_customizations = customizations;
-			_inner = inner;
+		public FluentValidationModelValidatorProvider(bool implicitValidationEnabled) {
+			_implicitValidationEnabled = implicitValidationEnabled;
 		}
 
 		public void CreateValidators(ModelValidatorProviderContext context) {
 
-				var validator = _validatorFactory.GetValidator(context.ModelMetadata.ModelType);
-
-				if (validator != null) {
+			if (context.ModelMetadata.MetadataKind == ModelMetadataKind.Type || (context.ModelMetadata.MetadataKind == ModelMetadataKind.Property && _implicitValidationEnabled)) {
 					context.Results.Add(new ValidatorItem {
 						IsReusable = false,
-						Validator = new FluentValidationModelValidator(validator, _customizations)
+						Validator = new FluentValidationModelValidator()
 					});
-				}
-			
-
-			_inner.CreateValidators(context);
+			}
 		}
 	}
-*/
 
 	internal class FluentValidationModelValidator : IModelValidator {
-		private IValidator _validator;
-		private CustomizeValidatorAttribute _customizations;
+		public IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
 
-		public FluentValidationModelValidator(IValidator validator, CustomizeValidatorAttribute customizations) {
-			_validator = validator;
-			_customizations = customizations;
+
+			var factory = mvContext.ActionContext.HttpContext.RequestServices.GetService(typeof(IValidatorFactory)) as IValidatorFactory;
+
+			if (factory != null) {
+				var validator = factory.GetValidator(mvContext.ModelMetadata.ModelType);
+
+				if (validator != null) {
+
+					var customizations = GetCustomizations(mvContext.ActionContext, mvContext.Model);
+					var selector = customizations.ToValidatorSelector();
+					var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
+					var context = new FluentValidation.ValidationContext(mvContext.Model, new FluentValidation.Internal.PropertyChain(), selector);
+
+					if (interceptor != null) {
+						// Allow the user to provide a customized context
+						// However, if they return null then just use the original context.
+						context = interceptor.BeforeMvcValidation((ControllerContext)mvContext.ActionContext, context) ?? context;
+					}
+
+					var result = validator.Validate(context);
+
+					if (interceptor != null) {
+						// allow the user to provice a custom collection of failures, which could be empty.
+						// However, if they return null then use the original collection of failures. 
+						result = interceptor.AfterMvcValidation((ControllerContext)mvContext.ActionContext, context, result) ?? result;
+					}
+
+					return result.Errors.Select(x => new ModelValidationResult(x.PropertyName, x.ErrorMessage));
+				}
+			}
+
+			return Enumerable.Empty<ModelValidationResult>();
 		}
 
-		public IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
-			var selector = _customizations.ToValidatorSelector();
-			var interceptor = _customizations.GetInterceptor() ?? (_validator as IValidatorInterceptor);
-			var context = new FluentValidation.ValidationContext(mvContext.Model, new FluentValidation.Internal.PropertyChain(), selector);
-
-			if (interceptor != null) {
-				// Allow the user to provide a customized context
-				// However, if they return null then just use the original context.
-				context = interceptor.BeforeMvcValidation((ControllerContext)mvContext.ActionContext, context) ?? context;
+		private CustomizeValidatorAttribute GetCustomizations(ActionContext ctx, object model) {
+			if (ctx.HttpContext.Items["_FV_Customizations"] is Tuple<object, CustomizeValidatorAttribute> customizations 
+				&& ReferenceEquals(model, customizations.Item1)) {
+				return customizations.Item2; // the attribute
 			}
+			return new CustomizeValidatorAttribute();
 
-			var result = _validator.Validate(context);
-
-			if (interceptor != null) {
-				// allow the user to provice a custom collection of failures, which could be empty.
-				// However, if they return null then use the original collection of failures. 
-				result = interceptor.AfterMvcValidation((ControllerContext)mvContext.ActionContext, context, result) ?? result;
-			}
-
-			return result.Errors.Select(x => new ModelValidationResult(x.PropertyName, x.ErrorMessage));
 		}
 	}
+
+	
 }

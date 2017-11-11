@@ -128,6 +128,20 @@
 			return TestResult();
 		}
 
+		public ActionResult DictionaryParameter(Dictionary<int, TestModel> model) {
+			return TestResult();
+		}
+
+		public IActionResult UsingDictionaryWithJsonBody([FromBody]Dictionary<int, TestModel5> model)
+		{
+			return TestResult();
+		}
+
+		public IActionResult UsingEnumerable([FromBody]IEnumerable<TestModel5> model)
+		{
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 
