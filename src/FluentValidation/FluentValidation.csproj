@@ -15,6 +15,7 @@ Changes in 7.3:
 * Fix - Updated EnumValidator's Flags support to handle the ~0 value
 * Fix - TestHelper checking for child validator would respond with the wrong type
 * Fix - Updated translations for some validators
+* Deprected the ValidatorAttribute. It is recommended to use the Service Provider infrastructure (AspNetCore) or an IoC container instead.
 
 Changes in 7.2:
 * Updated AspNetCore integration to support IValidatableObject
