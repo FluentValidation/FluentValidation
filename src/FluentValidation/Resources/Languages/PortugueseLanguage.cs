@@ -27,8 +27,8 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' deve ser superior ou igual a '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' deve ser superior a '{ComparisonValue}'.");
 			Translate<LengthValidator>("'{PropertyName}' deve ter {MinLength} a {MaxLength} caracteres. Introduziu {TotalLength} caracteres.");
-			Translate<MinimumLengthValidator>("'{PropertyName}' deve ter {MinLength} a {MaxLength} caracteres. Introduziu {TotalLength} caracteres.");
-			Translate<MaximumLengthValidator>("'{PropertyName}' deve ter {MinLength} a {MaxLength} caracteres. Introduziu {TotalLength} caracteres.");
+			Translate<MinimumLengthValidator>("'{PropertyName}' deve ser superior a {MinLength} caracteres. Introduziu {TotalLength} caracteres.");
+			Translate<MaximumLengthValidator>("'{PropertyName}' deve ser inferior a {MaxLength} caracteres. Introduziu {TotalLength} caracteres.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' deve ser inferior ou igual a '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' deve ser inferior a '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("'{PropertyName}' deve ser definido.");

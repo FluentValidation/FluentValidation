@@ -27,12 +27,12 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanOrEqualValidator>("\"{PropertyName}\" måste vara större än eller lika med {ComparisonValue}.");
 			Translate<GreaterThanValidator>("\"{PropertyName}\" måste vara större än {ComparisonValue}.");
 			Translate<LengthValidator>("\"{PropertyName}\" måste vara mellan {MinLength} och {MaxLength} tecken långt. Du angav {TotalLength} tecken.");
-			Translate<MinimumLengthValidator>("\"{PropertyName}\" måste vara mellan {MinLength} och {MaxLength} tecken långt. Du angav {TotalLength} tecken.");
-			Translate<MaximumLengthValidator>("\"{PropertyName}\" måste vara mellan {MinLength} och {MaxLength} tecken långt. Du angav {TotalLength} tecken.");
+			Translate<MinimumLengthValidator>("\"{PropertyName}\" måste vara mellan {MinLength} och 1000 tecken långt. Du angav {TotalLength} tecken.");
+			Translate<MaximumLengthValidator>("\"{PropertyName}\" måste vara mellan 0 och {MaxLength} tecken långt. Du angav {TotalLength} tecken.");
 			Translate<LessThanOrEqualValidator>("\"{PropertyName}\" måste vara mindre än eller lika med {ComparisonValue}.");
 			Translate<LessThanValidator>("\"{PropertyName}\" måste vara mindre än {ComparisonValue}.");
 			Translate<NotEmptyValidator>("\"{PropertyName}\" måste anges.");
-			Translate<NotEqualValidator>("\"{PropertyName}\" får inte vara lika med \"{CompairsonValue}\".");
+			Translate<NotEqualValidator>("\"{PropertyName}\" får inte vara lika med \"{ComparisonValue}\".");
 			Translate<NotNullValidator>("\"{PropertyName}\" måste anges.");
 			Translate<PredicateValidator>("Det angivna villkoret uppfylldes inte för \"{PropertyName}\".");
 			Translate<AsyncPredicateValidator>("Det angivna villkoret uppfylldes inte för \"{PropertyName}\".");
