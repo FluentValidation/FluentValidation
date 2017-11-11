@@ -82,14 +82,10 @@ namespace FluentValidation.AspNetCore {
 				services.Add(ServiceDescriptor.Transient(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 			}
 
-//			services.AddSingleton<IObjectModelValidator, FVObjectModelValidator2>();
-			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FVObjectModelValidator2>(s => {
+			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
 				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-//				var modelValidator= new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders);
-//				modelValidator.RunDefaultMvcValidation = config.RunDefaultMvcValidationAfterFluentValidationExecutes;
-
-				return new FVObjectModelValidator2(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
+				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
 			}));
 
 

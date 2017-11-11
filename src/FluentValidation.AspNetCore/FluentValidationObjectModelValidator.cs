@@ -29,14 +29,14 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
-	internal class FVObjectModelValidator2 : IObjectModelValidator {
+	internal class FluentValidationObjectModelValidator : IObjectModelValidator {
 		private readonly IModelMetadataProvider _modelMetadataProvider;
 		private readonly bool _runMvcValidation;
 		private readonly ValidatorCache _validatorCache;
 		private readonly IModelValidatorProvider _compositeProvider;
 		private readonly FluentValidationModelValidatorProvider _fvProvider;
 
-		public FVObjectModelValidator2(
+		public FluentValidationObjectModelValidator(
 			IModelMetadataProvider modelMetadataProvider,
 			IList<IModelValidatorProvider> validatorProviders, bool runMvcValidation) {
 
@@ -57,30 +57,9 @@ namespace FluentValidation.AspNetCore {
 
 		public void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model) {
 
-			// This is all to work around the default "Required" messages.
+			var requiredErrorsNotHandledByFv = RemoveImplicitRequiredErrors(actionContext);
 
-			var requiredErrorsNotHandledByFv = new List<KeyValuePair<ModelStateEntry, ModelError>>();
-
-			foreach (KeyValuePair<string, ModelStateEntry> entry in actionContext.ModelState) {
-
-				List<ModelError> errorsToModify = new List<ModelError>();
-
-				if (entry.Value.ValidationState == ModelValidationState.Invalid) {
-					foreach (var err in entry.Value.Errors) {
-						if (err.ErrorMessage.StartsWith(FluentValidationBindingMetadataProvider.Prefix)) {
-							errorsToModify.Add(err);
-						}
-					}
-
-					foreach (ModelError err in errorsToModify) {
-						entry.Value.Errors.Clear();
-						entry.Value.ValidationState = ModelValidationState.Unvalidated;
-						requiredErrorsNotHandledByFv.Add(new KeyValuePair<ModelStateEntry, ModelError>(entry.Value, new ModelError(err.ErrorMessage.Replace(FluentValidationBindingMetadataProvider.Prefix, string.Empty)))); ;
-					}
-				}
-
-			}
-
+			// Apply any customizations made with the CustomizeValidatorAttribute 
 			var metadata = model == null ? null : _modelMetadataProvider.GetMetadataForType(model.GetType());
 
 			if (model != null) {
@@ -88,6 +67,7 @@ namespace FluentValidation.AspNetCore {
 				actionContext.HttpContext.Items["_FV_Customizations"] = Tuple.Create(model, customizations);
 			}
 
+			// Setting as to whether we should run only FV or FV + the other validator providers
 			var validatorProvider = _runMvcValidation ? _compositeProvider : _fvProvider;
 
 			var visitor = new ValidationVisitorFork(
@@ -100,29 +80,64 @@ namespace FluentValidation.AspNetCore {
 			visitor.Validate(metadata, prefix, model);
 
 			// Re-add errors that we took out if FV didn't add a key. 
-			foreach (var pair in requiredErrorsNotHandledByFv) {
-				if (pair.Key.ValidationState != ModelValidationState.Invalid) {
-					pair.Key.Errors.Add(pair.Value);
-					pair.Key.ValidationState = ModelValidationState.Invalid;
-				}
-			}
+			ReApplyImplicitRequiredErrorsNotHandledByFV(requiredErrorsNotHandledByFv);
 
-			// Remove duplicates 
+			// Remove duplicates. This can happen if someone has implicit child validation turned on and also adds an explicit child validator.
+			RemoveDuplicateModelstateEntries(actionContext);
+		}
+
+		private static void RemoveDuplicateModelstateEntries(ActionContext actionContext) {
 			foreach (var entry in actionContext.ModelState) {
 				if (entry.Value.ValidationState == ModelValidationState.Invalid) {
 					var existing = new HashSet<string>();
 
-					foreach (var err in entry.Value.Errors.ToList()) { //TOList to create a copy so we can remvoe the original
+					foreach (var err in entry.Value.Errors.ToList()) {
+						//TOList to create a copy so we can remvoe the original
 						if (existing.Contains(err.ErrorMessage)) {
 							entry.Value.Errors.Remove(err);
-						} else {
+						}
+						else {
 							existing.Add(err.ErrorMessage);
 						}
 					}
 				}
 			}
 		}
-	
+
+		private static void ReApplyImplicitRequiredErrorsNotHandledByFV(List<KeyValuePair<ModelStateEntry, ModelError>> requiredErrorsNotHandledByFv) {
+			foreach (var pair in requiredErrorsNotHandledByFv) {
+				if (pair.Key.ValidationState != ModelValidationState.Invalid) {
+					pair.Key.Errors.Add(pair.Value);
+					pair.Key.ValidationState = ModelValidationState.Invalid;
+				}
+			}
+		}
+
+		private static List<KeyValuePair<ModelStateEntry, ModelError>> RemoveImplicitRequiredErrors(ActionContext actionContext) {
+			// This is all to work around the default "Required" messages.
+			var requiredErrorsNotHandledByFv = new List<KeyValuePair<ModelStateEntry, ModelError>>();
+
+			foreach (KeyValuePair<string, ModelStateEntry> entry in actionContext.ModelState) {
+				List<ModelError> errorsToModify = new List<ModelError>();
+
+				if (entry.Value.ValidationState == ModelValidationState.Invalid) {
+					foreach (var err in entry.Value.Errors) {
+						if (err.ErrorMessage.StartsWith(FluentValidationBindingMetadataProvider.Prefix)) {
+							errorsToModify.Add(err);
+						}
+					}
+
+					foreach (ModelError err in errorsToModify) {
+						entry.Value.Errors.Clear();
+						entry.Value.ValidationState = ModelValidationState.Unvalidated;
+						requiredErrorsNotHandledByFv.Add(new KeyValuePair<ModelStateEntry, ModelError>(entry.Value, new ModelError(err.ErrorMessage.Replace(FluentValidationBindingMetadataProvider.Prefix, string.Empty))));
+						;
+					}
+				}
+			}
+			return requiredErrorsNotHandledByFv;
+		}
+
 		private CustomizeValidatorAttribute GetCustomizations(ActionContext actionContext, Type type, string prefix) {
 
 			if (actionContext?.ActionDescriptor?.Parameters == null) {
@@ -149,10 +164,9 @@ namespace FluentValidation.AspNetCore {
 
 	}
 
-
 	// Old implementation
 
-	public class FluentValidationObjectModelValidator : IObjectModelValidator {
+	internal class FluentValidationObjectModelValidatorOriginal : IObjectModelValidator {
 		public const string InvalidValuePlaceholder = "__FV_InvalidValue";
 		public const string ModelKeyPrefix = "__FV_Prefix_";
 
@@ -161,9 +175,9 @@ namespace FluentValidation.AspNetCore {
 		private CompositeModelValidatorProvider _validatorProvider;
 
 		/// <summary>
-		///     Initializes a new instance of <see cref="FluentValidationObjectModelValidator" />.
+		///     Initializes a new instance of <see cref="FluentValidationObjectModelValidatorOriginal" />.
 		/// </summary>
-		public FluentValidationObjectModelValidator(IModelMetadataProvider modelMetadataProvider, IList<IModelValidatorProvider> validatorProviders) {
+		public FluentValidationObjectModelValidatorOriginal(IModelMetadataProvider modelMetadataProvider, IList<IModelValidatorProvider> validatorProviders) {
 			_modelMetadataProvider = modelMetadataProvider ?? throw new ArgumentNullException(nameof(modelMetadataProvider));
 			_validatorCache = new ValidatorCache();
 			_validatorProvider = new CompositeModelValidatorProvider(validatorProviders);
@@ -350,7 +364,7 @@ namespace FluentValidation.AspNetCore {
 
 	internal class MvcCollectionValidator<T> : AbstractValidator<IEnumerable<T>> {
 		public MvcCollectionValidator(IValidator<T> validator, string prefix) {
-			if (string.IsNullOrEmpty(prefix)) prefix = FluentValidationObjectModelValidator.ModelKeyPrefix;
+			if (string.IsNullOrEmpty(prefix)) prefix = FluentValidationObjectModelValidatorOriginal.ModelKeyPrefix;
 			RuleFor(x => x).SetCollectionValidator(validator).OverridePropertyName(prefix);
 		}
 	}
