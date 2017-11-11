@@ -471,8 +471,8 @@
 			};
 			var result = await _webApp.GetErrorsViaJSON("UsingDictionaryWithJsonBody", dictionary);
 			result.Count.ShouldEqual(2);
-			result.IsValidField("[456].Id").ShouldBeFalse();
-			result.IsValidField("[456].SomeBool").ShouldBeFalse();
+			result.IsValidField("[1].Value.Id").ShouldBeFalse();
+			result.IsValidField("[1].Value.SomeBool").ShouldBeFalse();
 		}
 	}
 }

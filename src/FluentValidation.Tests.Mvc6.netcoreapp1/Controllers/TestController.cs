@@ -132,7 +132,7 @@
 			return TestResult();
 		}
 
-		public IActionResult UsingDictionaryWithJsonBody([FromBody]IDictionary<int, TestModel5> model)
+		public IActionResult UsingDictionaryWithJsonBody([FromBody]Dictionary<int, TestModel5> model)
 		{
 			return TestResult();
 		}
