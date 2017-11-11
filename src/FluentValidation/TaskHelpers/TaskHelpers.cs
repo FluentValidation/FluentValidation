@@ -20,6 +20,7 @@ namespace System.Threading.Tasks
 		{
 			return task.ThenImpl(t => TaskHelpers.FromResult(continuation()), cancellationToken, runSynchronously);
 		}
+		
 		// <summary>
 		// Calls the given continuation, after the given task has completed, if the task successfully ran
 		// to completion (i.e., was not cancelled and did not fault).
@@ -63,14 +64,6 @@ namespace System.Threading.Tasks
 		}
 
 		// <summary>
-		// Returns an error task. The task is Completed, IsCanceled = False, IsFaulted = True
-		// </summary>
-		internal static Task FromError(Exception exception)
-		{
-			return FromError<AsyncVoid>(exception);
-		}
-
-		// <summary>
 		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
 		// </summary>
 		// <typeparam name="TResult"></typeparam>
@@ -78,16 +71,6 @@ namespace System.Threading.Tasks
 		{
 			TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
 			tcs.SetException(exception);
-			return tcs.Task;
-		}
-
-		// <summary>
-		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
-		// </summary>
-		internal static Task<TResult> FromErrors<TResult>(IEnumerable<Exception> exceptions)
-		{
-			TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
-			tcs.SetException(exceptions);
 			return tcs.Task;
 		}
 
@@ -170,6 +153,24 @@ namespace System.Threading.Tasks
 		}
 
 		// <summary>
+		// Returns an error task. The task is Completed, IsCanceled = False, IsFaulted = True
+		// </summary>
+		private static Task FromError(Exception exception)
+		{
+			return FromError<AsyncVoid>(exception);
+		}
+
+		// <summary>
+		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
+		// </summary>
+		private static Task<TResult> FromErrors<TResult>(IEnumerable<Exception> exceptions)
+		{
+			TaskCompletionSource<TResult> tcs = new TaskCompletionSource<TResult>();
+			tcs.SetException(exceptions);
+			return tcs.Task;
+		}
+
+		// <summary>
 		// Overload of RunSynchronously that avoids a call to Unwrap(). 
 		// This overload is useful when func() starts doing some synchronous work and then hits IO and 
 		// needs to create a task to finish the work. 
@@ -179,7 +180,7 @@ namespace System.Threading.Tasks
 		// <param name="cancellationToken">cancellation token. This is only checked before we run the task, and if canceled, we immediately return a canceled task.</param>
 		// <returns>a task, created by running func().</returns>
 		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
-		internal static Task<TResult> RunSynchronously<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken = default(CancellationToken))
+		private static Task<TResult> RunSynchronously<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken = default(CancellationToken))
 		{
 			if (cancellationToken.IsCancellationRequested)
 			{
