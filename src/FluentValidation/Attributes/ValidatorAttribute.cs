@@ -26,6 +26,7 @@ namespace FluentValidation.Attributes
 	/// Validator attribute to define the class that will describe the Validation rules.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Parameter)]
+	[Obsolete("Use of the ValidatorAttribute is no longer recommended. If you're using ASP.NET Core, you should switch to using the Service Provider infrastructure for registering validators. For MVC5, WebApi2 or non-web scenarios, please consider using an IoC container instead.")]
 	public class ValidatorAttribute : Attribute
 	{
 		/// <summary>

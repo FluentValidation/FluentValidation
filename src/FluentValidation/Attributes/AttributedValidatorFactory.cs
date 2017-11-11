@@ -29,6 +29,7 @@ namespace FluentValidation.Attributes
 	/// the <see cref="ValidatorAttribute"/> instance on the specified <see cref="Type"/> or
 	/// <see cref="ParameterInfo"/> in order to provide the validator instance.
 	/// </summary>
+	[Obsolete("The AttributedValidatorFactory is no longer recommended. If you're using ASP.NET Core, you should switch to using the Service Provider infrastructure for registering validators. For MVC5, WebApi2 or non-web scenarios, please consider using an IoC container instead.")]
 	public class AttributedValidatorFactory : IValidatorFactory, IParameterValidatorFactory
 	{
 		private readonly Func<Type, IValidator> instanceFactory;
