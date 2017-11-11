@@ -1,4 +1,5 @@
-7.x - 
+7.3 - 
+Major improvements to the AspNetCore integration including better collection support and optional support for implicit validators
 Marked ValidationException as serializable when running on full framework
 Updated EnumValidator's Flags support to handle the ~0 value
 Fixed TestHelper checking for child validator would respond with the wrong type
