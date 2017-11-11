@@ -113,7 +113,7 @@
 
 		void CheckParametersMatch(string languageCode, string translationKey) {
 			var referenceMessage = _languages.GetString(translationKey);
-			var translatedMessage = _languages.GetString(translationKey, CultureInfo.CreateSpecificCulture(languageCode));
+			var translatedMessage = _languages.GetString(translationKey, new CultureInfo(languageCode));
 			if (referenceMessage == translatedMessage) return;
 			var referenceParameters = ExtractTemplateParameters(referenceMessage);
 			var translatedParameters = ExtractTemplateParameters(translatedMessage);
