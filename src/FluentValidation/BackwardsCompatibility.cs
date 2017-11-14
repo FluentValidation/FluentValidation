@@ -236,7 +236,7 @@ namespace FluentValidation
 	    }
 
 	    /// <summary>
-	    /// Remove all validators of the specifed type.
+	    /// Remove all validators of the specified type.
 	    /// </summary>
 	    [Obsolete("Run-time modification of validators is not recommended or supported.", true)]
 	    public static void RemoveRule<T>(this IValidator<T> validators,
