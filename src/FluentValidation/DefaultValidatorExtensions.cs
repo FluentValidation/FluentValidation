@@ -82,7 +82,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// Defines a length validator on the current rule builder, but only for string properties.
-		/// Validation will fail if the length of the string is outside of the specifed range. The range is inclusive.
+		/// Validation will fail if the length of the string is outside of the specified range. The range is inclusive.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
@@ -95,7 +95,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// Defines a length validator on the current rule builder, but only for string properties.
-		/// Validation will fail if the length of the string is outside of the specifed range. The range is inclusive.
+		/// Validation will fail if the length of the string is outside of the specified range. The range is inclusive.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
@@ -311,7 +311,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.
 		/// Validation will fail if the specified lambda returns false.
-		/// Validation will succeed if the specifed lambda returns true.
+		/// Validation will succeed if the specified lambda returns true.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -327,7 +327,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.
 		/// Validation will fail if the specified lambda returns false.
-		/// Validation will succeed if the specifed lambda returns true.
+		/// Validation will succeed if the specified lambda returns true.
 		/// This overload accepts the object being validated in addition to the property being validated.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
@@ -343,7 +343,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines a predicate validator on the current rule builder using a lambda expression to specify the predicate.
 		/// Validation will fail if the specified lambda returns false.
-		/// Validation will succeed if the specifed lambda returns true.
+		/// Validation will succeed if the specified lambda returns true.
 		/// This overload accepts the object being validated in addition to the property being validated.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
@@ -359,7 +359,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines an asynchronous predicate validator on the current rule builder using a lambda expression to specify the predicate.
 		/// Validation will fail if the specified lambda returns false.
-		/// Validation will succeed if the specifed lambda returns true.
+		/// Validation will succeed if the specified lambda returns true.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -375,7 +375,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines an asynchronous predicate validator on the current rule builder using a lambda expression to specify the predicate.
 		/// Validation will fail if the specified lambda returns false.
-		/// Validation will succeed if the specifed lambda returns true.
+		/// Validation will succeed if the specified lambda returns true.
 		/// This overload accepts the object being validated in addition to the property being validated.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
@@ -391,7 +391,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines an asynchronous predicate validator on the current rule builder using a lambda expression to specify the predicate.
 		/// Validation will fail if the specified lambda returns false.
-		/// Validation will succeed if the specifed lambda returns true.
+		/// Validation will succeed if the specified lambda returns true.
 		/// This overload accepts the object being validated in addition to the property being validated.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
