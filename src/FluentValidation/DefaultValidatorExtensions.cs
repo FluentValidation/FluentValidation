@@ -20,6 +20,7 @@ namespace FluentValidation {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Text.RegularExpressions;
 	using System.Threading;
@@ -867,8 +868,8 @@ namespace FluentValidation {
 			}
 			
 			if(ruleSet != null) {
-				var ruleSetNames = ruleSet.Split(',', ';');
-				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames);
+				var ruleSetNames = ruleSet.Split(',', ';').Select(x => x.Trim());
+				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames.ToArray());
 			} 
 
 			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);

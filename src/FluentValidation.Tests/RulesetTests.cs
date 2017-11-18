@@ -143,6 +143,20 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+		[Fact]
+		public void Trims_spaces() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleSet("First", () => {
+				validator.RuleFor(x => x.Forename).NotNull();
+			});
+			validator.RuleSet("Second", () => {
+				validator.RuleFor(x => x.Surname).NotNull();
+			});
+
+			var result = validator.Validate(new Person(), ruleSet: "First, Second");
+			result.Errors.Count.ShouldEqual(2);
+		}
+
 
 		private class TestValidator : AbstractValidator<Person> {
 			public TestValidator() {
