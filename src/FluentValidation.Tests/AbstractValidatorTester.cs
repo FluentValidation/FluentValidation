@@ -90,6 +90,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void WithName_should_override_field_name_with_value_from_other_property() {
+			validator.RuleFor(x => x.Forename).NotNull().WithName(x => x.Surname);
+			var result = validator.Validate(new Person(){Surname = "Foo"});
+			result.Errors[0].ErrorMessage.ShouldEqual("'Foo' must not be empty.");
+		}
+
+		[Fact]
 		public void WithPropertyName_should_override_property_name() {
 			validator.RuleFor(x => x.Surname).NotNull().OverridePropertyName("foo");
 			var result = validator.Validate(new Person());

@@ -216,12 +216,29 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
+		/// Display name for the property. 
+		/// </summary>
+		public string GetDisplayName(object model) {
+			string result = null;
+
+			if (DisplayName != null) {
+				result = DisplayName.GetString(model);
+			}
+
+			if (result == null) {
+				result = propertyDisplayName;
+			}
+
+			return result;
+		}
+
+		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext context) {
-			string displayName = GetDisplayName();
+			string displayName = GetDisplayName(context.InstanceToValidate);
 
 			if (PropertyName == null && displayName == null) {
 				//No name has been specified. Assume this is a model-level rule, so we should use empty string instead. 
@@ -280,7 +297,7 @@ namespace FluentValidation.Internal {
 		/// <returns>A collection of validation failures</returns>
 		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
 			try {
-				var displayName = GetDisplayName();
+				var displayName = GetDisplayName(context.InstanceToValidate);
 
 				if (PropertyName == null && displayName == null)
 				{

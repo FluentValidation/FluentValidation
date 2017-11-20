@@ -63,7 +63,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_set_cutom_property_name() {
+		public void Should_set_custom_property_name() {
 			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
 			Assert.Equal(builder.Rule.DisplayName.GetString(null), "Foo");
 		}
