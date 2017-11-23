@@ -10,6 +10,7 @@
 		public string Required { get; set; }
 		public string Length { get; set; }
 		public string Required2 { get; set; }
+		public string RequiredInsidePartial { get; set; }
 		public string ExactLength { get; set; }
 		public int GreaterThan { get; set; }
 		public int GreaterThanOrEqual { get; set; }
@@ -60,6 +61,7 @@
 			RuleFor(x => x.RegEx).Matches("[0-9]");
 			RuleFor(x => x.Required).NotEmpty();
 			RuleFor(x => x.Required2).NotEmpty();
+			RuleFor(x => x.RequiredInsidePartial).NotEmpty();
 
 			RuleFor(x => x.Length).Length(1, 4);
 			RuleFor(x => x.ExactLength).Length(4);
@@ -76,6 +78,7 @@
 			RuleFor(x => x.LocalizedName).NotNull().WithLocalizedName(() => TestMessages.notnull_error);
 			RuleFor(x => x.CustomNameValueType).NotNull().WithName("Foo");
 			RuleFor(x => x.MessageWithContext).NotNull().WithMessage(x => $"Foo {x.Required}");
+
 
 		}
 	}

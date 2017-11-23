@@ -21,5 +21,6 @@
     <input asp-for="CustomName" />
     <input asp-for="LocalizedName" />
     <input asp-for="CustomNameValueType" />
-    <input asp-for="MessageWithContext"/>
+	<input asp-for="MessageWithContext"/>
+	@Html.Partial("_TestPartial", Model)
 </div>

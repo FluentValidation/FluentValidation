@@ -18,24 +18,8 @@
 
 namespace FluentValidation.Tests.AspNetCore {
 	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Linq.Expressions;
-	using System.Net.Http;
 	using System.Threading.Tasks;
-	using FluentValidation.AspNetCore;
-	using Internal;
-	using Microsoft.AspNetCore.Hosting;
-	using Microsoft.AspNetCore.Mvc;
-	using Microsoft.AspNetCore.Mvc.Filters;
-	using Microsoft.AspNetCore.Mvc.Internal;
-	using Microsoft.AspNetCore.Mvc.ModelBinding;
-	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using Microsoft.AspNetCore.TestHost;
-	using Validators;
-    using Xunit;
+	using Xunit;
 
 	public class ClientsideMessageTester : IClassFixture<ClientsideFixture<StartupWithContainer>> {
 		private readonly ClientsideFixture<StartupWithContainer> _webApp;
@@ -226,6 +210,12 @@ namespace FluentValidation.Tests.AspNetCore {
 
 			thrown.ShouldBeTrue();
 			ex.Message.ShouldEqual("Cannot use the RuleSetForClientSideMessagesAttribute unless the IHttpContextAccessor is registered with the service provider. Make sure the provider is registered by calling services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); in your Startup class's ConfigureServices method");
+		}
+
+		[Fact]
+		public async Task Renders_attributes_inside_partial() {
+			var msg = await _webApp.GetClientsideMessage("RequiredInsidePartial", "data-val-required");
+			msg.ShouldEqual("'Required Inside Partial' should not be empty.");
 		}
 		
 	}
