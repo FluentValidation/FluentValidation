@@ -66,6 +66,10 @@ namespace FluentValidation.AspNetCore {
 		public void CreateValidators(ClientValidatorProviderContext context) {
 			var modelType = context.ModelMetadata.ContainerType;
 
+			if (_httpContextAccessor == null) {
+				throw new InvalidOperationException("Cannot use clientside validation unless the IHttpContextAccessor is registered with the service provider. Make sure the provider is registered by calling services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); in your Startup class's ConfigureServices method");
+			}
+
 			var validatorFactory = (IValidatorFactory)_httpContextAccessor.HttpContext.RequestServices.GetService(typeof(IValidatorFactory));
 
 			if (modelType != null ) {
