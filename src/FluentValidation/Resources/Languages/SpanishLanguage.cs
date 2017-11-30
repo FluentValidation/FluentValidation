@@ -38,7 +38,7 @@ namespace FluentValidation.Resources {
 			Translate<AsyncPredicateValidator>("'{PropertyName}' no cumple con la condición especificada.");
 			Translate<RegularExpressionValidator>("'{PropertyName}' no tiene el formato correcto.");
 			Translate<EqualValidator>("'{PropertyName}' debería ser igual a '{ComparisonValue}'.");
-			Translate<ExactLengthValidator>("'{PropertyName}' debe tener una longitude de {MaxLength} caracteres. Actualmente tiene {TotalLength} caracter(es).");
+			Translate<ExactLengthValidator>("'{PropertyName}' debe tener un largo de {MaxLength} caracteres. Actualmente tiene {TotalLength} caracter(es).");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' debe estar entre {From} y {To} (exclusivo). Actualmente tiene {Value}.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' debe estar entre {From} y {To}. Actualmente tiene {Value}.");
 
