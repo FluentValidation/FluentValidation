@@ -353,11 +353,15 @@
 
 		[Fact]
 		public async void Executes_implicit_child_validator_when_enabled() {
-//			var app = new WebAppFixture<StartupWithImplicitValidationEnabled>();
-
 			var result = await _webApp.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 			result[0].Name.ShouldEqual("Child.Name");
+		}
+
+		[Fact]
+		public async void Ignores_null_child() {
+			var result = await _webApp.GetErrors("ImplicitChildValidatorWithNullChild", new FormData());
+			result.Count.ShouldEqual(0);
 		}
 
 		[Fact]

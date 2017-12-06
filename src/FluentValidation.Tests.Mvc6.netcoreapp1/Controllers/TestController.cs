@@ -112,6 +112,10 @@
 			return TestResult();
 		}
 
+		public ActionResult ImplicitChildValidatorWithNullChild(ParentModel5 model) {
+			return TestResult();
+		}
+
 		public ActionResult ImplementsIValidatableObject(ImplementsIValidatableObjectModel model) {
 			return TestResult();
 		}

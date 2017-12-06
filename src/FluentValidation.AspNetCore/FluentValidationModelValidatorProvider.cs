@@ -35,6 +35,8 @@
 	internal class FluentValidationModelValidator : IModelValidator {
 		public IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
 
+			// Skip validation if model is null.
+			if (mvContext.Model == null) return Enumerable.Empty<ModelValidationResult>();
 
 			var factory = mvContext.ActionContext.HttpContext.RequestServices.GetService(typeof(IValidatorFactory)) as IValidatorFactory;
 

@@ -462,4 +462,12 @@
 			RuleFor(x => x.Name).NotNull();
 		}
 	}
+
+	[Validator(typeof(ParentModel5Validator))]
+	public class ParentModel5 {
+		public ChildModel Child { get; set; }
+	}
+
+	public class ParentModel5Validator : AbstractValidator<ParentModel5> { }
+
 }
