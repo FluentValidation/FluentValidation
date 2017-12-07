@@ -25,12 +25,9 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
 	using FluentValidation;
-	using System.Linq;
 	using System.Collections.Generic;
 	using Microsoft.AspNetCore.Http;
-	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
-	using Resources;
 
 	public static class FluentValidationMvcExtensions {
 		/// <summary>
@@ -111,10 +108,10 @@ namespace FluentValidation.AspNetCore {
 		public static IMvcBuilder AddFluentValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			// add all IValidator to MVC's service provider
 
-		    var expr = configurationExpression ?? delegate { };
-            var config = new FluentValidationMvcConfiguration();
+			var expr = configurationExpression ?? delegate { };
+			var config = new FluentValidationMvcConfiguration();
 
-		    expr(config);
+			expr(config);
 
 			if (config.AssembliesToRegister.Count > 0) {
 				RegisterTypes(config.AssembliesToRegister, mvcBuilder.Services);
@@ -146,19 +143,16 @@ namespace FluentValidation.AspNetCore {
 		}
 	}
 
-	internal class FluentValidationViewOptionsSetup : IConfigureOptions<MvcViewOptions>
-	{
+	internal class FluentValidationViewOptionsSetup : IConfigureOptions<MvcViewOptions> {
 		private readonly Action<FluentValidationClientModelValidatorProvider> _action;
 		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public FluentValidationViewOptionsSetup(Action<FluentValidationClientModelValidatorProvider> action, IHttpContextAccessor httpContextAccessor)
-		{
+		public FluentValidationViewOptionsSetup(Action<FluentValidationClientModelValidatorProvider> action, IHttpContextAccessor httpContextAccessor) {
 			_action = action;
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-		public void Configure(MvcViewOptions options)
-		{
+		public void Configure(MvcViewOptions options) {
 			var provider = new FluentValidationClientModelValidatorProvider(_httpContextAccessor);
 			_action(provider);
 			options.ClientModelValidatorProviders.Add(provider);
