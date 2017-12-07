@@ -14,7 +14,6 @@
 	/// ModelValidatorProvider implementation only used for child properties.
 	/// </summary>
 	internal class FluentValidationModelValidatorProvider : IModelValidatorProvider {
-		private readonly bool _shouldExecute;
 		private bool _implicitValidationEnabled;
 
 		public FluentValidationModelValidatorProvider(bool implicitValidationEnabled) {
