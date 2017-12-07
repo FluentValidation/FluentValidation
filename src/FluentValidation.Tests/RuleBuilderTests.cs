@@ -106,7 +106,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_when_async_predicate_is_null() {
-			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WhenAsync(null));
+			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WhenAsync((Func<Person, CancellationToken, Task<bool>>) null));
 		}
 
 		[Fact]
@@ -116,7 +116,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_when_async_inverse_predicate_is_null() {
-			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).UnlessAsync(null));
+			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).UnlessAsync((Func<Person, CancellationToken, Task<bool>>) null));
 		}
 
 		[Fact]

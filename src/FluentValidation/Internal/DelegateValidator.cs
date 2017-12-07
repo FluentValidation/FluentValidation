@@ -37,7 +37,7 @@ namespace FluentValidation.Internal {
 		// Work-around for reflection bug in .NET 4.5
 		static Func<object, bool> s_condition = x => true;
 		private Func<object, bool> condition = s_condition;
-		private Func<object, Task<bool>> asyncCondition = null;
+		private Func<object, CancellationToken, Task<bool>> asyncCondition = null;
 
 		/// <summary>
 		/// Rule set to which this rule belongs.
@@ -107,7 +107,7 @@ namespace FluentValidation.Internal {
 		/// <returns>A collection of validation failures</returns>
 		public IEnumerable<ValidationFailure> Validate(ValidationContext context) {
 			if (!context.Selector.CanExecute(this, "", context) || !condition(context.InstanceToValidate) ||
-				(asyncCondition != null && !asyncCondition(context.InstanceToValidate).Result)) {
+				(asyncCondition != null && !asyncCondition(context.InstanceToValidate, new CancellationToken()).Result)) {
 				return Enumerable.Empty<ValidationFailure>();
 			}
 
@@ -130,7 +130,7 @@ namespace FluentValidation.Internal {
 
 			return asyncCondition == null
 				? ValidateAsyncInternal(context, cancellation)
-				: asyncCondition(context.InstanceToValidate).Then(shouldValidate => 
+				: asyncCondition(context.InstanceToValidate, cancellation).Then(shouldValidate => 
 					shouldValidate
 						? ValidateAsyncInternal(context, cancellation)
 						: TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()),
@@ -160,16 +160,16 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate"></param>
 		/// <param name="applyConditionTo"></param>
-		public void ApplyAsyncCondition(Func<object, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators)
+		public void ApplyAsyncCondition(Func<object, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators)
 		{
 			// For custom rules within the DelegateValidator, we ignore ApplyConditionTo - this is only relevant to chained rules using RuleFor.
 			var originalCondition = this.asyncCondition;
 
-			this.asyncCondition = async x => {
-				var result = await predicate(x);
+			this.asyncCondition = async (x, ct) => {
+				var result = await predicate(x, ct);
 				if (!result) return false;
 				if (originalCondition == null) return true;
-				return await originalCondition(x);
+				return await originalCondition(x, ct);
 			};
 		}
 	}
