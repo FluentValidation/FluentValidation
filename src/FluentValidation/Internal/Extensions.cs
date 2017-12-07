@@ -22,6 +22,7 @@ namespace FluentValidation.Internal {
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Text;
+	using System.Threading;
 	using System.Threading.Tasks;
 
 	/// <summary>
@@ -156,6 +157,12 @@ namespace FluentValidation.Internal {
 		public static Func<object, bool> CoerceToNonGeneric<T>(this Func<T, bool> func) {
 			return x => func((T)x);
 		}
+
+		public static Func<object, CancellationToken, Task<bool>> CoerceToNonGeneric<T>(this Func<T, CancellationToken, Task<bool>> func)
+		{
+			return (x, ct) => func((T)x, ct);
+		}
+
 
 		public static Func<object, Task<bool>> CoerceToNonGeneric<T>(this Func<T, Task<bool>> func)
 		{

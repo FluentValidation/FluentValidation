@@ -6,6 +6,7 @@ Fixed TestHelper checking for child validator would respond with the wrong type
 Updated translations for some validators and fixed some incorrect language codes
 Fixed overload of WithName that takes a lambda.
 Updated version of the Czech translations
+Added versions of WhenAsync and UnlessAsync that support CancellationTokens
 
 7.2.1 - 24 October 2017
 Introduce MessageFormatterFactory 
