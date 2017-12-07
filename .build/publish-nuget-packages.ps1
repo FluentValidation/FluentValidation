@@ -3,7 +3,7 @@ $scriptpath = split-path -parent $MyInvocation.MyCommand.Path
 $nugetpath = resolve-path "$scriptpath/../.nuget/nuget.exe"
 $packagespath = resolve-path "$scriptpath/../build/packages"
 
-$asm = [System.Reflection.Assembly]::LoadFile("$scriptpath/../build/Release/FluentValidation/FluentValidation.dll")
+$asm = [System.Reflection.Assembly]::LoadFile("$scriptpath/../build/Release/FluentValidation-netstandard2.0/FluentValidation.dll")
 
 if(-not (test-path $keyfile)) {
   throw "Could not find the NuGet access key at $keyfile. If you're not Jeremy, you shouldn't be running this script!"

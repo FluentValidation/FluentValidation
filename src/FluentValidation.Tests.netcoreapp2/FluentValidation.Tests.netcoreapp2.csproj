@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>FluentValidation Unit Tests .NET Core</Description>
+    <Authors>Jeremy Skinner</Authors>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>FluentValidation.Tests.dotnet</AssemblyName>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <ApplicationIcon />
+    <OutputTypeEx>library</OutputTypeEx>
+    <StartupObject />
+    <RootNamespace>FluentValidation.Tests</RootNamespace>
+	  <IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\FluentValidation.Tests\**\*.cs" Exclude="..\FluentValidation.Tests\obj\**\*.cs" />
+    <EmbeddedResource Include="..\FluentValidation.Tests\TestMessages.fr.resx" Link="TestMessages.fr.resx">
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\FluentValidation.Tests\TestMessages.resx" Link="TestMessages.resx">
+    </EmbeddedResource>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+		<PackageReference Include="Moq" Version="4.7.99" />
+
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1705;1998;0618</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1705;1998;0618</NoWarn>
+  </PropertyGroup>
+
+</Project>

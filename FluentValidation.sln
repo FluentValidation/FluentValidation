@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3906F280-A567-4AD7-A0EF-7253E95E7852}"
 	ProjectSection(SolutionItems) = preProject
@@ -18,11 +18,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{0216F6
 		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests", "src\FluentValidation.Tests\FluentValidation.Tests.csproj", "{E353A6E3-5404-4E1E-B33D-4C7BAE646752}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests", "src\FluentValidation.Tests\FluentValidation.Tests.csproj", "{E353A6E3-5404-4E1E-B33D-4C7BAE646752}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.Mvc5", "src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj", "{8FF90023-30A2-410D-A735-498878BDA168}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc5", "src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj", "{8FF90023-30A2-410D-A735-498878BDA168}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.WebApi", "src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj", "{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.WebApi", "src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj", "{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.netcoreapp1", "src\FluentValidation.Tests.netcoreapp1\FluentValidation.Tests.netcoreapp1.csproj", "{FCCE03DA-9FD1-4483-976C-EA6821A1E514}"
 EndProject
@@ -37,6 +37,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.WebApi", "src\FluentValidation.WebApi\FluentValidation.WebApi.csproj", "{9D1DC734-F71F-4587-B54C-697F0B5872AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.netcoreapp2", "src\FluentValidation.Tests.Mvc6.netcoreapp2\FluentValidation.Tests.Mvc6.netcoreapp2.csproj", "{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.netcoreapp2", "src\FluentValidation.Tests.netcoreapp2\FluentValidation.Tests.netcoreapp2.csproj", "{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,10 @@ Global
 		{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
