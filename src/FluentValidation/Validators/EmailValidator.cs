@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	//Email regex from http://hexillion.com/samples/#Regex
+	//Email regex matches the one used in the DataAnnotations EmailAddressAttribute for consistency/parity with DataAnnotations. This is not a fully comprehensive solution, but is "good enough" for most cases. 
 	public class EmailValidator : PropertyValidator, IRegularExpressionValidator, IEmailValidator {
 		private readonly Regex regex;
 
