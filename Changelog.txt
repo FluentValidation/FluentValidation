@@ -8,6 +8,7 @@ Fixed overload of WithName that takes a lambda.
 Updated version of the Czech translations
 Added versions of WhenAsync and UnlessAsync that support CancellationTokens
 Simplify calls to DependentRules
+Add Skip property to CustomizeValidatorAttribute in the ASP.NET Core integration
 
 7.2.1 - 24 October 2017
 Introduce MessageFormatterFactory 

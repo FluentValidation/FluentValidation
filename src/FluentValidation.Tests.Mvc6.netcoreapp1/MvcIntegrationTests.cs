@@ -478,5 +478,19 @@
 			result.IsValidField("[1].Value.Id").ShouldBeFalse();
 			result.IsValidField("[1].Value.SomeBool").ShouldBeFalse();
 		}
+
+		[Fact]
+		public async Task Skips_validation() {
+			var results = await _webApp.GetErrors("SkipsValidation", new FormData());
+			results.Count.ShouldEqual(0);
+		}
+
+		[Fact]
+		public async void Skips_implicit_child_validation() {
+			var result = await _webApp.GetErrors("SkipsImplicitChildValidator", new FormData());
+			result.Count.ShouldEqual(0);
+		}
+
+
 	}
 }

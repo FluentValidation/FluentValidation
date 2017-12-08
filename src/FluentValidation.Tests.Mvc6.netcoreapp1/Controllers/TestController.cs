@@ -146,6 +146,14 @@
 			return TestResult();
 		}
 
+		public ActionResult SkipsValidation([CustomizeValidator(Skip=true)] TestModel test) {
+			return TestResult();
+		}
+
+		public ActionResult SkipsImplicitChildValidator([CustomizeValidator(Skip=true)] ParentModel model) {
+			return TestResult();
+		}
+
 		private ActionResult TestResult() {
 			var errors = new List<SimpleError>();
 

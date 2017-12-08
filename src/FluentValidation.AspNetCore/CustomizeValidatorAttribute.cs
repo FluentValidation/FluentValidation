@@ -30,7 +30,7 @@ namespace FluentValidation.AspNetCore
 		public string RuleSet { get; set; }
 		public string Properties { get; set; }
 		public Type Interceptor { get; set; }
-
+		public bool Skip { get; set; }
 		/// <summary>
 		/// Builds a validator selector from the options specified in the attribute's properties.
 		/// </summary>

@@ -45,6 +45,18 @@
 				if (validator != null) {
 
 					var customizations = GetCustomizations(mvContext.ActionContext, mvContext.Model);
+
+					if (customizations.Skip) {
+						return Enumerable.Empty<ModelValidationResult>();
+					}
+
+					if (mvContext.Container != null) {
+						var containerCustomizations = GetCustomizations(mvContext.ActionContext, mvContext.Container);
+						if (containerCustomizations.Skip) {
+							return Enumerable.Empty<ModelValidationResult>();
+						}
+					}
+
 					var selector = customizations.ToValidatorSelector();
 					var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
 					var context = new FluentValidation.ValidationContext(mvContext.Model, new FluentValidation.Internal.PropertyChain(), selector);
