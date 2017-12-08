@@ -1,6 +1,5 @@
 $keyfile = "$env:USERPROFILE\Dropbox\nuget-access-key.txt"
 $scriptpath = split-path -parent $MyInvocation.MyCommand.Path
-$nugetpath = resolve-path "$scriptpath/../.nuget/nuget.exe"
 $packagespath = resolve-path "$scriptpath/../build/packages"
 
 $asm = [System.Reflection.Assembly]::LoadFile("$scriptpath/../build/Release/FluentValidation-netstandard2.0/FluentValidation.dll")
@@ -38,7 +37,7 @@ else {
     $packages | % { 
         $package = $_.Name
         write-host "Uploading $package"
-        & $nugetpath push $package $key -source "https://www.nuget.org/api/v2/package"
+        & dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
         write-host ""
     }
   }
