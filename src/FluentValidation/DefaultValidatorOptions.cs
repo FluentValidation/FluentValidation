@@ -235,8 +235,26 @@ namespace FluentValidation {
 		/// <param name="action">An action to be invoked if the rule is valid</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<DependentRules<T>>  action) {
+
 			var dependencyContainer = new DependentRules<T>();
-			action(dependencyContainer);
+
+			if (rule is IExposesParentValidator<T> exposesParentValidator) {
+				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
+					// Capture any rules added to the parent validator inside this delegate. 
+					void OnRuleAddedToParent(IValidationRule r) {
+						dependencyContainer.AddRule(r);
+						parent.NestedValidators.Remove(r);
+					}
+
+					using (parent.NestedValidators.OnItemAdded(OnRuleAddedToParent)) {
+						action(dependencyContainer);
+					}
+				}
+			}
+			else {
+				action(dependencyContainer);
+			}
+
 
 			rule.Configure(cfg => {
 

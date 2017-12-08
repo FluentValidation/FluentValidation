@@ -34,7 +34,14 @@ namespace FluentValidation {
 		public static ICollectionValidatorRuleBuilder<T, TCollectionElement> SetCollectionValidator<T, TCollectionElement>(this IRuleBuilder<T, IEnumerable<TCollectionElement>> ruleBuilder, IValidator<TCollectionElement> validator) {
 			var adaptor = new ChildCollectionValidatorAdaptor(validator);
 			ruleBuilder.SetValidator(adaptor);
-			return new CollectionValidatorRuleBuilder<T, TCollectionElement>(ruleBuilder, adaptor);
+			IValidator<T> parentValidator = null;
+
+			if (ruleBuilder is IExposesParentValidator<T> exposesParentValidator)
+			{
+				parentValidator = exposesParentValidator.ParentValidator;
+			}
+
+			return new CollectionValidatorRuleBuilder<T, TCollectionElement>(ruleBuilder, adaptor, parentValidator);
 		}
 
 		/// <summary>
@@ -50,7 +57,14 @@ namespace FluentValidation {
 			where TValidator : IValidator<TCollectionElement> {
 			var adaptor = new ChildCollectionValidatorAdaptor(parent => validator((T) parent), typeof(TValidator));
 			ruleBuilder.SetValidator(adaptor);
-			return new CollectionValidatorRuleBuilder<T, TCollectionElement>(ruleBuilder, adaptor);
+
+			IValidator<T> parentValidator= null;
+
+			if (ruleBuilder is IExposesParentValidator<T> exposesParentValidator) {
+				parentValidator = exposesParentValidator.ParentValidator;
+			}
+
+			return new CollectionValidatorRuleBuilder<T, TCollectionElement>(ruleBuilder, adaptor, parentValidator);
 		}
 
 		/// <summary>
@@ -67,13 +81,14 @@ namespace FluentValidation {
 			ICollectionValidatorRuleBuilder<T,TCollectionElement> Where(Func<TCollectionElement, bool> predicate);
 		}
 
-		private class CollectionValidatorRuleBuilder<T,TCollectionElement> : ICollectionValidatorRuleBuilder<T,TCollectionElement> {
+		private class CollectionValidatorRuleBuilder<T,TCollectionElement> : ICollectionValidatorRuleBuilder<T,TCollectionElement>, IExposesParentValidator<T> {
 			IRuleBuilder<T, IEnumerable<TCollectionElement>> ruleBuilder;
 			ChildCollectionValidatorAdaptor adaptor;
 
-			public CollectionValidatorRuleBuilder(IRuleBuilder<T, IEnumerable<TCollectionElement>> ruleBuilder, ChildCollectionValidatorAdaptor adaptor) {
+			public CollectionValidatorRuleBuilder(IRuleBuilder<T, IEnumerable<TCollectionElement>> ruleBuilder, ChildCollectionValidatorAdaptor adaptor, IValidator<T> parent) {
 				this.ruleBuilder = ruleBuilder;
 				this.adaptor = adaptor;
+				ParentValidator = parent;
 			}
 
 			public IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> SetValidator(IPropertyValidator validator) {
@@ -98,6 +113,8 @@ namespace FluentValidation {
 				adaptor.Predicate = x => predicate((TCollectionElement)x);
 				return this;
 			}
+
+			public IValidator<T> ParentValidator { get; }
 		}
 	}
 }

@@ -35,7 +35,7 @@ namespace FluentValidation.Tests {
 
 		public  RuleBuilderTests() {
 			var rule = PropertyRule.Create<Person,string>(x => x.Surname);
-			builder = new RuleBuilder<Person, string>(rule);
+			builder = new RuleBuilder<Person, string>(rule,null);
 		}
 
 		[Fact]
@@ -181,13 +181,13 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
-			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
+			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth), null);
 			builder.Rule.GetDisplayName().ShouldEqual("Date Of Birth");
 		}
 
 		[Fact]
 		public void PropertyDescription_should_return_custom_property_name() {
-			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth));
+			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth),null);
 			builder.NotEqual(default(DateTime)).WithName("Foo");
 			builder.Rule.GetDisplayName().ShouldEqual("Foo");
 		}
@@ -195,7 +195,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Nullable_object_with_condition_should_not_throw()
 		{
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value));
+			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value),null);
 			builder.GreaterThanOrEqualTo(3).When(x => x.NullableInt != null);
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
@@ -203,14 +203,14 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Nullable_object_with_async_condition_should_not_throw()
 		{
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value));
+			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value),null);
 			builder.GreaterThanOrEqualTo(3).WhenAsync(async x => x.NullableInt != null);
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
 		[Fact]
 		public void Rule_for_a_non_memberexpression_should_not_generate_property_name() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
+			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()),null);
 			builder.Rule.GetDisplayName().ShouldBeNull();
 			builder.Rule.PropertyName.ShouldBeNull();
 		}
@@ -223,13 +223,13 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Property_should_return_null_when_it_is_not_a_property_being_validated() {
-			builder = new RuleBuilder<Person, string>(PropertyRule.Create<Person, string>(x => "Foo"));
+			builder = new RuleBuilder<Person, string>(PropertyRule.Create<Person, string>(x => "Foo"),null);
 			builder.Rule.Member.ShouldBeNull();
 		}
 
 		[Fact]
 		public void Result_should_use_custom_property_name_when_no_property_name_can_be_determined() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()));
+			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()),null);
 			builder.GreaterThan(100).WithName("Foo");
 
 			var results = builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
@@ -238,7 +238,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Conditional_child_validator_should_register_with_validator_type_not_property() {
-			var builder = new RuleBuilder<Person, Address>(PropertyRule.Create<Person, Address>(x => x.Address));
+			var builder = new RuleBuilder<Person, Address>(PropertyRule.Create<Person, Address>(x => x.Address),null);
 			builder.SetValidator(person => new NoopAddressValidator());
 
 			builder.Rule.Validators.OfType<ChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));

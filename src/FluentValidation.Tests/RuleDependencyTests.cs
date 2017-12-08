@@ -136,6 +136,21 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+		[Fact]
+		public void Treats_root_level_RuleFor_call_as_dependent_rule_if_user_forgets_to_use_DependentRulesBuilder()
+		{
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Surname).NotNull()
+				.DependentRules(d => {
+					validator.RuleFor(x => x.Forename).NotNull();  // Shouldn't be invoked
+				});
+
+			var results = validator.Validate(new Person { Surname = null });
+			results.Errors.Count.ShouldEqual(1); //only the root NotNull should fire
+			results.Errors.Single().PropertyName.ShouldEqual("Surname");
+		}
+
+
 
 		class AsyncValidator : AbstractValidator<int> {
 			public AsyncValidator() {

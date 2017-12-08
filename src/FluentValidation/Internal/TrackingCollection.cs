@@ -28,10 +28,11 @@ namespace FluentValidation.Internal {
 
 		public void Add(T item) {
 			innerCollection.Add(item);
+			ItemAdded?.Invoke(item);
+		}
 
-			if (ItemAdded != null) {
-				ItemAdded(item);
-			}
+		public void Remove(T item) {
+			innerCollection.Remove(item);
 		}
 
 		public IDisposable OnItemAdded(Action<T> onItemAdded) {
