@@ -59,7 +59,7 @@ namespace FluentValidation {
 		}
 
 		private static string BuildErrorMesage(IEnumerable<ValidationFailure> errors) {
-			var arr = errors.Select(x => "\r\n -- " + x.ErrorMessage).ToArray();
+			var arr = errors.Select(x => Environment.NewLine + " -- " + x.ErrorMessage).ToArray();
 			return "Validation failed: " + string.Join("", arr);
 		}
 	}
