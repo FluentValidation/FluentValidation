@@ -43,7 +43,9 @@ namespace FluentValidation.Resources {
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' skal være mellem {From} og {To} (eksklusiv). Du har indtastet {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' er ikke et gyldigt kreditkortnummer.");
 			Translate<ScalePrecisionValidator>("'{PropertyName}' må ikke være mere end {expectedPrecision} cifre i alt, med hensyn til {expectedScale} decimaler. {digits} cifre og {actualScale} decimaler blev fundet.");
-
+			Translate<EmptyValidator>("'{PropertyName}' skal være tomt.");
+			Translate<NullValidator>("'{PropertyName}' skal være tomt.");
+			Translate<EnumValidator>("'{PropertyName}' har en række værdier, der ikke indeholder '{PropertyValue}'.");
 		}
 	}
 }

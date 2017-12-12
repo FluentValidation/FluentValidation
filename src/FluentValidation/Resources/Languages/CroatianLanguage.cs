@@ -16,16 +16,13 @@
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 
-namespace FluentValidation.Resources
-{
+namespace FluentValidation.Resources {
 	using Validators;
 
-	internal class CroatianLanguage : Language
-	{
+	internal class CroatianLanguage : Language {
 		public override string Name => "hr";
 
-		public CroatianLanguage()
-		{
+		public CroatianLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' nije validna email adresa.");
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' mora biti veći ili jednak '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' mora biti veći od '{ComparisonValue}'.");

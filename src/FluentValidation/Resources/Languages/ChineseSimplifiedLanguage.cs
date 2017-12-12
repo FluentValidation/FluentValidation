@@ -43,7 +43,9 @@ namespace FluentValidation.Resources {
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' 必须在 {From} 和 {To} 之外， 您输入了 {Value}。");
 			Translate<CreditCardValidator>("'{PropertyName}' 不是有效的信用卡号。");
 			Translate<ScalePrecisionValidator>("'{PropertyName}' 总位数不能超过 {expectedPrecision} 位，其中整数部分 {expectedScale} 位。您填写了 {digits} 位小数和 {actualScale} 位整数。");
-
+			Translate<EmptyValidator>("\"{PropertyName}\"应该是空的。");
+			Translate<NullValidator>("\"{PropertyName}\"必须为空。");
+			Translate<EnumValidator>("\"{PropertyName}\"的值范围不包含\"{PropertyValue}\"。");
 		}
 	}
 }

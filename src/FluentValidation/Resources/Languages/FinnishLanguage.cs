@@ -24,12 +24,8 @@ namespace FluentValidation.Resources {
 
 		public FinnishLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' ei ole kelvollinen sähköpostiosoite.");
-			Translate<EqualValidator>("'{PropertyName}' pitäisi olla yhtäsuuri kuin '{ComparisonValue}'.");
-			Translate<ExactLengthValidator>("'{PropertyName}' pitää olla {MaxLength} merkkiä pitkä. Syötit {TotalLength} merkkiä.");
-			Translate<ExclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From} ja {To} (exclusive). Syötit {Value}.");
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' pitää olla suurempi tai yhtä suuri kuin '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' pitää olla suurempi kuin '{ComparisonValue}'.");
-			Translate<InclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From} ja {To}. Syötit {Value}.");
 			Translate<LengthValidator>("'{PropertyName}' pitää olla välillä {MinLength} ja {MaxLength} merkkiä. Syötit {TotalLength} merkkiä.");
 			Translate<MinimumLengthValidator>("'{PropertyName}' on oltava suurempi tai yhtä suuri kuin {MinLength} merkkiä. Syöt {TotalLength} merkkejä.");
 			Translate<MaximumLengthValidator>("'{PropertyName}' on oltava pienempi tai yhtä suuri kuin {MaxLength} merkkiä. Syöt {TotalLength} merkkejä.");
@@ -41,6 +37,10 @@ namespace FluentValidation.Resources {
 			Translate<PredicateValidator>("Määritetty ehto ei toteutunut '{PropertyName}'.");
 			Translate<AsyncPredicateValidator>("Määritetty ehto ei toteutunut '{PropertyName}'.");
 			Translate<RegularExpressionValidator>("'{PropertyName}' ei ole oikeassa muodossa.");
+			Translate<EqualValidator>("'{PropertyName}' pitäisi olla yhtäsuuri kuin '{ComparisonValue}'.");
+			Translate<ExactLengthValidator>("'{PropertyName}' pitää olla {MaxLength} merkkiä pitkä. Syötit {TotalLength} merkkiä.");
+			Translate<ExclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From} ja {To} (exclusive). Syötit {Value}.");
+			Translate<InclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From} ja {To}. Syötit {Value}.");
 		}
 	}
 }

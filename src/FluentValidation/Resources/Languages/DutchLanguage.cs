@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			Translate<NotEqualValidator>("'{PropertyName}' moet anders zijn dan '{ComparisonValue}'.");
 			Translate<NotNullValidator>("'{PropertyName}' mag niet leeg zijn.");
 			Translate<PredicateValidator>("'{PropertyName}' voldoet niet aan de vereisten.");
+			Translate<AsyncPredicateValidator>("'{PropertyName}' voldoet niet aan de vereisten.");
 			Translate<RegularExpressionValidator>("'{PropertyName}' voldoet niet aan het verwachte formaat.");
 			Translate<ExactLengthValidator>("De lengte van '{PropertyName}' moet {MaxLength} karakters zijn. Er zijn {TotalLength} karakters ingevoerd.");
 			Translate<EnumValidator>("'{PropertyValue}' komt niet voor in het bereik van '{PropertyName}'.");
@@ -43,9 +44,8 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' hoort leeg te zijn.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' moet na {From} komen en voor {To} liggen. Je hebt ingevuld {Value}.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' moet tussen {From} en {To} liggen. Je hebt ingevuld {Value}.");
-			Translate<NullValidator>("'{PropertyName}' moet leeg zijn.");
 			Translate<ScalePrecisionValidator>("'{PropertyName}' mag in totaal niet meer dan {expectedPrecision} decimalen nauwkeurig zijn, met een grote van {expectedScale} gehele getallen. Er zijn {digits} decimalen en een grote van {actualScale} gehele getallen gevonden.");
-
+			Translate<NullValidator>("'{PropertyName}' moet leeg zijn.");
 		}
 	}
 }
