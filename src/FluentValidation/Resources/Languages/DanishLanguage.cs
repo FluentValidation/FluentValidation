@@ -27,7 +27,7 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' skal være større end eller lig med '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' skal være større end '{ComparisonValue}'.");
 			Translate<LengthValidator>("'{PropertyName}' skal være mellem {MinLength} og {MaxLength} tegn. Du har indtastet {TotalLength} tegn.");
-			Translate<MinimumLengthValidator>("'{PropertyName}' skal være mellem {MinLength} og 1000 tegn. Du har indtastet {TotalLength} tegn.");
+			Translate<MinimumLengthValidator>("'{PropertyName}' skal være større end eller lig med {MinLength} tegn. Du indtastede {TotalLength} tegn.");
 			Translate<MaximumLengthValidator>("'{PropertyName}' skal være mellem 0 og {MaxLength} tegn. Du har indtastet {TotalLength} tegn.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' skal være mindre end eller lig med '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' skal være mindre end '{ComparisonValue}'.");

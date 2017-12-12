@@ -27,7 +27,7 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' değeri '{ComparisonValue}' değerinden büyük veya eşit olmalı.");
 			Translate<GreaterThanValidator>("'{PropertyName}' değeri '{ComparisonValue}' değerinden büyük olmalı.");
 			Translate<LengthValidator>("'{PropertyName}' değeri  {MinLength} ve {MaxLength} arasında karakter uzunluğunda olmalı . Toplam {TotalLength} adet karakter girdiniz.");
-			Translate<MinimumLengthValidator>("'{PropertyName}' değeri {MinLength} ve 1000 arasında karakter uzunluğunda olmalı . Toplam {TotalLength} adet karakter girdiniz.");
+			Translate<MinimumLengthValidator>("'{PropertyName}', {MinLength} karakterden büyük veya ona eşit olmalıdır. {TotalLength} karakter girdiniz.");
 			Translate<MaximumLengthValidator>("'{PropertyName}' değeri 0 ve {MaxLength} arasında karakter uzunluğunda olmalı . Toplam {TotalLength} adet karakter girdiniz.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' değeri '{ComparisonValue}' değerinden küçük veya eşit olmalı.");
 			Translate<LessThanValidator>("'{PropertyName}' değeri  '{ComparisonValue}' değerinden küçük olmalı.");

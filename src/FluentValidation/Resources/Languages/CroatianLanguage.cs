@@ -30,7 +30,7 @@ namespace FluentValidation.Resources
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' mora biti veći ili jednak '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' mora biti veći od '{ComparisonValue}'.");
 			Translate<LengthValidator>("'{PropertyName}' mora biti između {MinLength} i {MaxLength} karaktera. Upisali ste {TotalLength} karaktera.");
-			Translate<MinimumLengthValidator>("'{PropertyName}' mora biti veći od {MinLength} karaktera. Upisali ste {TotalLength} karaktera.");
+			Translate<MinimumLengthValidator>("'{PropertyName}' mora biti veći ili jednak znakovima {MinLength}. Unijeli ste znakove {TotalLength}.");
 			Translate<MaximumLengthValidator>("'{PropertyName}' mora biti manji od {MaxLength} karaktera. Upisali ste {TotalLength} karaktera.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' mora biti manji ili jednak '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' mora biti manji od '{ComparisonValue}'.");
