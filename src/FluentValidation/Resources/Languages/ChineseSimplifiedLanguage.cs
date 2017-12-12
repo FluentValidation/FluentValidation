@@ -28,7 +28,7 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanValidator>("'{PropertyName}' 必须大于 '{ComparisonValue}'。");
 			Translate<LengthValidator>("'{PropertyName}' 的长度必须在 {MinLength} 到 {MaxLength} 字符，您已经输入了 {TotalLength} 字符。");
 			Translate<MinimumLengthValidator>("\"{PropertyName}\"必须大于或等于{MinLength}个字符。您输入了{TotalLength}个字符。");
-			Translate<MaximumLengthValidator>("'{PropertyName}' 的长度必须在 0 到 {MaxLength} 字符，您已经输入了 {TotalLength} 字符。");
+			Translate<MaximumLengthValidator>("\"{PropertyName}\"必须小于或等于{MaxLength}个字符。您输入了{TotalLength}个字符。");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' 必须小于或等于 '{ComparisonValue}'。");
 			Translate<LessThanValidator>("'{PropertyName}' 必须小于 '{ComparisonValue}'。");
 			Translate<NotEmptyValidator>("请填写 '{PropertyName}'。");

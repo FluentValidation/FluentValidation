@@ -32,7 +32,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From} ja {To}. Syötit {Value}.");
 			Translate<LengthValidator>("'{PropertyName}' pitää olla välillä {MinLength} ja {MaxLength} merkkiä. Syötit {TotalLength} merkkiä.");
 			Translate<MinimumLengthValidator>("'{PropertyName}' on oltava suurempi tai yhtä suuri kuin {MinLength} merkkiä. Syöt {TotalLength} merkkejä.");
-			Translate<MaximumLengthValidator>("'{PropertyName}' pitää olla välillä 0 ja {MaxLength} merkkiä. Syötit {TotalLength} merkkiä.");
+			Translate<MaximumLengthValidator>("'{PropertyName}' on oltava pienempi tai yhtä suuri kuin {MaxLength} merkkiä. Syöt {TotalLength} merkkejä.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' pitää olla pienempi tai yhtä suuri kuin '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' pitää olla pienempi kuin '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("'{PropertyName}' ei pitäisi olla tyhjä.");

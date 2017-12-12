@@ -32,7 +32,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' deve essere compreso tra {From} e {To}. Hai inserito {Value}.");
 			Translate<LengthValidator>("'{PropertyName}' deve essere lungo tra i {MinLength} e {MaxLength} caratteri. Hai inserito {TotalLength} caratteri.");
 			Translate<MinimumLengthValidator>("'{PropertyName}' deve essere maggiore o uguale a {MinLength} caratteri. Hai inserito i caratteri {TotalLength}.");
-			Translate<MaximumLengthValidator>("'{PropertyName}' deve essere lungo tra i 0 e {MaxLength} caratteri. Hai inserito {TotalLength} caratteri.");
+			Translate<MaximumLengthValidator>("'{PropertyName}' deve essere minore o uguale a {MaxLength} caratteri. Hai inserito i caratteri {TotalLength}.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' deve essere minore o uguale a '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' deve essere minore di '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("'{PropertyName}' non può essere vuoto.");

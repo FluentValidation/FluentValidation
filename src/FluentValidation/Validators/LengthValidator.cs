@@ -107,15 +107,6 @@ namespace FluentValidation.Validators {
 			: base(obj => 0, max, new LanguageStringSource(nameof(MaximumLengthValidator))) {
 
 		}
-
-		protected override bool IsValid(PropertyValidatorContext context) {
-			var result = base.IsValid(context);
-			if (!result) {
-				var currentMax = (int)context.MessageFormatter.PlaceholderValues["MaxLength"];
-				context.MessageFormatter.PlaceholderValues["MaxLength"] = currentMax + 1;
-			}
-			return result;
-		}
 	}
 
 	public class MinimumLengthValidator : LengthValidator {
@@ -128,15 +119,6 @@ namespace FluentValidation.Validators {
 		public MinimumLengthValidator(Func<object, int> min)
 			: base(min, obj => -1, new LanguageStringSource(nameof(MinimumLengthValidator))) {
 
-		}
-
-		protected override bool IsValid(PropertyValidatorContext context) {
-			var result = base.IsValid(context);
-			if (!result) {
-				var currentMin = (int)context.MessageFormatter.PlaceholderValues["MinLength"];
-				context.MessageFormatter.PlaceholderValues["MinLength"] = currentMin - 1;
-			}
-			return result;
 		}
 	}
 

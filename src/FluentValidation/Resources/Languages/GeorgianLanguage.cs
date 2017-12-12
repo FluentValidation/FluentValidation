@@ -29,7 +29,7 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე მეტი.");
 			Translate<LengthValidator>("'{PropertyName}' უნდა იყოს {MinLength}-დან {MaxLength} სიმბოლომდე. თქვენ შეიყვანეთ {TotalLength} სიმბოლო.");
 			Translate<MinimumLengthValidator>("'{PropertyName}' უნდა იყოს მეტი ან ტოლია {MinLength} სიმბოლოები. თქვენ შეიტანეთ {TotalLength} სიმბოლოები.");
-			Translate<MaximumLengthValidator>("'{PropertyName}' უნდა იყოს {MaxLength} სიმბოლოზე ნაკლები. თქვენ შეიყვანეთ {TotalLength} სიმბოლო.");
+			Translate<MaximumLengthValidator>("'{PropertyName}' უნდა იყოს ნაკლები ან ტოლია {MaxLength} სიმბოლოები. თქვენ შეიტანეთ {TotalLength} სიმბოლოები.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე ნაკლები ან ტოლი.");
 			Translate<LessThanValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე ნაკლები.");
 			Translate<NotEmptyValidator>("'{PropertyName}' არ უნდა იყოს ცარიელი.");

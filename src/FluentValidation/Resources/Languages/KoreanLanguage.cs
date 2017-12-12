@@ -33,7 +33,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}'은(는) {From} 이상 {To} 이하여야 합니다. 입력한 값은 {Value}입니다.");
 			Translate<LengthValidator>("'{PropertyName}'은(는) {MinLength} 글자 이상 {MaxLength} 글자 이하여야 합니다. 입력한 문자열은 {TotalLength} 글자입니다.");
 			Translate<MinimumLengthValidator>("'{PropertyName}'은 {MinLength} 자 이상의 값이어야합니다. {TotalLength} 문자를 입력했습니다.");
-			Translate<MaximumLengthValidator>("'{PropertyName}'은(는) 0 글자 이상 {MaxLength} 글자 이하여야 합니다. 입력한 문자열은 {TotalLength} 글자입니다.");
+			Translate<MaximumLengthValidator>("'{PropertyName}'은 (는) {MaxLength} 자 이하 여야합니다. {TotalLength} 문자를 입력했습니다.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}'은(는) '{ComparisonValue}' 이하여야 합니다.");
 			Translate<LessThanValidator>("'{PropertyName}'은(는) '{ComparisonValue}' 보다 작아야 합니다.");
 			Translate<NotEmptyValidator>("'{PropertyName}'은(는) 최소한 한 글자 이상이어야 합니다.");
