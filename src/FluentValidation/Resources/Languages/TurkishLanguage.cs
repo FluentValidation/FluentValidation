@@ -42,6 +42,10 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' değeri {From} ve {To} arasında olmalı. {Value} değerini girdiniz.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' değeri {From} ve {To} (dahil değil) arasında olmalı. {Value} değerini girdiniz.");
 			Translate<CreditCardValidator>("'{PropertyName}' geçerli kredi kartı numarası değil.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}', {expectedScale} ondalıkları için toplamda {expectedPrecision} rakamdan fazla olamaz. {digits} basamak ve {actualScale} basamak bulundu.");
+			Translate<EmptyValidator>("'{PropertyName}' boş olmalıdır.");
+			Translate<NullValidator>("'{PropertyName}' boş olmalıdır.");
+			Translate<EnumValidator>("'{PropertyName}', '{PropertyValue}' içermeyen bir değer aralığı içeriyor.");
 		}
 	}
 }

@@ -41,7 +41,11 @@ namespace FluentValidation.Resources {
 			Translate<ExactLengthValidator>("\"{PropertyName}\" måste vara {MaxLength} tecken långt. Du angav {TotalLength} tecken.");
 			Translate<InclusiveBetweenValidator>("\"{PropertyName}\" måste vara mellan {From} och {To}. Du angav {Value}.");
 			Translate<ExclusiveBetweenValidator>("\"{PropertyName}\" måste vara mellan {From} och {To} (gränsvärdena exkluderade). Du angav {Value}.");
-
+			Translate<CreditCardValidator>("\"{PropertyName}\" no es un número de tarjeta de crédito válido.");
+			Translate<ScalePrecisionValidator>("\"{PropertyName}\" är inte ett giltigt kreditkortsnummer.");
+			Translate<EmptyValidator>("\"{PropertyName}\" ska vara tomt.");
+			Translate<NullValidator>("\"{PropertyName}\" ska vara tomt.");
+			Translate<EnumValidator>("\"{PropertyName}\" har ett antal värden som inte inkluderar \"{PropertyValue}\".");
 		}
 	}
 }

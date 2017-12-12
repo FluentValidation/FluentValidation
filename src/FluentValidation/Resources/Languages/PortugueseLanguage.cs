@@ -41,7 +41,11 @@ namespace FluentValidation.Resources {
 			Translate<ExactLengthValidator>("'{PropertyName}' deve ter o comprimento de {MaxLength} caracteres. Introduziu {TotalLength} caracteres.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' deve estar entre {From} e {To} (exclusivo). Introduziu {Value}.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' deve estar entre {From} e {To}. Introduziu {Value}.");
-
+			Translate<CreditCardValidator>("'{PropertyName}' não é um número de cartão de crédito válido.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' pode não ser mais do que dígitos {expectPrecision} no total, com permissão para decimais de {expectedScale}. {dígitos} dígitos e {realScale} decimais foram encontrados.");
+			Translate<EmptyValidator>("'{PropertyName}' deve estar vazio.");
+			Translate<NullValidator>("'{PropertyName}' deve estar vazio.");
+			Translate<EnumValidator>("'{PropertyName}' possui um intervalo de valores que não inclui '{PropertyValue}'.");
 		}
 	}
 }

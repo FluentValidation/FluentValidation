@@ -20,7 +20,6 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class GeorgianLanguage : Language {
-
 		public override string Name => "ka";
 
 		public GeorgianLanguage() {

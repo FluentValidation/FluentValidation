@@ -43,7 +43,9 @@ namespace FluentValidation.Resources {
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' musi się zawierać pomiędzy {From} i {To} (wyłącznie). Wprowadzono {Value}.");
 			Translate<CreditCardValidator>("Pole '{PropertyName}' nie zawiera poprawnego numer karty kredytowej.");
 			Translate<ScalePrecisionValidator>("Wartość pola '{PropertyName}' nie może mieć więcej niż {expectedPrecision} cyfr z dopuszczalną dokładnością {expectedScale} cyfr po przecinku. Znaleziono {digits} cyfr i {actualScale} cyfr po przecinku.");
-
+			Translate<EmptyValidator>("\"{PropertyName}\" powinno być puste.");
+			Translate<NullValidator>("\"{PropertyName}\" powinno być puste.");
+			Translate<EnumValidator>("\"{PropertyName}\" ma zakres wartości, który nie obejmuje {PropertyValue}.");
 		}
 	}
 }
