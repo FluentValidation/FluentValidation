@@ -1,4 +1,4 @@
-7.3 - 
+7.3 - 13 December 2017
 Major improvements to the AspNetCore integration including better collection support and optional support for implicit validators
 Marked ValidationException as serializable when running on full framework
 Updated EnumValidator's Flags support to handle the ~0 value
@@ -9,6 +9,7 @@ Updated version of the Czech translations
 Added versions of WhenAsync and UnlessAsync that support CancellationTokens
 Simplify calls to DependentRules
 Add Skip property to CustomizeValidatorAttribute in the ASP.NET Core integration
+Updated language translations for various error messages.
 
 7.2.1 - 24 October 2017
 Introduce MessageFormatterFactory 
