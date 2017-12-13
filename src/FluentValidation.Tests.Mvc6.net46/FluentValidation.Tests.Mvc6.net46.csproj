@@ -1,0 +1,84 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+	  <RootNamespace>FluentValidation.Tests</RootNamespace>
+
+		<GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+	  <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	  <PreserveCompilationContext>true</PreserveCompilationContext>
+	</PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP2_0</DefineConstants>
+    <NoWarn>1701;1702;1705;0618</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1705;0618</NoWarn>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FluentValidation.AspNetCore\FluentValidation.AspNetCore.csproj" />
+		<ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.1" />
+	</ItemGroup>
+
+	<Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
+		<ItemGroup>
+			<DepsFilePaths Include="$([System.IO.Path]::ChangeExtension('%(_ResolvedProjectReferencePaths.FullPath)', '.deps.json'))" />
+		</ItemGroup>
+
+		<Copy SourceFiles="%(DepsFilePaths.FullPath)" DestinationFolder="$(OutputPath)" Condition="Exists('%(DepsFilePaths.FullPath)')" />
+	</Target>
+
+	<ItemGroup>
+		<Compile Update="TestMessages.Designer.cs">
+			<DependentUpon>TestMessages.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="TestMessages.resx">
+			<LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
+			<Generator>PublicResXFileCodeGenerator</Generator>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\FluentValidation.Tests.Mvc6.netcoreapp1\**\*.cs" Exclude="..\FluentValidation.Tests.Mvc6.netcoreapp1\obj\**\*.cs" />
+		<None Include="..\FluentValidation.Tests.Mvc6.netcoreapp1\**\*.cshtml" />
+		<Compile Remove="..\FluentValidation.Tests.Mvc6.netcoreapp1\TestMessages.Designer.cs" />
+		<Compile Include="..\FluentValidation.Tests\CultureScope.cs" Link="CultureScope.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="..\FluentValidation.Tests.Mvc6.netcoreapp1\Views\Clientside\Inputs.cshtml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="..\FluentValidation.Tests.Mvc6.netcoreapp1\Views\Clientside\RuleSet.cshtml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="..\FluentValidation.Tests.Mvc6.netcoreapp1\Views\Clientside\_TestPartial.cshtml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="..\FluentValidation.Tests.Mvc6.netcoreapp1\Views\_ViewImports.cshtml">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="xunit.runner.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>

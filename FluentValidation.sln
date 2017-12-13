@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+VisualStudioVersion = 15.0.27130.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3906F280-A567-4AD7-A0EF-7253E95E7852}"
 	ProjectSection(SolutionItems) = preProject
@@ -26,8 +26,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.WebA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.netcoreapp1", "src\FluentValidation.Tests.netcoreapp1\FluentValidation.Tests.netcoreapp1.csproj", "{FCCE03DA-9FD1-4483-976C-EA6821A1E514}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.netcoreapp1", "src\FluentValidation.Tests.Mvc6.netcoreapp1\FluentValidation.Tests.Mvc6.netcoreapp1.csproj", "{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.AspNetCore", "src\FluentValidation.AspNetCore\FluentValidation.AspNetCore.csproj", "{D8A44C11-51B8-4AA1-9391-C4F89078181C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation", "src\FluentValidation\FluentValidation.csproj", "{9DB6A8B4-5C9A-4CA1-96A5-4E1E4C3A9A44}"
@@ -39,6 +37,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.netcoreapp2", "src\FluentValidation.Tests.Mvc6.netcoreapp2\FluentValidation.Tests.Mvc6.netcoreapp2.csproj", "{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.netcoreapp2", "src\FluentValidation.Tests.netcoreapp2\FluentValidation.Tests.netcoreapp2.csproj", "{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.net46", "src\FluentValidation.Tests.Mvc6.net46\FluentValidation.Tests.Mvc6.net46.csproj", "{51F4E700-14A5-435D-8E6C-CEAC236161FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,10 +62,6 @@ Global
 		{FCCE03DA-9FD1-4483-976C-EA6821A1E514}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCCE03DA-9FD1-4483-976C-EA6821A1E514}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FCCE03DA-9FD1-4483-976C-EA6821A1E514}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D67DDC7-AE88-43C2-90DC-B6A37C0CCBF3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -90,6 +86,10 @@ Global
 		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51F4E700-14A5-435D-8E6C-CEAC236161FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F4E700-14A5-435D-8E6C-CEAC236161FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51F4E700-14A5-435D-8E6C-CEAC236161FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51F4E700-14A5-435D-8E6C-CEAC236161FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

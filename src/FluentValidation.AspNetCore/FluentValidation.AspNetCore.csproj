@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.6;net451;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>FluentValidation.AspNetCore</AssemblyName>
     <PackageId>FluentValidation.AspNetCore</PackageId>
     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.1</NetStandardImplicitPackageVersion>
@@ -15,13 +15,7 @@
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
-    <PackageReleaseNotes>
-Changes in 7.3:
-* Added support for validating collections when using the automatic MVC integration
-* Added support for implicat validation of child properties when using the automatic MVC integration
-* Added Skip property to the CustomizeValidatorAttribute to opt-out of validating certain properties
-    
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <RepositoryUrl>http://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
     <DelaySign>False</DelaySign>
@@ -40,13 +34,13 @@ Changes in 7.3:
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+  <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="[1.1.2,2.0)" />
   </ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="[1.1.2,2.0)" />
-	</ItemGroup>
+	</ItemGroup>-->
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
 		<!--<Reference Include="netstandard" />-->

@@ -29,7 +29,8 @@
       <Files Include="$(BaseDir)\src\FluentValidation.Tests.netcoreapp1\FluentValidation.Tests.netcoreapp1.csproj" />
       <Files Include="$(BaseDir)\src\FluentValidation.Tests.netcoreapp2\FluentValidation.Tests.netcoreapp2.csproj" />
       <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj" />
-      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.netcoreapp1\FluentValidation.Tests.Mvc6.netcoreapp1.csproj" />
+      <!--<Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.netcoreapp1\FluentValidation.Tests.Mvc6.netcoreapp1.csproj" />-->
+      <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.net46\FluentValidation.Tests.Mvc6.net46.csproj" />
       <Files Include="$(BaseDir)\src\FluentValidation.Tests.Mvc6.netcoreapp2\FluentValidation.Tests.Mvc6.netcoreapp2.csproj" />
       <Files Include="$(BaseDir)\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj" />
     </ItemGroup>
@@ -65,8 +66,8 @@
     <Copy SourceFiles="@(MainBinaries45)" DestinationFolder="$(OutputDir)\FluentValidation-net45\%(RecursiveDir)"  />
     <Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC5" />
     <Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi" />
-    <Copy SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(OutputDir)\AspNetCore-Netstandard1" />
-    <Copy SourceFiles="@(AspNetCore451Binaries)" DestinationFolder="$(OutputDir)\AspNetCore-net451" />
+   <!-- <Copy SourceFiles="@(AspNetCoreBinaries)" DestinationFolder="$(OutputDir)\AspNetCore-Netstandard1" />
+    <Copy SourceFiles="@(AspNetCore451Binaries)" DestinationFolder="$(OutputDir)\AspNetCore-net451" /> -->
     <Copy SourceFIles="@(AspNetCoreNetstandard2Binaries)" DestinationFolder="$(OutputDir)\AspNetCore-Netstandard2" />
     <Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
 
