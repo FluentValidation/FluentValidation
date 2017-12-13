@@ -62,13 +62,13 @@ namespace FluentValidation.Tests.AspNetCore {
 		[Fact]
 		public async Task MinLengthValidator_uses_simplified_message_for_clientside_validatation() {
 			var msg = await _webApp.GetClientsideMessage("MinLength", "data-val-minlength");
-			msg.ShouldEqual("'Min Length' must be more than 1 characters.");
+			msg.ShouldEqual("The length of 'Min Length' must be at least 1 characters.");
 		}
 
 		[Fact]
 		public async Task MaxengthValidator_uses_simplified_message_for_clientside_validatation() {
 			var msg = await _webApp.GetClientsideMessage("MaxLength", "data-val-maxlength");
-			msg.ShouldEqual("'Max Length' must be less than 2 characters.");
+			msg.ShouldEqual("The length of 'Max Length' must 2 characters or fewer.");
 		}
 
 		[Fact]

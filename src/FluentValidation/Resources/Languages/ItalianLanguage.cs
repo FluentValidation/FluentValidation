@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<AsyncPredicateValidator>("La condizione non è verificata per '{PropertyName}'.");
 			Translate<RegularExpressionValidator>("'{PropertyName}' non è nel formato corretto.");
 			Translate<CreditCardValidator>("'{PropertyName}' non è un numero di carta di credito valido.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' potrebbe non avere più di {expectedPrecision} cifre in totale, con una tolleranza per decimali {expectedScale}. Sono stati trovati i decimali {cifre} e i decimali {actualScale}.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' potrebbe non avere più di {expectedPrecision} cifre in totale, con una tolleranza per decimali {expectedScale}. Sono stati trovati i decimali {digits} e i decimali {actualScale}.");
 			Translate<EmptyValidator>("'{PropertyName}' dovrebbe essere vuoto.");
 			Translate<NullValidator>("'{PropertyName}' dovrebbe essere vuoto.");
 			Translate<EnumValidator>("'{PropertyName}' ha un intervallo di valori che non include '{PropertyValue}'.");

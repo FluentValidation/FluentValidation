@@ -1,7 +1,9 @@
 ﻿namespace FluentValidation.Tests {
+	using System;
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
+	using System.Linq.Expressions;
 	using Resources;
 	using Validators;
 	using Xunit;
@@ -57,10 +59,12 @@
 
 		[Fact]
 		public void Falls_back_to_english_when_translation_missing() {
-			// Chinese doesn't have enumvalidator translated
+			var l = new LanguageManager();
+			l.AddTranslation("en", "TestValidator", "foo");
+
 			using (new CultureScope("zh-CN")) {
-				var msg = _languages.GetStringForValidator<EnumValidator>();
-				msg.ShouldEqual("'{PropertyName}' has a range of values which does not include '{PropertyValue}'.");
+				var msg = l.GetStringForValidator<TestValidator>();
+				msg.ShouldEqual("foo");
 			}
 		}
 
@@ -132,6 +136,25 @@
 				AddTranslation("en", "NotNullValidator", "foo");
 			}
 		}
+
+		private class TestValidator : PropertyValidator {
+			public TestValidator(IStringSource errorMessageSource) : base(errorMessageSource) {
+			}
+
+			public TestValidator(string errorMessageResourceName, Type errorMessageResourceType) : base(errorMessageResourceName, errorMessageResourceType) {
+			}
+
+			public TestValidator(string errorMessage) : base(errorMessage) {
+			}
+
+			public TestValidator(Expression<Func<string>> errorMessageResourceSelector) : base(errorMessageResourceSelector) {
+			}
+
+			protected override bool IsValid(PropertyValidatorContext context) {
+				return true;
+			}
+		}
+
 
 	}
 }
