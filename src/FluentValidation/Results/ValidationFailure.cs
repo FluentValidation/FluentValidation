@@ -34,15 +34,15 @@ namespace FluentValidation.Results {
 		/// <summary>
 		/// Creates a new validation failure.
 		/// </summary>
-		public ValidationFailure(string propertyName, string error) : this(propertyName, error, null) {
+		public ValidationFailure(string propertyName, string errorMessage) : this(propertyName, errorMessage, null) {
 		}
 
 		/// <summary>
 		/// Creates a new ValidationFailure.
 		/// </summary>
-		public ValidationFailure(string propertyName, string error, object attemptedValue) {
+		public ValidationFailure(string propertyName, string errorMessage, object attemptedValue) {
 			PropertyName = propertyName;
-			ErrorMessage = error;
+			ErrorMessage = errorMessage;
 			AttemptedValue = attemptedValue;
 		}
 
