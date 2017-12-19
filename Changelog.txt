@@ -1,3 +1,6 @@
+7.4 - 
+Added CancellationToken support to child validators
+
 7.3 - 13 December 2017
 Major improvements to the AspNetCore integration including better collection support and optional support for implicit validators
 Marked ValidationException as serializable when running on full framework

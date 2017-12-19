@@ -73,9 +73,9 @@ namespace FluentValidation.Validators {
 					var tasks = items.Select(tuple => {
 						var ctx = tuple.Item1;
 						var validator = tuple.Item2;
-						return validator.ValidateAsync(ctx, cancellation).Then(res => failures.AddRange(res.Errors), runSynchronously: true);
+						return validator.ValidateAsync(ctx, cancellation).Then(res => failures.AddRange(res.Errors), runSynchronously: true, cancellationToken: cancellation);
 					});
-					return TaskHelpers.Iterate(tasks).Then(() => failures.AsEnumerable(), runSynchronously: true);
+					return TaskHelpers.Iterate(tasks, cancellation).Then(() => failures.AsEnumerable(), runSynchronously: true, cancellationToken: cancellation);
 				},
 				AsyncEmptyResult
 			);
