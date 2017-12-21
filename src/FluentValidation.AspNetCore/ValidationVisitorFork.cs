@@ -1,4 +1,6 @@
-﻿namespace FluentValidation.AspNetCore {
+﻿using System.Runtime.CompilerServices;
+
+namespace FluentValidation.AspNetCore {
 	using System;
 	using System.Collections.Generic;
 	using Microsoft.AspNetCore.Mvc;
@@ -6,24 +8,11 @@
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	
+
 	//Forked from the aspnetcore source
 	// Changes are in the ValidateComplexType method
-	internal class ValidationVisitorFork {
-		private readonly IModelValidatorProvider _validatorProvider;
-		private readonly IModelMetadataProvider _metadataProvider;
-		private readonly ValidatorCache _validatorCache;
-		private readonly ActionContext _actionContext;
-		private readonly ModelStateDictionary _modelState;
-		private readonly ValidationStateDictionary _validationState;
-		private readonly ValidationStack _currentPath;
-
-		private object _container;
-		private string _key;
-		private object _model;
-		private ModelMetadata _metadata;
-		private IValidationStrategy _strategy;
-
+	internal class ValidationVisitorFork
+	{
 		/// <summary>
 		/// Creates a new <see cref="ValidationVisitor"/>.
 		/// </summary>
@@ -37,30 +26,52 @@
 			IModelValidatorProvider validatorProvider,
 			ValidatorCache validatorCache,
 			IModelMetadataProvider metadataProvider,
-			ValidationStateDictionary validationState) {
-			if (actionContext == null) {
+			ValidationStateDictionary validationState)
+		{
+			if (actionContext == null)
+			{
 				throw new ArgumentNullException(nameof(actionContext));
 			}
 
-			if (validatorProvider == null) {
+			if (validatorProvider == null)
+			{
 				throw new ArgumentNullException(nameof(validatorProvider));
 			}
 
-			if (validatorCache == null) {
+			if (validatorCache == null)
+			{
 				throw new ArgumentNullException(nameof(validatorCache));
 			}
 
-			_actionContext = actionContext;
-			_validatorProvider = validatorProvider;
-			_validatorCache = validatorCache;
+			Context = actionContext;
+			ValidatorProvider = validatorProvider;
+			Cache = validatorCache;
 
-			_metadataProvider = metadataProvider;
-			_validationState = validationState;
+			MetadataProvider = metadataProvider;
+			ValidationState = validationState;
 
-			_modelState = actionContext.ModelState;
-			_currentPath = new ValidationStack();
+			ModelState = actionContext.ModelState;
+			CurrentPath = new ValidationStack();
 		}
 
+		protected IModelValidatorProvider ValidatorProvider { get; }
+		protected IModelMetadataProvider MetadataProvider { get; }
+		protected ValidatorCache Cache { get; }
+		protected ActionContext Context { get; }
+		protected ModelStateDictionary ModelState { get; }
+		protected ValidationStateDictionary ValidationState { get; }
+		protected ValidationStack CurrentPath { get; }
+
+		protected object Container { get; set; }
+		protected string Key { get; set; }
+		protected object Model { get; set; }
+		protected ModelMetadata Metadata { get; set; }
+		protected IValidationStrategy Strategy { get; set; }
+
+		/// <summary>
+		/// Indicates whether validation of a complex type should be performed if validation fails for any of its children. The default behavior is false. 
+		/// </summary>
+		public bool ValidateComplexTypesIfChildValidationFails { get; set; }
 		/// <summary>
 		/// Validates a object.
 		/// </summary>
@@ -68,7 +79,8 @@
 		/// <param name="key">The model prefix key.</param>
 		/// <param name="model">The model object.</param>
 		/// <returns><c>true</c> if the object is valid, otherwise <c>false</c>.</returns>
-		public bool Validate(ModelMetadata metadata, string key, object model) {
+		public bool Validate(ModelMetadata metadata, string key, object model)
+		{
 			return Validate(metadata, key, model, alwaysValidateAtTopLevel: false);
 		}
 
@@ -80,10 +92,13 @@
 		/// <param name="model">The model object.</param>
 		/// <param name="alwaysValidateAtTopLevel">If <c>true</c>, applies validation rules even if the top-level value is <c>null</c>.</param>
 		/// <returns><c>true</c> if the object is valid, otherwise <c>false</c>.</returns>
-		public bool Validate(ModelMetadata metadata, string key, object model, bool alwaysValidateAtTopLevel) {
-			if (model == null && key != null && !alwaysValidateAtTopLevel) {
-				var entry = _modelState[key];
-				if (entry != null && entry.ValidationState != ModelValidationState.Valid) {
+		public virtual bool Validate(ModelMetadata metadata, string key, object model, bool alwaysValidateAtTopLevel)
+		{
+			if (model == null && key != null && !alwaysValidateAtTopLevel)
+			{
+				var entry = ModelState[key];
+				if (entry != null && entry.ValidationState != ModelValidationState.Valid)
+				{
 					entry.ValidationState = ModelValidationState.Valid;
 				}
 
@@ -97,52 +112,62 @@
 		/// Validates a single node in a model object graph.
 		/// </summary>
 		/// <returns><c>true</c> if the node is valid, otherwise <c>false</c>.</returns>
-		protected virtual bool ValidateNode() {
-			var state = _modelState.GetValidationState(_key);
+		protected virtual bool ValidateNode()
+		{
+			var state = ModelState.GetValidationState(Key);
 
 			// Rationale: we might see the same model state key used for two different objects.
 			// We want to run validation unless it's already known that this key is invalid.
-			if (state != ModelValidationState.Invalid) {
-				var validators = _validatorCache.GetValidators(_metadata, _validatorProvider);
+			if (state != ModelValidationState.Invalid)
+			{
+				var validators = Cache.GetValidators(Metadata, ValidatorProvider);
 
 				var count = validators.Count;
-				if (count > 0) {
+				if (count > 0)
+				{
 					var context = new ModelValidationContext(
-						_actionContext,
-						_metadata,
-						_metadataProvider,
-						_container,
-						_model);
+						Context,
+						Metadata,
+						MetadataProvider,
+						Container,
+						Model);
 
 					var results = new List<ModelValidationResult>();
-					for (var i = 0; i < count; i++) {
+					for (var i = 0; i < count; i++)
+					{
 						results.AddRange(validators[i].Validate(context));
 					}
 
 					var resultsCount = results.Count;
-					for (var i = 0; i < resultsCount; i++) {
+					for (var i = 0; i < resultsCount; i++)
+					{
 						var result = results[i];
-						var key = ModelNames.CreatePropertyModelName(_key, result.MemberName);
+						var key = ModelNames.CreatePropertyModelName(Key, result.MemberName);
 
 						// If this is a top-level parameter/property, the key would be empty,
 						// so use the name of the top-level property
-						if (string.IsNullOrEmpty(key) && _metadata.PropertyName != null) {
-							key = _metadata.PropertyName;
+						if (string.IsNullOrEmpty(key) && Metadata.PropertyName != null)
+						{
+							key = Metadata.PropertyName;
 						}
 
-						_modelState.TryAddModelError(key, result.Message);
+						ModelState.TryAddModelError(key, result.Message);
 					}
 				}
 			}
 
-			state = _modelState.GetFieldValidationState(_key);
-			if (state == ModelValidationState.Invalid) {
+			state = ModelState.GetFieldValidationState(Key);
+			if (state == ModelValidationState.Invalid)
+			{
 				return false;
-			} else {
+			}
+			else
+			{
 				// If the field has an entry in ModelState, then record it as valid. Don't create
 				// extra entries if they don't exist already.
-				var entry = _modelState[_key];
-				if (entry != null) {
+				var entry = ModelState[Key];
+				if (entry != null)
+				{
 					entry.ValidationState = ModelValidationState.Valid;
 				}
 
@@ -150,10 +175,12 @@
 			}
 		}
 
-		private bool Visit(ModelMetadata metadata, string key, object model) {
-			//RuntimeHelpers.EnsureSufficientExecutionStack();
+		protected virtual bool Visit(ModelMetadata metadata, string key, object model)
+		{
+			RuntimeHelpers.EnsureSufficientExecutionStack();
 
-			if (model != null && !_currentPath.Push(model)) {
+			if (model != null && !CurrentPath.Push(model))
+			{
 				// This is a cycle, bail.
 				return true;
 			}
@@ -163,22 +190,28 @@
 			metadata = entry?.Metadata ?? metadata;
 			var strategy = entry?.Strategy;
 
-			if (_modelState.HasReachedMaxErrors) {
+			if (ModelState.HasReachedMaxErrors)
+			{
 				SuppressValidation(key);
 				return false;
-			} else if (entry != null && entry.SuppressValidation) {
+			}
+			else if (entry != null && entry.SuppressValidation)
+			{
 				// Use the key on the entry, because we might not have entries in model state.
 				SuppressValidation(entry.Key);
-				_currentPath.Pop(model);
+				CurrentPath.Pop(model);
 				return true;
 			}
 
-			using (StateManager.Recurse(this, key ?? string.Empty, metadata, model, strategy)) {
-				if (_metadata.IsEnumerableType) {
+			using (StateManager.Recurse(this, key ?? string.Empty, metadata, model, strategy))
+			{
+				if (Metadata.IsEnumerableType)
+				{
 					return VisitComplexType(DefaultCollectionValidationStrategy.Instance);
 				}
 
-				if (_metadata.IsComplexType) {
+				if (Metadata.IsComplexType)
+				{
 					return VisitComplexType(DefaultComplexObjectValidationStrategy.Instance);
 				}
 
@@ -187,52 +220,60 @@
 		}
 
 		// Covers everything VisitSimpleType does not i.e. both enumerations and complex types.
-		private bool VisitComplexType(IValidationStrategy defaultStrategy) {
+		protected virtual bool VisitComplexType(IValidationStrategy defaultStrategy)
+		{
 			var isValid = true;
 
-			if (_model != null && _metadata.ValidateChildren) {
-				var strategy = _strategy ?? defaultStrategy;
+			if (Model != null && Metadata.ValidateChildren)
+			{
+				var strategy = Strategy ?? defaultStrategy;
 				isValid = VisitChildren(strategy);
-			} else if (_model != null) {
+			}
+			else if (Model != null)
+			{
 				// Suppress validation for the entries matching this prefix. This will temporarily set
 				// the current node to 'skipped' but we're going to visit it right away, so subsequent
 				// code will set it to 'valid' or 'invalid'
-				SuppressValidation(_key);
+				SuppressValidation(Key);
 			}
 
 			// Double-checking HasReachedMaxErrors just in case this model has no properties.
-
-			//FluentValidation changed to remove isValid check. This allows model-level rules to run even if a property validator has marked the property invalid.
-			if (/*isValid && */!_modelState.HasReachedMaxErrors) {
+			// If validation has failed for any children, only validate the parent if ValidateComplexTypesIfChildValidationFails is true.
+			if ((isValid || ValidateComplexTypesIfChildValidationFails) && !ModelState.HasReachedMaxErrors)
+			{
 				isValid &= ValidateNode();
 			}
 
 			return isValid;
 		}
 
-		private bool VisitSimpleType() {
-			if (_modelState.HasReachedMaxErrors) {
-				SuppressValidation(_key);
+		protected virtual bool VisitSimpleType()
+		{
+			if (ModelState.HasReachedMaxErrors)
+			{
+				SuppressValidation(Key);
 				return false;
 			}
 
 			return ValidateNode();
 		}
 
-		private bool VisitChildren(IValidationStrategy strategy) {
+		protected virtual bool VisitChildren(IValidationStrategy strategy)
+		{
 			var isValid = true;
-			var enumerator = strategy.GetChildren(_metadata, _key, _model);
-			var parentEntry = new ValidationEntry(_metadata, _key, _model);
+			var enumerator = strategy.GetChildren(Metadata, Key, Model);
+			var parentEntry = new ValidationEntry(Metadata, Key, Model);
 
-			while (enumerator.MoveNext()) {
+			while (enumerator.MoveNext())
+			{
 				var entry = enumerator.Current;
 				var metadata = entry.Metadata;
 				var key = entry.Key;
-				//TODO: Re-introduce this after next .net fwk update.
-//				if (metadata.PropertyValidationFilter?.ShouldValidateEntry(entry, parentEntry) == false) {
-//					SuppressValidation(key);
-//					continue;
-//				}
+				if (metadata.PropertyValidationFilter?.ShouldValidateEntry(entry, parentEntry) == false)
+				{
+					SuppressValidation(key);
+					continue;
+				}
 
 				isValid &= Visit(metadata, key, entry.Model);
 			}
@@ -240,30 +281,36 @@
 			return isValid;
 		}
 
-		private void SuppressValidation(string key) {
-			if (key == null) {
+		protected virtual void SuppressValidation(string key)
+		{
+			if (key == null)
+			{
 				// If the key is null, that means that we shouldn't expect any entries in ModelState for
 				// this value, so there's nothing to do.
 				return;
 			}
 
-			var entries = _modelState.FindKeysWithPrefix(key);
-			foreach (var entry in entries) {
+			var entries = ModelState.FindKeysWithPrefix(key);
+			foreach (var entry in entries)
+			{
 				entry.Value.ValidationState = ModelValidationState.Skipped;
 			}
 		}
 
-		private ValidationStateEntry GetValidationEntry(object model) {
-			if (model == null || _validationState == null) {
+		protected virtual ValidationStateEntry GetValidationEntry(object model)
+		{
+			if (model == null || ValidationState == null)
+			{
 				return null;
 			}
 
 			ValidationStateEntry entry;
-			_validationState.TryGetValue(model, out entry);
+			ValidationState.TryGetValue(model, out entry);
 			return entry;
 		}
 
-		private struct StateManager : IDisposable {
+		protected struct StateManager : IDisposable
+		{
 			private readonly ValidationVisitorFork _visitor;
 			private readonly object _container;
 			private readonly string _key;
@@ -277,37 +324,40 @@
 				string key,
 				ModelMetadata metadata,
 				object model,
-				IValidationStrategy strategy) {
+				IValidationStrategy strategy)
+			{
 				var recursifier = new StateManager(visitor, model);
 
-				visitor._container = visitor._model;
-				visitor._key = key;
-				visitor._metadata = metadata;
-				visitor._model = model;
-				visitor._strategy = strategy;
+				visitor.Container = visitor.Model;
+				visitor.Key = key;
+				visitor.Metadata = metadata;
+				visitor.Model = model;
+				visitor.Strategy = strategy;
 
 				return recursifier;
 			}
 
-			public StateManager(ValidationVisitorFork visitor, object newModel) {
+			public StateManager(ValidationVisitorFork visitor, object newModel)
+			{
 				_visitor = visitor;
 				_newModel = newModel;
 
-				_container = _visitor._container;
-				_key = _visitor._key;
-				_metadata = _visitor._metadata;
-				_model = _visitor._model;
-				_strategy = _visitor._strategy;
+				_container = _visitor.Container;
+				_key = _visitor.Key;
+				_metadata = _visitor.Metadata;
+				_model = _visitor.Model;
+				_strategy = _visitor.Strategy;
 			}
 
-			public void Dispose() {
-				_visitor._container = _container;
-				_visitor._key = _key;
-				_visitor._metadata = _metadata;
-				_visitor._model = _model;
-				_visitor._strategy = _strategy;
+			public void Dispose()
+			{
+				_visitor.Container = _container;
+				_visitor.Key = _key;
+				_visitor.Metadata = _metadata;
+				_visitor.Model = _model;
+				_visitor.Strategy = _strategy;
 
-				_visitor._currentPath.Pop(_newModel);
+				_visitor.CurrentPath.Pop(_newModel);
 			}
 		}
 	}

@@ -75,7 +75,10 @@ namespace FluentValidation.AspNetCore {
 				validatorProvider,
 				_validatorCache,
 				_modelMetadataProvider,
-				validationState);
+				validationState)
+			{
+				ValidateComplexTypesIfChildValidationFails = true
+			};
 
 			visitor.Validate(metadata, prefix, model);
 
