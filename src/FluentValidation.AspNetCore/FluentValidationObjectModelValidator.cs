@@ -17,6 +17,8 @@
 #endregion
 
 
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+
 namespace FluentValidation.AspNetCore {
 	using System;
 	using System.Collections.Generic;
@@ -32,13 +34,14 @@ namespace FluentValidation.AspNetCore {
 	internal class FluentValidationObjectModelValidator : IObjectModelValidator {
 		private readonly IModelMetadataProvider _modelMetadataProvider;
 		private readonly bool _runMvcValidation;
+		private readonly bool _implicitValidationEnabled;
 		private readonly ValidatorCache _validatorCache;
 		private readonly IModelValidatorProvider _compositeProvider;
 		private readonly FluentValidationModelValidatorProvider _fvProvider;
 
 		public FluentValidationObjectModelValidator(
 			IModelMetadataProvider modelMetadataProvider,
-			IList<IModelValidatorProvider> validatorProviders, bool runMvcValidation) {
+			IList<IModelValidatorProvider> validatorProviders, bool runMvcValidation, bool implicitValidationEnabled) {
 
 			if (modelMetadataProvider == null) {
 				throw new ArgumentNullException(nameof(modelMetadataProvider));
@@ -50,6 +53,7 @@ namespace FluentValidation.AspNetCore {
 
 			_modelMetadataProvider = modelMetadataProvider;
 			_runMvcValidation = runMvcValidation;
+			_implicitValidationEnabled = implicitValidationEnabled;
 			_validatorCache = new ValidatorCache();
 			_fvProvider = validatorProviders.SingleOrDefault(x => x is FluentValidationModelValidatorProvider) as FluentValidationModelValidatorProvider;
 			_compositeProvider = new CompositeModelValidatorProvider(validatorProviders); //.Except(new IModelValidatorProvider[]{ _fvProvider }).ToList());
@@ -70,14 +74,14 @@ namespace FluentValidation.AspNetCore {
 			// Setting as to whether we should run only FV or FV + the other validator providers
 			var validatorProvider = _runMvcValidation ? _compositeProvider : _fvProvider;
 
-			var visitor = new ValidationVisitorFork(
+			var visitor = new FluentValidationVisitor(
 				actionContext,
 				validatorProvider,
 				_validatorCache,
 				_modelMetadataProvider,
 				validationState)
 			{
-				ValidateComplexTypesIfChildValidationFails = true
+				ValidateChildren = _implicitValidationEnabled
 			};
 
 			visitor.Validate(metadata, prefix, model);
@@ -165,6 +169,27 @@ namespace FluentValidation.AspNetCore {
 			return attribute ?? new CustomizeValidatorAttribute();
 		}
 
+	}
+
+	internal class FluentValidationVisitor : ValidationVisitorFork
+	{
+		public bool ValidateChildren { get; set; }
+
+		public FluentValidationVisitor(ActionContext actionContext, IModelValidatorProvider validatorProvider, ValidatorCache validatorCache, IModelMetadataProvider metadataProvider, ValidationStateDictionary validationState) : base(actionContext, validatorProvider, validatorCache, metadataProvider, validationState)
+		{
+			this.ValidateComplexTypesIfChildValidationFails = true;
+		}
+
+		protected override bool VisitChildren(IValidationStrategy strategy)
+		{
+			// If validting a collection property skip validation if validate children is off. 
+			if (!ValidateChildren && Metadata.ValidateChildren && Metadata.IsCollectionType 
+				&& Metadata.MetadataKind == ModelMetadataKind.Property)
+			{
+				return true;
+			}	
+			return base.VisitChildren(strategy);
+		}
 	}
 
 	// Old implementation
