@@ -1,5 +1,7 @@
 ﻿namespace FluentValidation.Tests.AspNetCore {
 	using System.Collections.Generic;
+	using System.Net.Http;
+	using System.Text;
 	using System.Threading.Tasks;
 	using Controllers;
 	using Newtonsoft.Json;
@@ -42,7 +44,7 @@
 				{"Id", "0"}
 			};
 
-			var result = await _webApp.GetErrors("Test5", form);
+			var result = await _webApp.GetErrors("Test5b", form);
 			result.IsValidField("SomeBool").ShouldBeFalse(); //Complex rule
 			result.IsValidField("Id").ShouldBeFalse(); //NotEmpty for non-nullable value type
 		}
@@ -491,6 +493,33 @@
 			result.Count.ShouldEqual(0);
 		}
 
+		[Fact]
+		public async void Does_not_implicitly_validate_child_collections_by_default() {
+			var webApp = new WebAppFixture<StartupWithImplicitValidationDisabled>();
+			var result = await webApp.GetErrorsViaJSONRaw("ImplicitChildCollection", @"{ Children: [ { Name: null } ] }");
+			result.Count.ShouldEqual(0);
+		}
+
+		[Fact]
+		public async void Does_implicitly_validate_child_collections_by_default_with_DataAnnotations() {
+			var webApp = new WebAppFixture<StartupWithImplicitValidationDisabled>();
+			var result = await webApp.GetErrorsViaJSONRaw("ImplicitChildCollectionDataAnnotations", @"{ Children: [ { Name: null } ] }");
+			result.Count.ShouldEqual(1);
+		}
+
+
+		[Fact]
+		public async void When_skipping_children_does_not_leave_validation_state_unvalidated() {
+			var webApp = new WebAppFixture<StartupWithImplicitValidationDisabled>();
+			string json = @"{ Children: [ { Name: null } ] }";
+
+			var request = new HttpRequestMessage(HttpMethod.Post, $"/Test/CheckUnvalidated");
+			request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+			var responseMessage = await webApp.Client.SendAsync(request);
+			responseMessage.EnsureSuccessStatusCode();
+			var response = await responseMessage.Content.ReadAsStringAsync();
+			response.ShouldEqual("0");
+		}
 
 	}
 }

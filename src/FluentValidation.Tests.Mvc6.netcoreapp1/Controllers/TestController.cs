@@ -3,7 +3,8 @@
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc;
 	using System.Linq;
-	
+	using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 	public class TestController : Controller {
 		public ActionResult SimpleFailure(SimpleModel model) {
 			return TestResult();
@@ -49,7 +50,12 @@
 			return TestResult();
 		}
 
-		public ActionResult Test5(TestModel5 model) {
+		public ActionResult Test5([FromBody] TestModel5 model) {
+			return TestResult();
+		}
+
+		public ActionResult Test5b(TestModel5 model)
+		{
 			return TestResult();
 		}
 
@@ -130,6 +136,19 @@
 
 		public ActionResult ImplicitAndExplicitChildValidator(ParentModel4 model) {
 			return TestResult();
+		}
+
+		public ActionResult ImplicitChildCollection([FromBody] ParentModel6 model) {
+			return TestResult();
+		}
+
+		public ActionResult ImplicitChildCollectionDataAnnotations([FromBody] ParentModel7 model) {
+			return TestResult();
+		}
+
+
+		public ActionResult CheckUnvalidated([FromBody] ParentModel6 model) {
+			return Content(ModelState.Count(x => x.Value.ValidationState == ModelValidationState.Unvalidated).ToString());
 		}
 
 		public ActionResult DictionaryParameter(Dictionary<int, TestModel> model) {

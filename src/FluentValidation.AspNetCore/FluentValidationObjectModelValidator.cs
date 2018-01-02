@@ -25,6 +25,7 @@ namespace FluentValidation.AspNetCore {
 	using System.ComponentModel.DataAnnotations;
 	using System.Linq;
 	using System.Reflection;
+	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.Controllers;
 	using Microsoft.AspNetCore.Mvc.Internal;
@@ -171,10 +172,9 @@ namespace FluentValidation.AspNetCore {
 
 	}
 
-	internal class FluentValidationVisitor : ValidationVisitorFork
-	{
+	internal class FluentValidationVisitor : ValidationVisitorFork {
 		public bool ValidateChildren { get; set; }
-
+		
 		public FluentValidationVisitor(ActionContext actionContext, IModelValidatorProvider validatorProvider, ValidatorCache validatorCache, IModelMetadataProvider metadataProvider, ValidationStateDictionary validationState) : base(actionContext, validatorProvider, validatorCache, metadataProvider, validationState)
 		{
 			this.ValidateComplexTypesIfChildValidationFails = true;
@@ -183,11 +183,20 @@ namespace FluentValidation.AspNetCore {
 		protected override bool VisitChildren(IValidationStrategy strategy)
 		{
 			// If validting a collection property skip validation if validate children is off. 
-			if (!ValidateChildren && Metadata.ValidateChildren && Metadata.IsCollectionType 
-				&& Metadata.MetadataKind == ModelMetadataKind.Property)
-			{
-				return true;
-			}	
+			// However we can't actually skip it here as otherwise this will affect DataAnnotaitons validation too.
+			// Instead store a list of objects to skip in the context, which the validator will check later. 
+			if (!ValidateChildren && Metadata.ValidateChildren && Metadata.IsCollectionType && Metadata.MetadataKind == ModelMetadataKind.Property) {
+
+				var skip = Context.HttpContext.Items["_FV_SKIP"] as HashSet<object>;
+
+				if (skip == null) {
+					skip = new HashSet<object>();
+					Context.HttpContext.Items["_FV_SKIP"] = skip;
+				}
+
+				skip.Add(Model); 
+			}
+
 			return base.VisitChildren(strategy);
 		}
 	}

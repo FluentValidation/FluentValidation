@@ -52,13 +52,18 @@
 			return JsonConvert.DeserializeObject<List<SimpleError>>(response);
 		}
 
-		public async Task<List<SimpleError>> GetErrorsViaJSON<T>(string action, T model) {
-			var body = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-			var responseMessage = await Client.PostAsync($"/Test/{action}", body);
+		public Task<List<SimpleError>> GetErrorsViaJSON<T>(string action, T model) {
+			return GetErrorsViaJSONRaw(action, JsonConvert.SerializeObject(model));
+		}
+
+		public async Task<List<SimpleError>> GetErrorsViaJSONRaw(string action, string json) {
+			var request = new HttpRequestMessage(HttpMethod.Post, $"/Test/{action}");
+			request.Content = new StringContent(json, Encoding.UTF8, "application/json");
+			var responseMessage = await Client.SendAsync(request);
 			responseMessage.EnsureSuccessStatusCode();
 			var response = await responseMessage.Content.ReadAsStringAsync();
-
 			return JsonConvert.DeserializeObject<List<SimpleError>>(response);
 		}
+
 	}
 }

@@ -22,6 +22,8 @@
 
 		public void CreateValidators(ModelValidatorProviderContext context) {
 
+			// Note that this check does NOT catch complex types that are collection elements (as the ModelMetadataKind will still be 'Type') 
+			
 			if (context.ModelMetadata.MetadataKind == ModelMetadataKind.Type || (context.ModelMetadata.MetadataKind == ModelMetadataKind.Property && _implicitValidationEnabled)) {
 					context.Results.Add(new ValidatorItem {
 						IsReusable = false,
@@ -34,8 +36,8 @@
 	internal class FluentValidationModelValidator : IModelValidator {
 		public IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
 
-			// Skip validation if model is null.
-			if (mvContext.Model == null) return Enumerable.Empty<ModelValidationResult>();
+			// Skip validation if model is null or the model has been marked for skipping.
+			if (mvContext.Model == null || ShouldSkip(mvContext)) return Enumerable.Empty<ModelValidationResult>();
 
 			var factory = mvContext.ActionContext.HttpContext.RequestServices.GetService(typeof(IValidatorFactory)) as IValidatorFactory;
 
@@ -80,6 +82,14 @@
 			}
 
 			return Enumerable.Empty<ModelValidationResult>();
+		}
+
+		private bool ShouldSkip(ModelValidationContext mvContext) {
+			if (mvContext.ActionContext.HttpContext.Items["_FV_SKIP"] is HashSet<object> skip) {
+				if (skip.Contains(mvContext.Model)) return true;
+				if (mvContext.Container != null && skip.Contains(mvContext.Container)) return true;
+			}
+			return false;
 		}
 
 		private CustomizeValidatorAttribute GetCustomizations(ActionContext ctx, object model) {

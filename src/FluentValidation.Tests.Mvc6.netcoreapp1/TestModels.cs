@@ -470,4 +470,24 @@
 
 	public class ParentModel5Validator : AbstractValidator<ParentModel5> { }
 
+
+	[Validator(typeof(ParentModel6Validator))]
+	public class ParentModel6 {
+		public List<ChildModel> Children { get; set; } = new List<ChildModel>();
+	}
+
+	public class ParentModel6Validator : AbstractValidator<ParentModel6> {
+		public ParentModel6Validator() {
+			
+		}
+	}
+
+	public class ParentModel7 {
+		public List<ChildModel7> Children { get; set; } = new List<ChildModel7>();
+	}
+
+	public class ChildModel7 {
+		[Required]
+		public string Name { get; set; }
+	}
 }
