@@ -1,6 +1,11 @@
+7.3.4 - 2 January 2018
+Resolved issue in AspNetCore integration where the change made in 7.3.3 meant that child collections were incorrectly skipped for DataAnnotations-based validation, as well as FV 
+
+7.3.3 - 22 December 2017
+Resolved issue in AspNetCore integration where child collections were incorrectly validated by the ModelValidatorProvider 
+
 7.3.2 - 21 December 2017 
 Added CancellationToken support to child validators
-Resolve issue in AspNetCore integration where child collections were incorrectly validated by the ModelValidatorProvider
 
 7.3 - 13 December 2017
 Major improvements to the AspNetCore integration including better collection support and optional support for implicit validators

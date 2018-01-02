@@ -6,7 +6,7 @@
     <Authors>Jeremy Skinner</Authors>
     <Company />
     <Description>ASP.NET WebApi integration for FluentValidation</Description>
-    <Copyright>Copyright (c) Jeremy Skinner 2008-2017</Copyright>
+    <Copyright>Copyright (c) Jeremy Skinner 2008-2018</Copyright>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
