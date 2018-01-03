@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Threading.Tasks;
+	using Internal;
 	using Xunit;
 
 	public class RuleDependencyTests {
@@ -27,7 +28,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname).NotNull()
 				.DependentRules(d => {
-					d.RuleFor(x => x.Forename).NotNull();
+					validator.RuleFor(x => x.Forename).NotNull();
 				});
 
 			var results = validator.Validate(new Person {Surname = "foo"});
@@ -51,13 +52,31 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Nested_dependent_rules() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Surname).NotNull()
+				.DependentRules(d => {
+					validator.RuleFor(x => x.Forename).NotNull().DependentRules(d2 => {
+						validator.RuleFor(x => x.Forename).NotEqual("foo");
+					});
+				});
+
+			var results = validator.Validate(new Person { Surname = "foo" });
+			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Single().PropertyName.ShouldEqual("Forename");
+			var rule = (PropertyRule) validator.Single();
+			rule.DependentRules.Count.ShouldEqual(1);
+			((PropertyRule) rule.DependentRules[0]).DependentRules.Count.ShouldEqual(1);
+		}
+
+		[Fact]
 		public void Dependent_rules_inside_ruleset() {
 			var validator = new TestValidator();
 			validator.RuleSet("MyRuleSet", () => {
 
 				validator.RuleFor(x => x.Surname).NotNull()
 					.DependentRules(d => {
-						d.RuleFor(x => x.Forename).NotNull();
+						validator.RuleFor(x => x.Forename).NotNull();
 					});
 			});
 
@@ -74,7 +93,7 @@ namespace FluentValidation.Tests {
 				validator.RuleFor(o => o.Age).LessThan(1)
 				.DependentRules(d =>
 				{
-					d.RuleFor(o => o.Forename).NotNull();
+					validator.RuleFor(o => o.Forename).NotNull();
 				});
 			}); ;
 
@@ -88,8 +107,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(o => o.Forename)
 				.NotNull()
 				.DependentRules(d => {
-					d.RuleFor(o => o.Address).NotNull();
-					d.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
+					validator.RuleFor(o => o.Address).NotNull();
+					validator.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
 				});
 
 			var result = await validator.ValidateAsync(new Person());
@@ -108,8 +127,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(o => o)
 				.MustAsync(async (p, ct) => await Task.FromResult(p.Forename != null))
 				.DependentRules(d => {
-					d.RuleFor(o => o.Address).NotNull();
-					d.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
+					validator.RuleFor(o => o.Address).NotNull();
+					validator.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
 				});
 
 			var result = await validator.ValidateAsync(new Person());
@@ -160,7 +179,7 @@ namespace FluentValidation.Tests {
 						return true;
 					})
 					.DependentRules(dependentRules => {
-						dependentRules.RuleFor(m => m)
+						RuleFor(m => m)
 							.MustAsync(async (ie, ct) => {
 								await Task.Delay(1000);
 								return false;
@@ -174,7 +193,7 @@ namespace FluentValidation.Tests {
 				RuleFor(model => model)
 					.Must((ie) => true)
 					.DependentRules(dependentRules => {
-						dependentRules.RuleFor(m => m)
+						RuleFor(m => m)
 							.MustAsync(async (ie, ct) => {
 								await Task.Delay(1000);
 								return false;
