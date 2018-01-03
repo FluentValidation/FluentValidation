@@ -85,7 +85,7 @@
 		}
 
 		private bool ShouldSkip(ModelValidationContext mvContext) {
-			if (mvContext.ActionContext.HttpContext.Items["_FV_SKIP"] is HashSet<object> skip) {
+			if (mvContext.ActionContext.HttpContext.Items.ContainsKey("_FV_SKIP") && mvContext.ActionContext.HttpContext.Items["_FV_SKIP"] is HashSet<object> skip) {
 				if (skip.Contains(mvContext.Model)) return true;
 				if (mvContext.Container != null && skip.Contains(mvContext.Container)) return true;
 			}

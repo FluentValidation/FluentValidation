@@ -187,7 +187,7 @@ namespace FluentValidation.AspNetCore {
 			// Instead store a list of objects to skip in the context, which the validator will check later. 
 			if (!ValidateChildren && Metadata.ValidateChildren && Metadata.IsCollectionType && Metadata.MetadataKind == ModelMetadataKind.Property) {
 
-				var skip = Context.HttpContext.Items["_FV_SKIP"] as HashSet<object>;
+				var skip = Context.HttpContext.Items.ContainsKey("_FV_SKIP") ? Context.HttpContext.Items["_FV_SKIP"] as HashSet<object> : null;
 
 				if (skip == null) {
 					skip = new HashSet<object>();
