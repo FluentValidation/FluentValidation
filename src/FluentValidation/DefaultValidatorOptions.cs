@@ -234,19 +234,15 @@ namespace FluentValidation {
 		/// <param name="rule">The current rule</param>
 		/// <param name="action">An action to be invoked if the rule is valid</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<DependentRules<T>>  action) {
+		[Obsolete("You no longer need to call RuleFor on the DependentRulesBuilder. Use the other overload of DependentRules that takes an Action and just call the root RuleFor method instead.")]
+		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<IValidator<T>>  action) {
 
 			var dependencyContainer = new DependentRules<T>();
 
 			if (rule is IExposesParentValidator<T> exposesParentValidator) {
 				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
 					// Capture any rules added to the parent validator inside this delegate. 
-					void OnRuleAddedToParent(IValidationRule r) {
-						dependencyContainer.AddRule(r);
-						parent.NestedValidators.Remove(r);
-					}
-
-					using (parent.NestedValidators.OnItemAdded(OnRuleAddedToParent)) {
+					using (parent.NestedValidators.Capture(dependencyContainer.AddRule)) {
 						action(dependencyContainer);
 					}
 				}
@@ -271,6 +267,52 @@ namespace FluentValidation {
 			});
 			return rule;
 		}
+
+
+		/// <summary>
+		/// Triggers an action when the rule passes. Typically used to configure dependent rules. This applies to all preceding rules in the chain. 
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="action">An action to be invoked if the rule is valid</param>
+		/// <returns></returns>
+
+		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action action) {
+
+			var dependencyContainer = new DependentRules<T>();
+
+			if (rule is IExposesParentValidator<T> exposesParentValidator)
+			{
+				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
+					// Capture any rules added to the parent validator inside this delegate. 
+					using (parent.NestedValidators.Capture(dependencyContainer.AddRule)) {
+						action();
+					}
+				}
+			}
+			else {
+				action();
+			}
+
+
+			rule.Configure(cfg => {
+
+				if (!string.IsNullOrEmpty(cfg.RuleSet))
+				{
+					foreach (var dependentRule in dependencyContainer)
+					{
+						var propRule = dependentRule as PropertyRule;
+						if (propRule != null && string.IsNullOrEmpty(propRule.RuleSet))
+						{
+							propRule.RuleSet = cfg.RuleSet;
+						}
+					}
+				}
+
+				cfg.DependentRules.AddRange(dependencyContainer);
+			});
+			return rule;
+		}
+
 
 		/// <summary>
 		/// Specifies a custom property name to use within the error message.

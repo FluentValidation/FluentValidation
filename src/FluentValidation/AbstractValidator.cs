@@ -366,6 +366,6 @@ namespace FluentValidation {
 	/// Container class for dependent rule definitions
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class	DependentRules<T> : AbstractValidator<T> {
-	}
+	[Obsolete]
+	internal class	DependentRules<T> : AbstractValidator<T> { }
 }
