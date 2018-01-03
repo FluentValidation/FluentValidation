@@ -18,10 +18,13 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Globalization;
     using System.Linq;
     using System.Threading;
-    using Xunit;
+	using Newtonsoft.Json;
+	using Results;
+	using Xunit;
 
 	
 	public class ValidateAndThrowTester {
@@ -169,6 +172,15 @@ namespace FluentValidation.Tests {
 			var ex = typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
             string expected = "FluentValidation.ValidationException: Validation failed: " + Environment.NewLine + " -- 'Surname' must not be empty.\r\n -- 'Forename' must not be empty.";
             Assert.True(ex.ToString().StartsWith(expected));
+		}
+
+		[Fact]
+		public void Serializes_exception() {
+			var v = new ValidationException(new List<ValidationFailure> {new ValidationFailure("test", "test")});
+			var raw = JsonConvert.SerializeObject(v);
+			var deserialized = JsonConvert.DeserializeObject<ValidationException>(raw);
+
+			deserialized.Errors.Count().ShouldEqual(1);
 		}
 	}
 }

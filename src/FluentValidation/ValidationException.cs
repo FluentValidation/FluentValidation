@@ -21,7 +21,9 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using Results;
 	using System.Linq;
-
+#if !NETSTANDARD1_0
+	using System.Runtime.Serialization;
+#endif
 	/// <summary>
 	/// An exception that represents failed validation
 	/// </summary>
@@ -62,5 +64,18 @@ namespace FluentValidation {
 			var arr = errors.Select(x => Environment.NewLine + " -- " + x.ErrorMessage).ToArray();
 			return "Validation failed: " + string.Join("", arr);
 		}
+
+#if !NETSTANDARD1_0
+		public ValidationException(SerializationInfo info, StreamingContext context) : base(info, context) {
+			Errors = info.GetValue("errors", typeof(IEnumerable<ValidationFailure>)) as IEnumerable<ValidationFailure>;
+		}
+
+		public override void GetObjectData(SerializationInfo info, StreamingContext context) {
+			if (info == null) throw new ArgumentNullException("info");
+
+			info.AddValue("errors", Errors);
+			base.GetObjectData(info, context);
+		}
+#endif
 	}
 }
