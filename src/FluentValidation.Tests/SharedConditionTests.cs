@@ -270,7 +270,11 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Async_condition_can_be_used_inside_ruleset() {
 			var validator = new TestValidator();
-			validator.RuleSet("foo", () => { validator.WhenAsync(async x => (x.Id > 0), () => { validator.RuleFor(x => x.Forename).NotNull(); }); });
+			validator.RuleSet("foo", () => {
+				validator.WhenAsync(async x => (x.Id > 0), () => {
+					validator.RuleFor(x => x.Forename).NotNull();
+				});
+			});
 			validator.RuleFor(x => x.Surname).NotNull();
 
 			var result = validator.ValidateAsync(new Person {Id = 5}, ruleSet: "foo").Result;
