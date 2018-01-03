@@ -237,7 +237,7 @@ namespace FluentValidation {
 		[Obsolete("You no longer need to call RuleFor on the DependentRulesBuilder. Use the other overload of DependentRules that takes an Action and just call the root RuleFor method instead.")]
 		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<IValidator<T>>  action) {
 
-			var dependencyContainer = new DependentRules<T>();
+			var dependencyContainer = new InlineValidator<T>();
 
 			if (rule is IExposesParentValidator<T> exposesParentValidator) {
 				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
@@ -278,31 +278,25 @@ namespace FluentValidation {
 
 		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action action) {
 
-			var dependencyContainer = new DependentRules<T>();
+			var dependencyContainer = new List<IValidationRule>();
 
-			if (rule is IExposesParentValidator<T> exposesParentValidator)
-			{
+			if (rule is IExposesParentValidator<T> exposesParentValidator) {
 				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
 					// Capture any rules added to the parent validator inside this delegate. 
-					using (parent.NestedValidators.Capture(dependencyContainer.AddRule)) {
+					using (parent.NestedValidators.Capture(dependencyContainer.Add)) {
 						action();
 					}
 				}
 			}
 			else {
-				action();
+				throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from AbstractValidator");
 			}
-
 
 			rule.Configure(cfg => {
 
-				if (!string.IsNullOrEmpty(cfg.RuleSet))
-				{
-					foreach (var dependentRule in dependencyContainer)
-					{
-						var propRule = dependentRule as PropertyRule;
-						if (propRule != null && string.IsNullOrEmpty(propRule.RuleSet))
-						{
+				if (!string.IsNullOrEmpty(cfg.RuleSet)) {
+					foreach (var dependentRule in dependencyContainer) {
+						if (dependentRule is PropertyRule propRule && string.IsNullOrEmpty(propRule.RuleSet)) {
 							propRule.RuleSet = cfg.RuleSet;
 						}
 					}
