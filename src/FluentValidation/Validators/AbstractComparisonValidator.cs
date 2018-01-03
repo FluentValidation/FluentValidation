@@ -67,6 +67,7 @@ namespace FluentValidation.Validators {
 
 			if (!IsValid((IComparable)context.PropertyValue, value)) {
 				context.MessageFormatter.AppendArgument("ComparisonValue", value);
+				context.MessageFormatter.AppendArgument("ComparisonProperty", MemberToCompare == null ? "" : MemberToCompare.Name);
 				return false;
 			}
 

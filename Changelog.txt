@@ -1,7 +1,8 @@
-7.x - 
+7.4 - 
 Update DependentRules syntax and mark old syntax as obsolete
 Add workaround for inconsistent behaviour with HttpContext.Items with nonexistent keys in different version of AspNetCore
 Updated ValidationException serialization support
+Add ComparisonProperty to comparison validator message placeholders
 
 7.3.4 - 2 January 2018
 Resolved issue in AspNetCore integration where the change made in 7.3.3 meant that child collections were incorrectly skipped for DataAnnotations-based validation, as well as FV 

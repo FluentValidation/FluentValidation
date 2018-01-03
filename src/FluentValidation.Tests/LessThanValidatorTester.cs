@@ -65,9 +65,10 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validates_against_property() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt));
+			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 			var result = validator.Validate(new Person { Id = 2, AnotherInt = 1 });
 			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("AnotherInt");
 		}
 
 		[Fact]
