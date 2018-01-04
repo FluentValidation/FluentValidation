@@ -208,6 +208,12 @@ namespace FluentValidation.Tests {
 			validator.ShouldNotHaveValidationErrorFor(a => a.Street, address);
 		}
 
+		[Fact]
+		public void ShouldHaveValidationError_preconstructed_object_does_not_throw_for_unwritable_property() {
+			validator.RuleFor(x => x.ForenameReadOnly).NotNull();
+			validator.ShouldHaveValidationErrorFor(x => x.ForenameReadOnly, new Person { Forename = null });
+		}
+
 		private class AddressValidator : AbstractValidator<Address> {
 
 		}

@@ -66,7 +66,9 @@ namespace FluentValidation.Tests
 
 		public int MaxLength { get; set; }
 
-        public EnumGender Gender { get; set; } 
+        public EnumGender Gender { get; set; }
+
+		public string ForenameReadOnly => Forename;
 	}
 
 

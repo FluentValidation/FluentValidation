@@ -37,7 +37,7 @@ namespace FluentValidation.TestHelper {
 		//This one
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet);
+			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
 			return testValidationResult.ShouldHaveError();
 		}
 
@@ -51,7 +51,7 @@ namespace FluentValidation.TestHelper {
 		//This one
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet);
+			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
 			testValidationResult.ShouldNotHaveError();
 		}
 
@@ -68,9 +68,13 @@ namespace FluentValidation.TestHelper {
 			}
 		}
 
-		private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T instanceToValidate, TValue value, string ruleSet = null) where T : class {
-			var memberAccessor = ((MemberAccessor<T, TValue>) expression);
-			memberAccessor.Set(instanceToValidate, value);
+		private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T instanceToValidate, TValue value, string ruleSet = null, bool setProperty=true) where T : class {
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, setProperty);
+
+			if (setProperty) {
+				memberAccessor.Set(instanceToValidate, value);
+			}
+
 			var validationResult = validator.Validate(instanceToValidate, null, ruleSet: ruleSet);
 
 			return new TestValidationResult<T, TValue>(validationResult, memberAccessor);
