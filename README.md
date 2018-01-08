@@ -11,16 +11,16 @@ Written by Jeremy Skinner (http://www.jeremyskinner.co.uk) and licensed under [A
 ```
 Install-Package FluentValidation
 ```
+For ASP.NET Core integration:
+```
+Install-Package FluentValidation.AspNetCore
+```
 
-For ASP.NET MVC integration:
+For legacy ASP.NET MVC/WebApi integration:
 
 ```
 Install-Package FluentValidation.MVC5
-```
-For ASP.NET Core:
-
-```
-Install-Package FluentValidation.AspNetCore
+Install-Package FluentValidation.WebApi
 ```
 
 ### Example
