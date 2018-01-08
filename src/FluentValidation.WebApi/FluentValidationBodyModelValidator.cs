@@ -238,12 +238,10 @@ namespace FluentValidation.WebApi
 			if (String.IsNullOrEmpty(prefix)) {
 				return propertyName ?? String.Empty;
 			}
-			else if (String.IsNullOrEmpty(propertyName)) {
-				return prefix ?? String.Empty;
+			if (String.IsNullOrEmpty(propertyName)) {
+				return prefix;
 			}
-			else {
-				return prefix + "." + propertyName;
-			}
+			return prefix + "." + propertyName;
 		}
 
 		private class PropertyScope : IKeyBuilder {
