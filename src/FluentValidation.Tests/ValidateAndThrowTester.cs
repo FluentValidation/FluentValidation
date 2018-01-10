@@ -174,6 +174,7 @@ namespace FluentValidation.Tests {
             Assert.True(ex.ToString().StartsWith(expected));
 		}
 
+#if !NETSTANDARD1_0
 		[Fact]
 		public void Serializes_exception() {
 			var v = new ValidationException(new List<ValidationFailure> {new ValidationFailure("test", "test")});
@@ -182,5 +183,6 @@ namespace FluentValidation.Tests {
 
 			deserialized.Errors.Count().ShouldEqual(1);
 		}
+#endif
 	}
 }
