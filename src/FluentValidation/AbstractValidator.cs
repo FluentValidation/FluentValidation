@@ -267,7 +267,7 @@ namespace FluentValidation {
 			}
 
 			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
-			propertyRules.ForEach(x => x.ApplyCondition(predicate.CoerceToNonGeneric()));
+			propertyRules.ForEach(x => x.ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate)));
 		}
 
 		/// <summary>
@@ -284,6 +284,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
+		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
 		[Obsolete("Use the overload of WhenAsync that takes a CancellationToken")]
 		public void WhenAsync(Func<T, Task<bool>> predicate, Action action) {
@@ -307,7 +308,7 @@ namespace FluentValidation {
 			}
 
 			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
-			propertyRules.ForEach(x => x.ApplyAsyncCondition(predicate.CoerceToNonGeneric()));
+			propertyRules.ForEach(x => x.ApplyAsyncCondition((ctx, token) => predicate((T)ctx.InstanceToValidate, token)));
 		}
 
 		/// <summary>

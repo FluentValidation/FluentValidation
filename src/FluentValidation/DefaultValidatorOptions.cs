@@ -146,7 +146,7 @@ namespace FluentValidation {
 			predicate.Guard("A predicate must be specified when calling When.");
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			return rule.Configure(config => {
-				config.ApplyCondition(predicate.CoerceToNonGeneric(), applyConditionTo);
+				config.ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate), applyConditionTo);
 			});
 		}
 
@@ -177,7 +177,7 @@ namespace FluentValidation {
 		{
 			predicate.Guard("A predicate must be specified when calling WhenAsync.");
 
-			var newPredicate = new Func<object, CancellationToken, Task<bool>>((x, ct) => predicate((T) x));
+			var newPredicate = new Func<ValidationContext, CancellationToken, Task<bool>>((ctx, ct) => predicate((T) ctx.InstanceToValidate));
 
 			return rule.Configure(config => {
 				config.ApplyAsyncCondition(newPredicate, applyConditionTo);
@@ -196,7 +196,7 @@ namespace FluentValidation {
 			predicate.Guard("A predicate must be specified when calling WhenAsync.");
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			return rule.Configure(config => {
-				config.ApplyAsyncCondition(predicate.CoerceToNonGeneric(), applyConditionTo);
+				config.ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, ct), applyConditionTo);
 			});
 		}
 
