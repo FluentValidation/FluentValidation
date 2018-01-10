@@ -881,12 +881,13 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="validator">The current validator</param>
 		/// <param name="instance">The object to validate</param>
+		/// <param name="cancellationToken"></param>
 		/// <param name="propertyExpressions">Expressions to specify the properties to validate</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
-		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, params Expression<Func<T, object>>[] propertyExpressions) {
+		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, CancellationToken cancellationToken = default(CancellationToken), params Expression<Func<T, object>>[] propertyExpressions) {
 			var selector = ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(MemberNameValidatorSelector.MemberNamesFromExpressions(propertyExpressions));
 			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
-			return validator.ValidateAsync(context);
+			return validator.ValidateAsync(context, cancellationToken);
 		}
 
 		/// <summary>
@@ -894,11 +895,12 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="validator"></param>
 		/// <param name="instance">The object to validate</param>
+		/// <param name="cancellationToken"></param>
 		/// <param name="properties">The names of the properties to validate.</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, params string[] properties) {
+		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, CancellationToken cancellationToken = default(CancellationToken), params string[] properties) {
 			var context = new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties));
-			return validator.ValidateAsync(context);
+			return validator.ValidateAsync(context, cancellationToken);
 		}
 
 		/// <summary>
@@ -907,10 +909,11 @@ namespace FluentValidation {
 		/// <typeparam name="T"></typeparam>
 		/// <param name="validator"></param>
 		/// <param name="instance"></param>
+		/// <param name="cancellationToken"></param>
 		/// <param name="selector"></param>
 		/// <param name="ruleSet"></param>
 		/// <returns></returns>
-		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, IValidatorSelector selector = null, string ruleSet = null) {
+		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, CancellationToken cancellationToken = default(CancellationToken), IValidatorSelector selector = null, string ruleSet = null) {
 			if (selector != null && ruleSet != null) {
 				throw new InvalidOperationException("Cannot specify both an IValidatorSelector and a RuleSet.");
 			}
@@ -925,7 +928,7 @@ namespace FluentValidation {
 			}
 
 			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
-			return validator.ValidateAsync(context);
+			return validator.ValidateAsync(context, cancellationToken);
 		}
 
 		/// <summary>
@@ -947,9 +950,10 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="validator">The validator this method is extending.</param>
 		/// <param name="instance">The instance of the type we are validating.</param>
+		/// <param name="cancellationToken"></param>
 		/// <param name="ruleSet">Optional: a ruleset when need to validate against.</param>
-		public static async Task ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance, string ruleSet = null) {
-			var result = await validator.ValidateAsync(instance, ruleSet: ruleSet);
+		public static async Task ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance, string ruleSet = null, CancellationToken cancellationToken = default(CancellationToken)) {
+			var result = await validator.ValidateAsync(instance, cancellationToken, ruleSet: ruleSet);
 			if (!result.IsValid) {
 				throw new ValidationException(result.Errors);
 			}
