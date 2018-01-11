@@ -35,7 +35,9 @@ namespace FluentValidation.WebApi
 		protected override bool ValidateNodeAndChildren(ModelMetadata metadata, BodyModelValidatorContext validationContext, object container, IEnumerable<ModelValidator> validators) {
 			bool isValid = base.ValidateNodeAndChildren(metadata, validationContext, container, validators);
 
-			if (!isValid && metadata.Model != null && !HasAlreadyBeenValidated(validationContext, metadata.Model)) {
+			var model = GetModel(metadata);
+
+			if (!isValid && model != null && !HasAlreadyBeenValidated(validationContext, model)) {
 				// default impl skips validating root node if any children fail, so we explicitly validate it in this scenario
 				var rootModelValidators = validationContext.ActionContext.GetValidators(metadata);
 				var rootIsValid = ShallowValidate(metadata, validationContext, container, rootModelValidators);
@@ -47,12 +49,27 @@ namespace FluentValidation.WebApi
 		protected override bool ShallowValidate(ModelMetadata metadata, BodyModelValidatorContext validationContext, object container, IEnumerable<ModelValidator> validators) {
 			var valid = base.ShallowValidate(metadata, validationContext, container, validators);
 
-			if (metadata.Model != null && validators.Any(x => x is FluentValidationModelValidator)) {
+			var model = GetModel(metadata);
+
+			if (model != null && validators.Any(x => x is FluentValidationModelValidator)) {
 				HashSet<object> progress = GetProgress(validationContext);
-				progress.Add(metadata.Model);
+				progress.Add(model);
 			}
 
 			return valid;
+		}
+
+		private object GetModel(ModelMetadata meta) {
+
+			object model = null;
+
+			try
+			{
+				model = meta.Model;
+			}
+			catch { }
+
+			return model;
 		}
 
 		private bool HasAlreadyBeenValidated(BodyModelValidatorContext validationContext, object model) {
