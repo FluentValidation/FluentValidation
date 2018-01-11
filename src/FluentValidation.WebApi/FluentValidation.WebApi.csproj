@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.4-preview1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
