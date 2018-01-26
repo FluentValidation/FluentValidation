@@ -88,8 +88,9 @@ namespace FluentValidation.Tests.Mvc5 {
 		[Fact]
 		public void MaxengthValidator_uses_simplified_message_for_clientside_validatation() {
 			validator.RuleFor(x => x.Name).MaximumLength(10);
+
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("The length of 'Name' must 10 characters or fewer.");
+			clientRule.ErrorMessage.ShouldEqual("The length of 'Name' must be 10 characters or fewer.");
 		}
 
 		[Fact]
