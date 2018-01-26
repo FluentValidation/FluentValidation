@@ -19,6 +19,7 @@
 namespace FluentValidation.Mvc {
 	using System.Collections.Generic;
 	using System.Globalization;
+	using System.Web;
 	using System.Web.Mvc;
 	using Results;
 
@@ -45,5 +46,15 @@ namespace FluentValidation.Mvc {
 				}
 			}
 		}
+
+		/// <summary>
+		/// Sets the rulests used when generating clientside messages.
+		/// </summary>
+		/// <param name="context">Http context</param>
+		/// <param name="ruleSets">Array of ruleset names</param>
+		public static void SetRulesetForClientsideMessages(this ControllerContext context, params string[] ruleSets)  {
+			context.HttpContext.Items["_FV_ClientSideRuleSet"] = ruleSets;
+		}
+
 	}
 }
