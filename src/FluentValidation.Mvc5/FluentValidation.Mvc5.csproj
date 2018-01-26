@@ -21,8 +21,15 @@
     <AssemblyOriginatorKeyFile>../FluentValidation-Dev.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.Mvc.xml</DocumentationFile>
+	  <PackageReleaseNotes>
+	Changes in 7.4:
+	* Added SetRulesetForClientsideMessages method as an alternative to using the RulesetForClientSideMessagesAttribute
+	* Updated the MVC5 AddToModelState extension not to overwrite existing attempted values
 
-  </PropertyGroup>
+	Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
+		</PackageReleaseNotes>
+
+	</PropertyGroup>
 
   <PropertyGroup>
     <NoWarn>1701;1702;1705;1591</NoWarn>

@@ -9,8 +9,19 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.4:
+* Improved syntax for DependentRules
+* ValidationException serialization support when running on full framework
+* Added ComparisonProperty placeholder to some validators
+* The Test Helper now correctly handles read-only properties
+* Add CancellationToken support to ValidateAndThrowAsync and various ValidateAsync overloads
+* Improved functionality for custom MessageBuilders
+* Updated AspNetCore integration to MVC version 2.0.2
+* Update MVC5 AddToModelState extension not to overwrite existing attempted values
+* Added SetRulesetForClientsideMessages method for MVC5/AspNetCore as an alternative to using the RulesetForClientSideMessagesAttribute
+			
 Changes in 7.3:
-* Major changes to AspNetCore integration including better support for collections and implicit validation (opt-in) 
+* Major changes to AspNetCore integration including better support for collections and implicit validation (opt-in)
 * Fix - Updated EnumValidator's Flags support to handle the ~0 value
 * Fix - TestHelper checking for child validator would respond with the wrong type
 * Fix - Updated translations for some validators
@@ -26,7 +37,7 @@ Changes in 7.2:
 * Fix - Property names were not generated properly for nested types when using AddFailure inside a Custom validator
 * Fix - NullReferenceException when using CustomAsync but the validator is invoked synchronously
 * Fix - Clientside integration in AspNetCore being resolved from the root-level service provider
-* Fix - Allow empty string to be passed to OverridePropertyName 
+* Fix - Allow empty string to be passed to OverridePropertyName
 
 Changes in 7.1.1:
 * Fix - Incorrect property name was generated when using RuleForEach combined with SetValidator
@@ -34,9 +45,9 @@ Changes in 7.1.1:
 
 Changes in 7.1:
 * New RuleFor().Custom() method as a replacement for the old, deprecated Custom method
-* Improved messages in the ShouldHaveChildValidator test extension   
+* Improved messages in the ShouldHaveChildValidator test extension
 * Test helper works with nested properties
-* Additional overload of WithState allows access to collection item when used with RuleForEach 
+* Additional overload of WithState allows access to collection item when used with RuleForEach
 * Fix - Wrong values were generated as part of the MVC5 clientside integration for MinLength and MaxLength validators
 * Fix - AssemblyScanner now excludes abstract and generic types
 * Fix - InvalidCastException when using lazy WithMessage combined with RuleForEach
@@ -60,7 +71,8 @@ Changes in 7.0:
 * Improve splitting of PascalCased property names to support uppercase character sequences
 * ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overriden
 
-   Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt </PackageReleaseNotes>
+Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
+		</PackageReleaseNotes>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
