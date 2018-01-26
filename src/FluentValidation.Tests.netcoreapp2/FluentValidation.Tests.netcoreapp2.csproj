@@ -4,7 +4,7 @@
     <Description>FluentValidation Unit Tests .NET Core</Description>
     <Authors>Jeremy Skinner</Authors>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <AssemblyName>FluentValidation.Tests.dotnet</AssemblyName>
+    <AssemblyName>FluentValidation.Tests.NetCoreApp2</AssemblyName>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <ApplicationIcon />
     <OutputTypeEx>library</OutputTypeEx>
