@@ -191,7 +191,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Allows custom creation of an error message
 		/// </summary>
-		public Func<PropertyValidatorContext, string> MessageBuilder { get; set; }
+		public Func<MessageBuilderContext, string> MessageBuilder { get; set; }
 
 		/// <summary>
 		/// Dependent rules

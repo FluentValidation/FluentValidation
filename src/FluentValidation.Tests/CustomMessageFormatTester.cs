@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
+	using Validators;
 	using Xunit;
 
 	
@@ -64,6 +65,22 @@ namespace FluentValidation.Tests {
 			var error = validator.Validate(new Person()).Errors.Single().ErrorMessage;
 			error.ShouldEqual("Test 0");
 		}
+
+		[Fact]
+		public void Uses_custom_delegate_for_building_message_only_for_specific_validator() {
+			validator.RuleFor(x => x.Surname).NotNull().NotEmpty().Configure(cfg => {
+				cfg.MessageBuilder = context => {
+					if (context.PropertyValidator is NotNullValidator)
+						return "Foo";
+					return context.GetDefaultMessage();
+				};
+			});
+
+			var result = validator.Validate(new Person());
+			result.Errors[0].ShouldEqual("Foo");
+			result.Errors[1].ShouldEqual("'Surname' should not be empty.");
+		}
+
 
 		[Fact]
 		public void Uses_property_value_in_message() {

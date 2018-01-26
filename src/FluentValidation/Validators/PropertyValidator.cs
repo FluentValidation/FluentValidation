@@ -121,8 +121,11 @@ namespace FluentValidation.Validators {
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
 		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
-			Func<PropertyValidatorContext, string> errorBuilder = context.Rule.MessageBuilder ?? BuildErrorMessage;
-			var error = errorBuilder(context);
+			var messageBuilderContext = new MessageBuilderContext(context, errorSource, this);
+
+			var error = context.Rule.MessageBuilder != null 
+				? context.Rule.MessageBuilder(messageBuilderContext) 
+				: messageBuilderContext.GetDefaultMessage();
 
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
@@ -140,14 +143,6 @@ namespace FluentValidation.Validators {
 			return failure;
 		}
 
-		string BuildErrorMessage(PropertyValidatorContext context) {
-			// For backwards compatibility, only pass in the PropertyValidatorContext if the string source implements IContextAwareStringSource
-			// otherwise fall back to old behaviour of passing the instance. 
-			object stringSourceContext = errorSource is IContextAwareStringSource ? context : context.Instance;
-
-			string error = context.MessageFormatter.BuildMessage(errorSource.GetString(stringSourceContext));
-			return error;
-		}
 
 		public IStringSource ErrorCodeSource {
 			get => errorCodeSource;
