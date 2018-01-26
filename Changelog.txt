@@ -8,6 +8,7 @@ Add CancellationToken support to ValidateAndThrowAsync and various ValidateAsync
 Introduce MessageBuilderContext to make custom MessageBuilders more useful
 Update Microsoft.AspNetCore.Mvc dependency to 2.0.2
 Update MVC5/WebApi2 AddToModelState extension not to overwrite existing attempted values
+Add SetRulesetForClientsideMessages extension method for MVC5/AspNetCore
 
 7.3.4 - 2 January 2018
 Resolved issue in AspNetCore integration where the change made in 7.3.3 meant that child collections were incorrectly skipped for DataAnnotations-based validation, as well as FV 
