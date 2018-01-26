@@ -6,6 +6,7 @@ Add ComparisonProperty to comparison validator message placeholders
 The Test Helper now correctly handles read-only properties
 Add CancellationToken support to ValidateAndThrowAsync and various ValidateAsync overloads
 Introduce MessageBuilderContext to make custom MessageBuilders more useful
+Update Microsoft.AspNetCore.Mvc dependency to 2.0.2
 
 7.3.4 - 2 January 2018
 Resolved issue in AspNetCore integration where the change made in 7.3.3 meant that child collections were incorrectly skipped for DataAnnotations-based validation, as well as FV 

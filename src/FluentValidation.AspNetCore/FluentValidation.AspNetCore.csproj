@@ -40,24 +40,9 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
 
-  <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="[1.1.2,2.0)" />
-  </ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="[1.1.2,2.0)" />
-	</ItemGroup>-->
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-		<!--<Reference Include="netstandard" />-->
-		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.0" />
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.2" />
 	</ItemGroup>
-
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
   </ItemGroup>
