@@ -43,6 +43,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.2" />
 	</ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
   </ItemGroup>
