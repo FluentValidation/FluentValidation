@@ -174,7 +174,7 @@ namespace FluentValidation.Tests {
             Assert.True(ex.ToString().StartsWith(expected));
 		}
 
-#if !NETSTANDARD1_0
+#if !NETCOREAPP1_1 && !NETCOREAPP2_0
 		[Fact]
 		public void Serializes_exception() {
 			var v = new ValidationException(new List<ValidationFailure> {new ValidationFailure("test", "test")});
