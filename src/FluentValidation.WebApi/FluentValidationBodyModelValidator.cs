@@ -16,19 +16,11 @@
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
-namespace FluentValidation.WebApi
-{
-	using System;
-	using System.Collections;
+namespace FluentValidation.WebApi {
 	using System.Collections.Generic;
-	using System.Diagnostics.Contracts;
-	using System.Globalization;
 	using System.Linq;
-	using System.Net.Http.Formatting;
-	using System.Runtime.CompilerServices;
 	using System.Web.Http.Controllers;
 	using System.Web.Http.Metadata;
-	using System.Web.Http.ModelBinding;
 	using System.Web.Http.Validation;
 
 	public class FluentValidationBodyModelValidator : DefaultBodyModelValidator {
