@@ -18,6 +18,9 @@
 
 namespace FluentValidation.Tests.AspNetCore
 {
+	using System;
+	using System.Globalization;
+	using System.Linq;
 	using Xunit;
 	using FluentValidation;
 	using FluentValidation.AspNetCore;
@@ -75,5 +78,16 @@ namespace FluentValidation.Tests.AspNetCore
 			new ValidationResult().AddToModelState(modelState, null);
 			modelState.IsValid.ShouldBeTrue();
 		}
+
+		[Fact]
+		public void Does_not_overwrite_existing_values() {
+			var modelstate = new ModelStateDictionary();
+			modelstate.AddModelError("model.Foo", "Foo");
+
+			result.AddToModelState(modelstate, "model");
+
+			modelstate["model.Foo"].Errors.Count.ShouldEqual(2);
+		}
+
 	}
 }

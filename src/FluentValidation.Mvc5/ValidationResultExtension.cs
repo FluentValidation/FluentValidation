@@ -33,9 +33,15 @@ namespace FluentValidation.Mvc {
 			if (!result.IsValid) {
 				foreach (var error in result.Errors) {
 					string key = string.IsNullOrEmpty(prefix) ? error.PropertyName : prefix + "." + error.PropertyName;
-					modelState.AddModelError(key, error.ErrorMessage);
-					//To work around an issue with MVC: SetModelValue must be called if AddModelError is called.
-					modelState.SetModelValue(key, new ValueProviderResult(error.AttemptedValue ?? "", (error.AttemptedValue ?? "").ToString(), CultureInfo.CurrentCulture));
+
+					if (modelState.ContainsKey(key)) {
+						modelState[key].Errors.Add(error.ErrorMessage);
+					}
+					else {
+						modelState.AddModelError(key, error.ErrorMessage);
+						//To work around an issue with MVC: SetModelValue must be called if AddModelError is called.
+						modelState.SetModelValue(key, new ValueProviderResult(error.AttemptedValue ?? "", (error.AttemptedValue ?? "").ToString(), CultureInfo.CurrentCulture));
+					}
 				}
 			}
 		}

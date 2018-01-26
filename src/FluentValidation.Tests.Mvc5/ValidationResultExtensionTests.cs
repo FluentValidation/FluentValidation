@@ -17,6 +17,8 @@
 #endregion
 
 namespace FluentValidation.Tests.Mvc5 {
+	using System.Globalization;
+	using System.Linq;
 	using System.Web.Mvc;
 	using Mvc;
     using Xunit;
@@ -68,5 +70,37 @@ namespace FluentValidation.Tests.Mvc5 {
 			new ValidationResult().AddToModelState(modelState, null);
 			modelState.IsValid.ShouldBeTrue();
 		}
+
+		[Fact]
+		public void Does_not_overwrite_existing_values()
+		{
+			var modelstate = new ModelStateDictionary();
+			modelstate.AddModelError("model.Foo", "Foo");
+
+			result.AddToModelState(modelstate, "model");
+
+			modelstate["model.Foo"].Errors.Count.ShouldEqual(2);
+		}
+
+		[Fact]
+		public void Does_not_overwrite_existing_values_with_valid_value()
+		{
+			var modelstate = new ModelStateDictionary();
+			var state = new ModelState();
+
+			state.Value = new ValueProviderResult(
+				"value",
+				"value",
+				CultureInfo.CurrentCulture);
+
+			modelstate.Add("model.Foo", state);
+			
+			result.AddToModelState(modelstate, "model");
+
+			modelstate["model.Foo"].Value.AttemptedValue.ShouldEqual("value");
+			modelstate["model.Foo"].Errors.Single().ErrorMessage.ShouldEqual("A foo error occurred");
+
+		}
+
 	}
 }
