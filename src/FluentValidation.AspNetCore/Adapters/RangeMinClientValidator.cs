@@ -40,7 +40,7 @@ namespace FluentValidation.AspNetCore {
 				messageNeedsSplitting = true;
 			}
 
-			if (messageNeedsSplitting) {
+			if (messageNeedsSplitting && message.Contains(".") && message.Contains("{ComparisonValue}")) {
 				// If we're using the default resources then the mesage for length errors will have two parts, eg:
 				// '{PropertyName}' must be between {From} and {To}. You entered {Value}.
 				// We can't include the "Value" part of the message because this information isn't available at the time the message is constructed.
