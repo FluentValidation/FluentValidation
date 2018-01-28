@@ -284,7 +284,6 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
-		/// <param name="cancellationToken"></param>
 		/// <returns></returns>
 		[Obsolete("Use the overload of WhenAsync that takes a CancellationToken")]
 		public void WhenAsync(Func<T, Task<bool>> predicate, Action action) {
