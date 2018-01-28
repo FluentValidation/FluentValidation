@@ -169,7 +169,58 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().PropertyName.ShouldEqual("Surname");
 		}
 
+		[Fact(Skip="Nested dependent rules not currently supported")]
+		public void Nested_dependent_rules_inside_ruleset()
+		{
+			var validator = new TestValidator();
+			validator.RuleSet("MyRuleSet", () =>
+			{
 
+				validator.RuleFor(x => x.Surname).NotNull()
+					.DependentRules(d =>
+					{
+
+
+						d.RuleFor(x => x.Forename).NotNull()
+							.DependentRules(y =>
+							{
+								y.RuleFor(x => x.Address).NotNull();
+							});
+					});
+			});
+
+			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, ruleSet: "MyRuleSet");
+			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Single().PropertyName.ShouldEqual("Address");
+		}
+
+		[Fact(Skip="Nested dependent rules not currently supported")]
+		public void Nested_dependent_rules_inside_ruleset_inside_method()
+		{
+			var validator = new TestValidator();
+			validator.RuleSet("MyRuleSet", () =>
+			{
+
+				validator.RuleFor(x => x.Surname).NotNull()
+					.DependentRules(d =>
+					{
+						d.RuleFor(x => x.Forename).NotNull()
+							.DependentRules(y =>
+							{
+								BaseValidation(y);
+							});
+					});
+			});
+
+			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, ruleSet: "MyRuleSet");
+			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Single().PropertyName.ShouldEqual("Address");
+		}
+
+		private void BaseValidation(InlineValidator<Person> validator)
+		{
+			validator.RuleFor(x => x.Address).NotNull();
+		}
 
 		class AsyncValidator : AbstractValidator<int> {
 			public AsyncValidator() {

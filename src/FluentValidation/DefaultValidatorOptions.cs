@@ -235,7 +235,7 @@ namespace FluentValidation {
 		/// <param name="action">An action to be invoked if the rule is valid</param>
 		/// <returns></returns>
 		[Obsolete("You no longer need to call RuleFor on the DependentRulesBuilder. Use the other overload of DependentRules that takes an Action and just call the root RuleFor method instead.")]
-		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<IValidator<T>>  action) {
+		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<InlineValidator<T>>  action) {
 
 			var dependencyContainer = new InlineValidator<T>();
 
