@@ -39,6 +39,9 @@
 			return error;
 		}
 
+		public static implicit operator PropertyValidatorContext(MessageBuilderContext ctx) {
+			return ctx._innerContext;
+		}
 
 	}
 }
