@@ -1,3 +1,6 @@
+7.5 - 
+Better handling of clientside messages when using custom overriden language resources
+
 7.4 - 27 January 2018 
 Update DependentRules syntax and mark old syntax as obsolete
 Add workaround for inconsistent behaviour with HttpContext.Items with nonexistent keys in different version of AspNetCore
