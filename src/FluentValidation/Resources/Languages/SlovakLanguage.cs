@@ -38,7 +38,7 @@ namespace FluentValidation.Resources {
 			Translate<AsyncPredicateValidator>("Nebola splnená podmienka pre pole '{PropertyName}'.");
 			Translate<RegularExpressionValidator>("Pole '{PropertyName}' nemá správný formát.");
 			Translate<EqualValidator>("Hodnota poľa '{PropertyName}' musí byť rovná '{ComparisonValue}'.");
-			Translate<ExactLengthValidator>("Hodnota poľa '{PropertyName}' musí byť {MaxLength} znakov dlhá. Vami zadaná dĺžka je {TotalLength} znakov.");
+			Translate<ExactLengthValidator>("Dĺžka poľa '{PropertyName}' musí byť {MaxLength} znakov. Vami zadaná dĺžka je {TotalLength} znakov.");
 			Translate<InclusiveBetweenValidator>("Hodnota poľa '{PropertyName}' musí byť medzi {From} a {To} (vrátane). Vami zadaná hodnota je {Value}.");
 			Translate<ExclusiveBetweenValidator>("Hodnota poľa '{PropertyName}' musí byť väčšia ako {From} a menšia ako {To}. Vami zadaná hodnota {Value}.");
 			Translate<CreditCardValidator>("Pole '{PropertyName}' nie je správné číslo kreditnej karty.");
