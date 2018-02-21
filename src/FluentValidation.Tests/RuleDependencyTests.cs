@@ -169,7 +169,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().PropertyName.ShouldEqual("Surname");
 		}
 
-		[Fact(Skip="Nested dependent rules not currently supported")]
+		[Fact]
 		public void Nested_dependent_rules_inside_ruleset()
 		{
 			var validator = new TestValidator();
@@ -177,14 +177,14 @@ namespace FluentValidation.Tests {
 			{
 
 				validator.RuleFor(x => x.Surname).NotNull()
-					.DependentRules(d =>
+					.DependentRules(() =>
 					{
 
 
-						d.RuleFor(x => x.Forename).NotNull()
-							.DependentRules(y =>
+						validator.RuleFor(x => x.Forename).NotNull()
+							.DependentRules(() =>
 							{
-								y.RuleFor(x => x.Address).NotNull();
+								validator.RuleFor(x => x.Address).NotNull();
 							});
 					});
 			});
@@ -194,7 +194,58 @@ namespace FluentValidation.Tests {
 			results.Errors.Single().PropertyName.ShouldEqual("Address");
 		}
 
-		[Fact(Skip="Nested dependent rules not currently supported")]
+		[Fact]
+		public void Nested_dependent_rules_inside_ruleset_no_result_when_top_level_fails()
+		{
+			var validator = new TestValidator();
+			validator.RuleSet("MyRuleSet", () =>
+			{
+
+				validator.RuleFor(x => x.Surname).NotNull()
+					.DependentRules(() =>
+					{
+
+
+						validator.RuleFor(x => x.Forename).NotNull()
+							.DependentRules(() =>
+							{
+								validator.RuleFor(x => x.Address).NotNull();
+							});
+					});
+			});
+
+			var results = validator.Validate(new Person { Surname = null, Forename = "foo" }, ruleSet: "MyRuleSet");
+			results.Errors.Count.ShouldEqual(1);
+			results.Errors[0].PropertyName.ShouldEqual("Surname");
+		}
+
+		[Fact]
+		public void Nested_dependent_rules_inside_ruleset_no_result_when_second_level_fails()
+		{
+			var validator = new TestValidator();
+			validator.RuleSet("MyRuleSet", () =>
+			{
+
+				validator.RuleFor(x => x.Surname).NotNull()
+					.DependentRules(() =>
+					{
+
+
+						validator.RuleFor(x => x.Forename).NotNull()
+							.DependentRules(() =>
+							{
+								validator.RuleFor(x => x.Address).NotNull();
+							});
+					});
+			});
+
+			var results = validator.Validate(new Person { Surname = "bar", Forename = null }, ruleSet: "MyRuleSet");
+			results.Errors.Count.ShouldEqual(1);
+			results.Errors[0].PropertyName.ShouldEqual("Forename");
+		}
+
+
+		[Fact]
 		public void Nested_dependent_rules_inside_ruleset_inside_method()
 		{
 			var validator = new TestValidator();
@@ -202,12 +253,12 @@ namespace FluentValidation.Tests {
 			{
 
 				validator.RuleFor(x => x.Surname).NotNull()
-					.DependentRules(d =>
+					.DependentRules(() =>
 					{
-						d.RuleFor(x => x.Forename).NotNull()
-							.DependentRules(y =>
+						validator.RuleFor(x => x.Forename).NotNull()
+							.DependentRules(() =>
 							{
-								BaseValidation(y);
+								BaseValidation(validator);
 							});
 					});
 			});
