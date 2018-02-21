@@ -49,7 +49,11 @@ namespace FluentValidation.Validators {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
-			propertyValueContainer = new Lazy<object>( () => rule.PropertyFunc(parentContext.InstanceToValidate));
+			propertyValueContainer = new Lazy<object>( () => {
+				var value = rule.PropertyFunc(parentContext.InstanceToValidate);
+				if (rule.Transformer != null) value = rule.Transformer(value);
+				return value;
+			});
 		}
 
 		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue)

@@ -198,6 +198,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public List<IValidationRule> DependentRules { get; private set; }
 
+		public Func<object, object> Transformer { get; set; }
+
 		/// <summary>
 		/// Display name for the property. 
 		/// </summary>

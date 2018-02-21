@@ -2,6 +2,7 @@
 Better handling of clientside messages when using custom overriden language resources
 Flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration
 Improvements to some of the validation tester's messages
+Added Transform method to transform property values prior to validation
 
 7.4 - 27 January 2018 
 Update DependentRules syntax and mark old syntax as obsolete
