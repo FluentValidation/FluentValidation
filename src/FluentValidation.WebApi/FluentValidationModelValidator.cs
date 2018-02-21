@@ -38,6 +38,8 @@ namespace FluentValidation.WebApi
 			if (metadata.Model != null) {
 				var selector = ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
 				var context = new ValidationContext(metadata.Model, new PropertyChain(), selector);
+				context.RootContextData["InvokedByWebApi"] = true;
+
 
 				var result = validator.Validate(context);
 

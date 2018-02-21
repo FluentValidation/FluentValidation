@@ -62,6 +62,7 @@
 					var selector = customizations.ToValidatorSelector();
 					var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
 					var context = new FluentValidation.ValidationContext(mvContext.Model, new FluentValidation.Internal.PropertyChain(), selector);
+					context.RootContextData["InvokedByMvc"] = true;
 
 					if (interceptor != null) {
 						// Allow the user to provide a customized context
