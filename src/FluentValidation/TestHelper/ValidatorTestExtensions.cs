@@ -95,22 +95,33 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-			if (!failures.Any(failurePredicate))
-				throw new ValidationTestException(exceptionMessage ?? "Expected a validation error is not found");
+			foreach (var failure in failures) {
+				if (!failurePredicate(failure)) {
+					string message = "Expected validation error was not found";
+
+					if (exceptionMessage != null) {
+						message = exceptionMessage.Replace("{Code}", failure.ErrorCode)
+							.Replace("{Message}", failure.ErrorMessage)
+							.Replace("{State}", failure.CustomState?.ToString() ?? "");
+					}
+
+					throw new ValidationTestException(message);
+				}
+			}
 
 			return failures;
 		}
 
 		public static IEnumerable<ValidationFailure> WithCustomState(this IEnumerable<ValidationFailure> failures, object expectedCustomState) {
-			return failures.When(failure => failure.CustomState == expectedCustomState, string.Format("Expected custom state of '{0}'.", expectedCustomState));
+			return failures.When(failure => failure.CustomState == expectedCustomState, string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
 		}
 
 		public static IEnumerable<ValidationFailure> WithErrorMessage(this IEnumerable<ValidationFailure> failures, string expectedErrorMessage) {
-			return failures.When(failure => failure.ErrorMessage == expectedErrorMessage, string.Format("Expected an error message of '{0}'.", expectedErrorMessage));
+			return failures.When(failure => failure.ErrorMessage == expectedErrorMessage, string.Format("Expected an error message of '{0}'. Actual message was '{{Message}}'", expectedErrorMessage));
 		}
 
 		public static IEnumerable<ValidationFailure> WithErrorCode(this IEnumerable<ValidationFailure> failures, string expectedErrorCode) {
-			return failures.When(failure => failure.ErrorCode == expectedErrorCode, string.Format("Expected an error code of '{0}'.", expectedErrorCode));
+			return failures.When(failure => failure.ErrorCode == expectedErrorCode, string.Format("Expected an error code of '{0}'. Actual error code was '{{Code}}'", expectedErrorCode));
 		}
 	}
 }

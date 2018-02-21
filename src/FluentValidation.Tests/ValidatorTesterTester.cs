@@ -214,6 +214,73 @@ namespace FluentValidation.Tests {
 			validator.ShouldHaveValidationErrorFor(x => x.ForenameReadOnly, new Person { Forename = null });
 		}
 
+		[Fact]
+		public void Expected_message_check() {
+
+			bool exceptionCaught = false;
+
+			try {
+				var validator = new InlineValidator<Person> {
+					v => v.RuleFor(x => x.Surname).NotNull().WithMessage("bar")
+				};
+				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithErrorMessage("foo");
+			}
+			catch (ValidationTestException e) {
+				exceptionCaught = true;
+
+				e.Message.ShouldEqual("Expected an error message of 'foo'. Actual message was 'bar'");
+			}
+
+			exceptionCaught.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Expected_state_check()
+		{
+
+			bool exceptionCaught = false;
+
+			try
+			{
+				var validator = new InlineValidator<Person> {
+					v => v.RuleFor(x => x.Surname).NotNull().WithState(x=>"bar")
+				};
+				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithCustomState("foo");
+			}
+			catch (ValidationTestException e)
+			{
+				exceptionCaught = true;
+
+				e.Message.ShouldEqual("Expected custom state of 'foo'. Actual state was 'bar'");
+			}
+
+			exceptionCaught.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Expected_error_code_check()
+		{
+
+			bool exceptionCaught = false;
+
+			try
+			{
+				var validator = new InlineValidator<Person> {
+					v => v.RuleFor(x => x.Surname).NotNull().WithErrorCode("bar")
+				};
+				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithErrorCode("foo");
+			}
+			catch (ValidationTestException e)
+			{
+				exceptionCaught = true;
+
+				e.Message.ShouldEqual("Expected an error code of 'foo'. Actual error code was 'bar'");
+			}
+
+			exceptionCaught.ShouldBeTrue();
+		}
+
+
 		private class AddressValidator : AbstractValidator<Address> {
 
 		}
