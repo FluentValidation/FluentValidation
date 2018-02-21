@@ -91,6 +91,11 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
 
+	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0' or '$(TargetFramework)'=='net45'">
+		<PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1"></PackageReference>
+		<PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0"></PackageReference>
+	</ItemGroup>
+
  
     <!--<ItemGroup>
       <Content Include="bin\$(Configuration)\$(TargetFramework)\**\FluentValidation.resources.dll">

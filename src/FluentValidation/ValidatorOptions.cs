@@ -19,7 +19,9 @@
 namespace FluentValidation {
 	using System;
 	using System.ComponentModel;
-	//using System.ComponentModel.DataAnnotations;
+#if !NETSTANDARD1_0
+	using System.ComponentModel.DataAnnotations;
+#endif
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
@@ -102,6 +104,9 @@ namespace FluentValidation {
 			return memberInfo == null ? null : GetDisplayName(memberInfo);
 		}
 
+
+
+#if NETSTANDARD1_0 
 		// Nasty hack to work around not referencing DataAnnotations directly. 
 		// At some point investigate the DataAnnotations reference issue in more detail and go back to using the code above. 
 		static string GetDisplayName(MemberInfo member) {
@@ -124,6 +129,32 @@ namespace FluentValidation {
 
 			return name;
 		}
+
+
+#else
+		static string GetDisplayName(MemberInfo member) {
+
+			if (member == null) return null;
+			string name = null;
+
+			var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
+
+			if (displayAttribute != null) {
+				name = displayAttribute.GetName();
+			}
+
+			if (string.IsNullOrEmpty(name)) {
+				// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
+				var displayNameAttribute = (DisplayNameAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayNameAttribute));
+				if (displayNameAttribute != null) {
+					name = displayNameAttribute.DisplayName;
+				}
+			}
+
+			return name;
+
+		}
+#endif
 
 		/// <summary>
 		/// Disables the expression accessor cache. Not recommended.
