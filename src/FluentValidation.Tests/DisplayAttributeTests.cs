@@ -50,11 +50,29 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Bar' must not be empty.");
 		}
 
+		[Fact]
+		public void Works_with_Inherited_attribute() {
+			var validator = new InlineValidator<DisplayNameTestModel> {
+				v => v.RuleFor(x => x.Name3).NotNull()
+			};
+
+			var result = validator.Validate(new DisplayNameTestModel());
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Baz' must not be empty.");
+		}
+
         public class DisplayNameTestModel {
 			[Display(Name = "Foo")]
 			public string Name1 { get; set; }
 			[DisplayName("Bar")]
 			public string Name2 { get; set; }
+			[MyDisplay]
+			public string Name3 { get; set; }
+		}
+
+		public class MyDisplay : DisplayNameAttribute {
+			public MyDisplay() : base("Baz") {
+				
+			}
 		}
 	}
 }
