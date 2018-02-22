@@ -89,17 +89,7 @@ namespace FluentValidation {
 		public static Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver
 		{
 			get => _displayNameResolver;
-			set
-			{
-				if (value != null) {
-					_displayNameResolver = value;
-					DisableDisplayNameCache = true;
-				}
-				else {
-					_displayNameResolver = DefaultDisplayNameResolver;
-					DisableDisplayNameCache = false;
-				}
-			}
+			set => _displayNameResolver = value ?? DefaultDisplayNameResolver;
 		}
 
 		static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
@@ -112,70 +102,16 @@ namespace FluentValidation {
 		}	
 		
 		static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
-			return memberInfo == null ? null : GetDisplayName(memberInfo);
+			return memberInfo == null ? null : DisplayNameCache.GetCachedDisplayName(memberInfo);
 		}
 
 
 
-#if NETSTANDARD1_0 
-		// Nasty hack to work around not referencing DataAnnotations directly. 
-		// At some point investigate the DataAnnotations reference issue in more detail and go back to using the code above. 
-		static string GetDisplayName(MemberInfo member) {
-			var attributes = (from attr in member.GetCustomAttributes(true)
-			                  select new {attr, type = attr.GetType()}).ToList();
-
-			string name = (from attr in attributes
-			        where attr.type.Name == "DisplayAttribute"
-			        let method = attr.type.GetRuntimeMethod("GetName", new Type[0]) 
-			        where method != null
-			        select method.Invoke(attr.attr, null) as string).FirstOrDefault();
-
-			if (string.IsNullOrEmpty(name)) {
-				name = (from attr in attributes
-				        where attr.type.Name == "DisplayNameAttribute"
-				        let property = attr.type.GetRuntimeProperty("DisplayName")
-				        where property != null
-				        select property.GetValue(attr.attr, null) as string).FirstOrDefault();
-			}
-
-			return name;
-		}
-
-
-#else
-		static string GetDisplayName(MemberInfo member) {
-
-			if (member == null) return null;
-			string name = null;
-
-			var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
-
-			if (displayAttribute != null) {
-				name = displayAttribute.GetName();
-			}
-
-			if (string.IsNullOrEmpty(name)) {
-				// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
-				var displayNameAttribute = (DisplayNameAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayNameAttribute));
-				if (displayNameAttribute != null) {
-					name = displayNameAttribute.DisplayName;
-				}
-			}
-
-			return name;
-
-		}
-#endif
 
 		/// <summary>
 		/// Disables the expression accessor cache. Not recommended.
 		/// </summary>
 		public static bool DisableAccessorCache { get; set; }
-
-		/// <summary>
-		/// Disables caching of display names. Not recommended unless you use a custom DisplayNameResolver. 
-		/// </summary>
-		public static bool DisableDisplayNameCache { get; set; }
 	}
 
 	/// <summary>

@@ -125,15 +125,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
 			var member = expression.GetMember();
-			string displayName;
-			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, out displayName);
-			var rule = new PropertyRule(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
-
-			if (!ValidatorOptions.DisableDisplayNameCache) {
-				rule.DisplayName = new StaticStringSource(displayName);
-			}
-
-			return rule;
+			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression);
+			return new PropertyRule(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
 		}
 
 		/// <summary>

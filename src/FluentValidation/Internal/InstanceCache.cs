@@ -21,7 +21,11 @@ namespace FluentValidation.Internal {
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Reflection;
-
+	using System.Linq;
+	using System.ComponentModel;
+#if !NETSTANDARD1_0
+	using System.ComponentModel.DataAnnotations;
+#endif
 	/// <summary>
 	/// Instancace cache.
 	/// </summary>
@@ -63,9 +67,8 @@ namespace FluentValidation.Internal {
 	/// Member accessor cache.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public static class AccessorCache<T>
-	{
-		private static readonly Dictionary<Key, Tuple<string, Delegate>> _cache = new Dictionary<Key, Tuple<string,Delegate>>();
+	public static class AccessorCache<T> {
+		private static readonly Dictionary<Key, Delegate> _cache = new Dictionary<Key, Delegate>();
 		private static readonly object _locker = new object();
 
 		/// <summary>
@@ -75,24 +78,21 @@ namespace FluentValidation.Internal {
 		/// <param name="member">The member represented by the expression</param>
 		/// <param name="expression"></param>
 		/// <returns>Accessor func</returns>
-		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, out string displayName) {
+		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {
 			if (member == null || ValidatorOptions.DisableAccessorCache) {
-				displayName = null; //Don't worry about getting the display name in this case.
 				return expression.Compile();
 			}
 			
- 			Tuple<string, Delegate> result;
+ 			Delegate result;
 
 			lock (_locker) {
 				var key = new Key(member, expression);
 				if (_cache.TryGetValue(key, out result)) {
-					displayName = result.Item1;
-					return (Func<T, TProperty>)result.Item2;
+					return (Func<T, TProperty>)result;
 				}
 
 				var func = expression.Compile();
-				displayName = ValidatorOptions.DisableDisplayNameCache ? null :  ValidatorOptions.DisplayNameResolver(typeof(T), member, expression);
-				_cache[key] = new Tuple<string, Delegate>(displayName, func);
+				_cache[key] = func;
 				return func;
 			}
 		}
@@ -130,6 +130,86 @@ namespace FluentValidation.Internal {
 	        }
 	    }
 
+	}
+
+
+	/// <summary>
+	/// Display name cache.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	internal static class DisplayNameCache {
+		private static readonly Dictionary<MemberInfo, string> _cache = new Dictionary<MemberInfo, string>();
+		private static readonly object _locker = new object();
+
+		public static string GetCachedDisplayName(MemberInfo member) {
+			string result;
+
+			lock (_locker) {
+				if (_cache.TryGetValue(member, out result)) {
+					return result;
+				}
+
+				string displayName = GetDisplayName(member);
+				_cache[member] = displayName;
+				return displayName;
+			}
+		}
+
+		public static void Clear() {
+			lock (_locker) {
+				_cache.Clear();
+			}
+		}
+
+#if NETSTANDARD1_0
+		// Nasty hack to work around not referencing DataAnnotations directly. 
+		// At some point investigate the DataAnnotations reference issue in more detail and go back to using the code above. 
+		static string GetDisplayName(MemberInfo member) {
+			var attributes = (from attr in member.GetCustomAttributes(true)
+				select new { attr, type = attr.GetType() }).ToList();
+
+			string name = (from attr in attributes
+				where attr.type.Name == "DisplayAttribute"
+				let method = attr.type.GetRuntimeMethod("GetName", new Type[0])
+				where method != null
+				select method.Invoke(attr.attr, null) as string).FirstOrDefault();
+
+			if (string.IsNullOrEmpty(name)) {
+				name = (from attr in attributes
+					where attr.type.Name == "DisplayNameAttribute"
+					let property = attr.type.GetRuntimeProperty("DisplayName")
+					where property != null
+					select property.GetValue(attr.attr, null) as string).FirstOrDefault();
+			}
+
+			return name;
+		}
+
+
+#else
+		static string GetDisplayName(MemberInfo member) {
+
+			if (member == null) return null;
+			string name = null;
+
+			var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
+
+			if (displayAttribute != null) {
+				name = displayAttribute.GetName();
+			}
+
+			if (string.IsNullOrEmpty(name)) {
+				// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
+				var displayNameAttribute = (DisplayNameAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayNameAttribute));
+				if (displayNameAttribute != null) {
+					name = displayNameAttribute.DisplayName;
+				}
+			}
+
+			return name;
+
+		}
+#endif
 	}
 
 }
