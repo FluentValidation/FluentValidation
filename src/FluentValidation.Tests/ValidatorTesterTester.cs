@@ -138,6 +138,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void ShouldHaveChildValidator_works_on_model_level_rules() {
+			validator.RuleFor(x => x).SetValidator(new InlineValidator<Person>());
+			validator.ShouldHaveChildValidator(x=>x, typeof(InlineValidator<Person>));
+		}
+
+		[Fact]
 		public void ShouldHaveValidationErrorFor_takes_account_of_rulesets() {
 			var testValidator = new TestValidator();
 			testValidator.RuleSet("Names", () => {

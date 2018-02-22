@@ -57,8 +57,16 @@ namespace FluentValidation.TestHelper {
 
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
 			var descriptor = validator.CreateDescriptor();
-			var expressionMemberName = expression.GetMember().Name;
-			var matchingValidators = descriptor.GetValidatorsForMember(expressionMemberName).ToArray();
+			var expressionMemberName = expression.GetMember()?.Name;
+
+			if (expressionMemberName == null && !expression.IsParameterExpression()) {
+				throw new NotSupportedException("ShouldHaveChildValidator can only be used for simple property expressions. It cannot be used for model-level rules or rules that contain anything other than a property reference.");
+			}
+
+			var matchingValidators = 
+				expression.IsParameterExpression()	 ? GetModelLevelValidators(descriptor) :
+				descriptor.GetValidatorsForMember(expressionMemberName).ToArray();
+
 			var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.ValidatorType);
 			childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
@@ -66,6 +74,12 @@ namespace FluentValidation.TestHelper {
 				var childValidatorNames = childValidatorTypes.Any() ? string.Join(", ", childValidatorTypes.Select(x => x.Name)) : "none";
 				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'. Instead found '{2}'", expressionMemberName, childValidatorType.Name, childValidatorNames));
 			}
+		}
+
+		private static IPropertyValidator[] GetModelLevelValidators(IValidatorDescriptor descriptor) {
+			var rules = descriptor.GetRulesForMember(null).OfType<PropertyRule>();
+			return rules.Where(x => x.Expression.IsParameterExpression()).SelectMany(x => x.Validators)
+				.ToArray();
 		}
 
 		private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T instanceToValidate, TValue value, string ruleSet = null, bool setProperty=true) where T : class {
