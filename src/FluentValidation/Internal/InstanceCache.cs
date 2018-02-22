@@ -77,7 +77,7 @@ namespace FluentValidation.Internal {
 		/// <returns>Accessor func</returns>
 		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, out string displayName) {
 			if (member == null || ValidatorOptions.DisableAccessorCache) {
-				displayName = ValidatorOptions.DisplayNameResolver(typeof(T), member, expression);
+				displayName = null; //Don't worry about getting the display name in this case.
 				return expression.Compile();
 			}
 			
@@ -87,19 +87,19 @@ namespace FluentValidation.Internal {
 				var key = new Key(member, expression);
 				if (_cache.TryGetValue(key, out result)) {
 					displayName = result.Item1;
-
-					// If display name caching is disabled, force it to be looked up again rather than using the cached value. 
-					if (ValidatorOptions.DisableDisplayNameCache) {
-						displayName = ValidatorOptions.DisplayNameResolver(typeof(T), member, expression);
-					}
-
 					return (Func<T, TProperty>)result.Item2;
 				}
 
 				var func = expression.Compile();
-				displayName = ValidatorOptions.DisplayNameResolver(typeof(T), member, expression);
+				displayName = ValidatorOptions.DisableDisplayNameCache ? null :  ValidatorOptions.DisplayNameResolver(typeof(T), member, expression);
 				_cache[key] = new Tuple<string, Delegate>(displayName, func);
 				return func;
+			}
+		}
+
+		public static void Clear() {
+			lock (_locker) {
+				_cache.Clear();
 			}
 		}
 

@@ -1,5 +1,6 @@
 ﻿namespace FluentValidation.Tests {
 	using System;
+	using System.ComponentModel.DataAnnotations;
 	using System.Diagnostics;
 	using System.Linq.Expressions;
 	using System.Reflection;
@@ -14,6 +15,7 @@
 		public AccessorCacheTests(ITestOutputHelper output)
 		{
 			this.output = output;
+			AccessorCache<Person>.Clear();
 		}
 
 		[Fact]
@@ -25,8 +27,8 @@
 
 			Assert.NotEqual(compiled1, compiled2);
 
-			var compiled3 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetTypeInfo().GetProperty("Id"), expr1);
-			var compiled4 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetTypeInfo().GetProperty("Id"), expr1);
+			var compiled3 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetTypeInfo().GetProperty("Id"), expr1, out string _);
+			var compiled4 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetTypeInfo().GetProperty("Id"), expr1, out string _);
 
 			Assert.Equal(compiled3, compiled4);
 		}
@@ -63,6 +65,42 @@
 			expr1.GetMember().ShouldNotBeNull();
 		}
 
+		[Fact]
+		public void Caches_display_name() {
+			try {
+				int count = 0;
+				ValidatorOptions.DisplayNameResolver = (type, info, arg3) => "foo" + count++;
+				ValidatorOptions.DisableDisplayNameCache = false; // By default setting custom resolver disables the cache
+				Expression<Func<Person, string>> expr = x => x.Surname;
+				string name;
+				AccessorCache<Person>.GetCachedAccessor(expr.GetMember(), expr, out name);
+				name.ShouldEqual("foo0");
+				 AccessorCache<Person>.GetCachedAccessor(expr.GetMember(), expr, out name);
+				name.ShouldEqual("foo0");
+
+			}
+			finally {
+				ValidatorOptions.DisplayNameResolver = null;
+			}
+
+		}
+
+		[Fact]
+		public void Does_not_cache_display_name_with_custom_resolver() {
+			try{
+				int count = 0;
+				ValidatorOptions.DisplayNameResolver = (type, info, arg3) => "foo" + count++;
+				Expression<Func<Person, string>> expr = x => x.Surname;
+				string name;
+				AccessorCache<Person>.GetCachedAccessor(expr.GetMember(), expr, out name);
+				name.ShouldBeNull();
+			}
+			finally {
+				ValidatorOptions.DisplayNameResolver = null;
+			}
+
+		}
+
 		private Person DoStuffToPerson(Person p) {
 			return p;
 		}
@@ -88,6 +126,11 @@
 				RuleFor(x => x.Surname).NotNull();
 				RuleFor(x => x).Must(x => true);
 			}
+		}
+
+		private class CacheTestModel {
+			[Display(Name="Foo")]
+			public string Name { get; set; }
 		}
 	}
 }

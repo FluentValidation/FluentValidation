@@ -110,7 +110,7 @@ namespace FluentValidation.Internal {
 			
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
-			DisplayName = new LazyStringSource(x => ValidatorOptions.DisplayNameResolver(containerType, member, expression));
+			DisplayName = new LazyStringSource(x =>  ValidatorOptions.DisplayNameResolver(containerType, member, expression));
 		}
 
 		/// <summary>
@@ -125,13 +125,15 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk) {
 			var member = expression.GetMember();
-			// We can't use the expression tree as a key in the cache, as it doesn't implement GetHashCode/Equals in a useful way.
-			// Instead we'll use the MemberInfo as the key, but this only works for member expressions.
-			// If this is not a member expression (eg, a RuleFor(x => x) or a RuleFor(x => x.Foo())) then we won't cache the result. 
-			// We could probably make the cache more robust in future. 
-			var compiled = member == null || ValidatorOptions.DisableAccessorCache ? expression.Compile() : AccessorCache<T>.GetCachedAccessor(member, expression);
+			string displayName;
+			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, out displayName);
+			var rule = new PropertyRule(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
 
-			return new PropertyRule(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+			if (!ValidatorOptions.DisableDisplayNameCache) {
+				rule.DisplayName = new StaticStringSource(displayName);
+			}
+
+			return rule;
 		}
 
 		/// <summary>
