@@ -138,20 +138,20 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	internal static class DisplayNameCache {
-		private static readonly Dictionary<MemberInfo, string> _cache = new Dictionary<MemberInfo, string>();
+		private static readonly Dictionary<MemberInfo, Func<string>> _cache = new Dictionary<MemberInfo, Func<string>>();
 		private static readonly object _locker = new object();
 
 		public static string GetCachedDisplayName(MemberInfo member) {
-			string result;
+			Func<string> result;
 
 			lock (_locker) {
 				if (_cache.TryGetValue(member, out result)) {
-					return result;
+					return result?.Invoke();
 				}
 
-				string displayName = GetDisplayName(member);
-				_cache[member] = displayName;
-				return displayName;
+				Func<string> displayNameFunc = GetDisplayName(member);
+				_cache[member] = displayNameFunc;
+				return displayNameFunc?.Invoke();
 			}
 		}
 
@@ -164,22 +164,22 @@ namespace FluentValidation.Internal {
 #if NETSTANDARD1_0
 		// Nasty hack to work around not referencing DataAnnotations directly. 
 		// At some point investigate the DataAnnotations reference issue in more detail and go back to using the code above. 
-		static string GetDisplayName(MemberInfo member) {
+		static Func<string> GetDisplayName(MemberInfo member) {
 			var attributes = (from attr in member.GetCustomAttributes(true)
 				select new { attr, type = attr.GetType() }).ToList();
 
-			string name = (from attr in attributes
+			Func<string> name = (from attr in attributes
 				where attr.type.Name == "DisplayAttribute"
 				let method = attr.type.GetRuntimeMethod("GetName", new Type[0])
 				where method != null
-				select method.Invoke(attr.attr, null) as string).FirstOrDefault();
+				select new Func<string>(() => method.Invoke(attr.attr, null) as string)).FirstOrDefault();
 
-			if (string.IsNullOrEmpty(name)) {
+			if (name == null) {
 				name = (from attr in attributes
 					where attr.type.Name == "DisplayNameAttribute"
 					let property = attr.type.GetRuntimeProperty("DisplayName")
 					where property != null
-					select property.GetValue(attr.attr, null) as string).FirstOrDefault();
+					select new Func<string>(() => property.GetValue(attr.attr, null) as string)).FirstOrDefault();
 			}
 
 			return name;
@@ -187,26 +187,24 @@ namespace FluentValidation.Internal {
 
 
 #else
-		static string GetDisplayName(MemberInfo member) {
+		static Func<string> GetDisplayName(MemberInfo member) {
 
 			if (member == null) return null;
-			string name = null;
 
 			var displayAttribute = (DisplayAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayAttribute));
 
 			if (displayAttribute != null) {
-				name = displayAttribute.GetName();
+				return () => displayAttribute.GetName();
 			}
 
-			if (string.IsNullOrEmpty(name)) {
-				// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
-				var displayNameAttribute = (DisplayNameAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayNameAttribute));
-				if (displayNameAttribute != null) {
-					name = displayNameAttribute.DisplayName;
-				}
+			// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
+			var displayNameAttribute = (DisplayNameAttribute)Attribute.GetCustomAttribute(member, typeof(DisplayNameAttribute));
+			if (displayNameAttribute != null) {
+				return () => displayNameAttribute.DisplayName;
 			}
+			
 
-			return name;
+			return null;
 
 		}
 #endif
