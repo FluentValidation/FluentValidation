@@ -65,7 +65,7 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="T"></typeparam>
 	public static class AccessorCache<T>
 	{
-		private static readonly Dictionary<Key, Delegate> _cache = new Dictionary<Key, Delegate>();
+		private static readonly Dictionary<Key, Tuple<string, Delegate>> _cache = new Dictionary<Key, Tuple<string,Delegate>>();
 		private static readonly object _locker = new object();
 
 		/// <summary>
@@ -75,23 +75,31 @@ namespace FluentValidation.Internal {
 		/// <param name="member">The member represented by the expression</param>
 		/// <param name="expression"></param>
 		/// <returns>Accessor func</returns>
-		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {
-			if (member == null)
-			{
-				return null;
+		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, out string displayName) {
+			if (member == null || ValidatorOptions.DisableAccessorCache) {
+				displayName = ValidatorOptions.DisplayNameResolver(typeof(T), member, expression);
+				return expression.Compile();
 			}
- 			Delegate func;
+			
+ 			Tuple<string, Delegate> result;
 
 			lock (_locker) {
-                var key = new Key(member, expression);
-				if (_cache.TryGetValue(key, out func))
-				{
-					return (Func<T, TProperty>)func;
+				var key = new Key(member, expression);
+				if (_cache.TryGetValue(key, out result)) {
+					displayName = result.Item1;
+
+					// If display name caching is disabled, force it to be looked up again rather than using the cached value. 
+					if (ValidatorOptions.DisableDisplayNameCache) {
+						displayName = ValidatorOptions.DisplayNameResolver(typeof(T), member, expression);
+					}
+
+					return (Func<T, TProperty>)result.Item2;
 				}
 
-				func = expression.Compile();
-				_cache[key] = func;
-				return (Func<T, TProperty>)func;
+				var func = expression.Compile();
+				displayName = ValidatorOptions.DisplayNameResolver(typeof(T), member, expression);
+				_cache[key] = new Tuple<string, Delegate>(displayName, func);
+				return func;
 			}
 		}
 

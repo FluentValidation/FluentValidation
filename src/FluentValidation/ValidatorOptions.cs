@@ -86,9 +86,20 @@ namespace FluentValidation {
 		/// <summary>
 		/// Pluggable logic for resolving display names
 		/// </summary>
-		public static Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver {
+		public static Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver
+		{
 			get => _displayNameResolver;
-			set => _displayNameResolver = value ?? DefaultDisplayNameResolver;
+			set
+			{
+				if (value != null) {
+					_displayNameResolver = value;
+					DisableDisplayNameCache = true;
+				}
+				else {
+					_displayNameResolver = DefaultDisplayNameResolver;
+					DisableDisplayNameCache = false;
+				}
+			}
 		}
 
 		static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
@@ -161,6 +172,10 @@ namespace FluentValidation {
 		/// </summary>
 		public static bool DisableAccessorCache { get; set; }
 
+		/// <summary>
+		/// Disables caching of display names. Not recommended unless you use a custom DisplayNameResolver. 
+		/// </summary>
+		public static bool DisableDisplayNameCache { get; set; }
 	}
 
 	/// <summary>
