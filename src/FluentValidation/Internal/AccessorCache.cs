@@ -25,7 +25,7 @@ namespace FluentValidation.Internal {
 			}
 			
 			var key = new Key(member, expression);
-			return (Func<T,TProperty>)_cache.GetOrAdd(key, k => { return expression.Compile(); });
+			return (Func<T,TProperty>)_cache.GetOrAdd(key, k => expression.Compile());
 		}
 
 		public static void Clear() {
@@ -33,16 +33,16 @@ namespace FluentValidation.Internal {
 		}
 
 		private class Key {
-			private readonly MemberInfo memberInfo;
-			private readonly string expressionDebugView;
+			private readonly MemberInfo _memberInfo;
+			private readonly string _expressionDebugView;
 
 			public Key(MemberInfo member, Expression expression) {
-				memberInfo = member;
-				expressionDebugView = expression.ToString();
+				_memberInfo = member;
+				_expressionDebugView = expression.ToString();
 			}
 
 			protected bool Equals(Key other) {
-				return Equals(memberInfo, other.memberInfo) && string.Equals(expressionDebugView, other.expressionDebugView);
+				return Equals(_memberInfo, other._memberInfo) && string.Equals(_expressionDebugView, other._expressionDebugView);
 			}
 
 			public override bool Equals(object obj) {
@@ -54,7 +54,7 @@ namespace FluentValidation.Internal {
 
 			public override int GetHashCode() {
 				unchecked {
-					return ((memberInfo != null ? memberInfo.GetHashCode() : 0)*397) ^ (expressionDebugView != null ? expressionDebugView.GetHashCode() : 0);
+					return ((_memberInfo != null ? _memberInfo.GetHashCode() : 0)*397) ^ (_expressionDebugView != null ? _expressionDebugView.GetHashCode() : 0);
 				}
 			}
 		}
