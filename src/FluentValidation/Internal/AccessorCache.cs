@@ -1,5 +1,6 @@
 namespace FluentValidation.Internal {
 	using System;
+	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Reflection;
@@ -9,8 +10,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public static class AccessorCache<T> {
-		private static readonly Dictionary<Key, Delegate> _cache = new Dictionary<Key, Delegate>();
-		private static readonly object _locker = new object();
+		private static readonly ConcurrentDictionary<Key, Delegate> _cache = new ConcurrentDictionary<Key, Delegate>();
 
 		/// <summary>
 		/// Gets an accessor func based on an expression
@@ -24,24 +24,12 @@ namespace FluentValidation.Internal {
 				return expression.Compile();
 			}
 			
-			Delegate result;
-
-			lock (_locker) {
-				var key = new Key(member, expression);
-				if (_cache.TryGetValue(key, out result)) {
-					return (Func<T, TProperty>)result;
-				}
-
-				var func = expression.Compile();
-				_cache[key] = func;
-				return func;
-			}
+			var key = new Key(member, expression);
+			return (Func<T,TProperty>)_cache.GetOrAdd(key, k => { return expression.Compile(); });
 		}
 
 		public static void Clear() {
-			lock (_locker) {
-				_cache.Clear();
-			}
+			_cache.Clear();
 		}
 
 		private class Key {
