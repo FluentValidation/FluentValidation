@@ -35,6 +35,7 @@ namespace FluentValidation.Resources {
 			var languages = new Language[] {
 				new EnglishLanguage(),
 				new ChineseSimplifiedLanguage(),
+				new CroatianLanguage(),
 				new CzechLanguage(),
 				new DanishLanguage(),
 				new DutchLanguage(),
@@ -42,6 +43,7 @@ namespace FluentValidation.Resources {
 				new FrenchLanguage(),
 				new GermanLanguage(),
 				new GeorgianLanguage(),
+				new HindiLanguage(),
 				new ItalianLanguage(),
 				new KoreanLanguage(),
 				new MacedonianLanguage(),
@@ -50,11 +52,10 @@ namespace FluentValidation.Resources {
 				new PortugueseLanguage(),
 				new RomanianLanguage(),
 				new RussianLanguage(),
+				new SlovakLanguage(),
 				new SpanishLanguage(),
 				new SwedishLanguage(),
 				new TurkishLanguage(),
-				new HindiLanguage(),
-				new CroatianLanguage()
 			};
 
 			foreach (var language in languages) {
