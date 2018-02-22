@@ -50,7 +50,7 @@
   <Target Name="CopyToOutput">
     <ItemGroup>
       <MainBinaries Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\netstandard2.0\**\*.*" />
-      <MainBinariesNS1 Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\netstandard1.0\**\*.*" />
+      <MainBinariesNS1 Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\netstandard1.1\**\*.*" />
       <MainBinaries45 Include="$(BaseDir)\src\FluentValidation\bin\$(Configuration)\net45\**\*.*" />
       <Mvc5Binaries Include="$(BaseDir)\src\FluentValidation.Mvc5\bin\$(Configuration)\net45\FluentValidation.Mvc.*" />
       <WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)\net45\FluentValidation.WebApi.*" />
@@ -62,7 +62,7 @@
 
     <!-- Copy to the output directory -->
     <Copy SourceFiles="@(MainBinaries)" DestinationFolder="$(OutputDir)\FluentValidation-netstandard2.0\%(RecursiveDir)"  />
-    <Copy SourceFiles="@(MainBinariesNS1)" DestinationFolder="$(OutputDir)\FluentValidation-netstandard1.0\%(RecursiveDir)"  />
+    <Copy SourceFiles="@(MainBinariesNS1)" DestinationFolder="$(OutputDir)\FluentValidation-netstandard1.1\%(RecursiveDir)"  />
     <Copy SourceFiles="@(MainBinaries45)" DestinationFolder="$(OutputDir)\FluentValidation-net45\%(RecursiveDir)"  />
     <Copy SourceFiles="@(Mvc5Binaries)" DestinationFolder="$(OutputDir)\MVC\MVC5" />
     <Copy SourceFiles="@(WebApiBinaries)" DestinationFolder="$(OutputDir)\WebApi" />

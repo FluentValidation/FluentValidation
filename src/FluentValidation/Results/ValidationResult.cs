@@ -24,7 +24,7 @@ namespace FluentValidation.Results {
 	/// <summary>
 	/// The result of running a validator
 	/// </summary>
-#if !NETSTANDARD1_0
+#if !NETSTANDARD1_1
 	[Serializable]
 #endif
 	public class ValidationResult {

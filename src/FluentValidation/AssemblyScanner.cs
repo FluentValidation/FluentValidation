@@ -41,7 +41,7 @@ namespace FluentValidation {
 		/// Finds all the validators in the specified assembly.
 		/// </summary>
 		public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly) {
-#if NETSTANDARD1_0
+#if NETSTANDARD1_1
 			return new AssemblyScanner(assembly.ExportedTypes);
 #else
 			return new AssemblyScanner(assembly.GetExportedTypes());
@@ -51,7 +51,7 @@ namespace FluentValidation {
 		/// Finds all the validators in the specified assemblies
 		/// </summary>
 		public static AssemblyScanner FindValidatorsInAssemblies(IEnumerable<Assembly> assemblies) {
-#if NETSTANDARD1_0
+#if NETSTANDARD1_1
 			var types = assemblies.SelectMany(x => x.ExportedTypes.Distinct());
 #else
 			var types = assemblies.SelectMany(x => x.GetExportedTypes().Distinct());
@@ -69,7 +69,7 @@ namespace FluentValidation {
 		private IEnumerable<AssemblyScanResult> Execute() {
 			var openGenericType = typeof(IValidator<>);
 
-#if NETSTANDARD1_0
+#if NETSTANDARD1_1
 			var query = from type in types
 						where !type.GetTypeInfo().IsAbstract && !type.GetTypeInfo().IsGenericTypeDefinition
 						let interfaces = type.GetTypeInfo().ImplementedInterfaces
