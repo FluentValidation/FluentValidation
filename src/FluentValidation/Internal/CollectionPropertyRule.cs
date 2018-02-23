@@ -63,12 +63,15 @@ namespace FluentValidation.Internal {
 		/// <returns></returns>
 		protected override Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
 
+			if (string.IsNullOrEmpty(propertyName)) {
+				propertyName = InferPropertyName(Expression);
+			}
+
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			var results = new List<ValidationFailure>();
 			var delegatingValidator = validator as IDelegatingValidator;
 
-			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.ParentContext))
-			{
+			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.ParentContext)) {
 				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
 				if (collectionPropertyValue != null)
@@ -97,6 +100,16 @@ namespace FluentValidation.Internal {
 			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 		}
 
+		private string InferPropertyName(LambdaExpression expression) {
+			var paramExp = expression.Body as ParameterExpression;
+
+			if (paramExp == null) {
+				throw new InvalidOperationException("Could not infer property name for expression: " + expression + ". Please explicitly specify a property name by calling OverridePropertyName as part of the rule chain. Eg: RuleForEach(x => x).NotNull().OverridePropertyName(\"MyProperty\")");
+			}
+
+			return paramExp.Name;
+		}
+
 		/// <summary>
 		/// Invokes the validator
 		/// </summary>
@@ -105,6 +118,11 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName"></param>
 		/// <returns></returns>
 		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(ValidationContext context, Validators.IPropertyValidator validator, string propertyName) {
+
+			if (string.IsNullOrEmpty(propertyName)) {
+				propertyName = InferPropertyName(Expression);
+			}
+
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			var results = new List<ValidationFailure>();
 			var delegatingValidator = validator as IDelegatingValidator;
@@ -114,6 +132,11 @@ namespace FluentValidation.Internal {
 				int count = 0;
 
 				if (collectionPropertyValue != null) {
+
+					if (string.IsNullOrEmpty(propertyName)) {
+						throw new InvalidOperationException("Could not automatically determine the property name ");
+					}
+
 					foreach (var element in collectionPropertyValue) {
 						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate);
 						newContext.PropertyChain.Add(propertyName);

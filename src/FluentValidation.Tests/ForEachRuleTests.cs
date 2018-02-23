@@ -112,6 +112,23 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().PropertyName.ShouldEqual("TradingExperience[0].Questions[0].SelectedAnswerID");
 		}
 
+		[Fact]
+		public void Uses_useful_error_message_when_used_on_non_property() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleForEach(x => x.NickNames.AsEnumerable()).NotNull();
+
+			bool thrown=false;
+			try {
+				validator.Validate(new Person {NickNames = new string[] {null, null}});
+			}
+			catch (System.InvalidOperationException ex) {
+				thrown = true;
+				ex.Message.ShouldEqual("Could not infer property name for expression: x => x.NickNames.AsEnumerable(). Please explicitly specify a property name by calling OverridePropertyName as part of the rule chain. Eg: RuleForEach(x => x).NotNull().OverridePropertyName(\"MyProperty\")");
+			}
+
+			thrown.ShouldBeTrue();
+		}
+
 
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> { new ApplicationGroup() };
