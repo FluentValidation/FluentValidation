@@ -1,4 +1,4 @@
-#region License
+ο»Ώ#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,29 +23,29 @@ namespace FluentValidation.Resources {
 		public override string Name => "he";
 
 		public HebrewLanguage() {
-			Translate<EmailValidator>("'{PropertyName}' ΰιπδ λϊεαϊ γεΰ\"μ ηεχιϊ.");
-			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' ηιια μδιεϊ βγεμ ΰε ωεεδ μ- '{ComparisonValue}'.");
-			Translate<GreaterThanValidator>("'{PropertyName}' ηιια μδιεϊ βγεμ ξ- '{ComparisonValue}'.");
-			Translate<LengthValidator>("ΰεψκ '{PropertyName}' ηιια μδιεϊ αιο {MinLength} μ- {MaxLength}. δζπϊ {TotalLength} ϊεειν.");
-			Translate<MinimumLengthValidator>("ΰεψκ '{PropertyName}' ηιια μδιεϊ μτηεϊ {MinLength} ϊεειν. δζπϊ {TotalLength} ϊεειν.");
-			Translate<MaximumLengthValidator>("ΰεψκ '{PropertyName}' ηιια μδιεϊ {MaxLength} ϊεειν ΰε τηεϊ. δζπϊ {TotalLength} ϊεειν.");
-			Translate<LessThanOrEqualValidator>("'{PropertyName}' ηιια μδιεϊ χθο ΰε ωεεδ μ- '{ComparisonValue}'.");
-			Translate<LessThanValidator>("'{PropertyName}' ηιια μδιεϊ χθο ξ- '{ComparisonValue}'.");
-			Translate<NotEmptyValidator>("'{PropertyName}' μΰ ΰξεψ μδιεϊ ψιχ.");
-			Translate<NotEqualValidator>("'{PropertyName}' μΰ ιλεμ μδιεϊ ωεεδ μ- '{ComparisonValue}'.");
-			Translate<NotNullValidator>("'{PropertyName}' μΰ ιλεμ μδιεϊ ψιχ.");
-			Translate<PredicateValidator>("δϊπΰι ωφειο μΰ δϊχιιν ςαεψ '{PropertyName}'.");
-			Translate<AsyncPredicateValidator>("δϊπΰι ωφειο μΰ δϊχιιν ςαεψ '{PropertyName}'.");
-			Translate<RegularExpressionValidator>("'{PropertyName}' ΰιπε ατεψξθ δπλεο.");
-			Translate<EqualValidator>("'{PropertyName}' ΰξεψ μδιεϊ ωεεδ μ- '{ComparisonValue}'.");
-			Translate<ExactLengthValidator>("'{PropertyName}' ηιια μδιεϊ αΰεψκ {MaxLength} ϊεειν. δζπϊ {TotalLength} ϊεειν.");
-			Translate<InclusiveBetweenValidator>("'{PropertyName}' ηιια μδιεϊ αιο {From} μαιο {To}. δζπϊ {Value}.");
-			Translate<ExclusiveBetweenValidator>("'{PropertyName}' ηιια μδιεϊ αιο {From} μαιο {To} (μΰ λεμμ). δζπϊ {Value}.");
-			Translate<CreditCardValidator>("'{PropertyName}' ΰιπε ξρτψ λψθιρ ΰωψΰι ηεχι.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' μΰ ιλεμ μλμεμ ιεϊψ ξ- {expectedPrecision} ρτψεϊ αρκ δλμ, ςν δχφαδ ωμ {expectedScale} ρτψεϊ ςωψεπιεϊ. πξφΰε {digits} ρτψεϊ ε- {actualScale} ρτψεϊ ςωψεπιεϊ.");
-			Translate<EmptyValidator>("'{PropertyName}' ΰξεψ μδιεϊ ψιχ.");
-			Translate<NullValidator>("'{PropertyName}' ηιια μδιεϊ ψιχ.");
-			Translate<EnumValidator>("'{PropertyName}' ξλιμ θεεη ςψλιν ωΰιπε λεμμ ΰϊ '{PropertyValue}'.");
+			Translate<EmailValidator>("'{PropertyName}' ΧΧ™Χ Χ” Χ›ΧªΧ•Χ‘Χª Χ“Χ•Χ\"Χ Χ—Χ•Χ§Χ™Χª.");
+			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ’Χ“Χ•Χ ΧΧ• Χ©Χ•Χ•Χ” Χ- '{ComparisonValue}'.");
+			Translate<GreaterThanValidator>("'{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ’Χ“Χ•Χ Χ- '{ComparisonValue}'.");
+			Translate<LengthValidator>("ΧΧ•Χ¨Χ '{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ‘Χ™Χ {MinLength} Χ- {MaxLength}. Χ”Χ–Χ Χª {TotalLength} ΧªΧ•Χ•Χ™Χ.");
+			Translate<MinimumLengthValidator>("ΧΧ•Χ¨Χ '{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª ΧΧ¤Χ—Χ•Χª {MinLength} ΧªΧ•Χ•Χ™Χ. Χ”Χ–Χ Χª {TotalLength} ΧªΧ•Χ•Χ™Χ.");
+			Translate<MaximumLengthValidator>("ΧΧ•Χ¨Χ '{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª {MaxLength} ΧªΧ•Χ•Χ™Χ ΧΧ• Χ¤Χ—Χ•Χª. Χ”Χ–Χ Χª {TotalLength} ΧªΧ•Χ•Χ™Χ.");
+			Translate<LessThanOrEqualValidator>("'{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ§ΧΧ ΧΧ• Χ©Χ•Χ•Χ” Χ- '{ComparisonValue}'.");
+			Translate<LessThanValidator>("'{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ§ΧΧ Χ- '{ComparisonValue}'.");
+			Translate<NotEmptyValidator>("'{PropertyName}' ΧΧ ΧΧΧ•Χ¨ ΧΧ”Χ™Χ•Χª Χ¨Χ™Χ§.");
+			Translate<NotEqualValidator>("'{PropertyName}' ΧΧ Χ™Χ›Χ•Χ ΧΧ”Χ™Χ•Χª Χ©Χ•Χ•Χ” Χ- '{ComparisonValue}'.");
+			Translate<NotNullValidator>("'{PropertyName}' ΧΧ Χ™Χ›Χ•Χ ΧΧ”Χ™Χ•Χª Χ¨Χ™Χ§.");
+			Translate<PredicateValidator>("Χ”ΧªΧ ΧΧ™ Χ©Χ¦Χ•Χ™Χ ΧΧ Χ”ΧªΧ§Χ™Χ™Χ ΧΆΧ‘Χ•Χ¨ '{PropertyName}'.");
+			Translate<AsyncPredicateValidator>("Χ”ΧªΧ ΧΧ™ Χ©Χ¦Χ•Χ™Χ ΧΧ Χ”ΧªΧ§Χ™Χ™Χ ΧΆΧ‘Χ•Χ¨ '{PropertyName}'.");
+			Translate<RegularExpressionValidator>("'{PropertyName}' ΧΧ™Χ Χ• Χ‘Χ¤Χ•Χ¨ΧΧ Χ”Χ Χ›Χ•Χ.");
+			Translate<EqualValidator>("'{PropertyName}' ΧΧΧ•Χ¨ ΧΧ”Χ™Χ•Χª Χ©Χ•Χ•Χ” Χ- '{ComparisonValue}'.");
+			Translate<ExactLengthValidator>("'{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ‘ΧΧ•Χ¨Χ {MaxLength} ΧªΧ•Χ•Χ™Χ. Χ”Χ–Χ Χª {TotalLength} ΧªΧ•Χ•Χ™Χ.");
+			Translate<InclusiveBetweenValidator>("'{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ‘Χ™Χ {From} ΧΧ‘Χ™Χ {To}. Χ”Χ–Χ Χª {Value}.");
+			Translate<ExclusiveBetweenValidator>("'{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ‘Χ™Χ {From} ΧΧ‘Χ™Χ {To} (ΧΧ Χ›Χ•ΧΧ). Χ”Χ–Χ Χª {Value}.");
+			Translate<CreditCardValidator>("'{PropertyName}' ΧΧ™Χ Χ• ΧΧ΅Χ¤Χ¨ Χ›Χ¨ΧΧ™Χ΅ ΧΧ©Χ¨ΧΧ™ Χ—Χ•Χ§Χ™.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' ΧΧ Χ™Χ›Χ•Χ ΧΧ›ΧΧ•Χ Χ™Χ•ΧªΧ¨ Χ- {expectedPrecision} Χ΅Χ¤Χ¨Χ•Χª Χ‘Χ΅Χ Χ”Χ›Χ, ΧΆΧ Χ”Χ§Χ¦Χ‘Χ” Χ©Χ {expectedScale} Χ΅Χ¤Χ¨Χ•Χª ΧΆΧ©Χ¨Χ•Χ Χ™Χ•Χª. Χ ΧΧ¦ΧΧ• {digits} Χ΅Χ¤Χ¨Χ•Χª Χ•- {actualScale} Χ΅Χ¤Χ¨Χ•Χª ΧΆΧ©Χ¨Χ•Χ Χ™Χ•Χª.");
+			Translate<EmptyValidator>("'{PropertyName}' ΧΧΧ•Χ¨ ΧΧ”Χ™Χ•Χª Χ¨Χ™Χ§.");
+			Translate<NullValidator>("'{PropertyName}' Χ—Χ™Χ™Χ‘ ΧΧ”Χ™Χ•Χª Χ¨Χ™Χ§.");
+			Translate<EnumValidator>("'{PropertyName}' ΧΧ›Χ™Χ ΧΧ•Χ•Χ— ΧΆΧ¨Χ›Χ™Χ Χ©ΧΧ™Χ Χ• Χ›Χ•ΧΧ ΧΧª '{PropertyValue}'.");
 		}
 	}
 }
