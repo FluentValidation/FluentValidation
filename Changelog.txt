@@ -5,6 +5,7 @@ Improvements to some of the validation tester's messages
 Added Transform method to transform property values prior to validation
 Improve support for DisplayAttribute / DisplayNameAttribute when inferring property display name
 Added Slovak language support
+Added Hebrew language support
 Cache display names by default 
 Ensure ShouldHaveChildValidator test method works with model-level rules
 
