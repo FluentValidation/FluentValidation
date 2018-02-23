@@ -43,6 +43,7 @@ namespace FluentValidation.Resources {
 				new FrenchLanguage(),
 				new GermanLanguage(),
 				new GeorgianLanguage(),
+				new HebrewLanguage(),
 				new HindiLanguage(),
 				new ItalianLanguage(),
 				new KoreanLanguage(),
