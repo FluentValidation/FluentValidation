@@ -51,6 +51,7 @@ namespace FluentValidation.Resources {
 				new PersianLanguage(),
 				new PolishLanguage(),
 				new PortugueseLanguage(),
+				new PortugueseBrazilLanguage(),
 				new RomanianLanguage(),
 				new RussianLanguage(),
 				new SlovakLanguage(),
