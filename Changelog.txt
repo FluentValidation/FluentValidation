@@ -6,6 +6,7 @@ Added Transform method to transform property values prior to validation
 Improve support for DisplayAttribute / DisplayNameAttribute when inferring property display name
 Added Slovak language support
 Added Hebrew language support
+Added Brizilian Portuguese language support
 Cache display names by default 
 Ensure ShouldHaveChildValidator test method works with model-level rules
 
