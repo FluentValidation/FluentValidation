@@ -16,6 +16,10 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.5:
+* Better handling of clientside messages when using custom overriden language resources
+* Added flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration
+
 Changes in 7.4:
 * Added SetRulesetForClientsideMessages method as an alternative to using the RulesetForClientSideMessagesAttribute
 * Updated MVC dependency to version 2.0.2

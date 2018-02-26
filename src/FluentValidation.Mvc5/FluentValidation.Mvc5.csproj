@@ -22,6 +22,10 @@
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.Mvc.xml</DocumentationFile>
 	  <PackageReleaseNotes>
+Changes in 7.5:
+* Better handling of clientside messages when using custom overriden language resources
+* Added flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration
+
 	Changes in 7.4:
 	* Added SetRulesetForClientsideMessages method as an alternative to using the RulesetForClientSideMessagesAttribute
 	* Updated the MVC5 AddToModelState extension not to overwrite existing attempted values
