@@ -1,4 +1,4 @@
-7.5 - 
+7.5 - 26 February 2018
 Better handling of clientside messages when using custom overriden language resources
 Flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration
 Improvements to some of the validation tester's messages
