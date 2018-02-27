@@ -23,8 +23,7 @@
 		public void CreateValidators(ModelValidatorProviderContext context) {
 
 			// Note that this check does NOT catch complex types that are collection elements (as the ModelMetadataKind will still be 'Type') 
-			
-			if (context.ModelMetadata.MetadataKind == ModelMetadataKind.Type || (context.ModelMetadata.MetadataKind == ModelMetadataKind.Property && _implicitValidationEnabled)) {
+			if (context.ModelMetadata.MetadataKind == ModelMetadataKind.Type || context.ModelMetadata.MetadataKind == ModelMetadataKind.Parameter || (context.ModelMetadata.MetadataKind == ModelMetadataKind.Property && _implicitValidationEnabled)) {
 					context.Results.Add(new ValidatorItem {
 						IsReusable = false,
 						Validator = new FluentValidationModelValidator()
@@ -99,9 +98,6 @@
 				return customizations.Item2; // the attribute
 			}
 			return new CustomizeValidatorAttribute();
-
 		}
 	}
-
-	
 }

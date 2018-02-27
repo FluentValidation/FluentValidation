@@ -62,6 +62,19 @@
 		}
 
 		[Fact]
+		public async Task When_a_validation_error_occurs_the_error_should_be_added_to_modelstate_using_TryUpdateModel() {
+			var form = new FormData {
+				{"test.Name", null}
+			};
+
+			var result = await _webApp.GetErrors("UpdateModel", form);
+
+			result.IsValidField("Name").ShouldBeFalse();
+			result.GetError("Name").ShouldEqual("Validation Failed");
+		}
+
+
+		[Fact]
 		public async Task When_a_validation_error_occurs_the_error_should_be_added_to_Modelstate_without_prefix() {
 			var form = new FormData {
 				{"Name", null}

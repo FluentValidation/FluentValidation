@@ -194,28 +194,19 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Throws_exception_if_IHttpContextProvider_not_registered() {
-			var app = new ClientsideFixture<StartupWithContainerWithoutHttpContextAccessor>();
-
-			bool thrown = false;
-			Exception ex = new Exception();
-
-			try {
-				var msg = await app.RunRulesetAction("/ClientSide/SpecifiedRuleset");
-			}
-			catch (InvalidOperationException e) {
-				thrown = true;
-				ex = e;
-			}
-
-			thrown.ShouldBeTrue();
-			ex.Message.ShouldEqual("Cannot use the RuleSetForClientSideMessagesAttribute unless the IHttpContextAccessor is registered with the service provider. Make sure the provider is registered by calling services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); in your Startup class's ConfigureServices method");
-		}
-
-		[Fact]
 		public async Task Renders_attributes_inside_partial() {
 			var msg = await _webApp.GetClientsideMessage("RequiredInsidePartial", "data-val-required");
 			msg.ShouldEqual("'Required Inside Partial' should not be empty.");
+		}
+
+		[Fact]
+		public async Task Instantiates_validator_for_clientside_usage_only_once() {
+			//static property - make sure it's reinitialized at the start of this test as other tests affect it too
+			ClientsideModelValidator.TimesInstantiated = 0;
+			var results = await _webApp.GetClientsideMessages();
+			ClientsideModelValidator.TimesInstantiated.ShouldEqual(1);
+
+
 		}
 		
 	}

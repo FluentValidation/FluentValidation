@@ -101,23 +101,25 @@ namespace FluentValidation {
 			return memberInfo == null ? null : DisplayNameCache.GetCachedDisplayName(memberInfo);
 		}
 
+
+
+
 		/// <summary>
-		/// Defines how the error codes for validators are constructed.
-		/// By default this is the class name of the property validator.
+		/// Disables the expression accessor cache. Not recommended.
+		/// </summary>
+		public static bool DisableAccessorCache { get; set; }
+
+		/// <summary>
+		/// Pluggable resolver for default error codes
 		/// </summary>
 		public static Func<PropertyValidator, string> ErrorCodeResolver {
 			get => _errorCodeResolver;
 			set => _errorCodeResolver = value ?? DefaultErrorCodeResolver;
 		}
 
-		static string DefaultErrorCodeResolver(PropertyValidator propertyValidator) {
-			return propertyValidator.GetType().Name;
+		static string DefaultErrorCodeResolver(PropertyValidator validator) {
+			return validator.GetType().Name;
 		}
-		
-		/// <summary>
-		/// Disables the expression accessor cache. Not recommended.
-		/// </summary>
-		public static bool DisableAccessorCache { get; set; }
 	}
 
 	/// <summary>

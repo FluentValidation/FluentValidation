@@ -1,6 +1,8 @@
-7.6.0 - 
+7.6 - 
 Fix WhenAsync not working properly when calling Validate instead of ValidateAsync
+Upgrade ASP.NET Core integration to ASP.NET Core 2.1
 Include rules now work with explicitly-selected properties.
+Added caching when instantiating validators to obtain clientside metadata
 
 7.5.2 - 16 March 2018
 Support multiple rulesets on a rule.

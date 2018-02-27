@@ -3,6 +3,7 @@
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 	public class TestController : Controller {
@@ -170,6 +171,12 @@
 		}
 
 		public ActionResult SkipsImplicitChildValidator([CustomizeValidator(Skip=true)] ParentModel model) {
+			return TestResult();
+		}
+
+		public async Task<ActionResult> UpdateModel() {
+			var model = new TestModel();
+			await TryUpdateModelAsync(model);
 			return TestResult();
 		}
 

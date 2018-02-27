@@ -19,6 +19,8 @@ Changes in 7.5.2:
 Changes in 7.5.1:
 * Resolved issues with referencing FluentValidation from legacy PCLs.
 * Added support for CustomizeValidatorAttribute to the legacy WebApi integration for consistency with MVC5 and AspNetCore. 
+Changes in 7.6:
+* Update ASP.NET Core integration to ASP.NET Core 2.1 
 
 Changes in 7.5:
 * Better handling of clientside messages when using custom overriden language resources

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>FluentValidation.AspNetCore</AssemblyName>
@@ -16,6 +15,9 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.6
+* Updates to support ASP.NET Core 2.1 
+
 Changes in 7.5:
 * Better handling of clientside messages when using custom overriden language resources
 * Added flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration
@@ -29,7 +31,8 @@ Changes in 7.3:
 * Added support for implicat validation of child properties when using the automatic MVC integration
 * Added Skip property to the CustomizeValidatorAttribute to opt-out of validating certain properties
 
-Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</PackageReleaseNotes>
+Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
+    </PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <RepositoryUrl>http://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
     <DelaySign>False</DelaySign>
@@ -37,27 +40,20 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
     <SignAssembly>True</SignAssembly>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.AspNetCore.xml</DocumentationFile>
-
   </PropertyGroup>
-
   <PropertyGroup>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.2" />
-	</ItemGroup>
-	
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-
 </Project>

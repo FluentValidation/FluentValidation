@@ -28,6 +28,7 @@ namespace FluentValidation.AspNetCore {
 	using System.Collections.Generic;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
+	using Microsoft.Extensions.Logging;
 
 	public static class FluentValidationMvcExtensions {
 		/// <summary>
@@ -85,16 +86,17 @@ namespace FluentValidation.AspNetCore {
 				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes, config.ImplicitlyValidateChildProperties);
 			}));
 
-
-			if (config.ClientsideEnabled)
-			{
+			if (config.ClientsideEnabled) {
+				// Clientside validation requires access to the Httpcontext, but MVC's clientside API does not provide it,
+				// so we need to inject the HttpContextAccessor instead. 
+				// This is not registered by default, so add it in if the user hasn't done so.
+				services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+				
 				services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<MvcViewOptions>, FluentValidationViewOptionsSetup>(s =>
 					{
 						return new FluentValidationViewOptionsSetup(config.ClientsideConfig, s.GetService<IHttpContextAccessor>());
 					}));
 			}
-
-
 		}
 
 		/// <summary>

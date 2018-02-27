@@ -29,8 +29,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.2" />
-	  <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.1" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.0" />
 	</ItemGroup>
 
 	<Target Name="CopyDepsFiles" AfterTargets="Build" Condition="'$(TargetFramework)'!=''">
