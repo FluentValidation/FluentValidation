@@ -20,3 +20,4 @@ TestResults/
 .vs/
 *.lock.json
 *.ncrunch*
+.idea/
