@@ -49,7 +49,7 @@ namespace FluentValidation {
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TProperty"></typeparam>
 		/// <param name="ruleBuilder"></param>
-		/// <param name="transformactionFunc"></param>
+		/// <param name="transformationFunc"></param>
 		/// <returns></returns>
 		public static IRuleBuilderInitial<T, TProperty> Transform<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, Func<TProperty, TProperty> transformationFunc) {
 			return ruleBuilder.Configure(cfg => {
