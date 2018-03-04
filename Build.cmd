@@ -1,7 +1,7 @@
 @echo off
 if "%1"=="PublishPackages" goto publish
 
-dotnet build .build\build.proj /p:Version=7.5.0 %*
+dotnet build .build\build.proj %*
 
 goto end
 

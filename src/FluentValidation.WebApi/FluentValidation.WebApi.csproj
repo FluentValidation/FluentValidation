@@ -4,6 +4,7 @@
     <TargetFramework>net45</TargetFramework>
     <PackageId>FluentValidation.WebApi</PackageId>
     <Authors>Jeremy Skinner</Authors>
+    <Version Condition="'$(Version)'==''">7.5.0</Version>
     <Company />
     <Description>ASP.NET WebApi integration for FluentValidation</Description>
     <Copyright>Copyright (c) Jeremy Skinner 2008-2018</Copyright>

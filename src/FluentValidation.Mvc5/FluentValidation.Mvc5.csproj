@@ -5,6 +5,7 @@
     <AssemblyName>FluentValidation.Mvc</AssemblyName>
     <RootNamespace>FluentValidation.Mvc</RootNamespace>
     <PackageId>FluentValidation.Mvc5</PackageId>
+    <Version Condition="'$(Version)'==''">7.5.0</Version>
     <Authors>Jeremy Skinner</Authors>
     <Company />
     <Description>ASP.NET MVC 5 integration for FluentValidation</Description>
