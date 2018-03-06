@@ -20,6 +20,7 @@ namespace FluentValidation.WebApi
 {
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Web.Http.Controllers;
 	using System.Web.Http.Metadata;
 	using System.Web.Http.Validation;
 
@@ -29,6 +30,9 @@ namespace FluentValidation.WebApi
 	public class FluentValidationModelValidator : ModelValidator {
 		readonly IValidator validator;
 
+		internal CustomizeValidatorAttribute Customizations { get; private set; }
+		internal HttpActionContext ActionContext { get; private set; }
+		
 		public FluentValidationModelValidator(IEnumerable<ModelValidatorProvider> validatorProviders, IValidator validator)
 			: base(validatorProviders) {
 			this.validator = validator;
@@ -36,12 +40,32 @@ namespace FluentValidation.WebApi
 
 		public override IEnumerable<ModelValidationResult> Validate(ModelMetadata metadata, object container) {
 			if (metadata.Model != null) {
-				var selector = ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
-				var context = new ValidationContext(metadata.Model, new PropertyChain(), selector);
+
+				var customizations = Customizations ?? new CustomizeValidatorAttribute();
+				
+				if (customizations.Skip) {
+					return Enumerable.Empty<ModelValidationResult>();
+				}
+
+				var selector = customizations.ToValidatorSelector();
+				var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
+				var context = new FluentValidation.ValidationContext(metadata.Model, new FluentValidation.Internal.PropertyChain(), selector);
 				context.RootContextData["InvokedByWebApi"] = true;
 
 
+				if (interceptor != null) {
+					// Allow the user to provide a customized context
+					// However, if they return null then just use the original context.
+					context = interceptor.BeforeMvcValidation(ActionContext, context) ?? context;
+				}
+
 				var result = validator.Validate(context);
+				
+				if (interceptor != null) {
+					// allow the user to provice a custom collection of failures, which could be empty.
+					// However, if they return null then use the original collection of failures. 
+					result = interceptor.AfterMvcValidation(ActionContext, context, result) ?? result;
+				}
 
 				if (!result.IsValid) {
 					return ConvertValidationResultToModelValidationResults(result);
@@ -56,6 +80,13 @@ namespace FluentValidation.WebApi
 				MemberName = x.PropertyName,
 				Message = x.ErrorMessage
 			});
+		}
+
+		public FluentValidationModelValidator CloneWithCustomizations(CustomizeValidatorAttribute customizations, HttpActionContext context) {
+			return new FluentValidationModelValidator(ValidatorProviders, validator) {
+				ActionContext = context,
+				Customizations = customizations
+			};
 		}
 	}
 }

@@ -17,14 +17,40 @@
 #endregion
 
 namespace FluentValidation.WebApi {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Web.Http.Controllers;
 	using System.Web.Http.Metadata;
 	using System.Web.Http.Validation;
 
-	public class FluentValidationBodyModelValidator : DefaultBodyModelValidator {
+	public class FluentValidationBodyModelValidator : DefaultBodyModelValidator, IBodyModelValidator {
+
+		bool IBodyModelValidator.Validate(object model, Type type, ModelMetadataProvider metadataProvider, HttpActionContext actionContext, string keyPrefix) {
+
+			var customizations = actionContext.ActionDescriptor.GetParameters().Where(x => x.ParameterName == keyPrefix)
+				.Select(x => x.GetCustomAttributes<CustomizeValidatorAttribute>().FirstOrDefault())
+				.FirstOrDefault();
+
+			if (customizations != null) {
+				actionContext.Request.Properties["_FV_Customizations"] = customizations;
+			}
+			
+			return base.Validate(model, type, metadataProvider, actionContext, keyPrefix);
+		}
+		
 		protected override bool ValidateNodeAndChildren(ModelMetadata metadata, BodyModelValidatorContext validationContext, object container, IEnumerable<ModelValidator> validators) {
+
+			CustomizeValidatorAttribute customizations = null;
+			
+			if (validationContext.ActionContext.Request.Properties.ContainsKey("_FV_Customizations")) {
+				customizations = validationContext.ActionContext.Request.Properties["_FV_Customizations"] as CustomizeValidatorAttribute;
+			}
+			
+			if(customizations == null) customizations = new CustomizeValidatorAttribute();
+
+			validators = ApplyCustomizationsToValidators(validators, customizations, validationContext.ActionContext);
+			
 			bool isValid = base.ValidateNodeAndChildren(metadata, validationContext, container, validators);
 
 			var model = GetModel(metadata);
@@ -32,10 +58,24 @@ namespace FluentValidation.WebApi {
 			if (!isValid && model != null && !HasAlreadyBeenValidated(validationContext, model)) {
 				// default impl skips validating root node if any children fail, so we explicitly validate it in this scenario
 				var rootModelValidators = validationContext.ActionContext.GetValidators(metadata);
+				rootModelValidators = ApplyCustomizationsToValidators(rootModelValidators, customizations, validationContext.ActionContext);
 				var rootIsValid = ShallowValidate(metadata, validationContext, container, rootModelValidators);
 				return rootIsValid && isValid;
 			}
 			return isValid;
+		}
+
+		private IEnumerable<ModelValidator> ApplyCustomizationsToValidators(IEnumerable<ModelValidator> validators, CustomizeValidatorAttribute customizations, HttpActionContext ctx) {
+			
+			// For the FV-specific model validator, clone it passing the context and customizations to the clone
+			// This is done rather than setting them on the original validator so we don't up with stale contexts in WebApi's cache
+			var projection = from validator in validators
+				let fluentValidator = validator as FluentValidationModelValidator
+				let needsCustomiations = fluentValidator != null && fluentValidator.Customizations == null
+				let newValidator = needsCustomiations ? (ModelValidator)fluentValidator.CloneWithCustomizations(customizations, ctx) : validator
+				select newValidator;
+
+			return projection.ToList();
 		}
 
 		protected override bool ShallowValidate(ModelMetadata metadata, BodyModelValidatorContext validationContext, object container, IEnumerable<ModelValidator> validators) {

@@ -1,3 +1,6 @@
+7.5.1 - 
+Support CustomizeValidatorAttribute in WebApi integration
+
 7.5 - 26 February 2018
 Better handling of clientside messages when using custom overriden language resources
 Flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration

@@ -26,12 +26,24 @@ namespace FluentValidation.Tests.WebApi {
 	using System.Threading.Tasks;
 	using System.Web.Http;
 	using FluentValidation.WebApi;
+	using System.Linq;
 
 	public abstract class WebApiBaseTest {
+
+		protected string ConvertToFormData(Dictionary<string, string> dict) {
+			return string.Join("&", dict.Select((x) => x.Key + "=" + x.Value.ToString()));
+		}
+		
 		protected List<SimpleError> InvokeTest<T>(string input, string contentType = "application/x-www-form-urlencoded") {
+			string className = typeof(T).Name;
+
+			return InvokeTest(className, input, contentType);
+		}
+
+
+		protected List<SimpleError> InvokeTest(string actionName, string input, string contentType = "application/x-www-form-urlencoded") {
 			const string baseAddress = "http://dummyname/";
 
-			string className = typeof(T).Name;
 
 			// Server
 			HttpConfiguration config = new HttpConfiguration();
@@ -52,10 +64,10 @@ namespace FluentValidation.Tests.WebApi {
 				SomeBool:'false',
 				Id:0}");
 */
-			request.RequestUri = new Uri(baseAddress + "api/Test/" + className);
+			request.RequestUri = new Uri(baseAddress + "api/Test/" + actionName);
 			request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml"));
 			request.Method = HttpMethod.Post;
-
+			
 			CancellationTokenSource cts = new CancellationTokenSource();
 
 			using (HttpResponseMessage response = messageInvoker.SendAsync(request, cts.Token).Result) {

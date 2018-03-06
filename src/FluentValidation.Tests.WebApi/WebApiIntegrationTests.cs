@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests.WebApi {
 	using System;
+	using System.Collections.Generic;
 	using Xunit;
 
 	public class WebApiIntegrationTests : WebApiBaseTest {
@@ -103,5 +104,96 @@ namespace FluentValidation.Tests.WebApi {
 
             result.IsValidField("model.Child.Name").ShouldBeFalse();
         }
+		
+		
+		[Fact]
+		public void Should_only_validate_specified_ruleset() {
+			var form = new Dictionary<string,string> {
+				{"Email", "foo"},
+				{"Surname", "foo"},
+				{"Forename", "foo"},
+			};
+
+			
+			var results =  InvokeTest("RulesetTest", ConvertToFormData(form));
+			results.IsValidField("model.Forename").ShouldBeFalse();
+			results.IsValidField("model.Surname").ShouldBeFalse();
+			results.IsValidField("model.Email").ShouldBeTrue();
+		}
+		[Fact]
+		public void Should_only_validate_specified_properties() {
+			var form = new Dictionary<string,string> {
+				{"Email", "foo"},
+				{"Surname", "foo"},
+				{"Forename", "foo"},
+			};
+
+			var result = InvokeTest("PropertyTest", ConvertToFormData(form));
+
+			result.IsValidField("model.Forename").ShouldBeFalse();
+			result.IsValidField("model.Surname").ShouldBeFalse();
+			result.IsValidField("model.Email").ShouldBeTrue();
+		}
+
+		[Fact]
+		public  void When_interceptor_specified_Intercepts_validation() {
+			var form = new Dictionary<string,string> {
+				{"Email", "foo"},
+				{"Surname", "foo"},
+				{"Forename", "foo"},
+			};
+			var result = InvokeTest("InterceptorTest", ConvertToFormData(form));
+
+			result.IsValidField("model.Forename").ShouldBeFalse();
+			result.IsValidField("model.Surname").ShouldBeFalse();
+			result.IsValidField("model.Email").ShouldBeTrue();
+		}
+
+		[Fact]
+		public void When_interceptor_specified_Intercepts_validation_provides_custom_errors() {
+			var form = new Dictionary<string,string> {
+				{"Email", "foo"},
+				{"Surname", "foo"},
+				{"Forename", "foo"},
+			};
+
+			var result = InvokeTest("ClearErrorsInterceptorTest", ConvertToFormData(form));
+
+			result.Count.ShouldEqual(0);
+		}
+
+		[Fact]
+		public async void When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked() {
+			var form = new Dictionary<string,string> {
+				{"Email", "foo"},
+				{"Surname", "foo"},
+				{"Forename", "foo"},
+			};
+
+			var result = InvokeTest("BuiltInInterceptorTest", ConvertToFormData(form));
+
+			result.Count.ShouldEqual(0);
+		}
+
+		[Fact]
+		public void Validator_customizations_should_only_apply_to_single_parameter() {
+			var form = new Dictionary<string,string> {
+				{"first.Email", "foo"},
+				{"first.Surname", "foo"},
+				{"first.Forename", "foo"},
+				{"second.Email", "foo"},
+				{"second.Surname", "foo"},
+				{"second.Forename", "foo"}
+			};
+
+			var result = InvokeTest("TwoParameters", ConvertToFormData(form));
+
+			//customizations should only apply to the first validator 
+			result.IsValidField("first.Forename").ShouldBeFalse();
+			result.IsValidField("first.Surname").ShouldBeFalse();
+			result.IsValidField("second.Forename").ShouldBeTrue();
+			result.IsValidField("second.Surname").ShouldBeTrue();
+		}
+
     }
 }

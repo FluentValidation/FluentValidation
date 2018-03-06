@@ -20,6 +20,7 @@ namespace FluentValidation.Tests.WebApi {
 	using System.Linq;
 	using System.Web.Http;
 	using System.Web.Http.Results;
+	using FluentValidation.WebApi;
 
 	public class TestController : ApiController {
         [HttpPost]
@@ -77,6 +78,29 @@ namespace FluentValidation.Tests.WebApi {
 			return OutputErrors();
 		}
 
+		public IHttpActionResult RulesetTestModel([CustomizeValidator(RuleSet = "Names")] RulesetTestModel model) {
+			return OutputErrors();
+		}
+
+		public IHttpActionResult PropertiesTestModel([CustomizeValidator(Properties="Surname,Forename")]PropertiesTestModel model) {
+			return OutputErrors();
+		}
+
+		public IHttpActionResult InterceptorTest([CustomizeValidator(Interceptor = typeof(SimplePropertyInterceptor))] PropertiesTestModel model) {
+			return OutputErrors();
+		}
+
+		public IHttpActionResult ClearErrorsInterceptorTest([CustomizeValidator(Interceptor = typeof(ClearErrorsInterceptor))] PropertiesTestModel model) {
+			return OutputErrors();
+		}
+
+		public IHttpActionResult BuiltInInterceptorTest(PropertiesTestModel2 model) {
+			return OutputErrors();
+		}
+		public IHttpActionResult TwoParameters([CustomizeValidator(RuleSet = "Names")]RulesetTestModel first, RulesetTestModel second) {
+			return OutputErrors();
+		}
+		
 		private JsonResult<List<SimpleError>> OutputErrors() {
 			var q = from x in ModelState
 				from err in x.Value.Errors
