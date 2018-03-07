@@ -97,7 +97,7 @@ namespace FluentValidation.Tests.WebApi {
 		public IHttpActionResult BuiltInInterceptorTest(PropertiesTestModel2 model) {
 			return OutputErrors();
 		}
-		public IHttpActionResult TwoParameters([CustomizeValidator(RuleSet = "Names")]RulesetTestModel first, RulesetTestModel second) {
+		public IHttpActionResult TwoParameters([CustomizeValidator(RuleSet = "Names")] RulesetTestModel first, RulesetTestModel second) {
 			return OutputErrors();
 		}
 		

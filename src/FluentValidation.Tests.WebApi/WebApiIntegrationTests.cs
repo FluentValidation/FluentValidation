@@ -126,7 +126,7 @@ namespace FluentValidation.Tests.WebApi {
 			};
 
 			
-			var results =  await _webApp.PostForm("/api/Test/RulesetTest", form);
+			var results =  await _webApp.PostForm("/api/Test/RulesetTestModel", form);
 			results.IsValidField("model.Forename").ShouldBeFalse();
 			results.IsValidField("model.Surname").ShouldBeFalse();
 			results.IsValidField("model.Email").ShouldBeTrue();
@@ -186,7 +186,7 @@ namespace FluentValidation.Tests.WebApi {
 			result.Count.ShouldEqual(0);
 		}
 
-		[Fact]
+		/*[Fact]
 		public async Task Validator_customizations_should_only_apply_to_single_parameter() {
 			var form = new Dictionary<string,string> {
 				{"first.Email", "foo"},
@@ -204,7 +204,7 @@ namespace FluentValidation.Tests.WebApi {
 			result.IsValidField("first.Surname").ShouldBeFalse();
 			result.IsValidField("second.Forename").ShouldBeTrue();
 			result.IsValidField("second.Surname").ShouldBeTrue();
-		}
+		}*/
 
     }
 }
