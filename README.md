@@ -23,6 +23,8 @@ Install-Package FluentValidation.MVC5
 Install-Package FluentValidation.WebApi
 ```
 
+[![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation)
+
 ### Example
 ```csharp
 using FluentValidation;

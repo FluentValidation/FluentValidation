@@ -16,11 +16,11 @@
   <Target Name="Build" DependsOnTargets="Compile; Test; Deploy" />
   
   <Target Name="Restore">
-    <MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Restore" />
+     <Exec Command="dotnet msbuild $(SolutionFile) /p:Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile) /t:Restore /nologo" />
   </Target>
   
   <Target Name="Compile">
-    <Exec Command="dotnet msbuild $(SolutionFile) /p:Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile) /t:Restore;Rebuild" />
+    <Exec Command="dotnet msbuild $(SolutionFile) /p:Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile) /t:Restore;Rebuild /nologo" />
 	</Target>
 
 	<Target Name="Test">
@@ -42,7 +42,7 @@
   <Target Name="Deploy">
     <RemoveDir Directories="$(BuildDir)" />
     
-    <exec Command="dotnet msbuild $(SolutionFile) /p:Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages;AssemblyOriginatorKeyFile=$(KeyFile) /t:Restore;Pack" />
+    <exec Command="dotnet msbuild $(SolutionFile) /p:Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages;AssemblyOriginatorKeyFile=$(KeyFile) /t:Restore;Pack /nologo" />
    
     <CallTarget Targets="CopyToOutput"></CallTarget>
   </Target>
