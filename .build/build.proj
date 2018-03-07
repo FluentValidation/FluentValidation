@@ -20,7 +20,7 @@
   </Target>
   
   <Target Name="Compile">
-		<MSBuild Projects="$(SolutionFile)" Properties="Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile)" Targets="Rebuild" />
+    <Exec Command="dotnet msbuild $(SolutionFile) /p:Configuration=$(Configuration);Version=$(Version);AssemblyOriginatorKeyFile=$(KeyFile) /t:Restore;Rebuild" />
 	</Target>
 
 	<Target Name="Test">
