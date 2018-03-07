@@ -19,12 +19,23 @@
 namespace FluentValidation.Tests.WebApi {
 	using System;
 	using System.Collections.Generic;
+	using System.Threading.Tasks;
 	using Xunit;
+	using Xunit.Abstractions;
 
-	public class WebApiIntegrationTests : WebApiBaseTest {
+	public class WebApiIntegrationTests : IClassFixture<WebApiFixture<Startup>> {
+		
+		private readonly ITestOutputHelper _output;
+		private readonly WebApiFixture<Startup> _webApp;
+
+		public WebApiIntegrationTests(ITestOutputHelper output, WebApiFixture<Startup> webApp) {
+			_output = output;
+			_webApp = webApp;
+		}
+
 		[Fact]
-		public void Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
-			var result = InvokeTest<TestModel5>(@"{
+		public async Task Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
+			var result = await _webApp.InvokeTest<TestModel5>(@"{
 				SomeBool:'false',
 				Id:0}");
 
@@ -33,8 +44,8 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
 		[Fact]
-		public void Should_add_all_errors_in_one_go() {
-			var result = InvokeTest<TestModel4>(@"Email=foo&Surname=foo&Forename=foo&DateOfBirth=&Address1=");
+		public async Task Should_add_all_errors_in_one_go() {
+			var result = await _webApp.InvokeTest<TestModel4>(@"Email=foo&Surname=foo&Forename=foo&DateOfBirth=&Address1=");
 
 			result.Count.ShouldEqual(4);
 			result.IsValidField("model.Email").ShouldBeFalse(); //Email validation failed
@@ -44,20 +55,20 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
 		[Fact]
-		public void When_a_validation_error_occurs_the_error_should_be_added_to_modelstate() {
-			var result = InvokeTest<TestModel>(@"Name=");
+		public async Task When_a_validation_error_occurs_the_error_should_be_added_to_modelstate() {
+			var result = await _webApp.InvokeTest<TestModel>(@"Name=");
 			result.GetMessage("model.Name").ShouldEqual("Validation Failed");
 		}
 
 		[Fact]
-		public void Should_not_fail_when_no_validator_can_be_found() {
-			var result = InvokeTest<TestModel2>(@"");
+		public async Task Should_not_fail_when_no_validator_can_be_found() {
+			var result = await _webApp.InvokeTest<TestModel2>(@"");
 			result.IsValid().ShouldBeTrue();
 		}
 		
 		[Fact]
-		public void Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
-			var result = InvokeTest<TestModel6>(@"Id=");
+		public async Task Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
+			var result = await _webApp.InvokeTest<TestModel6>(@"Id=");
 			result.Count.ShouldEqual(1);
 			result.IsValidField("model.Id").ShouldBeFalse();
 			result.GetMessage("model.Id").ShouldEqual(@"A value is required.");
@@ -65,8 +76,8 @@ namespace FluentValidation.Tests.WebApi {
 
 
 		[Fact]
-		public void Should_add_implicit_required_validator() {
-			var result = InvokeTest<TestModel6>(@"Id=");
+		public async Task Should_add_implicit_required_validator() {
+			var result = await _webApp.InvokeTest<TestModel6>(@"Id=");
 			result.Count.ShouldEqual(1);
 			result.IsValidField("model.Id").ShouldBeFalse();
 			result.GetMessage("model.Id").ShouldEqual(@"A value is required.");
@@ -74,15 +85,15 @@ namespace FluentValidation.Tests.WebApi {
 
 
 		[Fact]
-		public void Should_validate_less_than() {
-			 var result = InvokeTest<TestModel7>(@"AnIntProperty=15");
+		public async Task Should_validate_less_than() {
+			 var result = await _webApp.InvokeTest<TestModel7>(@"AnIntProperty=15");
 			result.IsValidField("model.AnIntProperty").ShouldBeFalse();
 			result.GetMessage("model.AnIntProperty").ShouldEqual("Less than 10");
 		}
 
 		[Fact]
-		public void Should_validate_custom_after_property_errors() {
-			var result = InvokeTest<TestModel7>(@"AnIntProperty=7&CustomProperty=14");
+		public async Task Should_validate_custom_after_property_errors() {
+			var result = await _webApp.InvokeTest<TestModel7>(@"AnIntProperty=7&CustomProperty=14");
 
 			result.IsValidField("model.CustomProperty").ShouldBeFalse();
 			result.GetMessage("model.CustomProperty").ShouldEqual("Cannot be 14");
@@ -90,24 +101,24 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
         [Fact]
-	    public void Should_still_validate_other_properties_when_error_found_in_collection() {
-	        var result = InvokeTest<TestModel9>(@"{Children:[{}]}", "application/json");
+	    public async Task Should_still_validate_other_properties_when_error_found_in_collection() {
+	        var result = await _webApp.InvokeTest<TestModel9>(@"{Children:[{}]}", "application/json");
 
             result.IsValidField("model.Name").ShouldBeFalse();
             result.IsValidField("model.Children[0].Name").ShouldBeFalse();
 	    }
 
         [Fact]
-        public void Should_validate_child_properties()
+        public async Task Should_validate_child_properties()
         {
-            var result = InvokeTest<TestModel10>(@"{Child: {}}", "application/json");
+            var result = await _webApp.InvokeTest<TestModel10>(@"{Child: {}}", "application/json");
 
             result.IsValidField("model.Child.Name").ShouldBeFalse();
         }
 		
 		
 		[Fact]
-		public void Should_only_validate_specified_ruleset() {
+		public async Task Should_only_validate_specified_ruleset() {
 			var form = new Dictionary<string,string> {
 				{"Email", "foo"},
 				{"Surname", "foo"},
@@ -115,20 +126,20 @@ namespace FluentValidation.Tests.WebApi {
 			};
 
 			
-			var results =  InvokeTest("RulesetTest", ConvertToFormData(form));
+			var results =  await _webApp.PostForm("/api/Test/RulesetTest", form);
 			results.IsValidField("model.Forename").ShouldBeFalse();
 			results.IsValidField("model.Surname").ShouldBeFalse();
 			results.IsValidField("model.Email").ShouldBeTrue();
 		}
 		[Fact]
-		public void Should_only_validate_specified_properties() {
+		public async Task Should_only_validate_specified_properties() {
 			var form = new Dictionary<string,string> {
 				{"Email", "foo"},
 				{"Surname", "foo"},
 				{"Forename", "foo"},
 			};
 
-			var result = InvokeTest("PropertyTest", ConvertToFormData(form));
+			var result = await _webApp.PostForm("/api/Test/PropertiesTestModel", form);
 
 			result.IsValidField("model.Forename").ShouldBeFalse();
 			result.IsValidField("model.Surname").ShouldBeFalse();
@@ -136,13 +147,13 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
 		[Fact]
-		public  void When_interceptor_specified_Intercepts_validation() {
+		public  async Task When_interceptor_specified_Intercepts_validation() {
 			var form = new Dictionary<string,string> {
 				{"Email", "foo"},
 				{"Surname", "foo"},
 				{"Forename", "foo"},
 			};
-			var result = InvokeTest("InterceptorTest", ConvertToFormData(form));
+			var result = await _webApp.PostForm("/api/Test/InterceptorTest", form);
 
 			result.IsValidField("model.Forename").ShouldBeFalse();
 			result.IsValidField("model.Surname").ShouldBeFalse();
@@ -150,33 +161,33 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
 		[Fact]
-		public void When_interceptor_specified_Intercepts_validation_provides_custom_errors() {
+		public async Task When_interceptor_specified_Intercepts_validation_provides_custom_errors() {
 			var form = new Dictionary<string,string> {
 				{"Email", "foo"},
 				{"Surname", "foo"},
 				{"Forename", "foo"},
 			};
 
-			var result = InvokeTest("ClearErrorsInterceptorTest", ConvertToFormData(form));
+			var result = await _webApp.PostForm("/api/Test/ClearErrorsInterceptorTest", form);
 
 			result.Count.ShouldEqual(0);
 		}
 
 		[Fact]
-		public async void When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked() {
+		public async Task When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked() {
 			var form = new Dictionary<string,string> {
 				{"Email", "foo"},
 				{"Surname", "foo"},
 				{"Forename", "foo"},
 			};
 
-			var result = InvokeTest("BuiltInInterceptorTest", ConvertToFormData(form));
+			var result = await _webApp.PostForm("/api/Test/BuiltInInterceptorTest", form);
 
 			result.Count.ShouldEqual(0);
 		}
 
 		[Fact]
-		public void Validator_customizations_should_only_apply_to_single_parameter() {
+		public async Task Validator_customizations_should_only_apply_to_single_parameter() {
 			var form = new Dictionary<string,string> {
 				{"first.Email", "foo"},
 				{"first.Surname", "foo"},
@@ -186,7 +197,7 @@ namespace FluentValidation.Tests.WebApi {
 				{"second.Forename", "foo"}
 			};
 
-			var result = InvokeTest("TwoParameters", ConvertToFormData(form));
+			var result = await _webApp.PostForm("/api/Test/TwoParameters", form);
 
 			//customizations should only apply to the first validator 
 			result.IsValidField("first.Forename").ShouldBeFalse();

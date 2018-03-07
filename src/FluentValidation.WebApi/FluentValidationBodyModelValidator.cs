@@ -49,6 +49,9 @@ namespace FluentValidation.WebApi {
 			
 			if(customizations == null) customizations = new CustomizeValidatorAttribute();
 
+			if(validators == null)
+				validators = GetValidators(validationContext.ActionContext, metadata, validationContext.ValidatorCache);
+
 			validators = ApplyCustomizationsToValidators(validators, customizations, validationContext.ActionContext);
 			
 			bool isValid = base.ValidateNodeAndChildren(metadata, validationContext, container, validators);
@@ -66,7 +69,7 @@ namespace FluentValidation.WebApi {
 		}
 
 		private IEnumerable<ModelValidator> ApplyCustomizationsToValidators(IEnumerable<ModelValidator> validators, CustomizeValidatorAttribute customizations, HttpActionContext ctx) {
-			
+			if (validators == null) return null;
 			// For the FV-specific model validator, clone it passing the context and customizations to the clone
 			// This is done rather than setting them on the original validator so we don't up with stale contexts in WebApi's cache
 			var projection = from validator in validators
@@ -76,6 +79,20 @@ namespace FluentValidation.WebApi {
 				select newValidator;
 
 			return projection.ToList();
+		}
+		
+		
+		private static IEnumerable<ModelValidator> GetValidators(HttpActionContext actionContext, ModelMetadata metadata, IModelValidatorCache validatorCache)
+		{
+			if (validatorCache == null)
+			{
+				// slow path: there is no validator cache on the configuration
+				return metadata.GetValidators(actionContext.GetValidatorProviders());
+			}
+			else
+			{
+				return validatorCache.GetValidators(metadata);
+			}
 		}
 
 		protected override bool ShallowValidate(ModelMetadata metadata, BodyModelValidatorContext validationContext, object container, IEnumerable<ModelValidator> validators) {
