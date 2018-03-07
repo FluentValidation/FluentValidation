@@ -18,7 +18,7 @@
 		public Task<List<SimpleError>> InvokeTest<T>(string input, string contentType = "application/x-www-form-urlencoded") {
 			string className = typeof(T).Name;
 
-			return PostForm("/api/Test/" + className, input);
+			return PostForm("/api/Test/" + className, input, contentType);
 		}
 
 		
@@ -27,7 +27,7 @@
 		}
 
 		public Task<List<SimpleError>> PostForm(string url, Dictionary<string, string> formData, string contentType = "application/x-www-form-urlencoded") {
-			return PostForm(url, ConvertToFormData(formData));
+			return PostForm(url, ConvertToFormData(formData), contentType);
 		}
 
 		public async Task<List<SimpleError>> PostForm(string url, string formData, string contentType = "application/x-www-form-urlencoded") {
