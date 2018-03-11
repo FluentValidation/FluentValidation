@@ -42,7 +42,7 @@
   <Target Name="Deploy">
     <RemoveDir Directories="$(BuildDir)" />
     
-    <exec Command="dotnet msbuild $(SolutionFile) /p:Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages;AssemblyOriginatorKeyFile=$(KeyFile) /t:Restore;Pack /nologo" />
+    <exec Command="dotnet msbuild $(SolutionFile) /p:Configuration=$(Configuration);PackageOutputPath=$(BuildDir)\Packages;AssemblyOriginatorKeyFile=$(KeyFile);Version=$(Version) /t:Restore;Pack /nologo" />
    
     <CallTarget Targets="CopyToOutput"></CallTarget>
   </Target>
