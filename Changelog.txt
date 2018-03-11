@@ -1,5 +1,6 @@
-7.5.1 - 
+7.5.1 - 11 March 2018
 Support CustomizeValidatorAttribute in WebApi integration
+Resolved issues with referencing FluentValidation from legacy PCLs.
 
 7.5 - 26 February 2018
 Better handling of clientside messages when using custom overriden language resources
@@ -12,6 +13,7 @@ Added Hebrew language support
 Added Brizilian Portuguese language support
 Cache display names by default 
 Ensure ShouldHaveChildValidator test method works with model-level rules
+Removed netstandard1.0 support. Supported platforms are now netstandard1.1, netstandard2.0 and net45.
 
 7.4 - 27 January 2018 
 Update DependentRules syntax and mark old syntax as obsolete
