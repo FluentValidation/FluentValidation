@@ -9,15 +9,20 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.5.1:
+* Resolved issues with referencing FluentValidation from legacy PCLs.
+* Added support for CustomizeValidatorAttribute to the legacy WebApi integration for consistency with MVC5 and AspNetCore. 
+
 Changes in 7.5:
 * Better handling of clientside messages when using custom overriden language resources
 * Added flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration
 * Improvements to some of the validation tester's messages
 * Added Transform method to transform property values prior to validation
 * Improve support for DisplayAttribute / DisplayNameAttribute when inferring property display name
-* New language translations (Slovak/Hebrew/Brizilian Portuguese)
+* New language translations (Slovak/Hebrew/Brazilian Portuguese)
 * Cache display names by default 
 * Ensure ShouldHaveChildValidator test method works with model-level rules
+* Removed netstandard1.0 support. Supported platforms are now netstandard1.1, netstandard2.0 and net45.
 
 Changes in 7.4:
 * Improved syntax for DependentRules
@@ -102,9 +107,12 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1"></PackageReference>
 		<PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0"></PackageReference>
 		<PackageReference Include="System.Collections.Concurrent" Version="4.3.0"></PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'!='netstandard1.1'">
+		<PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1"></PackageReference>
 	</ItemGroup>
 
     <!--<ItemGroup>

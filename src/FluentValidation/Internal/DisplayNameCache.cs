@@ -4,7 +4,6 @@ namespace FluentValidation.Internal {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
-	using System.ComponentModel.DataAnnotations;
 	using System.ComponentModel;
 
 	/// <summary>
@@ -26,12 +25,13 @@ namespace FluentValidation.Internal {
 
 			if (member == null) return null;
 
-			var displayAttribute = member.GetCustomAttribute<DisplayAttribute>();
+#if !NETSTANDARD1_1
+			var displayAttribute = member.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>();
 
 			if (displayAttribute != null) {
 				return () => displayAttribute.GetName();
 			}
-
+#endif
 			// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
 			var displayNameAttribute = member.GetCustomAttribute<DisplayNameAttribute>();
 

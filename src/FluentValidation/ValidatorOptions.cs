@@ -18,11 +18,6 @@
 
 namespace FluentValidation {
 	using System;
-	using System.ComponentModel;
-#if !NETSTANDARD1_0
-	using System.ComponentModel.DataAnnotations;
-#endif
-	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Internal;
