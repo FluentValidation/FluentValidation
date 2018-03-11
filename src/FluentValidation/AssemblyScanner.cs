@@ -69,7 +69,7 @@ namespace FluentValidation {
 		private IEnumerable<AssemblyScanResult> Execute() {
 			var openGenericType = typeof(IValidator<>);
 
-#if NETSTANDARD1_1
+#if NETSTANDARD1_1 || NETSTANDARD1_6
 			var query = from type in types
 						where !type.GetTypeInfo().IsAbstract && !type.GetTypeInfo().IsGenericTypeDefinition
 						let interfaces = type.GetTypeInfo().ImplementedInterfaces

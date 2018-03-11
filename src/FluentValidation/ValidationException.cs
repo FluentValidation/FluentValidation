@@ -21,13 +21,13 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using Results;
 	using System.Linq;
-#if !NETSTANDARD1_1
+#if !NETSTANDARD1_1 && !NETSTANDARD1_6
 	using System.Runtime.Serialization;
 #endif
 	/// <summary>
 	/// An exception that represents failed validation
 	/// </summary>
-#if !NETSTANDARD1_1
+#if !NETSTANDARD1_1 && !NETSTANDARD1_6
 	[Serializable]
 #endif
 	public class ValidationException : Exception {
@@ -65,7 +65,7 @@ namespace FluentValidation {
 			return "Validation failed: " + string.Join("", arr);
 		}
 
-#if !NETSTANDARD1_1
+#if !NETSTANDARD1_1 && !NETSTANDARD1_6
 		public ValidationException(SerializationInfo info, StreamingContext context) : base(info, context) {
 			Errors = info.GetValue("errors", typeof(IEnumerable<ValidationFailure>)) as IEnumerable<ValidationFailure>;
 		}
