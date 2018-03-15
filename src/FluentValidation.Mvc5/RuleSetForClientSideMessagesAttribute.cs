@@ -26,7 +26,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public static string[] GetRuleSetsForClientValidation(HttpContextBase context) {
-			return context.Items[key] as string[] ?? new string[] { null };
+			return context.Items[key] as string[] ?? new[] { "default" };
 		}
 	}
 }

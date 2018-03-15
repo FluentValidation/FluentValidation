@@ -44,7 +44,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (rule.RuleSets.Length > 0 && rulesetsToExecute.Length > 0) {
-				if (rule.RuleSets.Intersect(rulesetsToExecute).Any()) {
+				if (rule.RuleSets.Intersect(rulesetsToExecute, StringComparer.OrdinalIgnoreCase).Any()) {
 					return true;
 				}
 			}

@@ -37,10 +37,10 @@ namespace FluentValidation.AspNetCore {
 			// This is OK because if we're actually using the attribute, the OnActionExecuting will have caught the fact that the provider is not registered. 
 
 			if (context?.Items != null && context.Items.ContainsKey(key)) {
-				return context?.Items[key] as string[] ?? new string[] { null };
+				return context?.Items[key] as string[] ?? new[] { "default" };
 
 			}
-			return new string[] {null};
+			return new[] {"default"};
 		}
 	}
 }

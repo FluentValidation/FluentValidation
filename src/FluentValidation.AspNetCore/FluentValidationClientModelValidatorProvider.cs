@@ -140,7 +140,7 @@ namespace FluentValidation.AspNetCore {
 			if (factory != null) {
 				var ruleSetToGenerateClientSideRules = RuleSetForClientSideMessagesAttribute.GetRuleSetsForClientValidation(_httpContextAccessor?.HttpContext);
 				bool executeDefaultRule = (ruleSetToGenerateClientSideRules.Contains("default", StringComparer.OrdinalIgnoreCase) && (rule.RuleSets.Length == 0 || rule.RuleSets.Contains("default", StringComparer.OrdinalIgnoreCase)));
-				bool shouldExecute = ruleSetToGenerateClientSideRules.Intersect(rule.RuleSets).Any() || executeDefaultRule;
+				bool shouldExecute = ruleSetToGenerateClientSideRules.Intersect(rule.RuleSets, StringComparer.OrdinalIgnoreCase).Any() || executeDefaultRule;
 
 				if (shouldExecute) {
 					return factory.Invoke(context, rule, propertyValidator);
