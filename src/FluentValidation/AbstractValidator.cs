@@ -246,7 +246,11 @@ namespace FluentValidation {
 			ruleSetName.Guard("A name must be specified when calling RuleSet.");
 			action.Guard("A ruleset definition must be specified when calling RuleSet.");
 
-			using (NestedValidators.OnItemAdded(r => r.RuleSet = ruleSetName)) {
+			var ruleSetNames = ruleSetName.Split(',', ';')
+				.Select(x => x.Trim())
+				.ToArray();
+
+			using (NestedValidators.OnItemAdded(r => r.RuleSets = ruleSetNames)) {
 				action();
 			}
 		}

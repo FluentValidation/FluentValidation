@@ -38,11 +38,15 @@ namespace FluentValidation.Internal {
 		static Func<ValidationContext, bool> s_condition = x => true;
 		private Func<ValidationContext, bool> condition = s_condition;
 		private Func<ValidationContext, CancellationToken, Task<bool>> asyncCondition = null;
+		private string[] _ruleSets = new string[0];
 
 		/// <summary>
 		/// Rule set to which this rule belongs.
 		/// </summary>
-		public string RuleSet { get; set; }
+		public string[] RuleSets {
+			get => _ruleSets;
+			set => _ruleSets = value ?? new string[0];
+		}
 
 		/// <summary>
 		/// Creates a new DelegateValidator using the specified function to perform validation.

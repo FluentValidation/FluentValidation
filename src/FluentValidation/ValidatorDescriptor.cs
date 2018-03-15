@@ -125,9 +125,10 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public IEnumerable<RulesetMetadata> GetRulesByRuleset() {
 			var query = from rule in Rules.OfType<PropertyRule>()
-				group rule by rule.RuleSet
-				into grp
-				select new RulesetMetadata(grp.Key, grp);
+						from ruleset in rule.RuleSets
+						group rule by ruleset
+						into grp
+						select new RulesetMetadata(grp.Key, grp);
 
 			return query.ToList();
 		} 

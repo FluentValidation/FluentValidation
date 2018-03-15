@@ -29,16 +29,26 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyPath">Property path (eg Customer.Address.Line1)</param>
 		/// <param name="context">Contextual information</param>
 		/// <returns>Whether or not the validator can execute.</returns>
-		public bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
-			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0) {
+		public virtual bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
+			if (rule.RuleSets.Length == 0 && rulesetsToExecute.Length > 0) {
 				if (IsIncludeRule(rule)) {
 					return true;
 				}
 			}
 
-			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length == 0) return true;
-			if (string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0 && rulesetsToExecute.Contains("default", StringComparer.OrdinalIgnoreCase)) return true;
-			if (!string.IsNullOrEmpty(rule.RuleSet) && rulesetsToExecute.Length > 0 && rulesetsToExecute.Contains(rule.RuleSet)) return true;
+			if (rule.RuleSets.Length == 0 && rulesetsToExecute.Length == 0) return true;
+
+			if (rulesetsToExecute.Contains("default", StringComparer.OrdinalIgnoreCase)) {
+				if (rule.RuleSets.Length == 0) return true;
+				if (rule.RuleSets.Contains("default", StringComparer.OrdinalIgnoreCase)) return true;
+			}
+
+			if (rule.RuleSets.Length > 0 && rulesetsToExecute.Length > 0) {
+				if (rule.RuleSets.Intersect(rulesetsToExecute).Any()) {
+					return true;
+				}
+			}
+
 			if (rulesetsToExecute.Contains("*")) return true;
 
 			return false;

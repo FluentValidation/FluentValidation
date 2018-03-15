@@ -36,7 +36,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Name of the rule-set to which this rule belongs.
 		/// </summary>
-		string RuleSet { get; set; }
+		string[] RuleSets { get; set; }
 
 		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures.

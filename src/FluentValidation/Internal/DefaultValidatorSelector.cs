@@ -17,6 +17,9 @@
 #endregion
 
 namespace FluentValidation.Internal {
+	using System;
+	using System.Linq;
+
 	/// <summary>
 	/// Default validator selector that will execute all rules that do not belong to a RuleSet.
 	/// </summary>
@@ -30,7 +33,9 @@ namespace FluentValidation.Internal {
 		/// <returns>Whether or not the validator can execute.</returns>
 		public bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
 			// By default we ignore any rules part of a RuleSet.
-			if (!string.IsNullOrEmpty(rule.RuleSet)) return false;
+			if (rule.RuleSets.Length > 0 && !rule.RuleSets.Contains("default", StringComparer.OrdinalIgnoreCase)) {
+				return false;
+			}
 
 			return true;
 		}

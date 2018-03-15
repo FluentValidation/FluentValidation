@@ -37,6 +37,7 @@ namespace FluentValidation.Internal {
 		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
 		string propertyDisplayName;
 		string propertyName;
+		private string[] _ruleSet = new string[0];
 
 		/// <summary>
 		/// Property associated with this rule.
@@ -61,7 +62,10 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Rule set that this rule belongs to (if specified)
 		/// </summary>
-		public string RuleSet { get; set; }
+		public string[] RuleSets {
+			get => _ruleSet;
+			set => _ruleSet = value ?? new string[0];
+		}
 
 		/// <summary>
 		/// Function that will be invoked if any of the validators associated with this rule fail.

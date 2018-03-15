@@ -268,11 +268,10 @@ namespace FluentValidation {
 
 			rule.Configure(cfg => {
 
-				if (!string.IsNullOrEmpty(cfg.RuleSet)) {
+				if (cfg.RuleSets.Length > 0) {
 					foreach (var dependentRule in dependencyContainer) {
-						var propRule = dependentRule as PropertyRule;
-						if (propRule != null && string.IsNullOrEmpty(propRule.RuleSet)) {
-							propRule.RuleSet = cfg.RuleSet;
+						if (dependentRule is PropertyRule propRule && propRule.RuleSets.Length == 0) {
+							propRule.RuleSets = cfg.RuleSets;
 						}
 					}
 				}
@@ -308,10 +307,10 @@ namespace FluentValidation {
 
 			rule.Configure(cfg => {
 
-				if (!string.IsNullOrEmpty(cfg.RuleSet)) {
+				if (cfg.RuleSets.Length > 0) {
 					foreach (var dependentRule in dependencyContainer) {
-						if (dependentRule is PropertyRule propRule && string.IsNullOrEmpty(propRule.RuleSet)) {
-							propRule.RuleSet = cfg.RuleSet;
+						if (dependentRule is PropertyRule propRule && propRule.RuleSets.Length == 0) {
+							propRule.RuleSets = cfg.RuleSets;
 						}
 					}
 				}
