@@ -22,6 +22,7 @@ namespace FluentValidation {
 	using System.Reflection;
 	using Internal;
 	using Resources;
+	using Validators;
 
 	/// <summary>
 	/// Validator runtime options
@@ -59,8 +60,8 @@ namespace FluentValidation {
 		private static Func<Type, MemberInfo, LambdaExpression, string> _propertyNameResolver = DefaultPropertyNameResolver;
 		private static Func<Type, MemberInfo, LambdaExpression, string> _displayNameResolver = DefaultDisplayNameResolver;
 		private static ILanguageManager _languageManager = new LanguageManager();
-
 		private static Func<MessageFormatter> _messageFormatterFactory = () => new MessageFormatter();
+		private static Func<PropertyValidator, string> _errorCodeResolver = DefaultErrorCodeResolver;
 
 		/// <summary>
 		/// Specifies a factory for creating MessageFormatter instances.
@@ -101,8 +102,19 @@ namespace FluentValidation {
 		}
 
 
+		/// <summary>
+		/// Defines how the error codes for validators.
+		/// By default this is the class name of the property validator.
+		/// </summary>
+		public static Func<PropertyValidator, string> ErrorCodeResolver {
+			get => _errorCodeResolver;
+			set => _errorCodeResolver = value ?? DefaultErrorCodeResolver;
+		}
 
-
+		static string DefaultErrorCodeResolver(PropertyValidator propertyValidator) {
+			return propertyValidator.GetType().Name;
+		}
+		
 		/// <summary>
 		/// Disables the expression accessor cache. Not recommended.
 		/// </summary>

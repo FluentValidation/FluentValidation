@@ -68,6 +68,21 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Default_error_code_should_be_class_name() {
+			validator.RuleFor(x => x.Forename).NotNull();
+			var result = validator.Validate(new Person());
+			result.Errors[0].ErrorCode.ShouldEqual("NotNullValidator");
+		}
+
+		[Fact]
+		public void Can_replace_default_errorcode_resolver() {
+			ValidatorOptions.ErrorCodeResolver = x => x.GetType().Name + "_foo";
+			validator.RuleFor(x => x.Forename).NotNull();
+			var result = validator.Validate(new Person());
+			result.Errors[0].ErrorCode.ShouldEqual("NotNullValidator_foo");
+		}
+		
+		[Fact]
 		public void WithErrorCode_should_override_error_code() {
 			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("ErrCode101");
 			var result = validator.Validate(new Person());

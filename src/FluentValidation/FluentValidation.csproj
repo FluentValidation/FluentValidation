@@ -9,6 +9,13 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.5.2:
+* RuleSet method can now take multiple ruleset names by usinga comma-separated string.
+* Make setters on ValidationFailure's properties public to allow for easier deserialization.
+* Additional overload for OverridePropertyName that takes an expression.
+* Add overload of Include that takes a func to lazily create the inner validator.
+* Make error code resolution pluggable using ValidatorOptions.ErrorCodeResolver
+        
 Changes in 7.5.1:
 * Resolved issues with referencing FluentValidation from legacy PCLs.
 * Added support for CustomizeValidatorAttribute to the legacy WebApi integration for consistency with MVC5 and AspNetCore. 
