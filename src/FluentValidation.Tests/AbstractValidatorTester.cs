@@ -97,10 +97,17 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void WithPropertyName_should_override_property_name() {
+		public void OverridePropertyName_should_override_property_name() {
 			validator.RuleFor(x => x.Surname).NotNull().OverridePropertyName("foo");
 			var result = validator.Validate(new Person());
 			result.Errors[0].PropertyName.ShouldEqual("foo");
+		}
+		
+		[Fact]
+		public void OverridePropertyName_with_lambda_should_override_property_name() {
+			validator.RuleFor(x => x.Surname).NotNull().OverridePropertyName(x => x.Forename);
+			var result = validator.Validate(new Person());
+			result.Errors[0].PropertyName.ShouldEqual("Forename");
 		}
 
 		[Fact]
