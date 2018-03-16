@@ -101,9 +101,8 @@ namespace FluentValidation {
 			return memberInfo == null ? null : DisplayNameCache.GetCachedDisplayName(memberInfo);
 		}
 
-
 		/// <summary>
-		/// Defines how the error codes for validators.
+		/// Defines how the error codes for validators are constructed.
 		/// By default this is the class name of the property validator.
 		/// </summary>
 		public static Func<PropertyValidator, string> ErrorCodeResolver {
