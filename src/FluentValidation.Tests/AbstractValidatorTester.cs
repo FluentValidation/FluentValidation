@@ -79,6 +79,7 @@ namespace FluentValidation.Tests {
 			ValidatorOptions.ErrorCodeResolver = x => x.GetType().Name + "_foo";
 			validator.RuleFor(x => x.Forename).NotNull();
 			var result = validator.Validate(new Person());
+			ValidatorOptions.ErrorCodeResolver = null;
 			result.Errors[0].ErrorCode.ShouldEqual("NotNullValidator_foo");
 		}
 		
