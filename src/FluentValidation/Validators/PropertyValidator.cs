@@ -133,7 +133,7 @@ namespace FluentValidation.Validators {
 			failure.ResourceName = errorSource.ResourceName;
 			failure.ErrorCode = (errorCodeSource != null)
 				? errorCodeSource.GetString(context.Instance)
-				: GetType().Name;
+				: ValidatorOptions.ErrorCodeResolver(this);
 
 			if (CustomStateProvider != null) {
 				failure.CustomState = CustomStateProvider(context);
