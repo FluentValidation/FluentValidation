@@ -341,6 +341,17 @@ namespace FluentValidation {
 			var rule = IncludeRule.Create<T>(rulesToInclude, () => CascadeMode);
 			AddRule(rule);
 		}
+		
+		/// <summary>
+		/// Includes the rules from the specified validator
+		/// </summary>
+		public void Include<TValidator>(Func<T, TValidator> rulesToInclude) where TValidator : IValidator<T> {
+			rulesToInclude.Guard("Cannot pass null to Include");
+			//var rule = IncludeRule.Create<T, IValidator<T>>(x => rulesToInclude, () => CascadeMode);
+			var rule = IncludeRule.Create(rulesToInclude, () => CascadeMode);
+			AddRule(rule);
+		}
+
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection of validation rules.

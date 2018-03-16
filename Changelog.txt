@@ -1,7 +1,8 @@
-7.x -
+7.5.2 -
 Support multiple rulesets on a rule.
 Make setters on ValidationFailure's properties public to allow for easier deserialization.
 Additional overload for OverridePropertyName that takes an expression.
+Add overload of Include that lazily creates the inner validator.
 
 7.5.1 - 11 March 2018
 Support CustomizeValidatorAttribute in WebApi integration

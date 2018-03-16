@@ -144,6 +144,15 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Ruleset_selection_should_cascade_downwards_with_when_setting_child_validator_using_include_statement_with_lambda() {
+			var validator = new InlineValidator<Person>();
+			validator.Include(x => new TestValidator2());
+			var result = validator.Validate(new Person(), ruleSet:"Names");
+			result.IsValid.ShouldBeFalse();
+		}
+
+		
+		[Fact]
 		public void Trims_spaces() {
 			var validator = new InlineValidator<Person>();
 			validator.RuleSet("First", () => {
