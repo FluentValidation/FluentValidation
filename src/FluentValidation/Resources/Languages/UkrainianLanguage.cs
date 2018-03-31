@@ -43,8 +43,8 @@ namespace FluentValidation.Resources {
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' має бути між {From} та {To}. Ви ввели {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' не є номером кредитної картки.");
 			Translate<ScalePrecisionValidator>("'{PropertyName}' не може мати більше за {expectedPrecision} цифр всього, з {expectedScale} десятковими знаками. {digits} цифр та {actualScale} десяткових знаків знайдено.");
-			Translate<EmptyValidator>("'{PropertyName}' не може бути порожнім.");
-			Translate<NullValidator>("'{PropertyName}' не може бути порожнім.");
+			Translate<EmptyValidator>("'{PropertyName}' має бути порожнім.");
+			Translate<NullValidator>("'{PropertyName}' має бути порожнім.");
 			Translate<EnumValidator>("'{PropertyName}' має діапазон значень, який не включає '{PropertyValue}'.");
 		}
 	}
