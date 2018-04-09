@@ -48,7 +48,7 @@ namespace FluentValidation.Tests {
 			try {
 				var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotEmpty());
 
-				foreach (var culture in new[] { "en", "de", "fr", "es", "de", "it", "nl", "pl", "pt", "ru", "sv" }) {
+				foreach (var culture in new[] { "en", "de", "fr", "es", "de", "it", "nl", "pl", "pt", "ru", "sv", "ar" }) {
 					Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
 					var message = ValidatorOptions.LanguageManager.GetStringForValidator<NotEmptyValidator>();
 					var errorMessage = new MessageFormatter().AppendPropertyName("Surname").BuildMessage(message);
