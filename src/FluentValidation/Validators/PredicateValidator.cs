@@ -29,7 +29,7 @@ namespace FluentValidation.Validators {
 		private readonly Predicate predicate;
 
 		public PredicateValidator(Predicate predicate) : base(new LanguageStringSource(nameof(PredicateValidator))) {
-			predicate.Guard("A predicate must be specified.");
+			predicate.Guard("A predicate must be specified.", nameof(predicate));
 			this.predicate = predicate;
 		}
 

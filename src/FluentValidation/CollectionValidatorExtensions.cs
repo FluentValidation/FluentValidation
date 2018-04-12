@@ -109,7 +109,7 @@ namespace FluentValidation {
 			}
 
 			public ICollectionValidatorRuleBuilder<T, TCollectionElement> Where(Func<TCollectionElement, bool> predicate) {
-				predicate.Guard("Cannot pass null to Where.");
+				predicate.Guard("Cannot pass null to Where.", nameof(predicate));
 				adaptor.Predicate = x => predicate((TCollectionElement)x);
 				return this;
 			}

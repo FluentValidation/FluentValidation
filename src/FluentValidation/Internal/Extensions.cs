@@ -21,6 +21,7 @@ namespace FluentValidation.Internal {
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Runtime.CompilerServices;
 	using System.Text;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -29,19 +30,19 @@ namespace FluentValidation.Internal {
 	/// Useful extensions
 	/// </summary>
 	public static class Extensions {
-		internal static void Guard(this object obj, string message) {
+		internal static void Guard(this object obj, string message, string paramName) {
 			if (obj == null) {
-				throw new ArgumentNullException(message);
+				throw new ArgumentNullException(paramName, message);
 			}
 		}
 
-		internal static void Guard(this string str, string message) {
+		internal static void Guard(this string str, string message, string paramName) {
 			if (str == null) {
-				throw new ArgumentNullException(message);
+				throw new ArgumentNullException(paramName, message);
 			}
 
 			if (string.IsNullOrEmpty(str)) {
-				throw new ArgumentException(message);
+				throw new ArgumentException(message, paramName);
 			}
 		}
 
@@ -84,9 +85,8 @@ namespace FluentValidation.Internal {
 				currentExpr = RemoveUnary(currentExpr);
 
 				if (currentExpr != null && currentExpr.NodeType == ExpressionType.MemberAccess) {
-					currentExpr = ((MemberExpression) currentExpr).Expression;
-				}
-				else {
+					currentExpr = ((MemberExpression)currentExpr).Expression;
+				} else {
 					break;
 				}
 			}
@@ -144,48 +144,42 @@ namespace FluentValidation.Internal {
 		}
 
 		internal static void ForEach<T>(this IEnumerable<T> source, Action<T> action) {
-			foreach(var item in source) {
-				action(item);	
+			foreach (var item in source) {
+				action(item);
 			}
 		}
 
-#pragma warning disable 1591 
+#pragma warning disable 1591
 		public static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {
 			return x => func((T)x);
-		} 
+		}
 
 		public static Func<object, bool> CoerceToNonGeneric<T>(this Func<T, bool> func) {
 			return x => func((T)x);
 		}
 
-		public static Func<object, CancellationToken, Task<bool>> CoerceToNonGeneric<T>(this Func<T, CancellationToken, Task<bool>> func)
-		{
+		public static Func<object, CancellationToken, Task<bool>> CoerceToNonGeneric<T>(this Func<T, CancellationToken, Task<bool>> func) {
 			return (x, ct) => func((T)x, ct);
 		}
 
 
-		public static Func<object, Task<bool>> CoerceToNonGeneric<T>(this Func<T, Task<bool>> func)
-		{
+		public static Func<object, Task<bool>> CoerceToNonGeneric<T>(this Func<T, Task<bool>> func) {
 			return x => func((T)x);
 		}
 
-		public static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func)
-		{
+		public static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func) {
 			return x => func((T)x);
 		}
 
-		public static Func<object, long> CoerceToNonGeneric<T>(this Func<T, long> func)
-		{
+		public static Func<object, long> CoerceToNonGeneric<T>(this Func<T, long> func) {
 			return x => func((T)x);
 		}
 
-		public static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func)
-		{
+		public static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func) {
 			return x => func((T)x);
 		}
 
-		public static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func)
-		{
+		public static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func) {
 			return x => func((T)x);
 		}
 

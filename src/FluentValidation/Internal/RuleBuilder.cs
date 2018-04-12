@@ -51,7 +51,7 @@ namespace FluentValidation.Internal {
 		/// <param name="validator">The validator to set</param>
 		/// <returns></returns>
 		public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator validator) {
-			validator.Guard("Cannot pass a null validator to SetValidator.");
+			validator.Guard("Cannot pass a null validator to SetValidator.", nameof(validator));
 			Rule.AddValidator(validator);
 			return this;
 		}
@@ -61,7 +61,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="validator">The validator to set</param>
 		public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator) {
-			validator.Guard("Cannot pass a null validator to SetValidator");
+			validator.Guard("Cannot pass a null validator to SetValidator", nameof(validator));
 			var adaptor = new ChildValidatorAdaptor(validator);
 			SetValidator(adaptor);
 			return this;
@@ -73,7 +73,7 @@ namespace FluentValidation.Internal {
 		/// <param name="validatorProvider">The validator provider to set</param>
 		public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TValidator> validatorProvider)
 			where TValidator : IValidator<TProperty> {
-			validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator");
+			validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
 			SetValidator(new ChildValidatorAdaptor(t => validatorProvider((T) t), typeof (TValidator)));
 			return this;
 		}

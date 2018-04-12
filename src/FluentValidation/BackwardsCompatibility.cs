@@ -33,7 +33,7 @@ namespace FluentValidation
 		/// <param name="resourceAccessorBuilder">Resource accessor builder to use</param>
 		[Obsolete("Use WithName(x => ResourceType.ResourceName) instead")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, IResourceAccessorBuilder resourceAccessorBuilder = null) {
-			resourceSelector.Guard("A resource selector must be specified.");
+			resourceSelector.Guard("A resource selector must be specified.", nameof(resourceSelector));
 			// default to the static resource accessor builder - explicit resources configured with WithLocalizedName should take precedence over ResourceProviderType.
 
 			return rule.Configure(config => {
@@ -75,7 +75,7 @@ namespace FluentValidation
 		/// <returns></returns>
 		[Obsolete("Use WithMessage(x => ResourceType.ResourceName) instead.")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<string>> resourceSelector, IResourceAccessorBuilder resourceAccessorBuilder) {
-			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)");
+			resourceSelector.Guard("An expression must be specified when calling WithLocalizedMessage, eg .WithLocalizedMessage(() => Messages.MyResource)", nameof(resourceSelector));
 
 			return rule.Configure(config => {
 				config.CurrentValidator.ErrorMessageSource = LocalizedStringSource.CreateFromExpression(resourceSelector, resourceAccessorBuilder);
@@ -108,8 +108,8 @@ namespace FluentValidation
 	    /// <param name="resourceName">The name of the resource to use</param>
 	    [Obsolete("Use WithName(x => ResourceType.ResourceName) instead")]
 	    public static IRuleBuilderOptions<T, TProperty> WithLocalizedName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName) {
-		    resourceType.Guard("A resource type must be specified.");
-		    resourceName.Guard("A resource name must be specified.");
+		    resourceType.Guard("A resource type must be specified.", nameof(resourceType));
+		    resourceName.Guard("A resource name must be specified.", nameof(resourceName));
 
 		    return rule.Configure(config => {
 			    config.DisplayName = new LocalizedStringSource(resourceType, resourceName);
@@ -139,7 +139,7 @@ namespace FluentValidation
 	    /// <returns></returns>
 	    [Obsolete("Use WithMessage(x => string.Format(\"Custom message with placeholder\", x.Arg1, x.Arg2) instead")]
 	    public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage, params Func<T, object>[] funcs) {
-		    errorMessage.Guard("A message must be specified when calling WithMessage.");
+		    errorMessage.Guard("A message must be specified when calling WithMessage.", nameof(errorMessage));
 
 		    return rule.Configure(config => {
 			    var placeholders = funcs.Select(func => new Func<object, object, object>((instance, value) => func((T) instance))).ToList();
@@ -156,7 +156,7 @@ namespace FluentValidation
 		/// <returns></returns>
 		[Obsolete("Use WithMessage(x => string.Format(\"Custom message with placeholder\", x.Arg1, x.Arg2) instead")]
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage, params Func<T, TProperty, object>[] funcs) {
-		    errorMessage.Guard("A message must be specified when calling WithMessage.");
+		    errorMessage.Guard("A message must be specified when calling WithMessage.", nameof(errorMessage));
 
 		    return rule.Configure(config => {
 
@@ -192,8 +192,8 @@ namespace FluentValidation
 	    /// <returns></returns>
 	    [Obsolete("Use WithMessage(x => string.Format(ResourceType.ResourceName, x.Arg1, x.Arg2)")]
 	    public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName, params Func<T, object>[] formatArgs) {
-		    resourceType.Guard("A resource type must be provided.");
-		    resourceName.Guard("A resource name must be provided.");
+		    resourceType.Guard("A resource type must be provided.", nameof(resourceType));
+		    resourceName.Guard("A resource name must be provided.", nameof(resourceName));
 
 		    return rule.Configure(config => {
 			    var funcs = formatArgs.Select(func => new Func<object, object, object>((instance, value) => func((T) instance))).ToList();

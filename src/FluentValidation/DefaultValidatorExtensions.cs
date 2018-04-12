@@ -320,7 +320,7 @@ namespace FluentValidation {
 		/// <param name="predicate">A lambda expression specifying the predicate</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, bool> predicate) {
-			predicate.Guard("Cannot pass a null predicate to Must.");
+			predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
 
 			return ruleBuilder.Must((x, val) => predicate(val));
 		}
@@ -337,7 +337,7 @@ namespace FluentValidation {
 		/// <param name="predicate">A lambda expression specifying the predicate</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, bool> predicate) {
-			predicate.Guard("Cannot pass a null predicate to Must.");
+			predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
 			return ruleBuilder.Must((x, val, propertyValidatorContext) => predicate(x, val));
 		}
 
@@ -353,7 +353,7 @@ namespace FluentValidation {
 		/// <param name="predicate">A lambda expression specifying the predicate</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, PropertyValidatorContext, bool> predicate) {
-			predicate.Guard("Cannot pass a null predicate to Must.");
+			predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
 			return ruleBuilder.SetValidator(new PredicateValidator((instance, property, propertyValidatorContext) => predicate((T) instance, (TProperty) property, propertyValidatorContext)));
 		}
 
@@ -368,7 +368,7 @@ namespace FluentValidation {
 		/// <param name="predicate">A lambda expression specifying the predicate</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CancellationToken, Task<bool>> predicate) {
-			predicate.Guard("Cannot pass a null predicate to Must.");
+			predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
 
 			return ruleBuilder.MustAsync((x, val, ctx, cancel) => predicate(val, cancel));
 		}
@@ -385,7 +385,7 @@ namespace FluentValidation {
 		/// <param name="predicate">A lambda expression specifying the predicate</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, CancellationToken, Task<bool>> predicate) {
-			predicate.Guard("Cannot pass a null predicate to Must.");
+			predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
 			return ruleBuilder.MustAsync((x, val, propertyValidatorContext, cancel) => predicate(x, val, cancel));
 		}
 
@@ -401,7 +401,7 @@ namespace FluentValidation {
 		/// <param name="predicate">A lambda expression specifying the predicate</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) {
-			predicate.Guard("Cannot pass a null predicate to Must.");
+			predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
 			return ruleBuilder.SetValidator(new AsyncPredicateValidator((instance, property, propertyValidatorContext, cancel) => predicate((T) instance, (TProperty) property, propertyValidatorContext, cancel)));
 		}
 
@@ -541,7 +541,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 																			   Expression<Func<T, TProperty>> expression)
 			where TProperty : IComparable<TProperty>, IComparable {
-			expression.Guard("Cannot pass null to LessThan");
+			expression.Guard("Cannot pass null to LessThan", nameof(expression));
 
 			var func = expression.Compile();
 
@@ -561,7 +561,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 																			   Expression<Func<T, Nullable<TProperty>>> expression)
 			where TProperty : struct, IComparable<TProperty>, IComparable {
-			expression.Guard("Cannot pass null to LessThan");
+			expression.Guard("Cannot pass null to LessThan", nameof(expression));
 
 			var func = expression.Compile();
 
@@ -581,7 +581,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, Nullable<TProperty>> LessThan<T, TProperty>(this IRuleBuilder<T, Nullable<TProperty>> ruleBuilder,
 																						 Expression<Func<T, TProperty>> expression)
 			where TProperty : struct, IComparable<TProperty>, IComparable {
-			expression.Guard("Cannot pass null to LessThan");
+			expression.Guard("Cannot pass null to LessThan", nameof(expression));
 
 			var func = expression.Compile();
 
@@ -601,7 +601,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, Nullable<TProperty>> LessThan<T, TProperty>(this IRuleBuilder<T, Nullable<TProperty>> ruleBuilder,
 																						 Expression<Func<T, Nullable<TProperty>>> expression)
 			where TProperty : struct, IComparable<TProperty>, IComparable {
-			expression.Guard("Cannot pass null to LessThan");
+			expression.Guard("Cannot pass null to LessThan", nameof(expression));
 
 			var func = expression.Compile();
 
