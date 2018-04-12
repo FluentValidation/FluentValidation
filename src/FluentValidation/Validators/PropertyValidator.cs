@@ -46,8 +46,8 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			errorMessageResourceName.Guard("errorMessageResourceName must be specified.");
-			errorMessageResourceType.Guard("errorMessageResourceType must be specified.");
+			errorMessageResourceName.Guard("errorMessageResourceName must be specified.", nameof(errorMessageResourceName));
+			errorMessageResourceType.Guard("errorMessageResourceType must be specified.", nameof(errorMessageResourceType));
 
 			errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
