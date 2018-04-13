@@ -112,6 +112,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void ShouldHaveChildValidator_should_not_throw_when_property_Does_have_child_validator_and_expecting_a_basetype()
+		{
+			validator.RuleFor(x => x.Address).SetValidator(new AddressValidator());
+			validator.ShouldHaveChildValidator(x => x.Address, typeof(AbstractValidator<Address>));
+		}
+
+		[Fact]
 		public void ShouldHaveChildvalidator_throws_when_collection_property_Does_not_have_child_validator() {
 			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
 				validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator))
