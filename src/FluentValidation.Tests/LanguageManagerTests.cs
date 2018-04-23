@@ -27,7 +27,7 @@
 		public void Gets_translation_for_specific_culture() {
 			using (new CultureScope("zh-CN")) {
 				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("请填写 '{PropertyName}'。");
+				msg.ShouldEqual("'{PropertyName}' 不能为Null。");
 			}
 		}
 
