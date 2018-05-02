@@ -82,8 +82,10 @@ namespace FluentValidation.TestHelper {
 		public void ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
 
-			if (testValidationResult.Result.Errors.Any(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)))
-				throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", propertyName));
+			var failures = testValidationResult.Result.Errors.Where(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
+
+			if (failures.Any())
+				throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", propertyName), failures);
 		}
 	}
 }
