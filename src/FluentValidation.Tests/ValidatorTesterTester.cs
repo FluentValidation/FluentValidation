@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Linq;
 	using Xunit;
 	using TestHelper;
 	using Validators;
@@ -29,7 +30,35 @@ namespace FluentValidation.Tests {
 		public ValidatorTesterTester() {
 			validator = new TestValidator();
 			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleForEach(person => person.NickNames).MinimumLength(5);
 		}
+
+		[Fact]
+		public void ShouldHaveValidationError_should_not_throw_when_there_are_validation_errors_ruleforeach() {
+			validator.ShouldHaveValidationErrorFor(l => l.NickNames, new[] { "magician", "bull" });
+		}
+
+		[Fact]
+		public void ShouldHaveValidationError_should_throw_when_there_are_not_validation_errors_ruleforeach() {
+			ValidationTestException validationTestException = Assert.Throws<ValidationTestException>(() =>
+				validator.ShouldHaveValidationErrorFor(l => l.NickNames, new[] { "magician", "awesome" }));
+
+			Assert.Contains(nameof(Person.NickNames), validationTestException.Message);
+		}
+
+		[Fact]
+		public void ShouldNotHaveValidationError_should_not_throw_when_there_are_not_validation_errors_ruleforeach() {
+			validator.ShouldNotHaveValidationErrorFor(l => l.NickNames, new[] { "magician", "awesome" });
+		}
+
+		[Fact]
+		public void ShouldNotHaveValidationError_should_throw_when_there_are_validation_errors_ruleforeach() {
+			ValidationTestException validationTestException = Assert.Throws<ValidationTestException>(() => 
+				validator.ShouldNotHaveValidationErrorFor(l => l.NickNames, new[] { "magician", "bull" }));
+
+			Assert.Contains(nameof(Person.NickNames), validationTestException.Message);
+		}
+
 
 		[Fact]
 		public void ShouldHaveValidationError_should_not_throw_when_there_are_validation_errors() {
