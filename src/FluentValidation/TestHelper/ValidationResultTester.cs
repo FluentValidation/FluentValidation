@@ -22,7 +22,8 @@ namespace FluentValidation.TestHelper {
 	using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-	using Results;
+    using System.Text.RegularExpressions;
+    using Results;
 
 	class ValidationResultTester<T, TValue> : IValidationResultTester where T : class {
 		readonly TestValidationResult<T, TValue> testValidationResult;
@@ -71,7 +72,7 @@ namespace FluentValidation.TestHelper {
         public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
 
-			var failures = testValidationResult.Result.Errors.Where(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
+			var failures = testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
 
 			if (!failures.Any())
 				throw new ValidationTestException(string.Format("Expected a validation error for property {0}", propertyName));
@@ -82,10 +83,14 @@ namespace FluentValidation.TestHelper {
 		public void ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
 
-			var failures = testValidationResult.Result.Errors.Where(x => x.PropertyName == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
+			var failures = testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
 
 			if (failures.Any())
 				throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", propertyName), failures);
+		}
+
+		private string NormalizePropertyName(string propertyName) {
+			return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 		}
 	}
 }
