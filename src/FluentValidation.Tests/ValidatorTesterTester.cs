@@ -21,13 +21,14 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using TestHelper;
 	using Validators;
-
+	using System.Threading.Tasks;
 
 	public class ValidatorTesterTester {
 		private TestValidator validator;
 
 		public ValidatorTesterTester() {
 			validator = new TestValidator();
+			validator.RuleFor(x => x.CreditCard).Must(creditCard => !string.IsNullOrEmpty(creditCard)).WhenAsync((x, cancel) => Task.Run(() => { return x.Age >= 18; }));
 			validator.RuleFor(x => x.Forename).NotNull();
 		}
 
@@ -293,6 +294,65 @@ namespace FluentValidation.Tests {
 			exceptionCaught.ShouldBeTrue();
 		}
 
+		[Theory]
+		[InlineData(42, null)]
+		[InlineData(42, "")]
+		public void ShouldHaveValidationError_should_not_throw_when_there_are_validation_errors__WhenAsyn_is_used(int age, string cardNumber)
+		{
+			Person testPerson = new Person()
+			{
+				CreditCard = cardNumber,
+				Age = age
+			};
+
+			validator.ShouldHaveValidationErrorFor(x => x.CreditCard,testPerson);
+		}
+
+		[Theory]
+		[InlineData(42, "cardNumber")]
+		[InlineData(17, null)]
+		[InlineData(17, "")]
+		[InlineData(17, "cardNumber")]
+		public void ShouldHaveValidationError_should_throw_when_there_are_not_validation_errors__WhenAsyn_Is_Used(int age, string cardNumber)
+		{
+			Person testPerson = new Person()
+			{
+				CreditCard = cardNumber,
+				Age = age
+			};
+
+			Assert.Throws<ValidationTestException>(()=> validator.ShouldHaveValidationErrorFor(x => x.CreditCard, testPerson));
+		}
+
+		[Theory]
+		[InlineData(42, "cardNumber")]
+		[InlineData(17, null)]
+		[InlineData(17, "")]
+		[InlineData(17, "cardNumber")]
+		public void ShouldNotHaveValidationError_should_throw_when_there_are_not_validation_errors__WhenAsyn_is_used(int age, string cardNumber)
+		{
+			Person testPerson = new Person()
+			{
+				CreditCard = cardNumber,
+				Age = age
+			};
+
+			validator.ShouldNotHaveValidationErrorFor(x => x.CreditCard, testPerson);
+		}
+
+		[Theory]
+		[InlineData(42, null)]
+		[InlineData(42, "")]
+		public void ShouldNotHaveValidationError_should_throw_when_there_are_validation_errors__WhenAsyn_is_used(int age, string cardNumber)
+		{
+			Person testPerson = new Person()
+			{
+				CreditCard = cardNumber,
+				Age = age
+			};
+
+			Assert.Throws<ValidationTestException>(() => validator.ShouldNotHaveValidationErrorFor(x => x.CreditCard, testPerson));
+ 		}
 
 		private class AddressValidator : AbstractValidator<Address> {
 
