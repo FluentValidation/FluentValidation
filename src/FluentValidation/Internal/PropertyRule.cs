@@ -260,7 +260,11 @@ namespace FluentValidation.Internal {
 
 			// Invoke each validator and collect its results.
 			foreach (var validator in validators) {
-				var results = InvokePropertyValidator(context, validator, propertyName);
+				IEnumerable<ValidationFailure> results;
+				if (validator.IsAsync)
+					results = InvokePropertyValidatorAsync(context, validator, propertyName, default(CancellationToken)).Result;
+				else
+					results = InvokePropertyValidator(context, validator, propertyName);
 
 				bool hasFailure = false;
 

@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,7 +15,9 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
+
 #endregion
+
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
@@ -74,30 +77,35 @@ namespace FluentValidation.Internal {
 			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.ParentContext)) {
 				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
+				int count = 0;
+
 				if (collectionPropertyValue != null)
 				{
+					if (string.IsNullOrEmpty(propertyName))
+					{
+						throw new InvalidOperationException("Could not automatically determine the property name ");
+					}
 
-					var validators = collectionPropertyValue.Select((v, count) => {
-						var newContext = context.CloneForChildValidator(context.InstanceToValidate);
+					var validationTasks = new List<Task<IEnumerable<ValidationFailure>>>();
+					foreach (var element in collectionPropertyValue)
+					{
+						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate);
 						newContext.PropertyChain.Add(propertyName);
-						newContext.PropertyChain.AddIndexer(count);
+						newContext.PropertyChain.AddIndexer(count++);
 
-						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
+						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
 
-						return validator.ValidateAsync(newPropertyContext, cancellation)
-							.Then(fs => results.AddRange(fs));
-					});
+						validationTasks.Add(validator.ValidateAsync(newPropertyContext, cancellation));
+					}
 
-
-					return
-					TaskHelpers.Iterate(
-						validators,
-						cancellationToken: cancellation
-					).Then(() => results.AsEnumerable(), runSynchronously: true);
+					foreach (var validationTask in validationTasks)
+					{
+						results.AddRange(validationTask.Result);
+					}
 				}
 			}
 
-			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+			return TaskHelpers.FromResult(results.AsEnumerable());
 		}
 
 		private string InferPropertyName(LambdaExpression expression) {
@@ -118,7 +126,6 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName"></param>
 		/// <returns></returns>
 		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(ValidationContext context, Validators.IPropertyValidator validator, string propertyName) {
-
 			if (string.IsNullOrEmpty(propertyName)) {
 				propertyName = InferPropertyName(Expression);
 			}
@@ -132,7 +139,6 @@ namespace FluentValidation.Internal {
 				int count = 0;
 
 				if (collectionPropertyValue != null) {
-
 					if (string.IsNullOrEmpty(propertyName)) {
 						throw new InvalidOperationException("Could not automatically determine the property name ");
 					}
@@ -148,6 +154,7 @@ namespace FluentValidation.Internal {
 					}
 				}
 			}
+
 			return results;
 		}
 	}
