@@ -79,16 +79,13 @@ namespace FluentValidation.Internal {
 
 				int count = 0;
 
-				if (collectionPropertyValue != null)
-				{
-					if (string.IsNullOrEmpty(propertyName))
-					{
+				if (collectionPropertyValue != null) {
+					if (string.IsNullOrEmpty(propertyName)) {
 						throw new InvalidOperationException("Could not automatically determine the property name ");
 					}
 
 					var validationTasks = new List<Task<IEnumerable<ValidationFailure>>>();
-					foreach (var element in collectionPropertyValue)
-					{
+					foreach (var element in collectionPropertyValue) {
 						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate);
 						newContext.PropertyChain.Add(propertyName);
 						newContext.PropertyChain.AddIndexer(count++);
@@ -98,8 +95,7 @@ namespace FluentValidation.Internal {
 						validationTasks.Add(validator.ValidateAsync(newPropertyContext, cancellation));
 					}
 
-					foreach (var validationTask in validationTasks)
-					{
+					foreach (var validationTask in validationTasks) {
 						results.AddRange(validationTask.Result);
 					}
 				}

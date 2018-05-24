@@ -113,8 +113,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_not_scramble_property_name_when_using_collection_validators_several_levels_deep_with_ValidateAsync()
-		{
+		public void Should_not_scramble_property_name_when_using_collection_validators_several_levels_deep_with_ValidateAsync() {
 			var v = new ApplicationViewModelValidator();
 			var result = v.ValidateAsync(new ApplicationViewModel()).Result;
 

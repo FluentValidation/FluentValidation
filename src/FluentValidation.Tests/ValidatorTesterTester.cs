@@ -297,15 +297,13 @@ namespace FluentValidation.Tests {
 		[Theory]
 		[InlineData(42, null)]
 		[InlineData(42, "")]
-		public void ShouldHaveValidationError_should_not_throw_when_there_are_validation_errors__WhenAsyn_is_used(int age, string cardNumber)
-		{
-			Person testPerson = new Person()
-			{
+		public void ShouldHaveValidationError_should_not_throw_when_there_are_validation_errors__WhenAsyn_is_used(int age, string cardNumber) {
+			Person testPerson = new Person() {
 				CreditCard = cardNumber,
 				Age = age
 			};
 
-			validator.ShouldHaveValidationErrorFor(x => x.CreditCard,testPerson);
+			validator.ShouldHaveValidationErrorFor(x => x.CreditCard, testPerson);
 		}
 
 		[Theory]
@@ -313,15 +311,13 @@ namespace FluentValidation.Tests {
 		[InlineData(17, null)]
 		[InlineData(17, "")]
 		[InlineData(17, "cardNumber")]
-		public void ShouldHaveValidationError_should_throw_when_there_are_not_validation_errors__WhenAsyn_Is_Used(int age, string cardNumber)
-		{
-			Person testPerson = new Person()
-			{
+		public void ShouldHaveValidationError_should_throw_when_there_are_not_validation_errors__WhenAsyn_Is_Used(int age, string cardNumber) {
+			Person testPerson = new Person() {
 				CreditCard = cardNumber,
 				Age = age
 			};
 
-			Assert.Throws<ValidationTestException>(()=> validator.ShouldHaveValidationErrorFor(x => x.CreditCard, testPerson));
+			Assert.Throws<ValidationTestException>(() => validator.ShouldHaveValidationErrorFor(x => x.CreditCard, testPerson));
 		}
 
 		[Theory]
@@ -329,10 +325,8 @@ namespace FluentValidation.Tests {
 		[InlineData(17, null)]
 		[InlineData(17, "")]
 		[InlineData(17, "cardNumber")]
-		public void ShouldNotHaveValidationError_should_throw_when_there_are_not_validation_errors__WhenAsyn_is_used(int age, string cardNumber)
-		{
-			Person testPerson = new Person()
-			{
+		public void ShouldNotHaveValidationError_should_throw_when_there_are_not_validation_errors__WhenAsyn_is_used(int age, string cardNumber) {
+			Person testPerson = new Person() {
 				CreditCard = cardNumber,
 				Age = age
 			};
@@ -343,54 +337,47 @@ namespace FluentValidation.Tests {
 		[Theory]
 		[InlineData(42, null)]
 		[InlineData(42, "")]
-		public void ShouldNotHaveValidationError_should_throw_when_there_are_validation_errors__WhenAsyn_is_used(int age, string cardNumber)
-		{
-			Person testPerson = new Person()
-			{
+		public void ShouldNotHaveValidationError_should_throw_when_there_are_validation_errors__WhenAsyn_is_used(int age, string cardNumber) {
+			Person testPerson = new Person() {
 				CreditCard = cardNumber,
 				Age = age
 			};
 
 			Assert.Throws<ValidationTestException>(() => validator.ShouldNotHaveValidationErrorFor(x => x.CreditCard, testPerson));
- 		}
+		}
 
 		private class AddressValidator : AbstractValidator<Address> {
 
 		}
 
 		private class OrderValidator : AbstractValidator<Order> {
-
 		}
 
-		public class UnitOfMeasure
-		{
+		public class UnitOfMeasure {
 			public int Value { get; set; }
 			public int? Type { get; set; }
 		}
 
-		
-        public class UnitOfMeasureValidator : AbstractValidator<UnitOfMeasure>
-        {
-            public UnitOfMeasureValidator() {
-                RuleFor(unit => unit.Value).GreaterThanOrEqualTo(0);
 
-                RuleFor(unit => unit.Type).NotNull()
-                    .When(unit => unit.Value > 0)
-                    .WithMessage("If a unit of measure's 'Value' is provided, then a 'Type' also needs to be provided.");
-            }
-        }
+		public class UnitOfMeasureValidator : AbstractValidator<UnitOfMeasure> {
+			public UnitOfMeasureValidator() {
+				RuleFor(unit => unit.Value).GreaterThanOrEqualTo(0);
+
+				RuleFor(unit => unit.Type).NotNull()
+					.When(unit => unit.Value > 0)
+					.WithMessage("If a unit of measure's 'Value' is provided, then a 'Type' also needs to be provided.");
+			}
+		}
 
 		public class Address2 {
 			public string StreetNumber { get; set; }
 			public string Street { get; set; }
 		}
 
-		public class Address2Validator : AbstractValidator<Address2>
-		{
+		public class Address2Validator : AbstractValidator<Address2> {
 			public static string RuleLocationNames = "LocationNames";
 
-			public Address2Validator()
-			{
+			public Address2Validator() {
 				// Cannot have a street number/lot and no street name.
 				RuleFor(address => address.Street)
 					.NotNull()
