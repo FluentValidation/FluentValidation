@@ -1,3 +1,6 @@
+7.6.0 - 
+Better support for WhenAsync do not work properly when calling Validate instead of ValidateAsync
+
 7.5.2 - 16 March 2018
 Support multiple rulesets on a rule.
 Make setters on ValidationFailure's properties public to allow for easier deserialization.
