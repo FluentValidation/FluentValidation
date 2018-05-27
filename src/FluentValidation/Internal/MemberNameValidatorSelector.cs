@@ -51,7 +51,9 @@ namespace FluentValidation.Internal {
 			// Validator selector only applies to the top level.
  			// If we're running in a child context then this means that the child validator has already been selected
 			// Because of this, we assume that the rule should continue (ie if the parent rule is valid, all children are valid)
-			return context.IsChildContext || memberNames.Any(x => x == propertyPath || propertyPath.StartsWith(x + "."));
+			bool isChildContext = context.IsChildContext;
+			bool cascadeEnabled = !context.RootContextData.ContainsKey("_FV_DisableSelectorCascadeForChildRules");
+			return (isChildContext && cascadeEnabled) || rule is IncludeRule || ( memberNames.Any(x => x == propertyPath || propertyPath.StartsWith(x + ".")));
 		}
 
 		///<summary>

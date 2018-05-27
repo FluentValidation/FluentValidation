@@ -1,5 +1,6 @@
 7.6.0 - 
 Fix WhenAsync not working properly when calling Validate instead of ValidateAsync
+Include rules now work with explicitly-selected properties.
 
 7.5.2 - 16 March 2018
 Support multiple rulesets on a rule.

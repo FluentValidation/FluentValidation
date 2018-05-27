@@ -24,8 +24,9 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Validators;
 	using System.Collections.Generic;
+	using System.Threading;
 
-	
+
 	public class ValidatorSelectorTests {
 	
 		[Fact]
@@ -105,6 +106,43 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
 
+		}
+
+		[Fact]
+		public void Can_use_property_with_include() {
+			var validator = new TestValidator();
+			var validator2 = new TestValidator();
+			validator2.RuleFor(x => x.Forename).NotNull();
+			validator.Include(validator2);
+
+			var result = validator.Validate(new Person(), "Forename");
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void Executes_correct_rule_when_using_property_with_include() {
+			var validator = new TestValidator();
+			var validator2 = new TestValidator();
+			validator2.RuleFor(x => x.Forename).NotNull();
+			validator2.RuleFor(x => x.Surname).NotNull();
+			validator.Include(validator2);
+
+			var result = validator.Validate(new Person(), "Forename");
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Forename");
+		}
+
+		[Fact]
+		public void Executes_correct_rule_when_using_property_with_include_async() {
+			var validator = new TestValidator();
+			var validator2 = new TestValidator();
+			validator2.RuleFor(x => x.Forename).NotNull();
+			validator2.RuleFor(x => x.Surname).NotNull();
+			validator.Include(validator2);
+
+			var result = validator.ValidateAsync(new Person(), default(CancellationToken), "Forename").Result;
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Forename");
 		}
 
 		private PropertyRule CreateRule(Expression<Func<TestObject, object>> expression) {
