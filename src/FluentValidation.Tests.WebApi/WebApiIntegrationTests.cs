@@ -23,14 +23,17 @@ namespace FluentValidation.Tests.WebApi {
 	using Xunit;
 	using Xunit.Abstractions;
 
-	public class WebApiIntegrationTests : IClassFixture<WebApiFixture<Startup>> {
+	public class WebApiIntegrationTests : IClassFixture<WebApiFixture<Startup>>, IClassFixture<WebApiFixture<StartupRootValidationOnly>> {
 		
 		private readonly ITestOutputHelper _output;
 		private readonly WebApiFixture<Startup> _webApp;
+		private readonly WebApiFixture<StartupRootValidationOnly> _webAppRootValidationOnly;
+		
 
-		public WebApiIntegrationTests(ITestOutputHelper output, WebApiFixture<Startup> webApp) {
+		public WebApiIntegrationTests(ITestOutputHelper output, WebApiFixture<Startup> webApp, WebApiFixture<StartupRootValidationOnly> webAppRootValidationOnly) {
 			_output = output;
 			_webApp = webApp;
+			_webAppRootValidationOnly = webAppRootValidationOnly;
 		}
 
 		[Fact]
@@ -205,6 +208,21 @@ namespace FluentValidation.Tests.WebApi {
 			result.IsValidField("second.Forename").ShouldBeTrue();
 			result.IsValidField("second.Surname").ShouldBeTrue();
 		}*/
+		
+		[Fact]
+		public async Task Should_only_call_root_validator() {
+			var result = await _webAppRootValidationOnly.InvokeTest<TestModel11>(@"{Child: {}}", "application/json");
 
+			result.IsValidField("model.Name").ShouldBeFalse();
+			result.IsValidField("model.Child.Name").ShouldBeTrue();
+		}
+		
+		[Fact]
+		public async Task Should_only_call_children_validators() {
+			var result = await _webApp.InvokeTest<TestModel11>(@"{Child: {}}", "application/json");
+
+			result.IsValidField("model.Name").ShouldBeFalse();
+			result.IsValidField("model.Child.Name").ShouldBeFalse();
+		}
     }
 }

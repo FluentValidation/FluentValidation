@@ -23,6 +23,12 @@ namespace FluentValidation.Tests.WebApi {
 	using FluentValidation.WebApi;
 
 	public class TestController : ApiController {
+		[HttpPost]
+		public IHttpActionResult TestModel11(TestModel11 model)
+		{
+			return OutputErrors();
+		}
+		
         [HttpPost]
         public IHttpActionResult TestModel10(TestModel10 model)
         {

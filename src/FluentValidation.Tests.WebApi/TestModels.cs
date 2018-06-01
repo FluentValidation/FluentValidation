@@ -157,6 +157,20 @@ namespace FluentValidation.Tests.WebApi {
         }
     }
 	
+	[Validator(typeof(TestModel11Validator))]
+	public class TestModel11
+	{
+		public string Name { get; set; }
+		public TestModel Child { get; set; }
+	}
+
+	public class TestModel11Validator : AbstractValidator<TestModel11> 
+	{
+		public TestModel11Validator() 
+		{
+			RuleFor(m => m.Name).NotEmpty().WithMessage("Validation failed");
+		}
+	}
 	
 	[Validator(typeof(PropertiesValidator))]
 	public class PropertiesTestModel
