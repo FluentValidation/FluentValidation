@@ -9,6 +9,13 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.6:
+* WhenAsync now works correctly when calling the non-async Validate method.
+* ASP.NET Core integration has been updated to ASP.NET Core 2.1. 
+* Include statement now works when explicitly selecting properties to validate.
+* Added Ukranian language support.
+* Added Arabic language support.
+
 Changes in 7.5.2:
 * RuleSet method can now take multiple ruleset names by usinga comma-separated string.
 * Make setters on ValidationFailure's properties public to allow for easier deserialization.
@@ -18,9 +25,7 @@ Changes in 7.5.2:
         
 Changes in 7.5.1:
 * Resolved issues with referencing FluentValidation from legacy PCLs.
-* Added support for CustomizeValidatorAttribute to the legacy WebApi integration for consistency with MVC5 and AspNetCore. 
-Changes in 7.6:
-* Update ASP.NET Core integration to ASP.NET Core 2.1 
+* Added support for CustomizeValidatorAttribute to the legacy WebApi integration for consistency with MVC5 and AspNetCore.
 
 Changes in 7.5:
 * Better handling of clientside messages when using custom overriden language resources
