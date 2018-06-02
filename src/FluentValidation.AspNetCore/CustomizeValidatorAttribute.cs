@@ -25,31 +25,27 @@ namespace FluentValidation.AspNetCore
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
-	public class CustomizeValidatorAttribute : Attribute
-	{
+	public class CustomizeValidatorAttribute : Attribute {
 		public string RuleSet { get; set; }
 		public string Properties { get; set; }
 		public Type Interceptor { get; set; }
 		public bool Skip { get; set; }
+		
 		/// <summary>
 		/// Builds a validator selector from the options specified in the attribute's properties.
 		/// </summary>
-		public IValidatorSelector ToValidatorSelector()
-		{
+		public IValidatorSelector ToValidatorSelector() {
 			IValidatorSelector selector;
 
-			if (!string.IsNullOrEmpty(RuleSet))
-			{
+			if (!string.IsNullOrEmpty(RuleSet)) {
 				var rulesets = RuleSet.Split(',', ';');
 				selector = CreateRulesetValidatorSelector(rulesets);
 			}
-			else if (!string.IsNullOrEmpty(Properties))
-			{
+			else if (!string.IsNullOrEmpty(Properties)) {
 				var properties = Properties.Split(',', ';');
 				selector = CreateMemberNameValidatorSelector(properties);
 			}
-			else
-			{
+			else {
 				selector = CreateDefaultValidatorSelector();
 			}
 
@@ -57,34 +53,28 @@ namespace FluentValidation.AspNetCore
 
 		}
 
-		protected virtual IValidatorSelector CreateRulesetValidatorSelector(string[] ruleSets)
-		{
+		protected virtual IValidatorSelector CreateRulesetValidatorSelector(string[] ruleSets) {
 			return ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSets);
 		}
 
-		protected virtual IValidatorSelector CreateMemberNameValidatorSelector(string[] properties)
-		{
+		protected virtual IValidatorSelector CreateMemberNameValidatorSelector(string[] properties) {
 			return ValidatorOptions.ValidatorSelectors.MemberNameValidatorSelectorFactory(properties);
 		}
 
-		protected virtual IValidatorSelector CreateDefaultValidatorSelector()
-		{
+		protected virtual IValidatorSelector CreateDefaultValidatorSelector() {
 			return ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
 		}
 
-		public IValidatorInterceptor GetInterceptor()
-		{
+		public IValidatorInterceptor GetInterceptor() {
 			if (Interceptor == null) return null;
 
-			if (!typeof(IValidatorInterceptor) .GetTypeInfo().IsAssignableFrom(Interceptor))
-			{
+			if (!typeof(IValidatorInterceptor) .GetTypeInfo().IsAssignableFrom(Interceptor)) {
 				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
 			}
 
 			var instance = Activator.CreateInstance(Interceptor) as IValidatorInterceptor;
 
-			if (instance == null)
-			{
+			if (instance == null) {
 				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
 			}
 

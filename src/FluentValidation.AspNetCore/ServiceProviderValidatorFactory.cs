@@ -18,6 +18,9 @@
 namespace FluentValidation.AspNetCore {
 	using System;
 
+	/// <summary>
+	/// Validator factory implementation that uses the asp.net service provider to consruct validators.
+	/// </summary>
 	public class ServiceProviderValidatorFactory : ValidatorFactoryBase {
 		private readonly IServiceProvider _serviceProvider;
 

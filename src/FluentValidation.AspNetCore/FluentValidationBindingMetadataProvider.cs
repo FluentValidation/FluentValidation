@@ -25,18 +25,7 @@ namespace FluentValidation.AspNetCore {
 		public void CreateBindingMetadata(BindingMetadataProviderContext context) {
 			if (context.Key.MetadataKind == ModelMetadataKind.Property) {
 				var original = context.BindingMetadata.ModelBindingMessageProvider.ValueMustNotBeNullAccessor;
-
-				// MS introduced an annoying breaking change in aspnetcore 2.0, instead of using a setter they have an explicit Set method instead ¯\_(ツ)_/¯
-				// The multitargetting for this project means that the net451 and netstandard1.6 versions target aspnetcore 1.1 which uses the setter
-				// The netstandard2.0 version calls the set method.
-
-#if NETSTANDARD1_6 || NET451
-				context.BindingMetadata.ModelBindingMessageProvider.ValueMustNotBeNullAccessor = s => Prefix + original(s);
-#endif
-#if NETSTANDARD2_0
 				context.BindingMetadata.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(s => Prefix + original(s));
-#endif
-
 			}
 		}
 

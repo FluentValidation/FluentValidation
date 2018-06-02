@@ -1,4 +1,4 @@
-7.6 - 
+7.6 - 1 June 2018
 Fix WhenAsync not working properly when calling Validate instead of ValidateAsync
 Upgrade ASP.NET Core integration to ASP.NET Core 2.1
 Include rules now work with explicitly-selected properties.

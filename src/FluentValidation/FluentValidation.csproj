@@ -15,7 +15,8 @@ Changes in 7.6:
 * Include statement now works when explicitly selecting properties to validate.
 * Added Ukranian language support.
 * Added Arabic language support.
-
+* Added caching when instantiating validators to obtain clientside metadata.
+        
 Changes in 7.5.2:
 * RuleSet method can now take multiple ruleset names by usinga comma-separated string.
 * Make setters on ValidationFailure's properties public to allow for easier deserialization.

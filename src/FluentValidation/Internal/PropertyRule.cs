@@ -496,6 +496,7 @@ namespace FluentValidation.Internal {
 		/// <param name="cascadeModeThunk"></param>
 		/// <param name="typeToValidate"></param>
 		/// <param name="containerType"></param>
+		/// <param name="validatorType"></param>
 		public IncludeRule(Func<object, IValidator> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType, Type validatorType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
 			AddValidator(new ChildValidatorAdaptor(func,  validatorType));
 		}
@@ -514,7 +515,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new include rule from an existing validator
 		/// </summary>
-		/// <param name="validator"></param>
+		/// <param name="func"></param>
 		/// <param name="cascadeModeThunk"></param>
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TValidator"></typeparam>

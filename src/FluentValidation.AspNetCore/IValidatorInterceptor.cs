@@ -24,8 +24,7 @@ namespace FluentValidation.AspNetCore
 	/// <summary>
 	/// Specifies an interceptor that can be used to provide hooks that will be called before and after MVC validation occurs.
 	/// </summary>
-	public interface IValidatorInterceptor
-	{
+	public interface IValidatorInterceptor {
 		/// <summary>
 		/// Invoked before MVC validation takes place which allows the ValidationContext to be customized prior to validation.
 		/// It should return a ValidationContext object.
