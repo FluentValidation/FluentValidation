@@ -1,0 +1,1 @@
+cmd "/C build.cmd"
