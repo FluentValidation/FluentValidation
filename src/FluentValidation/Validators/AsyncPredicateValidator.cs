@@ -1,5 +1,4 @@
-namespace FluentValidation.Validators
-{
+namespace FluentValidation.Validators {
 	using System;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -9,16 +8,14 @@ namespace FluentValidation.Validators
 	/// <summary>
 	/// Asynchronous custom validator
 	/// </summary>
-	public class AsyncPredicateValidator : AsyncValidatorBase
-	{
+	public class AsyncPredicateValidator : AsyncValidatorBase {
 		private readonly Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate;
 
 		/// <summary>
 		/// Creates a new ASyncPredicateValidator
 		/// </summary>
 		/// <param name="predicate"></param>
-		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) : base(new LanguageStringSource(nameof(AsyncPredicateValidator)))
-		{
+		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) : base(new LanguageStringSource(nameof(AsyncPredicateValidator))) {
 			predicate.Guard("A predicate must be specified.", nameof(predicate));
 			this.predicate = predicate;
 		}
@@ -29,8 +26,7 @@ namespace FluentValidation.Validators
 		/// <param name="context"></param>
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
-		protected override Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation)
-		{
+		protected override Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			return predicate(context.Instance, context.PropertyValue, context, cancellation);
 		}
 	}
