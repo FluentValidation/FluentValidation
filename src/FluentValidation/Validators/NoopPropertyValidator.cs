@@ -32,6 +32,7 @@ namespace FluentValidation.Validators {
 			set { }
 		}
 
+		[Obsolete("Use IShouldValidateAsync.ShouldValidatAsync(context) instead")]
 		public virtual bool IsAsync {
 			get { return false; }
 		}

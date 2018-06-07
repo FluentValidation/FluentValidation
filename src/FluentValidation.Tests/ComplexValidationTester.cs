@@ -20,7 +20,9 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading;
 	using System.Threading.Tasks;
+	using Results;
 	using Xunit;
 
 	
@@ -134,8 +136,7 @@ namespace FluentValidation.Tests {
 		}
 
         [Fact]
-        public void Can_directly_validate_multiple_fields_of_same_type()
-        {
+        public void Can_directly_validate_multiple_fields_of_same_type() {
             var sut = new TestObjectValidator();
             var testObject = new TestObject {
                 Foo2 = new TestDetailObject() { Surname = "Bar" }
@@ -144,6 +145,28 @@ namespace FluentValidation.Tests {
             //Should not throw
             sut.Validate(testObject);
         }
+
+		[Fact]
+		public void Validates_child_validator_synchronously() {
+			var validator = new TracksAsyncCallValidator<Person>();
+			var addressValidator = new TracksAsyncCallValidator<Address>();
+			addressValidator.RuleFor(x => x.Line1).NotNull();
+			validator.RuleFor(x => x.Address).SetValidator(addressValidator);
+
+			validator.Validate(new Person() {Address = new Address()});
+			addressValidator.WasCalledAsync.ShouldEqual(false);
+		}
+
+		[Fact]
+		public void Validates_child_validator_asynchronously() {
+			var validator = new TracksAsyncCallValidator<Person>();
+			var addressValidator = new TracksAsyncCallValidator<Address>();
+			addressValidator.RuleFor(x => x.Line1).NotNull();
+			validator.RuleFor(x => x.Address).SetValidator(addressValidator);
+
+			validator.ValidateAsync(new Person() {Address = new Address()}).GetAwaiter().GetResult();
+			addressValidator.WasCalledAsync.ShouldEqual(true);
+		}
 
         public class TestObject
         {
@@ -215,6 +238,20 @@ namespace FluentValidation.Tests {
 		public class InfiniteLoop2Validator : AbstractValidator<InfiniteLoop2> {
 			public InfiniteLoop2Validator() {
 				RuleFor(x => x.Property).SetValidator(new InfiniteLoopValidator());
+			}
+		}
+
+		public class TracksAsyncCallValidator<T> : AbstractValidator<T> {
+			public bool? WasCalledAsync;
+			
+			public override ValidationResult Validate(ValidationContext<T> context) {
+				WasCalledAsync = false;
+				return base.Validate(context);
+			}
+
+			public override Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+				WasCalledAsync = true;
+				return base.ValidateAsync(context, cancellation);
 			}
 		}
 	}

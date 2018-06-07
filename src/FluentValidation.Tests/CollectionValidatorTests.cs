@@ -161,6 +161,28 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(4);
 			result.Errors[0].PropertyName.ShouldEqual("x[0].ProductName");
 		}
+		
+		[Fact]
+		public void Validates_child_validator_synchronously() {
+			var validator = new ComplexValidationTester.TracksAsyncCallValidator<Person>();
+			var childValidator = new ComplexValidationTester.TracksAsyncCallValidator<Person>();
+			childValidator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleFor(x => x.Children).SetCollectionValidator(childValidator);
+
+			validator.Validate(new Person() { Children = new List<Person> { new Person() }});
+			childValidator.WasCalledAsync.ShouldEqual(false);
+		}
+
+		[Fact]
+		public void Validates_child_validator_asynchronously() {
+			var validator = new ComplexValidationTester.TracksAsyncCallValidator<Person>();
+			var childValidator = new ComplexValidationTester.TracksAsyncCallValidator<Person>();
+			childValidator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleFor(x => x.Children).SetCollectionValidator(childValidator);
+
+			validator.ValidateAsync(new Person() { Children = new List<Person> { new Person() }}).GetAwaiter().GetResult();
+			childValidator.WasCalledAsync.ShouldEqual(true);
+		}
 	
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {

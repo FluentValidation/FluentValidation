@@ -3,10 +3,16 @@ namespace FluentValidation.Validators {
 	using System.Linq.Expressions;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using Internal;
 	using Resources;
 
-	public abstract class AsyncValidatorBase : PropertyValidator {
+	public abstract class AsyncValidatorBase : PropertyValidator, IShouldValidateAsync {
+		[Obsolete]
 		public override bool IsAsync => true;
+
+		public bool ShouldValidateAsync(ValidationContext context) {
+			return context.IsAsync();
+		}
 
 		protected AsyncValidatorBase(IStringSource errorSource) : base(errorSource) {
 			

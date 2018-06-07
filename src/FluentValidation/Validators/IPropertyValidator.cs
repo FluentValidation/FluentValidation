@@ -30,6 +30,7 @@ namespace FluentValidation.Validators {
 	/// Please inherit from <see cref="PropertyValidator">PropertyValidator</see> instead.
 	/// </summary>
 	public interface IPropertyValidator {
+		[Obsolete("Subclasses should implement IShouldValidateAsync.ShouldValidateAync() and instead of using this property.")]
 		bool IsAsync { get; }
 
 		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
@@ -40,5 +41,18 @@ namespace FluentValidation.Validators {
 		Severity Severity { get; set; }
 		IStringSource ErrorMessageSource { get; set; }
 		IStringSource ErrorCodeSource { get; set; }
+	}
+	
+	//todo: This should ideally be merged with IPropertyValidator. I've left it as a separate interface for now to avoid a breaking change.
+	/// <summary>
+	/// Indicates that a validator can support asynchronous operation.
+	/// </summary>
+	public interface IShouldValidateAsync {
+		/// <summary>
+		/// Determines whether this validator should be run asynchronously or not.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		bool ShouldValidateAsync(ValidationContext context);
 	}
 }
