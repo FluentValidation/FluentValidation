@@ -302,6 +302,10 @@ namespace FluentValidation.Internal {
 		/// <returns>A collection of validation failures</returns>
 		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
 			try {
+				if (!context.IsAsync()) {
+					context.RootContextData["__FV_IsAsyncExecution"] = true;
+				}
+
 				var displayName = GetDisplayName(context.InstanceToValidate);
 
 				if (PropertyName == null && displayName == null)

@@ -129,6 +129,8 @@ namespace FluentValidation {
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
+			context.RootContextData["__FV_IsAsyncExecution"] = true;
+
 			var failures = new List<ValidationFailure>();
 			
 			return TaskHelpers.Iterate(

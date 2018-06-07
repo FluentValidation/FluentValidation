@@ -16,8 +16,10 @@
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 namespace FluentValidation.Tests {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Internal;
 	using Validators;
 	using Xunit;
 
@@ -89,8 +91,12 @@ namespace FluentValidation.Tests {
 			public Person person = null;
 		}
 
-		private class MyAsyncNotNullValidator : NotNullValidator {
+		private class MyAsyncNotNullValidator : NotNullValidator, IShouldValidateAsync {
+			[Obsolete]
 			public override bool IsAsync { get { return true; } }
+			public bool ShouldValidateAsync(ValidationContext context) {
+				return context.IsAsync();
+			}
 		}
 
 		[Fact]

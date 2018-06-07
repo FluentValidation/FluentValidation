@@ -162,8 +162,7 @@ namespace FluentValidation.Tests {
 
 		}
 		[Fact]
-		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator()
-		{
+		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator() {
 			var person = new Person { Surname = "Foo" };
 			TaskCompletionSource<IEnumerable<ValidationFailure>> tcs = new TaskCompletionSource<IEnumerable<ValidationFailure>>();
 			tcs.SetResult(Enumerable.Empty<ValidationFailure>());
