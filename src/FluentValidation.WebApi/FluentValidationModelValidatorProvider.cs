@@ -33,7 +33,7 @@ namespace FluentValidation.WebApi
 
 	public class FluentValidationModelValidatorProvider : ModelValidatorProvider {
 		public IValidatorFactory ValidatorFactory { get; set; }
-
+		public bool ImplicitlyValidateChildProperties { get; set; }
 
 		/// <summary>
 		/// Enabling this maintains compatibility with FluentValidation 6.4, where discovery of validators was limited to top level models. 
@@ -41,6 +41,7 @@ namespace FluentValidation.WebApi
 		public bool DisableDiscoveryOfPropertyValidators { get; set; } = false;
 
 		public FluentValidationModelValidatorProvider(IValidatorFactory validatorFactory = null) {
+			ImplicitlyValidateChildProperties = true;
 			ValidatorFactory = validatorFactory ?? new AttributedValidatorFactory();
 		}
 
@@ -52,7 +53,7 @@ namespace FluentValidation.WebApi
 
 			var provider = new FluentValidationModelValidatorProvider();
 			configurationExpression(provider);
-		    configuration.Services.Replace(typeof(IBodyModelValidator), new FluentValidationBodyModelValidator());
+		    configuration.Services.Replace(typeof(IBodyModelValidator), new FluentValidationBodyModelValidator(provider.ImplicitlyValidateChildProperties));
 			configuration.Services.Add(typeof(ModelValidatorProvider), provider);
 		}
 

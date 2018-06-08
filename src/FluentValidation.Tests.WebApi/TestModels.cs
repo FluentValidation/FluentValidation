@@ -149,28 +149,34 @@ namespace FluentValidation.Tests.WebApi {
         public TestModel Child { get; set; }
     }
 
-    public class TestModel10Validator : AbstractValidator<TestModel10>
-    {
-        public TestModel10Validator()
-        {
+    public class TestModel10Validator : AbstractValidator<TestModel10> {
+        public TestModel10Validator() {
             RuleFor(m => m.Name).NotEmpty();
         }
     }
 	
+	[Validator(typeof(TestModel11Validator))]
+	public class TestModel11 {
+		public string Name { get; set; }
+		public TestModel Child { get; set; }
+	}
+
+	public class TestModel11Validator : AbstractValidator<TestModel11> {
+		public TestModel11Validator() {
+			RuleFor(m => m.Name).NotEmpty().WithMessage("Validation failed");
+		}
+	}
 	
 	[Validator(typeof(PropertiesValidator))]
-	public class PropertiesTestModel
-	{
+	public class PropertiesTestModel {
 		public string Email { get; set; }
 		public string Surname { get; set; }
 		public string Forename { get; set; }
 	}
 
 
-	public class PropertiesValidator : AbstractValidator<PropertiesTestModel>
-	{
-		public PropertiesValidator()
-		{
+	public class PropertiesValidator : AbstractValidator<PropertiesTestModel> {
+		public PropertiesValidator() {
 			RuleFor(x => x.Email).NotEqual("foo");
 			RuleFor(x => x.Surname).NotEqual("foo");
 			RuleFor(x => x.Forename).NotEqual("foo");
@@ -178,17 +184,14 @@ namespace FluentValidation.Tests.WebApi {
 	}
 
 	[Validator(typeof(RulesetTestValidator))]
-	public class RulesetTestModel
-	{
+	public class RulesetTestModel {
 		public string Email { get; set; }
 		public string Surname { get; set; }
 		public string Forename { get; set; }
 	}
 
-	public class RulesetTestValidator : AbstractValidator<RulesetTestModel>
-	{
-		public RulesetTestValidator()
-		{
+	public class RulesetTestValidator : AbstractValidator<RulesetTestModel> {
+		public RulesetTestValidator() {
 			RuleFor(x => x.Email).NotEqual("foo");
 
 			RuleSet("Names", () => {
@@ -199,59 +202,47 @@ namespace FluentValidation.Tests.WebApi {
 	}
 	
 	[Validator(typeof(PropertiesValidator2))]
-	public class PropertiesTestModel2
-	{
+	public class PropertiesTestModel2 {
 		public string Email { get; set; }
 		public string Surname { get; set; }
 		public string Forename { get; set; }
 	}
-	public class PropertiesValidator2 : AbstractValidator<PropertiesTestModel2>, IValidatorInterceptor
-	{
-		public PropertiesValidator2()
-		{
+	public class PropertiesValidator2 : AbstractValidator<PropertiesTestModel2>, IValidatorInterceptor {
+		public PropertiesValidator2() {
 			RuleFor(x => x.Email).NotEqual("foo");
 			RuleFor(x => x.Surname).NotEqual("foo");
 			RuleFor(x => x.Forename).NotEqual("foo");
 		}
 
-		public ValidationContext BeforeMvcValidation(HttpActionContext controllerContext, ValidationContext validationContext)
-		{
+		public ValidationContext BeforeMvcValidation(HttpActionContext controllerContext, ValidationContext validationContext) {
 			return validationContext;
 		}
 
-		public ValidationResult AfterMvcValidation(HttpActionContext controllerContext, ValidationContext validationContext, ValidationResult result)
-		{
+		public ValidationResult AfterMvcValidation(HttpActionContext controllerContext, ValidationContext validationContext, ValidationResult result) {
 			return new ValidationResult(); //empty errors
 		}
 	}
 
-	public class SimplePropertyInterceptor : IValidatorInterceptor
-	{
+	public class SimplePropertyInterceptor : IValidatorInterceptor {
 		readonly string[] properties = new[] { "Surname", "Forename" };
 
-		public ValidationContext BeforeMvcValidation(HttpActionContext cc, ValidationContext context)
-		{
+		public ValidationContext BeforeMvcValidation(HttpActionContext cc, ValidationContext context) {
 			var newContext = context.Clone(selector: new FluentValidation.Internal.MemberNameValidatorSelector(properties));
 			return newContext;
 		}
 
-		public ValidationResult AfterMvcValidation(HttpActionContext cc, ValidationContext context, ValidationResult result)
-		{
+		public ValidationResult AfterMvcValidation(HttpActionContext cc, ValidationContext context, ValidationResult result) {
 			return result;
 		}
 	}
 
-	public class ClearErrorsInterceptor : IValidatorInterceptor
-	{
-		public ValidationContext BeforeMvcValidation(HttpActionContext cc, ValidationContext context)
-		{
+	public class ClearErrorsInterceptor : IValidatorInterceptor {
+		public ValidationContext BeforeMvcValidation(HttpActionContext cc, ValidationContext context) {
 			return null;
 		}
 
-		public ValidationResult AfterMvcValidation(HttpActionContext cc, ValidationContext context, ValidationResult result)
-		{
+		public ValidationResult AfterMvcValidation(HttpActionContext cc, ValidationContext context, ValidationResult result) {
 			return new ValidationResult();
 		}
 	}
-
 }

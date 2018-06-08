@@ -25,7 +25,12 @@ namespace FluentValidation.WebApi {
 	using System.Web.Http.Validation;
 
 	public class FluentValidationBodyModelValidator : DefaultBodyModelValidator, IBodyModelValidator {
-
+		private bool ImplicitlyValidateChildProperties { get; set; }
+		
+		public FluentValidationBodyModelValidator(bool implicitlyValidateChildProperties = true) {
+			ImplicitlyValidateChildProperties = implicitlyValidateChildProperties;
+		}
+		
 		bool IBodyModelValidator.Validate(object model, Type type, ModelMetadataProvider metadataProvider, HttpActionContext actionContext, string keyPrefix) {
 
 			var customizations = actionContext.ActionDescriptor.GetParameters().Where(x => x.ParameterName == keyPrefix)
@@ -54,16 +59,16 @@ namespace FluentValidation.WebApi {
 
 			validators = ApplyCustomizationsToValidators(validators, customizations, validationContext.ActionContext);
 			
-			bool isValid = base.ValidateNodeAndChildren(metadata, validationContext, container, validators);
+			bool isValid = !ImplicitlyValidateChildProperties || base.ValidateNodeAndChildren(metadata, validationContext, container, validators);
 
 			var model = GetModel(metadata);
 
-			if (!isValid && model != null && !HasAlreadyBeenValidated(validationContext, model)) {
+			if ((!isValid || !ImplicitlyValidateChildProperties) && model != null && !HasAlreadyBeenValidated(validationContext, model)) {
 				// default impl skips validating root node if any children fail, so we explicitly validate it in this scenario
 				var rootModelValidators = validationContext.ActionContext.GetValidators(metadata);
 				rootModelValidators = ApplyCustomizationsToValidators(rootModelValidators, customizations, validationContext.ActionContext);
-				var rootIsValid = ShallowValidate(metadata, validationContext, container, rootModelValidators);
-				return rootIsValid && isValid;
+				ShallowValidate(metadata, validationContext, container, rootModelValidators);
+				return false;
 			}
 			return isValid;
 		}
