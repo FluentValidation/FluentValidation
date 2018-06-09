@@ -4,7 +4,13 @@
 
 A small validation library for .NET that uses a fluent interface 
 and lambda expressions for building validation rules.
-Written by Jeremy Skinner (http://www.jeremyskinner.co.uk) and licensed under [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html).
+
+[![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) 
+
+[![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg?label=FluentValidation%20Downloads)](https://nuget.org/packages/FluentValidation) 
+[![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg?label=FluentValidation.AspNetCore%20Downloads)](https://nuget.org/packages/FluentValidation.AspNetCore) <br/>
+[![Nuget](https://img.shields.io/nuget/dt/FluentValidation.Mvc5.svg?label=FluentValidation.Mvc5%20Downloads)](https://nuget.org/packages/FluentValidation.Mvc5) 
+[![Nuget](https://img.shields.io/nuget/dt/FluentValidation.WebApi.svg?label=FluentValidation.WebApi%20Downloads)](https://nuget.org/packages/FluentValidation.WebApi)
 
 ### NuGet Packages
 
@@ -22,8 +28,6 @@ For legacy ASP.NET MVC/WebApi integration:
 Install-Package FluentValidation.MVC5
 Install-Package FluentValidation.WebApi
 ```
-
-[![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation)
 
 ### Example
 ```csharp
