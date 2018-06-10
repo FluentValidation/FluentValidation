@@ -7,6 +7,8 @@
     <SolutionFile>$(BaseDir)\FluentValidation.sln</SolutionFile>
 		<KeyFile>$(BaseDir)\src\FluentValidation-dev.snk</KeyFile>
     <KeyFile Condition="Exists('$(UserProfile)\Dropbox\FluentValidation-Release.snk')">$(UserProfile)\Dropbox\FluentValidation-Release.snk</KeyFile>
+    <NewLine>%0a</NewLine>
+    <NugetKey>$(UserProfile)\Dropbox\nuget-access-key.txt</NugetKey>
   </PropertyGroup>
 	
   <Target Name="key">
@@ -56,7 +58,7 @@
       <WebApiBinaries Include="$(BaseDir)\src\FluentValidation.WebApi\bin\$(Configuration)\net45\FluentValidation.WebApi.*" />
       <AspNetCoreBinaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.deps.json" />
       <AspNetCore451Binaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\net451\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\net451\FluentValidation.AspNetCore.deps.json" />
-            <AspNetCoreNetstandard2Binaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard2.0\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.deps.json" />
+      <AspNetCoreNetstandard2Binaries Include="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard2.0\FluentValidation.AspNetCore.*" Exclude="$(BaseDir)\src\FluentValidation.AspNetCore\bin\$(Configuration)\netstandard1.6\FluentValidation.AspNetCore.deps.json" />
       <Docs Include="$(BaseDir)\Changelog.txt;$(BaseDir)\License.txt" />
     </ItemGroup>
 
@@ -70,6 +72,33 @@
     <Copy SourceFiles="@(AspNetCore451Binaries)" DestinationFolder="$(OutputDir)\AspNetCore-net451" /> -->
     <Copy SourceFIles="@(AspNetCoreNetstandard2Binaries)" DestinationFolder="$(OutputDir)\AspNetCore-Netstandard2" />
     <Copy SourceFiles="@(Docs)" DestinationFolder="$(OutputDir)" />
+
+  </Target>
+
+  <Target Name="VerifyPublicKey">
+      <GetAssemblyIdentity AssemblyFiles="$(OutputDir)\FluentValidation-netstandard2.0\FluentValidation.dll">
+        <Output TaskParameter="Assemblies" ItemName="FVAssemblyInfo"/>  
+      </GetAssemblyIdentity>
+      <Error Text="The assembly has not been built with the Release key." 
+        Condition="'%(FVAssemblyInfo.PublicKeyToken)'!='7DE548DA2FBAE0F0'" />
+  </Target>
+
+  <Target Name="PublishPackages" DependsOnTargets="VerifyPublicKey">
+    <ItemGroup>
+      <Packages Include="$(BuildDir)\Packages\*.nupkg" />
+    </ItemGroup>
+
+    <Message Text="Packages to upload: $(NewLine)" Importance="High" />
+    <Message Text="$([System.IO.Path]::GetFileName('%(Packages.Identity)'))" Importance="High" />
+
+    <ReadLinesFromFile File="$(NugetKey)">
+      <Output TaskParameter="Lines" ItemName="ApiKey"/>
+    </ReadLinesFromFile>
+    
+    <Exec Command="dotnet nuget push '%(Packages.Identity)' --api-key @(ApiKey) --source 'https://www.nuget.org/api/v2/package'"
+      Condition="'$(Confirm)'=='1'" />
+    
+    <Message Text="$(NewLine)Re-run task with /p:Confirm=1 if you are ready to publish." Importance="High" Condition="'$(Confirm)'==''"/>
 
   </Target>
 </Project>
