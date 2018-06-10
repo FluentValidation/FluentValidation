@@ -5,7 +5,7 @@
 A small validation library for .NET that uses a fluent interface 
 and lambda expressions for building validation rules.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) 
+[![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation)
 
 [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg?label=FluentValidation%20Downloads)](https://nuget.org/packages/FluentValidation) 
 [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg?label=FluentValidation.AspNetCore%20Downloads)](https://nuget.org/packages/FluentValidation.AspNetCore) <br/>
