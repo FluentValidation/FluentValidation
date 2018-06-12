@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using System;
 	using Newtonsoft.Json;
 	using Xunit;
 	using Results;
@@ -59,6 +60,49 @@ namespace FluentValidation.Tests {
 			var deserialized = JsonConvert.DeserializeObject<ValidationFailure>(serialized);
 			deserialized.PropertyName.ShouldEqual("Property");
 			deserialized.ErrorMessage.ShouldEqual("Error");
+		}
+
+		[Fact]
+		public void ToString_return_empty_string_when_there_is_no_error() {
+			ValidationResult result = new ValidationResult();
+			string actualResult = result.ToString();
+
+			Assert.Empty(actualResult);
+		}
+
+		[Fact]
+		public void ToString_return_error_messages_with_newline_as_separator() {
+			const string errorMessage1 = "expected error message 1";
+			const string errorMessage2 = "expected error message 2";
+
+			string expectedResult = errorMessage1 + Environment.NewLine + errorMessage2;
+
+			ValidationResult result = new ValidationResult(new[] {
+				new ValidationFailure("property1", errorMessage1),
+				new ValidationFailure("property2", errorMessage2)
+			});
+
+			string actualResult = result.ToString();
+
+			Assert.Equal(expectedResult, actualResult);
+		}
+
+		[Fact]
+		public void ToString_return_error_messages_with_given_separator()
+		{
+			const string errorMessage1 = "expected error message 1";
+			const string errorMessage2 = "expected error message 2";
+			const string separator = "~";
+			const string expectedResult = errorMessage1 + separator + errorMessage2;
+
+			ValidationResult result = new ValidationResult(new[] {
+				new ValidationFailure("property1", errorMessage1),
+				new ValidationFailure("property2", errorMessage2)
+			});
+
+			string actualResult = result.ToString(separator);
+
+			Assert.Equal(expectedResult, actualResult);
 		}
 	}
 }
