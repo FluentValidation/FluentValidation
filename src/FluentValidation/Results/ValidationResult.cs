@@ -57,5 +57,13 @@ namespace FluentValidation.Results {
 		public ValidationResult(IEnumerable<ValidationFailure> failures) {
 			errors = failures.Where(failure => failure != null).ToList();
 		}
+
+		public override string ToString() {
+			return ToString(Environment.NewLine);
+		}
+
+		public string ToString(string separator) {
+			return	string.Join(separator,errors.Select(failure => failure.ErrorMessage));
+		}
 	}
 }
