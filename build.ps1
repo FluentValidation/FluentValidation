@@ -3,7 +3,7 @@ param(
   [string]$configuration = 'Release'
 )
 
-. $PSScriptRoot/posh-build.ps1
+. $PSScriptRoot/src/posh-build.ps1
 
 $base = $PSScriptRoot;
 $build_dir = "$base\build";
@@ -35,10 +35,14 @@ target test {
     "$base\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj"
   )
 
+  $has_failures = $false
+
   $test_projects | % {
     dotnet test $_ -c $configuration --no-build -nologo
-    if ($LASTEXITCODE) { throw }
+    if ($LASTEXITCODE) { $has_failures = $true }
   }
+
+  if ($has_failures) { throw }
 }
 
 target deploy {
