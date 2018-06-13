@@ -58,12 +58,21 @@ namespace FluentValidation.Results {
 			errors = failures.Where(failure => failure != null).ToList();
 		}
 
+		/// <summary>
+		/// Generates a string representation of the error messages separated by new lines.
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString() {
 			return ToString(Environment.NewLine);
 		}
 
+		/// <summary>
+		/// Generates a string representation of the error messages separated by the specified character.
+		/// </summary>
+		/// <param name="separator">The character to separate the error messages.</param>
+		/// <returns></returns>
 		public string ToString(string separator) {
-			return	string.Join(separator,errors.Select(failure => failure.ErrorMessage));
+			return	string.Join(separator, errors.Select(failure => failure.ErrorMessage));
 		}
 	}
 }
