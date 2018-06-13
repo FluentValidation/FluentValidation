@@ -12,7 +12,9 @@
 Changes in 7.6.101:
 Added support for RuleForEach to the testing extensions.
 Fixed a regression where calling ValidateAsync with RuleForEach could cause a deadlock.
-
+Added ToString overrides on ValidationResult to generate a string representation of all errors.
+Updated logos thanks to Dylan Beattie.
+        
 Changes in 7.6.100:
 Resolved an issue where ValidateAsync was called on child validators when the root validator was invoked synchronously.
 
