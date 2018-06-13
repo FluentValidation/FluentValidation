@@ -1,10 +1,9 @@
 param(
   [string]$version = '1.0.0-dev',
-  [string]$configuration = 'Release',
-  [switch]$publish
+  [string]$configuration = 'Release'
 )
 
-write-host "Building version $version. Configuration: $configuration";
+. $PSScriptRoot/posh-build.ps1
 
 $base = $PSScriptRoot;
 $build_dir = "$base\build";
@@ -18,11 +17,14 @@ if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
   $key_file = "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk";
 }
 
-if (-not $publish) {
-  # Build.
-  dotnet build -c $configuration $solution_file --no-incremental -p:Version=$version -p:AssemblyOriginatorKeyFile=$key_file
+target default -depends compile, test, deploy
 
-  # Test
+target compile {
+  dotnet build $solution_file -c $configuration --no-incremental `
+    -p:Version=$version -p:AssemblyOriginatorKeyFile=$key_file
+}
+
+target test {
   $test_projects = @(
     "$base\src\FluentValidation.Tests\FluentValidation.Tests.csproj",
     "$base\src\FluentValidation.Tests.netcoreapp1\FluentValidation.Tests.netcoreapp1.csproj",
@@ -33,13 +35,16 @@ if (-not $publish) {
     "$base\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj"
   )
 
-  $test_projects | foreach {
+  $test_projects | % {
     dotnet test $_ -c $configuration --no-build -nologo
+    if ($LASTEXITCODE) { throw }
   }
+}
 
-  # Deploy
+target deploy {
   Remove-Item $build_dir -Force -Recurse 2> $null
   dotnet pack $solution_file -c $configuration -p:PackageOutputPath=$build_dir\Packages -p:AssemblyOriginatorKeyFile=$key_file -p:Version=$version
+  if ($LASTEXITCODE) { throw }
 
   # Copy to output dir
   Copy-Item "$base\src\FluentValidation\bin\$configuration\netstandard2.0" -Destination "$output_dir\FluentValidation-netstandard2.0" -Recurse
@@ -49,44 +54,49 @@ if (-not $publish) {
   Copy-Item "$base\src\FluentValidation.WebApi\bin\$configuration\net45"  -filter FluentValidation.WebApi.* -Destination "$output_dir\FluentValidation.WebApi-Legacy" -Recurse
   Copy-Item "$base\src\FluentValidation.AspNetCore\bin\$configuration\netstandard2.0"  -filter FluentValidation.AspNetCore.* -Destination "$output_dir\FluentValidation.AspNetCore-netstandard2.0" -Recurse
 }
-else {
+
+target verify-package {
   $asm = [System.Reflection.Assembly]::LoadFile("$output_dir/FluentValidation-netstandard2.0/FluentValidation.dll")
 
-  if (-not (test-path $nuget_key)) {
-    throw "Could not find the NuGet access key at $keyfile. If you're not Jeremy, you shouldn't be running this script!"
+  if (-not (test-path "$nuget_key")) {
+    throw "Could not find the NuGet access key." 
   }
   elseif (-not $asm.FullName.EndsWith("PublicKeyToken=7de548da2fbae0f0")) {
-    throw "This build is using the dev key. Please rebuild with release key"
-  }
+    throw "This build is using the dev key. Please rebuild with release key" 
+  } 
   else {
-    write-host "Public key is valid."
-    # get our secret key. This is not in the repository.
-    $key = get-content $nuget_key
+    write-host Package verified
+  }
+}
 
-    # Find all the packages and display them for confirmation
-    $packages = dir $packages_dir -Filter "*.nupkg"
-    write-host "Packages to upload:"
-    $packages | ForEach-Object { write-host $_.Name }
+target publish -depends verify-package {
+  $key = get-content $nuget_key
 
-    # Ensure we haven't run this by accident.
-    $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", "Uploads the packages."
-    $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", "Does not upload the packages."
-    $options = [System.Management.Automation.Host.ChoiceDescription[]]($no, $yes)
+  # Find all the packages and display them for confirmation
+  $packages = dir $packages_dir -Filter "*.nupkg"
+  write-host "Packages to upload:"
+  $packages | ForEach-Object { write-host $_.Name }
 
-    $result = $host.ui.PromptForChoice("Upload packages", "Do you want to upload the NuGet packages to the NuGet server?", $options, 0)
+  # Ensure we haven't run this by accident.
+  $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", "Uploads the packages."
+  $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", "Does not upload the packages."
+  $options = [System.Management.Automation.Host.ChoiceDescription[]]($no, $yes)
 
-    # Cancelled
-    if ($result -eq 0) {
-      "Upload aborted"
-    }
-    # upload
-    elseif ($result -eq 1) {
-      $packages | foreach {
-        $package = $_.FullName
-        write-host "Uploading $package"
-        & dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
-        write-host ""
-      }
+  $result = $host.ui.PromptForChoice("Upload packages", "Do you want to upload the NuGet packages to the NuGet server?", $options, 0)
+
+  # Cancelled
+  if ($result -eq 0) {
+    "Upload aborted"
+  }
+  # upload
+  elseif ($result -eq 1) {
+    $packages | foreach {
+      $package = $_.FullName
+      write-host "Uploading $package"
+      & dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
+      write-host
     }
   }
 }
+
+Start-Build $args
