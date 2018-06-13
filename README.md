@@ -1,4 +1,4 @@
-![FluentValidation](fv.png)
+![FluentValidation](fv.png | width=250)
 
  [Full Documentation](https://github.com/JeremySkinner/FluentValidation/wiki) 
 
