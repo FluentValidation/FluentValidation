@@ -1,25 +1,21 @@
-![FluentValidation](fv.png | width=250)
+<img src="https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv.png" alt="FluentValidation" width="250px" />
 
  [Full Documentation](https://github.com/JeremySkinner/FluentValidation/wiki) 
 
 A small validation library for .NET that uses a fluent interface 
-and lambda expressions for building validation rules.
+and lambda expressions for building validation rules. 
 
-[![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation)
-
-
-### NuGet Packages
+### Get Started
+FluentValidation can be installed using the Nuget package manager or the `dotnet` CLI.
 
 ```
 Install-Package FluentValidation
 ```
-[![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg?label=FluentValidation%20Downloads)](https://nuget.org/packages/FluentValidation) 
 
 For ASP.NET Core integration:
 ```
 Install-Package FluentValidation.AspNetCore
 ```
-[![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg?label=FluentValidation.AspNetCore%20Downloads)](https://nuget.org/packages/FluentValidation.AspNetCore)
 
 For legacy ASP.NET MVC/WebApi integration:
 
@@ -27,10 +23,13 @@ For legacy ASP.NET MVC/WebApi integration:
 Install-Package FluentValidation.MVC5
 Install-Package FluentValidation.WebApi
 ```
-[![Nuget](https://img.shields.io/nuget/dt/FluentValidation.Mvc5.svg?label=FluentValidation.Mvc5%20Downloads)](https://nuget.org/packages/FluentValidation.Mvc5) 
-[![Nuget](https://img.shields.io/nuget/dt/FluentValidation.WebApi.svg?label=FluentValidation.WebApi%20Downloads)](https://nuget.org/packages/FluentValidation.WebApi)
 
-
+| Package | Build | Tests | Nuget | Downloads |
+| ------- | ----- | ----- | ----- | --------- |
+| `FluentValidation` | [![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) |
+| `FluentValidation.AspNetCore` | [![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore) 
+| `FluentValidation.Mvc5` | [![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5) 
+| `FluentValidation.WebApi` | [![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi) 
 
 ### Example
 ```csharp
