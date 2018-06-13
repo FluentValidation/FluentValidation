@@ -71,7 +71,6 @@ namespace FluentValidation.Internal {
 			}
 
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
-			var results = new List<ValidationFailure>();
 			var delegatingValidator = validator as IDelegatingValidator;
 
 			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.ParentContext)) {
@@ -84,24 +83,28 @@ namespace FluentValidation.Internal {
 						throw new InvalidOperationException("Could not automatically determine the property name ");
 					}
 
-					var validationTasks = new List<Task<IEnumerable<ValidationFailure>>>();
+					var results = new List<ValidationFailure>();
+					var validationTasks = new List<Task>();
+					
 					foreach (var element in collectionPropertyValue) {
 						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate);
 						newContext.PropertyChain.Add(propertyName);
 						newContext.PropertyChain.AddIndexer(count++);
 
 						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
-
-						validationTasks.Add(validator.ValidateAsync(newPropertyContext, cancellation));
+						
+						validationTasks.Add(
+							validator.ValidateAsync(newPropertyContext, cancellation)
+							.Then(f => results.AddRange(f), cancellation)
+						);
 					}
-
-					foreach (var validationTask in validationTasks) {
-						results.AddRange(validationTask.Result);
-					}
+					
+					return TaskHelpers.Iterate(validationTasks, cancellation)
+							.Then(() => results.AsEnumerable(), runSynchronously: true, cancellationToken: cancellation);
 				}
 			}
 
-			return TaskHelpers.FromResult(results.AsEnumerable());
+			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 		}
 
 		private string InferPropertyName(LambdaExpression expression) {

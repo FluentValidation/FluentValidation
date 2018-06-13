@@ -1,5 +1,6 @@
 7.6.101 - 
 Added support for RuleForEach to the testing extensions.
+Fixed a regression where calling ValidateAsync with RuleForEach could cause a deadlock.
 
 7.6.100 - 7 June 2018
 Resolved an issue where ValidateAsync was called on child validators when the root validator was invoked synchronously.
