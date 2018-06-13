@@ -1,4 +1,4 @@
-7.6.101 - 
+7.6.101 - 13 June 2018
 Added support for RuleForEach to the testing extensions.
 Fixed a regression where calling ValidateAsync with RuleForEach could cause a deadlock.
 

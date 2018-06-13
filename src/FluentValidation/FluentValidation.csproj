@@ -9,6 +9,13 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.6.101:
+Added support for RuleForEach to the testing extensions.
+Fixed a regression where calling ValidateAsync with RuleForEach could cause a deadlock.
+
+Changes in 7.6.100:
+Resolved an issue where ValidateAsync was called on child validators when the root validator was invoked synchronously.
+
 Changes in 7.6:
 * WhenAsync now works correctly when calling the non-async Validate method.
 * ASP.NET Core integration has been updated to ASP.NET Core 2.1. 
