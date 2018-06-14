@@ -76,30 +76,25 @@ namespace FluentValidation.Internal {
 			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.ParentContext)) {
 				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
-				int count = 0;
-
 				if (collectionPropertyValue != null) {
 					if (string.IsNullOrEmpty(propertyName)) {
 						throw new InvalidOperationException("Could not automatically determine the property name ");
 					}
 
 					var results = new List<ValidationFailure>();
-					var validationTasks = new List<Task>();
-					
-					foreach (var element in collectionPropertyValue) {
+
+					var validators = collectionPropertyValue.Select((v, count) => {
 						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate);
 						newContext.PropertyChain.Add(propertyName);
-						newContext.PropertyChain.AddIndexer(count++);
+						newContext.PropertyChain.AddIndexer(count);
 
-						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
-						
-						validationTasks.Add(
-							validator.ValidateAsync(newPropertyContext, cancellation)
-							.Then(f => results.AddRange(f), cancellation)
-						);
-					}
+						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
+
+						return validator.ValidateAsync(newPropertyContext, cancellation)
+							.Then(fs => results.AddRange(fs), cancellation);
+					});
 					
-					return TaskHelpers.Iterate(validationTasks, cancellation)
+					return TaskHelpers.Iterate(validators, cancellation)
 							.Then(() => results.AsEnumerable(), runSynchronously: true, cancellationToken: cancellation);
 				}
 			}
