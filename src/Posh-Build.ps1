@@ -12,20 +12,20 @@ function target {
     throw "Target $name already defined.";
   }
 
-  $target = [BuildTarget]::new($action, $depends, $name);  
+  $target = [BuildTarget]::new($action, $depends, $name);
   $script:Targets.Add($name, $target);
 }
 
 function Start-Build($params = @()) {
   $timer = [System.Diagnostics.Stopwatch]::new()
   $timer.Start()
-  
+
   $target_names = @()
 
   for($i = 0; $i -lt $params.Count; $i++) {
     if ($params[$i] -eq '-t' -or $params[$i] -eq '-targets') {
       if ($params[$i+1]) {
-        $target_names += $params[$i+1]; 
+        $target_names += $params[$i+1];
       }
     }
   }
@@ -77,7 +77,7 @@ function Execute-Target([string]$name) {
         Write-Host »»»»»» $to_execute.Name -ForegroundColor Green
         try {
           & $to_execute.Action;
-            
+
           if($LASTEXITCODE) {
             throw;
           }
@@ -99,6 +99,34 @@ function Execute-Target([string]$name) {
   }
 }
 
+function Invoke-Tests($test_projects, $configuration = 'debug') {
+  $has_failures = $false
+
+  $test_projects | % {
+    dotnet test $_ -c $configuration -nologo $args
+    if ($LASTEXITCODE) { $has_failures = $true }
+  }
+
+  if ($has_failures) { throw "Tests failed" }
+}
+
+function Invoke-Dotnet {
+  write-host $args
+  dotnet $args
+  if ($LASTEXITCODE) { throw "Dotnet failed" }
+}
+
+function New-Prompt($title, $details, $prompt_options, $default_choice = 0) {
+  $options = @()
+
+  foreach($key in $prompt_options.Keys) {
+    $option = [System.Management.Automation.Host.ChoiceDescription]::new($key, $prompt_options[$key]);
+    $options += $option
+  }
+
+  return $host.ui.PromptForChoice($title, $details, $options, $default_choice)
+}
+
 class BuildTarget {
   [scriptblock]$Action;
   [string[]]$Dependencies;
@@ -115,7 +143,7 @@ class BuildTarget {
     $parsed_sequence = [System.Collections.Generic.List[BuildTarget]]::new()
 
     $this.PopulateExecutionSequence($execution_sequence, $parsed_sequence);
-    
+
     $execution_sequence.Reverse()
     return $execution_sequence;
   }
@@ -126,7 +154,7 @@ class BuildTarget {
     }
 
     $n = $this.Name;
-    
+
     if ($execution_sequence.Contains($this)) {
       throw "Target ${n} has recursive dependencies"
     }

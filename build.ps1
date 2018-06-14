@@ -20,8 +20,8 @@ if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
 target default -depends compile, test, deploy
 
 target compile {
-  dotnet build $solution_file -c $configuration --no-incremental `
-    -p:Version=$version -p:AssemblyOriginatorKeyFile=$key_file
+  Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
+    /p:Version=$version /p:AssemblyOriginatorKeyFile=$key_file
 }
 
 target test {
@@ -35,20 +35,12 @@ target test {
     "$base\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj"
   )
 
-  $has_failures = $false
-
-  $test_projects | % {
-    dotnet test $_ -c $configuration --no-build -nologo
-    if ($LASTEXITCODE) { $has_failures = $true }
-  }
-
-  if ($has_failures) { throw }
+  Invoke-Tests $test_projects -c $configuration --no-build
 }
 
 target deploy {
   Remove-Item $build_dir -Force -Recurse 2> $null
-  dotnet pack $solution_file -c $configuration -p:PackageOutputPath=$build_dir\Packages -p:AssemblyOriginatorKeyFile=$key_file -p:Version=$version
-  if ($LASTEXITCODE) { throw }
+  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$build_dir\Packages /p:AssemblyOriginatorKeyFile=$key_file /p:Version=$version
 
   # Copy to output dir
   Copy-Item "$base\src\FluentValidation\bin\$configuration\netstandard2.0" -Destination "$output_dir\FluentValidation-netstandard2.0" -Recurse
@@ -63,11 +55,11 @@ target verify-package {
   $asm = [System.Reflection.Assembly]::LoadFile("$output_dir/FluentValidation-netstandard2.0/FluentValidation.dll")
 
   if (-not (test-path "$nuget_key")) {
-    throw "Could not find the NuGet access key." 
+    throw "Could not find the NuGet access key."
   }
   elseif (-not $asm.FullName.EndsWith("PublicKeyToken=7de548da2fbae0f0")) {
-    throw "This build is using the dev key. Please rebuild with release key" 
-  } 
+    throw "This build is using the dev key. Please rebuild with release key"
+  }
   else {
     write-host Package verified
   }
@@ -82,11 +74,10 @@ target publish -depends verify-package {
   $packages | ForEach-Object { write-host $_.Name }
 
   # Ensure we haven't run this by accident.
-  $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", "Uploads the packages."
-  $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", "Does not upload the packages."
-  $options = [System.Management.Automation.Host.ChoiceDescription[]]($no, $yes)
-
-  $result = $host.ui.PromptForChoice("Upload packages", "Do you want to upload the NuGet packages to the NuGet server?", $options, 0)
+  $result = New-Prompt "Upload Packages" "Do you want to upload the NuGet packages to the NuGet server?" @{
+    "&No" = "Does not upload the packages."
+    "&Yes" = "Uploads the packages."
+  }
 
   # Cancelled
   if ($result -eq 0) {
@@ -97,7 +88,7 @@ target publish -depends verify-package {
     $packages | foreach {
       $package = $_.FullName
       write-host "Uploading $package"
-      & dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
+      Invoke-Dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
       write-host
     }
   }
