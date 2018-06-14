@@ -22,12 +22,20 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Internal;
 	using Validators;
 	using Xunit;
 
 
 	public class ForEachRuleTests {
+		private object _lock = new object();
+		private int _counter;
+
+		public ForEachRuleTests() {
+			_counter = 0;
+		}
+
 		[Fact]
 		public void Executes_rule_for_each_item_in_collection() {
 			var validator = new TestValidator {
@@ -143,6 +151,25 @@ namespace FluentValidation.Tests {
 			thrown.ShouldBeTrue();
 		}
 
+		[Fact]
+		public async Task RuleForEach_async_RunsTasksSynchronously() {
+			var validator = new InlineValidator<Person>();
+			var result = new List<bool>();
+
+			validator.RuleForEach(x => x.Children).MustAsync((person, token) => {
+				return ExclusiveDelay(1)
+					.ContinueWith(t => result.Add(t.Result))
+					.ContinueWith(t => true);
+			});
+
+			await validator.ValidateAsync(new Person() {
+				Children = new List<Person> {new Person(), new Person() }
+			});
+
+			Assert.NotEmpty(result);
+			Assert.All(result, Assert.True);
+		}
+
 
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};
@@ -186,6 +213,21 @@ namespace FluentValidation.Tests {
 			protected override bool IsValid(PropertyValidatorContext context) {
 				return false;
 			}
+		}
+
+		private async Task<bool> ExclusiveDelay(int milliseconds) {
+			lock (_lock) {
+				if (_counter != 0) return false;
+				_counter += 1;
+			}
+
+			await Task.Delay(milliseconds);
+
+			lock (_lock) {
+				_counter -= 1;
+			}
+
+			return true;
 		}
 	}
 }
