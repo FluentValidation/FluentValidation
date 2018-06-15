@@ -22,12 +22,24 @@
 		}
 
 		[Fact]
-		public async void Executes_page() {
+		public async void Validates_with_BindProperty_attribute() {
 			var form = new FormData {
 				{"Name", null},
 			};
 
 			var result = await _webApp.PostResponse("/TestPage1", form);
+			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
+
+			errors.Count.ShouldEqual(1);
+		}
+		
+		[Fact]
+		public async void Validates_with_BindProperty_attribute_and_prefix() {
+			var form = new FormData {
+				{"Test.Name", null},
+			};
+
+			var result = await _webApp.PostResponse("/TestPageWithPrefix", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
 			errors.Count.ShouldEqual(1);

@@ -50,8 +50,7 @@
     <Compile Remove="..\FluentValidation.Tests.Mvc6.netcoreapp1\TestMessages.Designer.cs" />
     <Compile Include="..\FluentValidation.Tests\CultureScope.cs" Link="CultureScope.cs" />
     <Compile Include="..\Fluentvalidation.Tests.Mvc6.netcoreapp2\RazorPagesTests.cs" Link="RazorPagesTests.cs" />
-    <None Include="..\FluentValidation.Tests.Mvc6.netcoreapp2\Pages\TestPage1.cshtml">
-      <Link>Pages\TestPage1.cshtml</Link>
+    <None Include="..\FluentValidation.Tests.Mvc6.netcoreapp2\**\*.cshtml" Exclude="..\FluentValidation.Tests.Mvc6.netcoreapp2\obj\**\*.cshtml;..\FluentValidation.Tests.Mvc6.netcoreapp2\bin\**\*.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <Compile Include="..\FluentValidation.Tests.Mvc6.netcoreapp2\TestPageModel.cs" />

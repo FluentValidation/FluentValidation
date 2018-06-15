@@ -14,7 +14,6 @@
 		
 		public async Task<IActionResult> OnPostAsync() {
 			return TestResult();
-			return Page();
 		}
 		
 		private ActionResult TestResult() {
@@ -29,4 +28,29 @@
 			return new JsonResult(errors);
 		}
 	}
+	
+	[IgnoreAntiforgeryToken(Order = 1001)]
+	public class TestPageModelWithPrefix : PageModel {
+		
+		[BindProperty(Name="Test")]
+		public TestModel Test { get; set; }
+		
+		public async Task<IActionResult> OnPostAsync() {
+			return TestResult();
+		}
+		
+		private ActionResult TestResult() {
+			var errors = new List<SimpleError>();
+
+			foreach (var pair in ModelState) {
+				foreach (var error in pair.Value.Errors) {
+					errors.Add(new SimpleError {Name = pair.Key, Message = error.ErrorMessage});
+				}
+			}
+
+			return new JsonResult(errors);
+		}
+	}
+
+
 }
