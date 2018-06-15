@@ -1,5 +1,6 @@
 7.6.103 - 
 Switched to embedded debug symbols.
+ShouldHaveChildValidator now works when the child validator is inside a DependentRules block.
 
 7.6.102 - 14 June 2018
 Fixed a regression where calling ValidateAsync with RuleForEach would no longer execute tasks sequentially (#799).

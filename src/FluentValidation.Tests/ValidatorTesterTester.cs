@@ -357,6 +357,19 @@ namespace FluentValidation.Tests {
 			Assert.Throws<ValidationTestException>(() => validator.ShouldNotHaveValidationErrorFor(x => x.CreditCard, testPerson));
 		}
 
+		[Fact]
+		public void ShouldHaveChildValidator_should_work_with_DependentRules() {
+			var validator = new InlineValidator<Person>();
+			
+			validator.RuleFor(x => x.Children)
+				.NotNull().When(p => true)
+				.DependentRules(() => {
+					validator.RuleForEach(p => p.Children).SetValidator(p => new InlineValidator<Person>());
+				});
+			
+			validator.ShouldHaveChildValidator(x => x.Children, typeof(InlineValidator<Person>));
+		}
+
 		private class AddressValidator : AbstractValidator<Address> {
 		}
 

@@ -68,6 +68,9 @@ namespace FluentValidation.TestHelper {
 				expression.IsParameterExpression()	 ? GetModelLevelValidators(descriptor) :
 				descriptor.GetValidatorsForMember(expressionMemberName).ToArray();
 
+
+			matchingValidators = matchingValidators.Concat(GetDependentRules(expressionMemberName, expression, descriptor)).ToArray();
+			
 			var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.ValidatorType);
 			childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
@@ -75,6 +78,14 @@ namespace FluentValidation.TestHelper {
 				var childValidatorNames = childValidatorTypes.Any() ? string.Join(", ", childValidatorTypes.Select(x => x.Name)) : "none";
 				throw new ValidationTestException(string.Format("Expected property '{0}' to have a child validator of type '{1}.'. Instead found '{2}'", expressionMemberName, childValidatorType.Name, childValidatorNames));
 			}
+		}
+
+		private static IEnumerable<IPropertyValidator> GetDependentRules<T, TProperty>(string expressionMemberName, Expression<Func<T, TProperty>> expression, IValidatorDescriptor descriptor) {
+			var member = expression.IsParameterExpression() ? null : expressionMemberName;
+			var rules = descriptor.GetRulesForMember(member).OfType<PropertyRule>().SelectMany(x => x.DependentRules)
+				.SelectMany(x => x.Validators);
+
+			return rules;
 		}
 
 		private static IPropertyValidator[] GetModelLevelValidators(IValidatorDescriptor descriptor) {
