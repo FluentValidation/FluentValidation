@@ -32,7 +32,7 @@ Changes in 7.5:
 
 	Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>
-
+      <DebugType>embedded</DebugType>
 	</PropertyGroup>
 
   <PropertyGroup>

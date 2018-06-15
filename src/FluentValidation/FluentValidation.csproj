@@ -123,6 +123,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     <AssemblyOriginatorKeyFile>../FluentValidation-Dev.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.xml</DocumentationFile>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -133,14 +134,14 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0"></PackageReference>
-		<PackageReference Include="System.Collections.Concurrent" Version="4.3.0"></PackageReference>
-	</ItemGroup>
-
-	<ItemGroup Condition="'$(TargetFramework)'!='netstandard1.1'">
-		<PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1"></PackageReference>
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0"/>
+        <PackageReference Include="System.Collections.Concurrent" Version="4.3.0"/>
+    </ItemGroup>
+    
+    <ItemGroup Condition="'$(TargetFramework)'!='netstandard1.1'">
+        <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1"/>
+    </ItemGroup>
 
     <!--<ItemGroup>
       <Content Include="bin\$(Configuration)\$(TargetFramework)\**\FluentValidation.resources.dll">

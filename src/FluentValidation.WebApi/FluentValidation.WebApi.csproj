@@ -17,6 +17,7 @@
     <DelaySign>False</DelaySign>
     <AssemblyOriginatorKeyFile>../FluentValidation-Dev.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+    <DebugType>embedded</DebugType>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.WebApi.xml</DocumentationFile>
     <PackageReleaseNotes>
 Changes in 7.5.1:
