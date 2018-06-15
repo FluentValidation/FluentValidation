@@ -54,6 +54,7 @@
       <Link>Pages\TestPage1.cshtml</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Compile Include="..\FluentValidation.Tests.Mvc6.netcoreapp2\TestPageModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Update="..\FluentValidation.Tests.Mvc6.netcoreapp1\Views\Clientside\Inputs.cshtml">
