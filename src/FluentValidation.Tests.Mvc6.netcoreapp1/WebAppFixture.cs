@@ -49,7 +49,7 @@
 
 		public async Task<List<SimpleError>> GetErrors(string action, Dictionary<string, string> form) {
 			var response = await PostResponse($"/Test/{action}", form);
-			return JsonConvert.DeserializeObject<List<SimpleError>>(response);
+				return JsonConvert.DeserializeObject<List<SimpleError>>(response);
 		}
 
 		public Task<List<SimpleError>> GetErrorsViaJSON<T>(string action, T model) {
