@@ -43,21 +43,20 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		public override void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model, ModelMetadata metadata) {
+			// This overload is called for properties annotated with [BindProperty]
 			ValidateInternal(actionContext, prefix, model, () => {
 				base.Validate(actionContext, validationState, prefix, model, metadata);
 			});
 		}
 
 		public override void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model) {
+			// This overload is called for action method parameters that take a complex model.
 			ValidateInternal(actionContext, prefix, model, () => {
 				base.Validate(actionContext, validationState, prefix, model);
 			});
 		}
 
 		private void ValidateInternal(ActionContext actionContext, string prefix, object model, Action action) {
-			// Cache the root object. Used by the provider to determine whether we're doing a top-level validation.
-			actionContext.HttpContext.Items["_FV_ROOT"] = model;
-			
 			// Store and remove any implicit required messages.
 			// Later we'll re-add those that are still relevant.
 			var requiredErrorsNotHandledByFv = RemoveImplicitRequiredErrors(actionContext);
@@ -88,10 +87,7 @@ namespace FluentValidation.AspNetCore {
 				validatorProviderToUse,
 				validatorCache,
 				metadataProvider,
-				validationState)
-			{
-				ValidateChildren = _implicitValidationEnabled
-			};
+				validationState);
 
 			return visitor;
 		}

@@ -7,6 +7,7 @@
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.Controllers;
 	using Microsoft.AspNetCore.Mvc.DataAnnotations.Internal;
+	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
@@ -21,14 +22,10 @@
 		}
 
 		public void CreateValidators(ModelValidatorProviderContext context) {
-
-			// Note that this check does NOT catch complex types that are collection elements (as the ModelMetadataKind will still be 'Type') 
-			if (context.ModelMetadata.MetadataKind == ModelMetadataKind.Type || context.ModelMetadata.MetadataKind == ModelMetadataKind.Parameter || (context.ModelMetadata.MetadataKind == ModelMetadataKind.Property)) {
-					context.Results.Add(new ValidatorItem {
-						IsReusable = false,
-						Validator = new FluentValidationModelValidator(_implicitValidationEnabled)
-					});
-			}
+			context.Results.Add(new ValidatorItem {
+				IsReusable = false,
+				Validator = new FluentValidationModelValidator(_implicitValidationEnabled)
+			});
 		}
 	}
 
@@ -40,9 +37,7 @@
 		}
 
 		public IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
-
-			// Skip validation if model is null or the model has been marked for skipping.
-			if (mvContext.Model == null || ShouldSkip(mvContext)) return Enumerable.Empty<ModelValidationResult>();
+			if (ShouldSkip(mvContext)) return Enumerable.Empty<ModelValidationResult>();
 
 			var factory = mvContext.ActionContext.HttpContext.RequestServices.GetService(typeof(IValidatorFactory)) as IValidatorFactory;
 
@@ -91,18 +86,49 @@
 		}
 
 		private bool ShouldSkip(ModelValidationContext mvContext) {
-			if (mvContext.ActionContext.HttpContext.Items.ContainsKey("_FV_SKIP") && mvContext.ActionContext.HttpContext.Items["_FV_SKIP"] is HashSet<object> skip) {
-				if (skip.Contains(mvContext.Model)) return true;
-				if (mvContext.Container != null && skip.Contains(mvContext.Container)) return true;
+			// Skip if there's nothing to process.
+			if (mvContext.Model == null) {
+				return true;
 			}
 
-			// If implicit validation of children is disabled and we're not validating the root, then skip.
-			if (!_implicitValidationEnabled && mvContext.ActionContext.HttpContext.Items.TryGetValue("_FV_ROOT", out var root)) {
-				if (! Equals(root, mvContext.Model)) {
-				//	return true;
+			// If implicit validation is disabled, then we want to only validate the root object.
+			if (! _implicitValidationEnabled) {
+
+				bool hasRootMetadata = mvContext.ActionContext.HttpContext.Items
+					.TryGetValue("_FV_ROOT_METADATA", out var rootMetadata);
+				
+				// We should always have root metadata, so this should never happen...
+				if (!hasRootMetadata) return true;
+				
+				// Careful when handling properties.
+				// If we're processing a property of our root object,
+				// then we always skip if implicit validation is disabled
+				// However if our root object *is* a property (because of [BindProperty])
+				// then this is OK to proceed.
+				if (mvContext.ModelMetadata.MetadataKind == ModelMetadataKind.Property) {
+					if (! ReferenceEquals(rootMetadata, mvContext.ModelMetadata)) {
+						// The metadata for the current property is not the same as the root metadata
+						// This means we're validating a property on a model, so we want to skip.
+						return true;
+					}
+				}
+				
+				// If we're handling a type, we need to make sure we're handling the root type.
+				// When MVC encounters child properties, it will set the MetadataKind to Type,
+				// so we can't use the MetadataKind to differentiate the root from the child property.
+				// Instead check if our cached root metadata is the same.
+				// If they're not, then it means we're handling a child property, so we should skip
+				// validation if implicit validation is disabled
+				else if (mvContext.ModelMetadata.MetadataKind == ModelMetadataKind.Type) {
+					if (! ReferenceEquals(rootMetadata, mvContext.ModelMetadata)) {
+						// The metadata for the current type is not the same as the root metadata
+						// This means we're validating a child element of a collection or sub property.
+						// Skip it as implicit validation is disabled.
+						return true;
+					}
 				}
 			}
-
+			
 			return false;
 		}
 
