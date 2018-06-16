@@ -17,23 +17,20 @@
 #endregion
 
 namespace FluentValidation.TestHelper {
-    using System;
-    using System.Collections.Generic;
+	using System.Collections.Generic;
 	using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
+	using System.Reflection;
     using System.Text.RegularExpressions;
     using Results;
-	using FluentValidation.Internal;
-	
-	class ValidationResultTester<T, TValue> : IValidationResultTester where T : class {
-		readonly TestValidationResult<T, TValue> _testValidationResult;
+
+	internal class ValidationResultTester<T, TValue> : IValidationResultTester where T : class {
+		private readonly TestValidationResult<T, TValue> _testValidationResult;
 
 		public ValidationResultTester(TestValidationResult<T, TValue> testValidationResult) {
-			this._testValidationResult = testValidationResult;
+			_testValidationResult = testValidationResult;
 		}
 
-		string GetPropertyName(IEnumerable<MemberInfo> properties) {
+		private string GetPropertyName(IEnumerable<MemberInfo> properties) {
 			return string.Join(".", 
                 GetMemberNames().Concat(properties
 				.Where(x => x != null)
@@ -62,7 +59,7 @@ namespace FluentValidation.TestHelper {
 			var failures = _testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
 
 			if (!failures.Any())
-				throw new ValidationTestException(string.Format("Expected a validation error for property {0}", propertyName));
+				throw new ValidationTestException($"Expected a validation error for property {propertyName}");
 
 			return failures;
 		}
@@ -73,10 +70,10 @@ namespace FluentValidation.TestHelper {
 			var failures = _testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
 
 			if (failures.Any())
-				throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", propertyName), failures);
+				throw new ValidationTestException($"Expected no validation errors for property {propertyName}", failures);
 		}
 
-		private string NormalizePropertyName(string propertyName) {
+		private static string NormalizePropertyName(string propertyName) {
 			return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 		}
 	}
