@@ -1,6 +1,7 @@
-7.6.103 - 
+7.6.103 - 16 June 2018
 Using [BindProperty] in AspNetCore now works when implicit child validation is disabled.
 ShouldHaveChildValidator now works when the child validator is inside a DependentRules block.
+Test helpers are now compatible with custom property name resolvers set using ValidatorOptions.PropertyNameResolver.
 Switched to embedded debug symbols.
 
 7.6.102 - 14 June 2018

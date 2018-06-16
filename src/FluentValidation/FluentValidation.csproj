@@ -9,17 +9,23 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 7.6.103:
+* Using [BindProperty] in AspNetCore now works when implicit child validation is disabled.
+* ShouldHaveChildValidator now works when the child validator is inside a DependentRules block.
+* Test helpers are now compatible with custom property name resolvers set using ValidatorOptions.PropertyNameResolver.
+* Switched to embedded debug symbols.
+
 Changes in 7.6.102:
-Fixed a regression where calling ValidateAsync with RuleForEach would no longer execute tasks sequentially (#799).
+* Fixed a regression where calling ValidateAsync with RuleForEach would no longer execute tasks sequentially (#799).
 
 Changes in 7.6.101:
-Added support for RuleForEach to the testing extensions (#238).
-Fixed a regression where calling ValidateAsync with RuleForEach could cause a deadlock (#799).
-Added ToString overrides on ValidationResult to generate a string representation of all errors (#778).
-Updated logos thanks to Dylan Beattie (#780).
+* Added support for RuleForEach to the testing extensions (#238).
+* Fixed a regression where calling ValidateAsync with RuleForEach could cause a deadlock (#799). 
+* Added ToString overrides on ValidationResult to generate a string representation of all errors (#778).
+* Updated logos thanks to Dylan Beattie (#780).
         
 Changes in 7.6.100:
-Resolved an issue where ValidateAsync was called on child validators when the root validator was invoked synchronously.
+* Resolved an issue where ValidateAsync was called on child validators when the root validator was invoked synchronously.
 
 Changes in 7.6:
 * WhenAsync now works correctly when calling the non-async Validate method.
