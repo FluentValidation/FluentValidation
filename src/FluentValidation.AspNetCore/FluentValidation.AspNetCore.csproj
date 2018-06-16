@@ -15,7 +15,10 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
-Changes in 7.6
+Changes in 7.6.103:
+* Support for validating controller and Razor properties annotated [BindProperty].
+
+Changes in 7.6:
 * Updates to support ASP.NET Core 2.1 
 
 Changes in 7.5:
