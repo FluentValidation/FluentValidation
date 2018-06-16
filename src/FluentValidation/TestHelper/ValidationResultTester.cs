@@ -50,8 +50,10 @@ namespace FluentValidation.TestHelper {
 			    _testValidationResult.MemberAccessor.Member,  
 			    _testValidationResult.MemberAccessor
 			);
-		    
-		    yield return memberName;
+
+		    if (!string.IsNullOrEmpty(memberName)) {
+			    yield return memberName;
+		    }
 	    }
 
         public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
