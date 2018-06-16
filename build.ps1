@@ -74,11 +74,11 @@ target publish -depends verify-package {
   $packages | ForEach-Object { write-host $_.Name }
 
   # Ensure we haven't run this by accident.
-  $result = New-Prompt "Upload Packages" "Do you want to upload the NuGet packages to the NuGet server?" @{
-    "&No" = "Does not upload the packages."
-    "&Yes" = "Uploads the packages."
-  }
-
+  $result = New-Prompt "Upload Packages" "Do you want to upload the NuGet packages to the NuGet server?" @(
+    @("&No", "Does not upload the packages."),
+    @("&Yes", "Uploads the packages.")
+  )
+  
   # Cancelled
   if ($result -eq 0) {
     "Upload aborted"

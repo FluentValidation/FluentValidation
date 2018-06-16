@@ -140,8 +140,11 @@ function Invoke-Dotnet {
 function New-Prompt($title, $details, $prompt_options, $default_choice = 0) {
   $options = @()
 
-  foreach($key in $prompt_options.Keys) {
-    $option = [System.Management.Automation.Host.ChoiceDescription]::new($key, $prompt_options[$key]);
+  foreach($entry in $prompt_options) {
+    $key = $entry[0]
+    $text = $entry[1]
+
+    $option = [System.Management.Automation.Host.ChoiceDescription]::new($key, $text);
     $options += $option
   }
 
