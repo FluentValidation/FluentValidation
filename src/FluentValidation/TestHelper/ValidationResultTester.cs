@@ -24,7 +24,8 @@ namespace FluentValidation.TestHelper {
     using System.Reflection;
     using System.Text.RegularExpressions;
     using Results;
-
+	using FluentValidation.Internal;
+	
 	class ValidationResultTester<T, TValue> : IValidationResultTester where T : class {
 		readonly TestValidationResult<T, TValue> _testValidationResult;
 
@@ -41,32 +42,16 @@ namespace FluentValidation.TestHelper {
 
 	    private IEnumerable<string> GetMemberNames() {
 	        if (_testValidationResult.MemberAccessor == null) {
-	            return Enumerable.Empty<string>();
+		        yield break;
 	        }
 
-            var memberNames = new Stack<string>();
-
-            var getMemberExp = new Func<Expression, MemberExpression>(toUnwrap => {
-
-                if (toUnwrap is UnaryExpression)
-                {
-                    return ((UnaryExpression)toUnwrap).Operand as MemberExpression;
-                }
-                else if (toUnwrap is LambdaExpression) {
-                    return ((LambdaExpression)toUnwrap).Body as MemberExpression;
-                }
-
-                return toUnwrap as MemberExpression;
-            });
-
-            var memberExp = getMemberExp(this._testValidationResult.MemberAccessor);
-
-            while (memberExp != null) {
-	            string memberName = ValidatorOptions.PropertyNameResolver(typeof(T), memberExp.Member, _testValidationResult.MemberAccessor);
-                memberNames.Push(memberName);
-                memberExp = getMemberExp(memberExp.Expression);
-            }
-	        return memberNames;
+		    string memberName = ValidatorOptions.PropertyNameResolver(
+			    typeof(T), 
+			    _testValidationResult.MemberAccessor.Member,  
+			    _testValidationResult.MemberAccessor
+			);
+		    
+		    yield return memberName;
 	    }
 
         public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
