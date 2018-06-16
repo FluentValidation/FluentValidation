@@ -41,8 +41,13 @@ function Start-Build($params = @()) {
     }
   }
 
+  $exit_code = 0;
   foreach($target_name in $target_names) {
-    Execute-Target $target_name
+    $target_success = Execute-Target $target_name
+    
+    if (!$target_success) {
+      $exit_code = 1;
+    }
   }
 
   $timer.Stop()
@@ -51,11 +56,22 @@ function Start-Build($params = @()) {
   $ts.TotalMinutes, $ts.Seconds,
   $ts.Milliseconds / 10);
 
-  write-host
-  write-host Build complete  in $elapsed
+  Write-Host ""
+
+  Write-Host "Build " -NoNewline
+  if ($exit_code) {
+    write-host "Failed " -NoNewline -ForegroundColor Red
+  }
+  else {
+    write-Host "Completed " -NoNewline -ForegroundColor Green
+  }
+  write-host "in $elapsed"
+
+  exit($exit_code)
 }
 
 function Execute-Target([string]$name) {
+  $success = $true;
   $target = $null;
 
   if (-not $script:Targets.ContainsKey($name)) {
@@ -76,13 +92,14 @@ function Execute-Target([string]$name) {
       if ($to_execute.Action) {
         Write-Host »»»»»» $to_execute.Name -ForegroundColor Green
         try {
-          & $to_execute.Action;
+          & $to_execute.Action | Out-Default;
 
           if($LASTEXITCODE) {
             throw;
           }
         }
         catch {
+          $success = $false;
           write-host »»»»»» $to_execute.Name failed -ForegroundColor Red
           if ($_.Exception.Message -and $_.Exception.Message -ne 'ScriptHalted') {
             write-host $_.Exception.Message -ForegroundColor Red
@@ -93,21 +110,23 @@ function Execute-Target([string]$name) {
     }
   }
   catch {
+    $success = $false
     write-host "Target failed " + $_.Exception.Message
     exit(1);
     break;
   }
+  return $success
 }
 
 function Invoke-Tests($test_projects, $configuration = 'debug') {
   $has_failures = $false
 
-  $test_projects | % {
-    dotnet test $_ -c $configuration -nologo $args
+  foreach($project in $test_projects) {
+    & dotnet test $project -c $configuration -nologo $args
     if ($LASTEXITCODE) { $has_failures = $true }
   }
 
-  if ($has_failures) { throw "Tests failed" }
+  if ($has_failures) { throw '' }
 }
 
 function Invoke-Dotnet {
