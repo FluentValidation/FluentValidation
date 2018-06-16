@@ -26,10 +26,10 @@ namespace FluentValidation.TestHelper {
     using Results;
 
 	class ValidationResultTester<T, TValue> : IValidationResultTester where T : class {
-		readonly TestValidationResult<T, TValue> testValidationResult;
+		readonly TestValidationResult<T, TValue> _testValidationResult;
 
 		public ValidationResultTester(TestValidationResult<T, TValue> testValidationResult) {
-			this.testValidationResult = testValidationResult;
+			this._testValidationResult = testValidationResult;
 		}
 
 		string GetPropertyName(IEnumerable<MemberInfo> properties) {
@@ -40,7 +40,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 	    private IEnumerable<string> GetMemberNames() {
-	        if (testValidationResult.MemberAccessor == null) {
+	        if (_testValidationResult.MemberAccessor == null) {
 	            return Enumerable.Empty<string>();
 	        }
 
@@ -59,11 +59,11 @@ namespace FluentValidation.TestHelper {
                 return toUnwrap as MemberExpression;
             });
 
-            var memberExp = getMemberExp(this.testValidationResult.MemberAccessor);
+            var memberExp = getMemberExp(this._testValidationResult.MemberAccessor);
 
-            while (memberExp != null)
-            {
-                memberNames.Push(memberExp.Member.Name);
+            while (memberExp != null) {
+	            string memberName = ValidatorOptions.DisplayNameResolver(typeof(T), memberExp.Member, _testValidationResult.MemberAccessor);
+                memberNames.Push(memberName);
                 memberExp = getMemberExp(memberExp.Expression);
             }
 	        return memberNames;
@@ -72,7 +72,7 @@ namespace FluentValidation.TestHelper {
         public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
 
-			var failures = testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
+			var failures = _testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
 
 			if (!failures.Any())
 				throw new ValidationTestException(string.Format("Expected a validation error for property {0}", propertyName));
@@ -83,7 +83,7 @@ namespace FluentValidation.TestHelper {
 		public void ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
 
-			var failures = testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
+			var failures = _testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
 
 			if (failures.Any())
 				throw new ValidationTestException(string.Format("Expected no validation errors for property {0}", propertyName), failures);
