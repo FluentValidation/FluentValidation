@@ -52,6 +52,9 @@
     <None Update="Pages\TestPage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Pages\TestPageWithPrefix.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Update="Pages\TestPage1.cshtml">

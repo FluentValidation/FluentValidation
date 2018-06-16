@@ -23,16 +23,22 @@
 		public void CreateValidators(ModelValidatorProviderContext context) {
 
 			// Note that this check does NOT catch complex types that are collection elements (as the ModelMetadataKind will still be 'Type') 
-			if (context.ModelMetadata.MetadataKind == ModelMetadataKind.Type || context.ModelMetadata.MetadataKind == ModelMetadataKind.Parameter || (context.ModelMetadata.MetadataKind == ModelMetadataKind.Property && _implicitValidationEnabled)) {
+			if (context.ModelMetadata.MetadataKind == ModelMetadataKind.Type || context.ModelMetadata.MetadataKind == ModelMetadataKind.Parameter || (context.ModelMetadata.MetadataKind == ModelMetadataKind.Property)) {
 					context.Results.Add(new ValidatorItem {
 						IsReusable = false,
-						Validator = new FluentValidationModelValidator()
+						Validator = new FluentValidationModelValidator(_implicitValidationEnabled)
 					});
 			}
 		}
 	}
 
 	internal class FluentValidationModelValidator : IModelValidator {
+		private readonly bool _implicitValidationEnabled;
+
+		public FluentValidationModelValidator(bool implicitValidationEnabled) {
+			_implicitValidationEnabled = implicitValidationEnabled;
+		}
+
 		public IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
 
 			// Skip validation if model is null or the model has been marked for skipping.
@@ -89,6 +95,14 @@
 				if (skip.Contains(mvContext.Model)) return true;
 				if (mvContext.Container != null && skip.Contains(mvContext.Container)) return true;
 			}
+
+			// If implicit validation of children is disabled and we're not validating the root, then skip.
+			if (!_implicitValidationEnabled && mvContext.ActionContext.HttpContext.Items.TryGetValue("_FV_ROOT", out var root)) {
+				if (! Equals(root, mvContext.Model)) {
+				//	return true;
+				}
+			}
+
 			return false;
 		}
 

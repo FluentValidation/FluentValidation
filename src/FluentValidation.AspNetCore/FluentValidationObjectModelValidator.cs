@@ -43,36 +43,35 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		public override void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model, ModelMetadata metadata) {
-			var requiredErrorsNotHandledByFv = RemoveImplicitRequiredErrors(actionContext);
-
-			// Apply any customizations made with the CustomizeValidatorAttribute 
-
-			if (model != null) {
-				var customizations = GetCustomizations(actionContext, model.GetType(), prefix);
-				actionContext.HttpContext.Items["_FV_Customizations"] = Tuple.Create(model, customizations);
-			}
-
-			base.Validate(actionContext, validationState, prefix, model, metadata);
-			
-			// Re-add errors that we took out if FV didn't add a key. 
-			ReApplyImplicitRequiredErrorsNotHandledByFV(requiredErrorsNotHandledByFv);
-
-			// Remove duplicates. This can happen if someone has implicit child validation turned on and also adds an explicit child validator.
-			RemoveDuplicateModelstateEntries(actionContext);
+			ValidateInternal(actionContext, prefix, model, () => {
+				base.Validate(actionContext, validationState, prefix, model, metadata);
+			});
 		}
 
 		public override void Validate(ActionContext actionContext, ValidationStateDictionary validationState, string prefix, object model) {
+			ValidateInternal(actionContext, prefix, model, () => {
+				base.Validate(actionContext, validationState, prefix, model);
+			});
+		}
+
+		private void ValidateInternal(ActionContext actionContext, string prefix, object model, Action action) {
+			// Cache the root object. Used by the provider to determine whether we're doing a top-level validation.
+			actionContext.HttpContext.Items["_FV_ROOT"] = model;
+			
+			// Store and remove any implicit required messages.
+			// Later we'll re-add those that are still relevant.
 			var requiredErrorsNotHandledByFv = RemoveImplicitRequiredErrors(actionContext);
 
 			// Apply any customizations made with the CustomizeValidatorAttribute 
-
 			if (model != null) {
 				var customizations = GetCustomizations(actionContext, model.GetType(), prefix);
 				actionContext.HttpContext.Items["_FV_Customizations"] = Tuple.Create(model, customizations);
 			}
 
-			base.Validate(actionContext, validationState, prefix, model);
-			
+			// Run the base Validate implementaiton.
+			// This could be either overload.
+			action();
+
 			// Re-add errors that we took out if FV didn't add a key. 
 			ReApplyImplicitRequiredErrorsNotHandledByFV(requiredErrorsNotHandledByFv);
 
