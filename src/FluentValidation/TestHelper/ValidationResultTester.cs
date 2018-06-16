@@ -62,7 +62,7 @@ namespace FluentValidation.TestHelper {
             var memberExp = getMemberExp(this._testValidationResult.MemberAccessor);
 
             while (memberExp != null) {
-	            string memberName = ValidatorOptions.DisplayNameResolver(typeof(T), memberExp.Member, _testValidationResult.MemberAccessor);
+	            string memberName = ValidatorOptions.PropertyNameResolver(typeof(T), memberExp.Member, _testValidationResult.MemberAccessor);
                 memberNames.Push(memberName);
                 memberExp = getMemberExp(memberExp.Expression);
             }
