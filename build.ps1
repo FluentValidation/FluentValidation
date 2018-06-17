@@ -28,8 +28,7 @@ target test {
   $test_projects = @(
     "$base\src\FluentValidation.Tests\FluentValidation.Tests.csproj",
     "$base\src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj",
-    "$base\src\FluentValidation.Tests.Mvc6.net46\FluentValidation.Tests.Mvc6.net46.csproj",
-    "$base\src\FluentValidation.Tests.Mvc6.netcoreapp2\FluentValidation.Tests.Mvc6.netcoreapp2.csproj",
+    "$base\src\FluentValidation.Tests.AspNetCore\FluentValidation.Tests.AspNetCore.csproj",
     "$base\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj"
   )
 
