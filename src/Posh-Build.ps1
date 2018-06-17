@@ -134,6 +134,21 @@ function Invoke-Tests($test_projects, $configuration = 'debug') {
   if ($has_failures) { throw '' }
 }
 
+function Invoke-Xunit($test_projects, $configuration = 'debug') {
+  $has_failures = $false
+
+  foreach($project in $test_projects) {
+    # CD into the directory with the project
+    $dir = (Get-Item $project).Directory
+    Push-Location $dir
+    & dotnet xunit -c $configuration -nologo $args
+    Pop-Location
+    if ($LASTEXITCODE) { $has_failures = $true }
+  }
+
+  if ($has_failures) { throw '' }
+}
+
 function Invoke-Dotnet {
   write-host $args
   dotnet $args
