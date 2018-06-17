@@ -27,6 +27,9 @@ namespace FluentValidation.AspNetCore {
 
 	public delegate IClientModelValidator FluentValidationClientValidatorFactory(ClientValidatorProviderContext context, PropertyRule rule, IPropertyValidator validator);
 
+	/// <summary>
+	/// Used to generate clientside metadata from FluentValidation's rules.
+	/// </summary>
 	public class FluentValidationClientModelValidatorProvider : IClientModelValidatorProvider{
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly ValidatorDescriptorCache _descriptorCache = new ValidatorDescriptorCache();

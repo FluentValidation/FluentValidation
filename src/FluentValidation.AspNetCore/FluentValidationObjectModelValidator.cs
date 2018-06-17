@@ -17,11 +17,9 @@
 #endregion
 
 namespace FluentValidation.AspNetCore {
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using Microsoft.AspNetCore.Mvc;
-	using Microsoft.AspNetCore.Mvc.Controllers;
 	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -51,8 +49,5 @@ namespace FluentValidation.AspNetCore {
 
 			return visitor;
 		}
-		
-	
 	}
-
 }

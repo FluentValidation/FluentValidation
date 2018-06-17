@@ -51,9 +51,5 @@ namespace FluentValidation.AspNetCore {
 
 			return result;
 		}
-
-
-
-
 	}
 }
