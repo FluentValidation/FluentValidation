@@ -45,8 +45,7 @@ namespace FluentValidation.AspNetCore {
 
 			expr(config);
 
-			if (config.AssembliesToRegister.Count > 0)
-			{
+			if (config.AssembliesToRegister.Count > 0) {
 				RegisterTypes(config.AssembliesToRegister, mvcBuilder.Services);
 			}
 
@@ -83,7 +82,7 @@ namespace FluentValidation.AspNetCore {
 			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
 				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes, config.ImplicitlyValidateChildProperties);
+				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
 			}));
 
 			if (config.ClientsideEnabled) {
@@ -92,10 +91,9 @@ namespace FluentValidation.AspNetCore {
 				// This is not registered by default, so add it in if the user hasn't done so.
 				services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 				
-				services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<MvcViewOptions>, FluentValidationViewOptionsSetup>(s =>
-					{
-						return new FluentValidationViewOptionsSetup(config.ClientsideConfig, s.GetService<IHttpContextAccessor>());
-					}));
+				services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<MvcViewOptions>, FluentValidationViewOptionsSetup>(s => {
+					return new FluentValidationViewOptionsSetup(config.ClientsideConfig, s.GetService<IHttpContextAccessor>());
+				}));
 			}
 		}
 
