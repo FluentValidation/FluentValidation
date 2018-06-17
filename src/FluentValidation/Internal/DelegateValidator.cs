@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,6 +15,7 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+
 #endregion
 
 namespace FluentValidation.Internal {
@@ -31,13 +33,13 @@ namespace FluentValidation.Internal {
 	/// <typeparam name="T"></typeparam>
 	[Obsolete("Use RuleFor(x => x).Custom((x,ctx) => ...) instead")]
 	public class DelegateValidator<T> : IValidationRule {
-		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func;
+		private readonly Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> _func;
 		private readonly Func<T, ValidationContext<T>, CancellationToken, Task<IEnumerable<ValidationFailure>>> asyncFunc;
 
 		// Work-around for reflection bug in .NET 4.5
 		static Func<ValidationContext, bool> s_condition = x => true;
-		private Func<ValidationContext, bool> condition = s_condition;
-		private Func<ValidationContext, CancellationToken, Task<bool>> asyncCondition = null;
+		private Func<ValidationContext, bool> _condition = s_condition;
+		private Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition = null;
 		private string[] _ruleSets = new string[0];
 
 		/// <summary>
@@ -52,8 +54,8 @@ namespace FluentValidation.Internal {
 		/// Creates a new DelegateValidator using the specified function to perform validation.
 		/// </summary>
 		public DelegateValidator(Func<T, ValidationContext<T>, IEnumerable<ValidationFailure>> func) {
-			this.func = func;
-			asyncFunc = (x, ctx, cancel) => TaskHelpers.RunSynchronously(() => this.func(x, ctx), cancel);
+			_func = func;
+			asyncFunc = (x, ctx, cancel) => TaskHelpers.RunSynchronously(() => _func(x, ctx), cancel);
 		}
 
 		/// <summary>
@@ -68,7 +70,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public DelegateValidator(Func<T, ValidationContext<T>, CancellationToken, Task<IEnumerable<ValidationFailure>>> asyncFunc) {
 			this.asyncFunc = asyncFunc;
-			func = (x, ctx) => Task.Factory.StartNew(() => this.asyncFunc(x, ctx, new CancellationToken())).Unwrap().Result;
+			_func = (x, ctx) => Task.Factory.StartNew(() => this.asyncFunc(x, ctx, new CancellationToken())).Unwrap().Result;
 		}
 
 		/// <summary>
@@ -84,7 +86,7 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		public IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
-			return func(context.InstanceToValidate, context);
+			return _func(context.InstanceToValidate, context);
 		}
 
 		/// <summary>
@@ -110,8 +112,8 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		public IEnumerable<ValidationFailure> Validate(ValidationContext context) {
-			if (!context.Selector.CanExecute(this, "", context) || !condition(context) ||
-				(asyncCondition != null && !asyncCondition(context, new CancellationToken()).Result)) {
+			if (!context.Selector.CanExecute(this, "", context) || !_condition(context) ||
+			    (_asyncCondition != null && !_asyncCondition(context, new CancellationToken()).Result)) {
 				return Enumerable.Empty<ValidationFailure>();
 			}
 
@@ -128,16 +130,16 @@ namespace FluentValidation.Internal {
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
 		public Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
-			if (!context.Selector.CanExecute(this, "", context) || !condition(context)) {
+			if (!context.Selector.CanExecute(this, "", context) || !_condition(context)) {
 				return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 			}
 
-			return asyncCondition == null
+			return _asyncCondition == null
 				? ValidateAsyncInternal(context, cancellation)
-				: asyncCondition(context, cancellation).Then(shouldValidate => 
-					shouldValidate
-						? ValidateAsyncInternal(context, cancellation)
-						: TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()),
+				: _asyncCondition(context, cancellation).Then(shouldValidate =>
+						shouldValidate
+							? ValidateAsyncInternal(context, cancellation)
+							: TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>()),
 					runSynchronously: true, cancellationToken: cancellation);
 		}
 
@@ -155,8 +157,8 @@ namespace FluentValidation.Internal {
 		/// <param name="applyConditionTo"></param>
 		public void ApplyCondition(Func<ValidationContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// For custom rules within the DelegateValidator, we ignore ApplyConditionTo - this is only relevant to chained rules using RuleFor.
-			var originalCondition = this.condition;
-			this.condition = x => predicate(x) && originalCondition(x);
+			var originalCondition = this._condition;
+			this._condition = x => predicate(x) && originalCondition(x);
 		}
 
 		/// <summary>
@@ -164,12 +166,11 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate"></param>
 		/// <param name="applyConditionTo"></param>
-		public void ApplyAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators)
-		{
+		public void ApplyAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// For custom rules within the DelegateValidator, we ignore ApplyConditionTo - this is only relevant to chained rules using RuleFor.
-			var originalCondition = this.asyncCondition;
+			var originalCondition = this._asyncCondition;
 
-			this.asyncCondition = async (x, ct) => {
+			this._asyncCondition = async (x, ct) => {
 				var result = await predicate(x, ct);
 				if (!result) return false;
 				if (originalCondition == null) return true;

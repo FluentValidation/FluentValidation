@@ -8,18 +8,18 @@ namespace FluentValidation.Internal {
 	/// Selects validators that belong to the specified rulesets.
 	/// </summary>
 	public class RulesetValidatorSelector : IValidatorSelector {
-		readonly string[] rulesetsToExecute;
+		readonly string[] _rulesetsToExecute;
 
 		/// <summary>
 		/// Rule sets
 		/// </summary>
-		public string[] RuleSets => rulesetsToExecute;
+		public string[] RuleSets => _rulesetsToExecute;
 
 		/// <summary>
 		/// Creates a new instance of the RulesetValidatorSelector.
 		/// </summary>
 		public RulesetValidatorSelector(params string[] rulesetsToExecute) {
-			this.rulesetsToExecute = rulesetsToExecute;
+			this._rulesetsToExecute = rulesetsToExecute;
 		}
 
 		/// <summary>
@@ -30,26 +30,26 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Contextual information</param>
 		/// <returns>Whether or not the validator can execute.</returns>
 		public virtual bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
-			if (rule.RuleSets.Length == 0 && rulesetsToExecute.Length > 0) {
+			if (rule.RuleSets.Length == 0 && _rulesetsToExecute.Length > 0) {
 				if (IsIncludeRule(rule)) {
 					return true;
 				}
 			}
 
-			if (rule.RuleSets.Length == 0 && rulesetsToExecute.Length == 0) return true;
+			if (rule.RuleSets.Length == 0 && _rulesetsToExecute.Length == 0) return true;
 
-			if (rulesetsToExecute.Contains("default", StringComparer.OrdinalIgnoreCase)) {
+			if (_rulesetsToExecute.Contains("default", StringComparer.OrdinalIgnoreCase)) {
 				if (rule.RuleSets.Length == 0) return true;
 				if (rule.RuleSets.Contains("default", StringComparer.OrdinalIgnoreCase)) return true;
 			}
 
-			if (rule.RuleSets.Length > 0 && rulesetsToExecute.Length > 0) {
-				if (rule.RuleSets.Intersect(rulesetsToExecute, StringComparer.OrdinalIgnoreCase).Any()) {
+			if (rule.RuleSets.Length > 0 && _rulesetsToExecute.Length > 0) {
+				if (rule.RuleSets.Intersect(_rulesetsToExecute, StringComparer.OrdinalIgnoreCase).Any()) {
 					return true;
 				}
 			}
 
-			if (rulesetsToExecute.Contains("*")) return true;
+			if (_rulesetsToExecute.Contains("*")) return true;
 
 			return false;
 		}

@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,6 +15,7 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+
 #endregion
 
 namespace FluentValidation.Validators {
@@ -25,28 +27,27 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class EqualValidator : PropertyValidator, IComparisonValidator {
-		readonly Func<object, object> func;
-		readonly IEqualityComparer comparer;
+		readonly Func<object, object> _func;
+		readonly IEqualityComparer _comparer;
 
 		public EqualValidator(object valueToCompare) : base(new LanguageStringSource(nameof(EqualValidator))) {
 			this.ValueToCompare = valueToCompare;
 		}
 
-		public EqualValidator(object valueToCompare, IEqualityComparer comparer) : base(new LanguageStringSource(nameof(EqualValidator)))
-		 {
+		public EqualValidator(object valueToCompare, IEqualityComparer comparer) : base(new LanguageStringSource(nameof(EqualValidator))) {
 			ValueToCompare = valueToCompare;
-			this.comparer = comparer;
+			_comparer = comparer;
 		}
 
-		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member) :base(new LanguageStringSource(nameof(EqualValidator))) {
-			func = comparisonProperty;
+		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member) : base(new LanguageStringSource(nameof(EqualValidator))) {
+			_func = comparisonProperty;
 			MemberToCompare = member;
 		}
 
 		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member, IEqualityComparer comparer) : base(new LanguageStringSource(nameof(EqualValidator))) {
-			func = comparisonProperty;
+			_func = comparisonProperty;
 			MemberToCompare = member;
-			this.comparer = comparer;
+			_comparer = comparer;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
@@ -62,27 +63,25 @@ namespace FluentValidation.Validators {
 		}
 
 		private object GetComparisonValue(PropertyValidatorContext context) {
-			if(func != null) {
-				return func(context.Instance);
+			if (_func != null) {
+				return _func(context.Instance);
 			}
 
 			return ValueToCompare;
 		}
 
-		public Comparison Comparison {
-			get { return Comparison.Equal; }
-		}
+		public Comparison Comparison => Comparison.Equal;
 
 		public MemberInfo MemberToCompare { get; private set; }
 		public object ValueToCompare { get; private set; }
 
 		protected bool Compare(object comparisonValue, object propertyValue) {
-			if(comparer != null) {
-				return comparer.Equals(comparisonValue, propertyValue);
+			if (_comparer != null) {
+				return _comparer.Equals(comparisonValue, propertyValue);
 			}
 
-			if (comparisonValue is IComparable && propertyValue is IComparable) {
-				return Internal.Comparer.GetEqualsResult((IComparable)comparisonValue, (IComparable)propertyValue);
+			if (comparisonValue is IComparable comparable && propertyValue is IComparable comparable1) {
+				return Internal.Comparer.GetEqualsResult(comparable, comparable1);
 			}
 
 			return Equals(comparisonValue, propertyValue);

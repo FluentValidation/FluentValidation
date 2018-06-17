@@ -31,28 +31,23 @@ namespace FluentValidation.Validators {
 		static readonly IEnumerable<ValidationFailure> EmptyResult = Enumerable.Empty<ValidationFailure>();
 		static readonly Task<IEnumerable<ValidationFailure>> AsyncEmptyResult = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 
-		readonly Func<object, IValidator> childValidatorProvider;
-		readonly Type childValidatorType;
+		readonly Func<object, IValidator> _childValidatorProvider;
 
 		[Obsolete("Use IShouldValidateAsync.ShouldValidatAsync(context) instead")]
-		public override bool IsAsync {
-			get { return true; }
-		}
+		public override bool IsAsync => true;
 
-		public Type ChildValidatorType {
-			get { return childValidatorType; }
-		}
+		public Type ChildValidatorType { get; }
 
 		public Func<object, bool> Predicate { get; set; }
 
 		public ChildCollectionValidatorAdaptor(IValidator childValidator) {
-			this.childValidatorProvider = _ => childValidator;
-			this.childValidatorType = childValidator.GetType();
+			_childValidatorProvider = _ => childValidator;
+			ChildValidatorType = childValidator.GetType();
 		}
 
 		public ChildCollectionValidatorAdaptor(Func<object, IValidator> childValidatorProvider, Type childValidatorType) {
-			this.childValidatorProvider = childValidatorProvider;
-			this.childValidatorType = childValidatorType;
+			_childValidatorProvider = childValidatorProvider;
+			ChildValidatorType = childValidatorType;
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
@@ -111,7 +106,7 @@ namespace FluentValidation.Validators {
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(a.item is IIndexedCollectionItem ? ((IIndexedCollectionItem)a.item).Index : a.index.ToString());
 
-					var validator = childValidatorProvider(context.Instance);
+					var validator = _childValidatorProvider(context.Instance);
 
 					return Tuple.Create(newContext, validator);
 				});

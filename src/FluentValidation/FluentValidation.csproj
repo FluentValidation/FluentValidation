@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard1.6;netstandard2.0;net45</TargetFrameworks>
     <Authors>Jeremy Skinner</Authors>
@@ -131,30 +130,24 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.xml</DocumentationFile>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
-
   <PropertyGroup>
     <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0"/>
-        <PackageReference Include="System.Collections.Concurrent" Version="4.3.0"/>
-    </ItemGroup>
-    
-    <ItemGroup Condition="'$(TargetFramework)'!='netstandard1.1'">
-        <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1"/>
-    </ItemGroup>
-
-    <!--<ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'!='netstandard1.1'">
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
+  </ItemGroup>
+  <!--<ItemGroup>
       <Content Include="bin\$(Configuration)\$(TargetFramework)\**\FluentValidation.resources.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
         <PackagePath>lib\</PackagePath>
       </Content>
     </ItemGroup>-->
-
 </Project>

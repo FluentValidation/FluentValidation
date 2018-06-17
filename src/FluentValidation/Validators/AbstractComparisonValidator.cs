@@ -18,19 +18,16 @@
 
 namespace FluentValidation.Validators {
 	using System;
-	using System.Linq.Expressions;
 	using System.Reflection;
-	using Attributes;
 	using Internal;
 	using Resources;
-	using Results;
 
 	/// <summary>
 	/// Base class for all comparison validators
 	/// </summary>
 	public abstract class AbstractComparisonValidator : PropertyValidator, IComparisonValidator {
 
-		readonly Func<object, object> valueToCompareFunc;
+		readonly Func<object, object> _valueToCompareFunc;
 
 		/// <summary>
 		/// </summary>
@@ -47,7 +44,7 @@ namespace FluentValidation.Validators {
 		/// <param name="member"></param>
 		/// <param name="errorSource"></param>
 		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, IStringSource errorSource) : base(errorSource) { 
-			this.valueToCompareFunc = valueToCompareFunc;
+			this._valueToCompareFunc = valueToCompareFunc;
 			this.MemberToCompare = member;
 		}
 
@@ -75,8 +72,8 @@ namespace FluentValidation.Validators {
 		}
 
 		public IComparable GetComparisonValue(PropertyValidatorContext context) {
-			if(valueToCompareFunc != null) {
-				return (IComparable)valueToCompareFunc(context.Instance);
+			if(_valueToCompareFunc != null) {
+				return (IComparable)_valueToCompareFunc(context.Instance);
 			}
 
 			return (IComparable)ValueToCompare;

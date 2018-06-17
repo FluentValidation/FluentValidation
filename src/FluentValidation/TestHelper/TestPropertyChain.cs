@@ -28,24 +28,24 @@ namespace FluentValidation.TestHelper {
 	using Results;
 
 	internal class TestPropertyChain<TValue, TValue1> : ITestPropertyChain<TValue> {
-		private readonly IValidationResultTester validationResultTester;
-		private readonly IEnumerable<MemberInfo> properties;
+		private readonly IValidationResultTester _validationResultTester;
+		private readonly IEnumerable<MemberInfo> _properties;
 
 		public TestPropertyChain(IValidationResultTester validationResultTester, IEnumerable<MemberInfo> properties = null) {
-			this.validationResultTester = validationResultTester;
-			this.properties = properties ?? Enumerable.Empty<MemberInfo>();
+			this._validationResultTester = validationResultTester;
+			this._properties = properties ?? Enumerable.Empty<MemberInfo>();
 		}
 
 		public ITestPropertyChain<TValue2> Property<TValue2>(Expression<Func<TValue, TValue2>> memberAccessor) {
-			return new TestPropertyChain<TValue2, TValue1>(validationResultTester, properties.Concat(new[] {((MemberAccessor<TValue, TValue2>) memberAccessor).Member}));
+			return new TestPropertyChain<TValue2, TValue1>(_validationResultTester, _properties.Concat(new[] {((MemberAccessor<TValue, TValue2>) memberAccessor).Member}));
 		}
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationError() {
-			return validationResultTester.ShouldHaveValidationError(properties);
+			return _validationResultTester.ShouldHaveValidationError(_properties);
 		}
 
 		public void ShouldNotHaveValidationError() {
-			validationResultTester.ShouldNotHaveValidationError(properties);
+			_validationResultTester.ShouldNotHaveValidationError(_properties);
 		}
 	}
 }

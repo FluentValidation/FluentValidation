@@ -33,10 +33,10 @@ namespace FluentValidation.Internal {
 	/// Defines a rule associated with a property.
 	/// </summary>
 	public class PropertyRule : IValidationRule {
-		readonly List<IPropertyValidator> validators = new List<IPropertyValidator>();
-		Func<CascadeMode> cascadeModeThunk = () => ValidatorOptions.CascadeMode;
-		string propertyDisplayName;
-		string propertyName;
+		readonly List<IPropertyValidator> _validators = new List<IPropertyValidator>();
+		Func<CascadeMode> _cascadeModeThunk = () => ValidatorOptions.CascadeMode;
+		string _propertyDisplayName;
+		string _propertyName;
 		private string[] _ruleSet = new string[0];
 
 		/// <summary>
@@ -86,14 +86,14 @@ namespace FluentValidation.Internal {
 		/// Cascade mode for this rule.
 		/// </summary>
 		public CascadeMode CascadeMode {
-			get { return cascadeModeThunk(); }
-			set { cascadeModeThunk = () => value; }
+			get { return _cascadeModeThunk(); }
+			set { _cascadeModeThunk = () => value; }
 		}
 
 		/// <summary>
 		/// Validators associated with this rule.
 		/// </summary>
-		public IEnumerable<IPropertyValidator> Validators => validators;
+		public IEnumerable<IPropertyValidator> Validators => _validators;
 
 		/// <summary>
 		/// Creates a new property rule.
@@ -110,7 +110,7 @@ namespace FluentValidation.Internal {
 			Expression = expression;
 			OnFailure = x => { };
 			TypeToValidate = typeToValidate;
-			this.cascadeModeThunk = cascadeModeThunk;
+			this._cascadeModeThunk = cascadeModeThunk;
 			
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
@@ -138,17 +138,17 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public void AddValidator(IPropertyValidator validator) {
 			CurrentValidator = validator;
-			validators.Add(validator);
+			_validators.Add(validator);
 		}
 
 		/// <summary>
 		/// Replaces a validator in this rule. Used to wrap validators.
 		/// </summary>
 		public void ReplaceValidator(IPropertyValidator original, IPropertyValidator newValidator) {
-			var index = validators.IndexOf(original);
+			var index = _validators.IndexOf(original);
 
 			if (index > -1) {
-				validators[index] = newValidator;
+				_validators[index] = newValidator;
 
 				if (ReferenceEquals(CurrentValidator, original)) {
 					CurrentValidator = newValidator;
@@ -161,10 +161,10 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public void RemoveValidator(IPropertyValidator original) {
 			if (ReferenceEquals(CurrentValidator, original)) {
-				CurrentValidator = validators.LastOrDefault(x => x != original);
+				CurrentValidator = _validators.LastOrDefault(x => x != original);
 			}
 
-			validators.Remove(original);
+			_validators.Remove(original);
 		}
 
 		/// <summary>
@@ -172,7 +172,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public void ClearValidators() {
 			CurrentValidator = null;
-			validators.Clear();
+			_validators.Clear();
 		}
 
 		/// <summary>
@@ -180,10 +180,10 @@ namespace FluentValidation.Internal {
 		/// Returns null if it is not a property being validated (eg a method call)
 		/// </summary>
 		public string PropertyName {
-			get { return propertyName; }
+			get { return _propertyName; }
 			set {
-				propertyName = value;
-				propertyDisplayName = propertyName.SplitPascalCase();
+				_propertyName = value;
+				_propertyDisplayName = _propertyName.SplitPascalCase();
 			}
 		}
 
@@ -210,7 +210,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (result == null) {
-				result = propertyDisplayName;
+				result = _propertyDisplayName;
 			}
 
 			return result;
@@ -227,7 +227,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (result == null) {
-				result = propertyDisplayName;
+				result = _propertyDisplayName;
 			}
 
 			return result;
@@ -255,11 +255,11 @@ namespace FluentValidation.Internal {
 				yield break;
 			}
 
-			var cascade = cascadeModeThunk();
+			var cascade = _cascadeModeThunk();
 			bool hasAnyFailure = false;
 
 			// Invoke each validator and collect its results.
-			foreach (var validator in validators) {
+			foreach (var validator in _validators) {
 				IEnumerable<ValidationFailure> results;
 				if (ShouldValidateAsync(validator, context))
 					results = InvokePropertyValidatorAsync(context, validator, propertyName, default(CancellationToken)).GetAwaiter().GetResult();
@@ -323,13 +323,13 @@ namespace FluentValidation.Internal {
 					return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 				}
 
-				var cascade = cascadeModeThunk();
+				var cascade = _cascadeModeThunk();
 				var failures = new List<ValidationFailure>();
 
 				var fastExit = false;
 
 				// Firstly, invoke all syncronous validators and collect their results.
-				foreach (var validator in validators.Where(v => !ShouldValidateAsync(v, context))) {
+				foreach (var validator in _validators.Where(v => !ShouldValidateAsync(v, context))) {
 
 					if (cancellation.IsCancellationRequested) {
 						return TaskHelpers.Canceled<IEnumerable<ValidationFailure>>();
@@ -354,7 +354,7 @@ namespace FluentValidation.Internal {
 					return TaskHelpers.FromResult(failures.AsEnumerable());
 				}
 
-				var asyncValidators = validators.Where(v => ShouldValidateAsync(v, context)).ToList();
+				var asyncValidators = _validators.Where(v => ShouldValidateAsync(v, context)).ToList();
                 
 				// if there's no async validators then we exit
 				if (asyncValidators.Count == 0) {
@@ -483,75 +483,9 @@ namespace FluentValidation.Internal {
 			}
 			
 			// For backwards compatibility
+#pragma warning disable 618
 			return validator.IsAsync;
-		}
-	}
-
-	/// <summary>
-	/// Include rule
-	/// </summary>
-	public class IncludeRule : PropertyRule {
-		/// <summary>
-		/// Creates a new IncludeRule
-		/// </summary>
-		/// <param name="validator"></param>
-		/// <param name="cascadeModeThunk"></param>
-		/// <param name="typeToValidate"></param>
-		/// <param name="containerType"></param>
-		public IncludeRule(IValidator validator,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
-			AddValidator(new ChildValidatorAdaptor(validator));
-		}
-
-		/// <summary>
-		/// Creates a new IncludeRule
-		/// </summary>
-		/// <param name="func"></param>
-		/// <param name="cascadeModeThunk"></param>
-		/// <param name="typeToValidate"></param>
-		/// <param name="containerType"></param>
-		/// <param name="validatorType"></param>
-		public IncludeRule(Func<object, IValidator> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType, Type validatorType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
-			AddValidator(new ChildValidatorAdaptor(func,  validatorType));
-		}
-		
-		/// <summary>
-		/// Creates a new include rule from an existing validator
-		/// </summary>
-		/// <param name="validator"></param>
-		/// <param name="cascadeModeThunk"></param>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public static IncludeRule Create<T>(IValidator validator, Func<CascadeMode> cascadeModeThunk) {
-			return new IncludeRule(validator, cascadeModeThunk, typeof(T), typeof(T));
-		}
-
-		/// <summary>
-		/// Creates a new include rule from an existing validator
-		/// </summary>
-		/// <param name="func"></param>
-		/// <param name="cascadeModeThunk"></param>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="TValidator"></typeparam>
-		/// <returns></returns>
-		public static IncludeRule Create<T, TValidator>(Func<T, TValidator> func, Func<CascadeMode> cascadeModeThunk) 
-		where TValidator : IValidator<T> {
-			return new IncludeRule(x => func((T)x), cascadeModeThunk, typeof(T), typeof(T), typeof(TValidator));
-		}
-
-
-		public override IEnumerable<ValidationFailure> Validate(ValidationContext context) {
-			context.RootContextData["_FV_DisableSelectorCascadeForChildRules"] = true;
-			var result = base.Validate(context).ToList();
-			context.RootContextData.Remove("_FV_DisableSelectorCascadeForChildRules");
-			return result;
-		}
-
-		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
-			context.RootContextData["_FV_DisableSelectorCascadeForChildRules"] = true;
-			var result = await base.ValidateAsync(context, cancellation);
-			result = result.ToList();
-			context.RootContextData.Remove("_FV_DisableSelectorCascadeForChildRules");
-			return result;
+#pragma warning restore 618
 		}
 	}
 }

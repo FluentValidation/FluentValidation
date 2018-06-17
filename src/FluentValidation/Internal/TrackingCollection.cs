@@ -23,13 +23,13 @@ namespace FluentValidation.Internal {
 	using System.Collections.Generic;
 
 	public class TrackingCollection<T> : IEnumerable<T> {
-		readonly List<T> innerCollection = new List<T>();
+		readonly List<T> _innerCollection = new List<T>();
 		public event Action<T> ItemAdded;
 		private Action<T> _capture = null;
 
 		public void Add(T item) {
 			if (_capture == null) {
-				innerCollection.Add(item);
+				_innerCollection.Add(item);
 			}
 			else {
 				_capture(item);
@@ -39,7 +39,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public void Remove(T item) {
-			innerCollection.Remove(item);
+			_innerCollection.Remove(item);
 		}
 
 		public IDisposable OnItemAdded(Action<T> onItemAdded) {
@@ -52,7 +52,7 @@ namespace FluentValidation.Internal {
 		}
 
 		public IEnumerator<T> GetEnumerator() {
-			return innerCollection.GetEnumerator();
+			return _innerCollection.GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() {

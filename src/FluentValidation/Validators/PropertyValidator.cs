@@ -29,8 +29,8 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public abstract class PropertyValidator : IPropertyValidator {
-		private IStringSource errorSource;
-		private IStringSource errorCodeSource;
+		private IStringSource _errorSource;
+		private IStringSource _errorCodeSource;
 
 		[Obsolete("Use IShouldValidateAsync.ShouldValidatAsync(context) instead")]
 		public virtual bool IsAsync {
@@ -43,33 +43,33 @@ namespace FluentValidation.Validators {
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
 			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
-			errorSource = errorMessageSource;
+			_errorSource = errorMessageSource;
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
 			errorMessageResourceName.Guard("errorMessageResourceName must be specified.", nameof(errorMessageResourceName));
 			errorMessageResourceType.Guard("errorMessageResourceType must be specified.", nameof(errorMessageResourceType));
 
-			errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
+			_errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			errorSource = new StaticStringSource(errorMessage);
+			_errorSource = new StaticStringSource(errorMessage);
 		}
 
 		[Obsolete("Use the constructor that takes a Type resourceType and string resourceName")]
 		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
-			errorSource = OverridableLocalizedStringSource.CreateFromExpression(errorMessageResourceSelector);
+			_errorSource = OverridableLocalizedStringSource.CreateFromExpression(errorMessageResourceSelector);
 		}
 
 		public IStringSource ErrorMessageSource {
-			get { return errorSource; }
+			get { return _errorSource; }
 			set {
 				if (value == null) {
 					throw new ArgumentNullException("value");
 				}
 
-				errorSource = value;
+				_errorSource = value;
 
 				
 			}
@@ -122,7 +122,7 @@ namespace FluentValidation.Validators {
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
 		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
-			var messageBuilderContext = new MessageBuilderContext(context, errorSource, this);
+			var messageBuilderContext = new MessageBuilderContext(context, _errorSource, this);
 
 			var error = context.Rule.MessageBuilder != null 
 				? context.Rule.MessageBuilder(messageBuilderContext) 
@@ -131,9 +131,9 @@ namespace FluentValidation.Validators {
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-			failure.ResourceName = errorSource.ResourceName;
-			failure.ErrorCode = (errorCodeSource != null)
-				? errorCodeSource.GetString(context.Instance)
+			failure.ResourceName = _errorSource.ResourceName;
+			failure.ErrorCode = (_errorCodeSource != null)
+				? _errorCodeSource.GetString(context.Instance)
 				: ValidatorOptions.ErrorCodeResolver(this);
 
 			if (CustomStateProvider != null) {
@@ -146,8 +146,8 @@ namespace FluentValidation.Validators {
 
 
 		public IStringSource ErrorCodeSource {
-			get => errorCodeSource;
-			set => errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));
+			get => _errorCodeSource;
+			set => _errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));
 		}
 	}
 }

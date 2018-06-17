@@ -11,24 +11,19 @@ namespace FluentValidation.Validators {
 		static readonly IEnumerable<ValidationFailure> EmptyResult = Enumerable.Empty<ValidationFailure>();
 		static readonly Task<IEnumerable<ValidationFailure>> AsyncEmptyResult = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 
-		readonly Func<object, IValidator> validatorProvider;
-		readonly Type validatorType;
+		readonly Func<object, IValidator> _validatorProvider;
 
-		public Type ValidatorType {
-			get { return validatorType; }
-		}
-		
+		public Type ValidatorType { get; }
+
 		[Obsolete("Use IShouldValidateAsync.ShouldValidatAsync(context) instead")]
-		public override bool IsAsync {
-			get { return true; }
-		}
+		public override bool IsAsync => true;
 
 		public ChildValidatorAdaptor(IValidator validator) : this(_ => validator, validator.GetType()) {
 		}
 
 		public ChildValidatorAdaptor(Func<object, IValidator> validatorProvider, Type validatorType) {
-			this.validatorProvider = validatorProvider;
-			this.validatorType = validatorType;
+			_validatorProvider = validatorProvider;
+			ValidatorType = validatorType;
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
@@ -67,7 +62,7 @@ namespace FluentValidation.Validators {
 
 		public virtual IValidator GetValidator(PropertyValidatorContext context) {
 			context.Guard("Cannot pass a null context to GetValidator", nameof(context));
-			return validatorProvider(context.Instance);
+			return _validatorProvider(context.Instance);
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {

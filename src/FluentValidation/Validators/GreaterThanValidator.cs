@@ -38,8 +38,6 @@ namespace FluentValidation.Validators {
 			return Comparer.GetComparisonResult(value, valueToCompare) > 0;
 		}
 
-		public override Comparison Comparison {
-			get { return Validators.Comparison.GreaterThan; }
-		}
+		public override Comparison Comparison => Validators.Comparison.GreaterThan;
 	}
 }

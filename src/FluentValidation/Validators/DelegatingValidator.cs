@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,6 +15,7 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+
 #endregion
 
 namespace FluentValidation.Validators {
@@ -27,56 +29,56 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator, IShouldValidateAsync {
-		private readonly Func<ValidationContext, bool> condition;
-		private readonly Func<ValidationContext, CancellationToken, Task<bool>> asyncCondition;
+		private readonly Func<ValidationContext, bool> _condition;
+		private readonly Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 		public IPropertyValidator InnerValidator { get; private set; }
 
 		[Obsolete]
-		public virtual bool IsAsync => InnerValidator.IsAsync || asyncCondition != null;
+		public virtual bool IsAsync => InnerValidator.IsAsync || _asyncCondition != null;
 
 		public bool ShouldValidateAsync(ValidationContext context) {
-			
-			return (InnerValidator is IShouldValidateAsync a && a.ShouldValidateAsync(context)) 
-				|| asyncCondition != null || InnerValidator.IsAsync;
+			return (InnerValidator is IShouldValidateAsync a && a.ShouldValidateAsync(context))
+			       || _asyncCondition != null || InnerValidator.IsAsync;
 		}
-		
+
 		public DelegatingValidator(Func<ValidationContext, bool> condition, IPropertyValidator innerValidator) {
-			this.condition = condition;
-			this.asyncCondition = null;
+			_condition = condition;
+			_asyncCondition = null;
 			InnerValidator = innerValidator;
 		}
 
 		public DelegatingValidator(Func<ValidationContext, CancellationToken, Task<bool>> asyncCondition, IPropertyValidator innerValidator) {
-			this.condition = _ => true;
-			this.asyncCondition = asyncCondition;
+			_condition = _ => true;
+			_asyncCondition = asyncCondition;
 			InnerValidator = innerValidator;
 		}
 
 		public IStringSource ErrorMessageSource {
-			get { return InnerValidator.ErrorMessageSource; }
-			set { InnerValidator.ErrorMessageSource = value; }
+			get => InnerValidator.ErrorMessageSource;
+			set => InnerValidator.ErrorMessageSource = value;
 		}
 
 		public IStringSource ErrorCodeSource {
-			get { return InnerValidator.ErrorCodeSource; }
-			set { InnerValidator.ErrorCodeSource = value; }
+			get => InnerValidator.ErrorCodeSource;
+			set => InnerValidator.ErrorCodeSource = value;
 		}
 
 		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			if (condition(context.ParentContext)) {
+			if (_condition(context.ParentContext)) {
 				return InnerValidator.Validate(context);
 			}
+
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
-		public async  Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			if (!condition(context.ParentContext))
+		public async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			if (!_condition(context.ParentContext))
 				return Enumerable.Empty<ValidationFailure>();
 
-			if (asyncCondition == null)
+			if (_asyncCondition == null)
 				return await InnerValidator.ValidateAsync(context, cancellation);
 
-			bool shouldValidate = await asyncCondition(context.ParentContext, cancellation);
+			bool shouldValidate = await _asyncCondition(context.ParentContext, cancellation);
 
 			if (shouldValidate) {
 				return await InnerValidator.ValidateAsync(context, cancellation);
@@ -85,29 +87,23 @@ namespace FluentValidation.Validators {
 			return Enumerable.Empty<ValidationFailure>();
 		}
 
-		public bool SupportsStandaloneValidation {
-			get { return false; }
-		}
+		public bool SupportsStandaloneValidation => false;
 
 		public Func<PropertyValidatorContext, object> CustomStateProvider {
-			get { return InnerValidator.CustomStateProvider; }
-			set { InnerValidator.CustomStateProvider = value; }
+			get => InnerValidator.CustomStateProvider;
+			set => InnerValidator.CustomStateProvider = value;
 		}
 
-		public Severity Severity
-		{
-		    get { return InnerValidator.Severity; }
-		    set { InnerValidator.Severity = value; }
+		public Severity Severity {
+			get => InnerValidator.Severity;
+			set => InnerValidator.Severity = value;
 		}
 
-		IPropertyValidator IDelegatingValidator.InnerValidator {
-			get { return InnerValidator; }
-		}
+		IPropertyValidator IDelegatingValidator.InnerValidator => InnerValidator;
 
 		public bool CheckCondition(ValidationContext context) {
-			return condition(context);
+			return _condition(context);
 		}
-
 	}
 
 	public interface IDelegatingValidator : IPropertyValidator {

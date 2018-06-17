@@ -22,17 +22,17 @@ namespace FluentValidation.Validators {
 	using System.Linq;
 
     public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
-		readonly object defaultValueForType;
+		readonly object _defaultValueForType;
 
 		public NotEmptyValidator(object defaultValueForType) : base(new LanguageStringSource(nameof(NotEmptyValidator))) {
-			this.defaultValueForType = defaultValueForType;
+			this._defaultValueForType = defaultValueForType;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
 			if (context.PropertyValue == null
 			    || IsInvalidString(context.PropertyValue)
 			    || IsEmptyCollection(context.PropertyValue)
-			    || Equals(context.PropertyValue, defaultValueForType)) {
+			    || Equals(context.PropertyValue, _defaultValueForType)) {
 				return false;
 			}
 

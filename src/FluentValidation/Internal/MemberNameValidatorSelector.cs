@@ -26,19 +26,19 @@ namespace FluentValidation.Internal {
 	/// Selects validators that are associated with a particular property.
 	/// </summary>
 	public class MemberNameValidatorSelector : IValidatorSelector {
-		readonly IEnumerable<string> memberNames;
+		readonly IEnumerable<string> _memberNames;
 
 		/// <summary>
 		/// Creates a new instance of MemberNameValidatorSelector.
 		/// </summary>
 		public MemberNameValidatorSelector(IEnumerable<string> memberNames) {
-			this.memberNames = memberNames;
+			_memberNames = memberNames;
 		}
 
 		/// <summary>
 		/// Member names that are validated.
 		/// </summary>
-		public IEnumerable<string> MemberNames => this.memberNames;
+		public IEnumerable<string> MemberNames => _memberNames;
 
 		/// <summary>
 		/// Determines whether or not a rule should execute.
@@ -53,7 +53,7 @@ namespace FluentValidation.Internal {
 			// Because of this, we assume that the rule should continue (ie if the parent rule is valid, all children are valid)
 			bool isChildContext = context.IsChildContext;
 			bool cascadeEnabled = !context.RootContextData.ContainsKey("_FV_DisableSelectorCascadeForChildRules");
-			return (isChildContext && cascadeEnabled) || rule is IncludeRule || ( memberNames.Any(x => x == propertyPath || propertyPath.StartsWith(x + ".")));
+			return (isChildContext && cascadeEnabled) || rule is IncludeRule || ( _memberNames.Any(x => x == propertyPath || propertyPath.StartsWith(x + ".")));
 		}
 
 		///<summary>
@@ -80,7 +80,7 @@ namespace FluentValidation.Internal {
 			var chain = PropertyChain.FromExpression(expression);
 
 			if (chain.Count == 0) {
-				throw new ArgumentException(string.Format("Expression '{0}' does not specify a valid property or field.", expression));
+				throw new ArgumentException($"Expression '{expression}' does not specify a valid property or field.");
 			}
 
 			return chain.ToString();

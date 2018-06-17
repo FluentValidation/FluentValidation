@@ -279,6 +279,13 @@ namespace FluentValidation
 		    }
 	    }
 	}
+	
+	/// <summary>
+	/// Container class for dependent rule definitions
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	[Obsolete]
+	internal class	DependentRules<T> : AbstractValidator<T> { }
 }
 
 namespace FluentValidation.Resources {

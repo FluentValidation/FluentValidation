@@ -26,15 +26,15 @@ namespace FluentValidation.Validators {
 	public class PredicateValidator : PropertyValidator, IPredicateValidator {
         public delegate bool Predicate(object instanceToValidate, object propertyValue, PropertyValidatorContext propertyValidatorContext);
 
-		private readonly Predicate predicate;
+		private readonly Predicate _predicate;
 
 		public PredicateValidator(Predicate predicate) : base(new LanguageStringSource(nameof(PredicateValidator))) {
 			predicate.Guard("A predicate must be specified.", nameof(predicate));
-			this.predicate = predicate;
+			this._predicate = predicate;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			if (!predicate(context.Instance, context.PropertyValue, context)) {
+			if (!_predicate(context.Instance, context.PropertyValue, context)) {
 				return false;
 			}
 

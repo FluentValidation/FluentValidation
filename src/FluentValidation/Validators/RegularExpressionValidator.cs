@@ -25,41 +25,41 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
-		readonly Func<object, Regex> regexFunc;
+		readonly Func<object, Regex> _regexFunc;
 
 		public RegularExpressionValidator(string expression) :base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 			this.Expression = expression;
 
 			var regex = CreateRegex(expression);
-			this.regexFunc = x => regex;
+			this._regexFunc = x => regex;
 		}
 
 		public RegularExpressionValidator(Regex regex) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 			this.Expression = regex.ToString();
-			this.regexFunc = x => regex;
+			this._regexFunc = x => regex;
 		}
 
 		public RegularExpressionValidator(string expression, RegexOptions options) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 			this.Expression = expression;
 			var regex = CreateRegex(expression, options);
-			this.regexFunc = x => regex;
+			this._regexFunc = x => regex;
 		}
 
 		public RegularExpressionValidator(Func<object, string> expressionFunc) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
-			this.regexFunc = x => CreateRegex(expressionFunc(x));
+			this._regexFunc = x => CreateRegex(expressionFunc(x));
 		}
 
 		public RegularExpressionValidator(Func<object, Regex> regexFunc) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
-			this.regexFunc = regexFunc;
+			this._regexFunc = regexFunc;
 		}
 
 		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
 
-			this.regexFunc = x => CreateRegex(expression(x), options);
+			this._regexFunc = x => CreateRegex(expression(x), options);
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			var regex = regexFunc(context.Instance);
+			var regex = _regexFunc(context.Instance);
 			
 			if (regex != null && context.PropertyValue != null && !regex.IsMatch((string) context.PropertyValue)) {
 				context.MessageFormatter.AppendArgument("RegularExpression", regex.ToString());

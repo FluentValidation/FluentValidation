@@ -27,7 +27,6 @@ namespace FluentValidation {
 	using System.Threading.Tasks;
 	using Internal;
 	using Results;
-	using Validators;
 
 	/// <summary>
 	/// Base class for entity validator classes.
@@ -38,20 +37,20 @@ namespace FluentValidation {
 
 		// Work-around for reflection bug in .NET 4.5
 		static Func<CascadeMode> s_cascadeMode = () => ValidatorOptions.CascadeMode;
-		Func<CascadeMode> cascadeMode = s_cascadeMode;
+		Func<CascadeMode> _cascadeMode = s_cascadeMode;
 
 		/// <summary>
 		/// Sets the cascade mode for all rules within this validator.
 		/// </summary>
 		public CascadeMode CascadeMode {
-			get => cascadeMode();
-			set => cascadeMode = () => value;
+			get => _cascadeMode();
+			set => _cascadeMode = () => value;
 		}
 
 		ValidationResult IValidator.Validate(object instance) {
 			instance.Guard("Cannot pass null to Validate.", nameof(instance));
 			if(! ((IValidator)this).CanValidateInstancesOfType(instance.GetType())) {
-				throw new InvalidOperationException(string.Format("Cannot validate instances of type '{0}'. This validator can only validate instances of type '{1}'.", instance.GetType().Name, typeof(T).Name));
+				throw new InvalidOperationException($"Cannot validate instances of type '{instance.GetType().Name}'. This validator can only validate instances of type '{typeof(T).Name}'.");
 			}
 			
 			return Validate((T)instance);
@@ -60,7 +59,7 @@ namespace FluentValidation {
 		Task<ValidationResult> IValidator.ValidateAsync(object instance, CancellationToken cancellation) {
 			instance.Guard("Cannot pass null to Validate.", nameof(instance));
 			if (!((IValidator) this).CanValidateInstancesOfType(instance.GetType())) {
-				throw new InvalidOperationException(string.Format("Cannot validate instances of type '{0}'. This validator can only validate instances of type '{1}'.", instance.GetType().Name, typeof (T).Name));
+				throw new InvalidOperationException($"Cannot validate instances of type '{instance.GetType().Name}'. This validator can only validate instances of type '{typeof(T).Name}'.");
 			}
 
 			return ValidateAsync((T) instance, cancellation);
@@ -135,10 +134,9 @@ namespace FluentValidation {
 			
 			return TaskHelpers.Iterate(
 				NestedValidators
-				.Select(v => v.ValidateAsync(context, cancellation).Then(fs => failures.AddRange(fs), runSynchronously: true))
-			).Then(
-				() => new ValidationResult(failures)
-			);
+				.Select(v => v.ValidateAsync(context, cancellation)
+				.Then(fs => failures.AddRange(fs), runSynchronously: true, cancellationToken: cancellation)), cancellation)
+				.Then(() => new ValidationResult(failures), cancellation);
 		}
 
 		/// <summary>
@@ -236,7 +234,7 @@ namespace FluentValidation {
 		[Obsolete("Use model-level RuleFor(x => x).CustomAsync(await (x,context,cancellation) => {}) instead")]
 		public void CustomAsync(Func<T, ValidationContext<T>, CancellationToken, Task<ValidationFailure>> customValidator) {
 			customValidator.Guard("Cannot pass null to Custom", nameof(customValidator));
-			AddRule(new DelegateValidator<T>((x, ctx, cancel) => customValidator(x, ctx, cancel).Then(f => new[] {f}.AsEnumerable(), runSynchronously: true)));
+			AddRule(new DelegateValidator<T>((x, ctx, cancel) => customValidator(x, ctx, cancel).Then(f => new[] {f}.AsEnumerable(), runSynchronously: true, cancellationToken: cancel)));
 		}
 
 		/// <summary>
@@ -349,7 +347,6 @@ namespace FluentValidation {
 		/// </summary>
 		public void Include<TValidator>(Func<T, TValidator> rulesToInclude) where TValidator : IValidator<T> {
 			rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
-			//var rule = IncludeRule.Create<T, IValidator<T>>(x => rulesToInclude, () => CascadeMode);
 			var rule = IncludeRule.Create(rulesToInclude, () => CascadeMode);
 			AddRule(rule);
 		}
@@ -378,11 +375,4 @@ namespace FluentValidation {
 			instanceToValidate.Guard("Cannot pass null model to Validate.", nameof(instanceToValidate));
 		}
 	}
-
-	/// <summary>
-	/// Container class for dependent rule definitions
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	[Obsolete]
-	internal class	DependentRules<T> : AbstractValidator<T> { }
 }
