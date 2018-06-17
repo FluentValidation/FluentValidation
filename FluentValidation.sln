@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.WebApi", "src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj", "{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.netcoreapp1", "src\FluentValidation.Tests.netcoreapp1\FluentValidation.Tests.netcoreapp1.csproj", "{FCCE03DA-9FD1-4483-976C-EA6821A1E514}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.AspNetCore", "src\FluentValidation.AspNetCore\FluentValidation.AspNetCore.csproj", "{D8A44C11-51B8-4AA1-9391-C4F89078181C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation", "src\FluentValidation\FluentValidation.csproj", "{9DB6A8B4-5C9A-4CA1-96A5-4E1E4C3A9A44}"
@@ -26,8 +24,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.WebApi", "src\FluentValidation.WebApi\FluentValidation.WebApi.csproj", "{9D1DC734-F71F-4587-B54C-697F0B5872AF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.netcoreapp2", "src\FluentValidation.Tests.Mvc6.netcoreapp2\FluentValidation.Tests.Mvc6.netcoreapp2.csproj", "{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.netcoreapp2", "src\FluentValidation.Tests.netcoreapp2\FluentValidation.Tests.netcoreapp2.csproj", "{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc6.net46", "src\FluentValidation.Tests.Mvc6.net46\FluentValidation.Tests.Mvc6.net46.csproj", "{51F4E700-14A5-435D-8E6C-CEAC236161FC}"
 EndProject
@@ -49,10 +45,6 @@ Global
 		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FCCE03DA-9FD1-4483-976C-EA6821A1E514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FCCE03DA-9FD1-4483-976C-EA6821A1E514}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FCCE03DA-9FD1-4483-976C-EA6821A1E514}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FCCE03DA-9FD1-4483-976C-EA6821A1E514}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -73,10 +65,6 @@ Global
 		{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4B226BA-7CD8-4EB0-A73A-19A9523ADE22}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0AE1D426-A5D0-4EDF-B20C-03FDACE06B2C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{51F4E700-14A5-435D-8E6C-CEAC236161FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{51F4E700-14A5-435D-8E6C-CEAC236161FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51F4E700-14A5-435D-8E6C-CEAC236161FC}.Release|Any CPU.ActiveCfg = Release|Any CPU

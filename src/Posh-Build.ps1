@@ -1,3 +1,6 @@
+# dotnet build utilities for Powershell by Jeremy Skinner
+# For the latest version of this file, go to https://github.com/jeremyskinner/posh-build
+
 $script:Targets = [System.Collections.Generic.Dictionary[string, [BuildTarget]]]::new()
 function target {
   [CmdletBinding()]

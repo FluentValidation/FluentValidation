@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
     <AssemblyName>FluentValidation.Tests</AssemblyName>
     <!--<PackageTargetFallback>$(PackageTargetFallback);dnxcore50;portable-net451+win81</PackageTargetFallback>-->
     <!--<RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>-->
     <RootNamespace>FluentValidation.Tests</RootNamespace>
 	  <IsPackable>false</IsPackable>
 	  <OutputType>Library</OutputType>
-	</PropertyGroup>
+    <NoWarn>1701;1702;1705;1998;0618</NoWarn>
+
+  </PropertyGroup>
 
   <ItemGroup>
     <None Update="xunit.runner.json">
@@ -44,21 +46,5 @@
       <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  </ItemGroup>
-
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputType>Library</OutputType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;1705;1998;0618</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;1705;1998;0618</NoWarn>
-  </PropertyGroup>
 
 </Project>
