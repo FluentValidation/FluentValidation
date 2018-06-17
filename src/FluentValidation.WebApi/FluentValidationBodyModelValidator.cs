@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,6 +15,7 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+
 #endregion
 
 namespace FluentValidation.WebApi {
@@ -26,13 +28,12 @@ namespace FluentValidation.WebApi {
 
 	public class FluentValidationBodyModelValidator : DefaultBodyModelValidator, IBodyModelValidator {
 		private bool ImplicitlyValidateChildProperties { get; set; }
-		
+
 		public FluentValidationBodyModelValidator(bool implicitlyValidateChildProperties = true) {
 			ImplicitlyValidateChildProperties = implicitlyValidateChildProperties;
 		}
-		
-		bool IBodyModelValidator.Validate(object model, Type type, ModelMetadataProvider metadataProvider, HttpActionContext actionContext, string keyPrefix) {
 
+		bool IBodyModelValidator.Validate(object model, Type type, ModelMetadataProvider metadataProvider, HttpActionContext actionContext, string keyPrefix) {
 			var customizations = actionContext.ActionDescriptor.GetParameters().Where(x => x.ParameterName == keyPrefix)
 				.Select(x => x.GetCustomAttributes<CustomizeValidatorAttribute>().FirstOrDefault())
 				.FirstOrDefault();
@@ -40,25 +41,24 @@ namespace FluentValidation.WebApi {
 			if (customizations != null) {
 				actionContext.Request.Properties["_FV_Customizations"] = customizations;
 			}
-			
+
 			return base.Validate(model, type, metadataProvider, actionContext, keyPrefix);
 		}
-		
-		protected override bool ValidateNodeAndChildren(ModelMetadata metadata, BodyModelValidatorContext validationContext, object container, IEnumerable<ModelValidator> validators) {
 
+		protected override bool ValidateNodeAndChildren(ModelMetadata metadata, BodyModelValidatorContext validationContext, object container, IEnumerable<ModelValidator> validators) {
 			CustomizeValidatorAttribute customizations = null;
-			
+
 			if (validationContext.ActionContext.Request.Properties.ContainsKey("_FV_Customizations")) {
 				customizations = validationContext.ActionContext.Request.Properties["_FV_Customizations"] as CustomizeValidatorAttribute;
 			}
-			
-			if(customizations == null) customizations = new CustomizeValidatorAttribute();
 
-			if(validators == null)
+			if (customizations == null) customizations = new CustomizeValidatorAttribute();
+
+			if (validators == null)
 				validators = GetValidators(validationContext.ActionContext, metadata, validationContext.ValidatorCache);
 
 			validators = ApplyCustomizationsToValidators(validators, customizations, validationContext.ActionContext);
-			
+
 			bool isValid = !ImplicitlyValidateChildProperties || base.ValidateNodeAndChildren(metadata, validationContext, container, validators);
 
 			var model = GetModel(metadata);
@@ -70,6 +70,7 @@ namespace FluentValidation.WebApi {
 				ShallowValidate(metadata, validationContext, container, rootModelValidators);
 				return false;
 			}
+
 			return isValid;
 		}
 
@@ -80,22 +81,19 @@ namespace FluentValidation.WebApi {
 			var projection = from validator in validators
 				let fluentValidator = validator as FluentValidationModelValidator
 				let needsCustomiations = fluentValidator != null && fluentValidator.Customizations == null
-				let newValidator = needsCustomiations ? (ModelValidator)fluentValidator.CloneWithCustomizations(customizations, ctx) : validator
+				let newValidator = needsCustomiations ? (ModelValidator) fluentValidator.CloneWithCustomizations(customizations, ctx) : validator
 				select newValidator;
 
 			return projection.ToList();
 		}
-		
-		
-		private static IEnumerable<ModelValidator> GetValidators(HttpActionContext actionContext, ModelMetadata metadata, IModelValidatorCache validatorCache)
-		{
-			if (validatorCache == null)
-			{
+
+
+		private static IEnumerable<ModelValidator> GetValidators(HttpActionContext actionContext, ModelMetadata metadata, IModelValidatorCache validatorCache) {
+			if (validatorCache == null) {
 				// slow path: there is no validator cache on the configuration
 				return metadata.GetValidators(actionContext.GetValidatorProviders());
 			}
-			else
-			{
+			else {
 				return validatorCache.GetValidators(metadata);
 			}
 		}
@@ -114,14 +112,13 @@ namespace FluentValidation.WebApi {
 		}
 
 		private object GetModel(ModelMetadata meta) {
-
 			object model = null;
 
-			try
-			{
+			try {
 				model = meta.Model;
 			}
-			catch { }
+			catch {
+			}
 
 			return model;
 		}

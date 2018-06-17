@@ -30,7 +30,6 @@ namespace FluentValidation.WebApi
 
 	public delegate ModelValidator FluentValidationModelValidationFactory(ModelMetadata metadata, IEnumerable<ModelValidatorProvider> validatorProviders, PropertyRule rule, IPropertyValidator validator);
 
-
 	public class FluentValidationModelValidatorProvider : ModelValidatorProvider {
 		public IValidatorFactory ValidatorFactory { get; set; }
 		public bool ImplicitlyValidateChildProperties { get; set; }
@@ -57,14 +56,13 @@ namespace FluentValidation.WebApi
 			configuration.Services.Add(typeof(ModelValidatorProvider), provider);
 		}
 
-		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, IEnumerable<ModelValidatorProvider> validatorProviders)
-		{
+		public override IEnumerable<ModelValidator> GetValidators(ModelMetadata metadata, IEnumerable<ModelValidatorProvider> validatorProviders) {
 			if (DisableDiscoveryOfPropertyValidators && IsValidatingProperty(metadata)) {
 				yield break;
 			}
 
 			IValidator validator = ValidatorFactory.GetValidator(metadata.ModelType);
-			
+
 			if (validator == null) {
 				yield break;
 			}

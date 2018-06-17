@@ -7,18 +7,18 @@ namespace FluentValidation.Mvc {
 	/// </summary>
 	public class RuleSetForClientSideMessagesAttribute : ActionFilterAttribute {
 		private const string key = "_FV_ClientSideRuleSet";
-		string[] ruleSets;
+		private readonly string[] _ruleSets;
 
 		public RuleSetForClientSideMessagesAttribute(string ruleSet) {
-			ruleSets = new[] { ruleSet };
+			_ruleSets = new[] { ruleSet };
 		}
 
 		public RuleSetForClientSideMessagesAttribute(params string[] ruleSets) {
-			this.ruleSets = ruleSets;
+			this._ruleSets = ruleSets;
 		}
 
 		public override void OnActionExecuting(ActionExecutingContext filterContext) {
-			SetRulesetForClientValidation(filterContext.HttpContext, ruleSets);
+			SetRulesetForClientValidation(filterContext.HttpContext, _ruleSets);
 		}
 
 		public static void SetRulesetForClientValidation(HttpContextBase context, string[] ruleSets) {

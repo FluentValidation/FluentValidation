@@ -28,14 +28,14 @@ namespace FluentValidation.WebApi
 	using FluentValidation.Results;
 
 	public class FluentValidationModelValidator : ModelValidator {
-		readonly IValidator validator;
+		private readonly IValidator _validator;
 
 		internal CustomizeValidatorAttribute Customizations { get; private set; }
 		internal HttpActionContext ActionContext { get; private set; }
 		
 		public FluentValidationModelValidator(IEnumerable<ModelValidatorProvider> validatorProviders, IValidator validator)
 			: base(validatorProviders) {
-			this.validator = validator;
+			this._validator = validator;
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(ModelMetadata metadata, object container) {
@@ -48,7 +48,7 @@ namespace FluentValidation.WebApi
 				}
 
 				var selector = customizations.ToValidatorSelector();
-				var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
+				var interceptor = customizations.GetInterceptor() ?? (_validator as IValidatorInterceptor);
 				var context = new FluentValidation.ValidationContext(metadata.Model, new FluentValidation.Internal.PropertyChain(), selector);
 				context.RootContextData["InvokedByWebApi"] = true;
 
@@ -59,7 +59,7 @@ namespace FluentValidation.WebApi
 					context = interceptor.BeforeMvcValidation(ActionContext, context) ?? context;
 				}
 
-				var result = validator.Validate(context);
+				var result = _validator.Validate(context);
 				
 				if (interceptor != null) {
 					// allow the user to provice a custom collection of failures, which could be empty.
@@ -75,15 +75,14 @@ namespace FluentValidation.WebApi
 		}
 
 		protected virtual IEnumerable<ModelValidationResult> ConvertValidationResultToModelValidationResults(ValidationResult result) {
-			return result.Errors.Select(x => new ModelValidationResult
-			{
+			return result.Errors.Select(x => new ModelValidationResult {
 				MemberName = x.PropertyName,
 				Message = x.ErrorMessage
 			});
 		}
 
 		public FluentValidationModelValidator CloneWithCustomizations(CustomizeValidatorAttribute customizations, HttpActionContext context) {
-			return new FluentValidationModelValidator(ValidatorProviders, validator) {
+			return new FluentValidationModelValidator(ValidatorProviders, _validator) {
 				ActionContext = context,
 				Customizations = customizations
 			};

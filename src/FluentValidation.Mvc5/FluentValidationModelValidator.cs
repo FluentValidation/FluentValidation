@@ -10,21 +10,21 @@ namespace FluentValidation.Mvc {
 	/// ModelValidator implementation that uses FluentValidation.
 	/// </summary>
 	internal class FluentValidationModelValidator : ModelValidator {
-		readonly IValidator validator;
-		readonly CustomizeValidatorAttribute customizations;
+		readonly IValidator _validator;
+		readonly CustomizeValidatorAttribute _customizations;
 
 		public FluentValidationModelValidator(ModelMetadata metadata, ControllerContext controllerContext, IValidator validator)
 			: base(metadata, controllerContext) {
-			this.validator = validator;
+			_validator = validator;
 			
-			this.customizations = CustomizeValidatorAttribute.GetFromControllerContext(controllerContext) 
+			_customizations = CustomizeValidatorAttribute.GetFromControllerContext(controllerContext) 
 				?? new CustomizeValidatorAttribute();
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
 			if (Metadata.Model != null) {
-				var selector = customizations.ToValidatorSelector();
-				var interceptor = customizations.GetInterceptor() ?? (validator as IValidatorInterceptor);
+				var selector = _customizations.ToValidatorSelector();
+				var interceptor = _customizations.GetInterceptor() ?? (_validator as IValidatorInterceptor);
 				var context = new ValidationContext(Metadata.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
 
@@ -34,7 +34,7 @@ namespace FluentValidation.Mvc {
 					context = interceptor.BeforeMvcValidation(ControllerContext, context) ?? context;
 				}
 
-				var result = validator.Validate(context);
+				var result = _validator.Validate(context);
 
 				if(interceptor != null) {
 					// allow the user to provice a custom collection of failures, which could be empty.

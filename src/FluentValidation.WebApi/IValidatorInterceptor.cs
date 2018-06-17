@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk) and contributors
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,9 +15,10 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+
 #endregion
-namespace FluentValidation.WebApi
-{
+
+namespace FluentValidation.WebApi {
 	using System.Web.Http.Controllers;
 	using FluentValidation.Results;
 	using FluentValidation;
@@ -24,8 +26,7 @@ namespace FluentValidation.WebApi
 	/// <summary>
 	/// Specifies an interceptor that can be used to provide hooks that will be called before and after WebApi validation occurs.
 	/// </summary>
-	public interface IValidatorInterceptor
-	{
+	public interface IValidatorInterceptor {
 		/// <summary>
 		/// Invoked before WebApi validation takes place which allows the ValidationContext to be customized prior to validation.
 		/// It should return a ValidationContext object.
