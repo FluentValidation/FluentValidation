@@ -44,10 +44,54 @@ Install-Package FluentValidation.MVC5
 Install-Package FluentValidation.WebApi
 ```
 
-|         |       |       |
-| ------- | ----- | ----- |
-|         | [![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) |
-| `FluentValidation` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) |
-| `FluentValidation.AspNetCore` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore) 
-| `FluentValidation.Mvc5` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5) 
-| `FluentValidation.WebApi` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi) 
+<table class="artifacts">
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+      [![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation)
+    </td>
+    <td>
+      [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation)
+    </td>
+  </tr>
+  
+  <tr>
+    <td>FluentValidation</td>
+    <td>
+      [![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg)](https://nuget.org/packages/FluentValidation)
+    </td>
+    <td>
+      [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg)](https://nuget.org/packages/FluentValidation)
+    </td>
+  </tr>
+
+  <tr>
+    <td>FluentValidation.AspNetCore</td>
+    <td>
+      [![NuGet](https://img.shields.io/nuget/v/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore)
+    </td>
+    <td>
+      [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore)
+    </td>
+  </tr>
+
+  <tr>
+    <td>FluentValidation.Mvc5</td>
+    <td>
+      [![NuGet](https://img.shields.io/nuget/v/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5)
+    </td>
+    <td>
+      [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5)
+    </td>
+  </tr>
+
+  <tr>
+    <td>FluentValidation.WebApi</td>
+    <td>
+      [![NuGet](https://img.shields.io/nuget/v/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi)
+    </td>
+    <td>
+      [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi)
+    </td>
+  </tr>
+</table>
