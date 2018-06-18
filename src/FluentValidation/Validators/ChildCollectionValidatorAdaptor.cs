@@ -54,8 +54,7 @@ namespace FluentValidation.Validators {
 			return ValidateInternal(
 				context,
 				items => items.Select(item => {
-					var ctx = item.ctx;
-					var validator = item.validator;
+					var (ctx, validator) = item;
 					return validator.Validate(ctx).Errors;
 				}).SelectMany(errors => errors),
 				EmptyResult
@@ -68,8 +67,7 @@ namespace FluentValidation.Validators {
 				items => {
 					var failures = new List<ValidationFailure>();
 					var tasks = items.Select(item => {
-						var ctx = item.ctx;
-						var validator = item.validator;
+						var (ctx, validator) = item;
 						return validator.ValidateAsync(ctx, cancellation).Then(res => failures.AddRange(res.Errors), runSynchronously: true, cancellationToken: cancellation);
 					});
 					return TaskHelpers.Iterate(tasks, cancellation).Then(() => failures.AsEnumerable(), runSynchronously: true, cancellationToken: cancellation);
