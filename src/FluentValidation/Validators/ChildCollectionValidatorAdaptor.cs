@@ -53,9 +53,9 @@ namespace FluentValidation.Validators {
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			return ValidateInternal(
 				context,
-				items => items.Select(tuple => {
-					var ctx = tuple.Item1;
-					var validator = tuple.Item2;
+				items => items.Select(item => {
+					var ctx = item.ctx;
+					var validator = item.validator;
 					return validator.Validate(ctx).Errors;
 				}).SelectMany(errors => errors),
 				EmptyResult
@@ -67,9 +67,9 @@ namespace FluentValidation.Validators {
 				context,
 				items => {
 					var failures = new List<ValidationFailure>();
-					var tasks = items.Select(tuple => {
-						var ctx = tuple.Item1;
-						var validator = tuple.Item2;
+					var tasks = items.Select(item => {
+						var ctx = item.ctx;
+						var validator = item.validator;
 						return validator.ValidateAsync(ctx, cancellation).Then(res => failures.AddRange(res.Errors), runSynchronously: true, cancellationToken: cancellation);
 					});
 					return TaskHelpers.Iterate(tasks, cancellation).Then(() => failures.AsEnumerable(), runSynchronously: true, cancellationToken: cancellation);
@@ -80,7 +80,7 @@ namespace FluentValidation.Validators {
 
 		TResult ValidateInternal<TResult>(
 			PropertyValidatorContext context,
-			Func<IEnumerable<Tuple<ValidationContext, IValidator>>, TResult> validatorApplicator,
+			Func<IEnumerable<(ValidationContext ctx, IValidator validator)>, TResult> validatorApplicator,
 			TResult emptyResult
 		) {
 			var collection = context.PropertyValue as IEnumerable;
@@ -108,7 +108,7 @@ namespace FluentValidation.Validators {
 
 					var validator = _childValidatorProvider(context.Instance);
 
-					return Tuple.Create(newContext, validator);
+					return (newContext, validator);
 				});
 
 			return validatorApplicator(itemsToValidate);
