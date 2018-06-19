@@ -1,6 +1,6 @@
 ## Custom Validators
 
-There are several ways to create a custom, reusable validator. The recommended way is to make use of the [Predicate Validator](Built-In-Validators.md#predicate-validator) to write a custom validation function, but you can also write a custom implementation of the PropertyValidator class. 
+There are several ways to create a custom, reusable validator. The recommended way is to make use of the [Predicate Validator](built-in-validators.md#predicate-validator) to write a custom validation function, but you can also write a custom implementation of the PropertyValidator class. 
 
 For these examples, we'll imagine a scenario where you want to create a reusable validator that will ensure a List object contains fewer than 10 items. 
 
@@ -42,7 +42,7 @@ RuleFor(x => x.Pets).ListMustContainFewerThan(10);
 
 ### Using a custom message placeholder
 
-We can extend the above example to include a more useful error message. At the moment, our custom validator always returns the message "The list contains too many items" if validation fails. Instead, let's change the message so it returns "'Pets' must contain fewer than 10 items." This can be done by using custom message placeholders. FluentValidation supports several message placeholders by default including `{PropertyName}` and `{PropertyValue}` ([see this list for more](Built-In-Validators.md)), but we can also add our own.
+We can extend the above example to include a more useful error message. At the moment, our custom validator always returns the message "The list contains too many items" if validation fails. Instead, let's change the message so it returns "'Pets' must contain fewer than 10 items." This can be done by using custom message placeholders. FluentValidation supports several message placeholders by default including `{PropertyName}` and `{PropertyValue}` ([see this list for more](built-in-validators.md)), but we can also add our own.
 
 We need to modify our extension method slightly to use a different overload of the `Must` method, one that accepts a `PropertyValidatorContext` instance. This context provides additional information and methods we can use when performing validation:
 
@@ -143,7 +143,7 @@ The `PropertyValidatorContext` object passed into the Validate method contains s
 - `PropertyValue` - the value of the property being validated
 - `Member` - the MemberInfo describing the property being validated.
 
-Note that the error message to use is specified in the constructor. The simplest way to define your error message is to use the string (as in this example) but you can also used localized error messages by specifying either a resource type and resource name. For more details, please see [Localization](Localization.md).
+Note that the error message to use is specified in the constructor. The simplest way to define your error message is to use the string (as in this example) but you can also used localized error messages by specifying either a resource type and resource name. For more details, please see [Localization](localization.md).
 
 To use the new custom validator you can call `SetValidator` when defining a validation rule. 
 

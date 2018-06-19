@@ -32,7 +32,7 @@ Used only in the Length validator:
 * {MaxLength} = Maximum length
 * {TotalLength} = Number of characters entered
 
-For a complete list of error message placeholders see the the [[Built in Validators|c. Built In Validators]] page. Each built in validator has its own supported placeholders. 
+For a complete list of error message placeholders see the the [Built in Validators](built-in-validators.md) page. Each built in validator has its own supported placeholders. 
 
 It is also possible to use your own custom arguments in the validation message. These can either be static values or references to other properties on the object being validated. This can be done by using the overload of WithMessage that takes a lambda expression, and then passing the values to string.Format or by using string interpolation. 
 
@@ -48,12 +48,12 @@ RuleFor(customer => customer.Surname)
 //Result would be: "This message references some other properties: Forename: Jeremy Discount: 100"
 ```
 
-If you want to override all of FluentValidation's default error messages, check out FluentValidation's support for  [[Localization|f. Localization]].
+If you want to override all of FluentValidation's default error messages, check out FluentValidation's support for  [Localization](Localization.md).
 
 ## Overriding the Default Property Name
 
 The default validation error messages contain the property name being validated. For example, if you were to define a validator like this:
-```
+```csharp
 RuleFor(customer => customer.Surname).NotNull();
 ```
 
@@ -85,7 +85,7 @@ This is not a realistic example as it changes all properties to have the suffix 
 
 Additionally, FluentValidation will respect the use of the DisplayName and Display attributes for generating the property's name within error messages:
 
-```
+```csharp
 public class Person {
   [Display(Name="Last name")]
   public string Surname { get; set; }
@@ -184,7 +184,7 @@ For advanced users, it's possible to pass arbitrary data into the validation pip
 
 The `RootContextData` property is a `Dictionary<string, object>` available on the `ValidationContext`.:
 
-```
+```csharp
 var instanceToValidate = new Person();
 var context = new ValidationContext<Person>(person);
 context.RootContextData["MyCustomData"] = "Test"; 
@@ -194,7 +194,7 @@ validator.Validate(context);
 
 The RootContextData can then be accessed inside any custom property validators, as well as calls to `Custom`:
 
-```
+```csharp
 RuleFor(x => x.Surname).Custom((x, context) => {
   if(context.ParentContext.RootContextData.ContainsKey("MyCustomData")) {
     context.AddFailure("My error message");

@@ -90,7 +90,7 @@ public class PeopleController : Controller {
 
 Now when you post the form MVC’s `DefaultModelBinder` will validate the Person object using the `FluentValidationModelValidatorProvider`.
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](Configuring-a-Validator.md#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually. 
+*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](configuration.md#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually. 
 
 ## Clientside Validation
 

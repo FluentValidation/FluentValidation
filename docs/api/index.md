@@ -1,48 +1,49 @@
 ## Documentation table of contents
-- [[Creating a Validator Class|Creating a Validator]]
-  * [[Chaining Validators|Creating a Validator#chaining-validators-for-the-same-property]]  
-  * [[Validation Results|Creating a Validator#validation-results]]
-  * [[Throwing Exceptions|Creating a Validator#throwing-exceptions]]
-  * [[Validating Collections|Creating a Validator#collections]]
-  * [[Re-using validators on Complex Properties|Creating a Validator#complex-properties]] 
-  * [[Re-using validators on Nested Collections|Creating a Validator#collections]]
-  * [[Rule Sets|Creating a Validator#rulesets]]
-- [[Built in Validators|Built In Validators]]
-  * [[NotNull Validator|Built In Validators#notnull-validator]]
-  * [[NotEmpty Validator|Built In Validators#notempty-validator]]
-  * [[NotEqual Validator|Built In Validators#notequal-validator]]
-  * [[Equal Validator|Built In Validators#equal-validator]]
-  * [[Length Validator|Built In Validators#length-validator]]
-  * [[MaxLength validator|Built In Validators#maxlength-validator]]
-  * [[MinLength validator|Built In Validators#minlength-validator]]
-  * [[Less Than Validator|Built In Validators#less-than-validator]] 
-  * [[Less Than Or Equal Validator|Built In Validators#less-than-or-equal-validator]]
-  * [[Greater Than Validator|Built In Validators#greater-than-validator]] 
-  * [[GreaterThan Or Equal Validator|Built In Validators#greater-than-or-equal-validator]]
-  * [[Predicate Validator (aka Must)|Built In Validators#predicate-validator]] 
-  * [[RegEx Validator|Built In Validators#regular-expression-validator]]
-  * [[Email Validator|Built In Validators#email-validator]] 
-  * [[Credit card validator|Built In Validators#credit-card-validator]] 
-  * [[Enum validator|Built In Validators#enum-validator]] 
-  * [[Empty validator|Built In Validators#empty-validator]] 
-  * [[Null validator|Built In Validators#null-validator]] 
-  * [[ExclusiveBetween Validator|Built In Validators#exclusivebetween-validator]] 
-  * [[InclusiveBetween Validator|Built In Validators#inclusivebetween-validator]] 
-  * [[ScalePrecision Validator|Built In Validators#scaleprecision-validator]] 
-- [[Configuring/Customising a validator|Configuring a Validator]]
-  * [[When to stop validating: Specifying the cascade mode|Configuring a Validator#setting-the-cascade-mode]]
-  * [[Overriding the default error message|Configuring a Validator#overriding-the-default-error]] 
-  * [[Overriding the default property name|Configuring a Validator#overriding-the-default-property-name]]
-  * [[Specifying a condition with When/Unless|Configuring a Validator#user-content-specifying-a-condition-with-whenunless]]
-  * [[Dependent Rules|Configuring a Validator#dependent-rules]]
-  * [[Root context data|Configuring a Validator#root-context-data]]
-- [[Custom Validators|Custom Validators]]
-  * [[Using the Predicate validator|Custom Validators#using-the-predicate-validator]]
-  * [[Using a Custom Validator|Custom Validators#using-a-custom-validator]]
-  * [[Writing a custom Property Validator|Custom Validators#writing-a-custom-reusable-property-validator]]
-- [[Localization|Localization]]
-- [[Testing Validators|Testing]]
-- [[Integrating with ASP.NET MVC 5|ASP.NET MVC 5 integration]]
-- [[Integrating with ASP.NET Core|ASP.NET Core Integration]]
-- [[Using a Validator Factory with an IoC container|IoC]]
-- [[Installation via NuGet|Nuget]]
+
+- [Creating a Validator Class](creating-a-validator.md)
+  * [Chaining Validators](creating-a-validator.md#chaining-validators-for-the-same-property)  
+  * [Validation Results](creating-a-validator.md#validation-results)
+  * [Throwing Exceptions](creating-a-validator.md#throwing-exceptions)
+  * [Validating Collections](creating-a-validator.md#collections)
+  * [Re-using validators on Complex Properties](creating-a-validator.md#complex-properties) 
+  * [Re-using validators on Nested Collections](creating-a-validator.md#collections)
+  * [Rule Sets](creating-a-validator.md#rulesets)
+- [Built in Validators](built-in-validators.md)
+  * [NotNull Validator](built-in-validators.md#notnull-validator)
+  * [NotEmpty Validator](built-in-validators.md#notempty-validator)
+  * [NotEqual Validator](built-in-validators.md#notequal-validator)
+  * [Equal Validator](built-in-validators.md#equal-validator)
+  * [Length Validator](built-in-validators.md#length-validator)
+  * [MaxLength validator](built-in-validators.md#maxlength-validator)
+  * [MinLength validator](built-in-validators.md#minlength-validator)
+  * [Less Than Validator](built-in-validators.md#less-than-validator) 
+  * [Less Than Or Equal Validator](built-in-validators.md#less-than-or-equal-validator)
+  * [Greater Than Validator](built-in-validators.md#greater-than-validator) 
+  * [GreaterThan Or Equal Validator](built-in-validators.md#greater-than-or-equal-validator)
+  * [Predicate Validator (aka Must)](built-in-validators.md#predicate-validator) 
+  * [RegEx Validator](built-in-validators.md#regular-expression-validator)
+  * [Email Validator](built-in-validators.md#email-validator) 
+  * [Credit card validator](built-in-validators.md#credit-card-validator) 
+  * [Enum validator](built-in-validators.md#enum-validator) 
+  * [Empty validator](built-in-validators.md#empty-validator) 
+  * [Null validator](built-in-validators.md#null-validator) 
+  * [ExclusiveBetween Validator](built-in-validators.md#exclusivebetween-validator) 
+  * [InclusiveBetween Validator](built-in-validators.md#inclusivebetween-validator) 
+  * [ScalePrecision Validator](built-in-validators.md#scaleprecision-validator) 
+- [Configuring/Customising a validator](configuration.md)
+  * [When to stop validating: Specifying the cascade mode](configuration.md#setting-the-cascade-mode)
+  * [Overriding the default error message](configuration.md#overriding-the-default-error) 
+  * [Overriding the default property name](configuration.md#overriding-the-default-property-name)
+  * [Specifying a condition with When/Unless](configuration.md#user-content-specifying-a-condition-with-whenunless)
+  * [Dependent Rules](configuration.md#dependent-rules)
+  * [Root context data](configuration.md#root-context-data)
+- [Custom Validators](custom-validators.md)
+  * [Using the Predicate validator](custom-validators.md#using-the-predicate-validator)
+  * [Using a Custom Validator](custom-validators.md#using-a-custom-validator)
+  * [Writing a custom Property Validator](custom-validators.md#writing-a-custom-reusable-property-validator)
+- [Localization](localization.md)
+- [Testing Validators](testing.md)
+- [Integrating with ASP.NET MVC 5](aspnet-mvc-5-integration.md)
+- [Integrating with ASP.NET Core](aspnet-core-integration.md)
+- [Using a Validator Factory with an IoC container](ioc.md)
+- [Installation via NuGet](nuget.md)
