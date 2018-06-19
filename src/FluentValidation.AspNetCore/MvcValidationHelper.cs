@@ -97,7 +97,7 @@ namespace FluentValidation.AspNetCore {
 
 		internal static void CacheCustomizations(ActionContext context, object model, string key) {
 			var customizations = GetCustomizations(context, model.GetType(), key);
-			context.HttpContext.Items["_FV_Customizations"] = Tuple.Create(model, customizations);
+			context.HttpContext.Items["_FV_Customizations"] = (model, customizations);
 		}
 
 		internal static void ReApplyImplicitRequiredErrorsNotHandledByFV(List<KeyValuePair<ModelStateEntry, ModelError>> requiredErrorsNotHandledByFv) {
@@ -128,7 +128,7 @@ namespace FluentValidation.AspNetCore {
 		}
 		
 		internal static CustomizeValidatorAttribute GetCustomizations(ActionContext ctx, object model) {
-			if (ctx.HttpContext.Items["_FV_Customizations"] is Tuple<object, CustomizeValidatorAttribute> customizations 
+			if (ctx.HttpContext.Items["_FV_Customizations"] is ValueTuple<object, CustomizeValidatorAttribute> customizations 
 			    && ReferenceEquals(model, customizations.Item1)) {
 				return customizations.Item2; // the attribute
 			}
