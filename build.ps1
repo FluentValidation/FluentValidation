@@ -5,14 +5,14 @@ param(
 )
 
 # Boostrap posh-build
-if (! (Test-Path $path\.build)) { mkdir $path\.build | Out-Null }
-if (! (Test-Path $path\.build\Posh-Build.ps1)) { Write-Host "Installing posh-build..."; Save-Script "Posh-Build" -Path $path\.build }
-. $path\.build\Posh-Build.ps1
+$build_dir = Join-Path $path ".build"
+if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) { Write-Host "Installing posh-build..."; mkdir $build_dir -ErrorAction Ignore | Out-Null; Save-Script "Posh-Build" -Path $build_dir }
+. (Join-Path $build_dir "Posh-Build.ps1")
 
 # Set these variables as desired
-$build_dir = "$path\.build";
-$packages_dir = "$build_dir\packages"
-$solution_file = "$path\FluentValidation.sln";
+$packages_dir = Join-Path $build_dir "packages"
+$output_dir = Join-Path $build_dir $configuration
+$solution_file = Join-Path $path "FluentValidation.sln";
 $key_file = "$path\src\FluentValidation-dev.snk";
 $nuget_key = "$env:USERPROFILE\Dropbox\nuget-access-key.txt";
 
