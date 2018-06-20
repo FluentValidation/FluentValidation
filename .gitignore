@@ -21,3 +21,4 @@ TestResults/
 *.lock.json
 *.ncrunch*
 .idea/
+.build/

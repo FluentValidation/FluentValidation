@@ -1,16 +1,19 @@
 param(
   [string]$version = '1.0.0-dev',
-  [string]$configuration = 'Release'
+  [string]$configuration = 'Release',
+  [string]$path = $PSScriptRoot
 )
 
-. $PSScriptRoot/src/posh-build.ps1
+# Boostrap posh-build
+if (! (Test-Path $path\.build)) { mkdir $path\.build | Out-Null }
+if (! (Test-Path $path\.build\Posh-Build.ps1)) { Write-Host "Installing posh-build..."; Save-Script "Posh-Build" -Path $path\.build }
+. $path\.build\Posh-Build.ps1
 
-$base = $PSScriptRoot;
-$build_dir = "$base\build";
+# Set these variables as desired
+$build_dir = "$path\.build";
 $packages_dir = "$build_dir\packages"
-$output_dir = "$build_dir\$configuration";
-$solution_file = "$base\FluentValidation.sln";
-$key_file = "$base\src\FluentValidation-dev.snk";
+$solution_file = "$path\FluentValidation.sln";
+$key_file = "$path\src\FluentValidation-dev.snk";
 $nuget_key = "$env:USERPROFILE\Dropbox\nuget-access-key.txt";
 
 if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
@@ -26,10 +29,10 @@ target compile {
 
 target test {
   $test_projects = @(
-    "$base\src\FluentValidation.Tests\FluentValidation.Tests.csproj",
-    "$base\src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj",
-    "$base\src\FluentValidation.Tests.AspNetCore\FluentValidation.Tests.AspNetCore.csproj",
-    "$base\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj"
+    "$path\src\FluentValidation.Tests\FluentValidation.Tests.csproj",
+    "$path\src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj",
+    "$path\src\FluentValidation.Tests.AspNetCore\FluentValidation.Tests.AspNetCore.csproj",
+    "$path\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj"
   )
 
   Invoke-Tests $test_projects -c $configuration --no-build
@@ -40,12 +43,12 @@ target deploy {
   Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$build_dir\Packages /p:AssemblyOriginatorKeyFile=$key_file /p:Version=$version
 
   # Copy to output dir
-  Copy-Item "$base\src\FluentValidation\bin\$configuration\netstandard2.0" -Destination "$output_dir\FluentValidation-netstandard2.0" -Recurse
-  Copy-Item "$base\src\FluentValidation\bin\$configuration\netstandard1.1" -Destination "$output_dir\FluentValidation-netstandard1.1" -Recurse
-  Copy-Item "$base\src\FluentValidation\bin\$configuration\net45"  -Destination "$output_dir\FluentValidation-net45" -Recurse
-  Copy-Item "$base\src\FluentValidation.Mvc5\bin\$configuration\net45"  -filter FluentValidation.Mvc.* -Destination "$output_dir\FluentValidation.Mvc5-Legacy" -Recurse
-  Copy-Item "$base\src\FluentValidation.WebApi\bin\$configuration\net45"  -filter FluentValidation.WebApi.* -Destination "$output_dir\FluentValidation.WebApi-Legacy" -Recurse
-  Copy-Item "$base\src\FluentValidation.AspNetCore\bin\$configuration\netstandard2.0"  -filter FluentValidation.AspNetCore.* -Destination "$output_dir\FluentValidation.AspNetCore-netstandard2.0" -Recurse
+  Copy-Item "$path\src\FluentValidation\bin\$configuration\netstandard2.0" -Destination "$output_dir\FluentValidation-netstandard2.0" -Recurse
+  Copy-Item "$path\src\FluentValidation\bin\$configuration\netstandard1.1" -Destination "$output_dir\FluentValidation-netstandard1.1" -Recurse
+  Copy-Item "$path\src\FluentValidation\bin\$configuration\net45"  -Destination "$output_dir\FluentValidation-net45" -Recurse
+  Copy-Item "$path\src\FluentValidation.Mvc5\bin\$configuration\net45"  -filter FluentValidation.Mvc.* -Destination "$output_dir\FluentValidation.Mvc5-Legacy" -Recurse
+  Copy-Item "$path\src\FluentValidation.WebApi\bin\$configuration\net45"  -filter FluentValidation.WebApi.* -Destination "$output_dir\FluentValidation.WebApi-Legacy" -Recurse
+  Copy-Item "$path\src\FluentValidation.AspNetCore\bin\$configuration\netstandard2.0"  -filter FluentValidation.AspNetCore.* -Destination "$output_dir\FluentValidation.AspNetCore-netstandard2.0" -Recurse
 }
 
 target verify-package {
@@ -75,7 +78,7 @@ target publish -depends verify-package {
     @("&No", "Does not upload the packages."),
     @("&Yes", "Uploads the packages.")
   )
-  
+
   # Cancelled
   if ($result -eq 0) {
     "Upload aborted"
