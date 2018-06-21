@@ -42,7 +42,7 @@ target test {
 
 target deploy {
   Remove-Item $build_dir -Force -Recurse 2> $null
-  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$build_dir\Packages /p:AssemblyOriginatorKeyFile=$key_file /p:Version=$version
+  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$key_file /p:Version=$version
 
   # Copy to output dir
   Copy-Item "$path\src\FluentValidation\bin\$configuration\netstandard2.0" -Destination "$output_dir\FluentValidation-netstandard2.0" -Recurse
