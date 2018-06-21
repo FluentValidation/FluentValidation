@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../netfx.props"/>
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <PackageId>FluentValidation.WebApi</PackageId>
@@ -42,4 +41,5 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
   </ItemGroup>
+  <Import Project="../netfx.props"/>
 </Project>

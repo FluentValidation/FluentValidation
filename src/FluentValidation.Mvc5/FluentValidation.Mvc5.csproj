@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../netfx.props"/>
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <AssemblyName>FluentValidation.Mvc</AssemblyName>
@@ -56,4 +55,5 @@ Changes in 7.5:
     <Reference Include="System.Web" />
   </ItemGroup>
 
+  <Import Project="../netfx.props"/>
 </Project>

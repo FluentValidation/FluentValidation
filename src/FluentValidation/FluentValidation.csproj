@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../netfx.props"/>
+
+
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard1.6;netstandard2.0;net45</TargetFrameworks>
     <Authors>Jeremy Skinner</Authors>
@@ -152,4 +153,5 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
         <PackagePath>lib\</PackagePath>
       </Content>
     </ItemGroup>-->
+  <Import Project="..\netfx.props" />
 </Project>

@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../netfx.props"/>
   <PropertyGroup>
     <TargetFramework>net452</TargetFramework>
     <AssemblyName>FluentValidation.Tests.Mvc5</AssemblyName>
@@ -75,5 +74,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1705;1998;0618</NoWarn>
   </PropertyGroup>
-
+  <Import Project="../netfx.props"/>
+  <ItemGroup Condition="'$(TargetFramework)'=='net452' AND '$(OS)'=='Unix'">
+    <!-- Workarounds for Mono -->
+    <Reference Include="System.Runtime"/>
+    <Reference Include="System.Threading.Tasks"/>
+  </ItemGroup>
 </Project>
