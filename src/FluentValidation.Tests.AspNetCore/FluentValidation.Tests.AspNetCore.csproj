@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../netfx.props"/>
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;net462</TargetFrameworks>
     <IsPackable>false</IsPackable>

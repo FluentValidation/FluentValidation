@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="../netfx.props"/>
   <PropertyGroup>
     <TargetFramework>net45</TargetFramework>
     <AssemblyName>FluentValidation.Mvc</AssemblyName>
