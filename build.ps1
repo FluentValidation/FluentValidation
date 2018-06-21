@@ -15,7 +15,7 @@ if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) { Write-Host "Install
 $packages_dir = Join-Path $build_dir "packages"
 $output_dir = Join-Path $build_dir $configuration
 $solution_file = Join-Path $path "FluentValidation.sln";
-$key_file = "$path\src\FluentValidation-dev.snk";
+$key_file = "$path\src\FluentValidation-Dev.snk";
 $nuget_key = "$env:USERPROFILE\Dropbox\nuget-access-key.txt";
 
 if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
