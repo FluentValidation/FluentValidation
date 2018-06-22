@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;net462</TargetFrameworks>
+    <TargetFrameworks Condition="'$(OS)'=='Unix'">netcoreapp2.1</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <RootNamespace>FluentValidation.Tests</RootNamespace>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
