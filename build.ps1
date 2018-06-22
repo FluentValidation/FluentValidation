@@ -41,8 +41,8 @@ target test {
 }
 
 target deploy {
-  Remove-Item $packages_dir -Force -Recurse 2> $null
-  Remove-Item $output_dir -Force -Recurse 2> $null
+  Remove-Item $packages_dir -Force -Recurse -ErrorAction Ignore 2> $null
+  Remove-Item $output_dir -Force -Recurse -ErrorAction Ignore 2> $null
   
   Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$key_file /p:Version=$version
 
