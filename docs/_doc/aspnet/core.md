@@ -1,8 +1,14 @@
-## Integration with ASP.NET Core MVC
+---
+title: ASP.NET Core
+---
 
-FluentValidation can be integrated with Asp.NET Core. Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure. The ASP.NET Core integration is very similar to the [MVC5 Integration](ASP.NET-MVC-5-integration.md) with a few differences. 
+FluentValidation can be integrated with ASP.NET Core. Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure.
 
-To enable MVC integration, you'll need to add a reference to the `FluentValidation.AspNetCore` assembly (available through the FluentValidation.AspNetCore NuGet packages). 
+To enable MVC integration, you'll need to add a reference to the `FluentValidation.AspNetCore` assembly by installing the appropriate NuGet package:
+
+```shell
+Install-Package FluentValidation.AspNetCore
+```
 
 Once installed, you'll need to configure FluentValidation in your app's Startup class by calling the `AddFluentValidation` extension method inside the `ConfigureServices` method (which requires a `using FluentValidation.AspNetCore` at the top of the file)
 
@@ -104,9 +110,9 @@ public class PeopleController : Controller {
 
 Now when you post the form, MVC's model-binding infrastructure will validate the `Person` object with the `PersonValidator`, and add the validation results to ModelState.
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](Configuring-a-Validator.md#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually.  
+*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](/start.html#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually.  
 
-## Compatibility with ASP.NET's built-in Validation (as of v7.3) 
+### Compatibility with ASP.NET's built-in Validation
 
 By default, after FluentValidation is executed then any other validator providers will also have a chance to execute as well. This means you can mix FluentValidation with DataAnnotations attributes (or any other ASP.NET ModelValidatorProvider implementation). 
 
@@ -120,9 +126,9 @@ services.AddMvc().AddFluentValidation(fv => {
 
 *Note* If you do set `RunDefaultMvcValidationAfterFluentValidationExecutes` to false then support for `IValidatableObject` will also be disabled. 
 
-## Implicit vs Explicit Child Property Validation (as of v7.3)
+### Implicit vs Explicit Child Property Validation
 
-When validating complex object graphs, by default you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](Creating-a-Validator.md#complex-properties))
+When validating complex object graphs, by default you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#complex-properties))
 
 When running an ASP.NET MVC application, you can also optionally enable implicit validation for child properties. When this is enabled, instead of having to specify child validators using `SetValidator`, MVC's validation infrastructure will recursively attempt to automatically find validators for each property. This can be done by setting `ImplicitlyValidateChildProperties` to true:
 
@@ -134,7 +140,7 @@ services.AddMvc().AddFluentValidation(fv => {
 
 Note that if you enable this behaviour you should not use `SetValidator` for child properties, or the validator will be executed twice. 
 
-## Clientside Validation
+### Clientside Validation
 
 FluentValidation is a server-side framework, and does not provide any client-side validation directly. However, it can provide metadata that can be applied to the generated HTML elements that can be used by a client-side framework such as jQuery Validate, in the same way that ASP.NET's default validation attributes.
 
@@ -150,7 +156,7 @@ Note that not all rules defined in FluentValidation will work with ASP.NET's cli
 * MinLength
 * Length 
 
-## Manual validation
+### Manual validation
 
 Sometimes you may want to manually validate an object in a MVC project. In this case, the validation results can be copied to MVC's modelstate dictionary:
 
@@ -167,7 +173,7 @@ public ActionResult DoSomething() {
 
 The AddToModelState method is implemented as an extension method, and requires a using statement for the FluentValidation namespace. Note that the second parameter is an optional model name, which will cause property names in the ModelState to be prefixed (eg a call to AddToModelState(ModelState, "Foo") will generate property names of "Foo.Id" and "Foo.Name" etc rather than just "Id" or "Name")
 
-## Validator customization
+### Validator customization
 
 The downside to using this automatic integration is that you don’t have access to the validator directly which means that you don’t have as much control over the validation processes compared to running the validator manually.
 
@@ -211,7 +217,7 @@ public ActionResult Save([CustomizeValidator(Skip=true)] Customer cust) {
 ```
 
 
-## Validator Interceptors
+### Validator Interceptors
 
 You can further customize this process by using an interceptor. An interceptor has to implement the IValidatorInterceptor interface from the FluentValidation.Mvc namespace:
 
@@ -241,7 +247,7 @@ In this case, the interceptor has to be a class that implements IValidatorInterc
 
 Note that this is considered to be an advanced scenario. Most of the time you probably won’t need to use an interceptor, but the option is there if you want it.
 
-## Specifying a RuleSet for client-side messages (as of v7.2) 
+### Specifying a RuleSet for client-side messages 
 
 If you’re using rulesets alongside ASP.NET MVC, then you’ll notice that by default FluentValidation will only generate client-side error messages for rules not part of any ruleset. You can instead specify that FluentValidation should generate clientside rules from a particular ruleset by attributing your controller action with a RuleSetForClientSideMessagesAttribute:
 
