@@ -112,10 +112,20 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
+			ValidationResult result =new ValidationResult();
+			bool @continue = PreValidation(context, result);
+			if (!@continue) {
+				return result;
+			}
+
 			context.Guard("Cannot pass null to Validate.", nameof(context));
 			EnsureInstanceNotNull(context.InstanceToValidate);
 			var failures = NestedValidators.SelectMany(x => x.Validate(context));
-			return new ValidationResult(failures);
+			foreach (ValidationFailure validationFailure in failures.Where(failure => failure != null)) {
+				result.Errors.Add(validationFailure);
+			}
+
+			return result;
 		}
 
 		/// <summary>
@@ -125,6 +135,12 @@ namespace FluentValidation {
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+			ValidationResult result = new ValidationResult();
+			bool @continue = PreValidation(context, result);
+			if (!@continue) {
+				return TaskHelpers.FromResult(result);
+			}
+
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
@@ -136,7 +152,12 @@ namespace FluentValidation {
 				NestedValidators
 				.Select(v => v.ValidateAsync(context, cancellation)
 				.Then(fs => failures.AddRange(fs), runSynchronously: true, cancellationToken: cancellation)), cancellation)
-				.Then(() => new ValidationResult(failures), cancellation);
+				.Then(() => {
+					      foreach (ValidationFailure validationFailure in failures.Where(failure => failure != null)) {
+						      result.Errors.Add(validationFailure);
+					      }
+					      return result;
+				      }, cancellation);
 		}
 
 		/// <summary>
@@ -373,6 +394,17 @@ namespace FluentValidation {
 		/// <param name="instanceToValidate"></param>
 		protected virtual void EnsureInstanceNotNull(object instanceToValidate) {
 			instanceToValidate.Guard("Cannot pass null model to Validate.", nameof(instanceToValidate));
+		}
+
+		/// <summary>
+		/// If return true, Validate/ValidateAsync will be executed.
+		/// If return false, result is returned immediatly as result of Validate/ValidateAsync.
+		/// </summary>
+		/// <param name="context">It may be null</param>
+		/// <param name="result"></param>
+		/// <returns></returns>
+		protected virtual bool  PreValidation(ValidationContext<T> context, ValidationResult result) {
+			return true;
 		}
 	}
 }
