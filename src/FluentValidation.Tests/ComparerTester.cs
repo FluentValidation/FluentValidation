@@ -5,6 +5,10 @@
 
 	
 	public class ComparerTester {
+		public ComparerTester() {
+			CultureScope.SetDefaultCulture();
+		}
+
 		[Fact]
 		public void Should_fail_with_different_type_values() {
 			double myDouble = 100.12;
