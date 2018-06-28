@@ -7,6 +7,8 @@ namespace FluentValidation.Tests.AspNetCore {
 	using Microsoft.Extensions.Logging;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Http;
+	using System.Globalization;
+	using Microsoft.AspNetCore.Localization;
 
 	public class StartupWithContainer
     {
@@ -34,6 +36,13 @@ namespace FluentValidation.Tests.AspNetCore {
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            CultureInfo cultureInfo = new CultureInfo("en-US");
+            app.UseRequestLocalization(options => {
+                options.DefaultRequestCulture = new RequestCulture(cultureInfo);
+                options.SupportedCultures = new []{ cultureInfo };
+                options.SupportedUICultures = new []{ cultureInfo };
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -63,6 +72,13 @@ namespace FluentValidation.Tests.AspNetCore {
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) {
+			CultureInfo cultureInfo = new CultureInfo("en-US");
+			app.UseRequestLocalization(options => {
+				options.DefaultRequestCulture = new RequestCulture(cultureInfo);
+				options.SupportedCultures = new []{ cultureInfo };
+				options.SupportedUICultures = new []{ cultureInfo };
+			});
+
 			app.UseMvc(routes => {
 				routes.MapRoute(
 					name: "default",

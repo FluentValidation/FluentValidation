@@ -28,6 +28,7 @@ namespace FluentValidation.Tests {
 
 		public CustomMessageFormatTester() {
 			validator = new TestValidator();
+			CultureScope.SetDefaultCulture();
 		}
 
 		[Fact]
