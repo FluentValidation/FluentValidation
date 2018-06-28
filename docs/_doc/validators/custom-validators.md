@@ -7,12 +7,12 @@ sections:
   - Reusable Property Validators
 ---
 
-There are several ways to create a custom, reusable validator. The recommended way is to make use of the [Predicate Validator](/built-in-validators.html#predicate-validator) to write a custom validation function, but you can also write a custom implementation of the PropertyValidator class. 
+There are several ways to create a custom, reusable validator. The recommended way is to make use of the [Predicate Validator](/built-in-validators.html#predicate-validator) to write a custom validation function, but you can also write a custom implementation of the PropertyValidator class.
 
-For these examples, we'll imagine a scenario where you want to create a reusable validator that will ensure a List object contains fewer than 10 items. 
+For these examples, we'll imagine a scenario where you want to create a reusable validator that will ensure a List object contains fewer than 10 items.
 
 ### Predicate Validator
-The simplest way to implement a custom validator is by using the `Must` method, which internally uses the `PredicateValidator`. 
+The simplest way to implement a custom validator is by using the `Must` method, which internally uses the `PredicateValidator`.
 
 Imagine we have the following class:
 ```csharp
@@ -24,14 +24,14 @@ public class Person {
 To ensure our list property contains fewer than 10 items, we could do this:
 
 ```csharp
-public class PersonValidator:AbstractValidator<Person> { 
+public class PersonValidator:AbstractValidator<Person> {
   public PersonValidator() {
    RuleFor(x => x.Pets).Must(list => list.Count <= 10).WithMessage("The list must contain fewer than 10 items");
   }
 }
 ```
 
-To make this logic reusable, we can wrap it an extension method that acts upon any `List<T>` type. 
+To make this logic reusable, we can wrap it an extension method that acts upon any `List<T>` type.
 
 ```csharp
 public static class MyCustomValidators {
@@ -49,7 +49,7 @@ RuleFor(x => x.Pets).ListMustContainFewerThan(10);
 
 #### Custom message placeholders
 
-We can extend the above example to include a more useful error message. At the moment, our custom validator always returns the message "The list contains too many items" if validation fails. Instead, let's change the message so it returns "'Pets' must contain fewer than 10 items." This can be done by using custom message placeholders. FluentValidation supports several message placeholders by default including `{PropertyName}` and `{PropertyValue}` ([[see this list for more|c. Built In Validators]]), but we can also add our own.
+We can extend the above example to include a more useful error message. At the moment, our custom validator always returns the message "The list contains too many items" if validation fails. Instead, let's change the message so it returns "'Pets' must contain fewer than 10 items." This can be done by using custom message placeholders. FluentValidation supports several message placeholders by default including `{PropertyName}` and `{PropertyValue}` ([see this list for more](/built-in-validators.html)), but we can also add our own.
 
 We need to modify our extension method slightly to use a different overload of the `Must` method, one that accepts a `PropertyValidatorContext` instance. This context provides additional information and methods we can use when performing validation:
 
@@ -84,16 +84,16 @@ public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T
 
 ### Using a Custom Validator
 
-If you need more control of the validation process than is available with `Must`, you can write a custom rule using the `Custom` method. This method allows you to manually create the `ValidationFailure` instance associated with the validation error. Usually, the framework does this for you, so it is more verbose than using `Must`. 
+If you need more control of the validation process than is available with `Must`, you can write a custom rule using the `Custom` method. This method allows you to manually create the `ValidationFailure` instance associated with the validation error. Usually, the framework does this for you, so it is more verbose than using `Must`.
 
 
 ```csharp
-public class PersonValidator:AbstractValidator<Person> { 
+public class PersonValidator:AbstractValidator<Person> {
   public PersonValidator() {
-   RuleFor(x => x.Pets).Custom((list, context) => { 
+   RuleFor(x => x.Pets).Custom((list, context) => {
      if(list.Count > 10) {
        context.AddFailure("The list must contain 10 items or fewer");
-     } 
+     }
    });
   }
 }
@@ -107,13 +107,13 @@ context.AddFailure("SomeOtherProperty", "The list must contain 10 items or fewer
 context.AddFailure(new ValidationFailure("SomeOtherProperty", "The list must contain 10 items or fewer");
 ```
 
-As before, this could be wrapped in an extension method to simplify the consuming code. 
+As before, this could be wrapped in an extension method to simplify the consuming code.
 
 ### Reusable Property Validator
 
-In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator` (this is how all of FluentValidation's built-in rules are defined). 
+In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator` (this is how all of FluentValidation's built-in rules are defined).
 
-This is an advanced technique that is usually unnecessary - the `Must` and `Custom` methods explained above are usually more appropriate.  
+This is an advanced technique that is usually unnecessary - the `Must` and `Custom` methods explained above are usually more appropriate.
 
 We can recreate the above example using a custom PropertyValidator implementation like this:
 
@@ -125,7 +125,7 @@ using FluentValidation.Validators;
 public class ListCountValidator<T> : PropertyValidator {
         private int _max;
 
-	public ListCountValidator(int max) 
+	public ListCountValidator(int max)
 		: base("{PropertyName} must contain fewer than {MaxElements} items.") {
 		_max = max;
 	}
@@ -150,9 +150,9 @@ The `PropertyValidatorContext` object passed into the Validate method contains s
 - `PropertyValue` - the value of the property being validated
 - `Member` - the MemberInfo describing the property being validated.
 
-Note that the error message to use is specified in the constructor. The simplest way to define your error message is to use the string (as in this example) but you can also used localized error messages by specifying either a resource type and resource name. For more details, please see [[Localization|f. Localization]]
+Note that the error message to use is specified in the constructor. The simplest way to define your error message is to use the string (as in this example) but you can also used localized error messages by specifying either a resource type and resource name. For more details, please see [Localization](/localization.html)
 
-To use the new custom validator you can call `SetValidator` when defining a validation rule. 
+To use the new custom validator you can call `SetValidator` when defining a validation rule.
 
 ```csharp
 public class PersonValidator : AbstractValidator<Person> {

@@ -1,9 +1,9 @@
-<img src="https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv.png" alt="FluentValidation" width="250px" />
+<img src="https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/docs/assets/logo/fluent-validation-logo.png" alt="FluentValidation" width="250px" />
 
- [Full Documentation](https://github.com/JeremySkinner/FluentValidation/wiki) 
+[Full Documentation](https://fluentvalidation.net)
 
-A small validation library for .NET that uses a fluent interface 
-and lambda expressions for building validation rules. 
+A small validation library for .NET that uses a fluent interface
+and lambda expressions for building validation rules.
 
 ### Get Started
 FluentValidation can be installed using the Nuget package manager or the `dotnet` CLI.
@@ -27,11 +27,9 @@ Install-Package FluentValidation.WebApi
 | ------- | ----- | ----- |
 | [![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) | [![Build status](https://ci.appveyor.com/api/projects/status/e42ta5ecsxltf4ts?svg=true&passingText=Linux%20-%20passing&failingText=Linux%20-%20failed&pendingText=Linux%20-%20pending)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation-tq12c) | [![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)](https://ci.appveyor.com/project/JeremySkinner/fluentvalidation) |
 | `FluentValidation` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) |
-| `FluentValidation.AspNetCore` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore) 
-| `FluentValidation.Mvc5` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5) 
-| `FluentValidation.WebApi` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi) 
-
-
+| `FluentValidation.AspNetCore` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore)
+| `FluentValidation.Mvc5` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.Mvc5.svg)](https://nuget.org/packages/FluentValidation.Mvc5)
+| `FluentValidation.WebApi` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.WebApi.svg)](https://nuget.org/packages/FluentValidation.WebApi)
 
 
 ### Example
@@ -40,11 +38,11 @@ using FluentValidation;
 
 public class CustomerValidator: AbstractValidator<Customer> {
   public CustomerValidator() {
-    RuleFor(customer => customer.Surname).NotEmpty();
-    RuleFor(customer => customer.Forename).NotEmpty().WithMessage("Please specify a first name");
-    RuleFor(customer => customer.Discount).NotEqual(0).When(customer => customer.HasDiscount);
-    RuleFor(customer => customer.Address).Length(20, 250);
-    RuleFor(customer => customer.Postcode).Must(BeAValidPostcode).WithMessage("Please specify a valid postcode");
+    RuleFor(x => x.Surname).NotEmpty();
+    RuleFor(x => x.Forename).NotEmpty().WithMessage("Please specify a first name");
+    RuleFor(x => x.Discount).NotEqual(0).When(x => x.HasDiscount);
+    RuleFor(x => x.Address).Length(20, 250);
+    RuleFor(cusxtomer => x.Postcode).Must(BeAValidPostcode).WithMessage("Please specify a valid postcode");
   }
 
   private bool BeAValidPostcode(string postcode) {
@@ -52,14 +50,14 @@ public class CustomerValidator: AbstractValidator<Customer> {
   }
 }
 
-Customer customer = new Customer();
-CustomerValidator validator = new CustomerValidator();
+var customer = new Customer();
+var validator = new CustomerValidator();
 ValidationResult results = validator.Validate(customer);
 
-bool validationSucceeded = results.IsValid;
+bool success = results.IsValid;
 IList<ValidationFailure> failures = results.Errors;
 ```
 
-### Further Documentation
+### Documentation
 
-[Documentation can be found here.](https://github.com/JeremySkinner/FluentValidation/wiki) 
+[Documentation can be found on the project site.](https://fluentvalidation.net)

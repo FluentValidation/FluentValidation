@@ -21,7 +21,7 @@ public void ConfigureServices(IServiceCollection services) {
 }
 ```
 
-In order for ASP.NET to discover your validators, they must be registered with the services collection. You can either do this by calling the `AddTransient` method for each of your validators... 
+In order for ASP.NET to discover your validators, they must be registered with the services collection. You can either do this by calling the `AddTransient` method for each of your validators...
 
 
 ```csharp
@@ -29,7 +29,7 @@ public void ConfigureServices(IServiceCollection services) {
     services.AddMvc(setup => {
       //...mvc setup...
     }).AddFluentValidation();
-    
+
     services.AddTransient<IValidator<Person>, PersonValidator>();
     //etc
 }
@@ -51,7 +51,7 @@ public class Person {
 	public string Email { get; set; }
 	public int Age { get; set; }
 }
- 
+
 public class PersonValidator : AbstractValidator<Person> {
 	public PersonValidator() {
 		RuleFor(x => x.Id).NotNull();
@@ -70,19 +70,19 @@ public class PeopleController : Controller {
 	public ActionResult Create() {
 		return View();
 	}
- 
+
 	[HttpPost]
 	public IActionResult Create(Person person) {
- 
+
 		if(! ModelState.IsValid) { // re-render the view when validation failed.
 			return View("Create", person);
 		}
-		
-		Save(person); //Save the person to the database, or some other logic 
- 
+
+		Save(person); //Save the person to the database, or some other logic
+
 		TempData["notice"] = "Person successfully created";
 		return RedirectToAction("Index");
- 
+
 	}
 }
 ```
@@ -102,7 +102,7 @@ public class PeopleController : Controller {
   Email: <input asp-for="Email" /> <span asp-validation-for="Email"></span>
   <br />
   Age: <input asp-for="Age" /> <span asp-validation-for="Age"></span>
-  
+
   <br /><br />
   <input type="submit" value="submtit" />
 </form>
@@ -110,11 +110,11 @@ public class PeopleController : Controller {
 
 Now when you post the form, MVC's model-binding infrastructure will validate the `Person` object with the `PersonValidator`, and add the validation results to ModelState.
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](/start.html#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually.  
+*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](/start.html#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually.
 
 ### Compatibility with ASP.NET's built-in Validation
 
-By default, after FluentValidation is executed then any other validator providers will also have a chance to execute as well. This means you can mix FluentValidation with DataAnnotations attributes (or any other ASP.NET ModelValidatorProvider implementation). 
+By default, after FluentValidation is executed then any other validator providers will also have a chance to execute as well. This means you can mix FluentValidation with DataAnnotations attributes (or any other ASP.NET ModelValidatorProvider implementation).
 
 If you want to disable this behaviour so that FluentValidation is the only validation library that executes, you can set the `RunDefaultMvcValidationAfterFluentValidationExecutes` to false in your application startup routine:
 
@@ -124,11 +124,11 @@ services.AddMvc().AddFluentValidation(fv => {
 });
 ```
 
-*Note* If you do set `RunDefaultMvcValidationAfterFluentValidationExecutes` to false then support for `IValidatableObject` will also be disabled. 
+*Note* If you do set `RunDefaultMvcValidationAfterFluentValidationExecutes` to false then support for `IValidatableObject` will also be disabled.
 
 ### Implicit vs Explicit Child Property Validation
 
-When validating complex object graphs, by default you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#complex-properties))
+When validating complex object graphs, by default you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](/start.html#complex-properties))
 
 When running an ASP.NET MVC application, you can also optionally enable implicit validation for child properties. When this is enabled, instead of having to specify child validators using `SetValidator`, MVC's validation infrastructure will recursively attempt to automatically find validators for each property. This can be done by setting `ImplicitlyValidateChildProperties` to true:
 
@@ -138,7 +138,7 @@ services.AddMvc().AddFluentValidation(fv => {
 });
 ```
 
-Note that if you enable this behaviour you should not use `SetValidator` for child properties, or the validator will be executed twice. 
+Note that if you enable this behaviour you should not use `SetValidator` for child properties, or the validator will be executed twice.
 
 ### Clientside Validation
 
@@ -154,7 +154,7 @@ Note that not all rules defined in FluentValidation will work with ASP.NET's cli
 * EqualTo (cross-property equality comparison)
 * MaxLength
 * MinLength
-* Length 
+* Length
 
 ### Manual validation
 
@@ -247,7 +247,7 @@ In this case, the interceptor has to be a class that implements IValidatorInterc
 
 Note that this is considered to be an advanced scenario. Most of the time you probably won’t need to use an interceptor, but the option is there if you want it.
 
-### Specifying a RuleSet for client-side messages 
+### Specifying a RuleSet for client-side messages
 
 If you’re using rulesets alongside ASP.NET MVC, then you’ll notice that by default FluentValidation will only generate client-side error messages for rules not part of any ruleset. You can instead specify that FluentValidation should generate clientside rules from a particular ruleset by attributing your controller action with a RuleSetForClientSideMessagesAttribute:
 
