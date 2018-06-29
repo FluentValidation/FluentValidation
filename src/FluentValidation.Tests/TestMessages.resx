@@ -127,6 +127,6 @@
     <value>foo</value>
   </data>
   <data name="ValueOfForPropertyNameIsNotValid" xml:space="preserve">
-    <value>Value of {0} for  {PropertyName} is not valid.</value>
+    <value>Value of {PropertyValue} for  {PropertyName} is not valid.</value>
   </data>
 </root>

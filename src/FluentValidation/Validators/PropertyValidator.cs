@@ -57,11 +57,6 @@ namespace FluentValidation.Validators {
 			_errorSource = new StaticStringSource(errorMessage);
 		}
 
-		[Obsolete("Use the constructor that takes a Type resourceType and string resourceName")]
-		protected PropertyValidator(Expression<Func<string>> errorMessageResourceSelector) {
-			_errorSource = OverridableLocalizedStringSource.CreateFromExpression(errorMessageResourceSelector);
-		}
-
 		public IStringSource ErrorMessageSource {
 			get { return _errorSource; }
 			set {
@@ -70,8 +65,6 @@ namespace FluentValidation.Validators {
 				}
 
 				_errorSource = value;
-
-				
 			}
 		}
 

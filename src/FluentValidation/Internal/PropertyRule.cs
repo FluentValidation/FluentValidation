@@ -380,7 +380,7 @@ namespace FluentValidation.Internal {
 							.Then(fs => failures.AddRange(fs), runSynchronously: true)
 						);
 
-				return
+				var stupidlyComplicatedTask = 
 					TaskHelpers.Iterate(
 						validations,
 						breakCondition: _ => cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0,
@@ -398,6 +398,8 @@ namespace FluentValidation.Internal {
 					},
 						runSynchronously: true
 					);
+
+				return stupidlyComplicatedTask;
 			}
 			catch (Exception ex) {
 				return TaskHelpers.FromError<IEnumerable<ValidationFailure>>(ex);
@@ -405,7 +407,9 @@ namespace FluentValidation.Internal {
 		}
 
 		private Task RunDependentRulesAsync(List<ValidationFailure> failures, ValidationContext context, CancellationToken cancellation) {
-			var validations = DependentRules.Select(v => v.ValidateAsync(context, cancellation).Then(fs => failures.AddRange(fs), runSynchronously: true));
+			var validations = DependentRules.Select(v => v.ValidateAsync(context, cancellation)
+				.Then(fs => failures.AddRange(fs), runSynchronously: true));
+			
 			return TaskHelpers.Iterate(validations, cancellationToken: cancellation);
 		}
 

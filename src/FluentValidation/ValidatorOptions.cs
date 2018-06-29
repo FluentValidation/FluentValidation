@@ -39,12 +39,6 @@ namespace FluentValidation {
 		public static string PropertyChainSeparator = ".";
 
 		/// <summary>
-		/// Default resource provider
-		/// </summary>
-		[Obsolete("Resource provider type is no longer recommended for overriding translations. Instead use the LanguageManager property.")]
-		public static Type ResourceProviderType;
-
-		/// <summary>
 		/// Default language manager 
 		/// </summary>
 		public static ILanguageManager LanguageManager {

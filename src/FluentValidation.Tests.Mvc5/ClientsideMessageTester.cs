@@ -181,7 +181,7 @@ namespace FluentValidation.Tests.Mvc5 {
 
 		[Fact]
 		public void Overrides_property_name_for_clientside_rule_using_localized_name() {
-			validator.RuleFor(x => x.Name).NotNull().WithLocalizedName(() => TestMessages.notnull_error);
+			validator.RuleFor(x => x.Name).NotNull().WithName(x => TestMessages.notnull_error);
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Localised Error' must not be empty.");
 		}

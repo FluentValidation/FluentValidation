@@ -147,9 +147,6 @@
 			public TestValidator(string errorMessage) : base(errorMessage) {
 			}
 
-			public TestValidator(Expression<Func<string>> errorMessageResourceSelector) : base(errorMessageResourceSelector) {
-			}
-
 			protected override bool IsValid(PropertyValidatorContext context) {
 				return true;
 			}
