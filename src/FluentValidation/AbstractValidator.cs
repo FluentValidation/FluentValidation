@@ -113,15 +113,17 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
 			context.Guard("Cannot pass null to Validate.", nameof(context));
+			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			var result = new ValidationResult();
 			bool shouldContinue = PreValidate(context, result);
+			
 			if (!shouldContinue) {
 				return result;
 			}
 
-			EnsureInstanceNotNull(context.InstanceToValidate);
 			var failures = NestedValidators.SelectMany(x => x.Validate(context));
+			
 			foreach (var validationFailure in failures.Where(failure => failure != null)) {
 				result.Errors.Add(validationFailure);
 			}
@@ -137,14 +139,16 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
+			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			var result = new ValidationResult();
+			
 			bool shouldContinue = PreValidate(context, result);
+			
 			if (!shouldContinue) {
 				return TaskHelpers.FromResult(result);
 			}
 
-			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			context.RootContextData["__FV_IsAsyncExecution"] = true;
 
@@ -399,8 +403,8 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// If return true, Validate/ValidateAsync will be executed.
-		/// If return false, result is returned immediatly as result of Validate/ValidateAsync.
+		/// Determines if validation should occur and provides a means to modify the context and ValidationResult prior to execution.
+		/// If this method returns false, then the ValidationResult is immediately returned from Validate/ValidateAsync.
 		/// </summary>
 		/// <param name="context"></param>
 		/// <param name="result"></param>
