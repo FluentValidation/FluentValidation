@@ -77,7 +77,7 @@
 			RuleFor(x => x.LengthCustomPlaceholders).Length(1, 5).WithMessage("Must be between {MinLength} and {MaxLength}.");
 
 			RuleFor(x => x.CustomName).NotNull().WithName("Foo");
-			RuleFor(x => x.LocalizedName).NotNull().WithLocalizedName(() => TestMessages.notnull_error);
+			RuleFor(x => x.LocalizedName).NotNull().WithName(x => TestMessages.notnull_error);
 			RuleFor(x => x.CustomNameValueType).NotNull().WithName("Foo");
 			RuleFor(x => x.MessageWithContext).NotNull().WithMessage(x => $"Foo {x.Required}");
 

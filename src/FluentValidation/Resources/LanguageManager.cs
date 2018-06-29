@@ -104,16 +104,6 @@ namespace FluentValidation.Resources {
 		/// <returns></returns>
 		public virtual string GetString(string key, CultureInfo culture=null) {
 			// For backwards compatibility with < 7.0 ResourceProvider
-#pragma warning disable 618
-			if (ValidatorOptions.ResourceProviderType != null) {
-				try {
-					var localizedStringSource = new LocalizedStringSource(ValidatorOptions.ResourceProviderType, BackwardsCompatibilityCodeMapping(key));
-					return localizedStringSource.GetString(null);
-				}
-				catch(InvalidOperationException) {  } // If something went wrong with the backwards compat override, just allow it to carry on to the normal behaviour.
-			}
-#pragma warning restore 618
-
 			culture = culture ?? Culture ?? CultureInfo.CurrentUICulture;
 
 			string code = culture.Name;
