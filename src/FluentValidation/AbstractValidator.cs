@@ -112,16 +112,17 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
-			ValidationResult result =new ValidationResult();
-			bool @continue = PreValidation(context, result);
-			if (!@continue) {
+			context.Guard("Cannot pass null to Validate.", nameof(context));
+
+			var result = new ValidationResult();
+			bool shouldContinue = PreValidate(context, result);
+			if (!shouldContinue) {
 				return result;
 			}
 
-			context.Guard("Cannot pass null to Validate.", nameof(context));
 			EnsureInstanceNotNull(context.InstanceToValidate);
 			var failures = NestedValidators.SelectMany(x => x.Validate(context));
-			foreach (ValidationFailure validationFailure in failures.Where(failure => failure != null)) {
+			foreach (var validationFailure in failures.Where(failure => failure != null)) {
 				result.Errors.Add(validationFailure);
 			}
 
@@ -135,13 +136,14 @@ namespace FluentValidation {
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
-			ValidationResult result = new ValidationResult();
-			bool @continue = PreValidation(context, result);
-			if (!@continue) {
+			context.Guard("Cannot pass null to Validate", nameof(context));
+
+			var result = new ValidationResult();
+			bool shouldContinue = PreValidate(context, result);
+			if (!shouldContinue) {
 				return TaskHelpers.FromResult(result);
 			}
 
-			context.Guard("Cannot pass null to Validate", nameof(context));
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			context.RootContextData["__FV_IsAsyncExecution"] = true;
@@ -153,7 +155,7 @@ namespace FluentValidation {
 				.Select(v => v.ValidateAsync(context, cancellation)
 				.Then(fs => failures.AddRange(fs), runSynchronously: true, cancellationToken: cancellation)), cancellation)
 				.Then(() => {
-					      foreach (ValidationFailure validationFailure in failures.Where(failure => failure != null)) {
+					      foreach (var validationFailure in failures.Where(failure => failure != null)) {
 						      result.Errors.Add(validationFailure);
 					      }
 					      return result;
@@ -400,10 +402,10 @@ namespace FluentValidation {
 		/// If return true, Validate/ValidateAsync will be executed.
 		/// If return false, result is returned immediatly as result of Validate/ValidateAsync.
 		/// </summary>
-		/// <param name="context">It may be null</param>
+		/// <param name="context"></param>
 		/// <param name="result"></param>
 		/// <returns></returns>
-		protected virtual bool  PreValidation(ValidationContext<T> context, ValidationResult result) {
+		protected virtual bool PreValidate(ValidationContext<T> context, ValidationResult result) {
 			return true;
 		}
 	}

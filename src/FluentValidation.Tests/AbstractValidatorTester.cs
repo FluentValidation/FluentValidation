@@ -29,12 +29,12 @@ namespace FluentValidation.Tests {
 
 	public class AbstractValidatorTester {
 		TestValidator validator;
-		TestValidatorWithPreValidation testValidatorWithPreValidation;
+		TestValidatorWithPreValidate testValidatorWithPreValidate;
 
 		public AbstractValidatorTester() {
 			CultureScope.SetDefaultCulture();
 			validator = new TestValidator();
-			testValidatorWithPreValidation = new TestValidatorWithPreValidation();
+			testValidatorWithPreValidate = new TestValidatorWithPreValidate();
 		}
 
 		[Fact]
@@ -250,18 +250,17 @@ namespace FluentValidation.Tests {
 
 		[Theory]
 		[MemberData(nameof(PreValidationReturnValueTheoryData))]
-		public void WhenPreValidationReturnsFalse_ResultReturnToUserImmediatly_Validate(ValidationResult preValidationResult)
-		{
-			testValidatorWithPreValidation.PreValidationMethod = (context, validationResult) => {
+		public void WhenPreValidationReturnsFalse_ResultReturnToUserImmediatly_Validate(ValidationResult preValidationResult) {
+			testValidatorWithPreValidate.PreValidateMethod = (context, validationResult) => {
 				foreach (ValidationFailure validationFailure in preValidationResult.Errors) {
 					validationResult.Errors.Add(validationFailure);
 				}
 
 				return false;
 			};
-			testValidatorWithPreValidation.RuleFor(person => person.Age).GreaterThanOrEqualTo(0);
+			testValidatorWithPreValidate.RuleFor(person => person.Age).GreaterThanOrEqualTo(0);
 
-			ValidationResult result = testValidatorWithPreValidation.Validate(new Person() { Age = -1 });
+			var result = testValidatorWithPreValidate.Validate(new Person() { Age = -1 });
 
 			Assert.Equal(preValidationResult.Errors.Count, result.Errors.Count);
 			Assert.DoesNotContain(nameof(Person.Age), result.Errors.Select(failure => failure.PropertyName));
@@ -269,37 +268,33 @@ namespace FluentValidation.Tests {
 
 		[Theory]
 		[MemberData(nameof(PreValidationReturnValueTheoryData))]
-		public void WhenPreValidationReturnsFalse_ResultReturnToUserImmediatly_ValidateAsync(ValidationResult preValidationResult)
-		{
-			testValidatorWithPreValidation.PreValidationMethod = (context, validationResult) => {
+		public async Task WhenPreValidationReturnsFalse_ResultReturnToUserImmediatly_ValidateAsync(ValidationResult preValidationResult) {
+			testValidatorWithPreValidate.PreValidateMethod = (context, validationResult) => {
 				foreach (ValidationFailure validationFailure in preValidationResult.Errors) {
 					validationResult.Errors.Add(validationFailure);
 				}
 
 				return false;
 			};
-			testValidatorWithPreValidation.RuleFor(person => person.Age).MustAsync((age, token) => Task.FromResult(age >= 0));
+			testValidatorWithPreValidate.RuleFor(person => person.Age).MustAsync((age, token) => Task.FromResult(age >= 0));
 
-			Task<ValidationResult> resultTask = testValidatorWithPreValidation.ValidateAsync(new Person() { Age = -1 });
-			Task.WaitAll(resultTask);
-			ValidationResult result = resultTask.Result;
+			var result = await testValidatorWithPreValidate.ValidateAsync(new Person() { Age = -1 });
 
 			Assert.Equal(preValidationResult.Errors.Count, result.Errors.Count);
 			Assert.DoesNotContain(nameof(Person.Age), result.Errors.Select(failure => failure.PropertyName));
 		}
 
 		[Fact]
-		public void WhenPreValidationReturnsTrue_ValidatorsGetHit_Validate()
-		{
+		public void WhenPreValidationReturnsTrue_ValidatorsGetHit_Validate() {
 			const string testProperty = "TestProperty";
 			const string testMessage = "Test Message";
-			testValidatorWithPreValidation.PreValidationMethod = (context, validationResult) => {
+			testValidatorWithPreValidate.PreValidateMethod = (context, validationResult) => {
 				validationResult.Errors.Add(new ValidationFailure(testProperty, testMessage));
 				return true;
 			};
-			testValidatorWithPreValidation.RuleFor(person => person.Age).GreaterThanOrEqualTo(0);
+			testValidatorWithPreValidate.RuleFor(person => person.Age).GreaterThanOrEqualTo(0);
 
-			ValidationResult result = testValidatorWithPreValidation.Validate(new Person() { Age = -1 });
+			var result = testValidatorWithPreValidate.Validate(new Person() { Age = -1 });
 
 			Assert.Contains(nameof(Person.Age), result.Errors.Select(failure => failure.PropertyName));
 			Assert.Contains(testProperty, result.Errors.Select(failure => failure.PropertyName));
@@ -307,19 +302,16 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void WhenPreValidationReturnsTrue_ValidatorsGetHit_ValidateAsync()
-		{
+		public async Task WhenPreValidationReturnsTrue_ValidatorsGetHit_ValidateAsync() {
 			const string testProperty = "TestProperty";
 			const string testMessage = "Test Message";
-			testValidatorWithPreValidation.PreValidationMethod = (context, validationResult) => {
+			testValidatorWithPreValidate.PreValidateMethod = (context, validationResult) => {
 				validationResult.Errors.Add(new ValidationFailure(testProperty, testMessage));
 				return true;
 			};
-			testValidatorWithPreValidation.RuleFor(person => person.Age).MustAsync((age, token) => Task.FromResult(age >= 0));
+			testValidatorWithPreValidate.RuleFor(person => person.Age).MustAsync((age, token) => Task.FromResult(age >= 0));
 
-			Task<ValidationResult> resultTask = testValidatorWithPreValidation.ValidateAsync(new Person() { Age = -1 });
-			Task.WaitAll(resultTask);
-			ValidationResult result = resultTask.Result;
+			var result = await testValidatorWithPreValidate.ValidateAsync(new Person() { Age = -1 });
 
 			Assert.Contains(nameof(Person.Age), result.Errors.Select(failure => failure.PropertyName));
 			Assert.Contains(testProperty, result.Errors.Select(failure => failure.PropertyName));
