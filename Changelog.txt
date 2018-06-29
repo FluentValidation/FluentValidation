@@ -1,3 +1,6 @@
+7.6.104 - 
+Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
+
 7.6.103 - 16 June 2018
 Using [BindProperty] in AspNetCore now works when implicit child validation is disabled.
 ShouldHaveChildValidator now works when the child validator is inside a DependentRules block.
