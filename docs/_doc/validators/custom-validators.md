@@ -82,7 +82,7 @@ public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T
 }
 ```
 
-### Using a Custom Validator
+### Writing a Custom Validator
 
 If you need more control of the validation process than is available with `Must`, you can write a custom rule using the `Custom` method. This method allows you to manually create the `ValidationFailure` instance associated with the validation error. Usually, the framework does this for you, so it is more verbose than using `Must`.
 
@@ -109,7 +109,7 @@ context.AddFailure(new ValidationFailure("SomeOtherProperty", "The list must con
 
 As before, this could be wrapped in an extension method to simplify the consuming code.
 
-### Reusable Property Validator
+### Reusable Property Validators
 
 In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator` (this is how all of FluentValidation's built-in rules are defined).
 
