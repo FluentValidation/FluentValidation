@@ -65,7 +65,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator() {
 													v => v.RuleFor(x => x.Forename)
 														.Must(forename => forename == "Jeremy")
-														.WithLocalizedMessage(()=>TestMessages.ValueOfForPropertyNameIsNotValid, x => x.Forename)
+														.WithLocalizedMessage(typeof(TestMessages), nameof(TestMessages.ValueOfForPropertyNameIsNotValid))
 												};
 
 			var result = validator.Validate(new Person() { Forename = "test" });
@@ -76,8 +76,7 @@ namespace FluentValidation.Tests {
 			error.AttemptedValue.ShouldEqual("test");
 			error.ErrorCode.ShouldEqual("PredicateValidator");
 
-			error.FormattedMessageArguments.Length.ShouldEqual(1);
-			error.FormattedMessageArguments[0].ShouldEqual("test");
+			error.FormattedMessageArguments.Length.ShouldEqual(0);
 
 			error.FormattedMessagePlaceholderValues.Count.ShouldEqual(2);
 			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();

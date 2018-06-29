@@ -7,27 +7,23 @@
     <OutputType>Library</OutputType>
     <NoWarn>1701;1702;1705;1998;0618</NoWarn>
   </PropertyGroup>
-
   <ItemGroup>
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2"/>
-    <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="15.7.2"/>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3"/>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1"/>
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0"/>
-    <PackageReference Include="xunit" Version="2.2.0"/>
-    <PackageReference Include="Moq" Version="4.7.99"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
+    <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="15.7.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="Moq" Version="4.7.99" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj"/>
+    <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Update="TestMessages.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -35,17 +31,16 @@
       <DependentUpon>TestMessages.resx</DependentUpon>
     </Compile>
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Update="TestMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="../netfx.props"/>
+  <Import Project="../netfx.props" />
   <ItemGroup Condition="'$(TargetFramework)'=='net452' AND '$(OS)'=='Unix'">
     <!-- Workarounds for Mono -->
-    <Reference Include="System.Runtime"/>
-    <Reference Include="System.Threading.Tasks"/>
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Threading.Tasks" />
   </ItemGroup>
 </Project>
