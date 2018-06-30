@@ -113,7 +113,6 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
 			context.Guard("Cannot pass null to Validate.", nameof(context));
-			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			var result = new ValidationResult();
 			bool shouldContinue = PreValidate(context, result);
@@ -122,6 +121,8 @@ namespace FluentValidation {
 				return result;
 			}
 
+			EnsureInstanceNotNull(context.InstanceToValidate);
+			
 			var failures = NestedValidators.SelectMany(x => x.Validate(context));
 			
 			foreach (var validationFailure in failures.Where(failure => failure != null)) {
@@ -139,7 +140,6 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
-			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			var result = new ValidationResult();
 			
@@ -149,6 +149,7 @@ namespace FluentValidation {
 				return TaskHelpers.FromResult(result);
 			}
 
+			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			context.RootContextData["__FV_IsAsyncExecution"] = true;
 
