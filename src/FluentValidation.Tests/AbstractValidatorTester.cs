@@ -285,6 +285,16 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void PreValidate_bypasses_nullcheck_on_instance() {
+			testValidatorWithPreValidate.RuleFor(x => x.Surname).NotNull();
+			testValidatorWithPreValidate.PreValidateMethod = (ctx, r) => false;
+			
+			var result = testValidatorWithPreValidate.Validate((Person)null);
+			result.IsValid.ShouldBeTrue();
+
+		}
+
+		[Fact]
 		public void WhenPreValidationReturnsTrue_ValidatorsGetHit_Validate() {
 			const string testProperty = "TestProperty";
 			const string testMessage = "Test Message";
