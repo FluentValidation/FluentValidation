@@ -123,7 +123,7 @@ namespace FluentValidation.Tests {
 	    
 	    [Fact]
 		public async Task Validation_continues_on_failure_async() {
-			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).MustAsync(async (x,c) => x != null).MustAsync(async (x,c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(2);
 		}
@@ -132,7 +132,7 @@ namespace FluentValidation.Tests {
 		public async Task Validation_stops_on_first_failure_async() {
 			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
 
-			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
 		}
@@ -141,7 +141,7 @@ namespace FluentValidation.Tests {
 		public async Task Validation_continues_on_failure_when_set_to_Stop_globally_and_overriden_at_rule_level_async() {
 			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
 
-			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(2);
 		}
@@ -149,15 +149,24 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public async Task Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level_async() {
 			ValidatorOptions.CascadeMode = CascadeMode.Continue;
-			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
 		}
 
+	    
+	    [Fact]
+	    public async Task Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level_and_async_validator_is_invoked_synchronously() {
+		    ValidatorOptions.CascadeMode = CascadeMode.Continue;
+		    validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
+		    var results = await validator.ValidateAsync(new Person());
+		    results.Errors.Count.ShouldEqual(1);
+	    }
+	    
 		[Fact]
 		public async Task Validation_continues_to_second_validator_when_first_validator_succeeds_and_cascade_set_to_stop_async() {
 			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
-			validator.RuleFor(x => x.Surname).NotNull().Length(2, 10);
+			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var result = await validator.ValidateAsync(new Person {Surname = "x"});
 			result.IsValid.ShouldBeFalse();
 		}
@@ -166,7 +175,7 @@ namespace FluentValidation.Tests {
 		public async Task Validation_stops_on_first_failure_when_set_to_StopOnFirstFailure_at_validator_level_async() {
 			validator.CascadeMode = CascadeMode.StopOnFirstFailure;
 
-			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
 		}
@@ -175,7 +184,7 @@ namespace FluentValidation.Tests {
 		public async Task Validation_continues_when_set_to_Continue_at_validator_level_async() {
 			validator.CascadeMode = CascadeMode.Continue;
 
-			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(2);
 		}
@@ -184,7 +193,7 @@ namespace FluentValidation.Tests {
 		public async Task Validation_continues_on_failure_when_set_to_StopOnFirstFailure_at_validator_level_and_overriden_at_rule_level_async() {
 			validator.CascadeMode = CascadeMode.StopOnFirstFailure;
 
-			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(2);
 		}
@@ -193,14 +202,14 @@ namespace FluentValidation.Tests {
 		public async Task Validation_stops_on_failure_when_set_to_Continue_and_overriden_at_rule_level_async() {
 			validator.CascadeMode = CascadeMode.Continue;
 
-			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
 		}
 
 		[Fact]
 		public async Task Cascade_mode_can_be_set_after_validator_instantiated_async() {
-			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
+			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			validator.CascadeMode = CascadeMode.StopOnFirstFailure;
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
