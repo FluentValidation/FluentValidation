@@ -7,16 +7,13 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	public class ChildValidatorAdaptor : NoopPropertyValidator, IShouldValidateAsync {
+	public class ChildValidatorAdaptor : NoopPropertyValidator {
 		static readonly IEnumerable<ValidationFailure> EmptyResult = Enumerable.Empty<ValidationFailure>();
 		static readonly Task<IEnumerable<ValidationFailure>> AsyncEmptyResult = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 
 		readonly Func<object, IValidator> _validatorProvider;
 
 		public Type ValidatorType { get; }
-
-		[Obsolete("Use IShouldValidateAsync.ShouldValidatAsync(context) instead")]
-		public override bool IsAsync => true;
 
 		public ChildValidatorAdaptor(IValidator validator) : this(_ => validator, validator.GetType()) {
 		}
@@ -73,7 +70,7 @@ namespace FluentValidation.Validators {
 			return newContext;
 		}
 
-		public bool ShouldValidateAsync(ValidationContext context) {
+		public override bool ShouldValidateAsync(ValidationContext context) {
 			return context.IsAsync();
 		}
 	}

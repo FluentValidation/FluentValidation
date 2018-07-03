@@ -261,7 +261,7 @@ namespace FluentValidation.Internal {
 			// Invoke each validator and collect its results.
 			foreach (var validator in _validators) {
 				IEnumerable<ValidationFailure> results;
-				if (ShouldValidateAsync(validator, context))
+				if (validator.ShouldValidateAsync(context))
 					results = InvokePropertyValidatorAsync(context, validator, propertyName, default(CancellationToken)).GetAwaiter().GetResult();
 				else
 					results = InvokePropertyValidator(context, validator, propertyName);
@@ -329,7 +329,7 @@ namespace FluentValidation.Internal {
 				var fastExit = false;
 
 				// Firstly, invoke all syncronous validators and collect their results.
-				foreach (var validator in _validators.Where(v => !ShouldValidateAsync(v, context))) {
+				foreach (var validator in _validators.Where(v => !v.ShouldValidateAsync(context))) {
 
 					if (cancellation.IsCancellationRequested) {
 						return TaskHelpers.Canceled<IEnumerable<ValidationFailure>>();
@@ -354,7 +354,7 @@ namespace FluentValidation.Internal {
 					return TaskHelpers.FromResult(failures.AsEnumerable());
 				}
 
-				var asyncValidators = _validators.Where(v => ShouldValidateAsync(v, context)).ToList();
+				var asyncValidators = _validators.Where(v => v.ShouldValidateAsync(context)).ToList();
                 
 				// if there's no async validators then we exit
 				if (asyncValidators.Count == 0) {
@@ -479,17 +479,6 @@ namespace FluentValidation.Internal {
 				var wrappedValidator = new DelegatingValidator(predicate, CurrentValidator);
 				ReplaceValidator(CurrentValidator, wrappedValidator);
 			}
-		}
-
-		private bool ShouldValidateAsync(IPropertyValidator validator, ValidationContext context) {
-			if (validator is IShouldValidateAsync a) {
-				return a.ShouldValidateAsync(context);
-			}
-			
-			// For backwards compatibility
-#pragma warning disable 618
-			return validator.IsAsync;
-#pragma warning restore 618
 		}
 	}
 }

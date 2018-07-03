@@ -6,11 +6,8 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	public abstract class AsyncValidatorBase : PropertyValidator, IShouldValidateAsync {
-		[Obsolete]
-		public override bool IsAsync => true;
-
-		public bool ShouldValidateAsync(ValidationContext context) {
+	public abstract class AsyncValidatorBase : PropertyValidator {
+		public override bool ShouldValidateAsync(ValidationContext context) {
 			return context.IsAsync();
 		}
 

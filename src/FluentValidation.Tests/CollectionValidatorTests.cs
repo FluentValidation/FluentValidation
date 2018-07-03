@@ -178,13 +178,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Validates_child_validator_asynchronously() {
+		public async Task Validates_child_validator_asynchronously() {
 			var validator = new ComplexValidationTester.TracksAsyncCallValidator<Person>();
 			var childValidator = new ComplexValidationTester.TracksAsyncCallValidator<Person>();
 			childValidator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleFor(x => x.Children).SetCollectionValidator(childValidator);
 
-			validator.ValidateAsync(new Person() { Children = new List<Person> { new Person() }}).GetAwaiter().GetResult();
+			await validator.ValidateAsync(new Person() {Children = new List<Person> {new Person()}});
 			childValidator.WasCalledAsync.ShouldEqual(true);
 		}
 	
