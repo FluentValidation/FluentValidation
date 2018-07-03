@@ -29,14 +29,8 @@
 
 		public object PropertyValue => _innerContext.PropertyValue;
 
-		public string GetDefaultMessage()
-		{
-			// For backwards compatibility, only pass in the PropertyValidatorContext if the string source implements IContextAwareStringSource
-			// otherwise fall back to old behaviour of passing the instance. 
-			object stringSourceContext = ErrorSource is IContextAwareStringSource ? _innerContext: _innerContext.Instance;
-
-			string error = MessageFormatter.BuildMessage(ErrorSource.GetString(stringSourceContext));
-			return error;
+		public string GetDefaultMessage() {
+			return MessageFormatter.BuildMessage(ErrorSource.GetString(_innerContext));
 		}
 
 		public static implicit operator PropertyValidatorContext(MessageBuilderContext ctx) {

@@ -18,27 +18,28 @@
 
 namespace FluentValidation.Resources {
 	using System;
+	using Validators;
 
 	/// <summary>
 	/// Represents a static string.
 	/// </summary>
 	public class StaticStringSource : IStringSource {
-		readonly string message;
+		readonly string _message;
 
 		/// <summary>
 		/// Creates a new StringErrorMessageSource using the specified error message as the error template.
 		/// </summary>
 		/// <param name="message">The error message template.</param>
 		public StaticStringSource(string message) {
-			this.message = message;
+			_message = message;
 		}
 
 		/// <summary>
 		/// Construct the error message template
 		/// </summary>
 		/// <returns>Error message template</returns>
-		public string GetString(object context) {
-			return message;
+		public string GetString(IValidationContext context) {
+			return _message;
 		}
 
 		/// <summary>

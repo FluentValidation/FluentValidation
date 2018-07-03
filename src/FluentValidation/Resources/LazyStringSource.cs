@@ -23,12 +23,12 @@ namespace FluentValidation.Resources {
 	/// Lazily loads the string
 	/// </summary>
 	public class LazyStringSource : IStringSource {
-		readonly Func<object, string> _stringProvider;
+		readonly Func<IValidationContext, string> _stringProvider;
 
 		/// <summary>
 		/// Creates a LazyStringSource
 		/// </summary>
-		public LazyStringSource(Func<object, string> stringProvider) {
+		public LazyStringSource(Func<IValidationContext, string> stringProvider) {
 			_stringProvider = stringProvider;
 		}
 
@@ -36,45 +36,11 @@ namespace FluentValidation.Resources {
 		/// Gets the value
 		/// </summary>
 		/// <returns></returns>
-		public string GetString(object context) {
+		public string GetString(IValidationContext context) {
 			try {
 				return _stringProvider(context);
 			}
 			catch (NullReferenceException ex) {
-				throw new FluentValidationMessageFormatException("Could not build error message- the message makes use of properties from the containing object, but the containing object was null.", ex);
-			}
-		}
-
-		/// <summary>
-		/// Resource type
-		/// </summary>
-		public string ResourceName => null;
-
-		/// <summary>
-		/// Resource name
-		/// </summary>
-		public Type ResourceType => null;
-	}
-
-	// Internal for now as I'm not sure I like the duplication. Might be better to have the breaking change and merge this with LazyStringSource.
-	internal class ContextAwareLazyStringSource : IStringSource, IContextAwareStringSource {
-		readonly Func<PropertyValidatorContext, string> _stringProvider;
-
-		/// <summary>
-		/// Creates a LazyStringSource
-		/// </summary>
-		public ContextAwareLazyStringSource(Func<PropertyValidatorContext, string> stringProvider) {
-			_stringProvider = stringProvider;
-		}
-
-		/// <summary>
-		/// Gets the value
-		/// </summary>
-		/// <returns></returns>
-		public string GetString(object context) {
-			try {
-				return _stringProvider(context as PropertyValidatorContext);
-			} catch (NullReferenceException ex) {
 				throw new FluentValidationMessageFormatException("Could not build error message- the message makes use of properties from the containing object, but the containing object was null.", ex);
 			}
 		}

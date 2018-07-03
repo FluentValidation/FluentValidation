@@ -92,9 +92,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
-			Func<object, string> newFunc = x => messageProvider((T)x);
 			return rule.Configure(config => {
-				config.CurrentValidator.GetMetadata().ErrorMessageSource = new LazyStringSource(newFunc);
+				config.CurrentValidator.GetMetadata().ErrorMessageSource = new LazyStringSource(ctx => messageProvider((T)ctx.InstanceToValidate));
 			});
 		}
 
@@ -102,19 +101,14 @@ namespace FluentValidation {
 		/// Specifies a custom error message to use when validation fails.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
-		/// <param name="messageProvider">Delegate that will be invoked to retrieve the localized message. </param>
+		/// <param name="messageProvider">Delegate that will be invoked.Uses_localized_name to retrieve the localized message. </param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 
 			return rule.Configure(config => {
-
-				Func<PropertyValidatorContext, string> newFunc = context => {
-					return messageProvider((T)context.Instance, (TProperty)context.PropertyValue);
-				};
-
-
-				config.CurrentValidator.GetMetadata().ErrorMessageSource = new ContextAwareLazyStringSource(newFunc);
+				config.CurrentValidator.GetMetadata().ErrorMessageSource 
+					= new LazyStringSource(context => messageProvider((T)context.InstanceToValidate, (TProperty)context.PropertyValue));
 			});
 		}
 
@@ -342,11 +336,11 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> nameProvider) {
 			nameProvider.Guard("A nameProvider WithName.", nameof(nameProvider));
-
-			Func<object, string> newFunc = x => nameProvider((T)x);
-
 			return rule.Configure(config => {
-				config.DisplayName = new LazyStringSource(newFunc);
+				// Must use null propogation here.
+				// The MVC clientside validation will try and retrieve the name, but won't 
+				// be able to to so if we've used this overload of withname.
+				config.DisplayName = new LazyStringSource(ctx => nameProvider((T)ctx?.InstanceToValidate));
 			});
 		}
 

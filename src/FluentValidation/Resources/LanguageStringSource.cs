@@ -1,6 +1,7 @@
 ﻿namespace FluentValidation.Resources {
 	using System;
 	using System.Globalization;
+	using Validators;
 
 	/// <summary>
 	/// IStringSource implementation that uses the default language manager.
@@ -13,7 +14,7 @@
 			_key = key;
 		}
 
-		public string GetString(object context) {
+		public string GetString(IValidationContext context) {
 			return ValidatorOptions.LanguageManager.GetString(_key);
 		}
 
