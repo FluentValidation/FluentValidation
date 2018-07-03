@@ -28,17 +28,13 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator, IShouldValidateAsync, IHasMetadata {
+	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator, IHasMetadata {
 		private readonly Func<ValidationContext, bool> _condition;
 		private readonly Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 		public IPropertyValidator InnerValidator { get; private set; }
 
-		[Obsolete]
-		public virtual bool IsAsync => InnerValidator.IsAsync || _asyncCondition != null;
-
 		public bool ShouldValidateAsync(ValidationContext context) {
-			return (InnerValidator is IShouldValidateAsync a && a.ShouldValidateAsync(context))
-			       || _asyncCondition != null || InnerValidator.IsAsync;
+			return InnerValidator.ShouldValidateAsync(context) || _asyncCondition != null;
 		}
 
 		public DelegatingValidator(Func<ValidationContext, bool> condition, IPropertyValidator innerValidator) {

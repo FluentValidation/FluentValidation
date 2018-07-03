@@ -30,33 +30,26 @@ namespace FluentValidation.Validators {
 	/// Please inherit from <see cref="PropertyValidator">PropertyValidator</see> instead.
 	/// </summary>
 	public interface IPropertyValidator {
-		[Obsolete("Subclasses should implement IShouldValidateAsync.ShouldValidateAync() and instead of using this property.")]
-		bool IsAsync { get; }
-
+		/// <summary>
+		/// Performs validation
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
 		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
+		
+		/// <summary>
+		/// Performs validation asynchronously.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="cancellation"></param>
+		/// <returns></returns>
 		Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation);
-	}
-	
-	//todo: This should ideally be merged with IPropertyValidator. I've left it as a separate interface for now to avoid a breaking change.
-	/// <summary>
-	/// Indicates that a validator can support asynchronous operation.
-	/// </summary>
-	public interface IShouldValidateAsync {
+
 		/// <summary>
 		/// Determines whether this validator should be run asynchronously or not.
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
 		bool ShouldValidateAsync(ValidationContext context);
-	}
-
-	/// <summary>
-	/// Indicates that a type exposes validator metadata.
-	/// </summary>
-	public interface IHasMetadata {
-		/// <summary>
-		/// Validator metadata.
-		/// </summary>
-		ValidatorMetadata Metadata { get; }
 	}
 }
