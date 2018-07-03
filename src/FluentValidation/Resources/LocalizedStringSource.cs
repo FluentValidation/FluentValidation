@@ -21,14 +21,13 @@ namespace FluentValidation.Resources {
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Internal;
+	using Validators;
 
 	/// <summary>
 	/// Represents a localized string.
 	/// </summary>
 	public class LocalizedStringSource : IStringSource {
-		readonly Func<string> accessor;
-		readonly Type resourceType;
-		readonly string resourceName;
+		readonly Func<string> _accessor;
 
 		/// <summary>
 		/// Creates a new instance of the LocalizedErrorMessageSource class using the specified resource name and resource type.
@@ -38,42 +37,38 @@ namespace FluentValidation.Resources {
 		public LocalizedStringSource(Type resourceType, string resourceName) {
 			var resourceAccessor = BuildResourceAccessor(resourceType, resourceName);
 
-			this.resourceType = resourceAccessor.ResourceType;
-			this.resourceName = resourceAccessor.ResourceName;
-			this.accessor = resourceAccessor.Accessor;
+			ResourceType = resourceAccessor.ResourceType;
+			ResourceName = resourceAccessor.ResourceName;
+			_accessor = resourceAccessor.Accessor;
 		}
 
 		/// <summary>
 		/// Construct the error message template
 		/// </summary>
 		/// <returns>Error message template</returns>
-		public string GetString(object context) {
-			return accessor();
+		public string GetString(IValidationContext context) {
+			return _accessor();
 		}
 
 		/// <summary>
 		/// The name of the resource if localized.
 		/// </summary>
-		public string ResourceName {
-			get { return resourceName; }
-		}
+		public string ResourceName { get; }
 
 		/// <summary>
 		/// The type of the resource provider if localized.
 		/// </summary>
-		public Type ResourceType {
-			get { return resourceType; }
-		}
+		public Type ResourceType { get; }
 
-	    protected virtual ResourceAccessor BuildResourceAccessor(Type resourceType, string resourceName) {
+		protected virtual ResourceAccessor BuildResourceAccessor(Type resourceType, string resourceName) {
 			var property = GetResourceProperty(ref resourceType, ref resourceName);
 
 			if (property == null) {
-				throw new InvalidOperationException(string.Format("Could not find a property named '{0}' on type '{1}'.", resourceName, resourceType));
+				throw new InvalidOperationException($"Could not find a property named '{resourceName}' on type '{resourceType}'.");
 			}
 
 			if (property.PropertyType != typeof(string)) {
-				throw new InvalidOperationException(string.Format("Property '{0}' on type '{1}' does not return a string", resourceName, resourceType));
+				throw new InvalidOperationException($"Property '{resourceName}' on type '{resourceType}' does not return a string");
 			}
 
 			var accessor = (Func<string>)property.GetMethod.CreateDelegate(typeof(Func<string>));

@@ -19,6 +19,7 @@
 namespace FluentValidation.Resources {
 
 	using System;
+	using Validators;
 
 	/// <summary>
 	/// Provides error message templates
@@ -28,7 +29,7 @@ namespace FluentValidation.Resources {
 		/// Construct the error message template
 		/// </summary>
 		/// <returns>Error message template</returns>
-		string GetString(object context);
+		string GetString(IValidationContext context);
 
 		/// <summary>
 		/// The name of the resource if localized.
@@ -40,9 +41,4 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		Type ResourceType { get; }
 	}
-
-	/// <summary>
-	/// Marker interface that indicates a PropertyValidatorContext should be passed to GetString
-	/// </summary>
-	internal interface IContextAwareStringSource {  }
 }

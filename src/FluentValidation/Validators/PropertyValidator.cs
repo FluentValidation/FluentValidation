@@ -105,7 +105,7 @@ namespace FluentValidation.Validators {
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
 			failure.ResourceName = Metadata.ErrorMessageSource.ResourceName;
 			failure.ErrorCode = (Metadata.ErrorCodeSource != null)
-				? Metadata.ErrorCodeSource.GetString(context.Instance)
+				? Metadata.ErrorCodeSource.GetString(context)
 				: ValidatorOptions.ErrorCodeResolver(this);
 
 			if (Metadata.CustomStateProvider != null) {

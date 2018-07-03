@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using Attributes;
 	using Internal;
 
-	public class PropertyValidatorContext {
+	public class PropertyValidatorContext : IValidationContext {
 		private MessageFormatter _messageFormatter;
 		private readonly Lazy<object> _propertyValueContainer;
 
@@ -32,12 +32,14 @@ namespace FluentValidation.Validators {
 		public PropertyRule Rule { get; private set; }
 		public string PropertyName { get; private set; }
 
-		[Obsolete("Use DisplaName instead")]
+		[Obsolete("Use DisplayName instead")]
 		public string PropertyDescription => DisplayName;
 
-		public string DisplayName => Rule.GetDisplayName(Instance);
+		public string DisplayName => Rule.GetDisplayName(ParentContext);
 
 		public object Instance => ParentContext.InstanceToValidate;
+
+		object IValidationContext.InstanceToValidate => ParentContext.InstanceToValidate;
 
 		public MessageFormatter MessageFormatter => _messageFormatter ?? (_messageFormatter = ValidatorOptions.MessageFormatterFactory());
 
@@ -63,5 +65,6 @@ namespace FluentValidation.Validators {
 			PropertyName = propertyName;
 			_propertyValueContainer = new Lazy<object>(() => propertyValue);
 		}
+
 	}
 }
