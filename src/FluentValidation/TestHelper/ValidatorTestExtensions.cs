@@ -49,7 +49,6 @@ namespace FluentValidation.TestHelper {
 			testValidationResult.ShouldNotHaveError();
 		}
 
-		//This one
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
 			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
@@ -72,7 +71,6 @@ namespace FluentValidation.TestHelper {
 			matchingValidators = matchingValidators.Concat(GetDependentRules(expressionMemberName, expression, descriptor)).ToArray();
 			
 			var childValidatorTypes = matchingValidators.OfType<ChildValidatorAdaptor>().Select(x => x.ValidatorType);
-			childValidatorTypes = childValidatorTypes.Concat(matchingValidators.OfType<ChildCollectionValidatorAdaptor>().Select(x => x.ChildValidatorType));
 
 			if (childValidatorTypes.All(x => !childValidatorType.GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()))) {
 				var childValidatorNames = childValidatorTypes.Any() ? string.Join(", ", childValidatorTypes.Select(x => x.Name)) : "none";

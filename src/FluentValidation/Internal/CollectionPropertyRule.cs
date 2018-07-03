@@ -47,6 +47,11 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
+		/// Filter that should include/exclude items in the collection.
+		/// </summary>
+		public Func<TProperty, bool> Filter { get; set; }
+
+		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
 		public static CollectionPropertyRule<TProperty> Create<T>(Expression<Func<T, IEnumerable<TProperty>>> expression, Func<CascadeMode> cascadeModeThunk) {
@@ -83,15 +88,20 @@ namespace FluentValidation.Internal {
 
 					var results = new List<ValidationFailure>();
 
-					var validators = collectionPropertyValue.Select((v, count) => {
-						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate);
+					var validators = collectionPropertyValue.Select(async (v, count) => {
+						
+						if (Filter != null && !Filter(v)) {
+							return;
+						}
+
+						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
 						newContext.PropertyChain.Add(propertyName);
 						newContext.PropertyChain.AddIndexer(count);
 
 						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
 
-						return validator.ValidateAsync(newPropertyContext, cancellation)
-							.Then(fs => results.AddRange(fs), cancellation);
+						var fs = await validator.ValidateAsync(newPropertyContext, cancellation);
+						results.AddRange(fs); // this is thread safe as our tasks are launched sequentially.
 					});
 					
 					return TaskHelpers.Iterate(validators, cancellation)
@@ -138,9 +148,15 @@ namespace FluentValidation.Internal {
 					}
 
 					foreach (var element in collectionPropertyValue) {
-						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate);
+						int index = count++;
+						
+						if (Filter != null && !Filter(element)) {
+							continue;
+						}
+						
+						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
 						newContext.PropertyChain.Add(propertyName);
-						newContext.PropertyChain.AddIndexer(count++);
+						newContext.PropertyChain.AddIndexer(index);
 
 						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
 
