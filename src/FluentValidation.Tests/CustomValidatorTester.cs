@@ -30,75 +30,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Returns_single_failure() {
-			validator.Custom(person => new ValidationFailure("Surname", "Fail", null));
-			var result = validator.Validate(new Person());
-
-			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Fail");
-			result.Errors[0].PropertyName.ShouldEqual("Surname");
-		}
-
-		[Fact]
-		public void Returns_single_failure_async() {
-			validator.CustomAsync(async person => new ValidationFailure("Surname", "Fail", null));
-			var result = validator.ValidateAsync(new Person()).Result;
-
-			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Fail");
-			result.Errors[0].PropertyName.ShouldEqual("Surname");
-		}
-
-		[Fact]
-		public void When_the_lambda_returns_null_then_the_validation_should_succeed() {
-			validator.Custom(person => null);
-			var result = validator.Validate(new Person());
-
-			result.IsValid.ShouldBeTrue();
-		}
-
-		[Fact]
-		public void When_the_async_lambda_returns_null_then_the_validation_should_succeed()
-		{
-			validator.CustomAsync(async person => null);
-			var result = validator.ValidateAsync(new Person()).Result;
-
-			result.IsValid.ShouldBeTrue();
-		}
-
-		[Fact]
-		public void Perserves_property_chain_using_custom() {
-			validator.RuleFor(x => x.Orders).SetCollectionValidator(new NestedOrderValidator());
-			var person = new Person();
-			person.Orders.Add(new Order());
-			var result = validator.Validate(person);
-
-			result.Errors.Single().PropertyName.ShouldEqual("Orders[0].Amount");
-		}
-
-		[Fact]
-		public void Custom_within_ruleset() {
-			var validator = new InlineValidator<Person>();
-			validator.RuleSet("foo", () => { validator.Custom(x => { return new ValidationFailure("x", "y"); }); });
-			validator.RuleSet("bar", () => { validator.Custom(x => { return new ValidationFailure("x", "y"); }); });
-
-			var result = validator.Validate(new Person(), ruleSet: "foo");
-			result.Errors.Count.ShouldEqual(1);
-		}
-
-		[Fact]
-		public void CustomAsync_within_ruleset()
-		{
-			var validator = new InlineValidator<Person>();
-			validator.RuleSet("foo", () => validator.CustomAsync(async x => new ValidationFailure("x", "y")));
-			validator.RuleSet("bar", () => validator.CustomAsync(async x =>new ValidationFailure("x", "y")));
-
-			var result = validator.ValidateAsync(new Person(), ruleSet: "foo").Result;
-			result.Errors.Count.ShouldEqual(1);
-		}
-
-
-		[Fact]
 		public void New_Custom_Returns_single_failure() {
 			validator
 				.RuleFor(x => x)
@@ -130,8 +61,8 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Perserves_property_chain_using_New_custom() {
-			validator.RuleFor(x => x.Orders).SetCollectionValidator(new NestedOrderValidator2());
+		public void Perserves_property_chain_using_custom() {
+			validator.RuleFor(x => x.Orders).SetCollectionValidator(new NestedOrderValidator());
 			var person = new Person();
 			person.Orders.Add(new Order());
 			var result = validator.Validate(person);
@@ -227,14 +158,6 @@ namespace FluentValidation.Tests {
 
 		private class NestedOrderValidator : AbstractValidator<Order> {
 			public NestedOrderValidator() {
-				Custom((x, ctx) => {
-					return new ValidationFailure(ctx.PropertyChain.BuildPropertyName("Amount"), "bar");
-				});
-			}
-		}
-
-		private class NestedOrderValidator2 : AbstractValidator<Order> {
-			public NestedOrderValidator2() {
 				RuleFor(x=>x).Custom((x, ctx) => {
 					ctx.AddFailure(ctx.ParentContext.PropertyChain.BuildPropertyName("Amount"), "bar");
 				});

@@ -143,16 +143,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_throw_when_custom_rule_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.Custom((Func<Person, ValidationFailure>)null));
-		}
-
-		[Fact]
-		public void Should_throw_when_customasync_rule_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.CustomAsync((Func<Person, Task<ValidationFailure>>)null));
-		}
-
-		[Fact]
 		public void Should_validate_single_property() {
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleFor(x => x.Surname).NotNull();
