@@ -71,6 +71,10 @@ namespace FluentValidation.Validators {
 				);
 		}
 
+		public virtual bool ShouldValidateAsync(ValidationContext context) {
+			return false;
+		}
+
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
 #pragma warning disable 1998
@@ -114,11 +118,6 @@ namespace FluentValidation.Validators {
 
 			failure.Severity = Metadata.Severity;
 			return failure;
-		}
-
-		[Obsolete("Use IShouldValidateAsync.ShouldValidatAsync(context) instead")]
-		public virtual bool IsAsync {
-			get { return false; }
 		}
 
 		[Obsolete("Use Metadata.CustomStateProvider")]

@@ -22,6 +22,16 @@ namespace FluentValidation {
 	using Validators;
 
 	/// <summary>
+	/// Indicates that a type exposes validator metadata.
+	/// </summary>
+	public interface IHasMetadata {
+		/// <summary>
+		/// Validator metadata.
+		/// </summary>
+		ValidatorMetadata Metadata { get; }
+	}
+
+	/// <summary>
 	/// Validator metadata.
 	/// </summary>
 	public class ValidatorMetadata {
