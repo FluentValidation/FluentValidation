@@ -114,7 +114,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Async_condition_should_work_with_complex_property() {
 			var validator = new TestValidator() {
-				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).WhenAsync(async x => x.Address.Line1 == "foo")
+				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).WhenAsync(async (x,c) => x.Address.Line1 == "foo")
 			};
 
 			var result = validator.ValidateAsync(person).Result;
