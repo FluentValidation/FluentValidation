@@ -362,7 +362,7 @@ namespace System.Threading.Tasks
 		// <summary>
 		// Returns a completed task that has no result. 
 		// </summary>        
-		private static Task Completed()
+		internal static Task Completed()
 		{
 			return DefaultCompleted;
 		}

@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,44 +15,38 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+
 #endregion
 
 using System.Linq;
 
-namespace FluentValidation.Tests
-{
+namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Xunit;
 
-	
-	public class CollectionValidatorWithParentTests
-	{
+
+	public class CollectionValidatorWithParentTests {
 		Person person;
 
-		public CollectionValidatorWithParentTests()
-		{
-			person = new Person()
-			{
+		public CollectionValidatorWithParentTests() {
+			person = new Person() {
 				AnotherInt = 99,
-				Children = new List<Person>()
-				{
-					new Person() { Email = "person@email.com"}
+				Children = new List<Person>() {
+					new Person() {Email = "person@email.com"}
 				},
-				Orders = new List<Order>()
-				{
-					new Order { ProductName = "email_that_does_not_belong_to_a_person", Amount = 99},
-					new Order { ProductName = "person@email.com", Amount = 1},
-					new Order { ProductName = "another_email_that_does_not_belong_to_a_person", Amount = 1},
+				Orders = new List<Order>() {
+					new Order {ProductName = "email_that_does_not_belong_to_a_person", Amount = 99},
+					new Order {ProductName = "person@email.com", Amount = 1},
+					new Order {ProductName = "another_email_that_does_not_belong_to_a_person", Amount = 1},
 				}
 			};
 		}
 
 		[Fact]
-		public void Validates_collection()
-		{
+		public void Validates_collection() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y))
@@ -63,25 +58,59 @@ namespace FluentValidation.Tests
 			results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
 			results.Errors[2].PropertyName.ShouldEqual("Orders[2].ProductName");
 		}
-
+		
 		[Fact]
-		public void Validates_collection_asynchronously()
-		{
+		public async Task Validates_collection_asynchronously() {
 			var validator = new TestValidator {
- 				v => v.RuleFor(x => x.Surname).NotNull(),
- 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new AsyncOrderValidator(y))
- 			};
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new AsyncOrderValidator(y))
+			};
 
-			var results = validator.ValidateAsync(person).Result;
+			var results = await validator.ValidateAsync(person);
 			results.Errors.Count.ShouldEqual(3);
 
 			results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
 			results.Errors[2].PropertyName.ShouldEqual("Orders[2].ProductName");
 		}
 
+
 		[Fact]
-		public void Collection_should_be_explicitly_included_with_expression()
-		{
+		public void Validates_collection_several_levels_deep() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y))
+			};	
+
+			var rootValidator = new InlineValidator<Tuple<Person, object>>();
+			rootValidator.RuleFor(x => x.Item1).SetValidator(validator);
+			
+			var results = rootValidator.Validate(Tuple.Create(person, new object()));
+			results.Errors.Count.ShouldEqual(3);
+
+			results.Errors[1].PropertyName.ShouldEqual("Item1.Orders[0].ProductName");
+			results.Errors[2].PropertyName.ShouldEqual("Item1.Orders[2].ProductName");
+		}
+
+		[Fact]
+		public async Task Validates_collection_several_levels_deep_async() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y))
+			};	
+
+			var rootValidator = new InlineValidator<Tuple<Person, object>>();
+			rootValidator.RuleFor(x => x.Item1).SetValidator(validator);
+			
+			var results  = await rootValidator.ValidateAsync(Tuple.Create(person, new object()));
+			results.Errors.Count.ShouldEqual(3);
+
+			results.Errors[1].PropertyName.ShouldEqual("Item1.Orders[0].ProductName");
+			results.Errors[2].PropertyName.ShouldEqual("Item1.Orders[2].ProductName");
+		}
+
+		
+		[Fact]
+		public void Collection_should_be_explicitly_included_with_expression() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y))
@@ -92,8 +121,7 @@ namespace FluentValidation.Tests
 		}
 
 		[Fact]
-		public void Collection_should_be_explicitly_included_with_string()
-		{
+		public void Collection_should_be_explicitly_included_with_string() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y))
@@ -104,8 +132,7 @@ namespace FluentValidation.Tests
 		}
 
 		[Fact]
-		public void Collection_should_be_excluded()
-		{
+		public void Collection_should_be_excluded() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y))
@@ -116,8 +143,7 @@ namespace FluentValidation.Tests
 		}
 
 		[Fact]
-		public void Condition_should_work_with_child_collection()
-		{
+		public void Condition_should_work_with_child_collection() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y)).When(x => x.Orders.Count == 4 /*there are only 3*/)
 			};
@@ -129,7 +155,7 @@ namespace FluentValidation.Tests
 		[Fact]
 		public void Async_condition_should_work_with_child_collection() {
 			var validator = new TestValidator() {
-				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y)).WhenAsync(async (x,c) => x.Orders.Count == 4 /*there are only 3*/)
+				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y)).WhenAsync(async (x, c) => x.Orders.Count == 4 /*there are only 3*/)
 			};
 
 			var result = validator.ValidateAsync(person).Result;
@@ -137,8 +163,7 @@ namespace FluentValidation.Tests
 		}
 
 		[Fact]
-		public void Skips_null_items()
-		{
+		public void Skips_null_items() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y))
@@ -150,8 +175,7 @@ namespace FluentValidation.Tests
 		}
 
 		[Fact]
-		public void Can_validate_collection_using_validator_for_base_type()
-		{
+		public void Can_validate_collection_using_validator_for_base_type() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderInterfaceValidator(y))
 			};
@@ -161,8 +185,7 @@ namespace FluentValidation.Tests
 		}
 
 		[Fact]
-		public void Can_specifiy_condition_for_individual_collection_elements()
-		{
+		public void Can_specifiy_condition_for_individual_collection_elements() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Orders)
 					.SetCollectionValidator(y => new OrderValidator(y))
@@ -171,12 +194,10 @@ namespace FluentValidation.Tests
 
 			var results = validator.Validate(person);
 			results.Errors.Count.ShouldEqual(1);
-
 		}
 
 		[Fact]
-		public void Should_override_property_name()
-		{
+		public void Should_override_property_name() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Orders).SetCollectionValidator(y => new OrderValidator(y))
 					.OverridePropertyName("Orders2")
@@ -188,8 +209,7 @@ namespace FluentValidation.Tests
 
 
 		[Fact]
-		public void Should_work_with_top_level_collection_validator()
-		{
+		public void Should_work_with_top_level_collection_validator() {
 			var personValidator = new InlineValidator<Person>();
 			personValidator.RuleFor(x => x.Surname).NotNull();
 
@@ -197,14 +217,13 @@ namespace FluentValidation.Tests
 			validator.RuleFor(x => x).SetCollectionValidator(personValidator);
 
 
-			var results = validator.Validate(new List<Person> { new Person(), new Person(), new Person { Surname = "Bishop"} });
+			var results = validator.Validate(new List<Person> {new Person(), new Person(), new Person {Surname = "Bishop"}});
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors[0].PropertyName.ShouldEqual("x[0].Surname");
 		}
 
 		[Fact]
-		public void Should_work_with_top_level_collection_validator_and_overriden_name()
-		{
+		public void Should_work_with_top_level_collection_validator_and_overriden_name() {
 			var personValidator = new InlineValidator<Person>();
 			personValidator.RuleFor(x => x.Surname).NotNull();
 
@@ -212,42 +231,34 @@ namespace FluentValidation.Tests
 			validator.RuleFor(x => x).SetCollectionValidator(personValidator).OverridePropertyName("test");
 
 
-			var results = validator.Validate(new List<Person> { new Person(), new Person(), new Person { Surname = "Bishop" } });
+			var results = validator.Validate(new List<Person> {new Person(), new Person(), new Person {Surname = "Bishop"}});
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors[0].PropertyName.ShouldEqual("test[0].Surname");
 		}
 
 
-		public class OrderValidator : AbstractValidator<Order>
-		{
-			public OrderValidator(Person person)
-			{
+		public class OrderValidator : AbstractValidator<Order> {
+			public OrderValidator(Person person) {
 				RuleFor(x => x.ProductName).Must(BeOneOfTheChildrensEmailAddress(person));
 			}
 
-			private Func<string, bool> BeOneOfTheChildrensEmailAddress(Person person)
-			{
+			private Func<string, bool> BeOneOfTheChildrensEmailAddress(Person person) {
 				return productName => person.Children.Any(child => child.Email == productName);
 			}
 		}
 
-		public class OrderInterfaceValidator : AbstractValidator<IOrder>
-		{
-			public OrderInterfaceValidator(Person person)
-			{
+		public class OrderInterfaceValidator : AbstractValidator<IOrder> {
+			public OrderInterfaceValidator(Person person) {
 				RuleFor(x => x.Amount).NotEqual(person.AnotherInt);
 			}
 		}
 
-		public class AsyncOrderValidator : AbstractValidator<Order>
-		{
-			public AsyncOrderValidator(Person person)
-			{
+		public class AsyncOrderValidator : AbstractValidator<Order> {
+			public AsyncOrderValidator(Person person) {
 				RuleFor(x => x.ProductName).MustAsync(BeOneOfTheChildrensEmailAddress(person));
 			}
 
-			private Func<string, CancellationToken, Task<bool>> BeOneOfTheChildrensEmailAddress(Person person)
-			{
+			private Func<string, CancellationToken, Task<bool>> BeOneOfTheChildrensEmailAddress(Person person) {
 				return async (productName, cancel) => person.Children.Any(child => child.Email == productName);
 			}
 		}

@@ -308,8 +308,7 @@ namespace FluentValidation.Internal {
 
 				var displayName = GetDisplayName(context);
 
-				if (PropertyName == null && displayName == null)
-				{
+				if (PropertyName == null && displayName == null) {
 					//No name has been specified. Assume this is a model-level rule, so we should use empty string instead. 
 					displayName = string.Empty;
 				}
