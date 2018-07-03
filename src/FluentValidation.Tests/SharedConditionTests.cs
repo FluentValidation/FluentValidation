@@ -339,7 +339,9 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Does_not_execute_custom_Rule_when_condition_false() {
 			var validator = new TestValidator();
-			validator.When(x => false, () => { validator.Custom(x => new ValidationFailure("foo", "bar")); });
+			validator.When(x => false, () => {
+				validator.RuleFor(x=>x).Custom((x,ctx)=> ctx.AddFailure(new ValidationFailure("foo", "bar")));
+			});
 
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
@@ -348,7 +350,9 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Does_not_execute_custom_Rule_when_async_condition_false() {
 			var validator = new TestValidator();
-			validator.WhenAsync(async x => (false), () => { validator.Custom(x => new ValidationFailure("foo", "bar")); });
+			validator.WhenAsync(async x => (false), () => {
+				validator.RuleFor(x=>x).Custom((x,ctx)=> ctx.AddFailure(new ValidationFailure("foo", "bar")));
+			});
 
 			var result = validator.ValidateAsync(new Person()).Result;
 			result.IsValid.ShouldBeTrue();
@@ -358,7 +362,10 @@ namespace FluentValidation.Tests {
 		public void Does_not_execute_customasync_Rule_when_condition_false()
 		{
 			var validator = new TestValidator();
-			validator.When(x => false, () => validator.CustomAsync(async x => (new ValidationFailure("foo", "bar"))));
+			validator.When(x => false, () => {
+				
+				validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("foo", "bar")));
+			});
 
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
@@ -367,7 +374,10 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Does_not_execute_customasync_Rule_when_async_condition_false() {
 			var validator = new TestValidator();
-			validator.WhenAsync(async x => (false), () => validator.CustomAsync(async x => (new ValidationFailure("foo", "bar"))));
+			validator.WhenAsync(async x => (false), () => {
+				
+				validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("foo", "bar")));
+			});
 
 			var result = validator.ValidateAsync(new Person()).Result;
 			result.IsValid.ShouldBeTrue();
@@ -376,7 +386,10 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Executes_custom_rule_when_condition_true() {
 			var validator = new TestValidator();
-			validator.When(x => true, () => { validator.Custom(x => new ValidationFailure("foo", "bar")); });
+			validator.When(x => true, () => {
+				validator.RuleFor(x=>x).Custom((x,ctx) => ctx.AddFailure(new ValidationFailure("foo", "bar"))); 
+				
+			});
 
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeFalse();
@@ -385,7 +398,10 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Executes_custom_rule_when_async_condition_true() {
 			var validator = new TestValidator();
-			validator.WhenAsync(async x => (true), () => { validator.Custom(x => new ValidationFailure("foo", "bar")); });
+			validator.WhenAsync(async x => (true), () => {
+				validator.RuleFor(x=>x).Custom((x,ctx) => ctx.AddFailure(new ValidationFailure("foo", "bar")));
+				
+			});
 
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeFalse();
@@ -394,7 +410,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Executes_customasync_rule_when_condition_true() {
 			var validator = new TestValidator();
-			validator.When(x => true, () => validator.CustomAsync(async x => (new ValidationFailure("foo", "bar"))));
+			validator.When(x => true, () => validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("foo", "bar"))));
 
 			var result = validator.ValidateAsync(new Person()).Result;
 			result.IsValid.ShouldBeFalse();
@@ -404,7 +420,7 @@ namespace FluentValidation.Tests {
 		public void Executes_customasync_rule_when_async_condition_true()
 		{
 			var validator = new TestValidator();
-			validator.WhenAsync(async x => (true), () => validator.CustomAsync(async x => (new ValidationFailure("foo", "bar"))));
+			validator.WhenAsync(async x => (true), () => validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("foo", "bar"))));
 
 			var result = validator.ValidateAsync(new Person()).Result;
 			result.IsValid.ShouldBeFalse();
@@ -415,7 +431,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {
 				validator.When(x => false, () => {
-					validator.Custom(x => new ValidationFailure("Custom", "The validation failed"));
+					validator.RuleFor(x=>x).Custom((x,ctx) => ctx.AddFailure(new ValidationFailure("Custom", "The validation failed")));
 					
 				});
 			});
@@ -428,7 +444,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {
 				validator.WhenAsync(async x => (false), () => {
-					validator.Custom(x => new ValidationFailure("Custom", "The validation failed"));
+					validator.RuleFor(x=>x).Custom((x,ctx) => ctx.AddFailure(new ValidationFailure("Custom", "The validation failed")));
 				});
 			});
 			var result = validator.Validate(new Person());
@@ -440,7 +456,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {
 				validator.When(x => false, () => {
-					validator.CustomAsync(async x => (new ValidationFailure("Custom", "The validation failed")));
+					validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("Custom", "The validation failed")));
 				});
 			});
 			var result = validator.ValidateAsync(new Person()).Result;
@@ -452,7 +468,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {
 				validator.WhenAsync(async x => (false), () => {
-					validator.CustomAsync(async x => (new ValidationFailure("Custom", "The validation failed")));
+					validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("Custom", "The validation failed")));
 				});
 			});
 			var result = validator.ValidateAsync(new Person()).Result;
