@@ -30,11 +30,11 @@
 				.AppendArgument("MinLength", LengthValidator.Min)
 				.AppendArgument("MaxLength", LengthValidator.Max);
 
-			var messageNeedsSplitting = LengthValidator.ErrorMessageSource.ResourceType == typeof(LanguageManager);
+			var messageNeedsSplitting = ValidatorMetadata.ErrorMessageSource.ResourceType == typeof(LanguageManager);
 			string message;
 
 			try {
-				message = LengthValidator.ErrorMessageSource.GetString(null);
+				message = ValidatorMetadata.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
