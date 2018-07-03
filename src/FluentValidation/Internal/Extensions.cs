@@ -151,36 +151,35 @@ namespace FluentValidation.Internal {
 
 #pragma warning disable 1591
 		public static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {
-			return x => func((T)x);
+			return GetSafeValue<T, TProperty, object>(func);
 		}
 
 		public static Func<object, bool> CoerceToNonGeneric<T>(this Func<T, bool> func) {
-			return x => func((T)x);
+			return GetSafeValue<T, bool, bool>(func);
 		}
 
 		public static Func<object, CancellationToken, Task<bool>> CoerceToNonGeneric<T>(this Func<T, CancellationToken, Task<bool>> func) {
-			return (x, ct) => func((T)x, ct);
+			return GetSafeValue<T, bool, bool>(func);
 		}
 
-
 		public static Func<object, Task<bool>> CoerceToNonGeneric<T>(this Func<T, Task<bool>> func) {
-			return x => func((T)x);
+			return GetSafeValue<T, Task<bool>, Task<bool>>(func);
 		}
 
 		public static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func) {
-			return x => func((T)x);
+			return GetSafeValue<T, int, int>(func);
 		}
 
 		public static Func<object, long> CoerceToNonGeneric<T>(this Func<T, long> func) {
-			return x => func((T)x);
+			return GetSafeValue<T, long, long>(func);
 		}
 
 		public static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func) {
-			return x => func((T)x);
+			return GetSafeValue<T, string, string>(func);
 		}
 
 		public static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func) {
-			return x => func((T)x);
+			return GetSafeValue<T, System.Text.RegularExpressions.Regex, System.Text.RegularExpressions.Regex>(func);
 		}
 
 		public static Action<object> CoerceToNonGeneric<T>(this Action<T> action) {
@@ -199,6 +198,28 @@ namespace FluentValidation.Internal {
 			}
 
 			return false;
+		}
+
+		private static Func<object, TResult> GetSafeValue<T, TProperty, TResult>(Func<T, TProperty> func) where TProperty : TResult {
+			return x => {
+				try {
+					return func((T)x);
+				}
+				catch (Exception) {
+					return default(TResult);
+				}
+			};
+		}
+
+		private static Func<object, CancellationToken, Task<TResult>> GetSafeValue<T, TProperty, TResult>(Func<T, CancellationToken, Task<TProperty>> func) where TProperty : TResult {
+			return async (x, ct) => {
+				try {
+					return await func((T)x, ct);
+				}
+				catch (Exception) {
+					return default(TResult);
+				}
+			};
 		}
 	}
 }
