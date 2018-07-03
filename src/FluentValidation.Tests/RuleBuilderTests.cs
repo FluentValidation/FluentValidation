@@ -132,7 +132,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Calling_when_async_should_replace_current_validator_with_predicate_validator() {
 			var validator = new TestPropertyValidator();
-			builder.SetValidator(validator).WhenAsync(async x => true);
+			builder.SetValidator(validator).WhenAsync(async (x,c) => true);
 			builder.Rule.CurrentValidator.ShouldBe<DelegatingValidator>();
 
 			var predicateValidator = (DelegatingValidator) builder.Rule.CurrentValidator;
@@ -203,7 +203,7 @@ namespace FluentValidation.Tests {
 		public void Nullable_object_with_async_condition_should_not_throw()
 		{
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value),null);
-			builder.GreaterThanOrEqualTo(3).WhenAsync(async x => x.NullableInt != null);
+			builder.GreaterThanOrEqualTo(3).WhenAsync(async (x,c) => x.NullableInt != null);
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 

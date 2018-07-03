@@ -32,9 +32,6 @@ namespace FluentValidation.Validators {
 		public PropertyRule Rule { get; private set; }
 		public string PropertyName { get; private set; }
 
-		[Obsolete("Use DisplayName instead")]
-		public string PropertyDescription => DisplayName;
-
 		public string DisplayName => Rule.GetDisplayName(ParentContext);
 
 		public object Instance => ParentContext.InstanceToValidate;
