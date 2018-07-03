@@ -43,7 +43,10 @@ namespace FluentValidation.Validators {
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
 		public object PropertyValue => _propertyValueContainer.Value;
-
+		
+		// Explicit implementation so we don't have to expose the base interface.
+		IValidationContext IValidationContext.ParentContext => ParentContext;
+		
 		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName) {
 			ParentContext = parentContext;
 			Rule = rule;
@@ -55,8 +58,7 @@ namespace FluentValidation.Validators {
 			});
 		}
 
-		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue)
-		{
+		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;

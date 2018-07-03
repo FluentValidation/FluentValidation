@@ -238,7 +238,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Conditional_child_validator_should_register_with_validator_type_not_property() {
 			var builder = new RuleBuilder<Person, Address>(PropertyRule.Create<Person, Address>(x => x.Address),null);
-			builder.SetValidator(person => new NoopAddressValidator());
+			builder.SetValidator((Person person) => new NoopAddressValidator());
 
 			builder.Rule.Validators.OfType<ChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
 		}

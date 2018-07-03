@@ -11,14 +11,16 @@ namespace FluentValidation.Validators {
 		static readonly IEnumerable<ValidationFailure> EmptyResult = Enumerable.Empty<ValidationFailure>();
 		static readonly Task<IEnumerable<ValidationFailure>> AsyncEmptyResult = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
 
-		readonly Func<object, IValidator> _validatorProvider;
+		readonly Func<IValidationContext, IValidator> _validatorProvider;
 
-		public Type ValidatorType { get; }
+		public Type ValidatorType { get; protected set; }
+		
+		internal bool PassThroughParentContext { get; set; }
 
 		public ChildValidatorAdaptor(IValidator validator) : this(_ => validator, validator.GetType()) {
 		}
 
-		public ChildValidatorAdaptor(Func<object, IValidator> validatorProvider, Type validatorType) {
+		public ChildValidatorAdaptor(Func<IValidationContext, IValidator> validatorProvider, Type validatorType) {
 			_validatorProvider = validatorProvider;
 			ValidatorType = validatorType;
 		}
@@ -59,11 +61,12 @@ namespace FluentValidation.Validators {
 
 		public virtual IValidator GetValidator(PropertyValidatorContext context) {
 			context.Guard("Cannot pass a null context to GetValidator", nameof(context));
-			return _validatorProvider(context.Instance);
+			return _validatorProvider(context);
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
-			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate);
+			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate, PassThroughParentContext);
+			
 			if(!context.ParentContext.IsChildCollectionContext)
 				newContext.PropertyChain.Add(context.Rule.PropertyName);
 

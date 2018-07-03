@@ -201,12 +201,25 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Applies a filter to a collection property.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="predicate">The condition</param>
+		/// <returns></returns>
+		public static IRuleBuilderInitialCollection<T, TCollectionElement> Where<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<TCollectionElement, bool> predicate) {
+			// This overload supports RuleFor().SetCollectionValidator() (which returns IRuleBuilderOptions<T, IEnumerable<TElement>>)
+			predicate.Guard("Cannot pass null to Where.", nameof(predicate));
+			return rule.Configure(cfg => {
+				cfg.Filter = predicate;
+			});
+		}
+		
+		/// <summary>
 		/// Triggers an action when the rule passes. Typically used to configure dependent rules. This applies to all preceding rules in the chain. 
 		/// </summary>
 		/// <param name="rule">The current rule</param>
 		/// <param name="action">An action to be invoked if the rule is valid</param>
 		/// <returns></returns>
-
 		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action action) {
 
 			var dependencyContainer = new List<IValidationRule>();
