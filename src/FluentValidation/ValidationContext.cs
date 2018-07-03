@@ -21,6 +21,21 @@ namespace FluentValidation {
 	using Internal;
 
 	/// <summary>
+	/// Defines a validation context.
+	/// </summary>
+	public interface IValidationContext {
+		/// <summary>
+		/// The object currently being validated.
+		/// </summary>
+		object InstanceToValidate { get; }
+		
+		/// <summary>
+		/// The value of the property being validated.
+		/// </summary>
+		object PropertyValue { get; }
+	}
+	
+	/// <summary>
 	/// Validation context
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
@@ -54,7 +69,7 @@ namespace FluentValidation {
 	/// <summary>
 	/// Validation context
 	/// </summary>
-	public class ValidationContext {
+	public class ValidationContext : IValidationContext {
 
 		public Dictionary<string, object> RootContextData { get; internal set; } = new Dictionary<string, object>();
 
@@ -101,6 +116,9 @@ namespace FluentValidation {
 		/// </summary>
 		public virtual bool IsChildCollectionContext { get; internal set; }
 
+		// root level context doesn't know about properties.
+		object IValidationContext.PropertyValue => null;
+		
 		/// <summary>
 		/// Creates a new ValidationContext based on this one
 		/// </summary>
