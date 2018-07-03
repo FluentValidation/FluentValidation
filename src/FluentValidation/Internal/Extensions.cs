@@ -205,7 +205,7 @@ namespace FluentValidation.Internal {
 				try {
 					return func((T)x);
 				}
-				catch (Exception) {
+				catch (NullReferenceException) {
 					return default(TResult);
 				}
 			};
@@ -216,7 +216,7 @@ namespace FluentValidation.Internal {
 				try {
 					return await func((T)x, ct);
 				}
-				catch (Exception) {
+				catch (NullReferenceException) {
 					return default(TResult);
 				}
 			};
