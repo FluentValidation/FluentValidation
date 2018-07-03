@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;
 	using Results;
+	using Validators;
 
 	//Inspired by SpecUnit's SpecificationExtensions
 	//http://code.google.com/p/specunit-net/source/browse/trunk/src/SpecUnit/SpecificationExtensions.cs
@@ -68,6 +69,14 @@ namespace FluentValidation.Tests {
 
 		public static bool IsValid(this IEnumerable<ValidationFailure> errors) {
 			return errors.Count() == 0;
+		}
+
+		internal static ValidatorMetadata GetMetadata(this IPropertyValidator validator) {
+			if (validator is IHasMetadata m) {
+				return m.Metadata;
+			}
+
+			throw new InvalidOperationException("This validator does not support metadata");
 		}
 	}
 }

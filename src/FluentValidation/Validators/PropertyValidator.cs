@@ -28,44 +28,23 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public abstract class PropertyValidator : IPropertyValidator {
-		private IStringSource _errorSource;
-		private IStringSource _errorCodeSource;
-
-		[Obsolete("Use IShouldValidateAsync.ShouldValidatAsync(context) instead")]
-		public virtual bool IsAsync {
-			get { return false; }
-		}
-
-		public Func<PropertyValidatorContext, object> CustomStateProvider { get; set; }
-
-		public Severity Severity { get; set; }
+	public abstract class PropertyValidator : IPropertyValidator, IHasMetadata {
+		public ValidatorMetadata Metadata { get; } = new ValidatorMetadata();
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
 			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
-			_errorSource = errorMessageSource;
+			Metadata.ErrorMessageSource = errorMessageSource;
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
 			errorMessageResourceName.Guard("errorMessageResourceName must be specified.", nameof(errorMessageResourceName));
 			errorMessageResourceType.Guard("errorMessageResourceType must be specified.", nameof(errorMessageResourceType));
 
-			_errorSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
+			Metadata.ErrorMessageSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			_errorSource = new StaticStringSource(errorMessage);
-		}
-
-		public IStringSource ErrorMessageSource {
-			get { return _errorSource; }
-			set {
-				if (value == null) {
-					throw new ArgumentNullException("value");
-				}
-
-				_errorSource = value;
-			}
+			Metadata.ErrorMessageSource = new StaticStringSource(errorMessage);
 		}
 
 		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
@@ -115,7 +94,7 @@ namespace FluentValidation.Validators {
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
 		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
-			var messageBuilderContext = new MessageBuilderContext(context, _errorSource, this);
+			var messageBuilderContext = new MessageBuilderContext(context, Metadata.ErrorMessageSource, this);
 
 			var error = context.Rule.MessageBuilder != null 
 				? context.Rule.MessageBuilder(messageBuilderContext) 
@@ -124,23 +103,46 @@ namespace FluentValidation.Validators {
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-			failure.ResourceName = _errorSource.ResourceName;
-			failure.ErrorCode = (_errorCodeSource != null)
-				? _errorCodeSource.GetString(context.Instance)
+			failure.ResourceName = Metadata.ErrorMessageSource.ResourceName;
+			failure.ErrorCode = (Metadata.ErrorCodeSource != null)
+				? Metadata.ErrorCodeSource.GetString(context.Instance)
 				: ValidatorOptions.ErrorCodeResolver(this);
 
-			if (CustomStateProvider != null) {
-				failure.CustomState = CustomStateProvider(context);
+			if (Metadata.CustomStateProvider != null) {
+				failure.CustomState = Metadata.CustomStateProvider(context);
 			}
 
-			failure.Severity = Severity;
+			failure.Severity = Metadata.Severity;
 			return failure;
 		}
 
+		[Obsolete("Use IShouldValidateAsync.ShouldValidatAsync(context) instead")]
+		public virtual bool IsAsync {
+			get { return false; }
+		}
 
+		[Obsolete("Use Metadata.CustomStateProvider")]
+		public Func<PropertyValidatorContext, object> CustomStateProvider {
+			get => Metadata.CustomStateProvider;
+			set => Metadata.CustomStateProvider = value;
+		}
+
+		[Obsolete("Use Metadata.Severity")]
+		public Severity Severity {
+			get => Metadata.Severity;
+			set => Metadata.Severity = value;
+		}
+
+		[Obsolete("Use Metadata.ErrorCodeSource")]
 		public IStringSource ErrorCodeSource {
-			get => _errorCodeSource;
-			set => _errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));
+			get => Metadata.ErrorCodeSource;
+			set => Metadata.ErrorCodeSource = value;
+		}
+
+		[Obsolete("Use Metadata.ErrorMessageSource")]
+		public IStringSource ErrorMessageSource {
+			get => Metadata.ErrorMessageSource;
+			set => Metadata.ErrorMessageSource = value;
 		}
 	}
 }

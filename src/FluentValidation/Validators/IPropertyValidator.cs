@@ -34,13 +34,7 @@ namespace FluentValidation.Validators {
 		bool IsAsync { get; }
 
 		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
-
 		Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation);
-
-		Func<PropertyValidatorContext, object> CustomStateProvider { get; set; }
-		Severity Severity { get; set; }
-		IStringSource ErrorMessageSource { get; set; }
-		IStringSource ErrorCodeSource { get; set; }
 	}
 	
 	//todo: This should ideally be merged with IPropertyValidator. I've left it as a separate interface for now to avoid a breaking change.
@@ -54,5 +48,15 @@ namespace FluentValidation.Validators {
 		/// <param name="context"></param>
 		/// <returns></returns>
 		bool ShouldValidateAsync(ValidationContext context);
+	}
+
+	/// <summary>
+	/// Indicates that a type exposes validator metadata.
+	/// </summary>
+	public interface IHasMetadata {
+		/// <summary>
+		/// Validator metadata.
+		/// </summary>
+		ValidatorMetadata Metadata { get; }
 	}
 }

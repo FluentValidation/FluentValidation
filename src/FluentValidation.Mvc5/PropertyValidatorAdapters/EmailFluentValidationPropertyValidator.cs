@@ -20,7 +20,7 @@
 			var formatter = ValidatorOptions.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
 			string message;
 			try {
-				message = EmailValidator.ErrorMessageSource.GetString(null);
+				message = ValidatorMetadata.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				// User provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 

@@ -16,7 +16,7 @@
 			var formatter = ValidatorOptions.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
 			string message;
 			try {
-				message = Validator.ErrorMessageSource.GetString(null);
+				message = ValidatorMetadata.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				message = ValidatorOptions.LanguageManager.GetStringForValidator<CreditCardValidator>();
