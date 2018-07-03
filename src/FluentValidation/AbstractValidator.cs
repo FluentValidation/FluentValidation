@@ -269,18 +269,6 @@ namespace FluentValidation {
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		[Obsolete("Use the overload of WhenAsync that takes a CancellationToken")]
-		public void WhenAsync(Func<T, Task<bool>> predicate, Action action) {
-			var newPredicate = new Func<T, CancellationToken, Task<bool>>((x, ct) => predicate(x));
-			WhenAsync(newPredicate, action);
-		}
-
-		/// <summary>
-		/// Defines an asynchronous condition that applies to several rules
-		/// </summary>
-		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
-		/// <param name="action">Action that encapsulates the rules.</param>
-		/// <returns></returns>
 		public void WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
 			var propertyRules = new List<IValidationRule>();
 
@@ -292,16 +280,6 @@ namespace FluentValidation {
 
 			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
 			propertyRules.ForEach(x => x.ApplyAsyncCondition((ctx, token) => predicate((T)ctx.InstanceToValidate, token)));
-		}
-
-		/// <summary>
-		/// Defines an inverse asynchronous condition that applies to several rules
-		/// </summary>
-		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
-		/// <param name="action">Action that encapsulates the rules</param>
-		[Obsolete("Use the overload of UnlessAsync that takes a CancellationToken")]
-		public void UnlessAsync(Func<T, Task<bool>> predicate, Action action) {
-			WhenAsync(x => predicate(x).Then(y => !y), action);
 		}
 
 		/// <summary>

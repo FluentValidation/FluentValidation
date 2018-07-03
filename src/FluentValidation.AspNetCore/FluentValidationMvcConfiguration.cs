@@ -34,11 +34,6 @@ namespace FluentValidation.AspNetCore {
 		/// The validator factory to use. Uses the ServiceProviderValidatorFactory by default. 
 		/// </summary>
 		public IValidatorFactory ValidatorFactory { get; set; }
-		/// <summary>
-		/// Whether to remove all of MVC's default validator providers when registering FluentValidation. False by default. 
-		/// </summary>
-		[Obsolete]
-		public bool ClearValidatorProviders { get; set; }
 
 		/// <summary>
 		/// Whether to run MVC's default validation process (including DataAnnotations) after FluentValidation is executed. True by default. 
