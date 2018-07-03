@@ -218,54 +218,6 @@ namespace FluentValidation {
 		} 
 
 		/// <summary>
-		/// Defines a custom validation rule using a lambda expression.
-		/// If the validation rule fails, it should return a instance of a <see cref="ValidationFailure">ValidationFailure</see>
-		/// If the validation rule succeeds, it should return null.
-		/// </summary>
-		/// <param name="customValidator">A lambda that executes custom validation rules.</param>
-		[Obsolete("Use model-level RuleFor(x => x).Custom((x, context) => {}) instead")]
-		public void Custom(Func<T, ValidationFailure> customValidator) {
-			customValidator.Guard("Cannot pass null to Custom", nameof(customValidator));
-			AddRule(new DelegateValidator<T>(x => new[] { customValidator(x) }));
-		}
-
-		/// <summary>
-		/// Defines a custom validation rule using a lambda expression.
-		/// If the validation rule fails, it should return an instance of <see cref="ValidationFailure">ValidationFailure</see>
-		/// If the validation rule succeeds, it should return null.
-		/// </summary>
-		/// <param name="customValidator">A lambda that executes custom validation rules</param>
-		[Obsolete("Use model-level RuleFor(x => x).Custom((x, context) => {}) instead")]
-		public void Custom(Func<T, ValidationContext<T>, ValidationFailure> customValidator) {
-			customValidator.Guard("Cannot pass null to Custom", nameof(customValidator));
-			AddRule(new DelegateValidator<T>((x, ctx) => new[] { customValidator(x, ctx) }));
-		}
-
-		/// <summary>
-		/// Defines a custom asynchronous validation rule using a lambda expression.
-		/// If the validation rule fails, it should asynchronously return a instance of a <see cref="ValidationFailure">ValidationFailure</see>
-		/// If the validation rule succeeds, it should return null.
-		/// </summary>
-		/// <param name="customValidator">A lambda that executes custom validation rules.</param>
-		[Obsolete("Use model-level RuleFor(x => x).CustomAsync(await (x,context,cancellation) => {}) instead")]
-		public void CustomAsync(Func<T, Task<ValidationFailure>> customValidator) {
-			customValidator.Guard("Cannot pass null to Custom", nameof(customValidator));
-			AddRule(new DelegateValidator<T>(x => customValidator(x).Then(f => new[] {f}.AsEnumerable(), runSynchronously: true)));
-		}
-
-		/// <summary>
-		/// Defines a custom asynchronous validation rule using a lambda expression.
-		/// If the validation rule fails, it should asynchronously return an instance of <see cref="ValidationFailure">ValidationFailure</see>
-		/// If the validation rule succeeds, it should return null.
-		/// </summary>
-		/// <param name="customValidator">A lambda that executes custom validation rules</param>
-		[Obsolete("Use model-level RuleFor(x => x).CustomAsync(await (x,context,cancellation) => {}) instead")]
-		public void CustomAsync(Func<T, ValidationContext<T>, CancellationToken, Task<ValidationFailure>> customValidator) {
-			customValidator.Guard("Cannot pass null to Custom", nameof(customValidator));
-			AddRule(new DelegateValidator<T>((x, ctx, cancel) => customValidator(x, ctx, cancel).Then(f => new[] {f}.AsEnumerable(), runSynchronously: true, cancellationToken: cancel)));
-		}
-
-		/// <summary>
 		/// Defines a RuleSet that can be used to group together several validators.
 		/// </summary>
 		/// <param name="ruleSetName">The name of the ruleset.</param>

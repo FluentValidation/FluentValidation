@@ -238,8 +238,8 @@
 
 	public class LifecycleTestValidator : AbstractValidator<LifecycleTestModel> {
 		public LifecycleTestValidator() {
-			Custom(x => {
-				return new ValidationFailure("Foo", GetHashCode().ToString());
+			RuleFor(x=>x).Custom((x,ctx) => {
+				ctx.AddFailure(new ValidationFailure("Foo", GetHashCode().ToString()));
 			});
 		}
 	}
