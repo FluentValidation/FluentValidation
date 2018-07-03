@@ -28,7 +28,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator, IShouldValidateAsync {
+	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator, IShouldValidateAsync, IHasMetadata {
 		private readonly Func<ValidationContext, bool> _condition;
 		private readonly Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 		public IPropertyValidator InnerValidator { get; private set; }
@@ -52,17 +52,7 @@ namespace FluentValidation.Validators {
 			_asyncCondition = asyncCondition;
 			InnerValidator = innerValidator;
 		}
-
-		public IStringSource ErrorMessageSource {
-			get => InnerValidator.ErrorMessageSource;
-			set => InnerValidator.ErrorMessageSource = value;
-		}
-
-		public IStringSource ErrorCodeSource {
-			get => InnerValidator.ErrorCodeSource;
-			set => InnerValidator.ErrorCodeSource = value;
-		}
-
+		
 		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			if (_condition(context.ParentContext)) {
 				return InnerValidator.Validate(context);
@@ -89,20 +79,20 @@ namespace FluentValidation.Validators {
 
 		public bool SupportsStandaloneValidation => false;
 
-		public Func<PropertyValidatorContext, object> CustomStateProvider {
-			get => InnerValidator.CustomStateProvider;
-			set => InnerValidator.CustomStateProvider = value;
-		}
-
-		public Severity Severity {
-			get => InnerValidator.Severity;
-			set => InnerValidator.Severity = value;
-		}
-
 		IPropertyValidator IDelegatingValidator.InnerValidator => InnerValidator;
 
 		public bool CheckCondition(ValidationContext context) {
 			return _condition(context);
+		}
+
+		public ValidatorMetadata Metadata {
+			get {
+				if (InnerValidator is IHasMetadata m) {
+					return m.Metadata;
+				}
+
+				return null; //todo: is this a good idea?
+			}
 		}
 	}
 

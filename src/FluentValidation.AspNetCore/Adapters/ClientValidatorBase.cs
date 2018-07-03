@@ -24,12 +24,14 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 	public abstract class ClientValidatorBase : IClientModelValidator {
-		public IPropertyValidator Validator { get; private set; }
-		public PropertyRule Rule { get; private set; }
+		public IPropertyValidator Validator { get; }
+		public PropertyRule Rule { get; }
+		public ValidatorMetadata Metadata { get; }
 
 		public ClientValidatorBase(PropertyRule rule, IPropertyValidator validator) {
-			this.Validator = validator;
-			this.Rule = rule;
+			Validator = validator;
+			Rule = rule;
+			Metadata = (validator is IHasMetadata m) ? m.Metadata : ValidatorMetadata.Empty;
 		}
 
 		public abstract void AddValidation(ClientModelValidationContext context);

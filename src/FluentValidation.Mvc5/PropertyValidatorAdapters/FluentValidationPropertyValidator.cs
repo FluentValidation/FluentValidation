@@ -7,9 +7,9 @@ namespace FluentValidation.Mvc {
 	using System.Linq;
 
 	public class FluentValidationPropertyValidator : ModelValidator {
-		public IPropertyValidator Validator { get; private set; }
-		public PropertyRule Rule { get; private set; }
-
+		public IPropertyValidator Validator { get; }
+		public PropertyRule Rule { get; }
+		public ValidatorMetadata ValidatorMetadata { get; }
 
 		/*
 		 This might seem a bit strange, but we do *not* want to do any work in these validators.
@@ -32,7 +32,10 @@ namespace FluentValidation.Mvc {
 				DisplayName = rule?.DisplayName,
 				RuleSets = rule?.RuleSets
 			};
+			
+			ValidatorMetadata = (validator is IHasMetadata m) ? m.Metadata : ValidatorMetadata.Empty;
 		}
+
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
 			if (ShouldValidate) {
