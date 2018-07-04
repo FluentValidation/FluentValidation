@@ -46,6 +46,16 @@ namespace FluentValidation {
 			get => _cascadeMode();
 			set => _cascadeMode = () => value;
 		}
+		
+		/// <summary>
+		/// Create your own validation rules in this method.
+		/// </summary>
+		protected virtual void CreateRules() { }
+
+		private IEnumerable<IValidationRule> GetRules() {
+			CreateRules();
+			return NestedValidators;
+		}
 
 		ValidationResult IValidator.Validate(object instance) {
 			instance.Guard("Cannot pass null to Validate.", nameof(instance));
@@ -111,7 +121,7 @@ namespace FluentValidation {
 
 			EnsureInstanceNotNull(context.InstanceToValidate);
 			
-			var failures = NestedValidators.SelectMany(x => x.Validate(context));
+			var failures = GetRules().SelectMany(x => x.Validate(context));
 			
 			foreach (var validationFailure in failures.Where(failure => failure != null)) {
 				result.Errors.Add(validationFailure);
@@ -126,40 +136,41 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		public virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+		public async virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
+			context.RootContextData["__FV_IsAsyncExecution"] = true;
 
 			var result = new ValidationResult();
 			
 			bool shouldContinue = PreValidate(context, result);
 			
 			if (!shouldContinue) {
-				return TaskHelpers.FromResult(result);
+				return result;
 			}
 
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
-			context.RootContextData["__FV_IsAsyncExecution"] = true;
-
 			var failures = new List<ValidationFailure>();
 			
-			return TaskHelpers.Iterate(
-				NestedValidators
+			var t = TaskHelpers.Iterate(
+				GetRules()
 				.Select(v => v.ValidateAsync(context, cancellation)
-				.Then(fs => failures.AddRange(fs), runSynchronously: true, cancellationToken: cancellation)), cancellation)
-				.Then(() => {
-					      foreach (var validationFailure in failures.Where(failure => failure != null)) {
-						      result.Errors.Add(validationFailure);
-					      }
-					      return result;
-				      }, cancellation);
+				.Then(fs => failures.AddRange(fs), runSynchronously: true, cancellationToken: cancellation)), cancellation);
+				
+			await t;
+			
+			foreach (var validationFailure in failures.Where(failure => failure != null)) {
+			  result.Errors.Add(validationFailure);
+			}
+			
+			return result;
 		}
 
 		/// <summary>
 		/// Adds a rule to the current validator.
 		/// </summary>
 		/// <param name="rule"></param>
-		public void AddRule(IValidationRule rule) {
+		protected void AddRule(IValidationRule rule) {
 			NestedValidators.Add(rule);
 		}
 
@@ -167,7 +178,7 @@ namespace FluentValidation {
 		/// Creates a <see cref="IValidatorDescriptor" /> that can be used to obtain metadata about the current validator.
 		/// </summary>
 		public virtual IValidatorDescriptor CreateDescriptor() {
-			return new ValidatorDescriptor<T>(NestedValidators);
+			return new ValidatorDescriptor<T>(GetRules());
 		}
 
 		bool IValidator.CanValidateInstancesOfType(Type type) {
@@ -306,7 +317,7 @@ namespace FluentValidation {
 		/// </returns>
 		/// <filterpriority>1</filterpriority>
 		public IEnumerator<IValidationRule> GetEnumerator() {
-			return NestedValidators.GetEnumerator();
+			return GetRules().GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator() {
