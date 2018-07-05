@@ -1,76 +1,74 @@
-﻿using FluentValidation.Internal;
-using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace FluentValidation.Validators {
+	using FluentValidation.Internal;
+	using FluentValidation.Results;
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Threading;
+	using System.Threading.Tasks;
 
-namespace FluentValidation.Validators
-{
-	public class OnFailureValidator<T, TProperty> : NoopPropertyValidator
-	{
+	public class OnFailureValidator<T, TProperty> : NoopPropertyValidator {
 		private readonly IPropertyValidator _innerValidator;
 		private readonly Action<T> _onFailureSuperSimple;
 		private readonly Action<T, PropertyValidatorContext> _onFailureSimple;
 		private readonly Action<T, PropertyValidatorContext, string> _onFailureComplex;
-		private readonly string _errorMessage;
-		private readonly Func<T, TProperty, object>[] _messageProvider;
 
-		public OnFailureValidator(IPropertyValidator innerValidator, Action<T, PropertyValidatorContext, string> onFailure, string errorMessage, Func<T, TProperty, object>[] messageProvider)
-		{
-			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
+		private readonly Action<PropertyValidatorContext> _onFailure;
 
-			_innerValidator = innerValidator;
-			_onFailureComplex = onFailure;
-			_errorMessage = errorMessage;
-			_messageProvider = messageProvider;
-		}
+		public OnFailureValidator(IPropertyValidator innerValidator, Action<T> onFailure) {
 
-		public OnFailureValidator(IPropertyValidator innerValidator, Action<T, PropertyValidatorContext> onFailure)
-		{
-			_innerValidator = innerValidator;
-			_onFailureSimple = onFailure;
-		}
-
-		public OnFailureValidator(IPropertyValidator innerValidator, Action<T> onFailure)
-		{
+			onFailure.Guard("onFailure action must be specified.", nameof(onFailure));
 			_innerValidator = innerValidator;
 			_onFailureSuperSimple = onFailure;
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context)
-		{
+		public OnFailureValidator(IPropertyValidator innerValidator, Action<T, PropertyValidatorContext> onFailure) {
+			onFailure.Guard("onFailure action must be specified.", nameof(onFailure));
+			_innerValidator = innerValidator;
+			_onFailureSimple = onFailure;
+		}
+
+		public OnFailureValidator(IPropertyValidator innerValidator, Action<T, PropertyValidatorContext, string> onFailure) {
+			onFailure.Guard("onFailure action must be specified.", nameof(onFailure));
+			_innerValidator = innerValidator;
+			_onFailureComplex = onFailure;
+		}
+
+		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			var results = _innerValidator.Validate(context);
 			if (!results.Any()) return results;
 
-			if (string.IsNullOrWhiteSpace(_errorMessage))
-			{
-				if (_onFailureSuperSimple != null)
-				{
-					_onFailureSuperSimple((T)context.Instance);
-				}
-				else
-				{
-					_onFailureSimple((T)context.Instance, context);
-				}
+			if (_onFailureSuperSimple != null) {
+				_onFailureSuperSimple((T)context.Instance);
 			}
-			else
-			{
-				var messageFormatter = new MessageFormatter();
-				messageFormatter.AppendPropertyName(context.PropertyName);
-				messageFormatter.AppendArgument("PropertyValue", context.PropertyValue);
-				try
-				{
-					messageFormatter.AppendAdditionalArguments(
-						_messageProvider.Select(func => func((T)context.Instance, (TProperty)context.PropertyValue)).ToArray());
-				}
-				catch (Exception ex)
-				{
-					//TODO log exceptions
-					//Debug.WriteLine(ex);
-				}
 
-				var msg = messageFormatter.BuildMessage(_errorMessage);
-				_onFailureComplex((T)context.Instance, context, msg);
+			else if (_onFailureSimple != null) {
+				_onFailureSimple((T)context.Instance, context);
+			}
+
+			else {
+				var errorMessage = results.First().ErrorMessage;
+				_onFailureComplex((T)context.Instance, context, errorMessage);
+			}
+
+			return results;
+		}
+
+		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			var results = _innerValidator.ValidateAsync(context, cancellation);
+			if (!results.Result.Any()) return results;
+
+			if (_onFailureSuperSimple != null) {
+				_onFailureSuperSimple((T)context.Instance);
+			}
+
+			else if (_onFailureSimple != null) {
+				_onFailureSimple((T)context.Instance, context);
+			}
+
+			else {
+				var errorMessage = results.Result.First().ErrorMessage;
+				_onFailureComplex((T)context.Instance, context, errorMessage);
 			}
 
 			return results;

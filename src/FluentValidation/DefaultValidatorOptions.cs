@@ -352,6 +352,14 @@ namespace FluentValidation {
 			return rule.Configure(config => config.CurrentValidator.GetMetadata().Severity = severity);
 		}
 
+		/// <summary>
+		/// Specifies custom method that will be called when specific rule fails
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="onFailure"></param>
+		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
 			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T, TProperty>(config.CurrentValidator, onFailure)));
 		}
@@ -368,27 +376,21 @@ namespace FluentValidation {
 			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T, TProperty>(config.CurrentValidator, onFailure)));
 		}
 
-		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext, string> onFailure, string errorMessage) {
-			return rule.OnFailure(onFailure, errorMessage, null as object[]);
-		}
-
-		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext, string> onFailure, string errorMessage, params object[] messageArgs) {
-			var funcs = ConvertArrayOfObjectsToArrayOfDelegates<T>(messageArgs);
-			return rule.OnFailure(onFailure, errorMessage, funcs);
-		}
-
-		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext, string> onFailure, string errorMessage, params Func<T, object>[] funcs) {
-			Func<T, TProperty, object>[] tmp = funcs.Select(func => new Func<T, TProperty, object>((instance, value) => func(instance))).ToArray();
-			return rule.OnFailure(onFailure, errorMessage, tmp);
-		}
-
-		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext, string> onFailure, string errorMessage, params Func<T, TProperty, object>[] funcs) {
-			return rule.Configure(config =>	config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T, TProperty>(config.CurrentValidator, onFailure, errorMessage, funcs)));
+		/// <summary>
+		/// Specifies custom method that will be called when specific rule fails
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="onFailure"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext, string> onFailure) {
+			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T, TProperty>(config.CurrentValidator, onFailure)));
 		}
 
 
 		/// <summary>
-		/// Gets the default message for a property validato
+		/// Gets the default message for a property validator
 		/// </summary>
 		/// <typeparam name="T">The validator type</typeparam>
 		/// <returns>The translated string</returns>
