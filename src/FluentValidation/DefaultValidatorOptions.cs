@@ -361,7 +361,7 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
-			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T, TProperty>(config.CurrentValidator, onFailure)));
+			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T, TProperty>(config.CurrentValidator, (instance, ctx, message) => onFailure(instance))));
 		}
 
 		/// <summary>
@@ -373,7 +373,7 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext> onFailure) {
-			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T, TProperty>(config.CurrentValidator, onFailure)));
+			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T, TProperty>(config.CurrentValidator, (instance, ctx, message) => onFailure(instance, ctx))));
 		}
 
 		/// <summary>

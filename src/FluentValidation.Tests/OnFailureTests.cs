@@ -2,7 +2,8 @@
 	using System.Threading.Tasks;
 	using System.Diagnostics;
 	using Xunit;
-
+	using static FluentValidation.Tests.ComplexValidationTester;
+	using FluentValidation.TestHelper;
 
 	public class OnFailureTests {
 		private TestValidator _validator;
@@ -77,6 +78,25 @@
 			_validator.Validate(new Person());
 
 			errorMessage.ShouldEqual("You must specify Surname!");
+		}
+
+		[Fact]
+		public void ShouldHaveChildValidator_should_be_true() {
+
+			_validator.RuleFor(person => person.Address).SetValidator(new AddressValidatorWithOnFailure());
+
+			// this should work:
+			_validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidatorWithOnFailure));
+			// but it won't, because it'll find an instance of OnFailureValidator instead
+		}
+	}
+
+	public class AddressValidatorWithOnFailure : AbstractValidator<Address> {
+		public AddressValidatorWithOnFailure() {
+			RuleFor(x => x.Postcode).NotNull().OnFailure((address, ctx) => {
+				Debug.WriteLine(address.Line1);
+			});
+			RuleFor(x => x.Country).SetValidator(new CountryValidator());
 		}
 	}
 }
