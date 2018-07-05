@@ -18,9 +18,10 @@ namespace FluentValidation.Internal {
 		/// <typeparam name="TProperty"></typeparam>
 		/// <param name="member">The member represented by the expression</param>
 		/// <param name="expression"></param>
+		/// <param name="bypassCache"></param>
 		/// <returns>Accessor func</returns>
-		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {
-			if (member == null || ValidatorOptions.DisableAccessorCache) {
+		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, bool bypassCache = false) {
+			if (member == null || bypassCache || ValidatorOptions.DisableAccessorCache) {
 				return expression.Compile();
 			}
 			
