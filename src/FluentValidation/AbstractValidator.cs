@@ -26,5 +26,8 @@ namespace FluentValidation {
 	[Obsolete("AbstractValidator is deprecated in FluentValidation 8. Please inherit from ValidatorBase<T> instead, and build your rules in the Rules method. For more information about upgrading to FluentValidation 8 please see https://fluentvalidation.net/upgrading-to-8")]
 	public abstract class AbstractValidator<T> : ValidatorBase<T> {
 		protected sealed override void Rules() {}
+
+		protected AbstractValidator() : base(cacheEnabled: false) {
+		}
 	}
 }
