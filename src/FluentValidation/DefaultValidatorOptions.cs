@@ -356,7 +356,44 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Gets the default message for a property validato
+		/// Specifies custom method that will be called when specific rule fails
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="onFailure"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
+			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T>(config.CurrentValidator, (instance, ctx, message) => onFailure(instance))));
+		}
+
+		/// <summary>
+		/// Specifies custom method that will be called when specific rule fails
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="onFailure"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext> onFailure) {
+			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T>(config.CurrentValidator, (instance, ctx, message) => onFailure(instance, ctx))));
+		}
+
+		/// <summary>
+		/// Specifies custom method that will be called when specific rule fails
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="onFailure"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext, string> onFailure) {
+			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T>(config.CurrentValidator, onFailure)));
+		}
+
+
+		/// <summary>
+		/// Gets the default message for a property validator
 		/// </summary>
 		/// <typeparam name="T">The validator type</typeparam>
 		/// <returns>The translated string</returns>
