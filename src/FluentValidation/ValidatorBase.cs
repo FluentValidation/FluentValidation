@@ -210,7 +210,10 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor", nameof(expression));
-			var rule = PropertyRule.Create(expression, () => CascadeMode);
+			// If rule-level caching is enabled, then bypass the expression-level cache.
+			// Otherwise we essentially end up caching expressions twice unnecessarily.
+			bool bypassExpressionCache = _cacheEnabled;
+			var rule = PropertyRule.Create(expression, () => CascadeMode, bypassExpressionCache);
 			AddRule(rule);
 			var ruleBuilder = new RuleBuilder<T, TProperty>(rule, this);
 			return ruleBuilder;
