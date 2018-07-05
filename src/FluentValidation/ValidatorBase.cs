@@ -16,7 +16,7 @@ namespace FluentValidation {
 	/// <typeparam name="T">The type of the object being validated</typeparam>
 	public abstract class ValidatorBase<T> : IValidator<T>, IEnumerable<IValidationRule> {
 		internal TrackingCollection<IValidationRule> NestedValidators { get; } = new TrackingCollection<IValidationRule>();
-
+		private readonly bool _cacheEnabled;
 		Func<CascadeMode> _cascadeMode = () => ValidatorOptions.CascadeMode;
 
 		/// <summary>
@@ -28,12 +28,46 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Creates a new instance of the validator.
+		/// </summary>
+		protected ValidatorBase() : this(true) {
+		}
+
+		// todo: is a second constructor really the best way to do this?
+		internal ValidatorBase(bool cacheEnabled) {
+			_cacheEnabled = cacheEnabled;
+			
+			// Each time this validator is constructed
+			// copy the rules out of the cache back into the local collection.
+			// This also ensures the cache is initialized if this is the first instance
+			// of this validator to be constructed.
+			if (_cacheEnabled && RuleCache.TryGetRules(GetType(), out var rules)) {
+				NestedValidators.AddRange(rules);
+			}
+		}
+		
+		/// <summary>
 		/// Create your own validation rules in this method.
 		/// </summary>
 		protected abstract void Rules();
 
 		protected IEnumerable<IValidationRule> GetRules() {
-			Rules();
+			// Don't directly return the result of RuleCache.GetRules.
+			// If we do, then the result won't contain any rules added outside of the Rules method
+			// Instead ensure the rules are copied from NestedValidators into the cache
+			// But return NestedValidators directly as it will have the same data
+			// (because it was initialized in the ctor)
+			// plus any 'add hoc' rules.
+
+			if (_cacheEnabled) {
+				RuleCache.GetRules(GetType(), () => {
+					Rules();
+					// Copy the validators into the cache.
+					// Don't cache the whole NestedValidators collection.
+					return NestedValidators.ToList();
+				});
+			}
+
 			return NestedValidators;
 		}
 		
@@ -161,7 +195,6 @@ namespace FluentValidation {
 			return new ValidatorDescriptor<T>(GetRules());
 		}
 
-		
 		bool IValidator.CanValidateInstancesOfType(Type type) {
 			return typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
 		}
@@ -233,7 +266,6 @@ namespace FluentValidation {
 			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
 			propertyRules.ForEach(x => x.ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate)));
 		}
-
 		
 		/// <summary>
 		/// Defines an inverse condition that applies to several rules
@@ -290,7 +322,6 @@ namespace FluentValidation {
 			AddRule(rule);
 		}
 
-
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection of validation rules.
 		/// </summary>
@@ -324,6 +355,5 @@ namespace FluentValidation {
 		protected virtual bool PreValidate(ValidationContext<T> context, ValidationResult result) {
 			return true;
 		}
-
 	}
 }

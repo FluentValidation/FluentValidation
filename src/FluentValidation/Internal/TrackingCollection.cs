@@ -51,6 +51,10 @@ namespace FluentValidation.Internal {
 			return new CaptureDisposable(this, onItemAdded);
 		}
 
+		public void AddRange(IEnumerable<T> collection) {
+			_innerCollection.AddRange(collection);
+		}
+		
 		public IEnumerator<T> GetEnumerator() {
 			return _innerCollection.GetEnumerator();
 		}
