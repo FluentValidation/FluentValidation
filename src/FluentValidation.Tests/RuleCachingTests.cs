@@ -49,6 +49,23 @@
 			
 		}
 
+		
+		[Fact]
+		public void InlineValidator_doesnt_cache() {
+			var validator1 = new InlineValidator<Person>();
+			var validator2 = new InlineValidator<Person>();
+
+			validator1.RuleFor(x => x.Surname).NotNull();
+			validator1.Count().ShouldEqual(1);
+
+			validator2.RuleFor(x => x.Surname).NotNull();
+			validator2.Count().ShouldEqual(1);
+			
+			Assert.NotSame(validator1.First(), validator2.First());
+			RuleCache.TryGetRules(typeof(NonCachingValidator), out _).ShouldBeFalse();
+			
+		}
+
 		private class CacheTestValidator : ValidatorBase<Person> {
 			protected override void Rules() {
 				RuleFor(x => x.Surname).NotNull();
