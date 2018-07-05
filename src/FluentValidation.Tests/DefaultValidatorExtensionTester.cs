@@ -27,7 +27,7 @@ namespace FluentValidation.Tests {
 
 	
 	public class DefaultValidatorExtensionTester {
-		private AbstractValidator<Person> validator;
+		private ValidatorBase<Person> validator;
 
 		public DefaultValidatorExtensionTester() {
 			validator = new TestValidator();
