@@ -12,44 +12,40 @@ namespace FluentValidation.Tests
 
 	public class OnFailureTests
 	{
-		private readonly Xunit.Abstractions.ITestOutputHelper output;
-
-		TestValidator validator;
-		public OnFailureTests(Xunit.Abstractions.ITestOutputHelper output)
+		private TestValidator _validator;
+		public OnFailureTests()
 		{
-			this.output = output;
-
-			validator = new TestValidator();
+			_validator = new TestValidator();
 		}
 
 		[Fact]
 		public void Invokes_twice_for_two_rules_on_failure()
 		{
-			validator.CascadeMode = CascadeMode.Continue;
+			_validator.CascadeMode = CascadeMode.Continue;
 
 			int invoked = 0;
-			validator.RuleFor(person => person.Surname).NotNull().NotEmpty().OnFailure( person => {
+			_validator.RuleFor(person => person.Surname).NotNull().NotEmpty().OnFailure( person => {
 				invoked += 1;
 			});
 
-			validator.RuleFor(person => person.Surname).NotEmpty().OnFailure((person,ctx) => {
-				output.WriteLine(ctx.PropertyName);
+			_validator.RuleFor(person => person.Surname).NotEmpty().OnFailure((person,ctx) => {
+				Debug.WriteLine(ctx.PropertyName);
 				invoked += 1;
 			});
 
-			validator.RuleFor(person => person.Forename).NotEqual("John").OnFailure((person, ctx, message) =>
+			_validator.RuleFor(person => person.Forename).NotEqual("John").OnFailure((person, ctx, message) =>
 			{
-				output.WriteLine(message);
+				Debug.WriteLine(message);
 				invoked += 1;
 			}, "Can't be John");
 
-			validator.RuleFor(person => person.Age).GreaterThanOrEqualTo(18).OnFailure((person, ctx, message) =>
+			_validator.RuleFor(person => person.Age).GreaterThanOrEqualTo(18).OnFailure((person, ctx, message) =>
 			{
-				output.WriteLine(message);
+				Debug.WriteLine(message);
 				invoked += 1;
 			}, "You must be at least 18 years old. You entered: {0}", person=>person.Age);
 
-			validator.Validate(new Person { Forename="John", Age = 17 });
+			_validator.Validate(new Person { Forename="John", Age = 17 });
 
 			invoked.ShouldEqual(4);
 		}
