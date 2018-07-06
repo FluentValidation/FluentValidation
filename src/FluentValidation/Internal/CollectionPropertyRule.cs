@@ -86,12 +86,9 @@ namespace FluentValidation.Internal {
 						throw new InvalidOperationException("Could not automatically determine the property name ");
 					}
 
-					var results = new List<ValidationFailure>();
-
-					var validators = collectionPropertyValue.Select(async (v, count) => {
-						
+					var validatorTasks = collectionPropertyValue.Select(async (v, count) => {
 						if (Filter != null && !Filter(v)) {
-							return;
+							return Enumerable.Empty<ValidationFailure>();
 						}
 
 						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
@@ -100,11 +97,16 @@ namespace FluentValidation.Internal {
 
 						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
 
-						var fs = await validator.ValidateAsync(newPropertyContext, cancellation);
-						results.AddRange(fs); // this is thread safe as our tasks are launched sequentially.
+						return await validator.ValidateAsync(newPropertyContext, cancellation);
 					});
 					
-					await TaskHelpers.Iterate(validators, cancellation);
+					var results = new List<ValidationFailure>();
+
+					foreach (var task in validatorTasks) {
+						var failures = await task;
+						results.AddRange(failures);
+					}
+					
 					return results;
 				}
 			}
