@@ -15,18 +15,20 @@ if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) { Write-Host "Install
 $packages_dir = Join-Path $build_dir "packages"
 $output_dir = Join-Path $build_dir $configuration
 $solution_file = Join-Path $path "FluentValidation.sln";
-$key_file = "$path\src\FluentValidation-Dev.snk";
+$key_file = "$path\src\FluentValidation-Public.snk";
 $nuget_key = "$env:USERPROFILE\Dropbox\nuget-access-key.txt";
+$public_sign = $true
 
 if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
   $key_file = "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk";
+  $public_sign = $false
 }
 
 target default -depends compile, test, deploy
 
 target compile {
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
-    /p:Version=$version /p:AssemblyOriginatorKeyFile=$key_file
+    /p:Version=$version /p:AssemblyOriginatorKeyFile=$key_file /p:PublicSign=$public_sign
 }
 
 target test {
@@ -47,22 +49,19 @@ target deploy {
   Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$key_file /p:Version=$version
 
   # Copy to output dir
-  Copy-Item "$path\src\FluentValidation\bin\$configuration\netstandard2.0" -Destination "$output_dir\FluentValidation-netstandard2.0" -Recurse
-  Copy-Item "$path\src\FluentValidation\bin\$configuration\netstandard1.1" -Destination "$output_dir\FluentValidation-netstandard1.1" -Recurse
-  Copy-Item "$path\src\FluentValidation\bin\$configuration\net45"  -Destination "$output_dir\FluentValidation-net45" -Recurse
-  Copy-Item "$path\src\FluentValidation.Mvc5\bin\$configuration\net45"  -filter FluentValidation.Mvc.* -Destination "$output_dir\FluentValidation.Mvc5-Legacy" -Recurse
-  Copy-Item "$path\src\FluentValidation.WebApi\bin\$configuration\net45"  -filter FluentValidation.WebApi.* -Destination "$output_dir\FluentValidation.WebApi-Legacy" -Recurse
-  Copy-Item "$path\src\FluentValidation.AspNetCore\bin\$configuration\netstandard2.0"  -filter FluentValidation.AspNetCore.* -Destination "$output_dir\FluentValidation.AspNetCore-netstandard2.0" -Recurse
+  Copy-Item "$path\src\FluentValidation\bin\$configuration" -Destination "$output_dir\FluentValidation" -Recurse
+  Copy-Item "$path\src\FluentValidation.Mvc5\bin\$configuration"  -filter FluentValidation.Mvc.* -Destination "$output_dir\FluentValidation.Mvc5-Legacy" -Recurse
+  Copy-Item "$path\src\FluentValidation.WebApi\bin\$configuration"  -filter FluentValidation.WebApi.* -Destination "$output_dir\FluentValidation.WebApi-Legacy" -Recurse
+  Copy-Item "$path\src\FluentValidation.AspNetCore\bin\$configuration"  -filter FluentValidation.AspNetCore.* -Destination "$output_dir\FluentValidation.AspNetCore" -Recurse
+  Copy-Item "$path\src\FluentValidation.ValidatorAttribute\bin\$configuration" -Destination "$output_dir\FluentValidation.ValidatorAttribute" -Recurse
 }
 
 target verify-package {
-  $asm = [System.Reflection.Assembly]::LoadFile("$output_dir/FluentValidation-netstandard2.0/FluentValidation.dll")
-
   if (-not (test-path "$nuget_key")) {
     throw "Could not find the NuGet access key."
   }
-  elseif (-not $asm.FullName.EndsWith("PublicKeyToken=7de548da2fbae0f0")) {
-    throw "This build is using the dev key. Please rebuild with release key"
+  elseif (!$public_sign) {
+    throw "Cannot publish packages that have been public-signed. Must perform full signing."
   }
   else {
     write-host Package verified
