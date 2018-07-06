@@ -69,7 +69,7 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName"></param>
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
-		protected override Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
+		protected override async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
 
 			if (string.IsNullOrEmpty(propertyName)) {
 				propertyName = InferPropertyName(Expression);
@@ -104,12 +104,12 @@ namespace FluentValidation.Internal {
 						results.AddRange(fs); // this is thread safe as our tasks are launched sequentially.
 					});
 					
-					return TaskHelpers.Iterate(validators, cancellation)
-							.Then(() => results.AsEnumerable(), runSynchronously: true, cancellationToken: cancellation);
+					await TaskHelpers.Iterate(validators, cancellation);
+					return results;
 				}
 			}
 
-			return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		private string InferPropertyName(LambdaExpression expression) {

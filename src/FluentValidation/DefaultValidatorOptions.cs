@@ -197,7 +197,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> UnlessAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling UnlessAsync", nameof(predicate));
-			return rule.WhenAsync((x, ct) => predicate(x, ct).Then(y => !y, ct), applyConditionTo);
+			return rule.WhenAsync(async (x, ct) => !await predicate(x, ct), applyConditionTo);
 		}
 
 		/// <summary>
