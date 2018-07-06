@@ -8,26 +8,28 @@ namespace FluentValidation.Validators {
 	/// <summary>
 	/// Asynchronous custom validator
 	/// </summary>
-	public class AsyncPredicateValidator : AsyncValidatorBase {
-		private readonly Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate;
+	public class AsyncPredicateValidator : PropertyValidator {
+		private readonly Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> _predicate;
 
 		/// <summary>
-		/// Creates a new ASyncPredicateValidator
+		/// Creates a new AsyncPredicateValidator
 		/// </summary>
 		/// <param name="predicate"></param>
 		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) : base(new LanguageStringSource(nameof(AsyncPredicateValidator))) {
 			predicate.Guard("A predicate must be specified.", nameof(predicate));
-			this.predicate = predicate;
+			this._predicate = predicate;
 		}
 
-		/// <summary>
-		/// Runs the validation check
-		/// </summary>
-		/// <param name="context"></param>
-		/// <param name="cancellation"></param>
-		/// <returns></returns>
 		protected override Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			return predicate(context.Instance, context.PropertyValue, context, cancellation);
+			return _predicate(context.Instance, context.PropertyValue, context, cancellation);
+		}
+
+		protected override bool IsValid(PropertyValidatorContext context) {
+			return Task.Run(() => IsValidAsync(context, new CancellationToken())).GetAwaiter().GetResult();
+		}
+
+		public override bool ShouldValidateAsync(ValidationContext context) {
+			return context.IsAsync();
 		}
 	}
 }
