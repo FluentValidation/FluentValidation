@@ -8,12 +8,9 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class ChildValidatorAdaptor : NoopPropertyValidator {
-		static readonly IEnumerable<ValidationFailure> EmptyResult = Enumerable.Empty<ValidationFailure>();
-		static readonly Task<IEnumerable<ValidationFailure>> AsyncEmptyResult = TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
-
 		readonly Func<IValidationContext, IValidator> _validatorProvider;
 
-		public Type ValidatorType { get; protected set; }
+		public Type ValidatorType { get; }
 		
 		internal bool PassThroughParentContext { get; set; }
 
@@ -26,37 +23,34 @@ namespace FluentValidation.Validators {
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			return ValidateInternal(
-				context, 
-				(ctx, v) => v.Validate(ctx).Errors,
-				EmptyResult
-			);
-		}
-
-		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			return ValidateInternal(
-				context, 
-				async (ctx, v) => (await v.ValidateAsync(ctx, cancellation)).Errors.AsEnumerable(),
-				AsyncEmptyResult
-			);
-		}
-
-		private TResult ValidateInternal<TResult>(PropertyValidatorContext context, Func<ValidationContext, IValidator, TResult> validationApplicator, TResult emptyResult) {
-			var instanceToValidate = context.PropertyValue;
-
-			if (instanceToValidate == null) {
-				return emptyResult;
+			if (context.PropertyValue == null) {
+				return Enumerable.Empty<ValidationFailure>();
 			}
 
 			var validator = GetValidator(context);
 
 			if (validator == null) {
-				return emptyResult;
+				return Enumerable.Empty<ValidationFailure>();
 			}
 
-			var newContext = CreateNewValidationContextForChildValidator(instanceToValidate, context);
+			var newContext = CreateNewValidationContextForChildValidator(context.PropertyValue, context);
+			return validator.Validate(newContext).Errors;
+		}
 
-			return validationApplicator(newContext, validator);
+		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			if (context.PropertyValue == null) {
+				return Enumerable.Empty<ValidationFailure>();
+			}
+
+			var validator = GetValidator(context);
+
+			if (validator == null) {
+				return Enumerable.Empty<ValidationFailure>();
+			}
+
+			var newContext = CreateNewValidationContextForChildValidator(context.PropertyValue, context);
+			var result = await validator.ValidateAsync(newContext, cancellation);
+			return result.Errors;
 		}
 
 		public virtual IValidator GetValidator(PropertyValidatorContext context) {

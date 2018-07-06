@@ -165,18 +165,15 @@ namespace FluentValidation {
 
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
-			var failures = new List<ValidationFailure>();
+			foreach (var rule in GetRules()) {
+				cancellation.ThrowIfCancellationRequested();
+				var failures = await rule.ValidateAsync(context, cancellation);
 
-			var validators = GetRules().Select(async v => {
-				failures.AddRange(await v.ValidateAsync(context, cancellation));
-			});
-			
-			await TaskHelpers.Iterate(validators, cancellation);
-				
-			foreach (var validationFailure in failures.Where(failure => failure != null)) {
-				result.Errors.Add(validationFailure);
+				foreach (var failure in failures.Where(f => f != null)) {
+					result.Errors.Add(failure);
+				}
 			}
-			
+
 			return result;
 		}
 		
