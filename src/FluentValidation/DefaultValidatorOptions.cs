@@ -225,15 +225,18 @@ namespace FluentValidation {
 			var dependencyContainer = new List<IValidationRule>();
 
 			if (rule is IExposesParentValidator<T> exposesParentValidator) {
-				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
+				if (exposesParentValidator.ParentValidator is ValidatorBase<T> parent) {
 					// Capture any rules added to the parent validator inside this delegate. 
 					using (parent.NestedValidators.Capture(dependencyContainer.Add)) {
 						action();
 					}
 				}
+				else {
+					throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from ValidatorBase");
+				}
 			}
 			else {
-				throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from AbstractValidator");
+				throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from ValidatorBase");
 			}
 
 			rule.Configure(cfg => {
