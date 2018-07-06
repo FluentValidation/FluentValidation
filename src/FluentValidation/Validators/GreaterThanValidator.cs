@@ -19,7 +19,6 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Reflection;
-	using Attributes;
 	using Internal;
 	using Resources;
 

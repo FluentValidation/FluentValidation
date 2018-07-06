@@ -19,10 +19,7 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Text.RegularExpressions;
-	using Attributes;
-	using Internal;
 	using Resources;
-	using Results;
 
 	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
 		readonly Func<object, Regex> _regexFunc;
