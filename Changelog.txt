@@ -1,4 +1,4 @@
-7.6.104 - 
+7.6.104 - 6 July 2018 
 Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
 
 7.6.103 - 16 June 2018

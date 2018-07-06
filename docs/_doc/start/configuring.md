@@ -213,3 +213,27 @@ RuleFor(x => x.Surname).Custom((x, context) => {
   }
 });
 ```
+
+### Using PreValidate
+
+If you need to run specific code every time a validator is invoked, you can do this by overriding the `PreValidate` method. This method takes a `ValidationContext` as well as a `ValidationResult`, which you can use to customise the validation process. 
+
+The method should return `true` if validation should continue, or `false` to immediately abort. Any modifications that you made to the `ValidationResult` will be returned to the user.
+
+Note that this method is called before FluentValidation performs its standard null-check against the model being validated, so you can use this to generate an error if the whole model is null, rather than relying on FluentValidation's standard behaviour in this case (which is to throw an exception):
+
+```csharp
+public class MyValidator : AbstractValidator<Person> {
+  public MyValidator() {
+    RuleFor(x => x.Name).NotNull();
+  }
+
+  protected override bool PreValidate(ValidationContext<Person> context, ValidationResult result) {
+    if (context.InstanceToValidate == null) {
+      result.Errors.Add(new ValidationFailure("", "Please ensure a model was supplied."));
+      return false;
+    }
+    return true;
+  }
+}
+```
