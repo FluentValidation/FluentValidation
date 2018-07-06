@@ -1,12 +1,12 @@
 ﻿namespace FluentValidation.Validators {
-	using FluentValidation.Results;
+	using Results;
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
 
-	public class OnFailureValidator<T, TProperty> : NoopPropertyValidator {
+	public class OnFailureValidator<T> : NoopPropertyValidator {
 		private readonly IPropertyValidator _innerValidator;
 		private readonly Action<T, PropertyValidatorContext, string> _onFailure;
 

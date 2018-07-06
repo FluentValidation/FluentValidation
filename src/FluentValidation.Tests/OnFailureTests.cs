@@ -2,8 +2,8 @@
 	using System.Threading.Tasks;
 	using System.Diagnostics;
 	using Xunit;
-	using static FluentValidation.Tests.ComplexValidationTester;
-	using FluentValidation.TestHelper;
+	using static ComplexValidationTester;
+	using TestHelper;
 
 	public class OnFailureTests {
 		private TestValidator _validator;
@@ -83,11 +83,8 @@
 		[Fact]
 		public void ShouldHaveChildValidator_should_be_true() {
 
-			_validator.RuleFor(person => person.Address).SetValidator(new AddressValidatorWithOnFailure());
-
-			// this should work:
+			_validator.RuleFor(person => person.Address).SetValidator(new AddressValidatorWithOnFailure()).OnFailure((p,ctx)=> { Debug.WriteLine(p.Forename); });
 			_validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidatorWithOnFailure));
-			// but it won't, because it'll find an instance of OnFailureValidator instead
 		}
 	}
 
