@@ -5,6 +5,7 @@ namespace FluentValidation {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Runtime.CompilerServices;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
@@ -165,14 +166,13 @@ namespace FluentValidation {
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			var failures = new List<ValidationFailure>();
+
+			var validators = GetRules().Select(async v => {
+				failures.AddRange(await v.ValidateAsync(context, cancellation));
+			});
 			
-			var t = TaskHelpers.Iterate(
-				GetRules()
-					.Select(v => v.ValidateAsync(context, cancellation)
-						.Then(fs => failures.AddRange(fs), runSynchronously: true, cancellationToken: cancellation)), cancellation);
+			await TaskHelpers.Iterate(validators, cancellation);
 				
-			await t;
-			
 			foreach (var validationFailure in failures.Where(failure => failure != null)) {
 				result.Errors.Add(validationFailure);
 			}
@@ -304,7 +304,7 @@ namespace FluentValidation {
 		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
 		public void UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
-			WhenAsync((x, ct) => predicate(x, ct).Then(y => !y, ct), action);
+			WhenAsync(async (x, ct) => !await predicate(x, ct), action);
 		}
 
 		/// <summary>

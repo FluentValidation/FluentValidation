@@ -300,7 +300,7 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
-		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
+		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
 			try {
 				if (!context.IsAsync()) {
 					context.RootContextData["__FV_IsAsyncExecution"] = true;
@@ -319,7 +319,7 @@ namespace FluentValidation.Internal {
 				// Ensure that this rule is allowed to run. 
 				// The validatselector has the opportunity to veto this before any of the validators execute.
 				if (!context.Selector.CanExecute(this, propertyName, context)) {
-					return TaskHelpers.FromResult(Enumerable.Empty<ValidationFailure>());
+					return Enumerable.Empty<ValidationFailure>();
 				}
 
 				var cascade = _cascadeModeThunk();
@@ -331,7 +331,7 @@ namespace FluentValidation.Internal {
 				foreach (var validator in _validators.Where(v => !v.ShouldValidateAsync(context))) {
 
 					if (cancellation.IsCancellationRequested) {
-						return TaskHelpers.Canceled<IEnumerable<ValidationFailure>>();
+						return await TaskHelpers.Canceled<IEnumerable<ValidationFailure>>();
 					}
 
 					var results = InvokePropertyValidator(context, validator, propertyName);
@@ -349,8 +349,7 @@ namespace FluentValidation.Internal {
 				if (fastExit && failures.Count > 0) {
 					// Callback if there has been at least one property validator failed.
 					OnFailure(context.InstanceToValidate);
-
-					return TaskHelpers.FromResult(failures.AsEnumerable());
+					return failures;
 				}
 
 				var asyncValidators = _validators.Where(v => v.ShouldValidateAsync(context)).ToList();
@@ -361,53 +360,43 @@ namespace FluentValidation.Internal {
 						// Callback if there has been at least one property validator failed.
 						OnFailure(context.InstanceToValidate);
 					}
-					else
-					{
-						return RunDependentRulesAsync(failures, context, cancellation)
-							.Then(() => failures.AsEnumerable(), cancellationToken: cancellation);
+					else {
+						await RunDependentRulesAsync(failures, context, cancellation);
 					}
 
-					return TaskHelpers.FromResult(failures.AsEnumerable());
+					return failures;
 				}
 
 				//Then call asyncronous validators in non-blocking way
-				var validations =
-					asyncValidators
-//						.Select(v => v.ValidateAsync(new PropertyValidatorContext(context, this, propertyName), cancellation)
-						.Select(v => InvokePropertyValidatorAsync(context, v, propertyName, cancellation)
-							//this is thread safe because tasks are launched sequencially
-							.Then(fs => failures.AddRange(fs), runSynchronously: true)
-						);
+				var validations = asyncValidators.Select(async v => {
+					failures.AddRange(await InvokePropertyValidatorAsync(context, v, propertyName, cancellation));
+				});
 
-				var stupidlyComplicatedTask = 
-					TaskHelpers.Iterate(
-						validations,
-						breakCondition: _ => cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0,
-						cancellationToken: cancellation
-					).Then(async () => {
-						if (failures.Count > 0) {
-							OnFailure(context.InstanceToValidate);
-						}
-						else
-						{
-							await RunDependentRulesAsync(failures, context, cancellation);
-						}
+				await TaskHelpers.Iterate(
+					validations,
+					breakCondition: _ => cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0,
+					cancellationToken: cancellation
+				);
 
-						return failures.AsEnumerable();
-					},
-						runSynchronously: true
-					);
+				if (failures.Count > 0) {
+					OnFailure(context.InstanceToValidate);
+				}
+				else {
+					await RunDependentRulesAsync(failures, context, cancellation);
+				}
 
-				return stupidlyComplicatedTask;
+				return failures;
+
 			}
 			catch (Exception ex) {
-				return TaskHelpers.FromError<IEnumerable<ValidationFailure>>(ex);
+				return await TaskHelpers.FromError<IEnumerable<ValidationFailure>>(ex);
 			}
 		}
 
 		private Task RunDependentRulesAsync(List<ValidationFailure> failures, ValidationContext context, CancellationToken cancellation) {
-			var validations = DependentRules.Select(v => v.ValidateAsync(context, cancellation)
-				.Then(fs => failures.AddRange(fs), runSynchronously: true));
+			var validations = DependentRules.Select(async v => {
+				failures.AddRange(await v.ValidateAsync(context, cancellation));
+			});
 			
 			return TaskHelpers.Iterate(validations, cancellationToken: cancellation);
 		}

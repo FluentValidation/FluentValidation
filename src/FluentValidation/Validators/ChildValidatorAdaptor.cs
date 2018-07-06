@@ -36,7 +36,7 @@ namespace FluentValidation.Validators {
 		public override Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			return ValidateInternal(
 				context, 
-				(ctx, v) => v.ValidateAsync(ctx, cancellation).Then(r => r.Errors.AsEnumerable(), runSynchronously:true, cancellationToken: cancellation),
+				async (ctx, v) => (await v.ValidateAsync(ctx, cancellation)).Errors.AsEnumerable(),
 				AsyncEmptyResult
 			);
 		}

@@ -13,57 +13,6 @@ namespace System.Threading.Tasks
 		private static readonly Task<AsyncVoid> DefaultCompleted = TaskHelpers.FromResult<AsyncVoid>(default(AsyncVoid));
 
 		// <summary>
-		// Calls the given continuation, after the given task has completed, if the task successfully ran
-		// to completion (i.e., was not canceled and did not fault).
-		// </summary>
-		internal static Task<TOuterResult> Then<TOuterResult>(this Task task, Func<TOuterResult> continuation, CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = false)
-		{
-			return task.ThenImpl(t => TaskHelpers.FromResult(continuation()), cancellationToken, runSynchronously);
-		}
-		
-		// <summary>
-		// Calls the given continuation, after the given task has completed, if the task successfully ran
-		// to completion (i.e., was not cancelled and did not fault).
-		// </summary>
-		internal static Task<TOuterResult> Then<TOuterResult>(this Task task, Func<Task<TOuterResult>> continuation, CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = false)
-		{
-			return task.ThenImpl(t => continuation(), cancellationToken, runSynchronously);
-		}
-
-		// <summary>
-		// Calls the given continuation, after the given task has completed, if the task successfully ran
-		// to completion (i.e., was not cancelled and did not fault). The continuation is provided with the
-		// result of the task as its sole parameter.
-		// </summary>
-		[SuppressMessage("Microsoft.Web.FxCop", "MW1201:DoNotCallProblematicMethodsOnTask", Justification = "The usages here are deemed safe, and provide the implementations that this rule relies upon.")]
-		internal static Task Then<TInnerResult>(this Task<TInnerResult> task, Action<TInnerResult> continuation, CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = false)
-		{
-			return task.ThenImpl(t => ToAsyncVoidTask(() => continuation(t.Result)), cancellationToken, runSynchronously);
-		}
-
-		// <summary>
-		// Calls the given continuation, after the given task has completed, if the task successfully ran
-		// to completion (i.e., was not canceled and did not fault). The continuation is provided with the
-		// result of the task as its sole parameter.
-		// </summary>
-		[SuppressMessage("Microsoft.Web.FxCop", "MW1201:DoNotCallProblematicMethodsOnTask", Justification = "The usages here are deemed safe, and provide the implementations that this rule relies upon.")]
-		internal static Task<TOuterResult> Then<TInnerResult, TOuterResult>(this Task<TInnerResult> task, Func<TInnerResult, TOuterResult> continuation, CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = false)
-		{
-			return task.ThenImpl(t => TaskHelpers.FromResult(continuation(t.Result)), cancellationToken, runSynchronously);
-		}
-
-		// <summary>
-		// Calls the given continuation, after the given task has completed, if the task successfully ran
-		// to completion (i.e., was not canceled and did not fault). The continuation is provided with the
-		// result of the task as its sole parameter.
-		// </summary>
-		[SuppressMessage("Microsoft.Web.FxCop", "MW1201:DoNotCallProblematicMethodsOnTask", Justification = "The usages here are deemed safe, and provide the implementations that this rule relies upon.")]
-		internal static Task<TOuterResult> Then<TInnerResult, TOuterResult>(this Task<TInnerResult> task, Func<TInnerResult, Task<TOuterResult>> continuation, CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = false)
-		{
-			return task.ThenImpl(t => continuation(t.Result), cancellationToken, runSynchronously);
-		}
-
-		// <summary>
 		// Returns an error task of the given type. The task is Completed, IsCanceled = False, IsFaulted = True
 		// </summary>
 		// <typeparam name="TResult"></typeparam>
@@ -116,40 +65,31 @@ namespace System.Threading.Tasks
 		{
 			return CancelCache<TResult>.Canceled;
 		}
-
-		internal static Task<TResult> RunSynchronously<TResult>(Func<TResult> func, CancellationToken cancellationToken = default(CancellationToken))
+		
+		// <summary>
+		// Returns a completed task that has no result. 
+		// </summary>        
+		private static Task Completed()
 		{
-			if (cancellationToken.IsCancellationRequested)
-			{
-				return Canceled<TResult>();
-			}
-
-			try
-			{
-				return FromResult(func());
-			}
-			catch (Exception e)
-			{
-				return FromError<TResult>(e);
-			}
+			return DefaultCompleted;
 		}
 
-		internal static Task RunSynchronously(Action action, CancellationToken cancellationToken = default(CancellationToken))
+		// <summary>
+		// Calls the given continuation, after the given task has completed, if the task successfully ran
+		// to completion (i.e., was not canceled and did not fault).
+		// </summary>
+		private static Task<TOuterResult> Then<TOuterResult>(this Task task, Func<TOuterResult> continuation, CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = false)
 		{
-			if (cancellationToken.IsCancellationRequested)
-			{
-				return Canceled<object>();
-			}
-
-			try
-			{
-				action();
-				return FromResult<object>(null);
-			}
-			catch (Exception e)
-			{
-				return FromError<object>(e);
-			}
+			return task.ThenImpl(t => TaskHelpers.FromResult(continuation()), cancellationToken, runSynchronously);
+		}
+		
+		// <summary>
+		// Calls the given continuation, after the given task has completed, if the task successfully ran
+		// to completion (i.e., was not cancelled and did not fault).
+		// </summary>
+		private static Task<TOuterResult> Then<TOuterResult>(this Task task, Func<Task<TOuterResult>> continuation, CancellationToken cancellationToken = default(CancellationToken), bool runSynchronously = false)
+		{
+			return task.ThenImpl(t => continuation(), cancellationToken, runSynchronously);
 		}
 
 		// <summary>
@@ -179,23 +119,6 @@ namespace System.Threading.Tasks
 		// <param name="func">function that returns a task</param>
 		// <param name="cancellationToken">cancellation token. This is only checked before we run the task, and if canceled, we immediately return a canceled task.</param>
 		// <returns>a task, created by running func().</returns>
-		[SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "The caught exception type is reflected into a faulted task.")]
-		private static Task<TResult> RunSynchronously<TResult>(Func<Task<TResult>> func, CancellationToken cancellationToken = default(CancellationToken))
-		{
-			if (cancellationToken.IsCancellationRequested)
-			{
-				return Canceled<TResult>();
-			}
-
-			try
-			{
-				return func();
-			}
-			catch (Exception e)
-			{
-				return FromError<TResult>(e);
-			}
-		}
 
 		// <summary>
 		// Calls the given continuation, after the given task has completed, if the task successfully ran
@@ -342,14 +265,6 @@ namespace System.Threading.Tasks
 		// <summary>
 		// Adapts any action into a Task (returning AsyncVoid, so that it's usable with Task{T} extension methods).
 		// </summary>
-		private static Task<AsyncVoid> ToAsyncVoidTask(Action action)
-		{
-			return TaskHelpers.RunSynchronously<AsyncVoid>(() =>
-			{
-				action();
-				return DefaultCompleted;
-			});
-		}
 
 		// <summary>
 		// Returns a canceled Task. The task is completed, IsCanceled = True, IsFaulted = False.
@@ -359,14 +274,6 @@ namespace System.Threading.Tasks
 			return CancelCache<AsyncVoid>.Canceled;
 		}
 	
-		// <summary>
-		// Returns a completed task that has no result. 
-		// </summary>        
-		internal static Task Completed()
-		{
-			return DefaultCompleted;
-		}
-
 		// <summary>
 		// Provides the implementation of the Iterate method.
 		// Contains special logic to help speed up common cases.
