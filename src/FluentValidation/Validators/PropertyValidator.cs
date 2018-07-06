@@ -59,7 +59,7 @@ namespace FluentValidation.Validators {
 			if (await IsValidAsync(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
 			
 			PrepareMessageFormatterForValidationError(context);
-			return new[] {CreateValidationError(context)}.AsEnumerable();
+			return new[] {CreateValidationError(context)};
 		}
 
 		public virtual bool ShouldValidateAsync(ValidationContext context) {
