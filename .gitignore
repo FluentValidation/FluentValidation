@@ -22,3 +22,5 @@ TestResults/
 *.ncrunch*
 .idea/
 .build/
+docs/_site/
+docs/Gemfile.lock
