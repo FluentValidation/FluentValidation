@@ -20,8 +20,6 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections;
 	using System.Reflection;
-	using Attributes;
-	using Internal;
 	using Resources;
 
 	public class NotEqualValidator : PropertyValidator, IComparisonValidator {

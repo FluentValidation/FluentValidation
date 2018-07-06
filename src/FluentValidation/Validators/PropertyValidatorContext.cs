@@ -18,10 +18,6 @@
 
 namespace FluentValidation.Validators {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Reflection;
-	using Attributes;
 	using Internal;
 
 	public class PropertyValidatorContext : IValidationContext {

@@ -48,6 +48,7 @@ Changes in 7.5:
 
     <ItemGroup>
       <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
+      <ProjectReference Include="..\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj"/>
     </ItemGroup>
 
   <ItemGroup>

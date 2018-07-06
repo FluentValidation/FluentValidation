@@ -40,6 +40,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
+    <ProjectReference Include="..\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj"/>
   </ItemGroup>
   <Import Project="../netfx.props"/>
 </Project>

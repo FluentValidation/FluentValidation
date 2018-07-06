@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.WebApi", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.AspNetCore", "src\FluentValidation.Tests.AspNetCore\FluentValidation.Tests.AspNetCore.csproj", "{3DFE3035-9685-4B76-AF21-074BCD8F69B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.ValidatorAttribute", "src\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj", "{7898B305-C18A-415F-A676-96D6593383B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{3DFE3035-9685-4B76-AF21-074BCD8F69B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DFE3035-9685-4B76-AF21-074BCD8F69B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DFE3035-9685-4B76-AF21-074BCD8F69B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7898B305-C18A-415F-A676-96D6593383B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7898B305-C18A-415F-A676-96D6593383B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7898B305-C18A-415F-A676-96D6593383B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7898B305-C18A-415F-A676-96D6593383B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

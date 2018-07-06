@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation.AspNetCore\FluentValidation.AspNetCore.csproj" />
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
+    <ProjectReference Include="..\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="TestMessages.Designer.cs">

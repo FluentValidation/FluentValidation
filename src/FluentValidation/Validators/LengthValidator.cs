@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Validators {
 	using System;
-	using System.Linq.Expressions;
-	using Attributes;
 	using Resources;
 
 	public class LengthValidator : PropertyValidator, ILengthValidator {
