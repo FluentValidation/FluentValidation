@@ -17,11 +17,8 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using Attributes;
 	using Internal;
 	using Resources;
-	using Results;
 
 	public class PredicateValidator : PropertyValidator, IPredicateValidator {
         public delegate bool Predicate(object instanceToValidate, object propertyValue, PropertyValidatorContext propertyValidatorContext);

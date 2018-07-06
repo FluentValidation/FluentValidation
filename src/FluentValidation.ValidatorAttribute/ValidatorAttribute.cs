@@ -18,27 +18,23 @@
 
 #endregion License
 
-namespace FluentValidation.Attributes
-{
+namespace FluentValidation.Attributes {
 	using System;
 
 	/// <summary>
 	/// Validator attribute to define the class that will describe the Validation rules.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Parameter)]
-//	[Obsolete("Use of the ValidatorAttribute is no longer recommended. If you're using ASP.NET Core, you should switch to using the Service Provider infrastructure for registering validators. For MVC5, WebApi2 or non-web scenarios, please consider using an IoC container instead.")]
-	public class ValidatorAttribute : Attribute
-	{
+	public class ValidatorAttribute : Attribute {
 		/// <summary>
 		/// The type of the validator used to validate the current type or parameter.
 		/// </summary>
-		public Type ValidatorType { get; private set; }
+		public Type ValidatorType { get; }
 
 		/// <summary>
 		/// Creates an instance of <see cref="ValidatorAttribute"/> allowing a validator type to be specified.
 		/// </summary>
-		public ValidatorAttribute(Type validatorType)
-		{
+		public ValidatorAttribute(Type validatorType) {
 			ValidatorType = validatorType;
 		}
 	}
