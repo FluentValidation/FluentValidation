@@ -1,4 +1,5 @@
 ﻿namespace FluentValidation.Tests {
+	using System;
 	using System.Linq;
 	using System.Runtime.CompilerServices;
 	using Internal;
@@ -66,6 +67,14 @@
 			
 		}
 
+		[Fact]
+		public void Throws_if_user_tries_to_define_rules_in_validatorbase_constructor() {
+			typeof(InvalidOperationException).ShouldBeThrownBy(() => {
+				var v = new BadValidator();
+				v.Validate(new Person());
+			});
+		}
+
 		private class CacheTestValidator : ValidatorBase<Person> {
 			protected override void Rules() {
 				RuleFor(x => x.Surname).NotNull();
@@ -75,6 +84,16 @@
 		private class NonCachingValidator : AbstractValidator<Person> {
 			public NonCachingValidator() {
 				RuleFor(x => x.Surname).NotNull();
+			}
+		}
+
+		private class BadValidator : ValidatorBase<Person> {
+			public BadValidator() {
+				RuleFor(x => x.Surname).NotNull();
+			}
+
+			protected override void Rules() {
+				
 			}
 		}
 	}

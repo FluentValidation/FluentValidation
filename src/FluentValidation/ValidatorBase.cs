@@ -1,3 +1,23 @@
+#region License
+
+// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); 
+// you may not use this file except in compliance with the License. 
+// You may obtain a copy of the License at 
+// 
+// http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software 
+// distributed under the License is distributed on an "AS IS" BASIS, 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+// See the License for the specific language governing permissions and 
+// limitations under the License.
+// 
+// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+
+#endregion
+
 namespace FluentValidation {
 	using System;
 	using System.Collections;
@@ -18,7 +38,8 @@ namespace FluentValidation {
 	public abstract class ValidatorBase<T> : IValidator<T>, IEnumerable<IValidationRule> {
 		internal TrackingCollection<IValidationRule> NestedValidators { get; } = new TrackingCollection<IValidationRule>();
 		private readonly bool _cacheEnabled;
-		Func<CascadeMode> _cascadeMode = () => ValidatorOptions.CascadeMode;
+		private Func<CascadeMode> _cascadeMode = () => ValidatorOptions.CascadeMode;
+		private readonly int _rulesLoadedFromCache = 0;
 
 		/// <summary>
 		/// Sets the cascade mode for all rules within this validator.
@@ -43,6 +64,7 @@ namespace FluentValidation {
 			// This also ensures the cache is initialized if this is the first instance
 			// of this validator to be constructed.
 			if (_cacheEnabled && RuleCache.TryGetRules(GetType(), out var rules)) {
+				_rulesLoadedFromCache = rules.Count;
 				NestedValidators.AddRange(rules);
 			}
 		}
@@ -61,7 +83,20 @@ namespace FluentValidation {
 			// plus any 'add hoc' rules.
 
 			if (_cacheEnabled) {
+				
 				RuleCache.GetRules(GetType(), () => {
+					
+					if (_rulesLoadedFromCache != NestedValidators.Count) {
+						// Between validator construction and now, the number of rules has changed.
+						// This means someone has added rules outside of the call to Rules(), probably in the constructor.
+						// If this has happened, we'll be harsh and throw an exception.
+						// If the user wants to use the old pattern, they must explicitly opt-in to it
+						// by inheriting from the old AbstractValidator instead, which disables the cache.
+						// We only do this check the FIRST time Rules is run, to allow the user to define rules 
+						// that are only relevant to this specific instance, rather than all instances of the validator.
+						throw new InvalidOperationException("Detected rules defined outside the Rules() method. All rules must be configured inside the Rules() method. Did you put them in the constructor?");
+					}
+					
 					Rules();
 					// Copy the validators into the cache.
 					// Don't cache the whole NestedValidators collection.
