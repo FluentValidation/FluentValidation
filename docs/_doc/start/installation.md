@@ -2,7 +2,7 @@
 title: Installation
 ---
 
-Before creating any validators, you will need to add a reference to FluentValidation.dll in your project. FluentValidation is availale as either a netstandard2.0 library or as a net45 library for older projects.
+Before creating any validators, you will need to add a reference to FluentValidation.dll in your project. FluentValidation is available as either a netstandard2.0 library or as a net45 library for older projects.
 
 The simplest way to do this is to use either the NuGet package manager, or the dotnet CLI.
 
