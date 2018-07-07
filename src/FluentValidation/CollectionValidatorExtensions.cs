@@ -39,7 +39,7 @@ namespace FluentValidation {
 			IValidator<T> parentValidator = null;
 			
 			// Delegate to the RuleForEach implementation.
-			var innerValidator = new InlineValidator<IEnumerable<TCollectionElement>>();
+			var innerValidator = new WrapperHack<TCollectionElement>(validator.GetType());
 			var innerRuleBuilder = (RuleBuilder<IEnumerable<TCollectionElement>, TCollectionElement>)innerValidator.RuleForEach(x => x);
 			innerRuleBuilder.SetValidator(validator);
 			
@@ -48,7 +48,9 @@ namespace FluentValidation {
 				innerRuleBuilder.Rule.RuleSets = cfg.RuleSets;
 			});
 			
-			ruleBuilder.SetValidator(innerValidator);
+			ruleBuilder.SetValidator(new ChildValidatorAdaptor(innerValidator, validator.GetType()) {
+				PassThroughParentContext = true
+			});
 
 			if (ruleBuilder is IExposesParentValidator<T> exposesParentValidator) {
 				parentValidator = exposesParentValidator.ParentValidator;
@@ -72,7 +74,7 @@ namespace FluentValidation {
 			IValidator<T> parentValidator = null;
 
 			// Delegate to the RuleForEach implementation.
-			var innerValidator = new InlineValidator<IEnumerable<TCollectionElement>>();
+			var innerValidator = new WrapperHack<TCollectionElement>(typeof(TValidator));
 			var innerRuleBuilder = ((RuleBuilder<IEnumerable<TCollectionElement>, TCollectionElement>)innerValidator.RuleForEach(x => x));
 			innerRuleBuilder.SetValidator(context => {
 
@@ -89,7 +91,7 @@ namespace FluentValidation {
 				innerRuleBuilder.Rule.RuleSets = cfg.RuleSets;
 			});
 			
-			ruleBuilder.SetValidator(new ChildValidatorAdaptor(innerValidator) {
+			ruleBuilder.SetValidator(new ChildValidatorAdaptor(innerValidator, typeof(TValidator)) {
 				PassThroughParentContext = true
 			});
 			
@@ -147,6 +149,13 @@ namespace FluentValidation {
 			}
 
 			public IValidator<T> ParentValidator { get; }
+		}
+
+		private class WrapperHack<T> : AbstractValidator<IEnumerable<T>>, IChildValidatorAdaptor {
+			public WrapperHack(Type innerValidatortype) {
+				ValidatorType = innerValidatortype;
+			}
+			public Type ValidatorType { get; }
 		}
 	}
 }

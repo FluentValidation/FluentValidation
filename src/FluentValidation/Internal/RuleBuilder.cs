@@ -62,7 +62,7 @@ namespace FluentValidation.Internal {
 		/// <param name="validator">The validator to set</param>
 		public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator) {
 			validator.Guard("Cannot pass a null validator to SetValidator", nameof(validator));
-			var adaptor = new ChildValidatorAdaptor(validator);
+			var adaptor = new ChildValidatorAdaptor(validator, validator.GetType());
 			SetValidator(adaptor);
 			return this;
 		}
