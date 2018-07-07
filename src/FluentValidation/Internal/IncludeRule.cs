@@ -18,8 +18,8 @@ namespace FluentValidation.Internal {
 		/// <param name="cascadeModeThunk"></param>
 		/// <param name="typeToValidate"></param>
 		/// <param name="containerType"></param>
-		public IncludeRule(IValidator validator,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
-			AddValidator(new ChildValidatorAdaptor(validator));
+		public IncludeRule(IValidator validator, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
+			AddValidator(new ChildValidatorAdaptor(validator, validator.GetType()));
 		}
 
 		/// <summary>

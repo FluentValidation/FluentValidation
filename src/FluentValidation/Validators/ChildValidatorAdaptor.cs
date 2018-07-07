@@ -7,14 +7,27 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	public class ChildValidatorAdaptor : NoopPropertyValidator {
-		readonly Func<IValidationContext, IValidator> _validatorProvider;
+	/// <summary>
+	/// Indicates that this validator wraps another validator.
+	/// </summary>
+	public interface IChildValidatorAdaptor {
+		/// <summary>
+		/// The type of the underyling validator
+		/// </summary>
+		Type ValidatorType { get; }
+	}
+	
+	public class ChildValidatorAdaptor : NoopPropertyValidator, IChildValidatorAdaptor {
+		private readonly Func<IValidationContext, IValidator> _validatorProvider;
+		private readonly IValidator _validator;
 
 		public Type ValidatorType { get; }
-		
+
 		internal bool PassThroughParentContext { get; set; }
 
-		public ChildValidatorAdaptor(IValidator validator) : this(_ => validator, validator.GetType()) {
+		public ChildValidatorAdaptor(IValidator validator, Type validatorType) {
+			_validator = validator;
+			ValidatorType = validatorType;
 		}
 
 		public ChildValidatorAdaptor(Func<IValidationContext, IValidator> validatorProvider, Type validatorType) {
@@ -55,7 +68,8 @@ namespace FluentValidation.Validators {
 
 		public virtual IValidator GetValidator(PropertyValidatorContext context) {
 			context.Guard("Cannot pass a null context to GetValidator", nameof(context));
-			return _validatorProvider(context);
+			
+			return _validatorProvider != null ? _validatorProvider(context) : _validator;
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {

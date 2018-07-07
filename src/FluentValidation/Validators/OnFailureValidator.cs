@@ -6,7 +6,7 @@
 	using System.Threading;
 	using System.Threading.Tasks;
 
-	public class OnFailureValidator<T> : NoopPropertyValidator {
+	public class OnFailureValidator<T> : NoopPropertyValidator, IChildValidatorAdaptor {
 		private readonly IPropertyValidator _innerValidator;
 		private readonly Action<T, PropertyValidatorContext, string> _onFailure;
 
@@ -19,7 +19,7 @@
 			var results = _innerValidator.Validate(context).ToList();
 			if (!results.Any()) return results;
 			var errorMessage = results.First().ErrorMessage;
-			_onFailure((T)context.Instance, context, errorMessage);
+			_onFailure((T) context.Instance, context, errorMessage);
 			return results;
 		}
 
@@ -27,8 +27,18 @@
 			var results = (await _innerValidator.ValidateAsync(context, cancellation)).ToList();
 			if (!results.Any()) return results;
 			var errorMessage = results.First().ErrorMessage;
-			_onFailure((T)context.Instance, context, errorMessage);
+			_onFailure((T) context.Instance, context, errorMessage);
 			return results;
 		}
+
+		public Type ValidatorType {
+			get {
+				if (_innerValidator is IChildValidatorAdaptor c)
+					return c.ValidatorType;
+				
+				return _innerValidator.GetType();
+			}
+		}
 	}
+
 }
