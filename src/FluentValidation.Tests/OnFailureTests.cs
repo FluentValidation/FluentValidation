@@ -7,12 +7,13 @@
 
 	public class OnFailureTests {
 		private TestValidator _validator;
+		
 		public OnFailureTests() {
 			_validator = new TestValidator();
 		}
 
 		[Fact]
-		public void on_failure_called_for_each_failed_rule() {
+		public void OnFailure_called_for_each_failed_rule() {
 			_validator.CascadeMode = CascadeMode.Continue;
 
 			int invoked = 0;
@@ -39,7 +40,7 @@
 		}
 
 		[Fact]
-		public async Task on_failure_called_for_each_failed_rule_asyncAsync() {
+		public async Task OnFailure_called_for_each_failed_rule_asyncAsync() {
 			_validator.CascadeMode = CascadeMode.Continue;
 
 			int invoked = 0;
@@ -66,7 +67,7 @@
 		}
 
 		[Fact]
-		public void should_be_able_to_access_error_message_in_on_failure() {
+		public void Should_be_able_to_access_error_message_in_OnFailure() {
 			_validator.CascadeMode = CascadeMode.Continue;
 
 			string errorMessage = string.Empty;
@@ -82,7 +83,6 @@
 
 		[Fact]
 		public void ShouldHaveChildValidator_should_be_true() {
-
 			_validator.RuleFor(person => person.Address).SetValidator(new AddressValidatorWithOnFailure()).OnFailure((p,ctx)=> { Debug.WriteLine(p.Forename); });
 			_validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidatorWithOnFailure));
 		}

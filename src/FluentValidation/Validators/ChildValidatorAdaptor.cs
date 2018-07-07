@@ -7,7 +7,17 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	public class ChildValidatorAdaptor : NoopPropertyValidator {
+	/// <summary>
+	/// Indicates that this validator wraps another validator.
+	/// </summary>
+	public interface IChildValidatorAdaptor {
+		/// <summary>
+		/// The type of the underyling validator
+		/// </summary>
+		Type ValidatorType { get; }
+	}
+	
+	public class ChildValidatorAdaptor : NoopPropertyValidator, IChildValidatorAdaptor {
 		readonly Func<IValidationContext, IValidator> _validatorProvider;
 
 		public Type ValidatorType { get; }
