@@ -11,8 +11,8 @@ public class Person {
 ```
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
+public class PersonValidator : ValidatorBase<Person> {
+  protected override void Rules() {
     RuleForEach(x => x.AddressLines).NotNull();
   }
 }
