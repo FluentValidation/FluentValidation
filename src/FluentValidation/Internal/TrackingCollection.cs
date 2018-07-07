@@ -38,6 +38,8 @@ namespace FluentValidation.Internal {
 			ItemAdded?.Invoke(item);
 		}
 
+		public int Count => _innerCollection.Count;
+
 		public void Remove(T item) {
 			_innerCollection.Remove(item);
 		}

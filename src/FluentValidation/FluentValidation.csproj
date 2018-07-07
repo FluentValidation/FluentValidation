@@ -63,9 +63,6 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   <ItemGroup Condition="'$(TargetFramework)'!='netstandard1.1'">
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Attributes" />
-  </ItemGroup>
   <!--<ItemGroup>
       <Content Include="bin\$(Configuration)\$(TargetFramework)\**\FluentValidation.resources.dll">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
