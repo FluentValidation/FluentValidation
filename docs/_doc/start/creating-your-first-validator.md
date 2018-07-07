@@ -2,7 +2,7 @@
 title: Creating your first validator
 ---
 
-To define a set of validation rules for a particular object, you will need to create a class that inherits from `AbstractValidator<T>`, where `T` is the type of class that you wish to validate. 
+To define a set of validation rules for a particular object, you will need to create a class that inherits from `ValidatorBase<T>`, where `T` is the type of class that you wish to validate. 
 
 For example, imagine that you have a Customer class:
 
@@ -16,16 +16,16 @@ public class Customer {
 }
 ```
 
-You would define a set of validation rules for this class by inheriting from `AbstractValidator<Customer>`:
+You would define a set of validation rules for this class by inheriting from `ValidatorBase<Customer>`:
 
 ```csharp
 using FluentValidation; 
 
-public class CustomerValidator : AbstractValidator<Customer> {
+public class CustomerValidator : ValidatorBase<Customer> {
 }
 ```
 
-The validation rules themselves should be defined in the validator class's constructor.
+The validation rules themselves should be defined in the validator class's `Rules` method, which must be overridden.
 
 To specify a validation rule for a particular property, call the `RuleFor` method, passing a lambda expression 
 that indicates the property that you wish to validate. For example, to ensure that the `Surname` property is not null, 
@@ -34,8 +34,8 @@ the validator class would look like this:
 ```csharp
 using FluentValidation;
 
-public class CustomerValidator : AbstractValidator<Customer> {
-  public CustomerValidator() {
+public class CustomerValidator : ValidatorBase<Customer> {
+  protected override void Rules() {
     RuleFor(customer => customer.Surname).NotNull();
   }
 }

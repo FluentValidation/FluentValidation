@@ -7,8 +7,8 @@ RuleSets allow you to group validation rules together which can be executed toge
 For example, let’s imagine we have 3 properties on a Person object (Id, Surname and Forename) and have a validation rule for each. We could group the Surname and Forename rules together in a “Names” RuleSet:
 
 ```csharp
- public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
+ public class PersonValidator : ValidatorBase<Person> {
+  protected override void Rules() {
      RuleSet("Names", () => {
         RuleFor(x => x.Surname).NotNull();
         RuleFor(x => x.Forename).NotNull();

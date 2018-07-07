@@ -28,8 +28,8 @@ navigation:
 [GITHUB]: https://github.com/JeremySkinner/FluentValidation
 
 ```csharp
-public class CustomerValidator: AbstractValidator<Customer> {
-  public CustomerValidator() {
+public class CustomerValidator : ValidatorBase<Customer> {
+  protected override void Rules() {
     RuleFor(x => x.Surname).NotEmpty();
     RuleFor(x => x.Forename).NotEmpty().WithMessage("Please specify a first name");
     RuleFor(x => x.Discount).NotEqual(0).When(x => x.HasDiscount);
