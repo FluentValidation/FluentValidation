@@ -1,0 +1,1 @@
+Start-Process wsl -WorkingDirectory $pwd -ArgumentList "jekyll serve"

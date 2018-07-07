@@ -18,3 +18,11 @@ public class PersonValidator : AbstractValidator<Person> {
 }
 ```
 The above rule will run a NotNull check against each item in the `AddressLines` collection. 
+
+You can optionally include or exclude certain items in the collection from being validated by using the `Where` method. Note this must come directly after the call to `RuleForEach`:
+
+```csharp
+RuleForEach(x => x.Orders)
+  .Where(x => x.Cost != null)
+  .SetValidator(new OrderValidator());
+```
