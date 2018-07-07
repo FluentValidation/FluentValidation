@@ -4,8 +4,8 @@ title: Testing
 FluentValidation comes with two extension methods `ShouldHaveValidationErrorFor` and `ShouldNotHaveValidationErrorFor` that can make it easier to write unit tests for validators. For example, imagine the following validator is defined:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-   public PersonValidator() {
+public class PersonValidator : ValidatorBase<Person> {
+   protected override void Rules() {
       RuleFor(person => person.Name).NotNull();
    }
 }

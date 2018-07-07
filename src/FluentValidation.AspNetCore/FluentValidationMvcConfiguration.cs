@@ -58,21 +58,21 @@ namespace FluentValidation.AspNetCore {
 		internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
 
 		/// <summary>
-		/// Registers all validators derived from AbstractValidator within the assembly containing the specified type
+		/// Registers all validators derived from ValidatorBase within the assembly containing the specified type
 		/// </summary>
 		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>() {
 			return RegisterValidatorsFromAssemblyContaining(typeof(T));
 		}
 
 		/// <summary>
-		/// Registers all validators derived from AbstractValidator within the assembly containing the specified type
+		/// Registers all validators derived from ValidatorBase within the assembly containing the specified type
 		/// </summary>
 		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type) {
 			return RegisterValidatorsFromAssembly(type.GetTypeInfo().Assembly);
 		}
 
 		/// <summary>
-		/// Registers all validators derived from AbstractValidator within the specified assembly
+		/// Registers all validators derived from ValidatorBase within the specified assembly
 		/// </summary>
 		public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly) {
 			ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
