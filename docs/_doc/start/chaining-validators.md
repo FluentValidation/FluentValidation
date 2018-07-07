@@ -6,8 +6,8 @@ You can chain multiple validators together for the same property:
 ```csharp
 using FluentValidation;
 
-public class CustomerValidator : AbstractValidator<Customer> {
-  public CustomerValidator() {
+public class CustomerValidator : ValidatorBase<Customer> {
+  protected override void Rules() 
     RuleFor(customer => customer.Surname).NotNull().NotEqual("foo");
   }
 }

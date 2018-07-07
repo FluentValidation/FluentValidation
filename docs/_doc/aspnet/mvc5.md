@@ -33,8 +33,8 @@ public class Person {
 	public int Age { get; set; }
 }
  
-public class PersonValidator : AbstractValidator<Person> {
-	public PersonValidator() {
+public class PersonValidator : ValidatorBase<Person> {
+	protected override void Rules() {
 		RuleFor(x => x.Id).NotNull();
 		RuleFor(x => x.Name).Length(0, 10);
 		RuleFor(x => x.Email).EmailAddress();

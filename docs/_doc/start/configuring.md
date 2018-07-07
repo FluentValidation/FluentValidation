@@ -157,19 +157,18 @@ ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
 
 This can then be overridden by individual validator classes or by individual rules.
 
-To set the cascade mode for all rules inside a single validator class, set the `CascadeMode` property on `AbstractValidator`:
+To set the cascade mode for all rules inside a single validator class, set the `CascadeMode` property on `ValidatorBase`:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
+public class PersonValidator : ValidatorBase<Person> {
   public PersonValidator() {
-    
     // First set the cascade mode
     CascadeMode = CascadeMode.StopOnFirstFailure;
-    
-    // Rule definitions follow
+  }
+
+  protected override void Rules() {
     RuleFor(...) 
     RuleFor(...)
-
    }
 }
 ```
@@ -223,8 +222,8 @@ The method should return `true` if validation should continue, or `false` to imm
 Note that this method is called before FluentValidation performs its standard null-check against the model being validated, so you can use this to generate an error if the whole model is null, rather than relying on FluentValidation's standard behaviour in this case (which is to throw an exception):
 
 ```csharp
-public class MyValidator : AbstractValidator<Person> {
-  public MyValidator() {
+public class MyValidator : ValidatorBase<Person> {
+  protected override void Rules() {
     RuleFor(x => x.Name).NotNull();
   }
 

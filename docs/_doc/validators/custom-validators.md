@@ -24,9 +24,10 @@ public class Person {
 To ensure our list property contains fewer than 10 items, we could do this:
 
 ```csharp
-public class PersonValidator:AbstractValidator<Person> {
-  public PersonValidator() {
-   RuleFor(x => x.Pets).Must(list => list.Count <= 10).WithMessage("The list must contain fewer than 10 items");
+public class PersonValidator : ValidatorBase<Person> {
+  protected override void Rules() {
+    RuleFor(x => x.Pets).Must(list => list.Count <= 10)
+      .WithMessage("The list must contain fewer than 10 items");
   }
 }
 ```
@@ -88,8 +89,8 @@ If you need more control of the validation process than is available with `Must`
 
 
 ```csharp
-public class PersonValidator:AbstractValidator<Person> {
-  public PersonValidator() {
+public class PersonValidator : ValidatorBase<Person> {
+  protected override void Rules() {
    RuleFor(x => x.Pets).Custom((list, context) => {
      if(list.Count > 10) {
        context.AddFailure("The list must contain 10 items or fewer");
@@ -109,14 +110,31 @@ context.AddFailure(new ValidationFailure("SomeOtherProperty", "The list must con
 
 As before, this could be wrapped in an extension method to simplify the consuming code.
 
+```csharp
+public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T, TElement>(this IRuleBuilder<T, IList<TElement>> ruleBuilder, int num) {
+
+  return ruleBuilder.Custom((list, context) => {
+     if(list.Count > 10) {
+       context.AddFailure("The list must contain 10 items or fewer");
+     }
+   });
+}
+```
+
 ### Reusable Property Validators
 
 In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator` (this is how all of FluentValidation's built-in rules are defined).
 
+<div class="callout-block callout-info"><div class="icon-holder">*&nbsp;*{: .fa .fa-bug}
+</div><div class="content">
+{: .callout-title}
+#### Note
+
 This is an advanced technique that is usually unnecessary - the `Must` and `Custom` methods explained above are usually more appropriate.
+		
+</div></div>
 
 We can recreate the above example using a custom PropertyValidator implementation like this:
-
 
 ```csharp
 using System.Collections.Generic;
@@ -155,8 +173,8 @@ Note that the error message to use is specified in the constructor. The simplest
 To use the new custom validator you can call `SetValidator` when defining a validation rule.
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-    public PersonValidator() {
+public class PersonValidator : ValidatorBase<Person> {
+    protected override void Rules() {
        RuleFor(person => person.Pets).SetValidator(new ListCountValidator<Pet>(10));
     }
 }
@@ -174,8 +192,8 @@ public static class MyValidatorExtensions {
 ...which can then be chained like any other validator:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-    public PersonValidator() {
+public class PersonValidator : ValidatorBase<Person> {
+    protected override void Rules() {
        RuleFor(person => person.Pets).ListMustContainFewerThan(10);
     }
 }
