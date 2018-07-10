@@ -3,7 +3,7 @@ remote_theme: LeakyAbstractions/pretty-docs
 url: https://leakyabstractions.github.io
 title: &site_title FluentValidation
 branding:
-  highlight: Fluent 
+  highlight: Fluent
   bold: Validation
 markdown: kramdown
 kramdown:
@@ -30,7 +30,7 @@ google_analytics: UA-884625-14
 collections:
   doc:
     output: true
-    permalink: /:path.html
+    permalink: /:path
 
 # Default values
 defaults:
