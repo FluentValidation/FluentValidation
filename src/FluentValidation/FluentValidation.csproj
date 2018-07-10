@@ -8,34 +8,18 @@
     <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
     <PackageReleaseNotes>
-Changes in 7.6.104:
-* Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
-
-Changes in 7.6.103:
-* Using [BindProperty] in AspNetCore now works when implicit child validation is disabled.
-* ShouldHaveChildValidator now works when the child validator is inside a DependentRules block.
-* Test helpers are now compatible with custom property name resolvers set using ValidatorOptions.PropertyNameResolver.
-* Switched to embedded debug symbols.
-
-Changes in 7.6.102:
-* Fixed a regression where calling ValidateAsync with RuleForEach would no longer execute tasks sequentially (#799).
-
-Changes in 7.6.101:
-* Added support for RuleForEach to the testing extensions (#238).
-* Fixed a regression where calling ValidateAsync with RuleForEach could cause a deadlock (#799). 
-* Added ToString overrides on ValidationResult to generate a string representation of all errors (#778).
-* Updated logos thanks to Dylan Beattie (#780).
+FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
         
-Changes in 7.6.100:
-* Resolved an issue where ValidateAsync was called on child validators when the root validator was invoked synchronously.
-
-Changes in 7.6:
-* WhenAsync now works correctly when calling the non-async Validate method.
-* ASP.NET Core integration has been updated to ASP.NET Core 2.1. 
-* Include statement now works when explicitly selecting properties to validate.
-* Added Ukranian language support.
-* Added Arabic language support.
-* Added caching when instantiating validators to obtain clientside metadata.
+Changes in 8.0:
+* Deprecated AbstractValidator in favour of ValidatorBase
+* Introduced rule caching
+* Added OnFailure method
+* Removed RuleFor(..).SetCollectionValidator in favour of RuleForEach(...).SetValidator
+* IStringSource.GetString now takes a validation context instead of a model instance.
+* Remove the pre-7.0 localization mechanism 
+* Remove the pre-7.0 methods for custom validation
+* Removed many other deprecated methods
+* Remove many deprecated methods
 
 Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>

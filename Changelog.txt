@@ -1,3 +1,15 @@
+8.0.0 - 
+Deprecate AbstractValidator in favour of the new ValidatorBase.
+Introduce rule caching.
+Introduce ValidatorMetadata in order to clean up the IPropretyValidator interface. 
+Moved the AttributedValidatorFactory into a separate package.
+IStringSource.GetString now takes a context.
+Major cleanup of asynchronous validation workflow.
+Deprecate SetCollectionValidator in favour of RuleForEach().SetValidator
+Remove the pre-7 version of Custom/CustomAsync.
+Removed deprecated localization system.
+Remove deprecated RemoveRule/ReplaceRule/ClearRules methods.
+
 7.6.104 - 6 July 2018 
 Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
 
