@@ -57,11 +57,20 @@ target deploy {
 }
 
 target verify-package {
+  $sn = "${env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.2 Tools\sn.exe"
+
+  if (! (Test-Path $sn)) {
+    throw "Could not find sn.exe to verify the dlls"
+  }
+
   if (-not (test-path "$nuget_key")) {
     throw "Could not find the NuGet access key."
   }
-  elseif (!$public_sign) {
+  elseif ($public_sign) {
     throw "Cannot publish packages that have been public-signed. Must perform full signing."
+  }
+  elseif((& $sn -q -v "$output_dir\FluentValidation\net45\FluentValidation.dll") -ne $null) {
+    throw "The assemblies have not been signed with a private key."
   }
   else {
     write-host Package verified
