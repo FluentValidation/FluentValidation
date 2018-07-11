@@ -1,0 +1,17 @@
+version: '{build}'
+branches:
+  only:
+  - master
+image: Ubuntu
+build_script:
+- sh: pwsh -NoProfile -ExecutionPolicy Unrestricted -File build.ps1
+notifications:
+- provider: Email
+  to:
+  - jeremy@jeremyskinner.co.uk
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: false
+skip_commits:
+  files:
+    - docs/

@@ -1,0 +1,19 @@
+version: '{build}'
+branches:
+  only:
+  - master
+image: Visual Studio 2017
+configuration: Release
+build_script:
+- cmd: build.cmd
+test: off
+notifications:
+- provider: Email
+  to:
+  - jeremy@jeremyskinner.co.uk
+  on_build_success: false
+  on_build_failure: true
+  on_build_status_changed: false
+skip_commits:
+  files:
+    - docs/
