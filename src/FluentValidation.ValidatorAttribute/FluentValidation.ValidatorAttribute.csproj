@@ -5,8 +5,8 @@
     <Company />
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
     <Copyright>Copyright (c) Jeremy Skinner 2008-2018</Copyright>
-    <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
+    <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
+    <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>

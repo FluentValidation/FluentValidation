@@ -7,8 +7,8 @@
     <Description>ASP.NET WebApi integration for FluentValidation</Description>
     <Copyright>Copyright (c) Jeremy Skinner 2008-2018</Copyright>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
-    <PackageProjectUrl>http://github.com/JeremySkinner/fluentvalidation</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/fv-small.png</PackageIconUrl>
+    <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
+    <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageReleaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <RepositoryUrl>http://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
