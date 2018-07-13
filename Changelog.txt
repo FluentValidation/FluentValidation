@@ -1,5 +1,5 @@
 8.0.0 - 
-Introduce ValidatorMetadata in order to clean up the IPropretyValidator interface. 
+Introduce PropertyValidatorOptions in order to clean up the IPropretyValidator interface. 
 Moved the AttributedValidatorFactory into a separate package.
 IStringSource.GetString now takes a context.
 Major cleanup of asynchronous validation workflow.

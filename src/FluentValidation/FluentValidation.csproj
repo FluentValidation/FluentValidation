@@ -14,6 +14,7 @@ Changes in 8.0:
 * Added OnFailure method
 * Removed RuleFor(..).SetCollectionValidator in favour of RuleForEach(...).SetValidator
 * IStringSource.GetString now takes a validation context instead of a model instance.
+* Introduce PropertyValidatorOptions in order to clean up the IPropretyValidator interface.
 * Remove the pre-7.0 localization mechanism 
 * Remove the pre-7.0 methods for custom validation
 * Removed many other deprecated methods
