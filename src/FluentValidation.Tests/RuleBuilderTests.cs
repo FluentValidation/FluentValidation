@@ -71,7 +71,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-			builder.Rule.CurrentValidator.GetMetadata().ErrorMessageSource.GetString(null).ShouldEqual("Bar");
+			builder.Rule.CurrentValidator.Options.ErrorMessageSource.GetString(null).ShouldEqual("Bar");
 		}
 
 		[Fact]

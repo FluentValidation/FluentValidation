@@ -70,13 +70,5 @@ namespace FluentValidation.Tests {
 		public static bool IsValid(this IEnumerable<ValidationFailure> errors) {
 			return errors.Count() == 0;
 		}
-
-		internal static ValidatorMetadata GetMetadata(this IPropertyValidator validator) {
-			if (validator is IHasMetadata m) {
-				return m.Metadata;
-			}
-
-			throw new InvalidOperationException("This validator does not support metadata");
-		}
 	}
 }

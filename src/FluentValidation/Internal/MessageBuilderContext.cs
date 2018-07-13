@@ -2,7 +2,7 @@
 	using Resources;
 	using Validators;
 
-	public class MessageBuilderContext {
+	public class MessageBuilderContext : IValidationContext {
 		private PropertyValidatorContext _innerContext;
 
 		public MessageBuilderContext(PropertyValidatorContext innerContext, IStringSource errorSource, IPropertyValidator propertyValidator) {
@@ -27,7 +27,10 @@
 
 		public MessageFormatter MessageFormatter => _innerContext.MessageFormatter;
 
+		public object InstanceToValidate => _innerContext.Instance;
 		public object PropertyValue => _innerContext.PropertyValue;
+		
+		IValidationContext IValidationContext.ParentContext => ParentContext;
 
 		public string GetDefaultMessage() {
 			return MessageFormatter.BuildMessage(ErrorSource.GetString(_innerContext));

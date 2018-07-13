@@ -321,7 +321,7 @@ namespace FluentValidation.Tests.Mvc5 {
 			}
 
 			public IEnumerable<ModelClientValidationRule> GetClientValidationRules(ModelMetadata metadata, ControllerContext context) {
-				yield return new ModelClientValidationRule { ErrorMessage = this.ErrorMessageSource.GetString(null) };
+				yield return new ModelClientValidationRule { ErrorMessage = this.Options.ErrorMessageSource.GetString(null) };
 			}
 		}
 	}

@@ -51,7 +51,7 @@ namespace FluentValidation.AspNetCore {
 
 				string messageTemplate;
 				try {
-					messageTemplate = EqualValidator.ErrorMessageSource.GetString(null);
+					messageTemplate = EqualValidator.Options.ErrorMessageSource.GetString(null);
 				}
 				catch (FluentValidationMessageFormatException) {
 					messageTemplate = ValidatorOptions.LanguageManager.GetStringForValidator<EqualValidator>();

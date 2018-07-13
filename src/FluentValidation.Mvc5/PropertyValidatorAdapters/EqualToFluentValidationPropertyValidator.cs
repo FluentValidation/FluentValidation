@@ -35,7 +35,7 @@
 
 				string message;
 				try {
-					message = EqualValidator.ErrorMessageSource.GetString(null);
+					message = EqualValidator.Options.ErrorMessageSource.GetString(null);
 					
 				}
 				catch (FluentValidationMessageFormatException) {

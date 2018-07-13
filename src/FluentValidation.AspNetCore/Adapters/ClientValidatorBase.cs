@@ -26,12 +26,10 @@ namespace FluentValidation.AspNetCore {
 	public abstract class ClientValidatorBase : IClientModelValidator {
 		public IPropertyValidator Validator { get; }
 		public PropertyRule Rule { get; }
-		public ValidatorMetadata Metadata { get; }
 
 		public ClientValidatorBase(PropertyRule rule, IPropertyValidator validator) {
 			Validator = validator;
 			Rule = rule;
-			Metadata = (validator is IHasMetadata m) ? m.Metadata : ValidatorMetadata.Empty;
 		}
 
 		public abstract void AddValidation(ClientModelValidationContext context);

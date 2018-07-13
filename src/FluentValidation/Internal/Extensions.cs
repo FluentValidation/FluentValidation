@@ -201,14 +201,5 @@ namespace FluentValidation.Internal {
 
 			return false;
 		}
-
-		//todo: temporary workaround
-		internal static ValidatorMetadata GetMetadata(this IPropertyValidator validator) {
-			if (validator is IHasMetadata m) {
-				return m.Metadata;
-			}
-
-			throw new InvalidOperationException("This validator does not support metadata");
-		}
 	}
 }

@@ -60,6 +60,5 @@ namespace FluentValidation.Validators {
 			PropertyName = propertyName;
 			_propertyValueContainer = new Lazy<object>(() => propertyValue);
 		}
-
 	}
 }

@@ -22,19 +22,9 @@ namespace FluentValidation {
 	using Validators;
 
 	/// <summary>
-	/// Indicates that a type exposes validator metadata.
-	/// </summary>
-	public interface IHasMetadata {
-		/// <summary>
-		/// Validator metadata.
-		/// </summary>
-		ValidatorMetadata Metadata { get; }
-	}
-
-	/// <summary>
 	/// Validator metadata.
 	/// </summary>
-	public class ValidatorMetadata {
+	public class PropertyValidatorOptions {
 		private IStringSource _errorSource;
 		private IStringSource _errorCodeSource;
 		
@@ -67,7 +57,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Empty metadata.
 		/// </summary>
-		public static ValidatorMetadata Empty { get; } = new ValidatorMetadata {
+		public static PropertyValidatorOptions Empty { get; } = new PropertyValidatorOptions {
 			_errorSource = new StaticStringSource(string.Empty),
 		};
 	}

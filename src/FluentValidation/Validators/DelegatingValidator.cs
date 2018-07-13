@@ -28,7 +28,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator, IHasMetadata {
+	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
 		private readonly Func<ValidationContext, bool> _condition;
 		private readonly Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 		public IPropertyValidator InnerValidator { get; private set; }
@@ -81,15 +81,7 @@ namespace FluentValidation.Validators {
 			return _condition(context);
 		}
 
-		public ValidatorMetadata Metadata {
-			get {
-				if (InnerValidator is IHasMetadata m) {
-					return m.Metadata;
-				}
-
-				return null; //todo: is this a good idea?
-			}
-		}
+		public PropertyValidatorOptions Options => InnerValidator.Options;
 	}
 
 	public interface IDelegatingValidator : IPropertyValidator {

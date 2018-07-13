@@ -28,23 +28,23 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public abstract class PropertyValidator : IPropertyValidator, IHasMetadata {
-		public ValidatorMetadata Metadata { get; } = new ValidatorMetadata();
+	public abstract class PropertyValidator : IPropertyValidator {
+		public PropertyValidatorOptions Options { get; } = new PropertyValidatorOptions();
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
 			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
-			Metadata.ErrorMessageSource = errorMessageSource;
+			Options.ErrorMessageSource = errorMessageSource;
 		}
 
 		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
 			errorMessageResourceName.Guard("errorMessageResourceName must be specified.", nameof(errorMessageResourceName));
 			errorMessageResourceType.Guard("errorMessageResourceType must be specified.", nameof(errorMessageResourceType));
 
-			Metadata.ErrorMessageSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
+			Options.ErrorMessageSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			Metadata.ErrorMessageSource = new StaticStringSource(errorMessage);
+			Options.ErrorMessageSource = new StaticStringSource(errorMessage);
 		}
 
 		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
@@ -89,7 +89,7 @@ namespace FluentValidation.Validators {
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
 		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
-			var messageBuilderContext = new MessageBuilderContext(context, Metadata.ErrorMessageSource, this);
+			var messageBuilderContext = new MessageBuilderContext(context, Options.ErrorMessageSource, this);
 
 			var error = context.Rule.MessageBuilder != null 
 				? context.Rule.MessageBuilder(messageBuilderContext) 
@@ -98,41 +98,17 @@ namespace FluentValidation.Validators {
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-			failure.ResourceName = Metadata.ErrorMessageSource.ResourceName;
-			failure.ErrorCode = (Metadata.ErrorCodeSource != null)
-				? Metadata.ErrorCodeSource.GetString(context)
+			failure.ResourceName = Options.ErrorMessageSource.ResourceName;
+			failure.ErrorCode = (Options.ErrorCodeSource != null)
+				? Options.ErrorCodeSource.GetString(context)
 				: ValidatorOptions.ErrorCodeResolver(this);
 
-			if (Metadata.CustomStateProvider != null) {
-				failure.CustomState = Metadata.CustomStateProvider(context);
+			if (Options.CustomStateProvider != null) {
+				failure.CustomState = Options.CustomStateProvider(context);
 			}
 
-			failure.Severity = Metadata.Severity;
+			failure.Severity = Options.Severity;
 			return failure;
-		}
-
-		[Obsolete("Use Metadata.CustomStateProvider")]
-		public Func<PropertyValidatorContext, object> CustomStateProvider {
-			get => Metadata.CustomStateProvider;
-			set => Metadata.CustomStateProvider = value;
-		}
-
-		[Obsolete("Use Metadata.Severity")]
-		public Severity Severity {
-			get => Metadata.Severity;
-			set => Metadata.Severity = value;
-		}
-
-		[Obsolete("Use Metadata.ErrorCodeSource")]
-		public IStringSource ErrorCodeSource {
-			get => Metadata.ErrorCodeSource;
-			set => Metadata.ErrorCodeSource = value;
-		}
-
-		[Obsolete("Use Metadata.ErrorMessageSource")]
-		public IStringSource ErrorMessageSource {
-			get => Metadata.ErrorMessageSource;
-			set => Metadata.ErrorMessageSource = value;
 		}
 	}
 }

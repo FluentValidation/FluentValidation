@@ -29,7 +29,7 @@
                 .AppendArgument("ComparisonValue", AbstractComparisonValidator.ValueToCompare);
             string message;
 	        try {
-		        message = AbstractComparisonValidator.ErrorMessageSource.GetString(null);
+		        message = AbstractComparisonValidator.Options.ErrorMessageSource.GetString(null);
 	        }
 	        catch (FluentValidationMessageFormatException) {
 		        message = GetDefaultMessage();

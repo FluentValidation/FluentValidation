@@ -25,16 +25,6 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public abstract class NoopPropertyValidator : IPropertyValidator {
-		public IStringSource ErrorMessageSource {
-			get { return null; }
-			set { }
-		}
-
-		public IStringSource ErrorCodeSource {
-			get { return null; }
-			set { }
-		}
-
 		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
 
 #pragma warning disable 1998
@@ -46,16 +36,7 @@ namespace FluentValidation.Validators {
 		public virtual bool ShouldValidateAsync(ValidationContext context) {
 			return false;
 		}
-
-		public virtual ICollection<Func<object, object, object>> CustomMessageFormatArguments {
-			get { return new List<Func<object, object, object>>(); }
-		}
-
-		public Func<PropertyValidatorContext, object> CustomStateProvider {
-			get { return null; }
-			set { }
-		}
-
-		public Severity Severity { get; set; }
+		
+		public PropertyValidatorOptions Options { get; } = PropertyValidatorOptions.Empty;
 	}
 }
