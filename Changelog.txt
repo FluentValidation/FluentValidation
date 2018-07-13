@@ -1,3 +1,6 @@
+7.6.105 - 
+Added Albanian language translations 
+
 7.6.104 - 6 July 2018 
 Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
 
