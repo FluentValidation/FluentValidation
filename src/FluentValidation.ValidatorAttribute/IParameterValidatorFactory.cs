@@ -1,12 +1,9 @@
-﻿namespace FluentValidation
-{
-	using System;
+﻿namespace FluentValidation {
 	using System.Reflection;
 
 	/// <summary>
 	/// Gets validators for method parameters.
 	/// </summary>
-	[Obsolete]
 	public interface IParameterValidatorFactory {
 		/// <summary>
 		/// Gets a validator for <paramref name="parameterInfo"/>.
