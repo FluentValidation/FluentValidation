@@ -30,9 +30,25 @@ FluentValidation 8:
 RuleForEach(x => x.AddressLines).SetValidator(new AddressLineValidator());
 ```
 
-### Why was this done?
+#### Why was this done?
 
 `SetCollectionValidator` was added to FluentValidation in its initial versions to provide a way to use a child validator against each element in a collection. `RuleForEach` was added later and provides a more comprehensive way of validating collections (as you can define in-line rules with RuleForEach too). It doesn't make sense to provide 2 ways to do the same thing.
+
+### Several properties have been removed from PropertyValidator
+
+`CustomStateProvider`, `Severity`, `ErrorMessageSource` and `ErrorCodeSource` are no longer directly exposed on `PropertyValidator`, you should now access them via the `Options` property on `PropertyValidator` instead.
+
+#### Why was this done?
+
+It allows extra options/configuration to be added to property validators without introducing breaking changes to the interface going forward.
+
+### ValidatorAttribute and AttributedValidatorFactory have been moved to a separate package
+
+Use of the `ValidatorAttribute` to wire up validators is no longer recommended and have been moved to a separate `FluentValidation.Attributes` package.
+
+- In ASP.NET Core projects, you should use dependency injection the service provider instead (this has been the default behaviour)
+- For desktop or mobile applications, we recommend using an IoC container to wire up validators, although you can still use the attribute approach by explicitly installing the `FluentValidation.Attributes` package.
+- In legacy ASP.NET projects (MVC 5 and WebApi 2), the ValidatorAttribute is still the default approach, and the `FluentValidation.Attributes` package will be automatically installed. However, we recommend using an IoC container instead if you can.
 
 ### Many old and deprecated methods have been removed
 
