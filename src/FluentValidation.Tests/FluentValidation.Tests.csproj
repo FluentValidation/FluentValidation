@@ -23,7 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
-    <ProjectReference Include="..\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj"/>
+    <ProjectReference Include="..\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="TestMessages.Designer.cs">

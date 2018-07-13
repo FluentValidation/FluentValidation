@@ -36,17 +36,12 @@ namespace FluentValidation {
 	/// </code>
 	/// </example>
 	/// <typeparam name="T"></typeparam>
-	public class InlineValidator<T> : ValidatorBase<T> {
-		public InlineValidator() : base(cacheEnabled: false) {
-		}
-
+	public class InlineValidator<T> : AbstractValidator<T> {
 		/// <summary>
 		/// Allows configuration of the validator.
 		/// </summary>
 		public void Add<TProperty>(Func<InlineValidator<T>, IRuleBuilderOptions<T, TProperty>> ruleCreator) {
 			ruleCreator(this);
 		}
-
-		protected override void Rules() { }
 	}
 }

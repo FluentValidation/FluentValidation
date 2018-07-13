@@ -11,8 +11,6 @@
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
         
 Changes in 8.0:
-* Deprecated AbstractValidator in favour of ValidatorBase
-* Introduced rule caching
 * Added OnFailure method
 * Removed RuleFor(..).SetCollectionValidator in favour of RuleForEach(...).SetValidator
 * IStringSource.GetString now takes a validation context instead of a model instance.

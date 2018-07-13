@@ -225,9 +225,9 @@ namespace FluentValidation {
 			var dependencyContainer = new List<IValidationRule>();
 
 			if (rule is IExposesParentValidator<T> exposesParentValidator) {
-				if (exposesParentValidator.ParentValidator is ValidatorBase<T> parent) {
+				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
 					// Capture any rules added to the parent validator inside this delegate. 
-					using (parent.NestedValidators.Capture(dependencyContainer.Add)) {
+					using (parent.Rules.Capture(dependencyContainer.Add)) {
 						action();
 					}
 				}

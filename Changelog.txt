@@ -1,6 +1,4 @@
 8.0.0 - 
-Deprecate AbstractValidator in favour of the new ValidatorBase.
-Introduce rule caching.
 Introduce ValidatorMetadata in order to clean up the IPropretyValidator interface. 
 Moved the AttributedValidatorFactory into a separate package.
 IStringSource.GetString now takes a context.

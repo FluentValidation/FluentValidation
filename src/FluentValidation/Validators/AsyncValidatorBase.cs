@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -18,36 +18,36 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Linq.Expressions;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using FluentValidation.Internal;
-	using FluentValidation.Resources;
+	using Internal;
+	using Resources;
 
 	/// <summary>
-	/// Asynchronous custom validator
+	/// Defines a property validator that can be run asynchronously.
 	/// </summary>
-	public class AsyncPredicateValidator : PropertyValidator {
-		private readonly Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> _predicate;
-
-		/// <summary>
-		/// Creates a new AsyncPredicateValidator
-		/// </summary>
-		/// <param name="predicate"></param>
-		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) : base(new LanguageStringSource(nameof(AsyncPredicateValidator))) {
-			predicate.Guard("A predicate must be specified.", nameof(predicate));
-			this._predicate = predicate;
+	public abstract class AsyncValidatorBase : PropertyValidator {
+		public override bool ShouldValidateAsync(ValidationContext context) {
+			return context.IsAsync();
 		}
 
-		protected override Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			return _predicate(context.Instance, context.PropertyValue, context, cancellation);
+		protected AsyncValidatorBase(IStringSource errorSource) : base(errorSource) {
+			
+		}
+
+		protected AsyncValidatorBase(string errorMessageResourceName, Type errorMessageResourceType)
+			: base(errorMessageResourceName, errorMessageResourceType) {
+		}
+
+		protected AsyncValidatorBase(string errorMessage)
+			: base(errorMessage) {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
 			return Task.Run(() => IsValidAsync(context, new CancellationToken())).GetAwaiter().GetResult();
 		}
 
-		public override bool ShouldValidateAsync(ValidationContext context) {
-			return context.IsAsync();
-		}
+		protected abstract override Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation);
 	}
 }
