@@ -69,3 +69,12 @@ if(! results.IsValid) {
   }
 }
 ```
+
+You can also call `ToString` on the `ValidationResult` to combine all error messages into a single string. By default, the messages will be separated with new lines, but if you want to customize this behaviour you can pass a different separator character to `ToString`.
+
+```csharp
+ValidationResult results = validator.Validate(customer);
+string allMessages = results.ToString("~");     // In this case, each message will be separated with a `~` 
+```
+
+*Note* : if there are no validation errors, `ToString()` will return an empty string.
