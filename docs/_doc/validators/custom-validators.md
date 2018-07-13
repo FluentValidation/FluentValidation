@@ -24,8 +24,8 @@ public class Person {
 To ensure our list property contains fewer than 10 items, we could do this:
 
 ```csharp
-public class PersonValidator : ValidatorBase<Person> {
-  protected override void Rules() {
+public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator() {
     RuleFor(x => x.Pets).Must(list => list.Count <= 10)
       .WithMessage("The list must contain fewer than 10 items");
   }
@@ -89,8 +89,8 @@ If you need more control of the validation process than is available with `Must`
 
 
 ```csharp
-public class PersonValidator : ValidatorBase<Person> {
-  protected override void Rules() {
+public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator() {
    RuleFor(x => x.Pets).Custom((list, context) => {
      if(list.Count > 10) {
        context.AddFailure("The list must contain 10 items or fewer");
@@ -173,8 +173,8 @@ Note that the error message to use is specified in the constructor. The simplest
 To use the new custom validator you can call `SetValidator` when defining a validation rule.
 
 ```csharp
-public class PersonValidator : ValidatorBase<Person> {
-    protected override void Rules() {
+public class PersonValidator : AbstractValidator<Person> {
+    public PersonValidator() {
        RuleFor(person => person.Pets).SetValidator(new ListCountValidator<Pet>(10));
     }
 }
@@ -192,8 +192,8 @@ public static class MyValidatorExtensions {
 ...which can then be chained like any other validator:
 
 ```csharp
-public class PersonValidator : ValidatorBase<Person> {
-    protected override void Rules() {
+public class PersonValidator : AbstractValidator<Person> {
+    public PersonValidator() {
        RuleFor(person => person.Pets).ListMustContainFewerThan(10);
     }
 }

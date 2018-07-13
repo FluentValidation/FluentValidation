@@ -22,8 +22,8 @@ public class Address {
 ... and you define an AddressValidator:
 
 ```csharp
-public class AddressValidator : ValidatorBase<Address> {
-  protected override void Rules() {
+public class AddressValidator : AbstractValidator<Address> {
+  public AddressValidator() {
     RuleFor(address => address.Postcode).NotNull();
     //etc
   }
@@ -33,8 +33,8 @@ public class AddressValidator : ValidatorBase<Address> {
 ... you can then re-use the AddressValidator in the CustomerValidator definition:
 
 ```csharp
-public class CustomerValidator : ValidatorBase<Customer> {
-  protected override void Rules() {
+public class CustomerValidator : AbstractValidator<Customer> {
+  public CustomerValidator() {
     RuleFor(customer => customer.Name).NotNull();
     RuleFor(customer => customer.Address).SetValidator(new AddressValidator());
   }
