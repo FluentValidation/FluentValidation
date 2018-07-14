@@ -60,17 +60,17 @@ namespace FluentValidation.Internal {
 
 
 		public override IEnumerable<ValidationFailure> Validate(ValidationContext context) {
-			context.RootContextData["_FV_DisableSelectorCascadeForChildRules"] = true;
+			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
 			var result = base.Validate(context).ToList();
-			context.RootContextData.Remove("_FV_DisableSelectorCascadeForChildRules");
+			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
 			return result;
 		}
 
 		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
-			context.RootContextData["_FV_DisableSelectorCascadeForChildRules"] = true;
+			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
 			var result = await base.ValidateAsync(context, cancellation);
 			result = result.ToList();
-			context.RootContextData.Remove("_FV_DisableSelectorCascadeForChildRules");
+			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
 			return result;
 		}
 	}

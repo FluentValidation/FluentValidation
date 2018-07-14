@@ -26,6 +26,7 @@ namespace FluentValidation.Internal {
 	/// Selects validators that are associated with a particular property.
 	/// </summary>
 	public class MemberNameValidatorSelector : IValidatorSelector {
+		internal const string DisableCascadeKey = "_FV_DisableSelectorCascadeForChildRules";
 		readonly IEnumerable<string> _memberNames;
 
 		/// <summary>
@@ -52,7 +53,7 @@ namespace FluentValidation.Internal {
  			// If we're running in a child context then this means that the child validator has already been selected
 			// Because of this, we assume that the rule should continue (ie if the parent rule is valid, all children are valid)
 			bool isChildContext = context.IsChildContext;
-			bool cascadeEnabled = !context.RootContextData.ContainsKey("_FV_DisableSelectorCascadeForChildRules");
+			bool cascadeEnabled = !context.RootContextData.ContainsKey(DisableCascadeKey);
 			
 			return (isChildContext && cascadeEnabled && !_memberNames.Any(x => x.Contains("."))) 
 			       || rule is IncludeRule 
