@@ -22,4 +22,5 @@
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
   </ItemGroup>
+  <Import Project="../netfx.props"/>
 </Project>
