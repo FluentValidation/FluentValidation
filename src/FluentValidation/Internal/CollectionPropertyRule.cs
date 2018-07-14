@@ -78,7 +78,7 @@ namespace FluentValidation.Internal {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			var delegatingValidator = validator as IDelegatingValidator;
 
-			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.ParentContext)) {
+			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext)) {
 				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
 				if (collectionPropertyValue != null) {
@@ -139,7 +139,7 @@ namespace FluentValidation.Internal {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			var results = new List<ValidationFailure>();
 			var delegatingValidator = validator as IDelegatingValidator;
-			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext.ParentContext)) {
+			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext)) {
 				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
 				int count = 0;

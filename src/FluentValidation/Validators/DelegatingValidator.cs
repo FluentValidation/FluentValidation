@@ -29,28 +29,28 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
-		private readonly Func<ValidationContext, bool> _condition;
-		private readonly Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition;
+		private readonly Func<PropertyValidatorContext, bool> _condition;
+		private readonly Func<PropertyValidatorContext, CancellationToken, Task<bool>> _asyncCondition;
 		public IPropertyValidator InnerValidator { get; private set; }
 
 		public bool ShouldValidateAsync(ValidationContext context) {
 			return InnerValidator.ShouldValidateAsync(context) || _asyncCondition != null;
 		}
 
-		public DelegatingValidator(Func<ValidationContext, bool> condition, IPropertyValidator innerValidator) {
+		public DelegatingValidator(Func<PropertyValidatorContext, bool> condition, IPropertyValidator innerValidator) {
 			_condition = condition;
 			_asyncCondition = null;
 			InnerValidator = innerValidator;
 		}
 
-		public DelegatingValidator(Func<ValidationContext, CancellationToken, Task<bool>> asyncCondition, IPropertyValidator innerValidator) {
+		public DelegatingValidator(Func<PropertyValidatorContext, CancellationToken, Task<bool>> asyncCondition, IPropertyValidator innerValidator) {
 			_condition = _ => true;
 			_asyncCondition = asyncCondition;
 			InnerValidator = innerValidator;
 		}
 		
 		public IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			if (_condition(context.ParentContext)) {
+			if (_condition(context)) {
 				return InnerValidator.Validate(context);
 			}
 
@@ -58,13 +58,13 @@ namespace FluentValidation.Validators {
 		}
 
 		public async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			if (!_condition(context.ParentContext))
+			if (!_condition(context))
 				return Enumerable.Empty<ValidationFailure>();
 
 			if (_asyncCondition == null)
 				return await InnerValidator.ValidateAsync(context, cancellation);
 
-			bool shouldValidate = await _asyncCondition(context.ParentContext, cancellation);
+			bool shouldValidate = await _asyncCondition(context, cancellation);
 
 			if (shouldValidate) {
 				return await InnerValidator.ValidateAsync(context, cancellation);
@@ -77,7 +77,7 @@ namespace FluentValidation.Validators {
 
 		IPropertyValidator IDelegatingValidator.InnerValidator => InnerValidator;
 
-		public bool CheckCondition(ValidationContext context) {
+		public bool CheckCondition(PropertyValidatorContext context) {
 			return _condition(context);
 		}
 
@@ -86,6 +86,6 @@ namespace FluentValidation.Validators {
 
 	public interface IDelegatingValidator : IPropertyValidator {
 		IPropertyValidator InnerValidator { get; }
-		bool CheckCondition(ValidationContext context);
+		bool CheckCondition(PropertyValidatorContext context);
 	}
 }

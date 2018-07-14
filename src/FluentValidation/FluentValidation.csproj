@@ -12,13 +12,13 @@ FluentValidation 8 is a major release. Please read the upgrade notes at https://
         
 Changes in 8.0:
 * Added OnFailure method
-* Removed RuleFor(..).SetCollectionValidator in favour of RuleForEach(...).SetValidator
+* Deprecated RuleFor(..).SetCollectionValidator in favour of RuleForEach(...).SetValidator
 * IStringSource.GetString now takes a validation context instead of a model instance.
 * Introduce PropertyValidatorOptions in order to clean up the IPropretyValidator interface.
+* Moved the legacy ValidatorAttribute and AttributedValidatorFactory into a separate FluentValidation.Attributes package.
 * Remove the pre-7.0 localization mechanism 
 * Remove the pre-7.0 methods for custom validation
 * Removed many other deprecated methods
-* Remove many deprecated methods
 
 Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>
