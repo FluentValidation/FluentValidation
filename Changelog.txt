@@ -1,4 +1,5 @@
 8.0.0 - 
+Support validating only specific properties by path.
 Introduce PropertyValidatorOptions in order to clean up the IPropretyValidator interface. 
 Moved the AttributedValidatorFactory into a separate package.
 IStringSource.GetString now takes a context.

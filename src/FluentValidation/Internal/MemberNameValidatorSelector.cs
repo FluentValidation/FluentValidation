@@ -53,7 +53,10 @@ namespace FluentValidation.Internal {
 			// Because of this, we assume that the rule should continue (ie if the parent rule is valid, all children are valid)
 			bool isChildContext = context.IsChildContext;
 			bool cascadeEnabled = !context.RootContextData.ContainsKey("_FV_DisableSelectorCascadeForChildRules");
-			return (isChildContext && cascadeEnabled) || rule is IncludeRule || ( _memberNames.Any(x => x == propertyPath || propertyPath.StartsWith(x + ".")));
+			
+			return (isChildContext && cascadeEnabled && !_memberNames.Any(x => x.Contains("."))) 
+			       || rule is IncludeRule 
+			       || ( _memberNames.Any(x => x == propertyPath || propertyPath.StartsWith(x + ".") || x.StartsWith(propertyPath + ".")));
 		}
 
 		///<summary>

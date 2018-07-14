@@ -186,6 +186,20 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Validates_single_property_by_path() {
+			var addressValidator = new InlineValidator<Address>();
+			addressValidator.RuleFor(x => x.Line1).NotNull();
+			addressValidator.RuleFor(x => x.Line2).NotNull();
+		
+			validator.RuleFor(x => x.Address).SetValidator(addressValidator);
+			validator.RuleFor(x => x.Forename).NotNull();
+
+			var result = validator.Validate(new Person { Address = new Address() }, properties: "Address.Line1");
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Single().PropertyName.ShouldEqual("Address.Line1");
+		}
+
+		[Fact]
 		public void CanValidateInstancesOfType_returns_true_when_comparing_against_same_type() {
 			var validator = (IValidator)this.validator;
 			validator.CanValidateInstancesOfType(typeof(Person)).ShouldBeTrue();

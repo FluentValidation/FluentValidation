@@ -11,6 +11,7 @@
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
         
 Changes in 8.0:
+* Support validating only specific properties by path.
 * Added OnFailure method
 * Deprecated RuleFor(..).SetCollectionValidator in favour of RuleForEach(...).SetValidator
 * IStringSource.GetString now takes a validation context instead of a model instance.
