@@ -61,8 +61,8 @@ namespace FluentValidation {
 		}
 
 		private static string BuildErrorMesage(IEnumerable<ValidationFailure> errors) {
-			var arr = errors.Select(x => Environment.NewLine + " -- " + x.ErrorMessage).ToArray();
-			return "Validation failed: " + string.Join("", arr);
+			var arr = errors.Select(x => $"{Environment.NewLine} -- {x.PropertyName}: {x.ErrorMessage}");
+			return "Validation failed: " + string.Join(string.Empty, arr);
 		}
 
 #if !NETSTANDARD1_1 && !NETSTANDARD1_6
