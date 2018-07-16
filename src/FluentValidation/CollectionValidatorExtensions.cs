@@ -130,13 +130,13 @@ namespace FluentValidation {
 				return _ruleBuilder.SetValidator(validator);
 			}
 
-			public IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> SetValidator(IValidator<IEnumerable<TCollectionElement>> validator) {
-				return _ruleBuilder.SetValidator(validator);
+			public IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> SetValidator(IValidator<IEnumerable<TCollectionElement>> validator, params string[] ruleSets) {
+				return _ruleBuilder.SetValidator(validator, ruleSets);
 			}
 
-			public IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> SetValidator<TValidator>(Func<T, TValidator> validatorProvider)
+			public IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> SetValidator<TValidator>(Func<T, TValidator> validatorProvider, params string[] ruleSets)
 				where TValidator : IValidator<IEnumerable<TCollectionElement>> {
-				return _ruleBuilder.SetValidator(validatorProvider);
+				return _ruleBuilder.SetValidator(validatorProvider, ruleSets);
 			}
 
 			public IRuleBuilderOptions<T, IEnumerable<TCollectionElement>> Configure(Action<PropertyRule> configurator) {

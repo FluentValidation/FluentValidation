@@ -161,6 +161,21 @@ namespace FluentValidation.Tests {
 			members[3].Key.ShouldEqual("Address.Line1");
 		}
 
+		[Fact]
+		public void Uses_explicit_ruleset() {
+			var addressValidator = new InlineValidator<Address>();
+			addressValidator.RuleSet("ruleset1", () => {
+				addressValidator.RuleFor(x => x.Line1).NotNull();
+			});
+			addressValidator.RuleFor(x => x.Line2).NotNull();
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Address).SetValidator(addressValidator, ruleSets: "ruleset1");
+
+			var result = validator.Validate(new Person {Address = new Address()});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Address.Line1");
+		}
+
 		public class DepartmentValidator : AbstractValidator<Department> {
 			public DepartmentValidator() {
 				CascadeMode = CascadeMode.StopOnFirstFailure; ;

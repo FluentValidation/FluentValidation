@@ -1,6 +1,7 @@
-8.0.0 - 
+8.0.0 -
 Support validating only specific properties by path.
-Introduce PropertyValidatorOptions in order to clean up the IPropretyValidator interface. 
+Allow specifying a ruleset with SetValidator for complex properties.
+Introduce PropertyValidatorOptions in order to clean up the IPropretyValidator interface.
 Moved the AttributedValidatorFactory into a separate package.
 IStringSource.GetString now takes a context.
 Major cleanup of asynchronous validation workflow.
@@ -10,7 +11,7 @@ Remove the pre-7 version of Custom/CustomAsync.
 Removed deprecated localization system.
 Remove deprecated RemoveRule/ReplaceRule/ClearRules methods.
 
-7.6.104 - 6 July 2018 
+7.6.104 - 6 July 2018
 Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
 
 7.6.103 - 16 June 2018

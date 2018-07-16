@@ -22,6 +22,8 @@ namespace FluentValidation.Validators {
 		private readonly IValidator _validator;
 
 		public Type ValidatorType { get; }
+		
+		public string[] RuleSets { get; set; }
 
 		internal bool PassThroughParentContext { get; set; }
 
@@ -73,7 +75,8 @@ namespace FluentValidation.Validators {
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
-			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate, PassThroughParentContext);
+			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null; 
+			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate, PassThroughParentContext, selector);
 			
 			if(!context.ParentContext.IsChildCollectionContext)
 				newContext.PropertyChain.Add(context.Rule.PropertyName);
