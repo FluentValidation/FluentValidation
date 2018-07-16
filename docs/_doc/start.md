@@ -14,5 +14,6 @@ sections:
   - /start/collections
   - /start/complex-properties
   - /start/rulesets
+  - /start/including-rules
   - /start/configuring
 ---
