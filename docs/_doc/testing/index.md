@@ -1,6 +1,8 @@
 ---
 title: Testing
 ---
+### Default testing extensions
+
 FluentValidation comes with two extension methods `ShouldHaveValidationErrorFor` and `ShouldNotHaveValidationErrorFor` that can make it easier to write unit tests for validators. For example, imagine the following validator is defined:
 
 ```csharp
@@ -56,3 +58,19 @@ You can also assert that a complex property has a particular child validator app
 ```csharp
 validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator));
 ```
+### Third-party test extensions
+Another option is to use a third-party library such as [FluentValidation.Validators.UnitTestExtension](https://github.com/MichalJankowskii/FluentValidation.Validators.UnitTestExtension). This provides an alternative syntax for testing validators:
+
+```csharp
+[Test]
+public void Should_have_configured_validation_rules_correctly_for_name() {
+  var personValidator = new PersonValidator();
+
+  personValidator.ShouldHaveRules(x => x.Name,
+    BaseVerifiersSetComposer.Build()
+      .AddPropertyValidatorVerifier<NotNullValidator>()
+      .Create());
+}
+```
+
+More information can be found on [the documentation page](https://github.com/MichalJankowskii/FluentValidation.Validators.UnitTestExtension/wiki).
