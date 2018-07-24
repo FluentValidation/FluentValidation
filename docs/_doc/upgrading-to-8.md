@@ -50,6 +50,23 @@ Use of the `ValidatorAttribute` to wire up validators is no longer recommended a
 - For desktop or mobile applications, we recommend using an IoC container to wire up validators, although you can still use the attribute approach by explicitly installing the `FluentValidation.Attributes` package.
 - In legacy ASP.NET projects (MVC 5 and WebApi 2), the ValidatorAttribute is still the default approach, and the `FluentValidation.Attributes` package will be automatically installed. However, we recommend using an IoC container instead if you can.
 
+### Validating properties by path
+
+You can now validate specific properties using a full path, eg: 
+
+```csharp
+validator.Validate(customer, "Address.Line1", "Address.Line2");
+```
+
+### Validating a specific ruleset with SetValidator
+
+Previously, if you defined a child validator with `SetValidator`, then whichever ruleset you invoked on the parent validator will cascade to the child validator.
+Now you can explicitly define which ruleset will run on the child:
+
+```csharp
+RuleFor(x => x.Address).SetValidator(new AddressValidator(), "myRuleset");
+```
+
 ### Many old and deprecated methods have been removed
 
 FluentValidation 8 removes many old/deprecated methods that have been marked as obsolete for a long time.
