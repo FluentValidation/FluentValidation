@@ -37,7 +37,7 @@ Install-Package FluentValidation.WebApi
 using FluentValidation;
 
 public class CustomerValidator: AbstractValidator<Customer> {
-  protected CustomerValidator() {
+  public CustomerValidator() {
     RuleFor(x => x.Surname).NotEmpty();
     RuleFor(x => x.Forename).NotEmpty().WithMessage("Please specify a first name");
     RuleFor(x => x.Discount).NotEqual(0).When(x => x.HasDiscount);
