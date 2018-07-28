@@ -232,11 +232,11 @@ namespace FluentValidation {
 					}
 				}
 				else {
-					throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from ValidatorBase");
+					throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from AbstractValidator");
 				}
 			}
 			else {
-				throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from ValidatorBase");
+				throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from AbstractValidator");
 			}
 
 			rule.Configure(cfg => {
