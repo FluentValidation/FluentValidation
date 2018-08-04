@@ -5,10 +5,6 @@
     <RootNamespace>FluentValidation.Tests.WebApi</RootNamespace>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
-    <SignAssembly>True</SignAssembly>
-    <DelaySign>False</DelaySign>
-    <AssemblyOriginatorKeyFile>../FluentValidation-Public.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\FluentValidation.Tests\TestExtensions.cs" Link="TestExtensions.cs" />

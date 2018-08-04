@@ -6,10 +6,6 @@
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
     <NoWarn>1701;1702;1705;1998;0618</NoWarn>
-    <SignAssembly>True</SignAssembly>
-    <DelaySign>False</DelaySign>
-    <AssemblyOriginatorKeyFile>../FluentValidation-Public.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
   </PropertyGroup>
   <ItemGroup>
     <None Update="xunit.runner.json">

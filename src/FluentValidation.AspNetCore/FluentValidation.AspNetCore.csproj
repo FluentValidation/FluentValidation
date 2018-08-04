@@ -3,17 +3,16 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>FluentValidation.AspNetCore</AssemblyName>
     <PackageId>FluentValidation.AspNetCore</PackageId>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.1</NetStandardImplicitPackageVersion>
-    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);dnxcore50</PackageTargetFallback>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <Version Condition="'$(AspNetCoreVersion)'!=''">$(AspNetCoreVersion)</Version>
     <Authors>Jeremy Skinner</Authors>
     <Company />
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
     <Copyright>Copyright (c) Jeremy Skinner 2008-2018</Copyright>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
-      <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
-      <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
+    <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
+    <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageReleaseNotes>
 Changes in 7.6.103:
 * Support for validating controller and Razor properties annotated [BindProperty].
@@ -38,10 +37,10 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     </PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <RepositoryUrl>http://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
+    <!-- Signining is only performed as part of the release build -->
+    <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <AssemblyOriginatorKeyFile>../FluentValidation-Public.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
-    <SignAssembly>True</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' and '$(AssemblyOriginatorKeyFile)'!=''">True</PublicSign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.AspNetCore.xml</DocumentationFile>
     <DebugType>embedded</DebugType>
   </PropertyGroup>

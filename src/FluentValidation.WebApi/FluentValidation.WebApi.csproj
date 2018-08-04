@@ -13,10 +13,11 @@
     <NeutralLanguage>en</NeutralLanguage>
     <RepositoryUrl>http://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <SignAssembly>True</SignAssembly>
+    <Version Condition="'$(WebApiVersion)'!=''">$(WebApiVersion)</Version>
+    <!-- Signining is only performed as part of the release build -->
+    <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <AssemblyOriginatorKeyFile>../FluentValidation-Public.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' and '$(AssemblyOriginatorKeyFile)'!=''">True</PublicSign>
     <DebugType>embedded</DebugType>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.WebApi.xml</DocumentationFile>
     <PackageReleaseNotes>

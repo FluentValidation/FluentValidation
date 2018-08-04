@@ -10,10 +10,10 @@
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <SignAssembly>True</SignAssembly>
+    <!-- Signining is only performed as part of the release build -->
+    <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <AssemblyOriginatorKeyFile>../FluentValidation-Public.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' and '$(AssemblyOriginatorKeyFile)'!=''">True</PublicSign>
     <DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>

@@ -1,7 +1,8 @@
 param(
-  [string]$version = '8.0.0-preview2',
+  [string]$version = '8.0.0-dev',
   [string]$configuration = 'Release',
-  [string]$path = $PSScriptRoot
+  [string]$path = $PSScriptRoot,
+  [string]$keyfile = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -15,20 +16,17 @@ if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) { Write-Host "Install
 $packages_dir = Join-Path $build_dir "packages"
 $output_dir = Join-Path $build_dir $configuration
 $solution_file = Join-Path $path "FluentValidation.sln";
-$key_file = "$path\src\FluentValidation-Public.snk";
 $nuget_key = "$env:USERPROFILE\Dropbox\nuget-access-key.txt";
-$public_sign = $true
 
 if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
-  $key_file = "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk";
-  $public_sign = $false
+  $keyfile = "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk";
 }
 
 target default -depends compile, test, deploy
 
 target compile {
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
-    /p:Version=$version /p:AssemblyOriginatorKeyFile=$key_file /p:PublicSign=$public_sign
+    /p:Version=$version /p:AssemblyOriginatorKeyFile=$keyfile
 }
 
 target test {
@@ -46,7 +44,7 @@ target deploy {
   Remove-Item $packages_dir -Force -Recurse -ErrorAction Ignore 2> $null
   Remove-Item $output_dir -Force -Recurse -ErrorAction Ignore 2> $null
   
-  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$key_file /p:Version=$version
+  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$keyfile /p:Version=$version
 
   # Copy to output dir
   Copy-Item "$path\src\FluentValidation\bin\$configuration" -Destination "$output_dir\FluentValidation" -Recurse
@@ -65,9 +63,6 @@ target verify-package {
 
   if (-not (test-path "$nuget_key")) {
     throw "Could not find the NuGet access key."
-  }
-  elseif ($public_sign) {
-    throw "Cannot publish packages that have been public-signed. Must perform full signing."
   }
   elseif((& $sn -q -v "$output_dir\FluentValidation\net45\FluentValidation.dll") -ne $null) {
     throw "The assemblies have not been signed with a private key."
