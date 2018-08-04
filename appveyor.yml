@@ -2,11 +2,28 @@ version: '{build}'
 branches:
   only:
   - master
-image: Visual Studio 2017
+image: 
+ - Visual Studio 2017
+ - Ubuntu
 configuration: Release
+environment:
+  kek:
+    secure: 7K1T/yYywk+v49LE9icYk1umcP/6b9dL8hYE2Cg8HXMsTdjG9otMM0VMsHbcF0gE
+install:
+  - ps: | 
+     # kek will not be decrypted for PR builds.
+     if (Test-Path ENV:kek) {
+       iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
+       dotnet "appveyor-tools/secure-file.dll" -decrypt src/FluentValidation-Release.snk.enc -secret $ENV:kek
+     }
+
 build_script:
-- cmd: build.cmd
+ - ps: ./build.ps1
 test: off
+artifacts:
+  - path: '.build/packages/*.nupkg'
+  - path: '.build/Release'
+    type: zip
 notifications:
 - provider: Email
   to:

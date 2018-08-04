@@ -15,11 +15,16 @@ if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) { Write-Host "Install
 # Set these variables as desired
 $packages_dir = Join-Path $build_dir "packages"
 $output_dir = Join-Path $build_dir $configuration
-$solution_file = Join-Path $path "FluentValidation.sln";
-$nuget_key = "$env:USERPROFILE\Dropbox\nuget-access-key.txt";
+$solution_file = Join-Path $path "FluentValidation.sln"
+$nuget_key = "$env:USERPROFILE\Dropbox\nuget-access-key.txt"
 
 if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
-  $keyfile = "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk";
+  # Use Jeremy's local copy of the key
+  $keyfile = "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk"
+}
+elseif (Test-Path "$path\src\FluentValidation-Release.snk") {
+  # For CI builds appveyor will decrypt the key and place it in src\
+  $keyfile = "$path\src\FluentValidation-Release.snk"
 }
 
 target default -depends compile, test, deploy

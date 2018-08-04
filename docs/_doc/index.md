@@ -15,7 +15,7 @@ navigation:
   - /legal
 ---
 
-![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg) ![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg) ![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true) ![Build status](https://ci.appveyor.com/api/projects/status/e42ta5ecsxltf4ts?svg=true&passingText=Linux%20-%20passing&failingText=Linux%20-%20failed&pendingText=Linux%20-%20pending) ![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)
+![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg) ![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg) ![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true) ![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)
 
 <div class="cta-container">
 
