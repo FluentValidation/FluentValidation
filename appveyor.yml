@@ -9,6 +9,10 @@ configuration: Release
 build_script:
  - ps: ./build.ps1
 test: off
+artifacts:
+  - path: '.build/packages/*.nupkg'
+  - path: '.build/Release'
+    type: zip
 notifications:
 - provider: Email
   to:
