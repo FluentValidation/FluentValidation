@@ -126,39 +126,6 @@ namespace FluentValidation.Resources {
 			return value ?? string.Empty;
 		}
 
-		// Prior to 7.0 the error message resource names were string values such as "notnull_error" rather than the type name (NotNullValidator).
-		// For internal usage, the change is fine but it's a breaking change who relied on the keys being set in the ErrorCode property on the validation failure
-		// This mapping ensures that the original resource names are used for generating error codes.
-		internal static string BackwardsCompatibilityCodeMapping(string name) {
-			switch (name) {
-				case nameof(EnumValidator): return "enum_error";
-				case nameof(NullValidator): return "null_error";
-				case nameof(EmptyValidator): return "empty_error";
-				case nameof(ScalePrecisionValidator): return "scale_precision_error";
-				case nameof(CreditCardValidator): return "CreditCardError";
-				case nameof(ExclusiveBetweenValidator): return "exclusivebetween_error";
-				case nameof(InclusiveBetweenValidator): return "inclusivebetween_error";
-				case nameof(ExactLengthValidator): return "exact_length_error";
-				case nameof(EqualValidator): return "equal_error";
-				case nameof(RegularExpressionValidator): return "regex_error";
-				case nameof(PredicateValidator): return "predicate_error";
-				case nameof(AsyncPredicateValidator): return "predicate_error";
-				case nameof(NotNullValidator): return "notnull_error";
-				case nameof(NotEqualValidator): return "notequal_error";
-				case nameof(NotEmptyValidator): return "notempty_error";
-				case nameof(LessThanValidator): return "lessthan_error";
-				case nameof(LessThanOrEqualValidator): return "lessthanorequal_error";
-				case nameof(LengthValidator): return "length_error";
-				case nameof(MinimumLengthValidator): return "length_error";
-				case nameof(MaximumLengthValidator): return "length_error";
-				case nameof(GreaterThanValidator): return "greaterthan_error";
-				case nameof(GreaterThanOrEqualValidator): return "greaterthanorequal_error";
-				case nameof(EmailValidator): return "email_error";
-			}
-
-			return name;
-		}
-
 		public IEnumerable<string> GetSupportedTranslationKeys() {
 			return _fallback.GetSupportedKeys();
 		}
