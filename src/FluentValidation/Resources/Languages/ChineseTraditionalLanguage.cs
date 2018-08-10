@@ -27,8 +27,8 @@ namespace FluentValidation.Resources {
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' 必須大於或等於 '{ComparisonValue}'。");
 			Translate<GreaterThanValidator>("'{PropertyName}' 必須大於 '{ComparisonValue}'。");
 			Translate<LengthValidator>("'{PropertyName}' 的長度必須在 {MinLength} 到 {MaxLength} 字符，您輸入了 {TotalLength} 字符。");
-			Translate<MinimumLengthValidator>("'{PropertyName}' 必須大於或等於{MinLength}個字符。您输入了{TotalLength}個字符。");
-			Translate<MaximumLengthValidator>("'{PropertyName}' 必須小於或等於{MaxLength}個字符。您输入了{TotalLength}個字符。");
+			Translate<MinimumLengthValidator>("'{PropertyName}' 必須大於或等於{MinLength}個字符。您輸入了{TotalLength}個字符。");
+			Translate<MaximumLengthValidator>("'{PropertyName}' 必須小於或等於{MaxLength}個字符。您輸入了{TotalLength}個字符。");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' 必須小於或等於 '{ComparisonValue}'。");
 			Translate<LessThanValidator>("'{PropertyName}' 必須小於 '{ComparisonValue}'。");
 			Translate<NotEmptyValidator>("'{PropertyName}' 不能為空。");
@@ -39,8 +39,8 @@ namespace FluentValidation.Resources {
 			Translate<RegularExpressionValidator>("'{PropertyName}' 的格式不正確。");
 			Translate<EqualValidator>("'{PropertyName}' 應該和 '{ComparisonValue}' 相等。");
 			Translate<ExactLengthValidator>("'{PropertyName}' 必須是 {MaxLength} 個字符，您輸入了 {TotalLength} 字符。");
-			Translate<InclusiveBetweenValidator>("'{PropertyName}' 必須在 {From} (包含)和 {To} (包含)之間， 您输入了 {Value}。");
-			Translate<ExclusiveBetweenValidator>("'{PropertyName}' 必須在 {From} (不包含)和 {To} (不包含)之間， 您输入了 {Value}。");
+			Translate<InclusiveBetweenValidator>("'{PropertyName}' 必須在 {From} (包含)和 {To} (包含)之間， 您輸入了 {Value}。");
+			Translate<ExclusiveBetweenValidator>("'{PropertyName}' 必須在 {From} (不包含)和 {To} (不包含)之間， 您輸入了 {Value}。");
 			Translate<CreditCardValidator>("'{PropertyName}' 不是有效的信用卡號碼。");
 			Translate<ScalePrecisionValidator>("'{PropertyName}' 總位數不能超過 {expectedPrecision} 位，其中小數部份 {expectedScale} 位。您共計輸入了 {digits} 位數字，其中小數部份{actualScale} 位。");
 			Translate<EmptyValidator>("'{PropertyName}' 必須為空。");
