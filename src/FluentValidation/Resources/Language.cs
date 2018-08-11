@@ -21,7 +21,7 @@ namespace FluentValidation.Resources {
 	/// <summary>
 	/// Base class for lanaguages
 	/// </summary>
-	internal abstract class Language {
+	public abstract class Language {
 
 		/// <summary>
 		/// Name of language (culture code)

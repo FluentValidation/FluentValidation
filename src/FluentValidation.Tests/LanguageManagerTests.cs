@@ -115,6 +115,21 @@
 			Assert.All(languages, l => Assert.All(keys, k => CheckParametersMatch(l, k)));
 		}
 
+		[Fact]
+		public void All_languages_should_be_loaded() {
+			var languages = typeof(LanguageManager).Assembly.GetTypes()
+				.Where(t => typeof(Language).IsAssignableFrom(t) && !t.IsAbstract && t.Name != "GenericLanguage")
+				.Select(t => (Language) Activator.CreateInstance(t));
+			
+			var l = (LanguageManager) _languages;
+			var languageCodes = l.GetSupportedLanguages().ToList();
+
+			foreach (var language in languages) {
+				languageCodes.Contains(language.Name).ShouldBeTrue($"Language {language.Name} is not loaded in the LanguageManager");
+			}
+			
+		}
+		
 		void CheckParametersMatch(string languageCode, string translationKey) {
 			var referenceMessage = _languages.GetString(translationKey);
 			var translatedMessage = _languages.GetString(translationKey, new CultureInfo(languageCode));
