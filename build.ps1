@@ -1,5 +1,5 @@
 param(
-  [string]$version = '7.6.104',
+  [string]$version = '7.6.105',
   [string]$configuration = 'Release',
   [string]$path = $PSScriptRoot
 )
