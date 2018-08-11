@@ -370,6 +370,20 @@ namespace FluentValidation.Tests {
 			validator.ShouldHaveChildValidator(x => x.Children, typeof(InlineValidator<Person>));
 		}
 
+		[Fact]
+		public void Allows_only_one_failure_to_match() {
+			var validator = new InlineValidator<Person> {
+				v => v.RuleFor(x => x.Surname).Equal("a").WithErrorCode("nota"),
+				v => v.RuleFor(x => x.Surname).Equal("b").WithErrorCode("notb")
+			};
+
+			var person = new Person() { Surname = "c" };
+			var result = validator.TestValidate(person);
+    
+			result.ShouldHaveError().WithErrorCode("nota");
+			result.ShouldHaveError().WithErrorCode("notb");
+		}
+
 		private class AddressValidator : AbstractValidator<Address> {
 		}
 

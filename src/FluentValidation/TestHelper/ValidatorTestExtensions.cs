@@ -121,20 +121,22 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-			foreach (var failure in failures) {
-				if (!failurePredicate(failure)) {
-					string message = "Expected validation error was not found";
+			bool anyMatched = failures.Any(failurePredicate);
 
-					if (exceptionMessage != null) {
-						message = exceptionMessage.Replace("{Code}", failure.ErrorCode)
-							.Replace("{Message}", failure.ErrorMessage)
-							.Replace("{State}", failure.CustomState?.ToString() ?? "");
-					}
+			if (!anyMatched) {
+				var failure = failures.First();
+				
+				string message = "Expected validation error was not found";
 
-					throw new ValidationTestException(message);
+				if (exceptionMessage != null) {
+					message = exceptionMessage.Replace("{Code}", failure.ErrorCode)
+						.Replace("{Message}", failure.ErrorMessage)
+						.Replace("{State}", failure.CustomState?.ToString() ?? "");
 				}
-			}
 
+				throw new ValidationTestException(message);
+			}
+			
 			return failures;
 		}
 
