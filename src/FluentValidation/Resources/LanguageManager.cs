@@ -35,6 +35,7 @@ namespace FluentValidation.Resources {
 			var languages = new Language[] {
 				new EnglishLanguage(),
 				new ChineseSimplifiedLanguage(),
+				new ChineseTraditionalLanguage(),
 				new CroatianLanguage(),
 				new CzechLanguage(),
 				new DanishLanguage(),
