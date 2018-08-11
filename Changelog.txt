@@ -6,12 +6,15 @@ Moved the AttributedValidatorFactory into a separate package.
 IStringSource.GetString now takes a context.
 Major cleanup of asynchronous validation workflow.
 Deprecate SetCollectionValidator in favour of RuleForEach().SetValidator
-Added Albanian language translations
 Remove the pre-7 version of Custom/CustomAsync.
 Removed deprecated localization system.
 Remove deprecated RemoveRule/ReplaceRule/ClearRules methods.
-Added traditional Chinese language support.
 
+7.6.105 - 11 August 2018 
+Added Albanian language translations 
+Added Chinese Traditional language translation 
+Fix #858 ValidationTestExtension.When() incorrectly checks each failure instead of all failures
+ 
 7.6.104 - 6 July 2018
 Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
 
