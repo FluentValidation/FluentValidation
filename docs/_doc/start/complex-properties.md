@@ -42,3 +42,17 @@ public class CustomerValidator : AbstractValidator<Customer> {
 ```
 
 ... so when you call `Validate` on the CustomerValidator it will run through the validators defined in both the CustomerValidator and the AddressValidator and combine the results into a single ValidationResult. 
+
+If the child property is null, then the child validator will not be executed.
+
+Instead of using a child validator, you can define child rules inline, eg:
+
+```csharp
+RuleFor(customer => customer.Address.PostCode).NotNull()
+``` 
+
+In this case, a null check will *not* be performed automatically on `Address`, so you should explicitly add a condition
+
+```csharp
+RuleFor(customer => customer.Address.PostCode).NotNull().When(customer => customer.Address != null)
+```
