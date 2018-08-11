@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,18 +15,16 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
+
 #endregion
 
-namespace FluentValidation.Resources
-{
+namespace FluentValidation.Resources {
 	using Validators;
 
-	internal class PortugueseBrazilLanguage : Language
-	{
+	internal class PortugueseBrazilLanguage : Language {
 		public override string Name => "pt-BR";
 
-		public PortugueseBrazilLanguage()
-		{
+		public PortugueseBrazilLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' é um endereço de email inválido.");
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' deve ser superior ou igual a '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' deve ser superior a '{ComparisonValue}'.");
