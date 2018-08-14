@@ -6,15 +6,9 @@ FluentValidation 8.0 is a major release that included several breaking changes. 
 
 ### Asynchronous Validation updates
 
-There have been many underlying changes to the asynchronous validation workflow in FluentValidation 8. 
+There have been several major underlying changes to the asynchronous validation workflow in FluentValidation 8. These should not have any impact to any existing asynchronous code other than that some methods now take a `CancellationToken` when they didn't before.
 
-<div class="callout-block callout-info"><div class="icon-holder">*&nbsp;*{: .fa .fa-info-circle}
-</div><div class="content">
-{: .callout-title}
-
-If you make heavy use of asynchronous validation in FluentValidation, we would really appreciate you trying out the preview builds of FluentValidation 8 and report any issues that you encounter.
-
-</div></div>
+These changes were made to remove the internal dependency on the old Microsoft `TaskHelper` classes and use `async/await` instead.
 
 ### SetCollectionValidator is deprecated
 
@@ -22,7 +16,7 @@ Instead of using `SetCollectionValidator` you should use FluentValidation's `Rul
 
 FluentValidation 7:
 ```csharp
-RuleFor(x => x.AddressLines).SetCollectionValidator(new AddressLineValidator()); 
+RuleFor(x => x.AddressLines).SetCollectionValidator(new AddressLineValidator());
 ```
 
 FluentValidation 8:
@@ -46,13 +40,13 @@ It allows extra options/configuration to be added to property validators without
 
 Use of the `ValidatorAttribute` to wire up validators is no longer recommended and have been moved to a separate `FluentValidation.Attributes` package.
 
-- In ASP.NET Core projects, you should use dependency injection the service provider instead (this has been the default behaviour)
+- In ASP.NET Core projects, you should use the service provider to wire models to their validators (this has been the default behaviour for ASP.NET Core projects since FluentValidation 7)
 - For desktop or mobile applications, we recommend using an IoC container to wire up validators, although you can still use the attribute approach by explicitly installing the `FluentValidation.Attributes` package.
-- In legacy ASP.NET projects (MVC 5 and WebApi 2), the ValidatorAttribute is still the default approach, and the `FluentValidation.Attributes` package will be automatically installed. However, we recommend using an IoC container instead if you can.
+- In legacy ASP.NET projects (MVC 5 and WebApi 2), the ValidatorAttribute is still the default approach, and the `FluentValidation.Attributes` package will be automatically installed for compatibility. However, we recommend using an IoC container instead if you can.
 
 ### Validating properties by path
 
-You can now validate specific properties using a full path, eg: 
+You can now validate specific properties using a full path, eg:
 
 ```csharp
 validator.Validate(customer, "Address.Line1", "Address.Line2");
@@ -77,5 +71,5 @@ FluentValidation 8 removes many old/deprecated methods that have been marked as 
 - Removed various async method overloads that didn't accept a `CancellationToken` (use the overloads that do accept them instead.)
 
 ### Other changes
-`IStringSource.GetString` now receives a context, instead of a model. If you have custom `IStringSource` implementations, you will need to update them. 
+`IStringSource.GetString` now receives a context, instead of a model. If you have custom `IStringSource` implementations, you will need to update them.
 
