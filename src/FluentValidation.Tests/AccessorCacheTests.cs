@@ -9,11 +9,9 @@
 	using Xunit.Abstractions;
 
 	public class AccessorCacheTests {
-
 		private readonly ITestOutputHelper output;
 
-		public AccessorCacheTests(ITestOutputHelper output)
-		{
+		public AccessorCacheTests(ITestOutputHelper output) {
 			this.output = output;
 			AccessorCache<Person>.Clear();
 		}
@@ -33,10 +31,9 @@
 			Assert.Equal(compiled3, compiled4);
 		}
 
-		
+
 		[Fact]
-		public void Equality_comparison_check()
-		{
+		public void Equality_comparison_check() {
 			Expression<Func<Person, string>> expr1 = x => x.Surname;
 			Expression<Func<Person, string>> expr2 = x => x.Surname;
 			Expression<Func<Person, string>> expr3 = x => x.Forename;
@@ -50,8 +47,7 @@
 		}
 
 		[Fact]
-		public void Identifies_if_memberexp_acts_on_model_instance()
-		{
+		public void Identifies_if_memberexp_acts_on_model_instance() {
 			Expression<Func<Person, string>> expr1 = x => DoStuffToPerson(x).Surname;
 			Expression<Func<Person, string>> expr2 = x => x.Surname;
 
@@ -68,14 +64,13 @@
 		private Person DoStuffToPerson(Person p) {
 			return p;
 		}
+
 		[Fact(Skip = "Manual benchmark")]
-		public void Bemchmark()
-		{
+		public void Benchmark() {
 			var s = new Stopwatch();
 			s.Start();
 
-			for (int i = 0; i < 20000; i++)
-			{
+			for (int i = 0; i < 20000; i++) {
 				var v = new BenchmarkValidator();
 			}
 
@@ -83,17 +78,15 @@
 			output.WriteLine(s.Elapsed.ToString());
 		}
 
-		private class BenchmarkValidator : AbstractValidator<Person>
-		{
-			public BenchmarkValidator()
-			{
+		private class BenchmarkValidator : AbstractValidator<Person> {
+			public BenchmarkValidator() {
 				RuleFor(x => x.Surname).NotNull();
 				RuleFor(x => x).Must(x => true);
 			}
 		}
 
 		private class CacheTestModel {
-			[Display(Name="Foo")]
+			[Display(Name = "Foo")]
 			public string Name { get; set; }
 		}
 	}
