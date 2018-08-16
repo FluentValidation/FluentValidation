@@ -1,4 +1,4 @@
-8.0.0 -
+8.0.0 - 16 Aug 2018
 Support validating only specific properties by path.
 Allow specifying a ruleset with SetValidator for complex properties.
 Introduce PropertyValidatorOptions in order to clean up the IPropretyValidator interface.
