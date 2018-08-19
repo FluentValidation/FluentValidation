@@ -1,18 +1,18 @@
 ﻿#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 
@@ -24,11 +24,11 @@ namespace FluentValidation.Tests.WebApi {
 	using Xunit.Abstractions;
 
 	public class WebApiIntegrationTests : IClassFixture<WebApiFixture<Startup>>, IClassFixture<WebApiFixture<StartupRootValidationOnly>> {
-		
+
 		private readonly ITestOutputHelper _output;
 		private readonly WebApiFixture<Startup> _webApp;
 		private readonly WebApiFixture<StartupRootValidationOnly> _webAppRootValidationOnly;
-		
+
 
 		public WebApiIntegrationTests(ITestOutputHelper output, WebApiFixture<Startup> webApp, WebApiFixture<StartupRootValidationOnly> webAppRootValidationOnly) {
 			_output = output;
@@ -37,7 +37,7 @@ namespace FluentValidation.Tests.WebApi {
 		}
 
 		[Fact]
-		public async Task Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
+		public async Task Should_add_all_errors_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
 			var result = await _webApp.InvokeTest<TestModel5>(@"{
 				SomeBool:'false',
 				Id:0}");
@@ -54,7 +54,7 @@ namespace FluentValidation.Tests.WebApi {
 			result.IsValidField("model.Email").ShouldBeFalse(); //Email validation failed
 			result.IsValidField("model.DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
 			result.IsValidField("model.Surname").ShouldBeFalse(); //cross-property
-			result.IsValidField("model.Address1").ShouldBeFalse(); 
+			result.IsValidField("model.Address1").ShouldBeFalse();
 		}
 
 		[Fact]
@@ -68,7 +68,7 @@ namespace FluentValidation.Tests.WebApi {
 			var result = await _webApp.InvokeTest<TestModel2>(@"");
 			result.IsValid().ShouldBeTrue();
 		}
-		
+
 		[Fact]
 		public async Task Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
 			var result = await _webApp.InvokeTest<TestModel6>(@"Id=");
@@ -118,8 +118,8 @@ namespace FluentValidation.Tests.WebApi {
 
             result.IsValidField("model.Child.Name").ShouldBeFalse();
         }
-		
-		
+
+
 		[Fact]
 		public async Task Should_only_validate_specified_ruleset() {
 			var form = new Dictionary<string,string> {
@@ -128,7 +128,7 @@ namespace FluentValidation.Tests.WebApi {
 				{"Forename", "foo"},
 			};
 
-			
+
 			var results =  await _webApp.PostForm("/api/Test/RulesetTestModel", form);
 			results.IsValidField("model.Forename").ShouldBeFalse();
 			results.IsValidField("model.Surname").ShouldBeFalse();
@@ -202,13 +202,13 @@ namespace FluentValidation.Tests.WebApi {
 
 			var result = await _webApp.PostForm("/api/Test/TwoParameters", form);
 
-			//customizations should only apply to the first validator 
+			//customizations should only apply to the first validator
 			result.IsValidField("first.Forename").ShouldBeFalse();
 			result.IsValidField("first.Surname").ShouldBeFalse();
 			result.IsValidField("second.Forename").ShouldBeTrue();
 			result.IsValidField("second.Surname").ShouldBeTrue();
 		}*/
-		
+
 		[Fact]
 		public async Task Should_only_call_root_validator() {
 			var result = await _webAppRootValidationOnly.InvokeTest<TestModel11>(@"{Child: {}}", "application/json");
@@ -216,7 +216,7 @@ namespace FluentValidation.Tests.WebApi {
 			result.IsValidField("model.Name").ShouldBeFalse();
 			result.IsValidField("model.Child.Name").ShouldBeTrue();
 		}
-		
+
 		[Fact]
 		public async Task Should_only_call_children_validators() {
 			var result = await _webApp.InvokeTest<TestModel11>(@"{Child: {}}", "application/json");

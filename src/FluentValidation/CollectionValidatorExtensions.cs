@@ -152,8 +152,8 @@ namespace FluentValidation {
 		}
 
 		private class WrapperHack<T> : AbstractValidator<IEnumerable<T>>, IChildValidatorAdaptor {
-			public WrapperHack(Type innerValidatortype) {
-				ValidatorType = innerValidatortype;
+			public WrapperHack(Type innerValidatorType) {
+				ValidatorType = innerValidatorType;
 			}
 			public Type ValidatorType { get; }
 		}

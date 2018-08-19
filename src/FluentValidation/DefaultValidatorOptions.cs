@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -33,7 +33,7 @@ namespace FluentValidation {
 	public static class DefaultValidatorOptions {
 
 		/// <summary>
-		/// Specifies the cascade mode for failures. 
+		/// Specifies the cascade mode for failures.
 		/// If set to 'Stop' then execution of the rule will stop once the first validator in the chain fails.
 		/// If set to 'Continue' then all validators in the chain will execute regardless of failures.
 		/// </summary>
@@ -44,7 +44,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Transforms the property value before validation occurs. The transformed value must be of the same type as the input value. 
+		/// Transforms the property value before validation occurs. The transformed value must be of the same type as the input value.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TProperty"></typeparam>
@@ -58,7 +58,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies a custom action to be invoked when the validator fails. 
+		/// Specifies a custom action to be invoked when the validator fails.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TProperty"></typeparam>
@@ -107,7 +107,7 @@ namespace FluentValidation {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 
 			return rule.Configure(config => {
-				config.CurrentValidator.Options.ErrorMessageSource 
+				config.CurrentValidator.Options.ErrorMessageSource
 					= new LazyStringSource(context => messageProvider((T)context.InstanceToValidate, (TProperty)context.PropertyValue));
 			});
 		}
@@ -143,7 +143,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies a condition limiting when the validator should run. 
+		/// Specifies a condition limiting when the validator should run.
 		/// The validator will only be executed if the result of the lambda returns true.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
@@ -159,7 +159,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies a condition limiting when the validator should not run. 
+		/// Specifies a condition limiting when the validator should not run.
 		/// The validator will only be executed if the result of the lambda returns false.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
@@ -172,7 +172,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies an asynchronous condition limiting when the validator should run. 
+		/// Specifies an asynchronous condition limiting when the validator should run.
 		/// The validator will only be executed if the result of the lambda returns true.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
@@ -186,9 +186,9 @@ namespace FluentValidation {
 				config.ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.Instance, ct), applyConditionTo);
 			});
 		}
-		
+
 		/// <summary>
-		/// Specifies an asynchronous condition limiting when the validator should not run. 
+		/// Specifies an asynchronous condition limiting when the validator should not run.
 		/// The validator will only be executed if the result of the lambda returns false.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
@@ -213,9 +213,9 @@ namespace FluentValidation {
 				cfg.Filter = predicate;
 			});
 		}
-		
+
 		/// <summary>
-		/// Triggers an action when the rule passes. Typically used to configure dependent rules. This applies to all preceding rules in the chain. 
+		/// Triggers an action when the rule passes. Typically used to configure dependent rules. This applies to all preceding rules in the chain.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
 		/// <param name="action">An action to be invoked if the rule is valid</param>
@@ -226,7 +226,7 @@ namespace FluentValidation {
 
 			if (rule is IExposesParentValidator<T> exposesParentValidator) {
 				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
-					// Capture any rules added to the parent validator inside this delegate. 
+					// Capture any rules added to the parent validator inside this delegate.
 					using (parent.Rules.Capture(dependencyContainer.Add)) {
 						action();
 					}
@@ -264,7 +264,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string overridePropertyName) {
 			overridePropertyName.Guard("A property name must be specified when calling WithName.", nameof(overridePropertyName));
 			return rule.Configure(config => {
-				config.DisplayName = new StaticStringSource(overridePropertyName);	
+				config.DisplayName = new StaticStringSource(overridePropertyName);
 			});
 		}
 
@@ -277,9 +277,9 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> nameProvider) {
 			nameProvider.Guard("A nameProvider WithName.", nameof(nameProvider));
 			return rule.Configure(config => {
-				// Must use null propogation here.
-				// The MVC clientside validation will try and retrieve the name, but won't 
-				// be able to to so if we've used this overload of withname.
+				// Must use null propagation here.
+				// The MVC clientside validation will try and retrieve the name, but won't
+				// be able to to so if we've used this overload of WithName.
 				config.DisplayName = new LazyStringSource(ctx => nameProvider((T)ctx?.InstanceToValidate));
 			});
 		}
@@ -292,8 +292,8 @@ namespace FluentValidation {
 		/// <param name="propertyName">The property name to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string propertyName) {
-			// Allow string.Empty as this could be a model-level rule. 
-			if (propertyName == null) throw new ArgumentNullException(nameof(propertyName), "A property name must be specified when calling OverridePropertyName."); 
+			// Allow string.Empty as this could be a model-level rule.
+			if (propertyName == null) throw new ArgumentNullException(nameof(propertyName), "A property name must be specified when calling OverridePropertyName.");
 			return rule.Configure(config => config.PropertyName = propertyName);
 		}
 
@@ -306,11 +306,11 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<T, TProperty>> expr) {
 			if (expr == null) throw new ArgumentNullException(nameof(expr));
-			var member = expr.GetMember(); // Need the FluentValidation.Internal namespace imported for this extension method to show up. 
+			var member = expr.GetMember(); // Need the FluentValidation.Internal namespace imported for this extension method to show up.
 			if (member == null) throw new NotSupportedException("Must supply a MemberExpression when calling OverridePropertyName");
 			return rule.OverridePropertyName(member.Name);
 		}
-		
+
 		/// <summary>
 		/// Specifies custom state that should be stored alongside the validation message when validation fails for this rule.
 		/// </summary>
@@ -406,6 +406,6 @@ namespace FluentValidation {
 				return new Func<T, object>[0];
 			}
 			return objects.Select(obj => new Func<T, object>(x => obj)).ToArray();
-		} 
+		}
 	}
 }

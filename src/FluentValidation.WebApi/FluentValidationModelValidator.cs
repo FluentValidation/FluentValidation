@@ -62,7 +62,7 @@ namespace FluentValidation.WebApi
 				var result = _validator.Validate(context);
 				
 				if (interceptor != null) {
-					// allow the user to provice a custom collection of failures, which could be empty.
+					// allow the user to provide a custom collection of failures, which could be empty.
 					// However, if they return null then use the original collection of failures. 
 					result = interceptor.AfterMvcValidation(ActionContext, context, result) ?? result;
 				}

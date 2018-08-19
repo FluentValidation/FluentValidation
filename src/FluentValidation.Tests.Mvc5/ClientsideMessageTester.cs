@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 
@@ -72,21 +72,21 @@ namespace FluentValidation.Tests.Mvc5 {
 		}
 
 		[Fact]
-		public void LengthValidator_uses_simplified_message_for_clientside_validatation() {
+		public void LengthValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Length(1, 10);
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' must be between 1 and 10 characters.");
 		}
 
 		[Fact]
-		public void MinLengthValidator_uses_simplified_message_for_clientside_validatation() {
+		public void MinLengthValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).MinimumLength(1);
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("The length of 'Name' must be at least 1 characters.");
 		}
 
 		[Fact]
-		public void MaxengthValidator_uses_simplified_message_for_clientside_validatation() {
+		public void MaxLengthValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).MaximumLength(10);
 
 			var clientRule = GetClientRule(x => x.Name);
@@ -94,12 +94,11 @@ namespace FluentValidation.Tests.Mvc5 {
 		}
 
 		[Fact]
-		public void ExactLengthValidator_uses_simplified_message_for_clientside_validatation() {
+		public void ExactLengthValidator_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Length(10);
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("'Name' must be 10 characters in length.");
 		}
-
 
 		[Fact]
 		public void InclusiveBetween_validator_uses_simplified_message_for_clientside_validation() {
@@ -108,19 +107,19 @@ namespace FluentValidation.Tests.Mvc5 {
 			clientRules.Any(x => x.ErrorMessage == "'Id' must be between 1 and 10.").ShouldBeTrue();
 		}
 
-        [Fact]
-        public void GreaterThanOrEqualTo_validator_uses_simplified_message_for_clientside_validation() {
-            validator.RuleFor(x => x.Id).GreaterThanOrEqualTo(5);
-            var clientRules = GetClientRules(x => x.Id);
-            clientRules.Any(x => x.ErrorMessage == "'Id' must be greater than or equal to '5'.").ShouldBeTrue();
-        }
+		[Fact]
+		public void GreaterThanOrEqualTo_validator_uses_simplified_message_for_clientside_validation() {
+			validator.RuleFor(x => x.Id).GreaterThanOrEqualTo(5);
+			var clientRules = GetClientRules(x => x.Id);
+			clientRules.Any(x => x.ErrorMessage == "'Id' must be greater than or equal to '5'.").ShouldBeTrue();
+		}
 
-        [Fact]
-        public void LessThanOrEqualTo_validator_uses_simplified_message_for_clientside_validation() {
-            validator.RuleFor(x => x.Id).LessThanOrEqualTo(50);
-            var clientRules = GetClientRules(x => x.Id);
-            clientRules.Any(x => x.ErrorMessage == "'Id' must be less than or equal to '50'.").ShouldBeTrue();
-        }
+		[Fact]
+		public void LessThanOrEqualTo_validator_uses_simplified_message_for_clientside_validation() {
+			validator.RuleFor(x => x.Id).LessThanOrEqualTo(50);
+			var clientRules = GetClientRules(x => x.Id);
+			clientRules.Any(x => x.ErrorMessage == "'Id' must be less than or equal to '50'.").ShouldBeTrue();
+		}
 
 		[Fact]
 		public void EqualValidator_with_property_uses_simplified_message_for_clientside_validation() {
@@ -134,13 +133,6 @@ namespace FluentValidation.Tests.Mvc5 {
 			validator.RuleFor(x => x.Name).Length(1, 10).WithMessage("Foo");
 			var clientRule = GetClientRule(x => x.Name);
 			clientRule.ErrorMessage.ShouldEqual("Foo");
-		}
-
-		[Fact]
-		public void ExactLengthValidator_uses_simplified_message_for_clientside_validation() {
-			validator.RuleFor(x => x.Name).Length(5);
-			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("'Name' must be 5 characters in length.");
 		}
 
 		[Fact]
@@ -191,7 +183,7 @@ namespace FluentValidation.Tests.Mvc5 {
 			validator.RuleFor(x => x.Id).NotNull().WithName("Foo");
 			var clientRule = GetClientRule(x => x.Id);
 			clientRule.ErrorMessage.ShouldEqual("'Foo' must not be empty.");
-		
+
 		}
 
 		[Fact]
@@ -313,7 +305,7 @@ namespace FluentValidation.Tests.Mvc5 {
 		private class TestPropertyValidator : PropertyValidator, IClientValidatable {
 			public TestPropertyValidator()
 				: base("foo") {
-				
+
 			}
 
 			protected override bool IsValid(PropertyValidatorContext context) {

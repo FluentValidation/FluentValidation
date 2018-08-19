@@ -106,7 +106,7 @@
 
 
 		[Fact]
-		public void All_localizatons_have_same_parameters_as_English() {
+		public void All_localizations_have_same_parameters_as_English() {
 
 			LanguageManager manager = (LanguageManager)_languages;
 			var languages = manager.GetSupportedLanguages();

@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -34,7 +34,7 @@ namespace FluentValidation {
 	/// </summary>
 	public static class DefaultValidatorExtensions {
     /// <summary>
-		/// Defines a 'not null' validator on the current rule builder. 
+		/// Defines a 'not null' validator on the current rule builder.
 		/// Validation will fail if the property is null.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
@@ -46,7 +46,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-			/// Defines a 'null' validator on the current rule builder. 
+			/// Defines a 'null' validator on the current rule builder.
 			/// Validation will fail if the property is not null.
 			/// </summary>
 			/// <typeparam name="T">Type of object being validated</typeparam>
@@ -263,7 +263,7 @@ namespace FluentValidation {
 																			   TProperty toCompare, IEqualityComparer comparer = null) {
 			return ruleBuilder.SetValidator(new NotEqualValidator(toCompare, comparer));
 		}
-		
+
 		/// <summary>
 		/// Defines a 'not equal' validator on the current rule builder using a lambda to specify the value.
 		/// Validation will fail if the value returned by the lambda is equal to the value of the property.
@@ -281,7 +281,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines an 'equals' validator on the current rule builder. 
+		/// Defines an 'equals' validator on the current rule builder.
 		/// Validation will fail if the specified value is not equal to the value of the property.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
@@ -406,7 +406,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder. 
+		/// Defines a 'less than' validator on the current rule builder.
 		/// The validation will succeed if the property value is less than the specified value.
 		/// The validation will fail if the property value is greater than or equal to the specified value.
 		/// </summary>
@@ -422,7 +422,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder. 
+		/// Defines a 'less than' validator on the current rule builder.
 		/// The validation will succeed if the property value is less than the specified value.
 		/// The validation will fail if the property value is greater than or equal to the specified value.
 		/// </summary>
@@ -438,7 +438,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than or equal' validator on the current rule builder. 
+		/// Defines a 'less than or equal' validator on the current rule builder.
 		/// The validation will succeed if the property value is less than or equal to the specified value.
 		/// The validation will fail if the property value is greater than the specified value.
 		/// </summary>
@@ -453,7 +453,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than or equal' validator on the current rule builder. 
+		/// Defines a 'less than or equal' validator on the current rule builder.
 		/// The validation will succeed if the property value is less than or equal to the specified value.
 		/// The validation will fail if the property value is greater than the specified value.
 		/// </summary>
@@ -468,7 +468,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'greater than' validator on the current rule builder. 
+		/// Defines a 'greater than' validator on the current rule builder.
 		/// The validation will succeed if the property value is greater than the specified value.
 		/// The validation will fail if the property value is less than or equal to the specified value.
 		/// </summary>
@@ -483,7 +483,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'greater than' validator on the current rule builder. 
+		/// Defines a 'greater than' validator on the current rule builder.
 		/// The validation will succeed if the property value is greater than the specified value.
 		/// The validation will fail if the property value is less than or equal to the specified value.
 		/// </summary>
@@ -498,7 +498,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'greater than or equal' validator on the current rule builder. 
+		/// Defines a 'greater than or equal' validator on the current rule builder.
 		/// The validation will succeed if the property value is greater than or equal the specified value.
 		/// The validation will fail if the property value is less than the specified value.
 		/// </summary>
@@ -513,7 +513,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'greater than or equal' validator on the current rule builder. 
+		/// Defines a 'greater than or equal' validator on the current rule builder.
 		/// The validation will succeed if the property value is greater than or equal the specified value.
 		/// The validation will fail if the property value is less than the specified value.
 		/// </summary>
@@ -529,7 +529,7 @@ namespace FluentValidation {
 
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is less than the specified value.
 		/// The validation will fail if the property value is greater than or equal to the specified value.
 		/// </summary>
@@ -549,7 +549,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is less than the specified value.
 		/// The validation will fail if the property value is greater than or equal to the specified value.
 		/// </summary>
@@ -569,7 +569,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is less than the specified value.
 		/// The validation will fail if the property value is greater than or equal to the specified value.
 		/// </summary>
@@ -589,7 +589,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is less than the specified value.
 		/// The validation will fail if the property value is greater than or equal to the specified value.
 		/// </summary>
@@ -609,7 +609,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than or equal' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than or equal' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is less than or equal to the specified value.
 		/// The validation will fail if the property value is greater than the specified value.
 		/// </summary>
@@ -627,7 +627,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than or equal' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than or equal' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is less than or equal to the specified value.
 		/// The validation will fail if the property value is greater than the specified value.
 		/// </summary>
@@ -645,7 +645,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than or equal' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than or equal' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is less than or equal to the specified value.
 		/// The validation will fail if the property value is greater than the specified value.
 		/// </summary>
@@ -663,7 +663,7 @@ namespace FluentValidation {
 		}
 
 	/// <summary>
-	/// Defines a 'less than or equal' validator on the current rule builder using a lambda expression. 
+	/// Defines a 'less than or equal' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is less than or equal to the specified value.
 	/// The validation will fail if the property value is greater than the specified value.
 	/// </summary>
@@ -681,7 +681,7 @@ namespace FluentValidation {
 	}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is greater than the specified value.
 		/// The validation will fail if the property value is less than or equal to the specified value.
 		/// </summary>
@@ -699,7 +699,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is greater than the specified value.
 		/// The validation will fail if the property value is less than or equal to the specified value.
 		/// </summary>
@@ -717,7 +717,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is greater than the specified value.
 		/// The validation will fail if the property value is less than or equal to the specified value.
 		/// </summary>
@@ -735,7 +735,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'less than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'less than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is greater than the specified value.
 		/// The validation will fail if the property value is less than or equal to the specified value.
 		/// </summary>
@@ -753,7 +753,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'greater than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is greater than or equal the specified value.
 		/// The validation will fail if the property value is less than the specified value.
 		/// </summary>
@@ -771,7 +771,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a 'greater than' validator on the current rule builder using a lambda expression. 
+		/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 		/// The validation will succeed if the property value is greater than or equal the specified value.
 		/// The validation will fail if the property value is less than the specified value.
 		/// </summary>
@@ -789,7 +789,7 @@ namespace FluentValidation {
 		}
 
 	/// <summary>
-	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression. 
+	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than or equal the specified value.
 	/// The validation will fail if the property value is less than the specified value.
 	/// </summary>
@@ -798,7 +798,7 @@ namespace FluentValidation {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="valueToCompare">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty?> GreaterThanOrEqualTo<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty?>> valueToCompare) 
+	public static IRuleBuilderOptions<T, TProperty?> GreaterThanOrEqualTo<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty?>> valueToCompare)
 	  where TProperty : struct, IComparable<TProperty>, IComparable
 	{
 	  var func = valueToCompare.Compile();
@@ -806,7 +806,7 @@ namespace FluentValidation {
 	}
 
 	/// <summary>
-	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression. 
+	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than or equal the specified value.
 	/// The validation will fail if the property value is less than the specified value.
 	/// </summary>
@@ -862,15 +862,15 @@ namespace FluentValidation {
 			if(selector != null && ruleSet != null) {
 				throw new InvalidOperationException("Cannot specify both an IValidatorSelector and a RuleSet.");
 			}
-			
+
 			if(selector == null) {
 				selector = ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory();
 			}
-			
+
 			if(ruleSet != null) {
 				var ruleSetNames = ruleSet.Split(',', ';').Select(x => x.Trim());
 				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames.ToArray());
-			} 
+			}
 
 			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
 			return validator.Validate(context);
@@ -904,7 +904,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Validates an object asynchronously using a custom valdiator selector or a ruleset
+		/// Validates an object asynchronously using a custom validator selector or a ruleset
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="validator"></param>
@@ -961,7 +961,7 @@ namespace FluentValidation {
 
 	    /// <summary>
 		/// Defines an 'inclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
-		/// Validation will fail if the value of the property is outside of the specifed range. The range is inclusive.
+		/// Validation will fail if the value of the property is outside of the specified range. The range is inclusive.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -975,7 +975,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// Defines an 'inclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
-		/// Validation will fail if the value of the property is outside of the specifed range. The range is inclusive.
+		/// Validation will fail if the value of the property is outside of the specified range. The range is inclusive.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -989,7 +989,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// Defines an 'exclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
-		/// Validation will fail if the value of the property is outside of the specifed range. The range is exclusive.
+		/// Validation will fail if the value of the property is outside of the specified range. The range is exclusive.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -1003,7 +1003,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// Defines an 'exclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
-		/// Validation will fail if the value of the property is outside of the specifed range. The range is exclusive.
+		/// Validation will fail if the value of the property is outside of the specified range. The range is exclusive.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
