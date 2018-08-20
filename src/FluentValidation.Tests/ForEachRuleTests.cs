@@ -51,7 +51,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Correctly_gets_collection_indicies() {
+		public void Correctly_gets_collection_indices() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).NotNull()
 			};
@@ -80,7 +80,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Correctly_gets_collection_indicies_async() {
+		public void Correctly_gets_collection_indices_async() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator())
 			};

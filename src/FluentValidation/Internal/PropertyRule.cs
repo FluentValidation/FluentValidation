@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -111,7 +111,7 @@ namespace FluentValidation.Internal {
 			OnFailure = x => { };
 			TypeToValidate = typeToValidate;
 			this._cascadeModeThunk = cascadeModeThunk;
-			
+
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
 			DisplayName = new LazyStringSource(x =>  ValidatorOptions.DisplayNameResolver(containerType, member, expression));
@@ -200,7 +200,7 @@ namespace FluentValidation.Internal {
 		public Func<object, object> Transformer { get; set; }
 
 		/// <summary>
-		/// Display name for the property. 
+		/// Display name for the property.
 		/// </summary>
 		public string GetDisplayName() {
 			string result = null;
@@ -217,7 +217,7 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
-		/// Display name for the property. 
+		/// Display name for the property.
 		/// </summary>
 		public string GetDisplayName(IValidationContext context) {
 			string result = null;
@@ -242,14 +242,14 @@ namespace FluentValidation.Internal {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
-				//No name has been specified. Assume this is a model-level rule, so we should use empty string instead. 
+				//No name has been specified. Assume this is a model-level rule, so we should use empty string instead.
 				displayName = string.Empty;
 			}
 
 			// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
 			string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
 
-			// Ensure that this rule is allowed to run. 
+			// Ensure that this rule is allowed to run.
 			// The validatselector has the opportunity to veto this before any of the validators execute.
 			if (!context.Selector.CanExecute(this, propertyName, context)) {
 				yield break;
@@ -308,14 +308,14 @@ namespace FluentValidation.Internal {
 			var displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
-				//No name has been specified. Assume this is a model-level rule, so we should use empty string instead. 
+				//No name has been specified. Assume this is a model-level rule, so we should use empty string instead.
 				displayName = string.Empty;
 			}
 
 			// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
 			var propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
 
-			// Ensure that this rule is allowed to run. 
+			// Ensure that this rule is allowed to run.
 			// The validatselector has the opportunity to veto this before any of the validators execute.
 			if (!context.Selector.CanExecute(this, propertyName, context)) {
 				return Enumerable.Empty<ValidationFailure>();
@@ -326,7 +326,7 @@ namespace FluentValidation.Internal {
 
 			var fastExit = false;
 
-			// Firstly, invoke all syncronous validators and collect their results.
+			// Firstly, invoke all synchronous validators and collect their results.
 			foreach (var validator in _validators.Where(v => !v.ShouldValidateAsync(context))) {
 				cancellation.ThrowIfCancellationRequested();
 				failures.AddRange(InvokePropertyValidator(context, validator, propertyName));
@@ -334,7 +334,7 @@ namespace FluentValidation.Internal {
 				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 				// then don't continue to the next rule
 				fastExit = cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0;
-				
+
 				if (fastExit) {
 					break;
 				}
@@ -364,7 +364,7 @@ namespace FluentValidation.Internal {
 
 			foreach (var asyncValidator in asyncValidators) {
 				cancellation.ThrowIfCancellationRequested();
-				
+
 				var propertyFailures = await InvokePropertyValidatorAsync(context, asyncValidator, propertyName, cancellation);
 				failures.AddRange(propertyFailures);
 
@@ -372,7 +372,7 @@ namespace FluentValidation.Internal {
 					break;
 				}
 			}
-			
+
 			if (failures.Count > 0) {
 				OnFailure(context.InstanceToValidate);
 			}
@@ -385,7 +385,7 @@ namespace FluentValidation.Internal {
 
 		private async Task<IEnumerable<ValidationFailure>> RunDependentRulesAsync(ValidationContext context, CancellationToken cancellation) {
 			var failures = new List<ValidationFailure>();
-			
+
 			foreach (var rule in DependentRules) {
 				cancellation.ThrowIfCancellationRequested();
 				failures.AddRange(await rule.ValidateAsync(context, cancellation));
@@ -395,7 +395,7 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
-		/// Invokes the validator asynchronously 
+		/// Invokes the validator asynchronously
 		/// </summary>
 		/// <param name="context"></param>
 		/// <param name="validator"></param>

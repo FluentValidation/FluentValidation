@@ -6,7 +6,7 @@
 	using Internal;
 	using Results;
 	/// <summary>
-	/// Custom validator that allows for manual/direct creation of ValidationFailure instances. 
+	/// Custom validator that allows for manual/direct creation of ValidationFailure instances.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	public class CustomValidator<T> : PropertyValidator {
@@ -27,7 +27,7 @@
 		}
 
 		/// <summary>
-		/// Creates a new isntance of the CutomValidator.
+		/// Creates a new instance of the CustomValidator.
 		/// </summary>
 		/// <param name="asyncAction"></param>
 		public CustomValidator(Func<T, CustomContext, CancellationToken, Task> asyncAction) : base(string.Empty) {
@@ -73,17 +73,17 @@
 		}
 
 		/// <summary>
-		/// Adds a new validation failure. 
+		/// Adds a new validation failure.
 		/// </summary>
 		/// <param name="propertyName">The property name</param>
-		/// <param name="errorMessage">The error mesage</param>
+		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string propertyName, string errorMessage) {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
 			AddFailure(new ValidationFailure(propertyName ?? string.Empty, errorMessage));
 		}
 
 		/// <summary>
-		/// Adds a new validation failure (the property name is inferred) 
+		/// Adds a new validation failure (the property name is inferred)
 		/// </summary>
 		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string errorMessage) {
@@ -92,7 +92,7 @@
 		}
 
 		/// <summary>
-		/// Adss a new validation failure
+		/// Adds a new validation failure
 		/// </summary>
 		/// <param name="failure">The failure to add</param>
 		public void AddFailure(ValidationFailure failure) {

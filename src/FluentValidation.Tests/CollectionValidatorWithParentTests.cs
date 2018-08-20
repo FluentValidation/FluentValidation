@@ -185,7 +185,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Can_specifiy_condition_for_individual_collection_elements() {
+		public void Can_specify_condition_for_individual_collection_elements() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Orders)
 					.SetCollectionValidator(y => new OrderValidator(y))

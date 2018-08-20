@@ -12,17 +12,17 @@ namespace FluentValidation.Validators {
 	/// </summary>
 	public interface IChildValidatorAdaptor {
 		/// <summary>
-		/// The type of the underyling validator
+		/// The type of the underlying validator
 		/// </summary>
 		Type ValidatorType { get; }
 	}
-	
+
 	public class ChildValidatorAdaptor : NoopPropertyValidator, IChildValidatorAdaptor {
 		private readonly Func<IValidationContext, IValidator> _validatorProvider;
 		private readonly IValidator _validator;
 
 		public Type ValidatorType { get; }
-		
+
 		public string[] RuleSets { get; set; }
 
 		internal bool PassThroughParentContext { get; set; }
@@ -70,14 +70,14 @@ namespace FluentValidation.Validators {
 
 		public virtual IValidator GetValidator(PropertyValidatorContext context) {
 			context.Guard("Cannot pass a null context to GetValidator", nameof(context));
-			
+
 			return _validatorProvider != null ? _validatorProvider(context) : _validator;
 		}
 
 		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
-			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null; 
+			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
 			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate, PassThroughParentContext, selector);
-			
+
 			if(!context.ParentContext.IsChildCollectionContext)
 				newContext.PropertyChain.Add(context.Rule.PropertyName);
 

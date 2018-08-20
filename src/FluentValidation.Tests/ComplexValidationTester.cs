@@ -79,7 +79,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Explicitly_included_properties_should_be_propogated_to_nested_validators() {
+		public void Explicitly_included_properties_should_be_propagated_to_nested_validators() {
 			var results = validator.Validate(person, x => x.Address);
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
@@ -87,7 +87,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Explicitly_included_properties_should_be_propogated_to_nested_validators_using_strings() {
+		public void Explicitly_included_properties_should_be_propagated_to_nested_validators_using_strings() {
 			var results = validator.Validate(person, "Address");
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");

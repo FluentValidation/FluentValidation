@@ -138,7 +138,7 @@ namespace FluentValidation.Internal {
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="valueToCompare">The value being compared</param>
 		/// <returns></returns>
-		internal static Expression<Func<T, TProperty>> GetConstantExpresionFromConstant<T, TProperty>(TProperty valueToCompare) {
+		internal static Expression<Func<T, TProperty>> GetConstantExpressionFromConstant<T, TProperty>(TProperty valueToCompare) {
 			Expression constant = Expression.Constant(valueToCompare, typeof(TProperty));
 			ParameterExpression parameter = Expression.Parameter(typeof(T), "t");
 			return Expression.Lambda<Func<T, TProperty>>(constant, parameter);

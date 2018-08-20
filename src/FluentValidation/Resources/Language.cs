@@ -19,7 +19,7 @@ namespace FluentValidation.Resources {
 	using System.Collections.Generic;
 
 	/// <summary>
-	/// Base class for lanaguages
+	/// Base class for languages
 	/// </summary>
 	public abstract class Language {
 
