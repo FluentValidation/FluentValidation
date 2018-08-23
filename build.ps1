@@ -27,7 +27,8 @@ elseif (Test-Path "$path\src\FluentValidation-Release.snk") {
   $keyfile = "$path\src\FluentValidation-Release.snk"
 }
 
-target default -depends compile, test, deploy
+target default -depends find-sdk, compile, test, deploy
+target install -depends install-dotnet-core, decrypt-private-key
 
 target compile {
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
@@ -102,6 +103,66 @@ target publish -depends verify-package {
       write-host "Uploading $package"
       Invoke-Dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
       write-host
+    }
+  }
+}
+
+target decrypt-private-key {
+  if (Test-Path ENV:kek) {
+    iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
+    dotnet "appveyor-tools/secure-file.dll" -decrypt src/FluentValidation-Release.snk.enc -secret $ENV:kek
+  }
+}
+
+target install-dotnet-core {
+  # Ensures that .net core is up to date.
+  # first get the required version from global.json
+  $json = ConvertFrom-Json (Get-Content "$path/global.json" -Raw)
+  $required_version = $json.sdk.version
+
+  # Running dotnet --version stupidly fails if the required SDK version is higher 
+  # than the currently installed version. So move global.json out the way 
+  # and then put it back again 
+  Rename-Item "$path/global.json" "$path/global.json.bak"
+  $current_version = (dotnet --version)
+  Rename-Item "$path/global.json.bak" "$path/global.json"
+  Write-Host "Required .NET version: $required_version Installed: $current_version"
+
+  if ($current_version -lt $required_version) {
+    # Current installed version is too low.
+    # Install new version as a local only dependency. 
+
+    if (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows) {
+      $urlCurrent = "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$required_version/dotnet-sdk-$required_version-win-x64.zip"
+      Write-Host "Installing .NET Core $required_version from $urlCurrent"
+      $env:DOTNET_INSTALL_DIR = "$path/.dotnetsdk"
+      New-Item -Type Directory $env:DOTNET_INSTALL_DIR -Force | Out-Null
+      (New-Object System.Net.WebClient).DownloadFile($urlCurrent, "dotnet.zip")
+      Write-Host "Unzipping to $env:DOTNET_INSTALL_DIR"
+      Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory("dotnet.zip", $env:DOTNET_INSTALL_DIR)
+    }
+    elseif ($IsLinux) {
+      $urlCurrent = "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$required_version/dotnet-sdk-$required_version-linux-x64.tar.gz"
+      Write-Host "Installing .NET Core $required_version from $urlCurrent"
+      $env:DOTNET_INSTALL_DIR = "$path/.dotnetsdk"
+      New-Item -Type Directory $env:DOTNET_INSTALL_DIR -Force | Out-Null
+      (New-Object System.Net.WebClient).DownloadFile($urlCurrent, "dotnet.tar.gz")
+      Write-Host "Unzipping to $env:DOTNET_INSTALL_DIR"
+      tar zxvf "dotnet.tar.gz" -C $env:DOTNET_INSTALL_DIR # Use tar directly instead of System.IO.Compression
+    }
+  }
+}
+
+target find-sdk {
+  if (Test-Path "$path/.dotnetsdk") {
+    Write-Host "Using .NET SDK from $path/.dotnetsdk"
+    $env:DOTNET_INSTALL_DIR = "$path/.dotnetsdk"
+
+    if (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows) {
+      $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
+    }
+    elseif ($IsLinux) {
+      $env:PATH = "$env:DOTNET_INSTALL_DIR:$env:PATH" # Linux uses colon not semicolon.
     }
   }
 }
