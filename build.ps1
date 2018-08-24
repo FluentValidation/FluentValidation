@@ -144,11 +144,11 @@ target install-dotnet-core {
     elseif ($IsLinux) {
       $urlCurrent = "https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$required_version/dotnet-sdk-$required_version-linux-x64.tar.gz"
       Write-Host "Installing .NET Core $required_version from $urlCurrent"
-      $env:DOTNET_INSTALL_DIR = "$path/.dotnetsdk"
-      New-Item -Type Directory $env:DOTNET_INSTALL_DIR -Force | Out-Null
-      (New-Object System.Net.WebClient).DownloadFile($urlCurrent, "dotnet.tar.gz")
+      $env:DOTNET_INSTALL_DIR = "$path/.dotnetsdk/"
+      mkdir "$path/.dotnetsdk/"
+      (New-Object System.Net.WebClient).DownloadFile($urlCurrent, "$path/dotnet.tar.gz")
       Write-Host "Unzipping to $env:DOTNET_INSTALL_DIR"
-      tar zxvf "dotnet.tar.gz" -C $env:DOTNET_INSTALL_DIR # Use tar directly instead of System.IO.Compression
+      tar zxf "$path/dotnet.tar.gz" -C $env:DOTNET_INSTALL_DIR # Use tar directly instead of System.IO.Compression
     }
   }
 }
@@ -162,7 +162,8 @@ target find-sdk {
       $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
     }
     elseif ($IsLinux) {
-      $env:PATH = "$env:DOTNET_INSTALL_DIR:$env:PATH" # Linux uses colon not semicolon.
+      # Linux uses colon not semicolon, so can't use string interpolation
+      $env:PATH = $env:DOTNET_INSTALL_DIR + ":" + $env:PATH
     }
   }
 }
