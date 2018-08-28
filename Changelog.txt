@@ -1,3 +1,6 @@
+8.x - 
+Added Greek language translation.
+
 8.0.0 - 16 Aug 2018
 Support validating only specific properties by path.
 Allow specifying a ruleset with SetValidator for complex properties.
