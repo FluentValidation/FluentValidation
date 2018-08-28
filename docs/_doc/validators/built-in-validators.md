@@ -19,7 +19,7 @@ sections:
   - Enum Validator
   - Null Validator
   - ExclusiveBetween Validator
-  - InclsuveBetween Validator
+  - InclusiveBetween Validator
   - ScalePrecision Validator
 ---
 
