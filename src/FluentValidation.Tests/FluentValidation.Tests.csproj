@@ -39,7 +39,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="../netfx.props" />
-  <ItemGroup Condition="'$(TargetFramework)'=='net45' AND '$(OS)'=='Unix'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net452' AND '$(OS)'=='Unix'">
     <!-- Workarounds for Mono -->
     <Reference Include="System.Runtime" />
     <Reference Include="System.Threading.Tasks" />
