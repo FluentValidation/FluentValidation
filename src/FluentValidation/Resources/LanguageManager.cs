@@ -61,7 +61,8 @@ namespace FluentValidation.Resources {
 				new TurkishLanguage(),
 				new UkrainianLanguage(),
 				new ArabicLanguage(),
-				new AlbanianLanguage()
+				new AlbanianLanguage(),
+				new GreekLanguage(),
 			};
 
 			foreach (var language in languages) {
