@@ -4,13 +4,15 @@ branches:
   - master
 image: 
  - Visual Studio 2017
- - Ubuntu
+# - Ubuntu
 configuration: Release
 environment:
   kek:
     secure: 7K1T/yYywk+v49LE9icYk1umcP/6b9dL8hYE2Cg8HXMsTdjG9otMM0VMsHbcF0gE
 install:
   - ps: | 
+     Write-Host ".NET Core version:"
+     dotnet --version
      # kek will not be decrypted for PR builds.
      if (Test-Path ENV:kek) {
        iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
