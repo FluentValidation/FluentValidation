@@ -148,7 +148,7 @@ The two cascade modes are:
 - `Continue` (the default) - always invokes all validators in a rule definition
 - `StopOnFirstFailure` - stops executing a rule as soon as a validator fails
 
-As well as being set at the rule level, the cascade mode can also be set globally for all validators, or for all the rules in a particular validator class.
+As well as being set at the rule level, the cascade mode can also be set globally for all validators, or for all the rules in a particular validator class. This is the equivalent of setting the cascade mode on every rule within the validator. Not that this still only applies to validators *within the same rule chain* - separate calls to `RuleFor` are treated separately. If one rule fails, it will not prevent a separate rule from running, only validators within the same rule chain.
 
 To set the cascade mode globally, you can set the CascadeMode property on the static ValidatorOptions class during your application's startup routine:
 
@@ -166,11 +166,27 @@ public class PersonValidator : AbstractValidator<Person> {
     // First set the cascade mode
     CascadeMode = CascadeMode.StopOnFirstFailure;
 
-    RuleFor(...)
-    RuleFor(...)
+    RuleFor(x => x.Surname).NotNull().NotEqual("foo");
+    RuleFor(x => x.Forename).NotNull().NotEqual("foo");
   }
 }
 ```
+
+Note that this is the equivalent of doing the following:
+
+```csharp
+RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqual("foo");
+RuleFor(x => x.Forename).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqual("foo");
+```
+
+<div class="callout-block callout-info"><div class="icon-holder">*&nbsp;*{: .fa .fa-info-circle}
+</div><div class="content">
+{: .callout-title}
+#### Remember
+
+Setting the cascade mode only applies to validators within the same `RuleFor` chain. Changing the cascade mode does not affect separate calls to `RuleFor`. If you want prevent one rule from running if a different rule fails, you should instead use Dependent Rules (below),
+
+</div></div>
 
 #### Dependent Rules
 
