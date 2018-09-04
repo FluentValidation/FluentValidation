@@ -165,6 +165,18 @@ namespace FluentValidation.Tests {
 			Assert.All(result, Assert.True);
 		}
 
+		[Fact]
+		public void Can_use_cascade_with_RuleForEach() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleForEach(x => x.NickNames)
+				.Cascade(CascadeMode.StopOnFirstFailure)
+				.NotNull()
+				.NotEqual("foo");
+
+			var result = validator.Validate(new Person {NickNames = new string[] {null}});
+			result.Errors.Count.ShouldEqual(1);
+		}
+
 
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};
