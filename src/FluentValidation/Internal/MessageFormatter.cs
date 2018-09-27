@@ -1,5 +1,6 @@
 namespace FluentValidation.Internal {
 	using System.Collections.Generic;
+	using System.Text.RegularExpressions;
 
 	/// <summary>
 	/// Assists in the construction of validation messages.
@@ -73,11 +74,9 @@ namespace FluentValidation.Internal {
 
 			string result = messageTemplate;
 
-			foreach(var pair in _placeholderValues) {
-				result = ReplacePlaceholderWithValue(result, pair.Key, pair.Value);
-			}
+			result = ReplacePlaceholdersWithValues(result, _placeholderValues);
 
-			if(_shouldUseAdditionalArgs) {
+			if (_shouldUseAdditionalArgs) {
 				return string.Format(result, _additionalArguments);
 			}
 			return result;
@@ -93,21 +92,26 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
 
-		protected virtual string ReplacePlaceholderWithValue(string template, string key, object value) {
-			string placeholder =  GetPlaceholder(key);
-			return template.Replace(placeholder, value?.ToString());
-		}
+		// TODO: Add alignment component
+		private Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}"); // Matches any placeholder
 
-		protected string GetPlaceholder(string key) {
-			// Performance: String concat causes much overhead when not needed. Concatting constants results in constants being compiled.
-			switch (key) {
-				case PropertyName:
-					return "{" + PropertyName + "}";
-				case PropertyValue:
-					return "{" + PropertyValue + "}";
-				default:
-					return "{" + key + "}";
-			}
+		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)
+		{
+			return _keyRegex.Replace(template, m =>
+			{
+				var key = m.Groups[1].Value;
+
+				if (!values.ContainsKey(key))
+					return m.Value; // No placeholder / value
+
+				var format = m.Groups[2].Success // Format specified?
+					? $"{{0:{m.Groups[2].Value}}}"
+					: null;
+
+				return format == null
+					? values[key]?.ToString()
+					: string.Format(format, values[key]);
+			});
 		}
 	}
 }
