@@ -19,11 +19,12 @@
 namespace FluentValidation.Tests {
 	using Internal;
 	using System;
+	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Threading;
 	using Xunit;
 
-	
+
 	public class MessageFormatterTests {
 		MessageFormatter formatter;
 
@@ -60,9 +61,8 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Format_property_value()
-		{
-			using (new TemporalCultureExchange())
+		public void Format_property_value()	{
+			using (new CultureScope("en-US"))
 			{
 				string result = formatter
 				.AppendPropertyValue(123.45)
@@ -73,9 +73,8 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Understands_numeric_formats()
-		{
-			using (new TemporalCultureExchange())
+		public void Understands_numeric_formats() {
+			using (new CultureScope("en-US"))
 			{
 				string result = formatter
 					.AppendArgument("d", 123)
@@ -90,10 +89,35 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Understands_date_formats()
-		{
+		public void Adds_formatted_argument_and_custom_arguments() {
+			using (new CultureScope("en-US"))
+			{
+				string result = formatter
+				.AppendArgument("foo", 123.43)
+				.AppendAdditionalArguments("baz")
+				.BuildMessage("{foo:#.#} {0}");
+
+				result.ShouldEqual("123.4 baz");
+			}
+		}
+
+		[Fact]
+		public void Adds_formatted_argument_and_formatted_custom_arguments() {
+			using (new CultureScope("en-US"))
+			{
+				string result = formatter
+				.AppendArgument("foo", 123.43)
+				.AppendAdditionalArguments(.6789)
+				.BuildMessage("{foo:#.#} {0:p1}");
+
+				result.ShouldEqual("123.4 67.9%");
+			}
+		}
+
+		[Fact]
+		public void Understands_date_formats() {
 			var now = DateTime.Now;
-			using (new TemporalCultureExchange())
+			using (new CultureScope("en-US"))
 			{
 				string result = formatter
 					.AppendArgument("now", now)
@@ -104,8 +128,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_ignore_unknown_parameters()
-		{
+		public void Should_ignore_unknown_parameters() {
 			var now = DateTime.Now;
 			string result = formatter
 				.AppendArgument("foo", now)
@@ -114,33 +137,48 @@ namespace FluentValidation.Tests {
 			result.ShouldEqual($"{(now.ToString("g"))} {{unknown}} {{unknown:format}}");
 		}
 
-		internal class TemporalCultureExchange : IDisposable
+		[Fact]
+		public void Should_not_call_formatted_arguments_when_nonexistant() {
+			var mock = new FormatterMock();
+
+			string result = mock
+				.AppendPropertyName("foo")
+				.BuildMessage("{PropertyName}");
+
+			result.ShouldEqual("foo");
+			mock.ReplacePlaceholderWithValueCalled.ShouldBeTrue();
+			mock.ReplacePlaceholdersWithValuesCalled.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void Should_call_formatted_arguments_when_existant()
 		{
-			private bool disposedValue = false;
-			private CultureInfo _culture;
+			var mock = new FormatterMock();
 
-			internal TemporalCultureExchange(string culture = "en-US")
+			string result = mock
+				.AppendPropertyValue(123)
+				.BuildMessage("{PropertyValue:d}");
+
+			result.ShouldEqual("123");
+			mock.ReplacePlaceholderWithValueCalled.ShouldBeFalse();
+			mock.ReplacePlaceholdersWithValuesCalled.ShouldBeTrue();
+		}
+
+		private class FormatterMock : MessageFormatter {
+			public bool ReplacePlaceholdersWithValuesCalled { get; set; }
+			public bool ReplacePlaceholderWithValueCalled { get; set; }
+			protected override string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)
 			{
-				_culture = Thread.CurrentThread.CurrentCulture;
-
-				Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo(culture);
+				ReplacePlaceholdersWithValuesCalled = true;
+				return base.ReplacePlaceholdersWithValues(template, values);
 			}
 
-			protected virtual void Dispose(bool disposing)
+			protected override string ReplacePlaceholderWithValue(string template, string key, object value)
 			{
-				if (!disposedValue)
-				{
-					if (disposing)
-						Thread.CurrentThread.CurrentUICulture = _culture;
-
-					disposedValue = true;
-				}
+				ReplacePlaceholderWithValueCalled = true;
+				return base.ReplacePlaceholderWithValue(template, key, value);
 			}
 
-			public void Dispose()
-			{
-				Dispose(true);
-			}
 		}
 	}
 }

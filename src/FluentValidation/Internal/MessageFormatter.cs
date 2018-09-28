@@ -1,5 +1,6 @@
 namespace FluentValidation.Internal {
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Text.RegularExpressions;
 
 	/// <summary>
@@ -49,8 +50,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="value">The value of the property</param>
 		/// <returns></returns>
-		public MessageFormatter AppendPropertyValue(object value)
-		{
+		public MessageFormatter AppendPropertyValue(object value) {
 			return AppendArgument(PropertyValue, value);
 		}
 
@@ -65,6 +65,12 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
+		
+#if NETSTANDARD1_1 || NETSTANDARD1_6
+		private static Regex _templateRegex = new Regex("{[^{}]+:.+}");
+#else
+		private static Regex _templateRegex = new Regex("{[^{}]+:.+}"/*, RegexOptions.Compiled*/); 
+#endif
 		/// <summary>
 		/// Constructs the final message from the specified template. 
 		/// </summary>
@@ -74,7 +80,13 @@ namespace FluentValidation.Internal {
 
 			string result = messageTemplate;
 
-			result = ReplacePlaceholdersWithValues(result, _placeholderValues);
+			if (_templateRegex.Match(result).Success)
+				//_placeholderValues.Keys.Any(x => x?.ToString().Contains(":") ?? false))
+				result = ReplacePlaceholdersWithValues(result, _placeholderValues);
+			else
+				foreach (var pair in _placeholderValues)
+					result = ReplacePlaceholderWithValue(result, pair.Key, pair.Value);
+				
 
 			if (_shouldUseAdditionalArgs) {
 				return string.Format(result, _additionalArguments);
@@ -92,11 +104,31 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
 
-		// TODO: Add alignment component
-		private Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}"); // Matches any placeholder
+		protected virtual string ReplacePlaceholderWithValue(string template, string key, object value)	{
+			string placeholder = GetPlaceholder(key);
+			return template.Replace(placeholder, value?.ToString());
+		}
 
-		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)
-		{
+		protected string GetPlaceholder(string key)	{
+			// Performance: String concat causes much overhead when not needed. Concatting constants results in constants being compiled.
+			switch (key)
+			{
+				case PropertyName:
+					return "{" + PropertyName + "}";
+				case PropertyValue:
+					return "{" + PropertyValue + "}";
+				default:
+					return "{" + key + "}";
+			}
+		}
+
+#if NETSTANDARD1_1 || NETSTANDARD1_6
+		private static Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}");
+#else
+		private static Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled); 
+#endif
+
+		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)	{
 			return _keyRegex.Replace(template, m =>
 			{
 				var key = m.Groups[1].Value;
