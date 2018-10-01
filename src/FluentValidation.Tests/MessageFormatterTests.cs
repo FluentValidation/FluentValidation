@@ -82,9 +82,9 @@ namespace FluentValidation.Tests {
 					.AppendArgument("c", -123.456789)
 					.AppendArgument("f", 1234.567)
 					.AppendArgument("p", 0.912)
-					.BuildMessage("{c:c3} {c:c4} {f:f} {p:p} {d:d} {e:e} {e:0.00} {d:0000}");
+					.BuildMessage("{c:c3} {c:c4} {f:f} {p:p} {d:d} {e:e} {e:e2} {d:0000}");
 
-				result.ShouldEqual("($123.457) ($123.4568) 1234.57 91.20% 123 1.052033e+003 1052.03 0123");
+				result.ShouldEqual($"{-123.456789:c3} {-123.456789:c4} {1234.567:f} {0.912:p} {123:d} {1052.0329112756:e} {1052.0329112756:e2} {123:0000}");
 			}
 		}
 
@@ -123,7 +123,7 @@ namespace FluentValidation.Tests {
 					.AppendArgument("now", now)
 					.BuildMessage("{now:g} {now:MM-dd-yy} {now:f}");
 
-				result.ShouldEqual($"{now.ToString("g")} {now.ToString("MM-dd-yy")} {now.ToString("f")}");
+				result.ShouldEqual($"{now:g} {now:MM-dd-yy} {now:f}");
 			}
 		}
 
@@ -151,8 +151,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_call_formatted_arguments_when_existant()
-		{
+		public void Should_call_formatted_arguments_when_existant()	{
 			var mock = new FormatterMock();
 
 			string result = mock
