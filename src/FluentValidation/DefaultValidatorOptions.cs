@@ -97,39 +97,39 @@ namespace FluentValidation {
 			});
 		}
 
-        /// <summary>
-        /// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
-        /// </summary>
-        /// <param name="rule">The current rule</param>
-        /// <param name="errorMessage">The error message to use</param>
-        /// <returns></returns>
-        public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage) {
+		/// <summary>
+		/// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="errorMessage">The error message to use</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage) {
 			errorMessage.Guard("A message must be specified when calling WithMessage.", nameof(errorMessage));
 			return rule.Configure(config => {
 				config.CurrentValidator.Options.ErrorMessageSource = new StaticStringSource(errorMessage);
 			});
 		}
 
-        /// <summary>
-        /// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
-        /// </summary>
-        /// <param name="rule">The current rule</param>
-        /// <param name="messageProvider">Delegate that will be invoked to retrieve the localized message. </param>
-        /// <returns></returns>
-        public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
+		/// <summary>
+		/// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="messageProvider">Delegate that will be invoked to retrieve the localized message. </param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 			return rule.Configure(config => {
 				config.CurrentValidator.Options.ErrorMessageSource = new LazyStringSource(ctx => messageProvider((T)ctx.InstanceToValidate));
 			});
 		}
 
-        /// <summary>
-        /// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
-        /// </summary>
-        /// <param name="rule">The current rule</param>
-        /// <param name="messageProvider">Delegate that will be invoked.Uses_localized_name to retrieve the localized message. </param>
-        /// <returns></returns>
-        public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, string> messageProvider) {
+		/// <summary>
+		/// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="messageProvider">Delegate that will be invoked.Uses_localized_name to retrieve the localized message. </param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 
 			return rule.Configure(config => {
