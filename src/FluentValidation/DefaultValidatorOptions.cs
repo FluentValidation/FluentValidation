@@ -98,7 +98,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies a custom error message to use if validation fails.
+		/// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
 		/// <param name="errorMessage">The error message to use</param>
@@ -111,7 +111,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies a custom error message to use when validation fails.
+		/// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
 		/// <param name="messageProvider">Delegate that will be invoked to retrieve the localized message. </param>
@@ -124,7 +124,7 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies a custom error message to use when validation fails.
+		/// Specifies a custom error message to use when validation fails. Only applies to the rule that directly precedes it.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
 		/// <param name="messageProvider">Delegate that will be invoked.Uses_localized_name to retrieve the localized message. </param>
