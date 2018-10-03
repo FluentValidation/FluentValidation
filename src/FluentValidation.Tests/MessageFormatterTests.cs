@@ -119,9 +119,19 @@ namespace FluentValidation.Tests {
 
 			result.ShouldEqual($"{(now.ToString("g"))} {{unknown}} {{unknown:format}}");
 		}
+		
+		[Fact]
+		public void Should_ignore_unknown_numbered_parameters() {
+			var now = new DateTime(2018, 2, 1);
+			string result = formatter
+				.AppendArgument("foo", now)
+				.BuildMessage("{foo:yyyy-MM-dd} {0}");
+
+			result.ShouldEqual("2018-02-01 {0}");
+		}
 
 		[Fact]
-		public void Should_not_call_formatted_arguments_when_nonexistent() {
+		public void Should_not_attempt_to_format_arguments_when_there_are_no_formattable_arguments() {
 			var mock = new FormatterMock();
 
 			string result = mock
@@ -134,7 +144,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_call_formatted_arguments_when_existent() {
+		public void Should_format_arguments_when_there_are_formattable_arguments() {
 			var mock = new FormatterMock();
 
 			string result = mock
