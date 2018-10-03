@@ -9,7 +9,10 @@
     <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageReleaseNotes>
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
-        
+
+Changes in 8.1:
+* Add format support in message placeholders.
+
 Changes in 8.0:
 * Support validating only specific properties by path.
 * Added OnFailure method
