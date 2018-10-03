@@ -69,7 +69,7 @@ namespace FluentValidation.Internal {
 #if NETSTANDARD1_1
 		private static Regex _templateRegex = new Regex("{[^{}]+:.+}");
 #else
-		private static Regex _templateRegex = new Regex("{[^{}]+:.+}"/*, RegexOptions.Compiled*/); 
+		private static Regex _templateRegex = new Regex("{[^{}]+:.+}", RegexOptions.Compiled); 
 #endif
 		/// <summary>
 		/// Constructs the final message from the specified template. 
@@ -81,7 +81,6 @@ namespace FluentValidation.Internal {
 			string result = messageTemplate;
 			
 			if (_templateRegex.Match(result).Success)
-				//_placeholderValues.Keys.Any(x => x?.ToString().Contains(":") ?? false))
 				result = ReplacePlaceholdersWithValues(result, _placeholderValues);
 			else
 				foreach (var pair in _placeholderValues)
