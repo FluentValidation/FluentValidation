@@ -1,6 +1,6 @@
 namespace FluentValidation.Internal {
+	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Text.RegularExpressions;
 
 	/// <summary>
@@ -11,6 +11,14 @@ namespace FluentValidation.Internal {
 		object[] _additionalArguments = new object[0];
 		private bool _shouldUseAdditionalArgs;
 
+#if NETSTANDARD1_1
+		private static readonly Regex _templateRegex = new Regex("{[^{}]+:.+}");
+		private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}");
+#else
+		private static readonly Regex _templateRegex = new Regex("{[^{}]+:.+}", RegexOptions.Compiled); 
+		private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled); 
+#endif
+		
 		/// <summary>
 		/// Default Property Name placeholder.
 		/// </summary>
@@ -65,12 +73,6 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		
-#if NETSTANDARD1_1
-		private static Regex _templateRegex = new Regex("{[^{}]+:.+}");
-#else
-		private static Regex _templateRegex = new Regex("{[^{}]+:.+}", RegexOptions.Compiled); 
-#endif
 		/// <summary>
 		/// Constructs the final message from the specified template. 
 		/// </summary>
@@ -79,13 +81,15 @@ namespace FluentValidation.Internal {
 		public virtual string BuildMessage(string messageTemplate) {
 
 			string result = messageTemplate;
-			
-			if (_templateRegex.Match(result).Success)
+
+			if (_templateRegex.Match(result).Success) {
 				result = ReplacePlaceholdersWithValues(result, _placeholderValues);
-			else
-				foreach (var pair in _placeholderValues)
+			}
+			else {
+				foreach (var pair in _placeholderValues) {
 					result = ReplacePlaceholderWithValue(result, pair.Key, pair.Value);
-				
+				}
+			}
 
 			if (_shouldUseAdditionalArgs) {
 				return string.Format(result, _additionalArguments);
@@ -103,13 +107,15 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
 
+		[Obsolete("Use of ReplacePlaceholderWithValue is deprecated and will be removed from future versions. Use ReplacePlaceholdersWithValues instead.")]
 		protected virtual string ReplacePlaceholderWithValue(string template, string key, object value)	{
 			string placeholder = GetPlaceholder(key);
 			return template.Replace(placeholder, value?.ToString());
 		}
 
+		[Obsolete("Use of GetPlaceholder is deprecated and will be removed from future versions.")]
 		protected string GetPlaceholder(string key)	{
-			// Performance: String concat causes much overhead when not needed. Concatting constants results in constants being compiled.
+			// Performance: String concat causes much overhead when not needed. Concatenating constants results in constants being compiled.
 			switch (key) {
 				case PropertyName:
 					return "{" + PropertyName + "}";
@@ -119,12 +125,6 @@ namespace FluentValidation.Internal {
 					return "{" + key + "}";
 			}
 		}
-
-#if NETSTANDARD1_1
-		private static Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}");
-#else
-		private static Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled); 
-#endif
 
 		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)	{
 			return _keyRegex.Replace(template, m =>	{
