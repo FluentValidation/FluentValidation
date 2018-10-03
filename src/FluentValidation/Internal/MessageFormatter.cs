@@ -66,7 +66,7 @@ namespace FluentValidation.Internal {
 		}
 
 		
-#if NETSTANDARD1_1 || NETSTANDARD1_6
+#if NETSTANDARD1_1
 		private static Regex _templateRegex = new Regex("{[^{}]+:.+}");
 #else
 		private static Regex _templateRegex = new Regex("{[^{}]+:.+}"/*, RegexOptions.Compiled*/); 
@@ -79,7 +79,7 @@ namespace FluentValidation.Internal {
 		public virtual string BuildMessage(string messageTemplate) {
 
 			string result = messageTemplate;
-
+			
 			if (_templateRegex.Match(result).Success)
 				//_placeholderValues.Keys.Any(x => x?.ToString().Contains(":") ?? false))
 				result = ReplacePlaceholdersWithValues(result, _placeholderValues);
@@ -111,8 +111,7 @@ namespace FluentValidation.Internal {
 
 		protected string GetPlaceholder(string key)	{
 			// Performance: String concat causes much overhead when not needed. Concatting constants results in constants being compiled.
-			switch (key)
-			{
+			switch (key) {
 				case PropertyName:
 					return "{" + PropertyName + "}";
 				case PropertyValue:
@@ -122,15 +121,14 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-#if NETSTANDARD1_1 || NETSTANDARD1_6
+#if NETSTANDARD1_1
 		private static Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}");
 #else
 		private static Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled); 
 #endif
 
 		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)	{
-			return _keyRegex.Replace(template, m =>
-			{
+			return _keyRegex.Replace(template, m =>	{
 				var key = m.Groups[1].Value;
 
 				if (!values.ContainsKey(key))

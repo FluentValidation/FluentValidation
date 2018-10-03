@@ -62,8 +62,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Format_property_value()	{
-			using (new CultureScope("en-US"))
-			{
+			using (new CultureScope("en-US")) {
 				string result = formatter
 				.AppendPropertyValue(123.45)
 				.BuildMessage("{PropertyValue:#.#}");
@@ -74,8 +73,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Understands_numeric_formats() {
-			using (new CultureScope("en-US"))
-			{
+			using (new CultureScope("en-US")) {
 				string result = formatter
 					.AppendArgument("d", 123)
 					.AppendArgument("e", 1052.0329112756)
@@ -90,8 +88,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Adds_formatted_argument_and_custom_arguments() {
-			using (new CultureScope("en-US"))
-			{
+			using (new CultureScope("en-US")) {
 				string result = formatter
 				.AppendArgument("foo", 123.43)
 				.AppendAdditionalArguments("baz")
@@ -103,22 +100,20 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Adds_formatted_argument_and_formatted_custom_arguments() {
-			using (new CultureScope("en-US"))
-			{
+			using (new CultureScope("en-US")) {
 				string result = formatter
 				.AppendArgument("foo", 123.43)
 				.AppendAdditionalArguments(.6789)
 				.BuildMessage("{foo:#.#} {0:p1}");
 
-				result.ShouldEqual("123.4 67.9%");
+				result.ShouldEqual($"{123.43:#.#} {.6789:p1}");
 			}
 		}
 
 		[Fact]
 		public void Understands_date_formats() {
 			var now = DateTime.Now;
-			using (new CultureScope("en-US"))
-			{
+			using (new CultureScope("en-US")) {
 				string result = formatter
 					.AppendArgument("now", now)
 					.BuildMessage("{now:g} {now:MM-dd-yy} {now:f}");
@@ -166,14 +161,12 @@ namespace FluentValidation.Tests {
 		private class FormatterMock : MessageFormatter {
 			public bool ReplacePlaceholdersWithValuesCalled { get; set; }
 			public bool ReplacePlaceholderWithValueCalled { get; set; }
-			protected override string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)
-			{
+			protected override string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values) {
 				ReplacePlaceholdersWithValuesCalled = true;
 				return base.ReplacePlaceholdersWithValues(template, values);
 			}
 
-			protected override string ReplacePlaceholderWithValue(string template, string key, object value)
-			{
+			protected override string ReplacePlaceholderWithValue(string template, string key, object value) {
 				ReplacePlaceholderWithValueCalled = true;
 				return base.ReplacePlaceholderWithValue(template, key, value);
 			}
