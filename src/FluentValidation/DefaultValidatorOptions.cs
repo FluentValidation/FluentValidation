@@ -417,6 +417,19 @@ namespace FluentValidation {
 			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T>(config.CurrentValidator, onFailure)));
 		}
 
+		/// <summary>
+		/// Allows the generated indexer to be overridden for collection rules.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="callback">The callback. Receives the model, the collection, the current element and the current index as parameters. Should return a string representation of the indexer. The default is "[" + index + "]"</param>
+		/// <returns></returns>
+		public static IRuleBuilderInitialCollection<T, TCollectionElement> OverrideIndexer<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<T, IEnumerable<TCollectionElement>, TCollectionElement, int, string> callback) {
+			// This overload supports RuleFor().SetCollectionValidator() (which returns IRuleBuilderOptions<T, IEnumerable<TElement>>)
+			callback.Guard("Cannot pass null to OverrideIndexer.", nameof(callback));
+			return rule.Configure(cfg => {
+				cfg.IndexBuilder = (x, collection, element, index) => callback((T)x, (IEnumerable<TCollectionElement>)collection, (TCollectionElement)element, index);
+			});
+		}
 
 		/// <summary>
 		/// Gets the default message for a property validator

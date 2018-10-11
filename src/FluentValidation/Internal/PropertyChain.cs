@@ -103,13 +103,14 @@ namespace FluentValidation.Internal {
 		/// Parent.Child[0]
 		/// </summary>
 		/// <param name="indexer"></param>
-		public void AddIndexer(object indexer) {
+		/// <param name="surroundWithBrackets">Whether square brackets should be applied before and after the indexer. Default true.</param>
+		public void AddIndexer(object indexer, bool surroundWithBrackets = true) {
 			if(_memberNames.Count == 0) {
 				throw new InvalidOperationException("Could not apply an Indexer because the property chain is empty.");
 			}
 
 			string last = _memberNames[_memberNames.Count - 1];
-			last += "[" + indexer + "]";
+			last += surroundWithBrackets ? "[" + indexer + "]" : indexer;
 
 			_memberNames[_memberNames.Count - 1] = last;
 		}

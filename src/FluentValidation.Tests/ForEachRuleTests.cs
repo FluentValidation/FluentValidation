@@ -66,6 +66,44 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Overrides_indexer() {
+			var validator = new TestValidator {
+				v => v.RuleForEach(x => x.NickNames)
+					.OverrideIndexer((x, collection, element, index) => {
+						return "<" + index + ">";
+					})
+					.NotNull()
+			};
+
+			var person = new Person {
+				NickNames = new[] {null, "foo", null}
+			};
+
+			var result = validator.Validate(person);
+			result.Errors[0].PropertyName.ShouldEqual("NickNames<0>");
+			result.Errors[1].PropertyName.ShouldEqual("NickNames<2>");
+		}
+		
+		[Fact]
+		public async Task Overrides_indexer_async() {
+			var validator = new TestValidator {
+				v => v.RuleForEach(x => x.NickNames)
+					.OverrideIndexer((x, collection, element, index) => {
+						return "<" + index + ">";
+					})
+					.MustAsync(async (x, elem, ct) => elem != null)
+			};
+
+			var person = new Person {
+				NickNames = new[] {null, "foo", null}
+			};
+
+			var result = await validator.ValidateAsync(person);
+			result.Errors[0].PropertyName.ShouldEqual("NickNames<0>");
+			result.Errors[1].PropertyName.ShouldEqual("NickNames<2>");
+		}
+
+		[Fact]
 		public void Executes_rule_for_each_item_in_collection_async() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator())
@@ -176,8 +214,7 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person {NickNames = new string[] {null}});
 			result.Errors.Count.ShouldEqual(1);
 		}
-
-
+		
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};
 		}

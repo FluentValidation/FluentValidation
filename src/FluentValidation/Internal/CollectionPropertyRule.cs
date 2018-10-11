@@ -52,6 +52,12 @@ namespace FluentValidation.Internal {
 		public Func<TProperty, bool> Filter { get; set; }
 
 		/// <summary>
+		/// Constructs the indexer in the property name associated with the error message.
+		/// By default this is "[" + index + "]"
+		/// </summary>
+		public Func<object, IEnumerable<TProperty>, TProperty, int, string> IndexBuilder { get; set; }
+
+		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
 		public static CollectionPropertyRule<TProperty> Create<T>(Expression<Func<T, IEnumerable<TProperty>>> expression, Func<CascadeMode> cascadeModeThunk) {
@@ -91,9 +97,17 @@ namespace FluentValidation.Internal {
 							return Enumerable.Empty<ValidationFailure>();
 						}
 
+						string indexer = count.ToString();
+						bool useDefaultIndexFormat = true;
+
+						if (IndexBuilder != null) {
+							indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, v, count);
+							useDefaultIndexFormat = false;
+						}
+						
 						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
 						newContext.PropertyChain.Add(propertyName);
-						newContext.PropertyChain.AddIndexer(count);
+						newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
 						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
 
@@ -156,9 +170,17 @@ namespace FluentValidation.Internal {
 							continue;
 						}
 						
+						string indexer = index.ToString();
+						bool useDefaultIndexFormat = true;
+
+						if (IndexBuilder != null) {
+							indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, element, index);
+							useDefaultIndexFormat = false;
+						}
+						
 						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
 						newContext.PropertyChain.Add(propertyName);
-						newContext.PropertyChain.AddIndexer(index);
+						newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
 						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
 
