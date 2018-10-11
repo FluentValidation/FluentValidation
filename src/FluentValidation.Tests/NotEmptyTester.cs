@@ -76,7 +76,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.DateOfBirth).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { DateOfBirth = default(DateTime) });
+			var result = validator.Validate(new Person { DateOfBirth = default });
 			result.IsValid.ShouldBeFalse();
 		}
 

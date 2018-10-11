@@ -5,6 +5,7 @@
     <RootNamespace>FluentValidation.Tests.WebApi</RootNamespace>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\FluentValidation.Tests\TestExtensions.cs" Link="TestExtensions.cs" />
@@ -54,10 +55,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1701;1702;1705;1998;0618</NoWarn>
   </PropertyGroup>
-  <Import Project="../netfx.props"/>
+  <Import Project="../netfx.props" />
   <ItemGroup Condition="'$(TargetFramework)'=='net452' AND '$(OS)'=='Unix'">
     <!-- Workarounds for Mono -->
-    <Reference Include="System.Runtime"/>
-    <Reference Include="System.Threading.Tasks"/>
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Threading.Tasks" />
   </ItemGroup>
 </Project>

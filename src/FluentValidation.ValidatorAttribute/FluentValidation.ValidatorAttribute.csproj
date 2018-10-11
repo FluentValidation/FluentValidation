@@ -15,6 +15,7 @@
     <DelaySign>False</DelaySign>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' and '$(AssemblyOriginatorKeyFile)'!=''">True</PublicSign>
     <DebugType>embedded</DebugType>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
@@ -22,5 +23,5 @@
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
   </ItemGroup>
-  <Import Project="../netfx.props"/>
+  <Import Project="../netfx.props" />
 </Project>

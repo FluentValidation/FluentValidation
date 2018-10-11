@@ -29,6 +29,7 @@ Changes in 7.4:
 	 
 Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
 </PackageReleaseNotes>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702;1705;1591</NoWarn>
@@ -41,7 +42,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
-    <ProjectReference Include="..\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj"/>
+    <ProjectReference Include="..\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj" />
   </ItemGroup>
-  <Import Project="../netfx.props"/>
+  <Import Project="../netfx.props" />
 </Project>

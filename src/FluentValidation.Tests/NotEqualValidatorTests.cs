@@ -124,7 +124,7 @@ namespace FluentValidation.Tests {
 
 		public struct MyValueType
 		{
-			public static readonly MyValueType None = default(MyValueType);
+			public static readonly MyValueType None = default;
 
 			public MyValueType(int value)
 			{

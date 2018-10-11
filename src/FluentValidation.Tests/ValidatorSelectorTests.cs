@@ -140,7 +140,7 @@ namespace FluentValidation.Tests {
 			validator2.RuleFor(x => x.Surname).NotNull();
 			validator.Include(validator2);
 
-			var result = validator.ValidateAsync(new Person(), default(CancellationToken), "Forename").Result;
+			var result = validator.ValidateAsync(new Person(), default, "Forename").Result;
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Forename");
 		}

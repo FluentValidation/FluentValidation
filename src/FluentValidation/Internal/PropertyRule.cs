@@ -47,12 +47,12 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that can be invoked to retrieve the value of the property.
 		/// </summary>
-		public Func<object, object> PropertyFunc { get; private set; }
+		public Func<object, object> PropertyFunc { get; }
 
 		/// <summary>
 		/// Expression that was used to create the rule.
 		/// </summary>
-		public LambdaExpression Expression { get; private set; }
+		public LambdaExpression Expression { get; }
 
 		/// <summary>
 		/// String source that can be used to retrieve the display name (if null, falls back to the property name)
@@ -80,7 +80,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Type of the property being validated
 		/// </summary>
-		public Type TypeToValidate { get; private set; }
+		public Type TypeToValidate { get; }
 
 		/// <summary>
 		/// Cascade mode for this rule.
@@ -262,7 +262,7 @@ namespace FluentValidation.Internal {
 			foreach (var validator in _validators) {
 				IEnumerable<ValidationFailure> results;
 				if (validator.ShouldValidateAsync(context))
-					results = InvokePropertyValidatorAsync(context, validator, propertyName, default(CancellationToken)).GetAwaiter().GetResult();
+					results = InvokePropertyValidatorAsync(context, validator, propertyName, default).GetAwaiter().GetResult();
 				else
 					results = InvokePropertyValidator(context, validator, propertyName);
 
