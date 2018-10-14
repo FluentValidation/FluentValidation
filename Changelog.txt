@@ -1,3 +1,6 @@
+8.1.0 - 
+Added format support for message placeholders.
+
 8.0.100 - 4 September 2018
 Added Greek language translation.
 Resolved an issue where Cascade and Transform couldn't be used with RuleForEach
