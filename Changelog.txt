@@ -1,5 +1,6 @@
 8.1.0 - 
 Added format support for message placeholders.
+Added support for overriding inexers for collection rules.
 
 8.0.100 - 4 September 2018
 Added Greek language translation.
