@@ -35,7 +35,7 @@ public void ConfigureServices(IServiceCollection services) {
 }
 ```
 
-...or by using the `AddFromAssemblyContaining` method to automatically register all validators within a particular assembly. This will automatically find and public, non-abstract types that inherit from `AbstractValidator` and register them with the container (open generics are not supported).
+...or by using the `AddFromAssemblyContaining` method to automatically register all validators within a particular assembly. This will automatically find any public, non-abstract types that inherit from `AbstractValidator` and register them with the container (open generics are not supported).
 
 ```csharp
 services.AddMvc()
