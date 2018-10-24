@@ -36,13 +36,13 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' deve essere minore o uguale a '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' deve essere minore di '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("'{PropertyName}' non può essere vuoto.");
-			Translate<NotEqualValidator>("'{PropertyName}' non puo essere uguale a '{ComparisonValue}'.");
-			Translate<NotNullValidator>("'{PropertyName}' non puo essere vuoto.");
+			Translate<NotEqualValidator>("'{PropertyName}' non può essere uguale a '{ComparisonValue}'.");
+			Translate<NotNullValidator>("'{PropertyName}' non può essere vuoto.");
 			Translate<PredicateValidator>("La condizione non è verificata per '{PropertyName}'.");
 			Translate<AsyncPredicateValidator>("La condizione non è verificata per '{PropertyName}'.");
 			Translate<RegularExpressionValidator>("'{PropertyName}' non è nel formato corretto.");
 			Translate<CreditCardValidator>("'{PropertyName}' non è un numero di carta di credito valido.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' potrebbe non avere più di {expectedPrecision} cifre in totale, con una tolleranza per decimali {expectedScale}. Sono stati trovati i decimali {digits} e i decimali {actualScale}.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' potrebbe non avere più di {expectedPrecision} cifre in totale, con una tolleranza per {expectedScale} decimali. Sono stati trovate {digits} cifre e {actualScale} decimali.");
 			Translate<EmptyValidator>("'{PropertyName}' dovrebbe essere vuoto.");
 			Translate<NullValidator>("'{PropertyName}' dovrebbe essere vuoto.");
 			Translate<EnumValidator>("'{PropertyName}' ha un intervallo di valori che non include '{PropertyValue}'.");
