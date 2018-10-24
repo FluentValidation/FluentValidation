@@ -10,7 +10,7 @@ To enable MVC integration, you'll need to add a reference to the `FluentValidati
 Install-Package FluentValidation.AspNetCore
 ```
 
-Once installed, you'll need to configure FluentValidation in your app's Startup class by calling the `AddFluentValidation` extension method inside the `ConfigureServices` method (which requires a `using FluentValidation.AspNetCore` at the top of the file)
+Once installed, you'll need to configure FluentValidation in your app's Startup class by calling the `AddFluentValidation` extension method inside the `ConfigureServices` method (which requires a `using FluentValidation.AspNetCore`). This method must be called directly after calling `AddMvc`.
 
 
 ```csharp
@@ -35,7 +35,7 @@ public void ConfigureServices(IServiceCollection services) {
 }
 ```
 
-...or by using the AddFromAssemblyContaining method to automatically register all validators within a particular assembly.
+...or by using the `AddFromAssemblyContaining` method to automatically register all validators within a particular assembly. This will automatically find and public, non-abstract types that inherit from `AbstractValidator` and register them with the container (open generics are not supported).
 
 ```csharp
 services.AddMvc()
