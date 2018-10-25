@@ -127,7 +127,34 @@
 			foreach (var language in languages) {
 				languageCodes.Contains(language.Name).ShouldBeTrue($"Language {language.Name} is not loaded in the LanguageManager");
 			}
+		}
+
+		[Fact]
+		public void Uses_error_code_as_localization_key() {
+			var originalLanguageManager = ValidatorOptions.LanguageManager;
+			ValidatorOptions.LanguageManager = new CustomLanguageManager();
 			
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("CustomKey");
+			var result = validator.Validate(new Person());
+
+			ValidatorOptions.LanguageManager = originalLanguageManager;
+			
+			result.Errors[0].ErrorMessage.ShouldEqual("bar");
+		}
+		
+		[Fact]
+		public void Falls_back_to_default_localization_key_when_error_code_key_not_found() {
+			var originalLanguageManager = ValidatorOptions.LanguageManager;
+			ValidatorOptions.LanguageManager = new CustomLanguageManager();
+			
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("DoesNotExist");
+			var result = validator.Validate(new Person());
+
+			ValidatorOptions.LanguageManager = originalLanguageManager;
+			
+			result.Errors[0].ErrorMessage.ShouldEqual("foo");
 		}
 		
 		void CheckParametersMatch(string languageCode, string translationKey) {
@@ -149,6 +176,7 @@
 		public class CustomLanguageManager : LanguageManager {
 			public CustomLanguageManager() {
 				AddTranslation("en", "NotNullValidator", "foo");
+				AddTranslation("en", "CustomKey", "bar");
 			}
 		}
 
