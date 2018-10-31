@@ -38,11 +38,11 @@ It allows extra options/configuration to be added to property validators without
 
 ### ValidatorAttribute and AttributedValidatorFactory have been moved to a separate package
 
-Use of the `ValidatorAttribute` to wire up validators is no longer recommended and have been moved to a separate `FluentValidation.Attributes` package.
+Use of the `ValidatorAttribute` to wire up validators is no longer recommended and have been moved to a separate `FluentValidation.ValidatorAttribute` package.
 
 - In ASP.NET Core projects, you should use the service provider to wire models to their validators (this has been the default behaviour for ASP.NET Core projects since FluentValidation 7)
-- For desktop or mobile applications, we recommend using an IoC container to wire up validators, although you can still use the attribute approach by explicitly installing the `FluentValidation.Attributes` package.
-- In legacy ASP.NET projects (MVC 5 and WebApi 2), the ValidatorAttribute is still the default approach, and the `FluentValidation.Attributes` package will be automatically installed for compatibility. However, we recommend using an IoC container instead if you can.
+- For desktop or mobile applications, we recommend using an IoC container to wire up validators, although you can still use the attribute approach by explicitly installing the `FluentValidation.ValidatorAttribute` package.
+- In legacy ASP.NET projects (MVC 5 and WebApi 2), the ValidatorAttribute is still the default approach, and the `FluentValidation.ValidatorAttribute` package will be automatically installed for compatibility. However, we recommend using an IoC container instead if you can.
 
 ### Validating properties by path
 
