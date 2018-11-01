@@ -155,7 +155,7 @@ namespace FluentValidation.Tests {
 			var validator = new Mock<IPropertyValidator>();
 			builder.SetValidator(validator.Object);
 
-			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
+			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationTokenSource(100).Token).Result.ToList();
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 
@@ -172,7 +172,7 @@ namespace FluentValidation.Tests {
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
 			builder.SetValidator(validator.Object);
 
-			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
+			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationTokenSource(100).Token).Result.ToList();
 
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
 

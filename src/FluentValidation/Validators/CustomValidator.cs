@@ -33,7 +33,7 @@
 		public CustomValidator(Func<T, CustomContext, CancellationToken, Task> asyncAction) : base(string.Empty) {
 			_isAsync = true;
 			_asyncAction = asyncAction;
-			_action = (x, ctx) => Task.Run(() => _asyncAction(x, ctx, new CancellationToken())).GetAwaiter().GetResult();
+			_action = (x, ctx) => Task.Run(() => _asyncAction(x, ctx, new CancellationTokenSource(100).Token)).GetAwaiter().GetResult();
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
