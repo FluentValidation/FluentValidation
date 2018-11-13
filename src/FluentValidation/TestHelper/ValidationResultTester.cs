@@ -69,8 +69,15 @@ namespace FluentValidation.TestHelper {
 
 			var failures = _testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
 
-			if (failures.Any())
-				throw new ValidationTestException($"Expected no validation errors for property {propertyName}", failures);
+			if (failures.Any()) {
+				var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
+				string errorMessageDetails = "";
+				for (int i = 0; i < failures.Count; i++) {
+					errorMessageDetails += $"[{i}]: {failures[i].ErrorMessage}\n";
+				}
+				var errorMessage = $"{errorMessageBanner}\n----\nValidation Errors:\n{errorMessageDetails}";
+				throw new ValidationTestException(errorMessage, failures);
+			}
 		}
 
 		private static string NormalizePropertyName(string propertyName) {
