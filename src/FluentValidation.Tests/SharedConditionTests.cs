@@ -505,6 +505,66 @@ namespace FluentValidation.Tests {
 			await validator.ValidateAsync(new Person {Age = 11});
 			executions.ShouldEqual(1);
 		}
+
+		[Fact]
+		public void Runs_otherwise_conditions_for_When() {
+			var validator = new TestValidator();
+			validator.When(x => x.Age > 10, () => {
+				validator.RuleFor(x => x.Forename).NotNull();
+			}).Otherwise(() => {
+				validator.RuleFor(x => x.Surname).NotNull();
+			});
+
+			var result1 = validator.Validate(new Person {Age = 11});
+			result1.Errors.Single().PropertyName.ShouldEqual("Forename");
+			var result2 = validator.Validate(new Person {Age = 9});
+			result2.Errors.Single().PropertyName.ShouldEqual("Surname");
+		}
+
+		[Fact]
+		public void Runs_otherwise_conditons_for_Unless() {
+			var validator = new TestValidator();
+			validator.Unless(x => x.Age > 10, () => {
+				validator.RuleFor(x => x.Forename).NotNull();
+			}).Otherwise(() => {
+				validator.RuleFor(x => x.Surname).NotNull();
+			});
+
+			var result1 = validator.Validate(new Person {Age = 11});
+			result1.Errors.Single().PropertyName.ShouldEqual("Surname");
+			var result2 = validator.Validate(new Person {Age = 9});
+			result2.Errors.Single().PropertyName.ShouldEqual("Forename");
+		}
+
+		[Fact]
+		public async Task Runs_otherwise_conditions_for_WhenAsync() {
+			var validator = new TestValidator();
+			validator.WhenAsync(async (x, ct) => x.Age > 10, () => {
+				validator.RuleFor(x => x.Forename).NotNull();
+			}).Otherwise(() => {
+				validator.RuleFor(x => x.Surname).NotNull();
+			});
+
+			var result1 = await validator.ValidateAsync(new Person {Age = 11});
+			result1.Errors.Single().PropertyName.ShouldEqual("Forename");
+			var result2 = await validator.ValidateAsync(new Person {Age = 9});
+			result2.Errors.Single().PropertyName.ShouldEqual("Surname");
+		}
+
+		[Fact]
+		public async Task Runs_otherwise_conditions_for_UnlessAsync() {
+			var validator = new TestValidator();
+			validator.UnlessAsync(async (x, ct) => x.Age > 10, () => {
+				validator.RuleFor(x => x.Forename).NotNull();
+			}).Otherwise(() => {
+				validator.RuleFor(x => x.Surname).NotNull();
+			});
+
+			var result1 = await validator.ValidateAsync(new Person {Age = 11});
+			result1.Errors.Single().PropertyName.ShouldEqual("Surname");
+			var result2 = await validator.ValidateAsync(new Person {Age = 9});
+			result2.Errors.Single().PropertyName.ShouldEqual("Forename");
+		}
 	}
 }
 

@@ -76,4 +76,15 @@ namespace FluentValidation {
 	public interface IRuleBuilderInitialCollection<T, TElement> : IRuleBuilder<T, TElement>, IConfigurable<CollectionPropertyRule<TElement>, IRuleBuilderInitialCollection<T, TElement>> {
 	}
 
+	/// <summary>
+	/// Fluent interface for conditions (When/Unless/WhenAsync/UnlessAsync)
+	/// </summary>
+	public interface IConditionBuilder {
+		/// <summary>
+		/// Rules to be invoked if the condition fails.
+		/// </summary>
+		/// <param name="action"></param>
+		void Otherwise(Action action);
+	}
+
 }
