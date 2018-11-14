@@ -159,7 +159,7 @@
 				{"Id", ""}
 			};
 			var errors = await _webApp.GetErrors("TestModelWithOverridenPropertyNameValueType", form);
-			errors.GetError("Id").ShouldEqual("'Foo' should not be empty.");
+			errors.GetError("Id").ShouldEqual("'Foo' must not be empty.");
 		}
 //
 //	    [Fact]

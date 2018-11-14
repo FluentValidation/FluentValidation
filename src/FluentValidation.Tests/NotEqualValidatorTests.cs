@@ -51,7 +51,7 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual("Foo"));
 			var result = validator.Validate(new Person { Forename = "Foo" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' should not be equal to 'Foo'.");
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' must not be equal to 'Foo'.");
 		}
 
 		[Fact]

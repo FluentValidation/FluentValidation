@@ -110,7 +110,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person { Surname = null });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' should not be empty.");
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
 		}
 
 	    [Fact]

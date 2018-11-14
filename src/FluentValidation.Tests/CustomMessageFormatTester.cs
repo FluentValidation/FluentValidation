@@ -61,7 +61,7 @@ namespace FluentValidation.Tests {
 
 			var result = validator.Validate(new Person());
 			result.Errors[0].ErrorMessage.ShouldEqual("Foo");
-			result.Errors[1].ErrorMessage.ShouldEqual("'Surname' should not be empty.");
+			result.Errors[1].ErrorMessage.ShouldEqual("'Surname' must not be empty.");
 		}
 
 

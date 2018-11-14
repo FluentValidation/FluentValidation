@@ -54,7 +54,7 @@ namespace FluentValidation.Tests.Mvc5 {
 		public void NotEmpty_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).NotEmpty();
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("'Name' should not be empty.");
+			clientRule.ErrorMessage.ShouldEqual("'Name' must not be empty.");
 		}
 
 		[Fact]
@@ -125,7 +125,7 @@ namespace FluentValidation.Tests.Mvc5 {
 		public void EqualValidator_with_property_uses_simplified_message_for_clientside_validation() {
 			validator.RuleFor(x => x.Name).Equal(x => x.Name2);
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("'Name' should be equal to 'Name2'.");
+			clientRule.ErrorMessage.ShouldEqual("'Name' must be equal to 'Name2'.");
 		}
 
 		[Fact]
@@ -190,7 +190,7 @@ namespace FluentValidation.Tests.Mvc5 {
 		public void Falls_back_to_default_message_when_no_context_available_to_custom_message_format() {
 			validator.RuleFor(x => x.Name).NotNull().WithMessage(x => $"Foo {x.Name}");
 			var clientRule = GetClientRule(x => x.Name);
-			clientRule.ErrorMessage.ShouldEqual("'Name' should not be empty.");
+			clientRule.ErrorMessage.ShouldEqual("'Name' must not be empty.");
 		}
 
 		[Fact]

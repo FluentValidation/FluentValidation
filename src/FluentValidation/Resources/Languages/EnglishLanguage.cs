@@ -31,19 +31,19 @@ namespace FluentValidation.Resources {
 			Translate<MaximumLengthValidator>("The length of '{PropertyName}' must be {MaxLength} characters or fewer. You entered {TotalLength} characters.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' must be less than or equal to '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' must be less than '{ComparisonValue}'.");
-			Translate<NotEmptyValidator>("'{PropertyName}' should not be empty.");
-			Translate<NotEqualValidator>("'{PropertyName}' should not be equal to '{ComparisonValue}'.");
+			Translate<NotEmptyValidator>("'{PropertyName}' must not be empty.");
+			Translate<NotEqualValidator>("'{PropertyName}' must not be equal to '{ComparisonValue}'.");
 			Translate<NotNullValidator>("'{PropertyName}' must not be empty.");
 			Translate<PredicateValidator>("The specified condition was not met for '{PropertyName}'.");
 			Translate<AsyncPredicateValidator>("The specified condition was not met for '{PropertyName}'.");
 			Translate<RegularExpressionValidator>("'{PropertyName}' is not in the correct format.");
-			Translate<EqualValidator>("'{PropertyName}' should be equal to '{ComparisonValue}'.");
+			Translate<EqualValidator>("'{PropertyName}' must be equal to '{ComparisonValue}'.");
 			Translate<ExactLengthValidator>("'{PropertyName}' must be {MaxLength} characters in length. You entered {TotalLength} characters.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' must be between {From} and {To}. You entered {Value}.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' must be between {From} and {To} (exclusive). You entered {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' is not a valid credit card number.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' may not be more than {expectedPrecision} digits in total, with allowance for {expectedScale} decimals. {digits} digits and {actualScale} decimals were found.");
-			Translate<EmptyValidator>("'{PropertyName}' should be empty.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' must not be more than {expectedPrecision} digits in total, with allowance for {expectedScale} decimals. {digits} digits and {actualScale} decimals were found.");
+			Translate<EmptyValidator>("'{PropertyName}' must be empty.");
 			Translate<NullValidator>("'{PropertyName}' must be empty.");
 			Translate<EnumValidator>("'{PropertyName}' has a range of values which does not include '{PropertyValue}'.");
 		}

@@ -32,13 +32,13 @@ namespace FluentValidation.Tests.AspNetCore {
 		[Fact]
 		public async Task NotEmpty_uses_simplified_message_for_clientside_validation() {
 			var msg = await _webApp.GetClientsideMessage("Required", "data-val-required");
-			msg.ShouldEqual("'Required' should not be empty.");
+			msg.ShouldEqual("'Required' must not be empty.");
 		}
 
 		[Fact]
 		public async Task NotNull_uses_simplified_message_for_clientside_validation() {
 			var msg = await _webApp.GetClientsideMessage("Required2", "data-val-required");
-			msg.ShouldEqual("'Required2' should not be empty.");
+			msg.ShouldEqual("'Required2' must not be empty.");
 		}
 
 		[Fact]
@@ -100,7 +100,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		[Fact]
 		public async Task EqualValidator_with_property_uses_simplified_message_for_clientside_validation() {
 			var msg = await _webApp.GetClientsideMessage("EqualTo", "data-val-equalto");
-			msg.ShouldEqual("'Equal To' should be equal to 'Required'.");
+			msg.ShouldEqual("'Equal To' must be equal to 'Required'.");
 		}
 
 		[Fact]
@@ -160,7 +160,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		[Fact]
 		public async Task Falls_back_to_default_message_when_no_context_available_to_custom_message_format() {
 			var msg = await _webApp.GetClientsideMessage("MessageWithContext", "data-val-required");
-			msg.ShouldEqual("'Message With Context' should not be empty.");
+			msg.ShouldEqual("'Message With Context' must not be empty.");
 		}
 
 		[Fact]
@@ -196,7 +196,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		[Fact]
 		public async Task Renders_attributes_inside_partial() {
 			var msg = await _webApp.GetClientsideMessage("RequiredInsidePartial", "data-val-required");
-			msg.ShouldEqual("'Required Inside Partial' should not be empty.");
+			msg.ShouldEqual("'Required Inside Partial' must not be empty.");
 		}
 
 		[Fact]
