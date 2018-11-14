@@ -107,7 +107,6 @@ namespace FluentValidation.Resources {
 		/// <param name="culture">The culture to translate into</param>
 		/// <returns></returns>
 		public virtual string GetString(string key, CultureInfo culture=null) {
-			// For backwards compatibility with < 7.0 ResourceProvider
 			culture = culture ?? Culture ?? CultureInfo.CurrentUICulture;
 
 			string code = culture.Name;
