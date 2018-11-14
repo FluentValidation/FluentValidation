@@ -12,6 +12,12 @@ FluentValidation 8 is a major release. Please read the upgrade notes at https://
 
 Changes in 8.1:
 * Add format support in message placeholders.
+* Added support for overriding indexers for collection rules.
+* Allow error codes to be used to override localization key in the Language Manager.
+* Additional error details are now shown in the ShouldNotHaveValidationErrorFor test extension.
+* Conditions defined with root-level When/WhenAsync/Unless/UnlessAsync are now only executed once (instead of once for each rule).
+* Support Otherwise method chained from root-level When/WhenAsync/Unless/UnlessAsync.
+* Minor wording changes to default English error messages.
 
 Changes in 8.0:
 * Support validating only specific properties by path.
