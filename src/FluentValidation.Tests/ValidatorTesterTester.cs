@@ -62,6 +62,12 @@ namespace FluentValidation.Tests {
 			Assert.Contains(nameof(Person.NickNames), validationTestException.Message);
 		}
 
+		[Fact]
+		public void ShouldNotHaveValidationError_should_have_validation_error_details_when_thrown_ruleforeach() {
+			ValidationTestException validationTestException = Assert.Throws<ValidationTestException>(() =>
+				validator.ShouldNotHaveValidationErrorFor(l => l.NickNames, new[] { "magician", "bull" }));
+			Assert.Contains("The length of 'Nick Names' must be at least 5 characters. You entered 4 characters.", validationTestException.Message);
+		}
 
 		[Fact]
 		public void ShouldHaveValidationError_should_not_throw_when_there_are_validation_errors() {
