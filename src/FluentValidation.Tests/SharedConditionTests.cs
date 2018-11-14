@@ -473,6 +473,38 @@ namespace FluentValidation.Tests {
 			var result = await validator.ValidateAsync(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
+		
+		[Fact]
+		public void When_condition_only_executed_once() {
+			var validator = new TestValidator();
+			int executions = 0;
+			validator.When(x => {
+				executions++;
+				return x.Age > 10;
+			}, () => {
+				validator.RuleFor(x => x.Surname).NotNull();
+				validator.RuleFor(x => x.Forename).NotNull();
+			});
+
+			validator.Validate(new Person {Age = 11});
+			executions.ShouldEqual(1);
+		}
+
+		[Fact]
+		public async Task WhenAsync_condition_only_executed_once() {
+			var validator = new TestValidator();
+			int executions = 0;
+			validator.WhenAsync(async (x, ct) => {
+				executions++;
+				return x.Age > 10;
+			}, () => {
+				validator.RuleFor(x => x.Surname).NotNull();
+				validator.RuleFor(x => x.Forename).NotNull();
+			});
+
+			await validator.ValidateAsync(new Person {Age = 11});
+			executions.ShouldEqual(1);
+		}
 	}
 }
 

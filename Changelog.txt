@@ -3,6 +3,7 @@ Added format support for message placeholders.
 Added support for overriding inexers for collection rules.
 Allow ErrorCode to be used to override localization key in the Language Manager.
 Additional error details are now shown in the ShouldNotHaveValidationErrorFor test extension.
+Conditions defined with root-level When/WhenAsync/Unless/UnlessAsync are now only executed once (instead of once for each rule)
 
 8.0.100 - 4 September 2018
 Added Greek language translation.

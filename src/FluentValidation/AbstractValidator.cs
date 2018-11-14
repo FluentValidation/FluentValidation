@@ -27,6 +27,7 @@ namespace FluentValidation {
 	using System.Threading.Tasks;
 	using Internal;
 	using Results;
+	using Validators;
 
 	/// <summary>
 	/// Base class for object validators.
@@ -234,8 +235,25 @@ namespace FluentValidation {
 				action(); 
 			}
 
+			// Generate unique ID for this shared condition.
+			var id = "_FV_Condition_" + Guid.NewGuid();
+			
+			bool Condition(PropertyValidatorContext context) {
+				if (context.ParentContext.RootContextData.TryGetValue(id, out var value)) {
+					if (value is bool result) {
+						return result;
+					}
+				}
+
+				var executionResult = predicate((T) context.Instance);
+				context.ParentContext.RootContextData[id] = executionResult;
+				return executionResult;
+			}
+
 			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
-			propertyRules.ForEach(x => x.ApplyCondition(ctx => predicate((T)ctx.Instance)));
+			foreach (var rule in propertyRules) {
+				rule.ApplyCondition(Condition);
+			}
 		}
 		
 		/// <summary>
@@ -261,9 +279,25 @@ namespace FluentValidation {
 			using (Rules.OnItemAdded(onRuleAdded)) {
 				action();
 			}
+			
+			// Generate unique ID for this shared condition.
+			var id = "_FV_AsyncCondition_" + Guid.NewGuid();
+			
+			async Task<bool> Condition(PropertyValidatorContext context, CancellationToken ct) {
+				if (context.ParentContext.RootContextData.TryGetValue(id, out var value)) {
+					if (value is bool result) {
+						return result;
+					}
+				}
 
-			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
-			propertyRules.ForEach(x => x.ApplyAsyncCondition((ctx, token) => predicate((T)ctx.Instance, token)));
+				var executionResult = await predicate((T) context.Instance, ct);
+				context.ParentContext.RootContextData[id] = executionResult;
+				return executionResult;
+			}
+
+			foreach (var rule in propertyRules) {
+				rule.ApplyAsyncCondition(Condition);
+			}
 		}
 
 		/// <summary>
