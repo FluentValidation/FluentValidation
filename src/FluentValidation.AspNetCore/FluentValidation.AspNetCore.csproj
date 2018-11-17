@@ -59,6 +59,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
+    <ProjectReference Include="..\FluentValidation.DependencyInjectionExtensions\FluentValidation.DependencyInjectionExtensions.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
