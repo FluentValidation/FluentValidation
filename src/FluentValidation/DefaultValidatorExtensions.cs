@@ -1066,9 +1066,9 @@ namespace FluentValidation {
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> True<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+		public static IRuleBuilderOptions<T, bool> True<T>(this IRuleBuilder<T, bool> ruleBuilder)
 		{
-			return ruleBuilder.SetValidator(new TrueValidator());
+			return ruleBuilder.Equal(true);
 		}
 
 		/// <summary>
@@ -1079,9 +1079,36 @@ namespace FluentValidation {
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> False<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+		public static IRuleBuilderOptions<T, bool?> True<T>(this IRuleBuilder<T, bool?> ruleBuilder)
 		{
-			return ruleBuilder.SetValidator(new FalseValidator());
+			return ruleBuilder.Equal(true);
 		}
+
+		/// <summary>
+		/// Defines a boolean validator on the current rule builder.
+		/// Validation will fail if the property is false.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, bool> False<T>(this IRuleBuilder<T, bool> ruleBuilder)
+		{
+			return ruleBuilder.Equal(false);
+		}
+
+		/// <summary>
+		/// Defines a boolean validator on the current rule builder.
+		/// Validation will fail if the property is false.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, bool?> False<T>(this IRuleBuilder<T, bool?> ruleBuilder)
+		{
+			return ruleBuilder.Equal(false);
+		}
+
 	}
 }
