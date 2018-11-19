@@ -69,6 +69,10 @@ namespace FluentValidation.Tests
         public EnumGender Gender { get; set; }
 
 		public string ForenameReadOnly => Forename;
+
+		public bool IsValid { get; set; }
+
+		public bool? NullableIsValid { get; set; }
 	}
 
 

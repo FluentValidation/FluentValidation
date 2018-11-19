@@ -1057,5 +1057,31 @@ namespace FluentValidation {
 		public static IRuleBuilderInitial<T, TProperty> CustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CustomContext, CancellationToken, Task> action) {
 			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new CustomValidator<TProperty>(action));
 		}
+
+		/// <summary>
+		/// Defines a boolean validator on the current rule builder.
+		/// Validation will fail if the property is true.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> True<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+		{
+			return ruleBuilder.SetValidator(new TrueValidator());
+		}
+
+		/// <summary>
+		/// Defines a boolean validator on the current rule builder.
+		/// Validation will fail if the property is true.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> False<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
+		{
+			return ruleBuilder.SetValidator(new FalseValidator());
+		}
 	}
 }
