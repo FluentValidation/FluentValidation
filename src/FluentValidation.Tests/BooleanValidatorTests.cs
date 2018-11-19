@@ -16,8 +16,7 @@
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests
-{
+namespace FluentValidation.Tests {
 	using Xunit;
 
 	public class BooleanValidatorTests {
