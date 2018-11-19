@@ -34,72 +34,63 @@ namespace FluentValidation.Tests
 		}
 
 		[Fact]
-		public void When_the_value_is_not_true_the_validator_not_should_pass()
-		{
+		public void When_the_value_is_not_true_the_validator_not_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.IsValid).True());
 			var result = validator.Validate(new Person { IsValid = false });
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
-		public void When_the_value_is_false_the_validator_should_pass()
-		{
+		public void When_the_value_is_false_the_validator_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.IsValid).False());
 			var result = validator.Validate(new Person { IsValid = false });
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Fact]
-		public void When_the_value_is_true_the_validator_not_should_pass()
-		{
+		public void When_the_value_is_true_the_validator_not_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.IsValid).False());
 			var result = validator.Validate(new Person { IsValid = true });
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
-		public void When_the_nullable_value_is_true_the_validator_should_pass()
-		{
+		public void When_the_nullable_value_is_true_the_validator_should_pass()	{
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableIsValid).True());
 			var result = validator.Validate(new Person { NullableIsValid = true });
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Fact]
-		public void When_the_nullable_value_is_not_true_the_validator_not_should_pass()
-		{
+		public void When_the_nullable_value_is_not_true_the_validator_not_should_pass()	{
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableIsValid).True());
 			var result = validator.Validate(new Person { NullableIsValid = false });
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
-		public void When_the_nullable_value_is_false_the_validator_should_pass()
-		{
+		public void When_the_nullable_value_is_false_the_validator_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableIsValid).False());
 			var result = validator.Validate(new Person { NullableIsValid = false });
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Fact]
-		public void When_the_nullable_value_is_true_the_validator_not_should_pass()
-		{
+		public void When_the_nullable_value_is_true_the_validator_not_should_pass()	{
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableIsValid).False());
 			var result = validator.Validate(new Person { NullableIsValid = true });
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
-		public void When_the__true_boolean_nullable_value_validator_not_should_pass()
-		{
+		public void When_the__true_boolean_nullable_value_validator_not_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableIsValid).True());
 			var result = validator.Validate(new Person { NullableIsValid = null });
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
-		public void When_the_false_boolean_nullable_value_validator_not_should_pass()
-		{
+		public void When_the_false_boolean_nullable_value_validator_not_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableIsValid).False());
 			var result = validator.Validate(new Person { NullableIsValid = null });
 			result.IsValid.ShouldBeFalse();
