@@ -20,7 +20,6 @@ namespace FluentValidation.Tests
 {
 	using Xunit;
 
-
 	public class BooleanValidatorTests {
 		public BooleanValidatorTests() {
 			CultureScope.SetDefaultCulture();
