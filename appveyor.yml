@@ -4,7 +4,7 @@ branches:
   - master
 image: 
  - Visual Studio 2017
- - Ubuntu
+# - Ubuntu
 configuration: Release
 environment:
   kek:
