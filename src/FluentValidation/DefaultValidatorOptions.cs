@@ -330,9 +330,9 @@ namespace FluentValidation {
 		/// <param name="rule">The current rule</param>
 		/// <param name="expr">An expression referencing another property</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<T, TProperty>> expr) {
+		public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<T, object>> expr) {
 			if (expr == null) throw new ArgumentNullException(nameof(expr));
-			var member = expr.GetMember(); // Need the FluentValidation.Internal namespace imported for this extension method to show up.
+			var member = expr.GetMember();
 			if (member == null) throw new NotSupportedException("Must supply a MemberExpression when calling OverridePropertyName");
 			return rule.OverridePropertyName(member.Name);
 		}
