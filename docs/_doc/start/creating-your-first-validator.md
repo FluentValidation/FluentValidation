@@ -25,7 +25,7 @@ public class CustomerValidator : AbstractValidator<Customer> {
 }
 ```
 
-The validation rules themselves should be defined in the validator class's `Rules` method, which must be overridden.
+The validation rules themselves should be defined in the validator class's constructor.
 
 To specify a validation rule for a particular property, call the `RuleFor` method, passing a lambda expression 
 that indicates the property that you wish to validate. For example, to ensure that the `Surname` property is not null, 
