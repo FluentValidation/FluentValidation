@@ -59,7 +59,7 @@ namespace FluentValidation.AspNetCore {
 				string message = formatter.BuildMessage(messageTemplate);
 				MergeAttribute(context.Attributes, "data-val", "true");
 				MergeAttribute(context.Attributes, "data-val-equalto", message);
-				MergeAttribute(context.Attributes, "data-val-equalto-other", propertyToCompare.Name);
+				MergeAttribute(context.Attributes, "data-val-equalto-other", "*." + propertyToCompare.Name);
 			}
 		
 		}

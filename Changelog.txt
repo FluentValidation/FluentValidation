@@ -7,6 +7,9 @@ Conditions defined with root-level When/WhenAsync/Unless/UnlessAsync are now onl
 Support Otherwise method chained from root-level When/WhenAsync/Unless/UnlessAsync.
 Minor wording changes to default English error messages.
 
+8.0.101 - 24 November 2018
+Fix clientside property comparison validation adaptor in ASP.NET Core integration.
+
 8.0.100 - 4 September 2018
 Added Greek language translation.
 Resolved an issue where Cascade and Transform couldn't be used with RuleForEach
