@@ -428,7 +428,7 @@ Update nuget package for wpa81
 * Added ExactLengthValidator (error message needs localising...)
 * Patch - Swedish language resources
 * Added WithPropertyName
-* Patch - InclusiveBetween/ExclusiveBetween validators.
+* Patch - InclusiveBetween/ExclusiveBetween validators contributed by Daniel Dyson
 * **Breaking Change** Removed generics from all the IPropertyValidator instances.
 * Introduced PropertyValidator base class
 * **Breaking Change** Removed the ValidationMessageAttribute
