@@ -8,17 +8,9 @@ sections:
   - Specifying a RuleSet for client-side messages
   - Using an Inversion of Control Container
 ---
-<div class="callout-block callout-warning"><div class="icon-holder">*&nbsp;*{: .fa .fa-bug}
-</div><div class="content">
-{: .callout-title}
-#### Important Note
-
-FluentValidation's support for WebApi 2 is considered legacy and has several limitations. For an optimal experience, we recommend using FluentValidation with [ASP.NET Core](/aspnet)
-</div></div>
-
 ### Getting Started
 
-FluentValidation can be configured to work with legacy WebApi 2 projects. 
+FluentValidation can be configured to work with WebApi 2 projects. Note that the WebApi 2 integration is considered legacy. For an optimal experience, we recommend using FluentValidation with [ASP.NET Core](/aspnet)
 
 To enable MVC integration, you'll need to add a reference to the `FluentValidation.WebApi` assembly from the appropriate NuGet package:
 

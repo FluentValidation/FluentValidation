@@ -10,17 +10,9 @@ sections:
   - Specifying a RuleSet for client-side messages
   - Using an Inversion of Control Container
 ---
-<div class="callout-block callout-warning"><div class="icon-holder">*&nbsp;*{: .fa .fa-bug}
-</div><div class="content">
-{: .callout-title}
-#### Important Note
-
-FluentValidation's support for MVC 5 is considered legacy and has several limitations. For an optimal experience, we recommend using FluentValidation with [ASP.NET Core](/aspnet)
-</div></div>
-
 ### Getting Started
 
-FluentValidation can be configured to work with legacy ASP.NET MVC 5 projects. 
+FluentValidation can be configured to work with ASP.NET MVC 5 projects. Note that the MVC 5 integration is considered legacy and has several limitations. For an optimal experience, we recommend using FluentValidation with [ASP.NET Core](/aspnet).
 
 To enable MVC integration, you'll need to add a reference to the `FluentValidation.Mvc5` assembly from the appropriate NuGet package:
 
