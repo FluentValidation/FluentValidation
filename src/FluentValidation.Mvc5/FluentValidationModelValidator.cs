@@ -22,7 +22,7 @@ namespace FluentValidation.Mvc {
 		}
 
 		public override IEnumerable<ModelValidationResult> Validate(object container) {
-			if (Metadata.Model != null) {
+			if (Metadata.Model != null && !_customizations.Skip) {
 				var selector = _customizations.ToValidatorSelector();
 				var interceptor = _customizations.GetInterceptor() ?? (_validator as IValidatorInterceptor);
 				var context = new ValidationContext(Metadata.Model, new PropertyChain(), selector);

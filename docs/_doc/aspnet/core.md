@@ -1,5 +1,12 @@
 ---
 title: ASP.NET Core
+sections:
+ - Implicit vs Explicit Child Property Validation
+ - Clientside Validation
+ - Manual validation
+ - Validator customization
+ - Validator Interceptors
+ - Specifying a RuleSet for client-side messages
 ---
 
 FluentValidation can be integrated with ASP.NET Core. Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure.

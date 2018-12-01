@@ -25,9 +25,26 @@ namespace FluentValidation.WebApi {
 
 	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
 	public class CustomizeValidatorAttribute : Attribute {
+		/// <summary>
+		/// Specifies the ruleset which should be used when executing this validator.
+		/// This can be a comma separated list of rulesets. The string "*" can be used to indicate all rulesets.
+		/// The string "default" can be used to specify those rules not in an explict ruleset.
+		/// </summary>
 		public string RuleSet { get; set; }
+		
+		/// <summary>
+		/// Specifies a whitelist of properties that should be validated, as a comma-separated list.
+		/// </summary>
 		public string Properties { get; set; }
+		
+		/// <summary>
+		/// Specifies an interceptor that can be used to customize the validation process.
+		/// </summary>
 		public Type Interceptor { get; set; }
+		
+		/// <summary>
+		/// Indicates whether this model should skip being validated. The default is false.
+		/// </summary>
 		public bool Skip { get; set; }
 
 		/// <summary>

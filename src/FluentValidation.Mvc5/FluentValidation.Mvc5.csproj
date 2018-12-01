@@ -23,6 +23,9 @@
 
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.Mvc.xml</DocumentationFile>
 	  <PackageReleaseNotes>
+Changes in 8.1:
+* Added the Skip property to the CustomizeValidatorAttribute to bring parity with the ASP.NET Core integration.
+
 Changes in 7.5:
 * Better handling of clientside messages when using custom overriden language resources
 * Added flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration

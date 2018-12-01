@@ -10,9 +10,6 @@ navigation:
   - /localization
   - /testing
   - /aspnet
-  - /news
-  - /community
-  - /legal
 ---
 
 ![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg) ![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg) ![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true) ![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)

@@ -6,6 +6,7 @@ Additional error details are now shown in the ShouldNotHaveValidationErrorFor te
 Conditions defined with root-level When/WhenAsync/Unless/UnlessAsync are now only executed once (instead of once for each rule).
 Support Otherwise method chained from root-level When/WhenAsync/Unless/UnlessAsync.
 Minor wording changes to default English error messages.
+Added Skip property to MVC5's CustomizeValidatorAttribute to bring parity with AspNetCore and WebApi integration.
 
 8.0.101 - 24 November 2018
 Fix clientside property comparison validation adaptor in ASP.NET Core integration.

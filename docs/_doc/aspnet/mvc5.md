@@ -1,7 +1,26 @@
 ---
 title: ASP.NET MVC 5
+sections:
+  - Getting Started
+  - Known Limitations
+  - Clientside Validation
+  - Manual validation
+  - Validator customization
+  - Validator Interceptors
+  - Specifying a RuleSet for client-side messages
+  - Using an Inversion of Control Container
 ---
-FluentValidation can also be configured to work with legacy ASP.NET MVC 5 projects. 
+<div class="callout-block callout-warning"><div class="icon-holder">*&nbsp;*{: .fa .fa-bug}
+</div><div class="content">
+{: .callout-title}
+#### Important Note
+
+FluentValidation's support for MVC 5 is considered legacy and has several limitations. For an optimal experience, we recommend using FluentValidation with [ASP.NET Core](/aspnet)
+</div></div>
+
+### Getting Started
+
+FluentValidation can be configured to work with legacy ASP.NET MVC 5 projects. 
 
 To enable MVC integration, you'll need to add a reference to the `FluentValidation.Mvc5` assembly from the appropriate NuGet package:
 
@@ -22,7 +41,7 @@ protected void Application_Start() {
 }
 ```
 
-Internally, FluentValidation's MVC integration makes use of a *validator factory* to know how to work out which validator should be used to validate a particular type. By default, FluentValidation ships with an AttributedValidatorFactory that allows you to link a validator to the type that it validates by decorating the class to validate with an attribute that identifies its corresponding validator:
+Internally, FluentValidation's MVC integration makes use of a *validator factory* to know how to determine which validator should be used to validate a particular type. By default, FluentValidation ships with an AttributedValidatorFactory that allows you to link a validator to the type that it validates by decorating the class to validate with an attribute that identifies its corresponding validator:
 
 ```csharp
 [Validator(typeof(PersonValidator))]
@@ -218,7 +237,7 @@ public ActionResult Index() {
 
 You can also use the `SetRulesetForClientsideMessages` extension method within your controller action (you must have the FluentValidation.Mvc namespace imported):
 
-```
+```csharp
 public ActionResult Index() {
    ControllerContext.SetRulesetForClientsideMessages("MyRuleset");
    return View(new PersonViewModel());
@@ -239,3 +258,11 @@ public interface IValidatorFactory {
 ```
 
 Instead of implementing this interface directly, you can inherit from the `ValidatorFactoryBase` class which does most of the work for you. When you inherit from ValidatorFactoryBase you should override the `CreateInstance` method. In this method you should call in to your IoC container to resolve an instance of the specified type or return `null` if it does not exist (many containers have a "TryResolve" method that will do this automatically).
+
+Once you've implemented this interface, you can set the `ValidatorFactory` of the provider during application startup:
+
+```csharp
+FluentValidationModelValidatorProvider.Configure(cfg => {
+    cfg.ValidatorFactory = new MyValidatorFactory();
+});
+```
