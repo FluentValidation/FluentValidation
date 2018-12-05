@@ -19,10 +19,10 @@
 namespace FluentValidation.Resources {
 	using Validators;
 
-	internal class EnglishLanguage : Language {
-		public override string Name => "en";
+	internal class JapaneseLanguage : Language {
+		public override string Name => "ja";
 
-		public EnglishLanguage() {
+		public JapaneseLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' は有効なメールアドレスではありません。");
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' は '{ComparisonValue} 以上でなければなりません'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' は '{ComparisonValue}' よりも大きくなければなりません。");
