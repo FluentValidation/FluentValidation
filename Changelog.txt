@@ -1,4 +1,4 @@
-8.1.0 - 
+8.1.0 - 6 December 2018
 Added format support for message placeholders.
 Added support for overriding inexers for collection rules.
 Allow ErrorCode to be used to override localization key in the Language Manager.
@@ -7,6 +7,8 @@ Conditions defined with root-level When/WhenAsync/Unless/UnlessAsync are now onl
 Support Otherwise method chained from root-level When/WhenAsync/Unless/UnlessAsync.
 Minor wording changes to default English error messages.
 Added Skip property to MVC5's CustomizeValidatorAttribute to bring parity with AspNetCore and WebApi integration.
+Japanese translation of the default error messages.
+Remove type constraint on the OverridePropertyName overload that takes an expression.
 
 8.0.101 - 24 November 2018
 Fix clientside property comparison validation adaptor in ASP.NET Core integration.

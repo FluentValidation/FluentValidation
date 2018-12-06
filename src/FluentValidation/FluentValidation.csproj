@@ -18,7 +18,11 @@ Changes in 8.1:
 * Conditions defined with root-level When/WhenAsync/Unless/UnlessAsync are now only executed once (instead of once for each rule).
 * Support Otherwise method chained from root-level When/WhenAsync/Unless/UnlessAsync.
 * Minor wording changes to default English error messages.
+* Japanese translation of the default error messages.
+* Added Skip property to MVC5's CustomizeValidatorAttribute for parity with AspNetCore and WebApi.
+* Remove type constraint on the OverridePropertyName overload that takes an expression.
 
+Added Skip property to MVC5's CustomizeValidatorAttribute to bring parity with AspNetCore and WebApi integration.
 Changes in 8.0:
 * Support validating only specific properties by path.
 * Added OnFailure method
