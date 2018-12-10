@@ -40,6 +40,8 @@ namespace FluentValidation.Results {
 		/// </summary>
 		public IList<ValidationFailure> Errors => errors;
 
+		public string[] RuleSetsExecuted { get; internal set; }
+
 		/// <summary>
 		/// Creates a new validationResult
 		/// </summary>

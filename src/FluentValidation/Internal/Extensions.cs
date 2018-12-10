@@ -201,5 +201,17 @@ namespace FluentValidation.Internal {
 
 			return false;
 		}
+
+		internal static T GetOrAdd<T>(this IDictionary<string, object> dict, string key, Func<T> value) {
+			if (dict.TryGetValue(key, out var tmp)) {
+				if (tmp is T result) {
+					return result;
+				}
+			}
+
+			var val = value();
+			dict[key] = val;
+			return val;
+		}
 	}
 }

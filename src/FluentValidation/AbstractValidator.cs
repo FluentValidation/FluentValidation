@@ -27,6 +27,7 @@ namespace FluentValidation {
 	using System.Threading.Tasks;
 	using Internal;
 	using Results;
+	using TestHelper;
 	using Validators;
 
 	/// <summary>
@@ -115,6 +116,8 @@ namespace FluentValidation {
 				result.Errors.Add(validationFailure);
 			}
 
+			SetExecutedRulesets(result, context);
+
 			return result;
 		}
 
@@ -146,10 +149,17 @@ namespace FluentValidation {
 					result.Errors.Add(failure);
 				}
 			}
+			
+			SetExecutedRulesets(result, context);
 
 			return result;
 		}
-		
+
+		private void SetExecutedRulesets(ValidationResult result, ValidationContext<T> context) {
+			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>{"default"});
+			result.RuleSetsExecuted = executed.ToArray();
+		}
+
 		/// <summary>
 		/// Adds a rule to the current validator.
 		/// </summary>

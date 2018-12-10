@@ -1,3 +1,6 @@
+8.2.0 - 
+Added RuleSetsExecuted property on ValidationResult.
+
 8.1.0 - 6 December 2018
 Added format support for message placeholders.
 Added support for overriding inexers for collection rules.
