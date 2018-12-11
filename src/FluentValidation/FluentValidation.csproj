@@ -10,6 +10,10 @@
     <PackageReleaseNotes>
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
 
+Changes in 8.1.1:
+* Added RuleSetsExecuted property on ValidationResult.
+* Resolved issue introduced in 8.1 where the shared condition cache does not work correctly with RuleForEach (#970).
+
 Changes in 8.1:
 * Add format support in message placeholders.
 * Added support for overriding indexers for collection rules.
