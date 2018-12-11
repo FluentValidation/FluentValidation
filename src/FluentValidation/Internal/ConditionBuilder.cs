@@ -49,14 +49,16 @@ namespace FluentValidation.Internal {
 			var id = "_FV_Condition_" + Guid.NewGuid();
 			
 			bool Condition(PropertyValidatorContext context) {
-				if (context.ParentContext.RootContextData.TryGetValue(id, out var value)) {
+				string cacheId = id + context.Instance.GetHashCode();
+
+				if (context.ParentContext.RootContextData.TryGetValue(cacheId, out var value)) {
 					if (value is bool result) {
 						return result;
 					}
 				}
 
 				var executionResult = predicate((T) context.Instance);
-				context.ParentContext.RootContextData[id] = executionResult;
+				context.ParentContext.RootContextData[cacheId] = executionResult;
 				return executionResult;
 			}
 

@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
 	using Xunit;
@@ -564,6 +565,32 @@ namespace FluentValidation.Tests {
 			result1.Errors.Single().PropertyName.ShouldEqual("Surname");
 			var result2 = await validator.ValidateAsync(new Person {Age = 9});
 			result2.Errors.Single().PropertyName.ShouldEqual("Forename");
+		}
+		
+		[Fact]
+		public void When_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
+			var person = new Person {
+				Children = new List<Person> {
+					new Person { Id = 1},
+					new Person { Id = 0}
+				}
+			};
+
+			var childValidator = new InlineValidator<Person>();
+			int executions = 0;
+			
+			childValidator.When(a => {
+				executions++;
+				return a.Id != 0;
+			}, () => {
+				childValidator.RuleFor(a => a.Id).Equal(1);
+			});
+			var personValidator = new InlineValidator<Person>();
+			personValidator.RuleForEach(p => p.Children).SetValidator(childValidator);
+			
+			var validationResult = personValidator.Validate(person);
+			validationResult.IsValid.ShouldBeTrue();
+			executions.ShouldEqual(2);
 		}
 	}
 }

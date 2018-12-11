@@ -1,5 +1,6 @@
-8.2.0 - 
-Added RuleSetsExecuted property on ValidationResult.
+8.1.1 - 11 December 2018
+Added RuleSetsExecuted property to ValidationResult.
+Fix issue with shared condition cache incorrectly caching when used with RuleForEach.
 
 8.1.0 - 6 December 2018
 Added format support for message placeholders.
