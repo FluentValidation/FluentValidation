@@ -18,9 +18,13 @@
 
 namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc;
-	using Microsoft.AspNetCore.Mvc.Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+#if NETSTANDARD2_0
+	// For aspnetcore 2.x (targetting NS2.0), the ValidationVisitor class lives in the .Internal namespace
+	using Microsoft.AspNetCore.Mvc.Internal;
+#endif
+
 	using static MvcValidationHelper;
 	
 	internal class FluentValidationVisitor : ValidationVisitor {
