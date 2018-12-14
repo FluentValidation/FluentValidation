@@ -1,6 +1,7 @@
 8.5.0 - 
 Add ASP.NET Core-compatible version of the email address validator.
 Simplify the advanced testhelper syntax.
+Add support for ASP.NET Core 3.
 
 8.4.0 - 10 May 2019
 Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.

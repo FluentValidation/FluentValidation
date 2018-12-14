@@ -25,6 +25,8 @@ $nuget_key = Resolve-Path "~/Dropbox/nuget-access-key.txt" -ErrorAction Ignore
 target default -depends compile, test, deploy
 target ci -depends ci-set-version, decrypt-private-key, default
 
+$script:version_suffix = ([xml](get-content src/Directory.Build.props)).Project.PropertyGroup.VersionSuffix
+
 target compile {
   if ($keyfile) {
     Write-Host "Using key file: $keyfile" -ForegroundColor Cyan
