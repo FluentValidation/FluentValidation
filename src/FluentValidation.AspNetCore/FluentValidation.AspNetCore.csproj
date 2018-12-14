@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
     <AssemblyName>FluentValidation.AspNetCore</AssemblyName>
     <PackageId>FluentValidation.AspNetCore</PackageId>
-    <Version Condition="'$(AspNetCoreVersion)'!=''">$(AspNetCoreVersion)</Version>
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
     <PackageReleaseNotes>
 Changes in 8.3.1:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
-      
+
 Changes in 8.3.0:
 * Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
 
@@ -27,7 +26,7 @@ Changes in 7.6.103:
 * Support for validating controller and Razor properties annotated [BindProperty].
 
 Changes in 7.6:
-* Updates to support ASP.NET Core 2.1 
+* Updates to support ASP.NET Core 2.1
 
 Changes in 7.5:
 * Better handling of clientside messages when using custom overriden language resources
@@ -53,8 +52,11 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />

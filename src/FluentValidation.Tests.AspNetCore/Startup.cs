@@ -12,20 +12,18 @@ namespace FluentValidation.Tests.AspNetCore {
 
 	public class Startup
     {
-        public Startup(IHostingEnvironment env)
-        {
-            var builder = new ConfigurationBuilder();
-            Configuration = builder.Build();
-        }
-
-        public IConfigurationRoot Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(setup => {
-                
-            }).AddFluentValidation(cfg => {
+#if NETCOREAPP3_0
+		            setup.EnableEndpointRouting = false;
+#endif
+            })
+#if NETCOREAPP3_0
+			.AddNewtonsoftJson()
+#endif   
+			.AddFluentValidation(cfg => {
 	            cfg.ValidatorFactoryType = typeof(AttributedValidatorFactory);
 	            cfg.ImplicitlyValidateChildProperties = true;
             });
@@ -33,7 +31,7 @@ namespace FluentValidation.Tests.AspNetCore {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app)
         {
             CultureInfo cultureInfo = new CultureInfo("en-US");
             app.UseRequestLocalization(options => {
