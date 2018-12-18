@@ -39,9 +39,7 @@ namespace FluentValidation.Internal {
 		public IConditionBuilder When(Func<T, bool> predicate, Action action) {
 			var propertyRules = new List<IValidationRule>();
 
-			Action<IValidationRule> onRuleAdded = propertyRules.Add;
-
-			using(_rules.OnItemAdded(onRuleAdded)) {
+			using(_rules.OnItemAdded(propertyRules.Add)) {
 				action(); 
 			}
 
@@ -96,9 +94,7 @@ namespace FluentValidation.Internal {
 		public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
 			var propertyRules = new List<IValidationRule>();
 
-			Action<IValidationRule> onRuleAdded = propertyRules.Add;
-
-			using (_rules.OnItemAdded(onRuleAdded)) {
+			using (_rules.OnItemAdded(propertyRules.Add)) {
 				action();
 			}
 			
@@ -106,14 +102,16 @@ namespace FluentValidation.Internal {
 			var id = "_FV_AsyncCondition_" + Guid.NewGuid();
 			
 			async Task<bool> Condition(PropertyValidatorContext context, CancellationToken ct) {
-				if (context.ParentContext.RootContextData.TryGetValue(id, out var value)) {
+				string cacheId = id + context.Instance.GetHashCode();
+				
+				if (context.ParentContext.RootContextData.TryGetValue(cacheId, out var value)) {
 					if (value is bool result) {
 						return result;
 					}
 				}
 
 				var executionResult = await predicate((T) context.Instance, ct);
-				context.ParentContext.RootContextData[id] = executionResult;
+				context.ParentContext.RootContextData[cacheId] = executionResult;
 				return executionResult;
 			}
 
