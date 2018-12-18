@@ -215,6 +215,36 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 		
+		[Fact]
+		public void Nested_conditions_Rule_For() {
+			var validator = new InlineValidator<request>();
+			validator.When(r => true, () => {
+				validator.When(r => r.person?.NickNames?.Any() == true, () => {
+					validator.RuleFor(r => r.person.NickNames)
+						.Must(nn => true)
+						.WithMessage("Failed RuleFor");
+				});
+			});
+			var result = validator.Validate(new request());
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Nested_conditions_Rule_For_Each() {
+			var validator = new InlineValidator<request>();
+
+			validator.When(x => true, () => {
+				validator.When(r => r.person?.NickNames?.Any() == true, () => {
+					validator.RuleForEach(x => x.person.NickNames)
+						.Must(nn => true)
+						.WithMessage("Failed RuleForEach");
+				});
+			});
+		
+			var result = validator.Validate(new request());
+			result.Errors.Count.ShouldEqual(0);
+		}
+		
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};
 		}

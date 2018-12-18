@@ -1,5 +1,6 @@
-8.1.2 - 
+8.1.2 - 18 December 2018
 Fix the same issue from 8.1.1 but for async conditions.
+Fix issue where shared When/Unless conditions didn't execute correctly when used with RuleForEach.
 
 8.1.1 - 11 December 2018
 Added RuleSetsExecuted property to ValidationResult.
