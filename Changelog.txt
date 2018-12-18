@@ -1,3 +1,6 @@
+8.1.2 - 
+Fix the same issue from 8.1.1 but for async conditions.
+
 8.1.1 - 11 December 2018
 Added RuleSetsExecuted property to ValidationResult.
 Fix issue with shared condition cache incorrectly caching when used with RuleForEach.
