@@ -270,5 +270,5 @@ RuleFor(x => x.Surname).NotNull().Must(surname => surname != null && surname.Len
 ```csharp
 RuleFor(x => x.Surname).NotNull().OnFailure(x => Console.WriteLine("Nonull failed"))
   .Must(surname => surname != null && surname.Length <= 200)
-  .OnAnyFailure(x => Console.WriteLine("Must failed"));
+  .OnFailure(x => Console.WriteLine("Must failed"));
 ```
