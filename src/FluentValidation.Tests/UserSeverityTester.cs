@@ -22,11 +22,11 @@ namespace FluentValidation.Tests {
 	using Xunit;
 
 	
-	public class UserSeerityTester {
+	public class UserSeverityTester {
 		TestValidator validator;
 
 
-		public UserSeerityTester()
+		public UserSeverityTester()
 		{
 			validator = new TestValidator();
 		}
