@@ -1044,10 +1044,7 @@ namespace FluentValidation {
 		/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> ScalePrecision<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false) {
-			var validator = new ScalePrecisionValidator(scale, precision) {
-				IgnoreTrailingZeros = ignoreTrailingZeros
-			};
-			return ruleBuilder.SetValidator(validator);
+			return ruleBuilder.SetValidator(new ScalePrecisionValidator(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
 		}
 
 		/// <summary>

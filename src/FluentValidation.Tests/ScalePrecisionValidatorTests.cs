@@ -31,7 +31,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Scale_and_precision_should_work() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Discount).SetValidator(new ScalePrecisionValidator(2, 4)));
+			var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 4));
 
 			var result = validator.Validate(new Person {Discount = 123.456778m});
 			Assert.False(result.IsValid);
@@ -51,9 +51,7 @@ namespace FluentValidation.Tests {
 			result = validator.Validate(new Person {Discount = 1565.0M}); // fail as it counts zeros
 			result.IsValid.ShouldBeFalse();
 
-			validator = new TestValidator(v =>
-				v.RuleFor(x => x.Discount)
-					.SetValidator(new ScalePrecisionValidator(2, 4) {IgnoreTrailingZeros = true}));
+			validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 4, true));
 
 			result = validator.Validate(new Person {Discount = 1565.0M}); // ignores zeros now
 			result.IsValid.ShouldBeTrue();
