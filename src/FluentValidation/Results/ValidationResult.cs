@@ -24,9 +24,7 @@ namespace FluentValidation.Results {
 	/// <summary>
 	/// The result of running a validator
 	/// </summary>
-#if !NETSTANDARD1_1 && !NETSTANDARD1_6
 	[Serializable]
-#endif
 	public class ValidationResult {
 		private readonly IList<ValidationFailure> errors;
 

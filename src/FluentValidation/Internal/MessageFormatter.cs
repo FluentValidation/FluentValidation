@@ -28,13 +28,8 @@ namespace FluentValidation.Internal {
 		object[] _additionalArguments = new object[0];
 		private bool _shouldUseAdditionalArgs;
 
-#if NETSTANDARD1_1
-		private static readonly Regex _templateRegex = new Regex("{[^{}]+:.+}");
-		private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}");
-#else
 		private static readonly Regex _templateRegex = new Regex("{[^{}]+:.+}", RegexOptions.Compiled); 
 		private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled); 
-#endif
 		
 		/// <summary>
 		/// Default Property Name placeholder.

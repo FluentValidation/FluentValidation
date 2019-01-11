@@ -23,9 +23,7 @@ namespace FluentValidation.Results {
 	/// <summary>
 	/// Defines a validation failure
 	/// </summary>
-#if !NETSTANDARD1_1 && !NETSTANDARD1_6
 	[Serializable]
-#endif
 	public class ValidationFailure {
 		private ValidationFailure() {
 			

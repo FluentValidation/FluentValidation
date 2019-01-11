@@ -50,9 +50,6 @@ namespace FluentValidation.Validators {
 			// If no REGEX_DEFAULT_MATCH_TIMEOUT is specified in the AppDomain, default to 2 seconds. 
 			// if we're on Netstandard 1.0 we don't have access to AppDomain, so just always use 2 second timeout there. 
 
-#if NETSTANDARD1_1 || NETSTANDARD1_6
-			return new Regex(_expression, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(2.0));
-#else
 			try
 			{
 				if (AppDomain.CurrentDomain.GetData("REGEX_DEFAULT_MATCH_TIMEOUT") == null) {
@@ -64,8 +61,7 @@ namespace FluentValidation.Validators {
 			}
 
 		
-	return new Regex(_expression, RegexOptions.IgnoreCase);
-#endif
+		return new Regex(_expression, RegexOptions.IgnoreCase);
 
 		}
 	}
