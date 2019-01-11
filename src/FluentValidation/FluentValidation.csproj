@@ -1,6 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard1.6;netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <Authors>Jeremy Skinner</Authors>
+    <Company />
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
     <PackageReleaseNotes>
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
@@ -89,12 +92,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.6' or '$(TargetFramework)'=='netstandard1.1'">
-    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'!='netstandard1.1'">
+  <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
   </ItemGroup>
   <Import Project="..\netfx.props" />

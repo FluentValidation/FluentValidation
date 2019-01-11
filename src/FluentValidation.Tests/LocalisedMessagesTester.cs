@@ -40,7 +40,6 @@ namespace FluentValidation.Tests {
 			CultureScope.SetDefaultCulture();
 		}
 
-#if !NETCOREAPP1_1
 		[Fact]
 		public void Correctly_assigns_default_localized_error_message() {
 
@@ -62,7 +61,7 @@ namespace FluentValidation.Tests {
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
 			}
 		}
-#endif
+
 		[Fact]
 		public void Sets_localised_message_via_type_name() {
 			var validator = new TestValidator();
