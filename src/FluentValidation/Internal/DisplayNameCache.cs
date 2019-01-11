@@ -25,13 +25,12 @@ namespace FluentValidation.Internal {
 
 			if (member == null) return null;
 
-#if !NETSTANDARD1_1
 			var displayAttribute = member.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>();
 
 			if (displayAttribute != null) {
 				return () => displayAttribute.GetName();
 			}
-#endif
+
 			// Couldn't find a name from a DisplayAttribute. Try DisplayNameAttribute instead.
 			var displayNameAttribute = member.GetCustomAttribute<DisplayNameAttribute>();
 
