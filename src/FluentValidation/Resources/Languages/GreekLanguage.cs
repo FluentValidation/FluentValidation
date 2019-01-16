@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μεταξύ {From} και {To}. Καταχωρίσατε την τιμή {Value}.");
 			Translate<ExclusiveBetweenValidator>("Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μεγαλύτερη από {From} και μικρότερη από {To}. Καταχωρίσατε την τιμή  {Value}.");
 			Translate<CreditCardValidator>("Το πεδίο '{PropertyName}' δεν περιέχει αποδεκτό αριθμό πιστωτικής κάρτας.");
-			Translate<ScalePrecisionValidator>("'Το πεδίο '{PropertyName}' δεν μπορεί να έχει περισσότερα από {expectedPrecision} ψηφία στο σύνολο, με μέγιστο επιτρεπόμενο αριθμό δεκαδικών τα {expectedScale} ψηφία. Έχετε καταχωρίσει {digits} ψηφία συνολικά με {actualScale} δεκαδικά.");
+			Translate<ScalePrecisionValidator>("'Το πεδίο '{PropertyName}' δεν μπορεί να έχει περισσότερα από {ExpectedPrecision} ψηφία στο σύνολο, με μέγιστο επιτρεπόμενο αριθμό δεκαδικών τα {ExpectedScale} ψηφία. Έχετε καταχωρίσει {Digits} ψηφία συνολικά με {ActualScale} δεκαδικά.");
 			Translate<EmptyValidator>("Το πεδίο '{PropertyName}' πρέπει να είναι κενό.");
 			Translate<NullValidator>("Το πεδίο '{PropertyName}' πρέπει να είναι κενό.");
 			Translate<EnumValidator>("Το πεδίο '{PropertyName}' επιτρέπει συγκεκριμένο εύρος τιμών που δεν περιλαμβάνουν την τιμή '{PropertyValue}' που καταχωρίσατε.");

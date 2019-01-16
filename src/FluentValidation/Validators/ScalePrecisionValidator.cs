@@ -21,6 +21,9 @@
 namespace FluentValidation.Validators {
 	using System;
 	using Resources;
+	
+	// Attribution: This class was contributed to FluentValidation using code posted on StackOverflow by Jon Skeet
+	// The original code can be found at https://stackoverflow.com/a/764102
 
 	/// <summary>
 	/// Allows a decimal to be validated for scale and precision.  
@@ -42,7 +45,7 @@ namespace FluentValidation.Validators {
 
 		public int Precision { get; set; }
 
-		public bool? IgnoreTrailingZeros { get; set; }
+		public bool IgnoreTrailingZeros { get; set; }
 
 		protected override bool IsValid(PropertyValidatorContext context) {
 			var decimalValue = context.PropertyValue as decimal?;
@@ -52,6 +55,12 @@ namespace FluentValidation.Validators {
 				var precision = GetPrecision(decimalValue.Value);
 				if (scale > Scale || precision > Precision) {
 					context.MessageFormatter
+						.AppendArgument("ExpectedPrecision", Precision)
+						.AppendArgument("ExpectedScale", Scale)
+						.AppendArgument("Digits", precision - scale)
+						.AppendArgument("ActualScale", scale)
+						// For backwards compatibility, 8.1.2 and older used lowercase placeholders.
+						// TODO consider removing for FV 9
 						.AppendArgument("expectedPrecision", Precision)
 						.AppendArgument("expectedScale", Scale)
 						.AppendArgument("digits", precision - scale)
@@ -99,7 +108,7 @@ namespace FluentValidation.Validators {
 
 		private int GetScale(decimal Decimal) {
 			uint scale = GetUnsignedScale(Decimal);
-			if (IgnoreTrailingZeros.HasValue && IgnoreTrailingZeros.Value) {
+			if (IgnoreTrailingZeros) {
 				return (int) (scale - NumTrailingZeros(Decimal));
 			}
 
@@ -124,7 +133,7 @@ namespace FluentValidation.Validators {
 					precision++;
 				}
 
-				if (IgnoreTrailingZeros.HasValue && IgnoreTrailingZeros.Value) {
+				if (IgnoreTrailingZeros) {
 					return (int) (precision - NumTrailingZeros(Decimal));
 				}
 			}

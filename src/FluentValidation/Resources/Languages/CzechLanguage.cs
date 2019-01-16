@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("Hodnota pole '{PropertyName}' musí být mezi {From} a {To} (včetně). Vámi zadaná hodnota je {Value}.");
 			Translate<ExclusiveBetweenValidator>("Hodnota pole '{PropertyName}' musí být větší než {From} a menší než {To}. Vámi zadaná hodnota je {Value}.");
 			Translate<CreditCardValidator>("Pole '{PropertyName}' musí obsahovat platné číslo platební karty.");
-			Translate<ScalePrecisionValidator>("Pole '{PropertyName}' nesmí mít víc než {expectedPrecision} číslic a {expectedScale} desetinných míst. Vámi bylo zadáno {digits} číslic a {actualScale} desetinných míst.");
+			Translate<ScalePrecisionValidator>("Pole '{PropertyName}' nesmí mít víc než {ExpectedPrecision} číslic a {ExpectedScale} desetinných míst. Vámi bylo zadáno {Digits} číslic a {ActualScale} desetinných míst.");
 			Translate<EmptyValidator>("Pole '{PropertyName}' musí být prázdné.");
 			Translate<NullValidator>("Pole '{PropertyName}' musí být prázdné.");
 			Translate<EnumValidator>("Pole '{PropertyName}' má rozsah hodnot, které neobsahují '{PropertyValue}'.");

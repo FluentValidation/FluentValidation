@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' duhet të jetë midis {From} dhe {To}. Ju keni shkruar {Value}.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' duhet të jetë midis {From} dhe {To} (përjashtuese). Ju keni shkruar {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' nuk është nje numër i vlefshëm karte krediti.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' nuk mund të jetë më shumë se {expectedPrecision} shifra në total, me hapësirë për {expectedScale} shifra dhjetore. {digits} shifra dhe {actualScale} shifra dhjetore u gjetën.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' nuk mund të jetë më shumë se {ExpectedPrecision} shifra në total, me hapësirë për {ExpectedScale} shifra dhjetore. {Digits} shifra dhe {ActualScale} shifra dhjetore u gjetën.");
 			Translate<EmptyValidator>("'{PropertyName}' nuk duhet të jetë bosh.");
 			Translate<NullValidator>("'{PropertyName}' duhet të jetë bosh.");
 			Translate<EnumValidator>("'{PropertyName}' ka një varg vlerash të cilat nuk përfshijnë '{PropertyValue}'.");
