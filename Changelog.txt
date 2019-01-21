@@ -1,6 +1,7 @@
 8.2.0 - 
 Add extensions for injecting child validators using the ASP.NET Core Service Provider.
 WithLocalizedMessage is deprecated. Use the overload of WithMessage that takes a Func instead.
+Implement RuleFor(...).ForEach(...) as an alternative to RuleForEach
 
 8.1.3 - 25 January 2019
 Resolved issue where clientside validation was incorrectly generating metadata for rules with shared conditions.

@@ -244,6 +244,27 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new request());
 			result.Errors.Count.ShouldEqual(0);
 		}
+
+		[Fact]
+		public void Regular_rules_can_drop_into_RuleForEach() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Children)
+				.Must(x => x.Count > 2).WithMessage("Foo")
+				.ForEach(forEachElement => {
+					forEachElement.NotNull().WithMessage("Bar");
+				});
+
+			var result = validator.Validate(new Person {Children = new List<Person> {null, null}});
+			result.Errors.Count.ShouldEqual(3);
+			result.Errors[0].ErrorMessage.ShouldEqual("Foo");
+			result.Errors[0].PropertyName.ShouldEqual("Children");
+			
+			result.Errors[1].ErrorMessage.ShouldEqual("Bar");
+			result.Errors[1].PropertyName.ShouldEqual("Children[0]");
+			
+			result.Errors[2].ErrorMessage.ShouldEqual("Bar");
+			result.Errors[2].PropertyName.ShouldEqual("Children[1]");
+		}
 		
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};

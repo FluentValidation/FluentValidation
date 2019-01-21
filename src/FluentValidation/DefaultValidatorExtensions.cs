@@ -1070,5 +1070,20 @@ namespace FluentValidation {
 		public static IRuleBuilderInitial<T, TProperty> CustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CustomContext, CancellationToken, Task> action) {
 			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new CustomValidator<TProperty>(action));
 		}
+
+		/// <summary>
+		/// Allows rules to be built against individual elements in the collection.
+		/// </summary>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="action"></param>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TElement"></typeparam>
+		/// <returns></returns>
+		public static IRuleBuilder<T, IEnumerable<TElement>> ForEach<T, TElement>(this IRuleBuilder<T, IEnumerable<TElement>> ruleBuilder, 
+			Action<IRuleBuilderInitialCollection<IEnumerable<TElement>, TElement>> action) {
+			var innerValidator = new InlineValidator<IEnumerable<TElement>>();
+			action(innerValidator.RuleForEach(x => x));
+			return ruleBuilder.SetValidator(innerValidator);
+		}
 	}
 }
