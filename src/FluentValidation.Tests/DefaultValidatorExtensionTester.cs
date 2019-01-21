@@ -224,6 +224,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void ScalePrecision_should_create_ScalePrecisionValidator_with_sql_server_compatible() {
+			validator.RuleFor(x => x.Discount).ScalePrecision(2, 5, true, true);
+			AssertValidator<ScalePrecisionValidator>();
+		}
+
+		[Fact]
 		public void MustAsync_should_not_throw_InvalidCastException() {
 			var model = new Model
 			{

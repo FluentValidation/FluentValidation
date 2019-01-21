@@ -32,6 +32,10 @@ namespace FluentValidation.Validators {
 	/// 
 	/// It can be configured to use the effective scale and precision 
 	/// (i.e. ignore trailing zeros) if required.
+	///
+	/// It can also be configured to match the SQL Server decimal data type by
+	/// verifying the digits to the left of the decimal are less than or equal
+	/// to precision - scale.
 	/// 
 	/// 123.4500 has an scale of 4 and a precision of 7, but an effective scale
 	/// and precision of 2 and 5 respectively.
@@ -47,23 +51,27 @@ namespace FluentValidation.Validators {
 
 		public bool IgnoreTrailingZeros { get; set; }
 
+		public bool SqlServerCompatible { get; set; }
+
 		protected override bool IsValid(PropertyValidatorContext context) {
 			var decimalValue = context.PropertyValue as decimal?;
 
 			if (decimalValue.HasValue) {
 				var scale = GetScale(decimalValue.Value);
 				var precision = GetPrecision(decimalValue.Value);
-				if (scale > Scale || precision > Precision) {
+				var actualDigits = precision - scale;
+				var expectedDigits = Precision - Scale;
+				if (scale > Scale || precision > Precision || (SqlServerCompatible && actualDigits > expectedDigits)) {
 					context.MessageFormatter
 						.AppendArgument("ExpectedPrecision", Precision)
 						.AppendArgument("ExpectedScale", Scale)
-						.AppendArgument("Digits", precision - scale)
+						.AppendArgument("Digits", actualDigits)
 						.AppendArgument("ActualScale", scale)
 						// For backwards compatibility, 8.1.2 and older used lowercase placeholders.
 						// TODO consider removing for FV 9
 						.AppendArgument("expectedPrecision", Precision)
 						.AppendArgument("expectedScale", Scale)
-						.AppendArgument("digits", precision - scale)
+						.AppendArgument("digits", actualDigits)
 						.AppendArgument("actualScale", scale);
 
 					return false;

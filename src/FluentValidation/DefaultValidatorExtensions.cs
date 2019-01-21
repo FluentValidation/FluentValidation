@@ -1042,9 +1042,10 @@ namespace FluentValidation {
 		/// <param name="scale">Allowed scale of the value</param>
 		/// <param name="precision">Allowed precision of the value</param>
 		/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
+		/// <param name="sqlServerCompatible">Whether the validator will validate the digits to the left of the decimal are less than or equal to the precision - scale to match SQL Server decimal data type</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> ScalePrecision<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false) {
-			return ruleBuilder.SetValidator(new ScalePrecisionValidator(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
+		public static IRuleBuilderOptions<T, TProperty> ScalePrecision<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false, bool sqlServerCompatible = false) {
+			return ruleBuilder.SetValidator(new ScalePrecisionValidator(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros, SqlServerCompatible = sqlServerCompatible});
 		}
 
 		/// <summary>
