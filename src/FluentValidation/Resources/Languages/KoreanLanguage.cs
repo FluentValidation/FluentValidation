@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<PredicateValidator>("'{PropertyName}'이(가) 유효하지 않습니다.");
 			Translate<AsyncPredicateValidator>("'{PropertyName}'이(가) 유효하지 않습니다.");
 			Translate<RegularExpressionValidator>("'{PropertyName}'이(가) 잘못된 형식입니다.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}'은(는) 소수점 이하 {expectedScale}자리 이하, 총 {expectedPrecision}자리 이하의 숫자여야 합니다. 입력한 값은 소수점 이하 {actualScale}자리이고 총 {digits}자리입니다.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}'은(는) 소수점 이하 {ExpectedScale}자리 이하, 총 {ExpectedPrecision}자리 이하의 숫자여야 합니다. 입력한 값은 소수점 이하 {ActualScale}자리이고 총 {Digits}자리입니다.");
 			Translate<EmptyValidator>("'{PropertyName}'이 비어 있어야합니다.");
 			Translate<NullValidator>("'{PropertyName}'이 비어 있어야합니다.");
 			Translate<EnumValidator>("'{PropertyName}'에는 '{PropertyValue}'가 포함되지 않은 값 범위가 있습니다.");

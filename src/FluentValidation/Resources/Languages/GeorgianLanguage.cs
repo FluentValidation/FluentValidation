@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' უნდა იყოს {From}-დან {To}-მდე (ჩათვლით). თქვენ შეიყვანეთ {Value}.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' უნდა იყოს {From}-სა და {To}-ს შორის. თქვენ შეიყვანეთ {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' არ არის ვალიდური საკრედიტო ბარათის ნომერი.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' არ უნდა იყოს ჯამში {expectedPrecision} ციფრზე მეტი, {expectedScale} ათობითი ციფრის ჩათვლით. თქვენ შეიყვანეთ {digits} ციფრი და {actualScale} ათობითი სიმბოლო.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' არ უნდა იყოს ჯამში {ExpectedPrecision} ციფრზე მეტი, {ExpectedScale} ათობითი ციფრის ჩათვლით. თქვენ შეიყვანეთ {Digits} ციფრი და {ActualScale} ათობითი სიმბოლო.");
 			Translate<EmptyValidator>("'{PropertyName}' უნდა იყოს ცარიელი.");
 			Translate<NullValidator>("'{PropertyName}' უნდა იყოს ცარიელი.");
 			Translate<EnumValidator>("'{PropertyValue}' არ შედის '{PropertyName}'-ის დასაშვებ მნიშვნელობებში.");

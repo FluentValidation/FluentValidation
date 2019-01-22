@@ -210,6 +210,19 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.OtherNullableInt);
 			AssertValidator<GreaterThanOrEqualValidator>();
 		}
+
+		[Fact]
+		public void ScalePrecision_should_create_ScalePrecisionValidator() {
+			validator.RuleFor(x => x.Discount).ScalePrecision(2, 5);
+			AssertValidator<ScalePrecisionValidator>();
+		}
+
+		[Fact]
+		public void ScalePrecision_should_create_ScalePrecisionValidator_with_ignore_trailing_zeros() {
+			validator.RuleFor(x => x.Discount).ScalePrecision(2, 5, true);
+			AssertValidator<ScalePrecisionValidator>();
+		}
+
 		[Fact]
 		public void MustAsync_should_not_throw_InvalidCastException() {
 			var model = new Model

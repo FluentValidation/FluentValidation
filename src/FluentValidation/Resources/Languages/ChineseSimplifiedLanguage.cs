@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' 必须在 {From} (包含)和 {To} (包含)之间， 您输入了 {Value}。");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' 必须在 {From} (不包含)和 {To} (不包含)之间， 您输入了 {Value}。");
 			Translate<CreditCardValidator>("'{PropertyName}' 不是有效的信用卡号。");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' 总位数不能超过 {expectedPrecision} 位，其中小数部分 {expectedScale} 位。您共计输入了 {digits} 位数字，其中小数部分{actualScale} 位。");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' 总位数不能超过 {ExpectedPrecision} 位，其中小数部分 {ExpectedScale} 位。您共计输入了 {Digits} 位数字，其中小数部分{ActualScale} 位。");
 			Translate<EmptyValidator>("'{PropertyName}' 必须为空。");
 			Translate<NullValidator>("'{PropertyName}' 必须为Null。");
 			Translate<EnumValidator>("'{PropertyName}' 的值范围不包含 '{PropertyValue}'。");

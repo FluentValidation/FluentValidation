@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' skal være mellom {From} og {To}. Du har tastet inn {Value}.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' skal være mellom {From} og {To} (eksklusiv). Du har tastet inn {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' er ikke et gyldig kredittkortnummer.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' kan ikke være mer enn {expectedPrecision} siffer totalt, med hensyn til {expectedScale} desimaler. {digits} siffer og {actualScale} desimaler ble funnet.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' kan ikke være mer enn {ExpectedPrecision} siffer totalt, med hensyn til {ExpectedScale} desimaler. {Digits} siffer og {ActualScale} desimaler ble funnet.");
 			Translate<EmptyValidator>("'{PropertyName}' skal være tomt.");
 			Translate<NullValidator>("'{PropertyName}' skal være tomt.");
 			Translate<EnumValidator>("'{PropertyName}' har en rekke verdier men inneholder ikke '{PropertyValue}'.");
