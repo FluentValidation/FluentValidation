@@ -19,7 +19,6 @@
 namespace FluentValidation {
 	using System;
 	using System.Collections;
-	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Text.RegularExpressions;
@@ -1045,6 +1044,19 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> ScalePrecision<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false) {
 			return ruleBuilder.SetValidator(new ScalePrecisionValidator(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
+		}
+
+		/// <summary>
+		/// Defines a count validator on the current rule builder, but only for collection properties.
+		/// Validation will fail if the number of elements is outside of the specified range. The range is inclusive.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="min"></param>
+		/// <param name="max"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, ICollection> Count<T>(this IRuleBuilder<T, ICollection> ruleBuilder, int min, int max) {
+			return ruleBuilder.SetValidator(new CountValidator(min, max));
 		}
 
 		/// <summary>
