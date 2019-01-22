@@ -349,9 +349,9 @@ Example error: 'Amount' must not be more than 4 digits in total, with allowance 
 String format args:
 * {PropertyName} = The name of the property being validated
 * {PropertyValue} = The current value of the property
-* {expectedPrecision} = The expected precision
-* {expectedScale} = The expected scale
-* {digits} = Total number of digits in the property value
-* {actualScale} = The actual scale of the property value
+* {ExpectedPrecision} = The expected precision
+* {ExpectedScale} = The expected scale
+* {Digits} = Total number of digits in the property value
+* {ActualScale} = The actual scale of the property value
 
 Note that this method contains an additional optional parameter `ignoreTrailingZeros`. When set to true, trailing zeros after the decimal point will not count towards the expected number of decimal places. By default, this is set to `false`.
