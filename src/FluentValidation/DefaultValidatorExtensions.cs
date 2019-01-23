@@ -1051,11 +1051,12 @@ namespace FluentValidation {
 		/// Validation will fail if the number of elements is outside of the specified range. The range is inclusive.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <param name="min"></param>
 		/// <param name="max"></param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, ICollection> Count<T>(this IRuleBuilder<T, ICollection> ruleBuilder, int min, int max) {
+		public static IRuleBuilderOptions<T, TProperty> Count<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, int min, int max) where TProperty : ICollection {
 			return ruleBuilder.SetValidator(new CountValidator(min, max));
 		}
 

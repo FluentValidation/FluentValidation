@@ -18,14 +18,12 @@
 
 #endregion
 
-namespace FluentValidation.Validators
-{
+namespace FluentValidation.Validators {
 	using System;
 	using System.Collections;
 	using Resources;
 
-	public class CountValidator : PropertyValidator
-	{
+	public class CountValidator : PropertyValidator {
 		public int Min { get; }
 		public int Max { get; }
 
@@ -43,15 +41,15 @@ namespace FluentValidation.Validators
 			if (!(context.PropertyValue is ICollection collection))
 				return true;
 
-			var count = collection.Count;
+			var total = collection.Count;
 
-			if (count >= Min && count <= Max)
+			if (total >= Min && total <= Max)
 				return true;
-			
+
 			context.MessageFormatter
-				.AppendArgument("MinCount", Min)
-				.AppendArgument("MaxCount", Max)
-				.AppendArgument("Count", count);
+				.AppendArgument("Min", Min)
+				.AppendArgument("Max", Max)
+				.AppendArgument("Total", total);
 			return false;
 		}
 	}

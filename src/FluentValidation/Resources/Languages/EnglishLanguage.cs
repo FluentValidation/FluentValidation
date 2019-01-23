@@ -46,7 +46,7 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' must be empty.");
 			Translate<NullValidator>("'{PropertyName}' must be empty.");
 			Translate<EnumValidator>("'{PropertyName}' has a range of values which does not include '{PropertyValue}'.");
-			Translate<CountValidator>("'{PropertyName}' must have between {MinCount} and {MaxCount} elements. You provided {Count} elements.");
+			Translate<CountValidator>("'{PropertyName}' must have between {Min} and {Max} elements, but actually contains {Total} elements.");
 		}
 	}
 }

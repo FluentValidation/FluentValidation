@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -14,17 +15,20 @@
 // limitations under the License.
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+
 #endregion
 
-namespace FluentValidation.Tests
-{
+namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
 	using Validators;
 	using Xunit;
 
-	public class CountValidatorTests
-	{
+	public class CountValidatorTests {
+		public CountValidatorTests() {
+			CultureScope.SetDefaultCulture();
+		}
+
 		[Fact]
 		public void When_the_min_is_negative_then_the_validator_should_throw() {
 			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() =>
@@ -76,7 +80,7 @@ namespace FluentValidation.Tests
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Children).Count(1, 3));
 			var result = validator.Validate(PersonWithChildren(4));
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Children' must have between 1 and 3 elements. You provided 4 elements.");
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Children' must have between 1 and 3 elements, but actually contains 4 elements.");
 		}
 
 		[Fact]
@@ -94,6 +98,6 @@ namespace FluentValidation.Tests
 		}
 
 		private static Person PersonWithChildren(int num) =>
-			new Person{Children = Enumerable.Repeat(new Person(), num).ToList()}; 
+			new Person {Children = Enumerable.Repeat(new Person(), num).ToList()};
 	}
 }
