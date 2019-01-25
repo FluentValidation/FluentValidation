@@ -14,6 +14,9 @@
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
     <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 8.1.3:
+* Resolved issue where clientside validation was incorrectly generating metadata for rules with shared conditions.
+
 Changes in 7.6.103:
 * Support for validating controller and Razor properties annotated [BindProperty].
 
