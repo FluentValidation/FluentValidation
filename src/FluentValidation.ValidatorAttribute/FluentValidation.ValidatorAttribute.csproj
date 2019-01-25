@@ -8,6 +8,7 @@
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
     <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <!-- Signining is only performed as part of the release build -->

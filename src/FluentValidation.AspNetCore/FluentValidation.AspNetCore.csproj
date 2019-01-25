@@ -39,7 +39,7 @@ Changes in 7.3:
 Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
     </PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
-    <RepositoryUrl>http://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
+    <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
     <!-- Signining is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
