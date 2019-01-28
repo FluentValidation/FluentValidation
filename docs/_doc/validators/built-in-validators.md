@@ -21,6 +21,7 @@ sections:
   - ExclusiveBetween Validator
   - InclusiveBetween Validator
   - ScalePrecision Validator
+  - Collection Count Validator
 ---
 
 
@@ -355,3 +356,19 @@ String format args:
 * {actualScale} = The actual scale of the property value
 
 Note that this method contains an additional optional parameter `ignoreTrailingZeros`. When set to true, trailing zeros after the decimal point will not count towards the expected number of decimal places. By default, this is set to `false`.
+
+#### Collection Count Validator
+Checks whether the number of items in a collection is within the specified range.
+
+```csharp
+RuleFor(x => x.Orders).Count(1, 10);
+```
+
+Example error: 'Orders' must have between 1 and 10 elements, but actually contains 12 elements.");
+
+String format args:
+* {PropertyName} = The name of the property being validated
+* {PropertyValue} = The current value of the property
+* {Min} = The minimum number of items allowed in the collection
+* {Max} = The maximum number of items allowed in the collection
+* {Total} = The current total number of items in the collection 
