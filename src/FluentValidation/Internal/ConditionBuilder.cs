@@ -29,16 +29,22 @@ namespace FluentValidation.Internal {
 			var id = "_FV_Condition_" + Guid.NewGuid();
 
 			bool Condition(ValidationContext context) {
-				string cacheId = id + context.InstanceToValidate.GetHashCode();
+				string cacheId = null;
+				
+				if (context.InstanceToValidate != null) {
+					cacheId = id + context.InstanceToValidate.GetHashCode();
 
-				if (context.RootContextData.TryGetValue(cacheId, out var value)) {
-					if (value is bool result) {
-						return result;
+					if (context.RootContextData.TryGetValue(cacheId, out var value)) {
+						if (value is bool result) {
+							return result;
+						}
 					}
 				}
 
 				var executionResult = predicate((T) context.InstanceToValidate);
-				context.RootContextData[cacheId] = executionResult;
+				if (context.InstanceToValidate != null) {
+					context.RootContextData[cacheId] = executionResult;
+				}
 				return executionResult;
 			}
 
@@ -90,16 +96,21 @@ namespace FluentValidation.Internal {
 			var id = "_FV_AsyncCondition_" + Guid.NewGuid();
 
 			async Task<bool> Condition(ValidationContext context, CancellationToken ct) {
-				string cacheId = id + context.InstanceToValidate.GetHashCode();
+				string cacheId = null;
+				if (context.InstanceToValidate != null) {
+					cacheId = id + context.InstanceToValidate.GetHashCode();
 
-				if (context.RootContextData.TryGetValue(cacheId, out var value)) {
-					if (value is bool result) {
-						return result;
+					if (context.RootContextData.TryGetValue(cacheId, out var value)) {
+						if (value is bool result) {
+							return result;
+						}
 					}
 				}
 
 				var executionResult = await predicate((T) context.InstanceToValidate, ct);
-				context.RootContextData[cacheId] = executionResult;
+				if (context.InstanceToValidate != null) {
+					context.RootContextData[cacheId] = executionResult;
+				}
 				return executionResult;
 			}
 

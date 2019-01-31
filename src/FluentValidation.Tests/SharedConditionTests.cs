@@ -109,6 +109,22 @@ namespace FluentValidation.Tests {
 			}
 		}
 
+		class BadValidatorDisablesNullCheck : AbstractValidator<string> {
+			public BadValidatorDisablesNullCheck() {
+				When(x => x != null, () => {
+					RuleFor(x => x).Must(x => x != "foo");
+				});
+				
+				WhenAsync(async (x, ct) => x != null, () => {
+					RuleFor(x => x).Must(x => x != "foo");
+				});
+			}
+
+			protected override void EnsureInstanceNotNull(object instanceToValidate) {
+				//bad.
+			}
+		}
+
 		[Fact]
 		public void Shared_When_is_not_applied_to_grouped_rules_when_initial_predicate_is_false() {
 			var validator = new SharedConditionValidator();
@@ -617,6 +633,20 @@ namespace FluentValidation.Tests {
 			var validationResult = await personValidator.ValidateAsync(person);
 			validationResult.IsValid.ShouldBeTrue();
 			executions.ShouldEqual(2);
+		}
+
+		[Fact]
+		public void Doesnt_throw_NullReferenceException_when_instance_not_null() {
+			var v = new BadValidatorDisablesNullCheck();
+			var result = v.Validate((string) null);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public async Task Doesnt_throw_NullReferenceException_when_instance_not_null_async() {
+			var v = new BadValidatorDisablesNullCheck();
+			var result = await v.ValidateAsync((string) null);
+			result.IsValid.ShouldBeTrue();
 		}
 
 	}
