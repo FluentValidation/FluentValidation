@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP || NETSTANDARD
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +22,8 @@ namespace FluentValidation.Tests
 				.AddValidatorsFromAssemblyContaining<TestValidator>()
 				.BuildServiceProvider();
 
+			serviceProvider.GetService<IValidator<TestClass>>().ShouldNotBeNull();
 			serviceProvider.GetService<TestValidator>().ShouldNotBeNull();
 		}
 	}
 }
-#endif
