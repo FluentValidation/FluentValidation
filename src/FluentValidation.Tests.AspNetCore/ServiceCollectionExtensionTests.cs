@@ -12,8 +12,8 @@ namespace FluentValidation.Tests
 
 	public class ServiceCollectionExtensionTests
 	{
-		class TestClass { }
-		class TestValidator : AbstractValidator<TestClass> { }
+		public class TestClass { }
+		public class TestValidator : AbstractValidator<TestClass> { }
 
 		[Fact]
 		public void ServiceCollectionExtensionTests_should_pass_if_validator_is_resolved()

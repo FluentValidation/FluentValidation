@@ -52,9 +52,17 @@ namespace FluentValidation
 		/// <returns></returns>
 		private static IServiceCollection AddScanResult(this IServiceCollection services, AssemblyScanner.AssemblyScanResult scanResult, ServiceLifetime lifetime)
 		{
+			//Register as interface
 			services.Add(
 				new ServiceDescriptor(
 							serviceType: scanResult.InterfaceType,
+							implementationType: scanResult.ValidatorType,
+							lifetime: lifetime));
+
+			//Register as self
+			services.Add(
+				new ServiceDescriptor(
+							serviceType: scanResult.ValidatorType,
 							implementationType: scanResult.ValidatorType,
 							lifetime: lifetime));
 
