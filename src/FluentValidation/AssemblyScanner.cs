@@ -72,8 +72,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Finds all the validators in the assembly containing the specified type.
 		/// </summary>
-		public static AssemblyScanner FindValidatorsInAssemblyContaining(Type type)
-		{
+		public static AssemblyScanner FindValidatorsInAssemblyContaining(Type type) {
 			return FindValidatorsInAssembly(type.GetTypeInfo().Assembly);
 		}
 

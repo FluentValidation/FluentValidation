@@ -1,29 +1,28 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using FluentValidation;
+﻿namespace FluentValidation.Tests {
+	using Microsoft.Extensions.DependencyInjection;
+	using Xunit;
 
-namespace FluentValidation.Tests
-{
-
-	public class ServiceCollectionExtensionTests
-	{
+	public class ServiceCollectionExtensionTests {
 		public class TestClass { }
 		public class TestValidator : AbstractValidator<TestClass> { }
+		public class TestValidator2 : AbstractValidator<TestClass> { }
 
 		[Fact]
-		public void ServiceCollectionExtensionTests_should_pass_if_validator_is_resolved()
-		{
+		public void Should_resolve_validator_auto_registered_from_assembly_as_self() {
 			var serviceProvider = new ServiceCollection()
-				.AddValidatorsFromAssemblyContaining<TestValidator>()
+				.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>()
+				.BuildServiceProvider();
+
+			serviceProvider.GetService<TestValidator>().ShouldNotBeNull();
+		}
+
+		[Fact]
+		public void Should_resolve_validator_auto_registered_from_assembly_as_interface() {
+			var serviceProvider = new ServiceCollection()
+				.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>()
 				.BuildServiceProvider();
 
 			serviceProvider.GetService<IValidator<TestClass>>().ShouldNotBeNull();
-			serviceProvider.GetService<TestValidator>().ShouldNotBeNull();
 		}
 	}
 }
