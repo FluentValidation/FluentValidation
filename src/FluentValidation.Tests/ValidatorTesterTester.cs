@@ -311,6 +311,25 @@ namespace FluentValidation.Tests {
 			exceptionCaught.ShouldBeTrue();
 		}
 
+		[Fact]
+		public void Expected_severity_check() {
+			bool exceptionCaught = false;
+
+			try {
+				var validator = new InlineValidator<Person> {
+					v => v.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Warning)
+				};
+				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithSeverity(Severity.Error);
+			}
+			catch (ValidationTestException e) {
+				exceptionCaught = true;
+
+				e.Message.ShouldEqual($"Expected a severity of '{nameof(Severity.Error)}'. Actual severity was '{nameof(Severity.Warning)}'");
+			}
+
+			exceptionCaught.ShouldBeTrue();
+		}
+
 		[Theory]
 		[InlineData(42, null)]
 		[InlineData(42, "")]
