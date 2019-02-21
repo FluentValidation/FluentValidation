@@ -39,15 +39,13 @@ namespace FluentValidation.AspNetCore {
 		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder" /> that can be used to further configure the
 		///     MVC services.
 		/// </returns>
-		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression=null) {
+		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			var expr = configurationExpression ?? delegate { };
 			var config = new FluentValidationMvcConfiguration();
 
 			expr(config);
 
-			if (config.AssembliesToRegister.Count > 0) {
-				RegisterTypes(config.AssembliesToRegister, mvcBuilder.Services);
-			}
+			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
 
 			RegisterServices(mvcBuilder.Services, config);
 			// clear all model validation providers since fluent validation will be handling everything
@@ -104,10 +102,8 @@ namespace FluentValidation.AspNetCore {
 
 			expr(config);
 
-			if (config.AssembliesToRegister.Count > 0) {
-				RegisterTypes(config.AssembliesToRegister, mvcBuilder.Services);
-			}
-
+			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
+			
 			RegisterServices(mvcBuilder.Services, config);
 
 			// clear all model validation providers since fluent validation will be handling everything
@@ -117,12 +113,6 @@ namespace FluentValidation.AspNetCore {
 			});
 
 			return mvcBuilder;
-		}
-
-		private static void RegisterTypes(IEnumerable<Assembly> assembliesToRegister, IServiceCollection services) {
-			AssemblyScanner.FindValidatorsInAssemblies(assembliesToRegister).ForEach(pair => {
-				services.Add(ServiceDescriptor.Transient(pair.InterfaceType, pair.ValidatorType));
-			});
 		}
 	}
 

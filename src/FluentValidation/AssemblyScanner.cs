@@ -69,6 +69,13 @@ namespace FluentValidation {
 			return FindValidatorsInAssembly(typeof(T).GetTypeInfo().Assembly);
 		}
 
+		/// <summary>
+		/// Finds all the validators in the assembly containing the specified type.
+		/// </summary>
+		public static AssemblyScanner FindValidatorsInAssemblyContaining(Type type) {
+			return FindValidatorsInAssembly(type.GetTypeInfo().Assembly);
+		}
+
 		private IEnumerable<AssemblyScanResult> Execute() {
 			var openGenericType = typeof(IValidator<>);
 
