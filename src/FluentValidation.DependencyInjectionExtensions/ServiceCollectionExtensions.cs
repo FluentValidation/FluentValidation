@@ -72,6 +72,30 @@ namespace FluentValidation {
 			=> services.AddValidatorsFromAssembly(typeof(T).Assembly, lifetime);
 
 		/// <summary>
+		/// Adds all validators in specified type collection using a user defined scan result collection. Use this method to perform custom validation discovery logic
+		/// </summary>
+		/// <param name="services">The collection of services</param>
+		/// <param name="scanResults">The collection of scan results</param>
+		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
+		/// <returns></returns>
+		public static IServiceCollection AddValidatorsFromScanResult(this IServiceCollection services, IEnumerable<AssemblyScanner.AssemblyScanResult> scanResults, ServiceLifetime lifetime = ServiceLifetime.Transient) {
+			foreach (var scanResult in scanResults)
+				services.AddScanResult(scanResult, lifetime);
+
+			return services;
+		}
+
+		/// <summary>
+		/// Adds all validators in specified type collection
+		/// </summary>
+		/// <param name="services">The collection of services</param>
+		/// <param name="assembly">The types to scan</param>
+		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
+		/// <returns></returns>
+		public static IServiceCollection AddValidatorsFromTypes(this IServiceCollection services, IEnumerable<Type> types, ServiceLifetime lifetime = ServiceLifetime.Transient)
+			=> services.AddValidatorsFromScanResult(new AssemblyScanner(types), lifetime);
+
+		/// <summary>
 		/// Helper method to register a validator from an AssemblyScanner result
 		/// </summary>
 		/// <param name="services">The collection of services</param>
