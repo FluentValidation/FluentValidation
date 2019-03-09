@@ -117,8 +117,7 @@ namespace FluentValidation.TestHelper {
 			testValidationResult.Which.ShouldNotHaveValidationError();
 		}
 
-		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage)
-		{
+		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
 			if (exceptionMessage != null && failure != null)
 			{
 				return exceptionMessage.Replace("{Code}", failure.ErrorCode)
