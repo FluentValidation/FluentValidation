@@ -117,25 +117,49 @@ namespace FluentValidation.TestHelper {
 			testValidationResult.Which.ShouldNotHaveValidationError();
 		}
 
-		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
+		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage)
+		{
+			if (exceptionMessage != null && failure != null)
+			{
+				return exceptionMessage.Replace("{Code}", failure.ErrorCode)
+					.Replace("{Message}", failure.ErrorMessage)
+					.Replace("{State}", failure.CustomState?.ToString() ?? "")
+					.Replace("{Severity}", failure.Severity.ToString());
+			}
+			return defaultMessage;
+		}
+
+		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null){
 			bool anyMatched = failures.Any(failurePredicate);
 
 			if (!anyMatched) {
-				var failure = failures.First();
-				
-				string message = "Expected validation error was not found";
+				var failure = failures.FirstOrDefault();
 
-				if (exceptionMessage != null) {
-					message = exceptionMessage.Replace("{Code}", failure.ErrorCode)
-						.Replace("{Message}", failure.ErrorMessage)
-						.Replace("{State}", failure.CustomState?.ToString() ?? "")
-						.Replace("{Severity}", failure.Severity.ToString());
-				}
+				string message = BuildErrorMessage(failure, exceptionMessage, "Expected validation error was not found");
 
 				throw new ValidationTestException(message);
 			}
 			
 			return failures;
+		}
+
+		public static IEnumerable<ValidationFailure> WhenAll(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
+			bool allMatched = failures.All(failurePredicate);
+
+			if (!allMatched)
+			{
+				var failure = failures.First(fail => !(failurePredicate(fail)));
+
+				string message = BuildErrorMessage(failure, exceptionMessage, "Unexpected validation error was found");
+
+				throw new ValidationTestException(message);
+			}
+
+			return failures;
+		}
+
+		public static IEnumerable<ValidationFailure> WithSeverity(this IEnumerable<ValidationFailure> failures, Severity expectedSeverity) {
+			return failures.When(failure => failure.Severity == expectedSeverity, string.Format("Expected a severity of '{0}'. Actual severity was '{{Severity}}'", expectedSeverity));
 		}
 
 		public static IEnumerable<ValidationFailure> WithCustomState(this IEnumerable<ValidationFailure> failures, object expectedCustomState) {
@@ -150,8 +174,20 @@ namespace FluentValidation.TestHelper {
 			return failures.When(failure => failure.ErrorCode == expectedErrorCode, string.Format("Expected an error code of '{0}'. Actual error code was '{{Code}}'", expectedErrorCode));
 		}
 
-		public static IEnumerable<ValidationFailure> WithSeverity(this IEnumerable<ValidationFailure> failures, Severity expectedSeverity) {
-			return failures.When(failure => failure.Severity == expectedSeverity, string.Format("Expected a severity of '{0}'. Actual severity was '{{Severity}}'", expectedSeverity));
+		public static IEnumerable<ValidationFailure> WithoutSeverity(this IEnumerable<ValidationFailure> failures, Severity unexpectedSeverity) {
+			return failures.WhenAll(failure => failure.Severity != unexpectedSeverity, string.Format("Unexpected a severity of '{0}'", unexpectedSeverity));
+		}
+
+		public static IEnumerable<ValidationFailure> WithoutCustomState(this IEnumerable<ValidationFailure> failures, object unexpectedCustomState) {
+			return failures.WhenAll(failure => failure.CustomState != unexpectedCustomState, string.Format("Unexpected custom state of '{0}'", unexpectedCustomState));
+		}
+
+		public static IEnumerable<ValidationFailure> WithoutErrorMessage(this IEnumerable<ValidationFailure> failures, string unexpectedErrorMessage) {
+			return failures.WhenAll(failure => failure.ErrorMessage != unexpectedErrorMessage, string.Format("Unexpected an error message of '{0}'", unexpectedErrorMessage));
+		}
+
+		public static IEnumerable<ValidationFailure> WithoutErrorCode(this IEnumerable<ValidationFailure> failures, string unexpectedErrorCode) {
+			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Unexpected an error code of '{0}'", unexpectedErrorCode));
 		}
 	}
 }
