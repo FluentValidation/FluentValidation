@@ -118,8 +118,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
-			if (exceptionMessage != null && failure != null)
-			{
+			if (exceptionMessage != null && failure != null) {
 				return exceptionMessage.Replace("{Code}", failure.ErrorCode)
 					.Replace("{Message}", failure.ErrorMessage)
 					.Replace("{State}", failure.CustomState?.ToString() ?? "")
@@ -143,8 +142,7 @@ namespace FluentValidation.TestHelper {
 		public static IEnumerable<ValidationFailure> WhenAll(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
 			bool allMatched = failures.All(failurePredicate);
 
-			if (!allMatched)
-			{
+			if (!allMatched) {
 				var failure = failures.First(fail => !(failurePredicate(fail)));
 				string message = BuildErrorMessage(failure, exceptionMessage, "Unexpected validation error was found");
 				throw new ValidationTestException(message);

@@ -294,8 +294,7 @@ namespace FluentValidation.Tests {
 				}
 				validator.TestValidate(new Person { }).Result.Errors.WithoutErrorMessage(withoutErrMsg);
 			}
-			catch (ValidationTestException e)
-			{
+			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
 				e.Message.ShouldEqual($"Unexpected an error message of '{withoutErrMsg}'");
@@ -334,8 +333,7 @@ namespace FluentValidation.Tests {
 				};
 				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithoutCustomState("bar");
 			}
-			catch (ValidationTestException e)
-			{
+			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
 				e.Message.ShouldEqual("Unexpected custom state of 'bar'");
@@ -374,8 +372,7 @@ namespace FluentValidation.Tests {
 				};
 				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithoutErrorCode("bar");
 			}
-			catch (ValidationTestException e)
-			{
+			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
 				e.Message.ShouldEqual("Unexpected an error code of 'bar'");
@@ -414,8 +411,7 @@ namespace FluentValidation.Tests {
 				};
 				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithoutSeverity(Severity.Warning);
 			}
-			catch (ValidationTestException e)
-			{
+			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
 				e.Message.ShouldEqual($"Unexpected a severity of '{nameof(Severity.Warning)}'");
