@@ -273,26 +273,36 @@ namespace FluentValidation.Tests {
 			exceptionCaught.ShouldBeTrue();
 		}
 
-		[Fact]
-		public void Unexpected_message_check() {
+		/// <summary>
+		/// Full test (for WhenAll)
+		/// </summary>
+		/// <param name="withoutErrMsg"></param>
+		/// <param name="errMessages"></param>
+		/// <param name="shouldBe"></param>
+		[Theory]
+		[InlineData("bar", new string[] { })]
+		[InlineData("bar", new string[] { "foo", })]
+		[InlineData("bar", new string[] { "foo", "bar" })]
+		[InlineData("bar", new string[] { "bar", })]
+		public void Unexpected_message_check(string withoutErrMsg, string[] errMessages) {
 			bool exceptionCaught = false;
 
 			try
 			{
-				var validator = new InlineValidator<Person> {
-					v => v.RuleFor(x => x.Surname).NotNull().WithMessage("bar"),
-					v => v.RuleFor(x => x.Surname).NotNull().WithMessage("foo"),
-				};
-				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithoutErrorMessage("bar");
+				var validator = new InlineValidator<Person>();
+				foreach(var msg in errMessages) {
+					validator.Add(v => v.RuleFor(x => x.Surname).NotNull().WithMessage(msg));
+				}
+				validator.TestValidate(new Person { }).Result.Errors.WithoutErrorMessage(withoutErrMsg);
 			}
 			catch (ValidationTestException e)
 			{
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual("Unexpected an error message of 'bar'");
+				e.Message.ShouldEqual($"Unexpected an error message of '{withoutErrMsg}'");
 			}
 
-			exceptionCaught.ShouldBeTrue();
+			exceptionCaught.ShouldEqual(errMessages.Contains(withoutErrMsg));
 		}
 
 		[Fact]
