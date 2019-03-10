@@ -287,8 +287,7 @@ namespace FluentValidation.Tests {
 		public void Unexpected_message_check(string withoutErrMsg, string[] errMessages) {
 			bool exceptionCaught = false;
 
-			try
-			{
+			try {
 				var validator = new InlineValidator<Person>();
 				foreach(var msg in errMessages) {
 					validator.Add(v => v.RuleFor(x => x.Surname).NotNull().WithMessage(msg));
@@ -328,8 +327,7 @@ namespace FluentValidation.Tests {
 		public void Unexpected_state_check() {
 			bool exceptionCaught = false;
 
-			try
-			{
+			try {
 				var validator = new InlineValidator<Person> {
 					v => v.RuleFor(x => x.Surname).NotNull().WithState(x => "bar"),
 					v => v.RuleFor(x => x.Surname).NotNull().WithState(x => "foo"),
@@ -369,8 +367,7 @@ namespace FluentValidation.Tests {
 		public void Unexpected_error_code_check() {
 			bool exceptionCaught = false;
 
-			try
-			{
+			try {
 				var validator = new InlineValidator<Person> {
 					v => v.RuleFor(x => x.Surname).NotNull().WithErrorCode("bar"),
 					v => v.RuleFor(x => x.Surname).NotNull().WithErrorCode("foo")
@@ -410,8 +407,7 @@ namespace FluentValidation.Tests {
 		public void Unexpected_severity_check() {
 			bool exceptionCaught = false;
 
-			try
-			{
+			try {
 				var validator = new InlineValidator<Person> {
 					v => v.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Warning),
 					v => v.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Error),

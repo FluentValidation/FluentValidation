@@ -133,9 +133,7 @@ namespace FluentValidation.TestHelper {
 
 			if (!anyMatched) {
 				var failure = failures.FirstOrDefault();
-
 				string message = BuildErrorMessage(failure, exceptionMessage, "Expected validation error was not found");
-
 				throw new ValidationTestException(message);
 			}
 			
@@ -148,9 +146,7 @@ namespace FluentValidation.TestHelper {
 			if (!allMatched)
 			{
 				var failure = failures.First(fail => !(failurePredicate(fail)));
-
 				string message = BuildErrorMessage(failure, exceptionMessage, "Unexpected validation error was found");
-
 				throw new ValidationTestException(message);
 			}
 
