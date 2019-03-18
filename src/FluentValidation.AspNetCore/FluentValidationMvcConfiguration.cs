@@ -81,6 +81,15 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		/// <summary>
+		/// Registers all validators derived from AbstractValidator within the specified assemblies
+		/// </summary>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblies(IEnumerable<Assembly> assemblies) {
+			ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
+			AssembliesToRegister.AddRange(assemblies);
+			return this;
+		}
+
+		/// <summary>
 		/// Configures clientside validation support
 		/// </summary>
 		/// <param name="clientsideConfig"></param>
