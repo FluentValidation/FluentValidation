@@ -55,7 +55,7 @@ public class Startup {
 }
 ```
 
-Internally, FluentValidation's WebApi integration makes use of a *validator factory* to dtermine which validator should be used to validate a particular type. By default, FluentValidation ships with an AttributedValidatorFactory that allows you to link a validator to the type that it validates by decorating the class to validate with an attribute that identifies its corresponding validator:
+Internally, FluentValidation's WebApi integration makes use of a *validator factory* to determine which validator should be used to validate a particular type. By default, FluentValidation ships with an AttributedValidatorFactory that allows you to link a validator to the type that it validates by decorating the class to validate with an attribute that identifies its corresponding validator:
 
 ```csharp
 [Validator(typeof(PersonValidator))]
