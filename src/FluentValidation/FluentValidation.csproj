@@ -67,7 +67,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'!='netstandard2.0'">
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard1.6' or '$(TargetFramework)'=='netstandard1.1'">
     <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" />
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
