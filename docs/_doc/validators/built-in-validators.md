@@ -253,6 +253,12 @@ String format args:
 * {PropertyName} = The name of the property being validated
 * {PropertyValue} = The current value of the property
 
+Internally, the email address validator uses the same regular expression as used by the .NET Framework's `EmailAddressAttribute`. Note that this regex is not 100% comprehensive, but this should not be considered a problem. A fully comprehensive regex would be extremely complicated, is not performant and is impossible to debug. When validating email addresses, it is better to not try and be too strict. See the following pages for information on this:
+
+- [The 100% Correct way to validate email addresses](https://hackernoon.com/the-100-correct-way-to-validate-email-addresses-7c4818f24643)
+- [Stop validating email addresses with Regex](https://davidcel.is/posts/stop-validating-email-addresses-with-regex/)
+- [How to validate an email address using a regular expression?](https://stackoverflow.com/a/201378)
+
 #### Credit Card Validator
 Checks whether a string property could be a valid credit card number. 
 

@@ -7,6 +7,7 @@ sections:
  - Validator customization
  - Validator Interceptors
  - Specifying a RuleSet for client-side messages
+ - Use with Page Models
 ---
 
 FluentValidation can be integrated with ASP.NET Core. Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure.
@@ -273,3 +274,7 @@ public ActionResult Index() {
    return View(new PersonViewModel());
 }
 ```
+
+### Use with Page Models
+
+Configuration for use with ASP.NET Web Pages and PageModels is exactly the same as with MVC above. There is one limitation, in that you can't define a validator for the whole page-model, only for models exposed as properties on the page model. This is a limitation of ASP.NET Web Pages itself. 

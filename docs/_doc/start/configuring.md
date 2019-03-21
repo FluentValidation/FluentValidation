@@ -124,7 +124,16 @@ When(customer => customer.IsPreferred, () => {
 });
 ```
 
-This time, the condition will be applied to both rules.
+This time, the condition will be applied to both rules. You can also chain a call to `Otherwise` which will invoke rules that don't match the condition:
+
+```csharp
+When(customer => customer.IsPreferred, () => {
+   RuleFor(customer => customer.CustomerDiscount).GreaterThan(0);
+   RuleFor(customer => customer.CreditCardNumber).NotNull();
+}).Otherwise(() => {
+  RuleFor(customer => customer.CustomerDiscount).Equal(0);
+});
+```
 
 ### Setting the Cascade mode
 
