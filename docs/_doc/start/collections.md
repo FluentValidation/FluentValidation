@@ -46,4 +46,4 @@ RuleForEach(x => x.Orders)
   .Must(order => order.Total > 0).WithMessage("Orders must have a total of more than 0")
 ```
 
-I personally using 2 rules is clearer and easier to read, but the option of combining them is available with the `ForEach` method.
+I personally think that using 2 rules is clearer and easier to read, but the option of combining them is available with the `ForEach` method.
