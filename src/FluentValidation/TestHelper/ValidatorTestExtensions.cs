@@ -144,7 +144,7 @@ namespace FluentValidation.TestHelper {
 
 			if (!allMatched) {
 				var failure = failures.First(fail => !(failurePredicate(fail)));
-				string message = BuildErrorMessage(failure, exceptionMessage, "Unexpected validation error was found");
+				string message = BuildErrorMessage(failure, exceptionMessage, "Found an unexpected validation error");
 				throw new ValidationTestException(message);
 			}
 
@@ -168,19 +168,19 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static IEnumerable<ValidationFailure> WithoutSeverity(this IEnumerable<ValidationFailure> failures, Severity unexpectedSeverity) {
-			return failures.WhenAll(failure => failure.Severity != unexpectedSeverity, string.Format("Unexpected a severity of '{0}'", unexpectedSeverity));
+			return failures.WhenAll(failure => failure.Severity != unexpectedSeverity, string.Format("Found an unexpected severity of '{0}'", unexpectedSeverity));
 		}
 
 		public static IEnumerable<ValidationFailure> WithoutCustomState(this IEnumerable<ValidationFailure> failures, object unexpectedCustomState) {
-			return failures.WhenAll(failure => failure.CustomState != unexpectedCustomState, string.Format("Unexpected custom state of '{0}'", unexpectedCustomState));
+			return failures.WhenAll(failure => failure.CustomState != unexpectedCustomState, string.Format("Found an unexpected custom state of '{0}'", unexpectedCustomState));
 		}
 
 		public static IEnumerable<ValidationFailure> WithoutErrorMessage(this IEnumerable<ValidationFailure> failures, string unexpectedErrorMessage) {
-			return failures.WhenAll(failure => failure.ErrorMessage != unexpectedErrorMessage, string.Format("Unexpected an error message of '{0}'", unexpectedErrorMessage));
+			return failures.WhenAll(failure => failure.ErrorMessage != unexpectedErrorMessage, string.Format("Found an unexpected error message of '{0}'", unexpectedErrorMessage));
 		}
 
 		public static IEnumerable<ValidationFailure> WithoutErrorCode(this IEnumerable<ValidationFailure> failures, string unexpectedErrorCode) {
-			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Unexpected an error code of '{0}'", unexpectedErrorCode));
+			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Found an unexpected error code of '{0}'", unexpectedErrorCode));
 		}
 	}
 }

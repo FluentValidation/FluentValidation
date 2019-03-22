@@ -297,7 +297,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual($"Unexpected an error message of '{withoutErrMsg}'");
+				e.Message.ShouldEqual($"Found an unexpected error message of '{withoutErrMsg}'");
 			}
 
 			exceptionCaught.ShouldEqual(errMessages.Contains(withoutErrMsg));
@@ -336,7 +336,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual("Unexpected custom state of 'bar'");
+				e.Message.ShouldEqual("Found an unexpected custom state of 'bar'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -375,7 +375,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual("Unexpected an error code of 'bar'");
+				e.Message.ShouldEqual("Found an unexpected error code of 'bar'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -414,7 +414,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual($"Unexpected a severity of '{nameof(Severity.Warning)}'");
+				e.Message.ShouldEqual($"Found an unexpected severity of '{nameof(Severity.Warning)}'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
