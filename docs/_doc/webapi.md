@@ -6,5 +6,9 @@ icon:
   name: icon_globe
 color: green
 sections:
-  - /aspnet/webapi
+  - /webapi/getting-started
+  - /webapi/manual-validation
+  - /webapi/validator-customization
+  - /webapi/validator-interceptors
+  - /webapi/ioc
 ---

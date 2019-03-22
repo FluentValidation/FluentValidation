@@ -7,12 +7,12 @@ title: Getting Started
 {: .callout-title}
 #### Deprecation Notice
 
-Integration with ASP.NET MVC5 is considered legacy and is will not be supported beyond FluentValidation 8.x. 
+Integration with ASP.NET MVC5 is considered legacy and will not be supported beyond FluentValidation 8.x. 
 For an optimal experience, we suggest using FluentValidtation with [ASP.NET Core](/aspnet).
 
 </div></div>
 
-FluentValidation can be configured to work with ASP.NET MVC 5 projects. Note that the MVC 5 integration is considered legacy and has several limitations. For an optimal experience, we recommend using FluentValidation with [ASP.NET Core](/aspnet).
+FluentValidation can be configured to work with ASP.NET MVC 5 projects.
 
 To enable MVC integration, you'll need to add a reference to the `FluentValidation.Mvc5` assembly from the appropriate NuGet package:
 
