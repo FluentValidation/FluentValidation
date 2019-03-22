@@ -86,7 +86,7 @@ There is also an overload of `WithName` that accepts a lambda expression in a si
 Property name resolution is also pluggable. By default, the name of the property extracted from the MemberExpression passed to RuleFor. If you want change this logic, you can set the `DisplayNameResolver` property on the `ValidatorOptions` class:
 
 ```csharp
-ValidatorOptions.DisplayNameResolver = (type, member) => {
+ValidatorOptions.DisplayNameResolver = (type, member, expression) => {
   if(member != null) {
      return member.Name + "Foo";
   }
@@ -124,7 +124,16 @@ When(customer => customer.IsPreferred, () => {
 });
 ```
 
-This time, the condition will be applied to both rules.
+This time, the condition will be applied to both rules. You can also chain a call to `Otherwise` which will invoke rules that don't match the condition:
+
+```csharp
+When(customer => customer.IsPreferred, () => {
+   RuleFor(customer => customer.CustomerDiscount).GreaterThan(0);
+   RuleFor(customer => customer.CreditCardNumber).NotNull();
+}).Otherwise(() => {
+  RuleFor(customer => customer.CustomerDiscount).Equal(0);
+});
+```
 
 ### Setting the Cascade mode
 
@@ -270,5 +279,5 @@ RuleFor(x => x.Surname).NotNull().Must(surname => surname != null && surname.Len
 ```csharp
 RuleFor(x => x.Surname).NotNull().OnFailure(x => Console.WriteLine("Nonull failed"))
   .Must(surname => surname != null && surname.Length <= 200)
-  .OnAnyFailure(x => Console.WriteLine("Must failed"));
+  .OnFailure(x => Console.WriteLine("Must failed"));
 ```

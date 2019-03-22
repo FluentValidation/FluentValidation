@@ -19,7 +19,6 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
-	using System.Globalization;
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
@@ -38,6 +37,18 @@ namespace FluentValidation.Internal {
 		string _propertyDisplayName;
 		string _propertyName;
 		private string[] _ruleSet = new string[0];
+		private Func<ValidationContext, bool> _condition;
+		private Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition;
+
+		/// <summary>
+		/// Condition for all validators in this rule.
+		/// </summary>
+		public Func<ValidationContext, bool> Condition => _condition;
+
+		/// <summary>
+		/// Asynchronous condition for all validators in this rule.
+		/// </summary>
+		public Func<ValidationContext, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
 
 		/// <summary>
 		/// Property associated with this rule.
@@ -254,6 +265,19 @@ namespace FluentValidation.Internal {
 			if (!context.Selector.CanExecute(this, propertyName, context)) {
 				yield break;
 			}
+			
+			if (_condition != null) {
+				if (!_condition(context)) {
+					yield break;
+				}
+			}
+			
+			// TODO: For FV 9, throw an exception by default if synchronous validator has async condition.
+			if (_asyncCondition != null) {
+				if (!_asyncCondition(context, default).GetAwaiter().GetResult()) {
+					yield break;
+				}
+			}
 
 			var cascade = _cascadeModeThunk();
 			bool hasAnyFailure = false;
@@ -262,6 +286,7 @@ namespace FluentValidation.Internal {
 			foreach (var validator in _validators) {
 				IEnumerable<ValidationFailure> results;
 				if (validator.ShouldValidateAsync(context))
+					//TODO: For FV 9 by default disallow invocation of async validators when running synchronously.
 					results = InvokePropertyValidatorAsync(context, validator, propertyName, default).GetAwaiter().GetResult();
 				else
 					results = InvokePropertyValidator(context, validator, propertyName);
@@ -319,6 +344,19 @@ namespace FluentValidation.Internal {
 			// The validatselector has the opportunity to veto this before any of the validators execute.
 			if (!context.Selector.CanExecute(this, propertyName, context)) {
 				return Enumerable.Empty<ValidationFailure>();
+			}
+			
+			if (_condition != null) {
+				if (!_condition(context)) {
+					return Enumerable.Empty<ValidationFailure>();
+				}
+			}
+			
+			// TODO: For FV 9, throw an exception by default if synchronous validator has async condition.
+			if (_asyncCondition != null) {
+				if (! await _asyncCondition(context, cancellation)) {
+					return Enumerable.Empty<ValidationFailure>();
+				}
 			}
 
 			var cascade = _cascadeModeThunk();
@@ -413,7 +451,7 @@ namespace FluentValidation.Internal {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			return validator.Validate(propertyContext);
 		}
-
+		
 		/// <summary>
 		/// Applies a condition to the rule
 		/// </summary>
@@ -435,8 +473,6 @@ namespace FluentValidation.Internal {
 				var wrappedValidator = new DelegatingValidator(predicate, CurrentValidator);
 				ReplaceValidator(CurrentValidator, wrappedValidator);
 			}
-
-
 		}
 
 		/// <summary>
@@ -460,6 +496,28 @@ namespace FluentValidation.Internal {
 				var wrappedValidator = new DelegatingValidator(predicate, CurrentValidator);
 				ReplaceValidator(CurrentValidator, wrappedValidator);
 			}
+		}
+
+		// TODO: Consider making these public and part of the interface for FV 9.
+		internal void ApplySharedCondition(Func<ValidationContext, bool> condition) {
+			if (_condition == null) {
+				_condition = condition;
+			}
+			else {
+				var original = _condition;
+				_condition = ctx => condition(ctx) && original(ctx);
+			}
+		}
+
+		internal void ApplySharedAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> condition) {
+			if (_condition == null) {
+				_asyncCondition = condition;
+			}
+			else {
+				var original = _asyncCondition;
+				_asyncCondition = async (ctx, ct) => await condition(ctx, ct) && await original(ctx, ct);
+			}
+			
 		}
 	}
 }

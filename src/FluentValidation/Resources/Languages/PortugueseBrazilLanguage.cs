@@ -44,7 +44,7 @@ namespace FluentValidation.Resources {
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' deve, exclusivamente, estar entre {From} e {To}. Você digitou {Value}.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' deve estar entre {From} e {To}. Você digitou {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' não é um número válido de cartão de crédito.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' não pode ter mais do que {expectedPrecision} dígitos no total, com {expectedScale} dígitos decimais. {digits} dígitos e {actualScale} decimais foram informados.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' não pode ter mais do que {ExpectedPrecision} dígitos no total, com {ExpectedScale} dígitos decimais. {Digits} dígitos e {ActualScale} decimais foram informados.");
 			Translate<EmptyValidator>("'{PropertyName}' deve estar vazio.");
 			Translate<NullValidator>("'{PropertyName}' deve estar null.");
 			Translate<EnumValidator>("'{PropertyName}' possui um intervalo de valores que não inclui '{PropertyValue}'.");

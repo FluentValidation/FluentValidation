@@ -20,9 +20,7 @@
 
 		public static TestServer BuildTestServer<T>() where T : class {
 			return new TestServer(new WebHostBuilder()
-#if NETCOREAPP2_0
 				.UseDefaultServiceProvider((context, options) => options.ValidateScopes = true)
-#endif
 				.UseStartup<T>());
 		}
 

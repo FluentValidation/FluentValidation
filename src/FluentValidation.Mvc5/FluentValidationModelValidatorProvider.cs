@@ -98,6 +98,7 @@ namespace FluentValidation.Mvc {
 
 				var validatorsWithRules = from rule in descriptor.GetRulesForMember(metadata.PropertyName)
 										  let propertyRule = (PropertyRule)rule
+										  where propertyRule.Condition == null && propertyRule.AsyncCondition == null
 										  let validators = rule.Validators
 										  where validators.Any()
 										  from propertyValidator in validators

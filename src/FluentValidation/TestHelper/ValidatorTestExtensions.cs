@@ -128,7 +128,8 @@ namespace FluentValidation.TestHelper {
 				if (exceptionMessage != null) {
 					message = exceptionMessage.Replace("{Code}", failure.ErrorCode)
 						.Replace("{Message}", failure.ErrorMessage)
-						.Replace("{State}", failure.CustomState?.ToString() ?? "");
+						.Replace("{State}", failure.CustomState?.ToString() ?? "")
+						.Replace("{Severity}", failure.Severity.ToString());
 				}
 
 				throw new ValidationTestException(message);
@@ -147,6 +148,10 @@ namespace FluentValidation.TestHelper {
 
 		public static IEnumerable<ValidationFailure> WithErrorCode(this IEnumerable<ValidationFailure> failures, string expectedErrorCode) {
 			return failures.When(failure => failure.ErrorCode == expectedErrorCode, string.Format("Expected an error code of '{0}'. Actual error code was '{{Code}}'", expectedErrorCode));
+		}
+
+		public static IEnumerable<ValidationFailure> WithSeverity(this IEnumerable<ValidationFailure> failures, Severity expectedSeverity) {
+			return failures.When(failure => failure.Severity == expectedSeverity, string.Format("Expected a severity of '{0}'. Actual severity was '{{Severity}}'", expectedSeverity));
 		}
 	}
 }

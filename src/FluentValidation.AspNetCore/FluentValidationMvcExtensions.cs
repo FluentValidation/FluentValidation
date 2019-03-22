@@ -39,18 +39,37 @@ namespace FluentValidation.AspNetCore {
 		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder" /> that can be used to further configure the
 		///     MVC services.
 		/// </returns>
-		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression=null) {
-			var expr = configurationExpression ?? delegate { };
+		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			var config = new FluentValidationMvcConfiguration();
+			configurationExpression?.Invoke(config);
 
-			expr(config);
-
-			if (config.AssembliesToRegister.Count > 0) {
-				RegisterTypes(config.AssembliesToRegister, mvcBuilder.Services);
-			}
+			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
 
 			RegisterServices(mvcBuilder.Services, config);
-			// clear all model validation providers since fluent validation will be handling everything
+
+			mvcBuilder.AddMvcOptions(options => {
+				options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
+				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+			});
+
+			return mvcBuilder;
+		}
+		
+		/// <summary>
+		///     Adds Fluent Validation services to the specified
+		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />.
+		/// </summary>
+		/// <returns>
+		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" /> that can be used to further configure the
+		///     MVC services.
+		/// </returns>
+		public static IMvcBuilder AddFluentValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
+			var config = new FluentValidationMvcConfiguration();
+			configurationExpression?.Invoke(config);
+
+			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
+			
+			RegisterServices(mvcBuilder.Services, config);
 
 			mvcBuilder.AddMvcOptions(options => {
 				options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
@@ -86,43 +105,6 @@ namespace FluentValidation.AspNetCore {
 					return new FluentValidationViewOptionsSetup(config.ClientsideConfig, s.GetService<IHttpContextAccessor>());
 				}));
 			}
-		}
-
-		/// <summary>
-		///     Adds Fluent Validation services to the specified
-		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />.
-		/// </summary>
-		/// <returns>
-		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" /> that can be used to further configure the
-		///     MVC services.
-		/// </returns>
-		public static IMvcBuilder AddFluentValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
-			// add all IValidator to MVC's service provider
-
-			var expr = configurationExpression ?? delegate { };
-			var config = new FluentValidationMvcConfiguration();
-
-			expr(config);
-
-			if (config.AssembliesToRegister.Count > 0) {
-				RegisterTypes(config.AssembliesToRegister, mvcBuilder.Services);
-			}
-
-			RegisterServices(mvcBuilder.Services, config);
-
-			// clear all model validation providers since fluent validation will be handling everything
-			mvcBuilder.AddMvcOptions(options => {
-				options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
-				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
-			});
-
-			return mvcBuilder;
-		}
-
-		private static void RegisterTypes(IEnumerable<Assembly> assembliesToRegister, IServiceCollection services) {
-			AssemblyScanner.FindValidatorsInAssemblies(assembliesToRegister).ForEach(pair => {
-				services.Add(ServiceDescriptor.Transient(pair.InterfaceType, pair.ValidatorType));
-			});
 		}
 	}
 

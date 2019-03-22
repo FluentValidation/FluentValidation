@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
 	using Xunit;
@@ -105,6 +106,22 @@ namespace FluentValidation.Tests {
 			public SharedAsyncConditionInverseValidator()
 			{
 				UnlessAsync(async (x,c) => x.Id == 0, () => { RuleFor(x => x.Forename).NotNull(); });
+			}
+		}
+
+		class BadValidatorDisablesNullCheck : AbstractValidator<string> {
+			public BadValidatorDisablesNullCheck() {
+				When(x => x != null, () => {
+					RuleFor(x => x).Must(x => x != "foo");
+				});
+				
+				WhenAsync(async (x, ct) => x != null, () => {
+					RuleFor(x => x).Must(x => x != "foo");
+				});
+			}
+
+			protected override void EnsureInstanceNotNull(object instanceToValidate) {
+				//bad.
 			}
 		}
 
@@ -565,6 +582,73 @@ namespace FluentValidation.Tests {
 			var result2 = await validator.ValidateAsync(new Person {Age = 9});
 			result2.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
+		
+		[Fact]
+		public void When_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
+			var person = new Person {
+				Children = new List<Person> {
+					new Person { Id = 1},
+					new Person { Id = 0}
+				}
+			};
+
+			var childValidator = new InlineValidator<Person>();
+			int executions = 0;
+			
+			childValidator.When(a => {
+				executions++;
+				return a.Id != 0;
+			}, () => {
+				childValidator.RuleFor(a => a.Id).Equal(1);
+			});
+			var personValidator = new InlineValidator<Person>();
+			personValidator.RuleForEach(p => p.Children).SetValidator(childValidator);
+			
+			var validationResult = personValidator.Validate(person);
+			validationResult.IsValid.ShouldBeTrue();
+			executions.ShouldEqual(2);
+		}
+		
+		[Fact]
+		public async Task When_async_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
+			var person = new Person {
+				Children = new List<Person> {
+					new Person { Id = 1},
+					new Person { Id = 0}
+				}
+			};
+
+			var childValidator = new InlineValidator<Person>();
+			int executions = 0;
+			
+			childValidator.WhenAsync(async (a, ct) => {
+				executions++;
+				return a.Id != 0;
+			}, () => {
+				childValidator.RuleFor(a => a.Id).Equal(1);
+			});
+			var personValidator = new InlineValidator<Person>();
+			personValidator.RuleForEach(p => p.Children).SetValidator(childValidator);
+			
+			var validationResult = await personValidator.ValidateAsync(person);
+			validationResult.IsValid.ShouldBeTrue();
+			executions.ShouldEqual(2);
+		}
+
+		[Fact]
+		public void Doesnt_throw_NullReferenceException_when_instance_not_null() {
+			var v = new BadValidatorDisablesNullCheck();
+			var result = v.Validate((string) null);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public async Task Doesnt_throw_NullReferenceException_when_instance_not_null_async() {
+			var v = new BadValidatorDisablesNullCheck();
+			var result = await v.ValidateAsync((string) null);
+			result.IsValid.ShouldBeTrue();
+		}
+
 	}
 }
 

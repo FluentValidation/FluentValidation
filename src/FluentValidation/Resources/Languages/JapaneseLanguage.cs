@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' は {From} から {To} までの間でなければなりません。 {Value} と入力されています。");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' は {From} と {To} の間でなければなりません。 {Value} と入力されています。");
 			Translate<CreditCardValidator>("'{PropertyName}' は有効なクレジットカード番号ではありません。");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' は合計で {expectedPrecision} 桁、小数点以下は{expectedScale} 桁を超えてはなりません。 {digits} 桁、小数点以下は{actualScale} で入力されています。");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' は合計で {ExpectedPrecision} 桁、小数点以下は{ExpectedScale} 桁を超えてはなりません。 {Digits} 桁、小数点以下は{ActualScale} で入力されています。");
 			Translate<EmptyValidator>("'{PropertyName}' は空でなければなりません。");
 			Translate<NullValidator>("'{PropertyName}' は空でなければなりません。");
 			Translate<EnumValidator>("'{PropertyName}' の範囲に '{PropertyValue}' は含まれていません。");

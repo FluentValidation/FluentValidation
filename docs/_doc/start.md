@@ -16,4 +16,5 @@ sections:
   - /start/rulesets
   - /start/including-rules
   - /start/configuring
+  - /start/async
 ---

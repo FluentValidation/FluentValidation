@@ -44,7 +44,7 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' hoort leeg te zijn.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' moet na {From} komen en voor {To} liggen. Je hebt ingevuld {Value}.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' moet tussen {From} en {To} liggen. Je hebt ingevuld {Value}.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' mag in totaal niet meer dan {expectedPrecision} decimalen nauwkeurig zijn, met een grote van {expectedScale} gehele getallen. Er zijn {digits} decimalen en een grote van {actualScale} gehele getallen gevonden.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' mag in totaal niet meer dan {ExpectedPrecision} decimalen nauwkeurig zijn, met een grote van {ExpectedScale} gehele getallen. Er zijn {Digits} decimalen en een grote van {ActualScale} gehele getallen gevonden.");
 			Translate<NullValidator>("'{PropertyName}' moet leeg zijn.");
 		}
 	}

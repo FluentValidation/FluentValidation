@@ -7,6 +7,7 @@ namespace FluentValidation.Internal
 	using System.Reflection;
 	using Internal;
 
+	[Obsolete("Instantiate MemberAccessor<TObject,TValue> directly.")]
 	public static class MemberAccessor<TObject> {
 		public static MemberAccessor<TObject, TValue> From<TValue>(Expression<Func<TObject, TValue>> getExpression, bool writeable = true) {
 			return new MemberAccessor<TObject, TValue>(getExpression, writeable);

@@ -43,7 +43,7 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' muss zwischen {From} and {To} sein. Es wurde {Value} eingegeben.");
 
 			Translate<CreditCardValidator>("'{PropertyName}' ist keine gültige Kreditkartennummer.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' darf insgesamt nicht mehr als {expectedPrecision} Ziffern enthalten, mit Berücksichtigung von {expectedScale} Dezimalstellen. Es wurden {digits} Ziffern und {actualScale} Dezimalstellen gefunden.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' darf insgesamt nicht mehr als {ExpectedPrecision} Ziffern enthalten, mit Berücksichtigung von {ExpectedScale} Dezimalstellen. Es wurden {Digits} Ziffern und {ActualScale} Dezimalstellen gefunden.");
 			Translate<EmptyValidator>("'{PropertyName}' sollte leer sein.");
 			Translate<NullValidator>("'{PropertyName}' sollte leer sein.");
 			Translate<EnumValidator>("'{PropertyName}' hat einen Wertebereich, der '{PropertyValue}' nicht enthält.");
