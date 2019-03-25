@@ -27,6 +27,20 @@ As an alternative to the above, you can localize an error message for by calling
 RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(typeof(MyLocalizedMessages), "SurnameRequired");
 ```
 
+### IStringLocalizer
+
+The above 2 examples assume you're using a strongly-typed wrapper around a resource file, where each static property on the class corresponds to a key within the resourece file. This is the "old" way of working with resources prior to ASP.NET Core, but is not relevant if you're using ASP.NET Core's `IStringLocalizer`. 
+
+If you are using `IStringLocalizer` to handle localization then all you need to do is inject your localizer into your validator, and use it within a `WithMessage` callback, for example:
+
+```csharp
+public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator(IStringLocalizer<Person> localizer) {
+    RuleFoR(x => x.Surname).NotNull().WithMessage(x => localizer["Surname is required"]);
+  }
+}
+```
+
 ### Default Messages 
 If you want to replace all (or some) of FluentValidation's default messages then you can do this by implementing a custom version of the `ILanguageManager` interface. 
 
