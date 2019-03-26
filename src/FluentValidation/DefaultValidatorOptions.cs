@@ -153,23 +153,6 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Specifies a custom error message resource to use when validation fails.
-		/// </summary>
-		/// <param name="rule">The current rule</param>
-		/// <param name="resourceType">Resource type representing a resx file</param>
-		/// <param name="resourceName">Name of resource</param>
-		/// <returns></returns>
-		[Obsolete("WithLocalizedMessage is deprecated. Use the overload of WithMessage that takes a Func instead.")]
-		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName) {
-			resourceType.Guard("A resource type must be provided.", nameof(resourceType));
-			resourceName.Guard("A resource name must be provided.", nameof(resourceName));
-
-			return rule.Configure(config => {
-				config.CurrentValidator.Options.ErrorMessageSource = new LocalizedStringSource(resourceType, resourceName);
-			});
-		}
-
-		/// <summary>
 		/// Specifies a condition limiting when the validator should run.
 		/// The validator will only be executed if the result of the lambda returns true.
 		/// </summary>

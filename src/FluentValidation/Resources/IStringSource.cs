@@ -30,17 +30,5 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		/// <returns>Error message template</returns>
 		string GetString(IValidationContext context);
-
-		/// <summary>
-		/// The name of the resource if localized.
-		/// </summary>
-		[Obsolete("ResourceName will be removed from IStringSource in FluentValidation 9.")]
-		string ResourceName { get; }
-
-		/// <summary>
-		/// The type of the resource provider if localized.
-		/// </summary>
-		[Obsolete("ResourceType will be removed from IStringSource in FluentValidation 9.")]
-		Type ResourceType { get; }
 	}
 }
