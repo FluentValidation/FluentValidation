@@ -28,7 +28,6 @@ namespace FluentValidation.Internal {
 		object[] _additionalArguments = new object[0];
 		private bool _shouldUseAdditionalArgs;
 
-		private static readonly Regex _templateRegex = new Regex("{[^{}]+:.+}", RegexOptions.Compiled); 
 		private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled); 
 		
 		/// <summary>
@@ -91,19 +90,7 @@ namespace FluentValidation.Internal {
 		/// <param name="messageTemplate">Message template</param>
 		/// <returns>The message with placeholders replaced with their appropriate values</returns>
 		public virtual string BuildMessage(string messageTemplate) {
-
-			string result = messageTemplate;
-
-			if (_templateRegex.Match(result).Success) {
-				result = ReplacePlaceholdersWithValues(result, _placeholderValues);
-			}
-			else {
-				foreach (var pair in _placeholderValues) {
-#pragma warning disable 618
-					result = ReplacePlaceholderWithValue(result, pair.Key, pair.Value);
-#pragma warning restore 618
-				}
-			}
+			string result = ReplacePlaceholdersWithValues(messageTemplate, _placeholderValues);
 
 			if (_shouldUseAdditionalArgs) {
 				return string.Format(result, _additionalArguments);
@@ -120,25 +107,6 @@ namespace FluentValidation.Internal {
 		/// Additional placeholder values
 		/// </summary>
 		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
-
-		[Obsolete("Use of ReplacePlaceholderWithValue is deprecated and will be removed from future versions. Use ReplacePlaceholdersWithValues instead.")]
-		protected virtual string ReplacePlaceholderWithValue(string template, string key, object value)	{
-			string placeholder = GetPlaceholder(key);
-			return template.Replace(placeholder, value?.ToString());
-		}
-
-		[Obsolete("Use of GetPlaceholder is deprecated and will be removed from future versions.")]
-		protected string GetPlaceholder(string key)	{
-			// Performance: String concat causes much overhead when not needed. Concatenating constants results in constants being compiled.
-			switch (key) {
-				case PropertyName:
-					return "{" + PropertyName + "}";
-				case PropertyValue:
-					return "{" + PropertyValue + "}";
-				default:
-					return "{" + key + "}";
-			}
-		}
 
 		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)	{
 			return _keyRegex.Replace(template, m =>	{

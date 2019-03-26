@@ -19,9 +19,9 @@
 			person.Forename = "John";
 			person.Address = new Address {Country = new Country {Name = "United States"}};
 
-			nameFieldAccessor = MemberAccessor<Person>.From(x => x.NameField);
-			forenameAccessor = MemberAccessor<Person>.From(x => x.Forename);
-			countryNameAccessor = MemberAccessor<Person>.From(x => x.Address.Country.Name);
+			nameFieldAccessor = new MemberAccessor<Person, string>(x => x.NameField, true);
+			forenameAccessor = new MemberAccessor<Person, string>(x => x.Forename, true);
+			countryNameAccessor = new MemberAccessor<Person, string>(x => x.Address.Country.Name, true);
 		}
 
 		[Fact]
@@ -59,15 +59,15 @@
 
 		[Fact]
 		public void Equality() {
-			Assert.Equal(nameFieldAccessor, MemberAccessor<Person>.From(x => x.NameField));
+			Assert.Equal(nameFieldAccessor, new MemberAccessor<Person, string>(x => x.NameField, true));
 			Assert.NotEqual(nameFieldAccessor, forenameAccessor);
 			Assert.NotEqual(nameFieldAccessor, countryNameAccessor);
 
-			Assert.Equal(forenameAccessor, MemberAccessor<Person>.From(x => x.Forename));
+			Assert.Equal(forenameAccessor, new MemberAccessor<Person, string>(x => x.Forename, true));
 			Assert.NotEqual(forenameAccessor, nameFieldAccessor);
 			Assert.NotEqual(forenameAccessor, countryNameAccessor);
 
-			Assert.Equal(countryNameAccessor, MemberAccessor<Person>.From(x => x.Address.Country.Name));
+			Assert.Equal(countryNameAccessor, new MemberAccessor<Person, string>(x => x.Address.Country.Name, true));
 			Assert.NotEqual(countryNameAccessor, nameFieldAccessor);
 			Assert.NotEqual(countryNameAccessor, forenameAccessor);
 		}
