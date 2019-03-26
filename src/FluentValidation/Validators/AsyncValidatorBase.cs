@@ -36,10 +36,6 @@ namespace FluentValidation.Validators {
 			
 		}
 
-		protected AsyncValidatorBase(string errorMessageResourceName, Type errorMessageResourceType)
-			: base(errorMessageResourceName, errorMessageResourceType) {
-		}
-
 		protected AsyncValidatorBase(string errorMessage)
 			: base(errorMessage) {
 		}

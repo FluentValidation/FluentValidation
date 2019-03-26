@@ -184,9 +184,6 @@
 			public TestValidator(IStringSource errorMessageSource) : base(errorMessageSource) {
 			}
 
-			public TestValidator(string errorMessageResourceName, Type errorMessageResourceType) : base(errorMessageResourceName, errorMessageResourceType) {
-			}
-
 			public TestValidator(string errorMessage) : base(errorMessage) {
 			}
 

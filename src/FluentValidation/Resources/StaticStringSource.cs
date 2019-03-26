@@ -41,15 +41,5 @@ namespace FluentValidation.Resources {
 		public string GetString(IValidationContext context) {
 			return _message;
 		}
-
-		/// <summary>
-		/// The name of the resource if localized.
-		/// </summary>
-		public string ResourceName => null;
-
-		/// <summary>
-		/// The type of the resource provider if localized.
-		/// </summary>
-		public Type ResourceType => null;
 	}
 }
