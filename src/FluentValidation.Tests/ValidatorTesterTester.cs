@@ -173,7 +173,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldHaveChildValidator_should_not_throw_when_property_has_collection_validators() {
-			validator.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator());
+			validator.RuleForEach(x => x.Orders).SetValidator(new OrderValidator());
 			validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator));
 		}
 
