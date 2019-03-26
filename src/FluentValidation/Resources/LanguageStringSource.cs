@@ -50,8 +50,5 @@ namespace FluentValidation.Resources {
 
 			return ValidatorOptions.LanguageManager.GetString(_key);
 		}
-
-		public string ResourceName => _key;
-		public Type ResourceType => typeof(LanguageManager);
 	}
 }
