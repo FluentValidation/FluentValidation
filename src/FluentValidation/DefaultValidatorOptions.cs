@@ -159,6 +159,7 @@ namespace FluentValidation {
 		/// <param name="resourceType">Resource type representing a resx file</param>
 		/// <param name="resourceName">Name of resource</param>
 		/// <returns></returns>
+		[Obsolete("WithLocalizedMessage is deprecated. Use the overload of WithMessage that takes a Func instead.")]
 		public static IRuleBuilderOptions<T, TProperty> WithLocalizedMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Type resourceType, string resourceName) {
 			resourceType.Guard("A resource type must be provided.", nameof(resourceType));
 			resourceName.Guard("A resource name must be provided.", nameof(resourceName));
