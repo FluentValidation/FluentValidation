@@ -164,11 +164,6 @@ namespace FluentValidation.Tests {
 				ReplacePlaceholdersWithValuesCalled = true;
 				return base.ReplacePlaceholdersWithValues(template, values);
 			}
-
-			protected override string ReplacePlaceholderWithValue(string template, string key, object value) {
-				ReplacePlaceholderWithValueCalled = true;
-				return base.ReplacePlaceholderWithValue(template, key, value);
-			}
 		}
 	}
 }
