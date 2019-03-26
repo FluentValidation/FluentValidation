@@ -7,6 +7,7 @@ sections:
  - Validator customization
  - Validator Interceptors
  - Specifying a RuleSet for client-side messages
+ - Injecting Child Validators
  - Use with Page Models
 ---
 
@@ -272,6 +273,38 @@ You can also use the `SetRulesetForClientsideMessages` extension method within y
 public ActionResult Index() {
    ControllerContext.SetRulesetForClientsideMessages("MyRuleset");
    return View(new PersonViewModel());
+}
+```
+
+### Injecting Child Validators
+
+As an alternative to directly instantiating child validators, with the ASP.NET Core integration you can choose to inject them instead. This can be done via the validator's constructor:
+
+```csharp
+public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator(IValidator<Address> addressValidator) {
+    RuleFor(x => x.Address).SetValidator(addressValidator);
+  }
+}
+```
+
+Alternatively, as of version 8.2 you can call `InjectValidator` without having to use constructor injection:
+
+```csharp
+public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator() {
+    RuleFor(x => x.Address).InjectValidator();
+  }
+}
+```
+
+Note that in this case, FluentValidation will attempt to resolve an instance of `IValidator<T>` from ASP.NET's service collection, where `T` is the same type as the property being validated. If you need to explicitly specify the type, then this can be done with the other overload of `InjectValidator` which accepts a func referencing the service provider:
+
+```csharp
+public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator() {
+    RuleFor(x => x.Address).InjectValidator((services, context) => services.GetService<MyAddressValidator>());
+  }
 }
 ```
 
