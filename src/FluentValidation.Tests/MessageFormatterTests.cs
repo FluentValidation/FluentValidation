@@ -129,41 +129,5 @@ namespace FluentValidation.Tests {
 
 			result.ShouldEqual("2018-02-01 {0}");
 		}
-
-		[Fact]
-		public void Should_not_attempt_to_format_arguments_when_there_are_no_formattable_arguments() {
-			var mock = new FormatterMock();
-
-			string result = mock
-				.AppendPropertyName("foo")
-				.BuildMessage("{PropertyName}");
-
-			result.ShouldEqual("foo");
-			mock.ReplacePlaceholderWithValueCalled.ShouldBeTrue();
-			mock.ReplacePlaceholdersWithValuesCalled.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void Should_format_arguments_when_there_are_formattable_arguments() {
-			var mock = new FormatterMock();
-
-			string result = mock
-				.AppendPropertyValue(123)
-				.BuildMessage("{PropertyValue:d}");
-
-			result.ShouldEqual("123");
-			mock.ReplacePlaceholderWithValueCalled.ShouldBeFalse();
-			mock.ReplacePlaceholdersWithValuesCalled.ShouldBeTrue();
-		}
-
-		private class FormatterMock : MessageFormatter {
-			public bool ReplacePlaceholdersWithValuesCalled { get; set; }
-			public bool ReplacePlaceholderWithValueCalled { get; set; }
-
-			protected override string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values) {
-				ReplacePlaceholdersWithValuesCalled = true;
-				return base.ReplacePlaceholdersWithValues(template, values);
-			}
-		}
 	}
 }
