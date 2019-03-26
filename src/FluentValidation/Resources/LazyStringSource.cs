@@ -44,16 +44,6 @@ namespace FluentValidation.Resources {
 				throw new FluentValidationMessageFormatException("Could not build error message- the message makes use of properties from the containing object, but the containing object was null.", ex);
 			}
 		}
-
-		/// <summary>
-		/// Resource type
-		/// </summary>
-		public string ResourceName => null;
-
-		/// <summary>
-		/// Resource name
-		/// </summary>
-		public Type ResourceType => null;
 	}
 
 	public class FluentValidationMessageFormatException : Exception {

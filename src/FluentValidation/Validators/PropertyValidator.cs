@@ -39,13 +39,6 @@ namespace FluentValidation.Validators {
 			Options.ErrorMessageSource = errorMessageSource;
 		}
 
-		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			errorMessageResourceName.Guard("errorMessageResourceName must be specified.", nameof(errorMessageResourceName));
-			errorMessageResourceType.Guard("errorMessageResourceType must be specified.", nameof(errorMessageResourceType));
-
-			Options.ErrorMessageSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
-		}
-
 		protected PropertyValidator(string errorMessage) {
 			Options.ErrorMessageSource = new StaticStringSource(errorMessage);
 		}
@@ -107,7 +100,6 @@ namespace FluentValidation.Validators {
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-			failure.ResourceName = Options.ErrorMessageSource.ResourceName;
 			failure.ErrorCode = (Options.ErrorCodeSource != null)
 				? Options.ErrorCodeSource.GetString(context)
 				: ValidatorOptions.ErrorCodeResolver(this);

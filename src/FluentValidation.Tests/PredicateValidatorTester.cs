@@ -65,7 +65,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator() {
 													v => v.RuleFor(x => x.Forename)
 														.Must(forename => forename == "Jeremy")
-														.WithLocalizedMessage(typeof(TestMessages), nameof(TestMessages.ValueOfForPropertyNameIsNotValid))
+														.WithMessage(x => TestMessages.ValueOfForPropertyNameIsNotValid)
 												};
 
 			var result = validator.Validate(new Person() { Forename = "test" });

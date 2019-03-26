@@ -63,15 +63,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Sets_localised_message_via_type_name() {
-			var validator = new TestValidator();
-			validator.RuleFor(x => x.Surname).NotEmpty().WithLocalizedMessage(typeof(MyResources), nameof(MyResources.notempty_error));
-			var result = validator.Validate(new Person());
-
-			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
-		}
-
-		[Fact]
 		public void Uses_func_to_get_message() {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => "el foo");
@@ -114,29 +105,6 @@ namespace FluentValidation.Tests {
 
 			var result = validator.Validate(new Person() {NickNames = new[] {"What"}});
 			result.Errors.Single().ErrorMessage.ShouldEqual("x");
-		}
-
-
-		private class MyResources {
-			public static string notempty_error {
-				get { return "foo"; }
-			}
-		}
-
-		private class MyOverridenResources {
-			public static string notempty_error {
-				get { return "bar"; }
-			}
-		}
-
-		private class MyPropertyValidator : PropertyValidator {
-			public MyPropertyValidator() : base(nameof(MyOverridenResources.notempty_error), typeof(MyOverridenResources)) {
-				
-			}
-
-			protected override bool IsValid(PropertyValidatorContext context) {
-				return false;
-			}
 		}
 	}
 }
