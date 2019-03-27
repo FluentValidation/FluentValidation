@@ -273,6 +273,36 @@ namespace FluentValidation.Tests {
 			exceptionCaught.ShouldBeTrue();
 		}
 
+		/// <summary>
+		/// Full test (for WhenAll)
+		/// </summary>
+		/// <param name="withoutErrMsg"></param>
+		/// <param name="errMessages"></param>
+		/// <param name="shouldBe"></param>
+		[Theory]
+		[InlineData("bar", new string[] { })]
+		[InlineData("bar", new string[] { "foo", })]
+		[InlineData("bar", new string[] { "foo", "bar" })]
+		[InlineData("bar", new string[] { "bar", })]
+		public void Unexpected_message_check(string withoutErrMsg, string[] errMessages) {
+			bool exceptionCaught = false;
+
+			try {
+				var validator = new InlineValidator<Person>();
+				foreach(var msg in errMessages) {
+					validator.Add(v => v.RuleFor(x => x.Surname).NotNull().WithMessage(msg));
+				}
+				validator.TestValidate(new Person { }).Result.Errors.WithoutErrorMessage(withoutErrMsg);
+			}
+			catch (ValidationTestException e) {
+				exceptionCaught = true;
+
+				e.Message.ShouldEqual($"Found an unexpected error message of '{withoutErrMsg}'");
+			}
+
+			exceptionCaught.ShouldEqual(errMessages.Contains(withoutErrMsg));
+		}
+
 		[Fact]
 		public void Expected_state_check() {
 			bool exceptionCaught = false;
@@ -287,6 +317,26 @@ namespace FluentValidation.Tests {
 				exceptionCaught = true;
 
 				e.Message.ShouldEqual("Expected custom state of 'foo'. Actual state was 'bar'");
+			}
+
+			exceptionCaught.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Unexpected_state_check() {
+			bool exceptionCaught = false;
+
+			try {
+				var validator = new InlineValidator<Person> {
+					v => v.RuleFor(x => x.Surname).NotNull().WithState(x => "bar"),
+					v => v.RuleFor(x => x.Surname).NotNull().WithState(x => "foo"),
+				};
+				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithoutCustomState("bar");
+			}
+			catch (ValidationTestException e) {
+				exceptionCaught = true;
+
+				e.Message.ShouldEqual("Found an unexpected custom state of 'bar'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -312,6 +362,26 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Unexpected_error_code_check() {
+			bool exceptionCaught = false;
+
+			try {
+				var validator = new InlineValidator<Person> {
+					v => v.RuleFor(x => x.Surname).NotNull().WithErrorCode("bar"),
+					v => v.RuleFor(x => x.Surname).NotNull().WithErrorCode("foo")
+				};
+				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithoutErrorCode("bar");
+			}
+			catch (ValidationTestException e) {
+				exceptionCaught = true;
+
+				e.Message.ShouldEqual("Found an unexpected error code of 'bar'");
+			}
+
+			exceptionCaught.ShouldBeTrue();
+		}
+
+		[Fact]
 		public void Expected_severity_check() {
 			bool exceptionCaught = false;
 
@@ -325,6 +395,26 @@ namespace FluentValidation.Tests {
 				exceptionCaught = true;
 
 				e.Message.ShouldEqual($"Expected a severity of '{nameof(Severity.Error)}'. Actual severity was '{nameof(Severity.Warning)}'");
+			}
+
+			exceptionCaught.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Unexpected_severity_check() {
+			bool exceptionCaught = false;
+
+			try {
+				var validator = new InlineValidator<Person> {
+					v => v.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Warning),
+					v => v.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Error),
+				};
+				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithoutSeverity(Severity.Warning);
+			}
+			catch (ValidationTestException e) {
+				exceptionCaught = true;
+
+				e.Message.ShouldEqual($"Found an unexpected severity of '{nameof(Severity.Warning)}'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
