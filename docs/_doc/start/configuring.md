@@ -188,8 +188,8 @@ RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqu
 RuleFor(x => x.Forename).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqual("foo");
 ```
 
-<div class="callout-block callout-info"><div class="icon-holder">*&nbsp;*{: .fa .fa-info-circle}
-</div><div class="content">
+<div class="callout-block callout-info"><div class="icon-holder" markdown="1">*&nbsp;*{: .fa .fa-info-circle}
+</div><div class="content" markdown="1">
 {: .callout-title}
 #### Remember
 

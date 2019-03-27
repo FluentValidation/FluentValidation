@@ -2,8 +2,8 @@
 title: Getting Started
 ---
 
-<div class="callout-block callout-info"><div class="icon-holder">*&nbsp;*{: .fa .fa-info-circle}
-</div><div class="content">
+<div class="callout-block callout-info"><div class="icon-holder" markdown="1">*&nbsp;*{: .fa .fa-info-circle}
+</div><div class="content" markdown="1">
 {: .callout-title}
 #### Deprecation Notice
 

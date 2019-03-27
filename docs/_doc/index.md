@@ -14,7 +14,7 @@ navigation:
 
 ![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg) ![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg) ![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true) ![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)
 
-<div class="cta-container">
+<div class="cta-container" markdown="1">
 
 [*&nbsp;*{: .fa .fa-cloud-download} Download Now][NUGET]{: .btn .btn-primary .btn-cta}
 [*&nbsp;*{: .fa .fa-github} View On Github][GITHUB]{: .btn .btn-green .btn-primary .btn-cta}

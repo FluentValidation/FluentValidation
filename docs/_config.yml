@@ -1,20 +1,10 @@
 # Site settings
-remote_theme: LeakyAbstractions/pretty-docs
+remote_theme: JeremySkinner/PrettyDocs-theme
 url: https://leakyabstractions.github.io
 title: &site_title FluentValidation
 branding:
   highlight: Fluent
   bold: Validation
-markdown: kramdown
-kramdown:
-  auto_ids: true
-  entity_output: as_char
-  toc_levels: 1..6
-  smart_quotes: lsquo,rsquo,ldquo,rdquo
-  input: GFM
-  hard_wrap: false
-  footnote_nr: 1
-  parse_block_html: true
 
 # Owner
 owner:

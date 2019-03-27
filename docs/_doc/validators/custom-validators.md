@@ -125,8 +125,8 @@ public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T
 
 In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator` (this is how all of FluentValidation's built-in rules are defined).
 
-<div class="callout-block callout-info"><div class="icon-holder">*&nbsp;*{: .fa .fa-bug}
-</div><div class="content">
+<div class="callout-block callout-info"><div class="icon-holder" markdown="1">*&nbsp;*{: .fa .fa-bug}
+</div><div class="content" markdown="1">
 {: .callout-title}
 #### Note
 
