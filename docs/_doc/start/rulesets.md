@@ -35,13 +35,13 @@ You can execute multiple rulesets by using a comma-separated list of strings:
 validator.Validate(person, ruleSet: "Names,MyRuleSet,SomeOtherRuleSet")
 ```
 
-...and you can also include rules not in any ruleset by specifying a ruleset of "default":
+You can also include all the rules not part of a ruleset by using the special name "default" (case insensitive):
 
 ```csharp
 validator.Validate(person, ruleSet: "default,MyRuleSet")
 ```
 
-This would execute rules in the MyRuleSet set, and those rules not in any ruleset.
+This would execute rules in the MyRuleSet set, and those rules not in any ruleset. Note that you shouldn't create your own ruleset called "default", as FluentValidation will treat these rules as not being in a ruleset.
 
 You can force all rules to be executed regardless of whether or not they're in a ruleset by specifying a ruleset of "*":
 
