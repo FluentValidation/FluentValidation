@@ -25,6 +25,7 @@ namespace FluentValidation {
 	using System.Threading.Tasks;
 	using Internal;
 	using Resources;
+	using Results;
 	using Validators;
 
 	/// <summary>
@@ -92,8 +93,24 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
+			if (onFailure == null) throw new ArgumentNullException(nameof(onFailure));
 			return rule.Configure(config => {
-				config.OnFailure = onFailure.CoerceToNonGeneric();
+				config.OnFailure = (x, failures) => onFailure((T)x);
+			});
+		}
+		
+		/// <summary>
+		/// Specifies a custom action to be invoked when the validator fails.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="onFailure"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, IEnumerable<ValidationFailure>> onFailure) {
+			if (onFailure == null) throw new ArgumentNullException(nameof(onFailure));
+			return rule.Configure(config => {
+				config.OnFailure = (x, failures) => onFailure((T)x, failures);
 			});
 		}
 

@@ -81,7 +81,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that will be invoked if any of the validators associated with this rule fail.
 		/// </summary>
-		public Action<object> OnFailure { get; set; }
+		public Action<object, IEnumerable<ValidationFailure>> OnFailure { get; set; }
 
 		/// <summary>
 		/// The current validator being configured by this rule.
@@ -119,7 +119,6 @@ namespace FluentValidation.Internal {
 			Member = member;
 			PropertyFunc = propertyFunc;
 			Expression = expression;
-			OnFailure = x => { };
 			TypeToValidate = typeToValidate;
 			this._cascadeModeThunk = cascadeModeThunk;
 
@@ -270,7 +269,7 @@ namespace FluentValidation.Internal {
 			}
 
 			var cascade = _cascadeModeThunk();
-			bool hasAnyFailure = false;
+			var failures = new List<ValidationFailure>();
 
 			// Invoke each validator and collect its results.
 			foreach (var validator in _validators) {
@@ -284,7 +283,7 @@ namespace FluentValidation.Internal {
 				bool hasFailure = false;
 
 				foreach (var result in results) {
-					hasAnyFailure = true;
+					failures.Add(result);
 					hasFailure = true;
 					yield return result;
 				}
@@ -296,9 +295,9 @@ namespace FluentValidation.Internal {
 				}
 			}
 
-			if (hasAnyFailure) {
+			if (failures.Count > 0) {
 				// Callback if there has been at least one property validator failed.
-				OnFailure(context.InstanceToValidate);
+				OnFailure?.Invoke(context.InstanceToValidate, failures);
 			}
 			else {
 				foreach (var dependentRule in DependentRules) {
@@ -371,7 +370,7 @@ namespace FluentValidation.Internal {
 			//if StopOnFirstFailure triggered then we exit
 			if (fastExit && failures.Count > 0) {
 				// Callback if there has been at least one property validator failed.
-				OnFailure(context.InstanceToValidate);
+				OnFailure(context.InstanceToValidate, failures);
 				return failures;
 			}
 
@@ -381,7 +380,7 @@ namespace FluentValidation.Internal {
 			if (asyncValidators.Count == 0) {
 				if (failures.Count > 0) {
 					// Callback if there has been at least one property validator failed.
-					OnFailure(context.InstanceToValidate);
+					OnFailure(context.InstanceToValidate, failures);
 				}
 				else {
 					failures.AddRange(await RunDependentRulesAsync(context, cancellation));
@@ -402,7 +401,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (failures.Count > 0) {
-				OnFailure(context.InstanceToValidate);
+				OnFailure(context.InstanceToValidate, failures);
 			}
 			else {
 				failures.AddRange(await RunDependentRulesAsync(context, cancellation));
