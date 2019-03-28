@@ -1,6 +1,8 @@
 9.0 - 
 Removed support for netstandard1.1 and netstandard1.6
 Removed WithLocalizedMessage (WithMessage that takes a callback is the replacement)
+Removed ResourceName from ValidationFailure
+Removed ResourceName and ResourceType from IStringSource.
 Removed SetCollectionValidator which was deprecated in 8.0
 Additional overload of OnAnyFailure that can receive a collection of validation failures
 
