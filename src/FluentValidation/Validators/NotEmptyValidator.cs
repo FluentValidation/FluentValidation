@@ -17,15 +17,16 @@
 #endregion
 
 namespace FluentValidation.Validators {
+	using System;
 	using System.Collections;
 	using Resources;
 	using System.Linq;
 
     public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
-		readonly object _defaultValueForType;
+	    private readonly object _defaultValueForType;
 
 		public NotEmptyValidator(object defaultValueForType) : base(new LanguageStringSource(nameof(NotEmptyValidator))) {
-			this._defaultValueForType = defaultValueForType;
+			_defaultValueForType = defaultValueForType;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
@@ -40,15 +41,18 @@ namespace FluentValidation.Validators {
 		}
 
 		bool IsEmptyCollection(object propertyValue) {
-			var collection = propertyValue as IEnumerable;
-		    return collection != null && !collection.Cast<object>().Any();
+			switch (propertyValue) {
+				case ICollection c when c.Count == 0:
+				case Array a when a.Length == 0:
+				case IEnumerable e when !e.Cast<object>().Any():
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		bool IsInvalidString(object value) {
-			if (value is string) {
-				return string.IsNullOrWhiteSpace(value as string);
-			}
-			return false;
+			return value is string s && string.IsNullOrWhiteSpace(s);
 		}
     }
 
