@@ -257,9 +257,6 @@ In this case, the interceptor has to be a class that implements IValidatorInterc
 Alternatively, you can register a default `IValidatorInterceptor` with the ASP.NET Service Provider. If you do this, then the interceptor will be used for all validators:
 
 ```csharp
-
-
-```csharp
 public void ConfigureServices(IServiceCollection services) {
     services
       .AddMvc()
