@@ -252,7 +252,24 @@ public ActionResult Save([CustomizeValidator(Interceptor=typeof(MyCustomerInterc
 }
 ```
 
-In this case, the interceptor has to be a class that implements IValidatorInterceptor and has a public, parameterless constructor. The advantage of this approach is that your validators don’t have to be in an assembly that directly references System.Web.Mvc.
+In this case, the interceptor has to be a class that implements IValidatorInterceptor and has a public, parameterless constructor. 
+
+Alternatively, you can register a default `IValidatorInterceptor` with the ASP.NET Service Provider. If you do this, then the interceptor will be used for all validators:
+
+```csharp
+
+
+```csharp
+public void ConfigureServices(IServiceCollection services) {
+    services
+      .AddMvc()
+      .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>());
+
+    // Register a default interceptor, where MyDefaultInterceptor is a class that 
+    // implements IValidatorInterceptor.
+    services.AddTransient<IValidatorInterceptor, MyDefaultInterceptor>();
+}
+```
 
 Note that this is considered to be an advanced scenario. Most of the time you probably won’t need to use an interceptor, but the option is there if you want it.
 

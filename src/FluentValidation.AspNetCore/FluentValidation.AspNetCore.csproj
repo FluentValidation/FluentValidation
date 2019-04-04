@@ -16,6 +16,7 @@
     <PackageReleaseNotes>
 Changes in 8.2.1:
 * Resolved issue using InjectValidator with RuleForEach.
+* Add support for a default IValidatorInterceptor to be registered with the Service Provider.
 
 Changes in 8.2.0:
 * Add extensions for injecting child validators using the ASP.NET Core Service Provider.

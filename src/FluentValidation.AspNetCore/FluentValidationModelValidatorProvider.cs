@@ -24,6 +24,7 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using FluentValidation.Internal;
+	using Microsoft.Extensions.DependencyInjection;
 	using static MvcValidationHelper;
 
 	/// <summary>
@@ -74,7 +75,9 @@ namespace FluentValidation.AspNetCore {
 				}
 
 				var selector = customizations.ToValidatorSelector();
-				var interceptor = customizations.GetInterceptor() ?? validator as IValidatorInterceptor;
+				var interceptor = customizations.GetInterceptor() 
+				                  ?? validator as IValidatorInterceptor 
+				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IValidatorInterceptor>();
 				var context = new ValidationContext(mvContext.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
 				context.SetServiceProvider(mvContext.ActionContext.HttpContext.RequestServices);
