@@ -502,4 +502,11 @@
 			RuleFor(x => x.Name).NotNull().WithMessage("NotNullInjected");
 		}
 	}
+	
+	public class InjectsExplicitChildValidatorCollection : AbstractValidator<ParentModel6> {
+		public InjectsExplicitChildValidatorCollection() {
+			RuleForEach(x => x.Children).InjectValidator();
+		}
+	}
+
 }

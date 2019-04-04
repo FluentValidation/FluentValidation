@@ -26,6 +26,7 @@ namespace FluentValidation.Tests.AspNetCore {
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddTransient<IValidator<ParentModel>, InjectsExplicitChildValidator>();
 			services.AddTransient<IValidator<ChildModel>, InjectedChildValidator>();
+			services.AddTransient<IValidator<ParentModel6>, InjectsExplicitChildValidatorCollection>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

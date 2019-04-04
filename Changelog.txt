@@ -1,3 +1,6 @@
+8.2.1 - 4 April 2019
+Resolved issue using InjectValidator with RuleForEach.
+
 8.2.0 - 26 March 2019
 Add extensions for injecting child validators using the ASP.NET Core Service Provider.
 WithLocalizedMessage is deprecated. Use the overload of WithMessage that takes a Func instead.

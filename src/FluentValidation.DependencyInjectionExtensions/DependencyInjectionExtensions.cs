@@ -90,7 +90,8 @@ namespace FluentValidation {
 			var adaptor = new ChildValidatorAdaptor(context => {
 				var actualContext = (PropertyValidatorContext) context;
 				var serviceProvider = actualContext.ParentContext.GetServiceProvider();
-				var validator = callback(serviceProvider, (ValidationContext<T>) actualContext.ParentContext);
+				var contextToUse = ValidationContext<T>.GetFromNoNGenericContext(actualContext.ParentContext);
+				var validator = callback(serviceProvider, contextToUse);
 				return validator;
 			}, typeof(IValidator<TProperty>));
 

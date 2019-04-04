@@ -22,5 +22,14 @@ namespace FluentValidation.Tests {
 			result.IsValidField("Child.Name").ShouldBeFalse();
 			result.GetError("Child.Name").ShouldEqual("NotNullInjected");
 		}
+		
+		[Fact]
+		public async Task Resolves_explicit_child_validator_for_collection() {
+			var formData = new FormData();
+			formData.Add("Children[0].Name", null);
+			var result = await _webApp.GetErrors("InjectsExplicitChildValidatorCollection", formData);
+			result.IsValidField("Children[0].Name").ShouldBeFalse();
+			result.GetError("Children[0].Name").ShouldEqual("NotNullInjected");
+		}
 	}
 }

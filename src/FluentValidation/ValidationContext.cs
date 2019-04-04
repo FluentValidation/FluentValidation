@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation {
+	using System;
 	using System.Collections.Generic;
 	using Internal;
 
@@ -69,6 +70,29 @@ namespace FluentValidation {
 		/// The object to validate
 		/// </summary>
 		public new T InstanceToValidate { get; private set; }
+
+		/// <summary>
+		/// Gets or creates generic validation context from non-generic validation context.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
+		/// <exception cref="NotSupportedException"></exception>
+		public static ValidationContext<T> GetFromNoNGenericContext(ValidationContext context) {
+			if (context == null) throw new ArgumentNullException(nameof(context));
+
+			// Already of the correct type.
+			if (context is ValidationContext<T> c) {
+				return c;
+			}
+			
+			// Parameters match
+			if (context.InstanceToValidate is T) {
+				return context.ToGeneric<T>();
+			}
+			
+			throw new NotSupportedException("context.InstanceToValidate is not of type " + typeof(T).FullName);
+		}
 	}
 
 	/// <summary>
