@@ -14,7 +14,6 @@
     <!-- Signining is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' and '$(AssemblyOriginatorKeyFile)'!=''">True</PublicSign>
     <DebugType>embedded</DebugType>
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>

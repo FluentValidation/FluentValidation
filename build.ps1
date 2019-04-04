@@ -22,6 +22,10 @@ if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
   # Use Jeremy's local copy of the key
   $keyfile = "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk"
 }
+elseif (Test-Path "~/Dropbox/FluentValidation-Release.snk") {
+  # Local builds on linux
+  $keyfile = Resolve-Path "~/Dropbox/FluentValidation-Release.snk"
+}
 elseif (Test-Path "$path\src\FluentValidation-Release.snk") {
   # For CI builds appveyor will decrypt the key and place it in src\
   $keyfile = "$path\src\FluentValidation-Release.snk"
@@ -31,6 +35,10 @@ target default -depends find-sdk, compile, test, deploy
 target install -depends install-dotnet-core, decrypt-private-key
 
 target compile {
+  if ($keyfile) {
+    Write-Host "Using key file: $keyfile" -ForegroundColor Cyan
+  }
+
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
     /p:Version=$version /p:AssemblyOriginatorKeyFile=$keyfile
 }

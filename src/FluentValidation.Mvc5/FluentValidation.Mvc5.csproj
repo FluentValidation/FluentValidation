@@ -19,8 +19,6 @@
     <!-- Signining is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' and '$(AssemblyOriginatorKeyFile)'!=''">True</PublicSign>
-
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.Mvc.xml</DocumentationFile>
 	  <PackageReleaseNotes>
 Changes in 8.1.3:
