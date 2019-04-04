@@ -1,6 +1,7 @@
 8.2.1 - 4 April 2019
 Resolved issue using InjectValidator with RuleForEach.
 Add support for a default IValidatorInterceptor to be registered with the ASP.NET Core Service Provider.
+Added "Without" test extensions for consistency with existing "With" text extensions.
 
 8.2.0 - 26 March 2019
 Add extensions for injecting child validators using the ASP.NET Core Service Provider.
