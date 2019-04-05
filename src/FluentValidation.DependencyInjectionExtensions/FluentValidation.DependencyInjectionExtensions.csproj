@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>netstandard2.0</TargetFrameworks>
-        <AssemblyName>FluentValidation.DependencyInjetionExtensions</AssemblyName>
-        <PackageId>FluentValidation.DependencyInjetionExtensions</PackageId>
+        <AssemblyName>FluentValidation.DependencyInjectionExtensions</AssemblyName>
+        <PackageId>FluentValidation.DependencyInjectionExtensions</PackageId>
         <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
         <Authors>Jeremy Skinner</Authors>
         <Company />
