@@ -1,3 +1,6 @@
+8.2.2 - 5 April 2019 
+Fix typo in FluentValidation.DependencyInjectionExtensions package name.
+
 8.2.1 - 4 April 2019
 Resolved issue using InjectValidator with RuleForEach.
 Add support for a default IValidatorInterceptor to be registered with the ASP.NET Core Service Provider.
