@@ -18,6 +18,10 @@ $output_dir = Join-Path $build_dir $configuration
 $solution_file = Join-Path $path "FluentValidation.sln"
 $nuget_key = "$env:USERPROFILE\Dropbox\nuget-access-key.txt"
 
+if (!$IsWindows -and (Test-Path "~/Dropbox/nuget-access-key.txt")) { 
+  $nuget_key = Resolve-Path "~/Dropbox/nuget-access-key.txt"
+}
+
 if (test-path "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk") {
   # Use Jeremy's local copy of the key
   $keyfile = "$env:USERPROFILE\Dropbox\FluentValidation-Release.snk"
@@ -70,21 +74,17 @@ target deploy {
 }
 
 target verify-package {
-  $sn = "${env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.2 Tools\sn.exe"
-
-  if (! (Test-Path $sn)) {
-    throw "Could not find sn.exe to verify the dlls"
-  }
-
   if (-not (test-path "$nuget_key")) {
     throw "Could not find the NuGet access key."
   }
-  elseif((& $sn -q -v "$output_dir\FluentValidation\net45\FluentValidation.dll") -ne $null) {
-    throw "The assemblies have not been signed with a private key."
+  
+  Get-ChildItem $output_dir -Recurse *.dll | ForEach { 
+    $asm = $_.FullName
+    if (! (verify_assembly $asm)) {
+      throw "$asm is not signed" 
+    }
   }
-  else {
-    write-host Package verified
-  }
+  write-host Package verified
 }
 
 target publish -depends verify-package {
@@ -175,6 +175,14 @@ target find-sdk {
       $env:PATH = $env:DOTNET_INSTALL_DIR + ":" + $env:PATH
     }
   }
+}
+
+function verify_assembly($path) {
+  $asm = [System.Reflection.Assembly]::LoadFile($path);
+  $asmName = $asm.GetName().ToString();
+  $search = "PublicKeyToken="
+  $token = $asmName.Substring($asmName.IndexOf($search) + $search.Length)
+  return $token -eq "7de548da2fbae0f0";
 }
 
 Start-Build $args
