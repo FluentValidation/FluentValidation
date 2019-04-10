@@ -25,34 +25,33 @@ namespace FluentValidation.Validators {
 		readonly Func<object, Regex> _regexFunc;
 
 		public RegularExpressionValidator(string expression) :base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
-			this.Expression = expression;
+			Expression = expression;
 
 			var regex = CreateRegex(expression);
-			this._regexFunc = x => regex;
+			_regexFunc = x => regex;
 		}
 
 		public RegularExpressionValidator(Regex regex) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
-			this.Expression = regex.ToString();
-			this._regexFunc = x => regex;
+			Expression = regex.ToString();
+			_regexFunc = x => regex;
 		}
 
 		public RegularExpressionValidator(string expression, RegexOptions options) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
-			this.Expression = expression;
+			Expression = expression;
 			var regex = CreateRegex(expression, options);
-			this._regexFunc = x => regex;
+			_regexFunc = x => regex;
 		}
 
 		public RegularExpressionValidator(Func<object, string> expressionFunc) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
-			this._regexFunc = x => CreateRegex(expressionFunc(x));
+			_regexFunc = x => CreateRegex(expressionFunc(x));
 		}
 
 		public RegularExpressionValidator(Func<object, Regex> regexFunc) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
-			this._regexFunc = regexFunc;
+			_regexFunc = regexFunc;
 		}
 
 		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
-
-			this._regexFunc = x => CreateRegex(expression(x), options);
+			_regexFunc = x => CreateRegex(expression(x), options);
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
@@ -66,20 +65,7 @@ namespace FluentValidation.Validators {
 		}
 
 		private static Regex CreateRegex(string expression, RegexOptions options=RegexOptions.None) {
-			// Workaround for CVE-2015-2526
-			// If no REGEX_DEFAULT_MATCH_TIMEOUT is specified in the AppDomain, default to 2 seconds. 
-			// if we're on Netstandard 1.0 we don't have access to AppDomain, so just always use 2 second timeout there. 
-
-			try {
-				if (AppDomain.CurrentDomain.GetData("REGEX_DEFAULT_MATCH_TIMEOUT") == null) {
-					return new Regex(expression, options, TimeSpan.FromSeconds(2.0));
-				}
-			}
-			catch
-			{
-			}
-
-			return new Regex(expression, options);
+			return new Regex(expression, options, TimeSpan.FromSeconds(2.0));
 		}
 
 		public string Expression { get; }
