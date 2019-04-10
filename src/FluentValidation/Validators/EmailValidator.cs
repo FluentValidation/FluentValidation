@@ -46,7 +46,6 @@ namespace FluentValidation.Validators {
 			_regex = CreateRegEx();
 		}
 
-
 		protected override bool IsValid(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) return true;
 
@@ -59,27 +58,11 @@ namespace FluentValidation.Validators {
 
 		public string Expression => _expression;
 
-		private static Regex CreateRegEx()
-		{
-			// Workaround for CVE-2015-2526
-			// If no REGEX_DEFAULT_MATCH_TIMEOUT is specified in the AppDomain, default to 2 seconds.
-			// if we're on Netstandard 1.0 we don't have access to AppDomain, so just always use 2 second timeout there.
-
-			try
-			{
-				if (AppDomain.CurrentDomain.GetData("REGEX_DEFAULT_MATCH_TIMEOUT") == null) {
-					return new Regex(_expression, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(2.0));
-				}
-			}
-			catch
-			{
-			}
-
-
-		return new Regex(_expression, RegexOptions.IgnoreCase);
-
+		private static Regex CreateRegEx() {
+			return new Regex(_expression, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(2.0));
 		}
 	}
+
 
 	public class AspNetCoreCompatibleEmailValidator : PropertyValidator, IEmailValidator {
 		public AspNetCoreCompatibleEmailValidator() : base(new LanguageStringSource(nameof(EmailValidator))) {
