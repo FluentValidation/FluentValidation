@@ -54,9 +54,7 @@ namespace FluentValidation.Resources {
 		/// <param name="key"></param>
 		/// <returns></returns>
 		public virtual string GetTranslation(string key) {
-			string value;
-
-			if (_translations.TryGetValue(key, out value)) {
+			if (_translations.TryGetValue(key, out var value)) {
 				return value;
 			}
 

@@ -4,6 +4,7 @@
 	using System.Globalization;
 	using System.Linq;
 	using System.Linq.Expressions;
+	using System.Resources;
 	using Resources;
 	using Validators;
 	using Xunit;
@@ -107,9 +108,12 @@
 
 		[Fact]
 		public void All_localizations_have_same_parameters_as_English() {
-
+			var languages = typeof(LanguageManager).Assembly.GetTypes()
+				.Where(t => typeof(Language).IsAssignableFrom(t) && !t.IsAbstract && t.Name != "GenericLanguage")
+				.Select(t => (Language) Activator.CreateInstance(t))
+				.Select(l => l.Name);
+			
 			LanguageManager manager = (LanguageManager)_languages;
-			var languages = manager.GetSupportedLanguages();
 			var keys = manager.GetSupportedTranslationKeys();
 			
 			Assert.All(languages, l => Assert.All(keys, k => CheckParametersMatch(l, k)));
@@ -120,12 +124,19 @@
 			var languages = typeof(LanguageManager).Assembly.GetTypes()
 				.Where(t => typeof(Language).IsAssignableFrom(t) && !t.IsAbstract && t.Name != "GenericLanguage")
 				.Select(t => (Language) Activator.CreateInstance(t));
-			
-			var l = (LanguageManager) _languages;
-			var languageCodes = l.GetSupportedLanguages().ToList();
+
+			string englishMessage = _languages.GetString(nameof(NotNullValidator), new CultureInfo("en"));
 
 			foreach (var language in languages) {
-				languageCodes.Contains(language.Name).ShouldBeTrue($"Language {language.Name} is not loaded in the LanguageManager");
+				// Skip english as we know it's always loaded and will match.
+				if (language.Name == "en") {
+					continue;
+				}
+				
+				// Get the message from the language manager from the culture. If it's in English, then it's hit the
+				// fallback and means the culture hasn't been loaded.
+				string message = _languages.GetString(nameof(NotNullValidator), new CultureInfo(language.Name));
+				(message != englishMessage).ShouldBeTrue($"Language '{language.Name}' ({language.GetType().Name}) is not loaded in the LanguageManager");
 			}
 		}
 
@@ -191,7 +202,5 @@
 				return true;
 			}
 		}
-
-
 	}
 }
