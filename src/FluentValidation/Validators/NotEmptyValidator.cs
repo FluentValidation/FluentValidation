@@ -30,29 +30,20 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			if (context.PropertyValue == null
-			    || IsInvalidString(context.PropertyValue)
-			    || IsEmptyCollection(context.PropertyValue)
-			    || Equals(context.PropertyValue, _defaultValueForType)) {
-				return false;
-			}
-
-			return true;
-		}
-
-		bool IsEmptyCollection(object propertyValue) {
-			switch (propertyValue) {
+			switch (context.PropertyValue) {
+				case null: 
+				case string s when string.IsNullOrWhiteSpace(s):
 				case ICollection c when c.Count == 0:
 				case Array a when a.Length == 0:
 				case IEnumerable e when !e.Cast<object>().Any():
-					return true;
-				default:
 					return false;
 			}
-		}
 
-		bool IsInvalidString(object value) {
-			return value is string s && string.IsNullOrWhiteSpace(s);
+			if (Equals(context.PropertyValue, _defaultValueForType)) {
+				return false;
+			}
+			
+			return true;
 		}
     }
 
