@@ -18,10 +18,13 @@
 namespace FluentValidation.Tests.WebApi {
 	using System;
 	using System.Collections.Generic;
+	using System.ComponentModel.DataAnnotations;
 	using System.Web.Http.Controllers;
 	using Attributes;
 	using FluentValidation.WebApi;
 	using Results;
+	using ValidationContext = FluentValidation.ValidationContext;
+	using ValidationResult = Results.ValidationResult;
 
 	[Validator(typeof(TestModel5Validator))]
 	public class TestModel5 {
@@ -241,5 +244,10 @@ namespace FluentValidation.Tests.WebApi {
 		public ValidationResult AfterMvcValidation(HttpActionContext cc, ValidationContext context, ValidationResult result) {
 			return new ValidationResult();
 		}
+	}
+
+	public class DataAnnotationsModel {
+		[Range(0,3)]
+		public int Amount { get; set; }
 	}
 }

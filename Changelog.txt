@@ -1,3 +1,7 @@
+8.2.3 - 12 April 2019
+Fix issue with WebApi integration where DataAnnotations validation could generate duplicate messages when used in the same 
+project as FluentValidation.
+
 8.2.2 - 5 April 2019 
 Fix typo in FluentValidation.DependencyInjectionExtensions package name.
 
