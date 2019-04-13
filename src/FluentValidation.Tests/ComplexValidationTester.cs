@@ -112,15 +112,36 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Async_condition_should_work_with_complex_property() {
+		public async Task Condition_should_work_with_complex_property_when_invoked_async() {
+			var validator = new TestValidator() {
+				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).When(x => x.Address.Line1 == "foo")
+			};
+
+			var result = await validator.ValidateAsync(person);
+			result.IsValid.ShouldBeTrue();
+		}
+
+		
+		[Fact]
+		public async Task Async_condition_should_work_with_complex_property() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).WhenAsync(async (x,c) => x.Address.Line1 == "foo")
 			};
 
-			var result = validator.ValidateAsync(person).Result;
+			var result = await validator.ValidateAsync(person);
 			result.IsValid.ShouldBeTrue();
 		}
 
+		[Fact]
+		public void Async_condition_should_work_with_complex_property_when_validator_invoked_synchronously() {
+			var validator = new TestValidator() {
+				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).WhenAsync(async (x,c) => x.Address.Line1 == "foo")
+			};
+
+			var result = validator.Validate(person);
+			result.IsValid.ShouldBeTrue();
+		}
+		
 		[Fact]
 		public void Can_validate_using_validator_for_base_type() {
 			var addressValidator = new InlineValidator<IAddress>() {
