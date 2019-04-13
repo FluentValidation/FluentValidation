@@ -73,7 +73,7 @@ namespace FluentValidation.Validators {
 
 		public IComparable GetComparisonValue(PropertyValidatorContext context) {
 			if(_valueToCompareFunc != null) {
-				return (IComparable)_valueToCompareFunc(context.Instance);
+				return (IComparable)_valueToCompareFunc(context.InstanceToValidate);
 			}
 
 			return (IComparable)ValueToCompare;

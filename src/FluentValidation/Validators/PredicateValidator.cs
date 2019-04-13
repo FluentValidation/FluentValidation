@@ -31,7 +31,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			if (!_predicate(context.Instance, context.PropertyValue, context)) {
+			if (!_predicate(context.InstanceToValidate, context.PropertyValue, context)) {
 				return false;
 			}
 
