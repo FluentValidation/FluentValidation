@@ -120,7 +120,7 @@ namespace FluentValidation.Internal {
 			PropertyFunc = propertyFunc;
 			Expression = expression;
 			TypeToValidate = typeToValidate;
-			this._cascadeModeThunk = cascadeModeThunk;
+			_cascadeModeThunk = cascadeModeThunk;
 
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
@@ -370,7 +370,7 @@ namespace FluentValidation.Internal {
 			//if StopOnFirstFailure triggered then we exit
 			if (fastExit && failures.Count > 0) {
 				// Callback if there has been at least one property validator failed.
-				OnFailure(context.InstanceToValidate, failures);
+				OnFailure?.Invoke(context.InstanceToValidate, failures);
 				return failures;
 			}
 
@@ -380,7 +380,7 @@ namespace FluentValidation.Internal {
 			if (asyncValidators.Count == 0) {
 				if (failures.Count > 0) {
 					// Callback if there has been at least one property validator failed.
-					OnFailure(context.InstanceToValidate, failures);
+					OnFailure?.Invoke(context.InstanceToValidate, failures);
 				}
 				else {
 					failures.AddRange(await RunDependentRulesAsync(context, cancellation));
@@ -401,7 +401,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (failures.Count > 0) {
-				OnFailure(context.InstanceToValidate, failures);
+				OnFailure?.Invoke(context.InstanceToValidate, failures);
 			}
 			else {
 				failures.AddRange(await RunDependentRulesAsync(context, cancellation));
