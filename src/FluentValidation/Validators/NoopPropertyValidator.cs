@@ -37,6 +37,6 @@ namespace FluentValidation.Validators {
 			return false;
 		}
 		
-		public PropertyValidatorOptions Options { get; } = PropertyValidatorOptions.Empty;
+		public PropertyValidatorOptions Options { get; } = new PropertyValidatorOptions();
 	}
 }

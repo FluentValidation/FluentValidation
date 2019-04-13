@@ -53,12 +53,5 @@ namespace FluentValidation {
 			get => _errorCodeSource;
 			set => _errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));
 		}
-
-		/// <summary>
-		/// Empty metadata.
-		/// </summary>
-		public static PropertyValidatorOptions Empty { get; } = new PropertyValidatorOptions {
-			_errorSource = new StaticStringSource(string.Empty),
-		};
 	}
 }
