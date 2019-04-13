@@ -51,6 +51,7 @@ namespace FluentValidation.Validators {
 		}
 
 		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+			if (Options.Condition != null && !Options.Condition(context)) return Enumerable.Empty<ValidationFailure>();
 			if (IsValid(context)) return Enumerable.Empty<ValidationFailure>();
 			
 			PrepareMessageFormatterForValidationError(context);
@@ -59,6 +60,8 @@ namespace FluentValidation.Validators {
 		}
 
 		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			if (Options.Condition != null && !Options.Condition(context)) return Enumerable.Empty<ValidationFailure>();
+			if (Options.AsyncCondition != null && !await Options.AsyncCondition(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
 			if (await IsValidAsync(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
 			
 			PrepareMessageFormatterForValidationError(context);
@@ -66,6 +69,9 @@ namespace FluentValidation.Validators {
 		}
 
 		public virtual bool ShouldValidateAsync(ValidationContext context) {
+			// If the user has applied an async condition, then always go through the async path
+			// even if validator is being run synchronously.
+			if (Options.AsyncCondition != null) return true;
 			return false;
 		}
 

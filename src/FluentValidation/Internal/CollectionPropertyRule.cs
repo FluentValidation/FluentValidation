@@ -76,53 +76,48 @@ namespace FluentValidation.Internal {
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
 		protected override async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
-
 			if (string.IsNullOrEmpty(propertyName)) {
 				propertyName = InferPropertyName(Expression);
 			}
 
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
-			var delegatingValidator = validator as IDelegatingValidator;
+			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
-			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext)) {
-				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
-
-				if (collectionPropertyValue != null) {
-					if (string.IsNullOrEmpty(propertyName)) {
-						throw new InvalidOperationException("Could not automatically determine the property name ");
-					}
-
-					var validatorTasks = collectionPropertyValue.Select(async (v, count) => {
-						if (Filter != null && !Filter(v)) {
-							return Enumerable.Empty<ValidationFailure>();
-						}
-
-						string indexer = count.ToString();
-						bool useDefaultIndexFormat = true;
-
-						if (IndexBuilder != null) {
-							indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, v, count);
-							useDefaultIndexFormat = false;
-						}
-						
-						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
-						newContext.PropertyChain.Add(propertyName);
-						newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
-
-						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
-
-						return await validator.ValidateAsync(newPropertyContext, cancellation);
-					});
-					
-					var results = new List<ValidationFailure>();
-
-					foreach (var task in validatorTasks) {
-						var failures = await task;
-						results.AddRange(failures);
-					}
-					
-					return results;
+			if (collectionPropertyValue != null) {
+				if (string.IsNullOrEmpty(propertyName)) {
+					throw new InvalidOperationException("Could not automatically determine the property name ");
 				}
+
+				var validatorTasks = collectionPropertyValue.Select(async (v, count) => {
+					if (Filter != null && !Filter(v)) {
+						return Enumerable.Empty<ValidationFailure>();
+					}
+
+					string indexer = count.ToString();
+					bool useDefaultIndexFormat = true;
+
+					if (IndexBuilder != null) {
+						indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, v, count);
+						useDefaultIndexFormat = false;
+					}
+
+					var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
+					newContext.PropertyChain.Add(propertyName);
+					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
+
+					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
+
+					return await validator.ValidateAsync(newPropertyContext, cancellation);
+				});
+
+				var results = new List<ValidationFailure>();
+
+				foreach (var task in validatorTasks) {
+					var failures = await task;
+					results.AddRange(failures);
+				}
+
+				return results;
 			}
 
 			return Enumerable.Empty<ValidationFailure>();
@@ -152,40 +147,37 @@ namespace FluentValidation.Internal {
 
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			var results = new List<ValidationFailure>();
-			var delegatingValidator = validator as IDelegatingValidator;
-			if (delegatingValidator == null || delegatingValidator.CheckCondition(propertyContext)) {
-				var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
+			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
-				int count = 0;
+			int count = 0;
 
-				if (collectionPropertyValue != null) {
-					if (string.IsNullOrEmpty(propertyName)) {
-						throw new InvalidOperationException("Could not automatically determine the property name ");
+			if (collectionPropertyValue != null) {
+				if (string.IsNullOrEmpty(propertyName)) {
+					throw new InvalidOperationException("Could not automatically determine the property name ");
+				}
+
+				foreach (var element in collectionPropertyValue) {
+					int index = count++;
+
+					if (Filter != null && !Filter(element)) {
+						continue;
 					}
 
-					foreach (var element in collectionPropertyValue) {
-						int index = count++;
-						
-						if (Filter != null && !Filter(element)) {
-							continue;
-						}
-						
-						string indexer = index.ToString();
-						bool useDefaultIndexFormat = true;
+					string indexer = index.ToString();
+					bool useDefaultIndexFormat = true;
 
-						if (IndexBuilder != null) {
-							indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, element, index);
-							useDefaultIndexFormat = false;
-						}
-						
-						var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
-						newContext.PropertyChain.Add(propertyName);
-						newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
-
-						var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
-
-						results.AddRange(validator.Validate(newPropertyContext));
+					if (IndexBuilder != null) {
+						indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, element, index);
+						useDefaultIndexFormat = false;
 					}
+
+					var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
+					newContext.PropertyChain.Add(propertyName);
+					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
+
+					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
+
+					results.AddRange(validator.Validate(newPropertyContext));
 				}
 			}
 

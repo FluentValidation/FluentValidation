@@ -120,25 +120,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Calling_when_should_replace_current_validator_with_predicate_validator() {
-			var validator = new TestPropertyValidator();
-			builder.SetValidator(validator).When(x => true);
-			builder.Rule.CurrentValidator.ShouldBe<DelegatingValidator>();
-
-			var predicateValidator = (DelegatingValidator)builder.Rule.CurrentValidator;
-			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
-		}
-
-		[Fact]
-		public void Calling_when_async_should_replace_current_validator_with_predicate_validator() {
-			var validator = new TestPropertyValidator();
-			builder.SetValidator(validator).WhenAsync(async (x,c) => true);
-			builder.Rule.CurrentValidator.ShouldBe<DelegatingValidator>();
-
-			var predicateValidator = (DelegatingValidator) builder.Rule.CurrentValidator;
-			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
-		}
-		[Fact]
 		public void Calling_validate_should_delegate_to_underlying_validator() {
 			var person = new Person {Surname = "Foo"};
 			var validator = new Mock<IPropertyValidator>();

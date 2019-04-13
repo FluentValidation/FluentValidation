@@ -29,7 +29,7 @@ namespace FluentValidation.Validators {
 	/// </summary>
 	public abstract class AsyncValidatorBase : PropertyValidator {
 		public override bool ShouldValidateAsync(ValidationContext context) {
-			return context.IsAsync();
+			return context.IsAsync() || Options.AsyncCondition != null;
 		}
 
 		protected AsyncValidatorBase(IStringSource errorSource) : base(errorSource) {
