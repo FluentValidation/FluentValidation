@@ -63,10 +63,9 @@ namespace FluentValidation.Validators {
 			var min = Min;
 			var max = Max;
 
-			if (MaxFunc != null && MinFunc != null)
-			{
-				max = MaxFunc(context.Instance);
-				min = MinFunc(context.Instance);
+			if (MaxFunc != null && MinFunc != null) {
+				max = MaxFunc(context.InstanceToValidate);
+				min = MinFunc(context.InstanceToValidate);
 			}
 
 			int length = context.PropertyValue.ToString().Length;
