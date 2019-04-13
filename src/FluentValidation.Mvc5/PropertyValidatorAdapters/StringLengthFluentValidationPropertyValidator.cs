@@ -30,7 +30,7 @@
 				.AppendArgument("MinLength", LengthValidator.Min)
 				.AppendArgument("MaxLength", LengthValidator.Max);
 
-			var messageNeedsSplitting = Validator.Options.ErrorMessageSource.ResourceType == typeof(LanguageManager);
+			var messageNeedsSplitting = Validator.Options.ErrorMessageSource is LanguageStringSource;
 			string message;
 
 			try {

@@ -30,7 +30,7 @@ namespace FluentValidation.AspNetCore {
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("ComparisonValue", RangeValidator.ValueToCompare);
 
-			var messageNeedsSplitting = RangeValidator.Options.ErrorMessageSource.ResourceType == typeof(LanguageManager);
+			var messageNeedsSplitting = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
 
 			string message;
 

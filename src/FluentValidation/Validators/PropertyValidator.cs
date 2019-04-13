@@ -33,7 +33,9 @@ namespace FluentValidation.Validators {
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
 			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
-			else if (errorMessageSource is LanguageStringSource l) errorMessageSource = new ErrorCodeLanguageStringSource(ctx => Options.ErrorCodeSource?.GetString(ctx), l);
+			else if (errorMessageSource is LanguageStringSource l && l.ErrorCodeFunc == null) 
+				l.ErrorCodeFunc = ctx => Options.ErrorCodeSource?.GetString(ctx);
+			
 			Options.ErrorMessageSource = errorMessageSource;
 		}
 

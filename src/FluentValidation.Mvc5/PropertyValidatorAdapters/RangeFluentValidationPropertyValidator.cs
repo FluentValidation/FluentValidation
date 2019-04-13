@@ -22,7 +22,7 @@
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
 
-			var messageNeedsSplitting = RangeValidator.Options.ErrorMessageSource.ResourceType == typeof(LanguageManager);
+			var messageNeedsSplitting = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
 			
 			string message;
 			try {

@@ -37,7 +37,7 @@ namespace FluentValidation.AspNetCore {
 			    .AppendArgument("MinLength", lengthVal.Min)
 			    .AppendArgument("MaxLength", lengthVal.Max);
 
-		    bool messageNeedsSplitting = lengthVal.Options.ErrorMessageSource.ResourceType == typeof(LanguageManager);
+		    bool messageNeedsSplitting = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
 
 		    string message;
 		    try {
