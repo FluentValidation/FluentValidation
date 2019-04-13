@@ -55,7 +55,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			var regex = _regexFunc(context.Instance);
+			var regex = _regexFunc(context.InstanceToValidate);
 			
 			if (regex != null && context.PropertyValue != null && !regex.IsMatch((string) context.PropertyValue)) {
 				context.MessageFormatter.AppendArgument("RegularExpression", regex.ToString());

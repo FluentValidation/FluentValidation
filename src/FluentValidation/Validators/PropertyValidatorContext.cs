@@ -30,10 +30,7 @@ namespace FluentValidation.Validators {
 
 		public string DisplayName => Rule.GetDisplayName(ParentContext);
 
-		public object Instance => ParentContext.InstanceToValidate;
-		//TODO: For FV9 remove this duplication and standardise on Instance/InstanceToValidate.
-		object IValidationContext.InstanceToValidate => ParentContext.InstanceToValidate;
-
+		public object InstanceToValidate => ParentContext.InstanceToValidate;
 		public MessageFormatter MessageFormatter => _messageFormatter ?? (_messageFormatter = ValidatorOptions.MessageFormatterFactory());
 
 		//Lazily load the property value

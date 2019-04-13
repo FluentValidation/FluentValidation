@@ -181,7 +181,7 @@ namespace FluentValidation {
 			predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			return rule.Configure(config => {
-				config.ApplyCondition(ctx => predicate((T)ctx.Instance), applyConditionTo);
+				config.ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate), applyConditionTo);
 			});
 		}
 
@@ -210,7 +210,7 @@ namespace FluentValidation {
 			predicate.Guard("A predicate must be specified when calling WhenAsync.", nameof(predicate));
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			return rule.Configure(config => {
-				config.ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.Instance, ct), applyConditionTo);
+				config.ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, ct), applyConditionTo);
 			});
 		}
 
@@ -348,7 +348,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
-			var wrapper = new Func<PropertyValidatorContext, object>(ctx => stateProvider((T) ctx.Instance));
+			var wrapper = new Func<PropertyValidatorContext, object>(ctx => stateProvider((T) ctx.InstanceToValidate));
 			return rule.Configure(config => config.CurrentValidator.Options.CustomStateProvider = wrapper);
 		}
 
@@ -364,7 +364,7 @@ namespace FluentValidation {
 			stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
 
 			var wrapper = new Func<PropertyValidatorContext, object>(ctx => {
-				return stateProvider((T) ctx.Instance, (TProperty) ctx.PropertyValue);
+				return stateProvider((T) ctx.InstanceToValidate, (TProperty) ctx.PropertyValue);
 			});
 
 			return rule.Configure(config => config.CurrentValidator.Options.CustomStateProvider = wrapper);
