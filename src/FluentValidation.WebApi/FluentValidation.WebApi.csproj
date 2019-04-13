@@ -6,7 +6,7 @@
     <Company />
     <Description>ASP.NET WebApi integration for FluentValidation</Description>
     <Copyright>Copyright (c) Jeremy Skinner 2008-2019</Copyright>
-    <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
     <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageReleaseNotes>https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt</PackageReleaseNotes>

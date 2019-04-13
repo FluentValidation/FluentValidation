@@ -4,6 +4,6 @@ root = true
 [*.cs]
 indent_style = tab
 
-[*.{nuspec,config}]
+[*.{nuspec,config,csproj}]
 indent_style = space
 indent_size = 2
