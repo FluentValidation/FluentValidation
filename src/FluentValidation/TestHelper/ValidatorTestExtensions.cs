@@ -54,6 +54,7 @@ namespace FluentValidation.TestHelper {
 			testValidationResult.ShouldNotHaveError();
 		}
 
+		[Obsolete("Testing for the presence of a specific validator is not recommended and leads to brittle tests and false belief that the validator will do what you expect. It is better to perform assertions that check the expected result of the validation.")]
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
 			var descriptor = validator.CreateDescriptor();
 			var expressionMemberName = expression.GetMember()?.Name;
