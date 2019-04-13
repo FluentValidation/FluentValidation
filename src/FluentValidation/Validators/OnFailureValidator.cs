@@ -30,7 +30,7 @@
 			var results = _innerValidator.Validate(context).ToList();
 			if (!results.Any()) return results;
 			var errorMessage = results.First().ErrorMessage;
-			_onFailure((T) context.Instance, context, errorMessage);
+			_onFailure((T) context.InstanceToValidate, context, errorMessage);
 			return results;
 		}
 
@@ -38,7 +38,7 @@
 			var results = (await _innerValidator.ValidateAsync(context, cancellation)).ToList();
 			if (!results.Any()) return results;
 			var errorMessage = results.First().ErrorMessage;
-			_onFailure((T) context.Instance, context, errorMessage);
+			_onFailure((T) context.InstanceToValidate, context, errorMessage);
 			return results;
 		}
 

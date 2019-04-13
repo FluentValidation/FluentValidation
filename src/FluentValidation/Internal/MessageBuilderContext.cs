@@ -23,11 +23,9 @@
 
 		public string DisplayName => _innerContext.DisplayName;
 
-		public object Instance => _innerContext.Instance;
-
 		public MessageFormatter MessageFormatter => _innerContext.MessageFormatter;
 
-		public object InstanceToValidate => _innerContext.Instance;
+		public object InstanceToValidate => _innerContext.InstanceToValidate;
 		public object PropertyValue => _innerContext.PropertyValue;
 		
 		IValidationContext IValidationContext.ParentContext => ParentContext;

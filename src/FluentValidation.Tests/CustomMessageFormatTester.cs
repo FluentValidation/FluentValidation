@@ -42,7 +42,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Uses_custom_delegate_for_building_message() {
 			validator.RuleFor(x => x.Surname).NotNull().Configure(cfg => {
-				cfg.MessageBuilder = context => "Test " + ((Person)context.Instance).Id;
+				cfg.MessageBuilder = context => "Test " + ((Person)context.InstanceToValidate).Id;
 			});
 
 			var error = validator.Validate(new Person()).Errors.Single().ErrorMessage;
