@@ -120,7 +120,7 @@ namespace FluentValidation.Internal {
 			PropertyFunc = propertyFunc;
 			Expression = expression;
 			TypeToValidate = typeToValidate;
-			this._cascadeModeThunk = cascadeModeThunk;
+			_cascadeModeThunk = cascadeModeThunk;
 
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
