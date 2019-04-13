@@ -28,6 +28,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
+	[Obsolete]
 	public class DelegatingValidator : IPropertyValidator, IDelegatingValidator {
 		private readonly Func<PropertyValidatorContext, bool> _condition;
 		private readonly Func<PropertyValidatorContext, CancellationToken, Task<bool>> _asyncCondition;
@@ -84,6 +85,7 @@ namespace FluentValidation.Validators {
 		public PropertyValidatorOptions Options => InnerValidator.Options;
 	}
 
+	[Obsolete]
 	public interface IDelegatingValidator : IPropertyValidator {
 		IPropertyValidator InnerValidator { get; }
 		bool CheckCondition(PropertyValidatorContext context);
