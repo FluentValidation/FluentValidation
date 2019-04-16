@@ -506,7 +506,7 @@ namespace FluentValidation.Internal {
 		}
 
 		internal void ApplySharedAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> condition) {
-			if (_condition == null) {
+			if (_asyncCondition == null) {
 				_asyncCondition = condition;
 			}
 			else {
