@@ -23,22 +23,22 @@ namespace FluentValidation.Resources {
 		public override string Name => "ka";
 
 		public GeorgianLanguage() {
-			Translate<EmailValidator>("'{PropertyName}' არ არის ვალიდური იმეილის მისამართი.");
+			Translate<EmailValidator>("'{PropertyName}' არ არის ვალიდური ელ.ფოსტის მისამართი.");
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე მეტი ან ტოლი.");
 			Translate<GreaterThanValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე მეტი.");
 			Translate<LengthValidator>("'{PropertyName}' უნდა იყოს {MinLength}-დან {MaxLength} სიმბოლომდე. თქვენ შეიყვანეთ {TotalLength} სიმბოლო.");
-			Translate<MinimumLengthValidator>("'{PropertyName}' უნდა იყოს მეტი ან ტოლია {MinLength} სიმბოლოები. თქვენ შეიტანეთ {TotalLength} სიმბოლოები.");
-			Translate<MaximumLengthValidator>("'{PropertyName}' უნდა იყოს ნაკლები ან ტოლია {MaxLength} სიმბოლოები. თქვენ შეიტანეთ {TotalLength} სიმბოლოები.");
+			Translate<MinimumLengthValidator>("'{PropertyName}'-ის სიგრძე უნდა აღემატებოდეს {MinLength} სიმბოლოს. თქვენ შეიყვანეთ {TotalLength} სიმბოლო.");
+			Translate<MaximumLengthValidator>("'{PropertyName}'-ის სიგრძე არ უნდა აღემატებოდეს {MaxLength} სიმბოლოს. თქვენ შეიყვანეთ {TotalLength} სიმბოლო.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე ნაკლები ან ტოლი.");
 			Translate<LessThanValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე ნაკლები.");
 			Translate<NotEmptyValidator>("'{PropertyName}' არ უნდა იყოს ცარიელი.");
 			Translate<NotEqualValidator>("'{PropertyName}' არ უნდა უდრიდეს '{ComparisonValue}'-ს.");
 			Translate<NotNullValidator>("'{PropertyName}' არ უნდა იყოს ცარიელი.");
-			Translate<PredicateValidator>("'{PropertyName}'-ისთვის განსაზღვრული კრიტერიუმი არ დაკმაყოფილდა.");
-			Translate<AsyncPredicateValidator>("'{PropertyName}'-ისთვის განსაზღვრული კრიტერიუმი არ დაკმაყოფილდა.");
-			Translate<RegularExpressionValidator>("'{PropertyName}' არასწორ ფორმატშია.");
+			Translate<PredicateValidator>("'{PropertyName}'-ისთვის განსაზღვრული პირობა არ დაკმაყოფილდა.");
+			Translate<AsyncPredicateValidator>("'{PropertyName}'-ისთვის განსაზღვრული პირობა არ დაკმაყოფილდა.");
+			Translate<RegularExpressionValidator>("'{PropertyName}'-ის ფორმატი არასწორია.");
 			Translate<EqualValidator>("'{PropertyName}' უნდა უდრიდეს '{ComparisonValue}'-ს.");
-			Translate<ExactLengthValidator>("'{PropertyName}' უნდა იყოს {MaxLength} სიმბოლო. თქვენ შეიყვანეთ {TotalLength} სიმბოლო.");
+			Translate<ExactLengthValidator>("'{PropertyName}' უნდა უდრიდეს {MaxLength} სიმბოლოს. თქვენ შეიყვანეთ {TotalLength} სიმბოლო.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' უნდა იყოს {From}-დან {To}-მდე (ჩათვლით). თქვენ შეიყვანეთ {Value}.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' უნდა იყოს {From}-სა და {To}-ს შორის. თქვენ შეიყვანეთ {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' არ არის ვალიდური საკრედიტო ბარათის ნომერი.");
