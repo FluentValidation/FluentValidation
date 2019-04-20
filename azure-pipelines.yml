@@ -1,0 +1,16 @@
+strategy:
+  matrix:
+    linux:
+      imageName: 'ubuntu-16.04'
+    windows:
+      imageName: 'windows-2019'
+
+trigger:
+- master
+
+pool:
+  vmImage: $(imageName)
+
+steps:
+- pwsh: ./build.ps1 -t install
+- pwsh: ./build.ps1
