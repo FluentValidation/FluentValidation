@@ -14,3 +14,8 @@ pool:
 steps:
 - pwsh: ./build.ps1 -t install
 - pwsh: ./build.ps1
+- task: PublishTestResults@2
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
+    failTaskOnFailedTests: true

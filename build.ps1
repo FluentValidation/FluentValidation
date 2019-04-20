@@ -55,7 +55,7 @@ target test {
     "$path\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj"
   )
 
-  Invoke-Tests $test_projects -c $configuration --no-build
+  Invoke-Tests $test_projects -c $configuration --no-build --logger trx
 }
 
 target deploy {
