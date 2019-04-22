@@ -12,10 +12,10 @@ pool:
   vmImage: $(imageName)
 
 steps:
-- pwsh: ./build.ps1 -t install
+- pwsh: ./build.ps1 -t ci
+  displayName: 'Build'
   env: 
     kek: $(kek)
-- pwsh: ./build.ps1
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
@@ -28,3 +28,4 @@ steps:
     publishVstsFeed: 'FluentValidation-ci'
     allowPackageConflicts: true
     packagesToPush: '$(Build.SourcesDirectory)/.build/packages/*.nupkg'
+  condition: eq( variables['Agent.OS'], 'Windows_NT' )

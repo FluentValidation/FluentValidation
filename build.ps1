@@ -37,6 +37,7 @@ elseif (Test-Path "$path\src\FluentValidation-Release.snk") {
 
 target default -depends find-sdk, compile, test, deploy
 target install -depends install-dotnet-core, decrypt-private-key
+target ci -depends install-dotnet-core, decrypt-private-key, default
 
 target compile {
   if ($keyfile) {
