@@ -37,7 +37,7 @@ elseif (Test-Path "$path\src\FluentValidation-Release.snk") {
 
 target default -depends find-sdk, compile, test, deploy
 target install -depends install-dotnet-core, decrypt-private-key
-target ci -depends install-dotnet-core, decrypt-private-key, default
+target ci -depends ci-set-version, install-dotnet-core, decrypt-private-key, default
 
 target compile {
   if ($keyfile) {
@@ -114,6 +114,12 @@ target publish -depends verify-package {
       Invoke-Dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
       write-host
     }
+  }
+}
+
+target ci-set-version { 
+  if ($env:BUILD_BUILDNUMBER) {
+    $script:version = $script:version.split("-")[0] + "-ci-${env:BUILD_BUILDNUMBER}"
   }
 }
 
