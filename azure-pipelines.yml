@@ -13,6 +13,8 @@ pool:
 
 steps:
 - pwsh: ./build.ps1 -t install
+  env: 
+    kek: $(kek)
 - pwsh: ./build.ps1
 - task: PublishTestResults@2
   inputs:
