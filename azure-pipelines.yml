@@ -18,7 +18,7 @@ steps:
 - task: DotNetCoreInstaller@0
   inputs:
     version: $(dotnetVersion)
-  displayName: '.NET Core SDK $(dotnetVersion) Installer'
+  displayName: '.NET Core SDK Installer'
 
 - pwsh: ./build.ps1 -t ci
   displayName: 'Build'
