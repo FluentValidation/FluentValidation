@@ -12,7 +12,7 @@ navigation:
   - /aspnet
 ---
 
-![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg) ![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg) ![Build status](https://ci.appveyor.com/api/projects/status/b9bkth37cdtsifac?svg=true) ![Tests](https://img.shields.io/appveyor/tests/JeremySkinner/FluentValidation.svg)
+![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg) ![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg) [![Build Status](https://dev.azure.com/jeremy0621/FluentValidation/_apis/build/status/JeremySkinner.FluentValidation?branchName=master)](https://dev.azure.com/jeremy0621/FluentValidation/_build/latest?definitionId=1&branchName=master)
 
 <div class="cta-container" markdown="1">
 
