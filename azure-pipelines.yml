@@ -19,3 +19,10 @@ steps:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
     failTaskOnFailedTests: true
+- task: NuGetCommand@2
+  displayName: 'NuGet push'
+  inputs:
+    command: push
+    publishVstsFeed: 'FluentValidation-ci'
+    allowPackageConflicts: true
+    packagesToPush: '$(Build.SourcesDirectory)/.build/packages/*.nupkg'
