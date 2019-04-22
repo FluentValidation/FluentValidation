@@ -12,15 +12,25 @@ pool:
   vmImage: $(imageName)
 
 steps:
+- pwsh: ./build.ps1 -t get-dotnet-version
+  displayName: 'Get .NET Core version to use'
+
+- task: DotNetCoreInstaller@0
+  inputs:
+    version: $(dotnetVersion)
+  displayName: '.NET Core SDK $(dotnetVersion) Installer'
+
 - pwsh: ./build.ps1 -t ci
   displayName: 'Build'
   env: 
     kek: $(kek)
+
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
     failTaskOnFailedTests: true
+
 - task: NuGetCommand@2
   displayName: 'NuGet push'
   inputs:

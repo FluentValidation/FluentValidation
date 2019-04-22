@@ -37,7 +37,7 @@ elseif (Test-Path "$path\src\FluentValidation-Release.snk") {
 
 target default -depends find-sdk, compile, test, deploy
 target install -depends install-dotnet-core, decrypt-private-key
-target ci -depends ci-set-version, install-dotnet-core, decrypt-private-key, default
+target ci -depends ci-set-version, decrypt-private-key, default
 
 target compile {
   if ($keyfile) {
@@ -128,6 +128,12 @@ target decrypt-private-key {
     iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
     dotnet "appveyor-tools/secure-file.dll" -decrypt src/FluentValidation-Release.snk.enc -secret $ENV:kek
   }
+}
+
+target get-dotnet-version {
+  $json = ConvertFrom-Json (Get-Content "$path/global.json" -Raw)
+  $required_version = $json.sdk.version
+  echo "##vso[task.setvariable variable=dotnetVersion]$required_version"
 }
 
 target install-dotnet-core {
