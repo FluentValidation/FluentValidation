@@ -86,7 +86,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// The current validator being configured by this rule.
 		/// </summary>
-		public IPropertyValidator CurrentValidator { get; private set; }
+		public IPropertyValidator CurrentValidator => _validators.LastOrDefault();
 
 		/// <summary>
 		/// Type of the property being validated
@@ -97,8 +97,8 @@ namespace FluentValidation.Internal {
 		/// Cascade mode for this rule.
 		/// </summary>
 		public CascadeMode CascadeMode {
-			get { return _cascadeModeThunk(); }
-			set { _cascadeModeThunk = () => value; }
+			get => _cascadeModeThunk();
+			set => _cascadeModeThunk = () => value;
 		}
 
 		/// <summary>
@@ -148,7 +148,6 @@ namespace FluentValidation.Internal {
 		/// Adds a validator to the rule.
 		/// </summary>
 		public void AddValidator(IPropertyValidator validator) {
-			CurrentValidator = validator;
 			_validators.Add(validator);
 		}
 
@@ -160,10 +159,6 @@ namespace FluentValidation.Internal {
 
 			if (index > -1) {
 				_validators[index] = newValidator;
-
-				if (ReferenceEquals(CurrentValidator, original)) {
-					CurrentValidator = newValidator;
-				}
 			}
 		}
 
@@ -171,10 +166,6 @@ namespace FluentValidation.Internal {
 		/// Remove a validator in this rule.
 		/// </summary>
 		public void RemoveValidator(IPropertyValidator original) {
-			if (ReferenceEquals(CurrentValidator, original)) {
-				CurrentValidator = _validators.LastOrDefault(x => x != original);
-			}
-
 			_validators.Remove(original);
 		}
 
@@ -182,7 +173,6 @@ namespace FluentValidation.Internal {
 		/// Clear all validators from this rule.
 		/// </summary>
 		public void ClearValidators() {
-			CurrentValidator = null;
 			_validators.Clear();
 		}
 
