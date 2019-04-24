@@ -36,14 +36,7 @@ target compile {
 }
 
 target test {
-  $test_projects = @(
-    "$path\src\FluentValidation.Tests\FluentValidation.Tests.csproj",
-    "$path\src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj",
-    "$path\src\FluentValidation.Tests.AspNetCore\FluentValidation.Tests.AspNetCore.csproj",
-    "$path\src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj"
-  )
-
-  Invoke-Tests $test_projects -c $configuration --no-build --logger trx
+  Invoke-Dotnet test $solution_file -c $configuration --no-build --logger trx 
 }
 
 target deploy {
