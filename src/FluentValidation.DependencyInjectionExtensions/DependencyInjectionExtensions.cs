@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
+using FluentValidation.Internal;
+
 namespace FluentValidation {
 	using System;
 	using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +38,12 @@ namespace FluentValidation {
 			ValidationContext actualContext = null;
 
 			switch (context) {
+				case CustomContext cc:
+					actualContext = cc.ParentContext;
+					break;
+				case MessageBuilderContext mbc:
+					actualContext = mbc.ParentContext;
+					break;
 				case PropertyValidatorContext pvc:
 					actualContext = pvc.ParentContext;
 					break;
