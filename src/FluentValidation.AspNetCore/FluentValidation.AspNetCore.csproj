@@ -14,6 +14,9 @@
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
     <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 8.3.0:
+* Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
+
 Changes in 8.2.1:
 * Resolved issue using InjectValidator with RuleForEach.
 * Add support for a default IValidatorInterceptor to be registered with the Service Provider.

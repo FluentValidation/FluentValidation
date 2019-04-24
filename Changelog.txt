@@ -1,3 +1,15 @@
+8.3.0 - 24 April 2019
+Changes in 8.3.0:
+Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
+Improved how LanguageStringSource works with error-code overrides.
+Fix thread-safety issue with use of PropertyValidatorOptions.Empty (now removed).
+Improved how calls to When/Unless are handled internally.
+DelegatingValidator is now marked as deprecated.
+ShouldHaveChildValidator is now marked as deprecated.
+Improvements to Croatian language translations.
+Improvements to Georgian language translations.
+Resolved subtle bug where top-level WhenAsync wouldn't work correctly when wrapping a top-level call to When.
+
 8.2.3 - 12 April 2019
 Fix issue with WebApi integration where DataAnnotations validation could generate duplicate messages when used in the same 
 project as FluentValidation.
