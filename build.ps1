@@ -2,14 +2,18 @@ param(
   [string]$version = '8.2.0-dev',
   [string]$configuration = 'Release',
   [string]$path = $PSScriptRoot,
-  [string]$keyfile = ""
+  [string]$keyfile = "",
+  [string[]]$targets = 'default'
 )
 
 $ErrorActionPreference = "Stop"
 
 # Boostrap posh-build
 $build_dir = Join-Path $path ".build"
-if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) { Write-Host "Installing posh-build..."; New-Item -Type Directory $build_dir -ErrorAction Ignore | Out-Null; Save-Script "Posh-Build" -Path $build_dir }
+if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) { 
+  Write-Host "Installing posh-build..."; New-Item -Type Directory $build_dir -ErrorAction Ignore | Out-Null; 
+  (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/jeremyskinner/posh-build/master/Posh-Build.ps1', "$build_dir/Posh-Build.ps1")
+}
 . (Join-Path $build_dir "Posh-Build.ps1")
 
 # Set these variables as desired
@@ -137,4 +141,4 @@ function verify_assembly($path) {
   return $token -eq "7de548da2fbae0f0";
 }
 
-Start-Build $args
+Start-Build $targets
