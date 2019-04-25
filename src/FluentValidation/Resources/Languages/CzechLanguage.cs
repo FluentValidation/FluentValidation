@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("Pole '{PropertyName}' musí být prázdné.");
 			Translate<NullValidator>("Pole '{PropertyName}' musí být prázdné.");
 			Translate<EnumValidator>("Pole '{PropertyName}' má rozsah hodnot, které neobsahují '{PropertyValue}'.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "Délka pole '{PropertyName}' musí být v rozsahu {MinLength} až {MaxLength} znaků.");
+			Translate("MinimumLength_Simple", "Délka pole '{PropertyName}' musí být větší nebo rovna {MinLength} znakům.");
+			Translate("MaximumLength_Simple", "Délka pole '{PropertyName}' musí být menší nebo rovna {MaxLength} znakům.");
+			Translate("ExactLength_Simple", "Délka pole '{PropertyName}' musí být {MaxLength} znaků.");
+			Translate("InclusiveBetween_Simple", "Hodnota pole '{PropertyName}' musí být mezi {From} a {To} (včetně).");
 		}
 	}
 }

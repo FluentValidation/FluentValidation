@@ -34,10 +34,8 @@ namespace FluentValidation.AspNetCore {
 
 		public abstract void AddValidation(ClientModelValidationContext context);
 
-		protected static bool MergeAttribute(IDictionary<string, string> attributes, string key, string value)
-		{
-			if (attributes.ContainsKey(key))
-			{
+		protected static bool MergeAttribute(IDictionary<string, string> attributes, string key, string value) {
+			if (attributes.ContainsKey(key)) {
 				return false;
 			}
 

@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}'이 비어 있어야합니다.");
 			Translate<NullValidator>("'{PropertyName}'이 비어 있어야합니다.");
 			Translate<EnumValidator>("'{PropertyName}'에는 '{PropertyValue}'가 포함되지 않은 값 범위가 있습니다.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("ExactLength_Simple", "'{PropertyName}'은(는) {MaxLength} 글자이하의 문자열이어야 합니다.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}'은(는) {From} 이상 {To} 이하여야 합니다.");
+			Translate("Length_Simple", "'{PropertyName}'은(는) {MinLength} 글자 이상 {MaxLength} 글자 이하여야 합니다.");
+			Translate("MinimumLength_Simple", "'{PropertyName}'은 {MinLength} 자 이상의 값이어야합니다.");
+			Translate("MaximumLength_Simple", "'{PropertyName}'은 (는) {MaxLength} 자 이하 여야합니다.");
 		}
 	}
 }

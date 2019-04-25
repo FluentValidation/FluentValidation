@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' skal være tomt.");
 			Translate<NullValidator>("'{PropertyName}' skal være tomt.");
 			Translate<EnumValidator>("'{PropertyName}' har en række værdier, der ikke indeholder '{PropertyValue}'.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "'{PropertyName}' skal være mellem {MinLength} og {MaxLength} tegn.");
+			Translate("MinimumLength_Simple", "'{PropertyName}' skal være større end eller lig med {MinLength} tegn.");
+			Translate("MaximumLength_Simple", "'{PropertyName}' skal være mindre end eller lig med {MaxLength} tegn.");
+			Translate("ExactLength_Simple", "'{PropertyName}' skal være {MaxLength} tegn langt.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' skal være mellem {From} og {To}.");
 		}
 	}
 }

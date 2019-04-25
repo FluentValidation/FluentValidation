@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' 必須為空。");
 			Translate<NullValidator>("'{PropertyName}' 必須為Null。");
 			Translate<EnumValidator>("'{PropertyName}' 的數值範圍不包含 '{PropertyValue}'。");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "'{PropertyName}' 的長度必須在 {MinLength} 到 {MaxLength} 字符。");
+			Translate("MinimumLength_Simple", "'{PropertyName}' 必須大於或等於{MinLength}個字符。");
+			Translate("MaximumLength_Simple", "'{PropertyName}' 必須小於或等於{MaxLength}個字符。");
+			Translate("ExactLength_Simple", "'{PropertyName}' 必須是 {MaxLength} 個字符。");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' 必須在 {From} (包含)和 {To} (包含)之間。");
 		}
 	}
 }

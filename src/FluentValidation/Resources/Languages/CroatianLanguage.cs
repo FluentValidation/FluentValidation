@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' mora biti prazan.");
 			Translate<NullValidator>("'{PropertyName}' mora biti prazan.");
 			Translate<EnumValidator>("'{PropertyName}' ima raspon vrijednosti koji ne uključuje '{PropertyValue}'.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "'{PropertyName}' mora biti između {MinLength} i {MaxLength} znakova.");
+			Translate("MinimumLength_Simple", "'{PropertyName}' mora imati duljinu veću ili jednaku {MinLength}.");
+			Translate("MaximumLength_Simple", "'{PropertyName}' mora imati duljinu manju ili jednaku {MaxLength}.");
+			Translate("ExactLength_Simple", "'{PropertyName}' mora sadržavati {MaxLength} znakova.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' mora biti između {From} i {To}.");
 		}
 	}
 }
