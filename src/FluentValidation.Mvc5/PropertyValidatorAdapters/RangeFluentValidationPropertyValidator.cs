@@ -22,7 +22,7 @@
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
 
-			var messageNeedsSplitting = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
+			var needsSimplifiedMessage = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
 			
 			string message;
 			try {
@@ -31,10 +31,10 @@
 			catch (FluentValidationMessageFormatException){
 				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
 				message = ValidatorOptions.LanguageManager.GetString("InclusiveBetween_Simple");
-				messageNeedsSplitting = false;
+				needsSimplifiedMessage = false;
 			}
 
-			if (messageNeedsSplitting && message.Contains("{Value}")) {
+			if (needsSimplifiedMessage && message.Contains("{Value}")) {
 				message = ValidatorOptions.LanguageManager.GetString("InclusiveBetween_Simple");
 			}
 

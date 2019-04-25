@@ -43,7 +43,7 @@ namespace FluentValidation.AspNetCore {
 				.AppendArgument("MinLength", lengthVal.Min)
 				.AppendArgument("MaxLength", lengthVal.Max);
 
-			bool messageNeedsSplitting = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
+			bool needsSimplifiedMessage = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
 
 			string message;
 			try {
@@ -57,10 +57,10 @@ namespace FluentValidation.AspNetCore {
 					message = ValidatorOptions.LanguageManager.GetString("Length_Simple");
 				}
 
-				messageNeedsSplitting = false;
+				needsSimplifiedMessage = false;
 			}
 
-			if (messageNeedsSplitting && message.Contains("{TotalLength}")) {
+			if (needsSimplifiedMessage && message.Contains("{TotalLength}")) {
 				if (lengthVal is ExactLengthValidator) {
 					message = ValidatorOptions.LanguageManager.GetString("ExactLength_Simple");
 				}

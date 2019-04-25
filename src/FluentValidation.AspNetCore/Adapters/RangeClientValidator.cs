@@ -45,7 +45,8 @@ namespace FluentValidation.AspNetCore {
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
-			var messageNeedsSplitting = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
+
+			var needsSimplifiedMessage = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
 
 			string message;
 
@@ -54,10 +55,10 @@ namespace FluentValidation.AspNetCore {
 			}
 			catch (FluentValidationMessageFormatException) {
 				message =ValidatorOptions.LanguageManager.GetString("InclusiveBetween_Simple");
-				messageNeedsSplitting = false;
+				needsSimplifiedMessage = false;
 			}
 
-			if (messageNeedsSplitting && message.Contains("{Value}")) {
+			if (needsSimplifiedMessage && message.Contains("{Value}")) {
 				message =ValidatorOptions.LanguageManager.GetString("InclusiveBetween_Simple");
 			}
 			message = formatter.BuildMessage(message);

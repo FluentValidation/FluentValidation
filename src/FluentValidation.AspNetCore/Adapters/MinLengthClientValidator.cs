@@ -38,17 +38,17 @@ namespace FluentValidation.AspNetCore {
 			    .AppendArgument("MinLength", lengthVal.Min)
 			    .AppendArgument("MaxLength", lengthVal.Max);
 
-		    bool messageNeedsSplitting = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
+		    bool needsSimifiedMessage = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
 
 		    string message;
 		    try {
 			    message = lengthVal.Options.ErrorMessageSource.GetString(null);
 		    } catch (FluentValidationMessageFormatException) {
 				message = ValidatorOptions.LanguageManager.GetString("MinimumLength_Simple");
-			    messageNeedsSplitting = false;
+			    needsSimifiedMessage = false;
 		    }
 
-		    if (messageNeedsSplitting && message.Contains("{TotalLength}")) {
+		    if (needsSimifiedMessage && message.Contains("{TotalLength}")) {
 			    message = ValidatorOptions.LanguageManager.GetString("MinimumLength_Simple");
 		    }
 
