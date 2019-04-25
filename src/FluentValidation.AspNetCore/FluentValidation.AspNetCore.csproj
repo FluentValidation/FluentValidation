@@ -73,4 +73,8 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+
+  <Target Name="_SetExactVersionsOfProjects" BeforeTargets="GenerateNuspec">
+    <Exec Command="pwsh -noprofile -command $(MSBuildProjectDirectory)/../hack-package-versions.ps1 $(BaseIntermediateOutputPath)" />
+  </Target>
 </Project>
