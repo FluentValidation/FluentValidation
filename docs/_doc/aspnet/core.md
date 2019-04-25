@@ -324,4 +324,10 @@ public class PersonValidator : AbstractValidator<Person> {
 
 ### Use with Page Models
 
-Configuration for use with ASP.NET Web Pages and PageModels is exactly the same as with MVC above. There is one limitation, in that you can't define a validator for the whole page-model, only for models exposed as properties on the page model. This is a limitation of ASP.NET Web Pages itself. 
+Configuration for use with ASP.NET Web Pages and PageModels is exactly the same as with MVC above, but there are several limitations:
+
+- You can't define a validator for the whole page-model, only for models exposed as properties on the page model.
+- The `[CustomizeValidator]` attribute is not supported
+- the `[RuleSetForClientSideMessages]` attribute is not supported
+
+These are limitations of ASP.NET Web Pages and are not currently something that FluentValidation can work around.
