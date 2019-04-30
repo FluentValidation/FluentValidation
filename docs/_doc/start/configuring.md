@@ -2,7 +2,7 @@
 titie: Configuring a Validator
 sections:
   - Overriding the Message
-  - Overrding the Property Name
+  - Overriding the Property Name
   - Conditions
   - Setting the Cascade Mode
   - Dependent Rules
