@@ -46,7 +46,6 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' must be empty.");
 			Translate<NullValidator>("'{PropertyName}' must be empty.");
 			Translate<EnumValidator>("'{PropertyName}' has a range of values which does not include '{PropertyValue}'.");
-			Translate<StringEnumValidator>("'{PropertyName}' has names which do not include '{PropertyValue}'.");
 		}
 	}
 }
