@@ -67,5 +67,16 @@
 			var result = _caseInsensitiveValidator.Validate(new Person { GenderString = "invalid" });
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Gender String' has a range of values which does not include 'invalid'.");
 		}
+
+		[Fact]
+		public void When_enumType_is_null_it_should_throw() {
+			Assert.Throws<ArgumentNullException>(() => new TestValidator { v => v.RuleFor(x => x.GenderString).IsEnumName(null) });
+		}
+
+		[Fact]
+		public void When_enumType_is_not_an_enum_it_should_throw() {
+			var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new TestValidator { v => v.RuleFor(x => x.GenderString).IsEnumName(typeof(Person)) });
+			exception.Message.ShouldEqual("The type 'Person' is not an enum and can't be used with IsEnumName.\r\nParameter name: enumType");
+		}
 	}
 }
