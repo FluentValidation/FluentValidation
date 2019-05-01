@@ -18,10 +18,7 @@
 
 namespace FluentValidation.Resources {
 	using System;
-	using System.Linq.Expressions;
 	using System.Reflection;
-	using Internal;
-	using Validators;
 
 	/// <summary>
 	/// Represents a localized string.

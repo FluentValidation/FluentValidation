@@ -18,10 +18,8 @@
 
 namespace FluentValidation.Tests {
     using System.ComponentModel.DataAnnotations;
-    using System.Globalization;
     using Xunit;
     using System.Linq;
-    using Resources;
     using System;
 
     public class LocalisedNameTester : IDisposable {

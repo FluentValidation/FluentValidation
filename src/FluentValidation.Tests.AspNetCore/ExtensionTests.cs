@@ -18,11 +18,7 @@
 
 namespace FluentValidation.Tests.AspNetCore
 {
-	using System;
-	using System.Globalization;
-	using System.Linq;
 	using Xunit;
-	using FluentValidation;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using FluentValidation.Results;

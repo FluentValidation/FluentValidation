@@ -20,7 +20,6 @@
 
 namespace FluentValidation.Attributes
 {
-	using Internal;
 	using System;
 	using System.Collections.Concurrent;
 	using System.Reflection;

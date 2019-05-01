@@ -19,7 +19,6 @@
 namespace FluentValidation.Resources {
 
 	using System;
-	using Validators;
 
 	/// <summary>
 	/// Provides error message templates

@@ -17,7 +17,6 @@
 #endregion
 namespace FluentValidation.Tests {
 	using System.Linq;
-	using Validators;
 	using Xunit;
 
 	public class ModelLevelValidatorTests {

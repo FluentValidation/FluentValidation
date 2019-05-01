@@ -17,13 +17,10 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System.Globalization;
 	using System.Linq;
-	using System.Threading;
 	using Xunit;
-	using Validators;
 
-	
+
 	public class NotNullTester {
 		public NotNullTester() {
             CultureScope.SetDefaultCulture();

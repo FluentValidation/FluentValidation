@@ -17,7 +17,6 @@
 #endregion
 namespace FluentValidation.Resources {
 	using System;
-	using Validators;
 
 	/// <summary>
 	/// Lazily loads the string

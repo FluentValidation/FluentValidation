@@ -23,8 +23,6 @@ namespace FluentValidation.WebApi
 	using System.Web.Http.Controllers;
 	using System.Web.Http.Metadata;
 	using System.Web.Http.Validation;
-
-	using FluentValidation.Internal;
 	using FluentValidation.Results;
 
 	public class FluentValidationModelValidator : ModelValidator {

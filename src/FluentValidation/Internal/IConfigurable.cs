@@ -18,7 +18,6 @@
 
 namespace FluentValidation.Internal {
 	using System;
-	using System.ComponentModel;
 
 	/// <summary>
 	/// Represents an object that is configurable.

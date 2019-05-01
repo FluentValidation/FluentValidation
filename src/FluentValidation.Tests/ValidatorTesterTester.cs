@@ -19,11 +19,9 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System;
 	using System.Linq;
 	using Xunit;
 	using TestHelper;
-	using Validators;
 	using System.Threading.Tasks;
 
 	public class ValidatorTesterTester {

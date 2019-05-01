@@ -20,9 +20,8 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Internal;
 	using Xunit;
-	using System.Collections.Generic;
 
-	
+
 	public class ChainingValidatorsTester {
 		TestValidator validator;
 

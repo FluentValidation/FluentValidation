@@ -1,17 +1,7 @@
 ﻿namespace FluentValidation.Tests {
-	using System;
 	using System.Collections.Generic;
-	using System.Net.Http;
-	using System.Text.RegularExpressions;
-	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
-	using Microsoft.AspNetCore.Mvc;
-	using Microsoft.AspNetCore.Mvc.Abstractions;
-	using Microsoft.AspNetCore.Mvc.ModelBinding;
-	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using Microsoft.Extensions.Logging;
-	using Microsoft.Extensions.Options;
 	using Newtonsoft.Json;
 	using Xunit;
 	using Xunit.Abstractions;

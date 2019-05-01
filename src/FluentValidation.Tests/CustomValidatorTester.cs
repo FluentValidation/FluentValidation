@@ -18,11 +18,9 @@
 
 namespace FluentValidation.Tests {
 	using System.Linq;
-	using System.Threading.Tasks;
 	using Xunit;
-	using Results;
 
-	
+
 	public class CustomValidatorTester {
 		private TestValidator validator;
 		public CustomValidatorTester() {

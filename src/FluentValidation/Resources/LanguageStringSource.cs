@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Resources {
 	using System;
-	using System.Globalization;
-	using Validators;
 
 	/// <summary>
 	/// IStringSource implementation that uses the default language manager.

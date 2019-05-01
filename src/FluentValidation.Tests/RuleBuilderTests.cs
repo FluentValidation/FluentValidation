@@ -28,8 +28,7 @@ namespace FluentValidation.Tests {
 	using Resources;
 	using Results;
 	using Validators;
-	using System.Reflection;
-	
+
 	public class RuleBuilderTests {
 		RuleBuilder<Person, string> builder;
 

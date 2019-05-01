@@ -18,15 +18,11 @@
 
 namespace FluentValidation.Tests {
 	using System;
-	using System.Globalization;
 	using System.Linq;
 	using System.Linq.Expressions;
-	using System.Threading;
-	using Internal;
 	using Xunit;
 	using Validators;
-	using System.Reflection;
-	
+
 	public class LessThanValidatorTester {
 		int value = 1;
 

@@ -15,16 +15,13 @@
 // 
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
-using Xunit.Extensions;
+
 namespace FluentValidation.Tests {
 	using System;
-	using System.Globalization;
 	using System.Linq;
-	using System.Threading;
 	using Xunit;
-	using Validators;
 
-	
+
 	public class EmailValidatorTests {
 		TestValidator validator;
 

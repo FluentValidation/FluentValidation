@@ -21,9 +21,8 @@ namespace FluentValidation.Tests {
 	using System.Linq.Expressions;
 	using Internal;
 	using Xunit;
-	using System.Reflection;
 
-	
+
 	public class PropertyChainTests {
 		PropertyChain chain;
 

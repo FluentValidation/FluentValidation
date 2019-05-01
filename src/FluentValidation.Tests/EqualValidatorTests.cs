@@ -16,16 +16,9 @@
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
-using System.Reflection;
-
 namespace FluentValidation.Tests {
 	using System;
-	using System.Collections;
-	using System.Globalization;
 	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Threading;
-	using Internal;
 	using Xunit;
 	using Validators;
 

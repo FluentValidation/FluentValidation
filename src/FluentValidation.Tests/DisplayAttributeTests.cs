@@ -19,8 +19,6 @@
 namespace FluentValidation.Tests {
 	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
-	using System.Globalization;
-	using System.Threading;
 	using Xunit;
 	using System.Linq;
 

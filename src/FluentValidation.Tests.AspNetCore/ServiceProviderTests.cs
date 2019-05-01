@@ -1,11 +1,6 @@
 ﻿namespace FluentValidation.Tests.AspNetCore {
-	using System.Collections.Generic;
-	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Controllers;
-	using Microsoft.AspNetCore.Hosting;
-	using Microsoft.AspNetCore.TestHost;
-	using Newtonsoft.Json;
 	using Xunit;
 
 	public class ServiceProviderTests : IClassFixture<WebAppFixture<StartupWithContainer>> {

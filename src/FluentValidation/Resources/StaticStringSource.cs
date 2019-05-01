@@ -18,7 +18,6 @@
 
 namespace FluentValidation.Resources {
 	using System;
-	using Validators;
 
 	/// <summary>
 	/// Represents a static string.

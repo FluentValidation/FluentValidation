@@ -6,7 +6,6 @@ namespace FluentValidation.Tests.AspNetCore {
 	using Microsoft.Extensions.Logging;
 	using FluentValidation.AspNetCore;
 	using FluentValidation.Attributes;
-	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using System.Globalization;
 	using Microsoft.AspNetCore.Localization;
 

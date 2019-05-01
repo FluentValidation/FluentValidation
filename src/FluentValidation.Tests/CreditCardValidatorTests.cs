@@ -1,7 +1,5 @@
 namespace FluentValidation.Tests {
-	using System.Globalization;
 	using System.Linq;
-	using System.Threading;
 	using Xunit;
 
 	

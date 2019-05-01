@@ -18,7 +18,6 @@
 
 namespace FluentValidation {
 	using System;
-	using System.Collections.Generic;
 	using Internal;
 	using Validators;
 

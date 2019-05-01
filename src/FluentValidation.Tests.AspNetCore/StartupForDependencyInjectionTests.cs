@@ -1,6 +1,5 @@
 namespace FluentValidation.Tests.AspNetCore {
 	using System.Globalization;
-	using Controllers;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Hosting;

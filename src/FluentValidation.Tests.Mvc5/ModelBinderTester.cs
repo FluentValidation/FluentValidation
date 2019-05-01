@@ -19,7 +19,6 @@
 namespace FluentValidation.Tests.Mvc5 {
 	using System;
 	using System.Collections;
-	using System.ComponentModel;
 	using System.ComponentModel.DataAnnotations;
 	using System.Globalization;
 	using System.Linq;

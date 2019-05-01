@@ -18,13 +18,10 @@
 
 namespace FluentValidation.Tests {
 	using System;
-	using System.Linq;
 	using System.Linq.Expressions;
 	using Internal;
 	using Xunit;
 	using Validators;
-	using System.Collections.Generic;
-	using System.Threading;
 
 
 	public class ValidatorSelectorTests {

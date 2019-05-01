@@ -1,5 +1,4 @@
 namespace FluentValidation.Tests {
-	using System;
 	using System.Linq;
 	using Internal;
 	using Xunit;

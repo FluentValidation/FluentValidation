@@ -18,7 +18,6 @@
 
 namespace FluentValidation.Internal {
 	using System;
-	using System.Linq.Expressions;
 	using Validators;
 
 	/// <summary>

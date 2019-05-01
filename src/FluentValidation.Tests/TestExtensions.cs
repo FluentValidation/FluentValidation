@@ -22,7 +22,6 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;
 	using Results;
-	using Validators;
 
 	//Inspired by SpecUnit's SpecificationExtensions
 	//http://code.google.com/p/specunit-net/source/browse/trunk/src/SpecUnit/SpecificationExtensions.cs

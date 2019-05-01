@@ -17,12 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System;
-	using System.Globalization;
-	using System.Linq;
-	using System.Threading;
 	using Xunit;
-	using Validators;
 
 	public class ScalePrecisionValidatorTests {
 		public ScalePrecisionValidatorTests() {

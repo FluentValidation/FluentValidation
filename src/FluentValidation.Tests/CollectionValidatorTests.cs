@@ -17,7 +17,6 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System;
 	using System.Collections.Generic;
 	using System.Threading.Tasks;
 	using Xunit;

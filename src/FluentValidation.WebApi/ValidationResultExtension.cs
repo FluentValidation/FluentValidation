@@ -17,8 +17,7 @@
 #endregion
 
 namespace FluentValidation.WebApi {
-    using System.Collections.Generic;
-    using System.Globalization;
+	using System.Globalization;
     using Results;
     using System.Web.Http.ModelBinding;
     using System.Web.Http.ValueProviders;

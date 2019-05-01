@@ -1,7 +1,5 @@
 namespace FluentValidation.Resources {
 	using System;
-	using System.Reflection;
-	using Internal;
 
 	/// <summary>
 	/// Defines an accessor for localization resources

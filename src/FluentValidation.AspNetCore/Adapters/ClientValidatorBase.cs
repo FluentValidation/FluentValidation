@@ -16,11 +16,9 @@
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 namespace FluentValidation.AspNetCore {
-	using System;
 	using System.Collections.Generic;
 	using Internal;
 	using Validators;
-	using System.Linq;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 	public abstract class ClientValidatorBase : IClientModelValidator {

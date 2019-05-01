@@ -17,14 +17,11 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System.Globalization;
 	using System.Linq;
 	using System.Text.RegularExpressions;
-	using System.Threading;
 	using Xunit;
-	using Validators;
 
-	
+
 	public class RegularExpressionValidatorTests {
 		TestValidator validator;
 		TestValidator validator2;

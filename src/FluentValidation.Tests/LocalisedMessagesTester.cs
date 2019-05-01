@@ -24,7 +24,6 @@ namespace FluentValidation.Tests {
 	using System.Threading;
 	using Internal;
 	using Xunit;
-	using Resources;
 	using Validators;
 
 	

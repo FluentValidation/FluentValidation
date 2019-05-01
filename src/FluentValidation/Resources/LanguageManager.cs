@@ -19,7 +19,6 @@ namespace FluentValidation.Resources {
 	using System;
 	using System.Collections.Generic;
 	using System.Globalization;
-	using Validators;
 
 	/// <summary>
 	/// Allows the default error message translations to be managed.

@@ -1,7 +1,6 @@
 ﻿namespace FluentValidation.Mvc {
     using System.Web.Mvc;
     using Internal;
-    using Resources;
     using Validators;
 
     internal class MaxFluentValidationPropertyValidator : AbstractComparisonFluentValidationPropertyValidator<LessThanOrEqualValidator> {
