@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' უნდა იყოს ცარიელი.");
 			Translate<NullValidator>("'{PropertyName}' უნდა იყოს ცარიელი.");
 			Translate<EnumValidator>("'{PropertyValue}' არ შედის '{PropertyName}'-ის დასაშვებ მნიშვნელობებში.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "'{PropertyName}' უნდა იყოს {MinLength}-დან {MaxLength} სიმბოლომდე.");
+			Translate("MinimumLength_Simple", "'{PropertyName}'-ის სიგრძე უნდა აღემატებოდეს {MinLength} სიმბოლოს.");
+			Translate("MaximumLength_Simple", "'{PropertyName}'-ის სიგრძე არ უნდა აღემატებოდეს {MaxLength} სიმბოლოს.");
+			Translate("ExactLength_Simple", "'{PropertyName}' უნდა უდრიდეს {MaxLength} სიმბოლოს.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' უნდა იყოს {From}-დან {To}-მდე (ჩათვლით).");
 		}
 	}
 }

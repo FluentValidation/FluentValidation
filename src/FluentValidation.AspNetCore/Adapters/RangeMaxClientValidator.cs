@@ -30,25 +30,14 @@ namespace FluentValidation.AspNetCore {
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("ComparisonValue", RangeValidator.ValueToCompare);
 
-			var messageNeedsSplitting = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
-
 			string message;
 
 			try {
 				message = RangeValidator.Options.ErrorMessageSource.GetString(null);
 			} catch (FluentValidationMessageFormatException) {
 				message = ValidatorOptions.LanguageManager.GetStringForValidator<LessThanOrEqualValidator>();
-				messageNeedsSplitting = true;
 			}
 
-			if (messageNeedsSplitting && message.Contains(".") && message.Contains("{ComparisonValue}")) {
-				// If we're using the default resources then the mesage for length errors will have two parts, eg:
-				// '{PropertyName}' must be between {From} and {To}. You entered {Value}.
-				// We can't include the "Value" part of the message because this information isn't available at the time the message is constructed.
-				// Instead, we'll just strip this off by finding the index of the period that separates the two parts of the message.
-
-				message = message.Substring(0, message.IndexOf(".") + 1);
-			}
 			message = formatter.BuildMessage(message);
 
 			return message;

@@ -38,23 +38,18 @@ namespace FluentValidation.AspNetCore {
 			    .AppendArgument("MinLength", lengthVal.Min)
 			    .AppendArgument("MaxLength", lengthVal.Max);
 
-		    bool messageNeedsSplitting = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
+		    bool needsSimifiedMessage = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
 
 		    string message;
 		    try {
 			    message = lengthVal.Options.ErrorMessageSource.GetString(null);
 		    } catch (FluentValidationMessageFormatException) {
-				message = ValidatorOptions.LanguageManager.GetStringForValidator<MinimumLengthValidator>();
-			    messageNeedsSplitting = true;
+				message = ValidatorOptions.LanguageManager.GetString("MinimumLength_Simple");
+			    needsSimifiedMessage = false;
 		    }
 
-		    if (messageNeedsSplitting && message.Contains(".") && message.Contains("{TotalLength}")) {
-			    // If we're using the default resources then the mesage for length errors will have two parts, eg:
-			    // '{PropertyName}' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters.
-			    // We can't include the "TotalLength" part of the message because this information isn't available at the time the message is constructed.
-			    // Instead, we'll just strip this off by finding the index of the period that separates the two parts of the message.
-
-			    message = message.Substring(0, message.IndexOf(".") + 1);
+		    if (needsSimifiedMessage && message.Contains("{TotalLength}")) {
+			    message = ValidatorOptions.LanguageManager.GetString("MinimumLength_Simple");
 		    }
 
 		    message = formatter.BuildMessage(message);

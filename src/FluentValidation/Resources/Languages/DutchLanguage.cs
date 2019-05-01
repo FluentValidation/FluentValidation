@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' moet tussen {From} en {To} liggen. Je hebt ingevuld {Value}.");
 			Translate<ScalePrecisionValidator>("'{PropertyName}' mag in totaal niet meer dan {ExpectedPrecision} decimalen nauwkeurig zijn, met een grote van {ExpectedScale} gehele getallen. Er zijn {Digits} decimalen en een grote van {ActualScale} gehele getallen gevonden.");
 			Translate<NullValidator>("'{PropertyName}' moet leeg zijn.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "De lengte van '{PropertyName}' moet tussen {MinLength} en {MaxLength} karakters zijn.");
+			Translate("MinimumLength_Simple", "De lengte van '{PropertyName}' moet groter zijn dan of gelijk aan {MinLength} tekens.");
+			Translate("MaximumLength_Simple", "De lengte van '{PropertyName}' moet kleiner zijn dan of gelijk aan {MaxLength} tekens.");
+			Translate("ExactLength_Simple", "De lengte van '{PropertyName}' moet {MaxLength} karakters zijn.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' moet tussen {From} en {To} liggen.");
 		}
 	}
 }

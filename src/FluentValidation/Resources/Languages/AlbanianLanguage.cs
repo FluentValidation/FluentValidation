@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' nuk duhet të jetë bosh.");
 			Translate<NullValidator>("'{PropertyName}' duhet të jetë bosh.");
 			Translate<EnumValidator>("'{PropertyName}' ka një varg vlerash të cilat nuk përfshijnë '{PropertyValue}'.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "'{PropertyName}' duhet të jetë midis {MinLength} dhe {MaxLength} karakteresh.");
+			Translate("MinimumLength_Simple", "Gjatësia e '{PropertyName}' duhet të jetë të paktën {MinLength} karaktere.");
+			Translate("MaximumLength_Simple", "Gjatësia e '{PropertyName}' duhet të jetë {MaxLength} karaktere ose më pak.");
+			Translate("ExactLength_Simple", "'{PropertyName}' duhet të jetë {MaxLength} karaktere në gjatësi.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' duhet të jetë midis {From} dhe {To}.");
 		}
 	}
 }
