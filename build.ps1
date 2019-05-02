@@ -105,7 +105,7 @@ target ci-set-version {
 }
 
 target decrypt-private-key {
-  if (Test-Path ENV:kek) {
+  if ((Test-Path ENV:kek) -and ($ENV:kek.Length -gt 0) -and ($env:SYSTEM_PULLREQUEST.ISFORK -eq $false)) {
     iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1')) | Out-Null
     dotnet "appveyor-tools/secure-file.dll" -decrypt src/FluentValidation-Release.snk.enc -secret $ENV:kek
     if (($LASTEXITCODE -eq 0) -and (Test-Path "$path/src/FluentValidation-Release.snk")) {
