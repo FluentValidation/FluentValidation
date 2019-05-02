@@ -10,9 +10,6 @@
 
 		private readonly bool _caseSensitive;
 
-		public StringEnumValidator(Type enumType) : this(enumType, false) {
-		}
-
 		public StringEnumValidator(Type enumType, bool caseSensitive) : base(new LanguageStringSource(nameof(EnumValidator))) { // Default message identical to EnumValidator
 			if (enumType == null) throw new ArgumentNullException(nameof(enumType));
 
