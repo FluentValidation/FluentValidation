@@ -68,6 +68,8 @@ namespace FluentValidation.Tests
 
         public EnumGender Gender { get; set; }
 
+		public string GenderString { get; set; }
+
 		public string ForenameReadOnly => Forename;
 	}
 
