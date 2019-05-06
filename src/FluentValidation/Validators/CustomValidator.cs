@@ -21,10 +21,9 @@
 		public CustomValidator(Action<T, CustomContext> action) : base(string.Empty) {
 			_isAsync = false;
 			_action = action;
-			_asyncAction = async (x, ctx, cancel) => {
-				_action(x, ctx);
-			};
-		}
+
+            _asyncAction = async (x, ctx, cancel) => await Task.Run(() => action(x, ctx));
+        }
 
 		/// <summary>
 		/// Creates a new instance of the CustomValidator.
@@ -34,7 +33,7 @@
 			_isAsync = true;
 			_asyncAction = asyncAction;
 			//TODO: For FV 9, throw an exception by default if async validator is being executed synchronously.
-			_action = (x, ctx) => Task.Run(() => _asyncAction(x, ctx, new CancellationToken())).GetAwaiter().GetResult();
+			_action = async (x, ctx) => await _asyncAction(x, ctx, new CancellationToken());
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {

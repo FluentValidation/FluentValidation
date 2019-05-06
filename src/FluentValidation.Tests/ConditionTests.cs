@@ -44,9 +44,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Validation_should_fail_when_async_condition_matches() {
+		public async Task Validation_should_fail_when_async_condition_matches() {
 			var validator = new TestConditionAsyncValidator();
-			var result = validator.ValidateAsync(new Person()).Result;
+			var result = await validator.ValidateAsync(new Person());
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -72,9 +72,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Validation_should_fail_when_async_condition_does_not_match() {
+		public async Task Validation_should_fail_when_async_condition_does_not_match() {
 			var validator = new InverseConditionAsyncValidator();
-			var result = validator.ValidateAsync(new Person {Id = 1}).Result;
+			var result = await validator.ValidateAsync(new Person {Id = 1});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -132,12 +132,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Async_condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
+		public async Task Async_condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(async (x,c) => x.Id > 0, ApplyConditionTo.CurrentValidator)
 			};
 
-			var result = validator.ValidateAsync(new Person()).Result;
+			var result = await validator.ValidateAsync(new Person());
 			result.Errors.Count.ShouldEqual(1);
 		}
 

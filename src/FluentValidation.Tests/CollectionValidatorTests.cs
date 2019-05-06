@@ -97,12 +97,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-	    public void Async_condition_should_work_with_child_collection() {
+	    public async Task Async_condition_should_work_with_child_collection() {
 	        var validator = new TestValidator() {
 	                                                v => v.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator()).WhenAsync(async (x,c) => x.Orders.Count == 3 /*there are only 2*/)
 	                                            };
 
-	        var result = validator.ValidateAsync(person).Result;
+	        var result = await validator.ValidateAsync(person);
 	        result.IsValid.ShouldBeTrue();
 	    }
 
@@ -194,11 +194,11 @@ namespace FluentValidation.Tests {
 			var validator = new InlineValidator<Person>();
 			var orderValidator = new InlineValidator<Order>();
 		
-			orderValidator.RuleFor(x => x.ProductName).MustAsync((x, token) => {
-				return ExclusiveDelay(1)
-					.ContinueWith(t => result.Add(t.Result))
-					.ContinueWith(t => true);
-			});
+			orderValidator.RuleFor(x => x.ProductName).MustAsync(async (x, token) => 
+				await ExclusiveDelay(1)
+					.ContinueWith(t => result.Add(t.Result), token)
+					.ContinueWith(t => true, token)
+			);
 
 			validator.RuleFor(x => x.Orders).SetCollectionValidator(orderValidator);
 			

@@ -112,7 +112,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Executes_rule_for_each_item_in_collection_async() {
+		public async Task Executes_rule_for_each_item_in_collection_async() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator())
 			};
@@ -121,12 +121,12 @@ namespace FluentValidation.Tests {
 				NickNames = new[] {null, "foo", null}
 			};
 
-			var result = validator.ValidateAsync(person).Result;
+			var result = await validator.ValidateAsync(person);
 			result.Errors.Count.ShouldEqual(2);
 		}
 
 		[Fact]
-		public void Correctly_gets_collection_indices_async() {
+		public async Task Correctly_gets_collection_indices_async() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator())
 			};
@@ -135,7 +135,7 @@ namespace FluentValidation.Tests {
 				NickNames = new[] {null, "foo", null}
 			};
 
-			var result = validator.ValidateAsync(person).Result;
+			var result = await validator.ValidateAsync(person);
 			result.Errors[0].PropertyName.ShouldEqual("NickNames[0]");
 			result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
 		}
@@ -168,9 +168,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_not_scramble_property_name_when_using_collection_validators_several_levels_deep_with_ValidateAsync() {
+		public async Task Should_not_scramble_property_name_when_using_collection_validators_several_levels_deep_with_ValidateAsync() {
 			var v = new ApplicationViewModelValidator();
-			var result = v.ValidateAsync(new ApplicationViewModel()).Result;
+			var result = await v.ValidateAsync(new ApplicationViewModel());
 
 			result.Errors.Single().PropertyName.ShouldEqual("TradingExperience[0].Questions[0].SelectedAnswerID");
 		}
@@ -197,11 +197,11 @@ namespace FluentValidation.Tests {
 			var validator = new InlineValidator<Person>();
 			var result = new List<bool>();
 
-			validator.RuleForEach(x => x.Children).MustAsync((person, token) => {
-				return ExclusiveDelay(1)
-					.ContinueWith(t => result.Add(t.Result))
-					.ContinueWith(t => true);
-			});
+			validator.RuleForEach(x => x.Children).MustAsync(async (person, token) => 
+				await ExclusiveDelay(1)
+					.ContinueWith(t => result.Add(t.Result), token)
+					.ContinueWith(t => true, token)
+			);
 
 			await validator.ValidateAsync(new Person() {
 				Children = new List<Person> {new Person(), new Person() }

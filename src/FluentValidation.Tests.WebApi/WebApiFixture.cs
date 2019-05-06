@@ -34,7 +34,7 @@
 			var response = await _server.HttpClient.PostAsync(url, new StringContent(formData, Encoding.UTF8, contentType));
 			string responseStr = await response.Content.ReadAsStringAsync();
 			try {
-				var errors = response.Content.ReadAsAsync<List<SimpleError>>().Result;
+				var errors = await response.Content.ReadAsAsync<List<SimpleError>>();
 				return errors;
 			}
 			catch (AggregateException e) {
