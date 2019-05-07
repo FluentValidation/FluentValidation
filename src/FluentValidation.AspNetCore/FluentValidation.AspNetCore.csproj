@@ -50,7 +50,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     </PackageReleaseNotes>
     <NeutralLanguage>en</NeutralLanguage>
     <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
-    <!-- Signining is only performed as part of the release build -->
+    <!-- Signing is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.AspNetCore.xml</DocumentationFile>
