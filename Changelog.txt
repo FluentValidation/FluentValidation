@@ -1,3 +1,7 @@
+8.3.1 - 
+Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
+New enum validator for string properties.
+
 8.3.0 - 24 April 2019
 Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
 Improved how LanguageStringSource works with error-code overrides.

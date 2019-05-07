@@ -1,21 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard2.0;net45</TargetFrameworks>
-    <Authors>Jeremy Skinner</Authors>
-    <Company />
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
-    <Copyright>Copyright (c) Jeremy Skinner 2008-2019</Copyright>
-    <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
-    <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
-    <NeutralLanguage>en</NeutralLanguage>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <!-- Signing is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
     <DebugType>embedded</DebugType>
-    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />

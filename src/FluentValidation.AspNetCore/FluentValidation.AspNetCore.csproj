@@ -3,17 +3,13 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>FluentValidation.AspNetCore</AssemblyName>
     <PackageId>FluentValidation.AspNetCore</PackageId>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <Version Condition="'$(AspNetCoreVersion)'!=''">$(AspNetCoreVersion)</Version>
-    <Authors>Jeremy Skinner</Authors>
-    <Company />
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
-    <Copyright>Copyright (c) Jeremy Skinner 2008-2019</Copyright>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
-    <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageReleaseNotes>
+Changes in 8.3.1:
+* Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
+      
 Changes in 8.3.0:
 * Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
 
@@ -48,17 +44,11 @@ Changes in 7.3:
 
 Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
     </PackageReleaseNotes>
-    <NeutralLanguage>en</NeutralLanguage>
-    <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
     <!-- Signing is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.AspNetCore.xml</DocumentationFile>
     <DebugType>embedded</DebugType>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
