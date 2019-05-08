@@ -21,9 +21,8 @@
 		public CustomValidator(Action<T, CustomContext> action) : base(string.Empty) {
 			_isAsync = false;
 			_action = action;
-			_asyncAction = async (x, ctx, cancel) => {
-				_action(x, ctx);
-			};
+
+			_asyncAction = (x, ctx, cancel) => Task.Run(() => action(x, ctx), cancel);
 		}
 
 		/// <summary>

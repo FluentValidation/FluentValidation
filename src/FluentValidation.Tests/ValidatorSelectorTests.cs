@@ -25,6 +25,7 @@ namespace FluentValidation.Tests {
 	using Validators;
 	using System.Collections.Generic;
 	using System.Threading;
+	using System.Threading.Tasks;
 
 
 	public class ValidatorSelectorTests {
@@ -133,14 +134,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Executes_correct_rule_when_using_property_with_include_async() {
+		public async Task Executes_correct_rule_when_using_property_with_include_async() {
 			var validator = new TestValidator();
 			var validator2 = new TestValidator();
 			validator2.RuleFor(x => x.Forename).NotNull();
 			validator2.RuleFor(x => x.Surname).NotNull();
 			validator.Include(validator2);
 
-			var result = validator.ValidateAsync(new Person(), default, "Forename").Result;
+			var result = await validator.ValidateAsync(new Person(), default, "Forename");
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Forename");
 		}
