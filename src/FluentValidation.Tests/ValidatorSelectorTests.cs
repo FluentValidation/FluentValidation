@@ -25,10 +25,10 @@ namespace FluentValidation.Tests {
 	using Validators;
 	using System.Collections.Generic;
 	using System.Threading;
-    using System.Threading.Tasks;
+	using System.Threading.Tasks;
 
 
-    public class ValidatorSelectorTests {
+	public class ValidatorSelectorTests {
 	
 		[Fact]
 		public void MemberNameValidatorSelector_returns_true_when_property_name_matches() {
