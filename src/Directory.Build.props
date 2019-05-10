@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>8.4.1</VersionPrefix>
+    <VersionPrefix>9.0.0</VersionPrefix>
     <Authors>Jeremy Skinner</Authors>
     <LangVersion>7.3</LangVersion>
     <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
