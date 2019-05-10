@@ -31,7 +31,7 @@ target compile {
   }
 
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
-    /p:AssemblyOriginatorKeyFile=$keyfile
+    /p:AssemblyOriginatorKeyFile=$keyfile /p:VersionSuffix=$script:version_suffix
 }
 
 target test {
@@ -42,7 +42,7 @@ target deploy {
   Remove-Item $packages_dir -Force -Recurse -ErrorAction Ignore 2> $null
   Remove-Item $output_dir -Force -Recurse -ErrorAction Ignore 2> $null
   
-  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$keyfile
+  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$keyfile /p:VersionSuffix=$script:version_suffix
 
   # Copy to output dir
   Copy-Item "$path\src\FluentValidation\bin\$configuration" -Destination "$output_dir\FluentValidation" -Recurse
@@ -99,7 +99,7 @@ target publish -depends verify-package {
 target ci-set-version { 
   if ($env:BUILD_BUILDNUMBER) {
     # If there's a build number environment variable provided by CI, use that for the build number suffix.
-    $script:version = $script:version.split("-")[0] + "-ci-${env:BUILD_BUILDNUMBER}"
+    $script:version_suffix = "ci-${env:BUILD_BUILDNUMBER}"
   }
 }
 
