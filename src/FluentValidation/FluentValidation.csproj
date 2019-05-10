@@ -5,7 +5,7 @@
     <PackageReleaseNotes>
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
 
-Changes in 8.3.1:
+Changes in 8.4.0:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation. 
 * New enum validator for string properties.
 
@@ -15,7 +15,6 @@ Changes in 8.3.0:
 * Fix thread-safety issue with use of PropertyValidatorOptions.Empty (now removed).
 * Improved how calls to When/Unless are handled internally. 
 * DelegatingValidator is now marked as deprecated.
-* ShouldHaveChildValidator is now marked as deprecated.
 * Improvements to Croatian language translations.
 * Improvements to Georgian language translations.
 * Resolved subtle bug where top-level WhenAsync wouldn't work correctly when wrapping a top-level call to When.
