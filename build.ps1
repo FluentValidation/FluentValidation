@@ -1,5 +1,4 @@
 param(
-  [string]$version = '8.3.0-dev',
   [string]$configuration = 'Release',
   [string]$path = $PSScriptRoot,
   [string]$keyfile = "",
@@ -32,7 +31,7 @@ target compile {
   }
 
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
-    /p:Version=$version /p:AssemblyOriginatorKeyFile=$keyfile
+    /p:AssemblyOriginatorKeyFile=$keyfile
 }
 
 target test {
@@ -43,7 +42,7 @@ target deploy {
   Remove-Item $packages_dir -Force -Recurse -ErrorAction Ignore 2> $null
   Remove-Item $output_dir -Force -Recurse -ErrorAction Ignore 2> $null
   
-  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$keyfile /p:Version=$version
+  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$keyfile
 
   # Copy to output dir
   Copy-Item "$path\src\FluentValidation\bin\$configuration" -Destination "$output_dir\FluentValidation" -Recurse
