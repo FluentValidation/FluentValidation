@@ -5,8 +5,7 @@
     <RootNamespace>FluentValidation.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
-    <NoWarn>1701;1702;1705;1998;0618</NoWarn>
-    <LangVersion>7.3</LangVersion>
+    <NoWarn>1998;0618</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Update="xunit.runner.json">
@@ -14,8 +13,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
-    <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="15.7.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="16.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />

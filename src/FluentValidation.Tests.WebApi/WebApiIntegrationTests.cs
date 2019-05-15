@@ -224,5 +224,16 @@ namespace FluentValidation.Tests.WebApi {
 			result.IsValidField("model.Name").ShouldBeFalse();
 			result.IsValidField("model.Child.Name").ShouldBeFalse();
 		}
+
+		[Fact]
+		public async Task Should_not_cause_DataAnnotations_to_duplicate_errors() {
+			var form = new Dictionary<string,string> {
+				{"Amount", "-1"},
+			};
+
+			var result = await _webApp.PostForm("/api/Test/DataAnnotations", form);
+
+			result.Count.ShouldEqual(1);
+		}
     }
 }

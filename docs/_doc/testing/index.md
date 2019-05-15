@@ -53,11 +53,6 @@ Note that if you have a complex validator that relies on multiple properties bei
     }
 ```
 
-You can also assert that a complex property has a particular child validator applied to it by using `ShouldHaveChildValidator`
-
-```csharp
-validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator));
-```
 ### Third-party test extensions
 Another option is to use a third-party library such as [FluentValidation.Validators.UnitTestExtension](https://github.com/MichalJankowskii/FluentValidation.Validators.UnitTestExtension). This provides an alternative syntax for testing validators:
 

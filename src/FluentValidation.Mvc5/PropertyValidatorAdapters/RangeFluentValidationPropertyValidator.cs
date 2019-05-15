@@ -22,7 +22,7 @@
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
 
-			var messageNeedsSplitting = RangeValidator.Options.ErrorMessageSource.ResourceType == typeof(LanguageManager);
+			var needsSimplifiedMessage = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
 			
 			string message;
 			try {
@@ -30,17 +30,12 @@
 			}
 			catch (FluentValidationMessageFormatException){
 				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				message = ValidatorOptions.LanguageManager.GetStringForValidator<InclusiveBetweenValidator>();
-				messageNeedsSplitting = true;
+				message = ValidatorOptions.LanguageManager.GetString("InclusiveBetween_Simple");
+				needsSimplifiedMessage = false;
 			}
 
-			if (messageNeedsSplitting && message.Contains(".") && message.Contains("{Value}")) {
-				// If we're using the default resources then the mesage for length errors will have two parts, eg:
-				// '{PropertyName}' must be between {From} and {To}. You entered {Value}.
-				// We can't include the "Value" part of the message because this information isn't available at the time the message is constructed.
-				// Instead, we'll just strip this off by finding the index of the period that separates the two parts of the message.
-
-				message = message.Substring(0, message.IndexOf(".") + 1);
+			if (needsSimplifiedMessage && message.Contains("{Value}")) {
+				message = ValidatorOptions.LanguageManager.GetString("InclusiveBetween_Simple");
 			}
 
 			message = formatter.BuildMessage(message);

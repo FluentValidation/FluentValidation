@@ -86,7 +86,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// The current validator being configured by this rule.
 		/// </summary>
-		public IPropertyValidator CurrentValidator { get; private set; }
+		public IPropertyValidator CurrentValidator => _validators.LastOrDefault();
 
 		/// <summary>
 		/// Type of the property being validated
@@ -97,8 +97,8 @@ namespace FluentValidation.Internal {
 		/// Cascade mode for this rule.
 		/// </summary>
 		public CascadeMode CascadeMode {
-			get { return _cascadeModeThunk(); }
-			set { _cascadeModeThunk = () => value; }
+			get => _cascadeModeThunk();
+			set => _cascadeModeThunk = () => value;
 		}
 
 		/// <summary>
@@ -148,7 +148,6 @@ namespace FluentValidation.Internal {
 		/// Adds a validator to the rule.
 		/// </summary>
 		public void AddValidator(IPropertyValidator validator) {
-			CurrentValidator = validator;
 			_validators.Add(validator);
 		}
 
@@ -160,10 +159,6 @@ namespace FluentValidation.Internal {
 
 			if (index > -1) {
 				_validators[index] = newValidator;
-
-				if (ReferenceEquals(CurrentValidator, original)) {
-					CurrentValidator = newValidator;
-				}
 			}
 		}
 
@@ -171,10 +166,6 @@ namespace FluentValidation.Internal {
 		/// Remove a validator in this rule.
 		/// </summary>
 		public void RemoveValidator(IPropertyValidator original) {
-			if (ReferenceEquals(CurrentValidator, original)) {
-				CurrentValidator = _validators.LastOrDefault(x => x != original);
-			}
-
 			_validators.Remove(original);
 		}
 
@@ -182,7 +173,6 @@ namespace FluentValidation.Internal {
 		/// Clear all validators from this rule.
 		/// </summary>
 		public void ClearValidators() {
-			CurrentValidator = null;
 			_validators.Clear();
 		}
 
@@ -460,18 +450,16 @@ namespace FluentValidation.Internal {
 		public void ApplyCondition(Func<PropertyValidatorContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
-				foreach (var validator in Validators.ToList()) {
-					var wrappedValidator = new DelegatingValidator(predicate, validator);
-					ReplaceValidator(validator, wrappedValidator);
+				foreach (var validator in Validators) {
+					validator.Options.ApplyCondition(predicate);
 				}
 
-				foreach (var dependentRule in DependentRules.ToList()) {
+				foreach (var dependentRule in DependentRules) {
 					dependentRule.ApplyCondition(predicate, applyConditionTo);
 				}
 			}
 			else {
-				var wrappedValidator = new DelegatingValidator(predicate, CurrentValidator);
-				ReplaceValidator(CurrentValidator, wrappedValidator);
+				CurrentValidator.Options.ApplyCondition(predicate);
 			}
 		}
 
@@ -483,18 +471,16 @@ namespace FluentValidation.Internal {
 		public void ApplyAsyncCondition(Func<PropertyValidatorContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
-				foreach (var validator in Validators.ToList()) {
-					var wrappedValidator = new DelegatingValidator(predicate, validator);
-					ReplaceValidator(validator, wrappedValidator);
+				foreach (var validator in Validators) {
+					validator.Options.ApplyAsyncCondition(predicate);
 				}
 
-				foreach (var dependentRule in DependentRules.ToList()) {
+				foreach (var dependentRule in DependentRules) {
 					dependentRule.ApplyAsyncCondition(predicate, applyConditionTo);
 				}
 			}
 			else {
-				var wrappedValidator = new DelegatingValidator(predicate, CurrentValidator);
-				ReplaceValidator(CurrentValidator, wrappedValidator);
+				CurrentValidator.Options.ApplyAsyncCondition(predicate);
 			}
 		}
 
@@ -510,7 +496,7 @@ namespace FluentValidation.Internal {
 		}
 
 		internal void ApplySharedAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> condition) {
-			if (_condition == null) {
+			if (_asyncCondition == null) {
 				_asyncCondition = condition;
 			}
 			else {

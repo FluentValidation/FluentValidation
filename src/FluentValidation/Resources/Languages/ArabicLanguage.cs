@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -46,6 +46,12 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' يجب أن يكون فارغاً.");
 			Translate<NullValidator>("'{PropertyName}' يجب أن يكون فارغاً.");
 			Translate<EnumValidator>("'{PropertyName}' يحتوي على مجموعة من القيم التي لا تتضمن '{PropertyValue}'.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "'{PropertyName}' عدد الحروف يجب أن يكون بين {MinLength} و {MaxLength}.");
+			Translate("MinimumLength_Simple", "الحد الأدنى لعدد الحروف في '{PropertyName}' هو {MinLength}.");
+			Translate("MaximumLength_Simple", "الحد الأقصى لعدد الحروف في '{PropertyName}' هو {MaxLength}.");
+			Translate("ExactLength_Simple", "الحد الأقصى لعدد الحروف في '{PropertyName}' هو {MaxLength}.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' يجب أن يكون بين {From} و {To}.");
 		}
 	}
 }

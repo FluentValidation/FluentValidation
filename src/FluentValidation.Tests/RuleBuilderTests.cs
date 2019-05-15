@@ -120,25 +120,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Calling_when_should_replace_current_validator_with_predicate_validator() {
-			var validator = new TestPropertyValidator();
-			builder.SetValidator(validator).When(x => true);
-			builder.Rule.CurrentValidator.ShouldBe<DelegatingValidator>();
-
-			var predicateValidator = (DelegatingValidator)builder.Rule.CurrentValidator;
-			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
-		}
-
-		[Fact]
-		public void Calling_when_async_should_replace_current_validator_with_predicate_validator() {
-			var validator = new TestPropertyValidator();
-			builder.SetValidator(validator).WhenAsync(async (x,c) => true);
-			builder.Rule.CurrentValidator.ShouldBe<DelegatingValidator>();
-
-			var predicateValidator = (DelegatingValidator) builder.Rule.CurrentValidator;
-			predicateValidator.InnerValidator.ShouldBeTheSameAs(validator);
-		}
-		[Fact]
 		public void Calling_validate_should_delegate_to_underlying_validator() {
 			var person = new Person {Surname = "Foo"};
 			var validator = new Mock<IPropertyValidator>();
@@ -150,19 +131,19 @@ namespace FluentValidation.Tests {
 
 		}
 		[Fact]
-		public void Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
+		public async Task Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
 			var person = new Person { Surname = "Foo" };
 			var validator = new Mock<IPropertyValidator>();
 			builder.SetValidator(validator.Object);
 
-			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
+			await builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 
 
 		}
 		[Fact]
-		public void Calling_ValidateAsync_should_delegate_to_underlying_async_validator() {
+		public async Task Calling_ValidateAsync_should_delegate_to_underlying_async_validator() {
 			var person = new Person { Surname = "Foo" };
 			TaskCompletionSource<IEnumerable<ValidationFailure>> tcs = new TaskCompletionSource<IEnumerable<ValidationFailure>>();
 			tcs.SetResult(Enumerable.Empty<ValidationFailure>());
@@ -172,7 +153,7 @@ namespace FluentValidation.Tests {
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
 			builder.SetValidator(validator.Object);
 
-			builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken()).Result.ToList();
+			await builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
 
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
 

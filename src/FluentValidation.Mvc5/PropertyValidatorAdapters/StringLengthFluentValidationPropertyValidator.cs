@@ -30,7 +30,7 @@
 				.AppendArgument("MinLength", LengthValidator.Min)
 				.AppendArgument("MaxLength", LengthValidator.Max);
 
-			var messageNeedsSplitting = Validator.Options.ErrorMessageSource.ResourceType == typeof(LanguageManager);
+			var needsSimpifiedMessage = Validator.Options.ErrorMessageSource is LanguageStringSource;
 			string message;
 
 			try {
@@ -38,25 +38,16 @@
 			}
 			catch (FluentValidationMessageFormatException) {
 				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
-				if (lengthVal is MinimumLengthValidator) {
-					message = ValidatorOptions.LanguageManager.GetStringForValidator<MinimumLengthValidator>();
-				} else if (lengthVal is MaximumLengthValidator) {
-					message = ValidatorOptions.LanguageManager.GetStringForValidator<MaximumLengthValidator>();
-				} else if (lengthVal is ExactLengthValidator) {
-					message = ValidatorOptions.LanguageManager.GetStringForValidator<ExactLengthValidator>();
-				} else {
-					message = ValidatorOptions.LanguageManager.GetStringForValidator<LengthValidator>();
-				}
-				messageNeedsSplitting = true;
+				message = FallbackMessage();
+				needsSimpifiedMessage = false;
 			}
 
-			if(messageNeedsSplitting && message.Contains(".") && message.Contains("{TotalLength}")) {
+			if(needsSimpifiedMessage && message.Contains("{TotalLength}")) {
 				// If we're using the default resources then the message for length errors will have two parts, eg:
 				// '{PropertyName}' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters.
 				// We can't include the "TotalLength" part of the message because this information isn't available at the time the message is constructed.
 				// Instead, we'll just strip this off by finding the index of the period that separates the two parts of the message.
-
-				message = message.Substring(0, message.IndexOf(".") + 1);
+				message = FallbackMessage();
 			}
 
 			message = formatter.BuildMessage(message);
@@ -69,6 +60,24 @@
 			else
 				rule = new ModelClientValidationStringLengthRule(message, LengthValidator.Min, LengthValidator.Max);
 			yield return rule;
+
+			string FallbackMessage() {
+				string msg;
+				if (lengthVal is MinimumLengthValidator) {
+					msg = ValidatorOptions.LanguageManager.GetString("MinimumLength_Simple");
+				}
+				else if (lengthVal is MaximumLengthValidator) {
+					msg = ValidatorOptions.LanguageManager.GetString("MaximumLength_Simple");
+				}
+				else if (lengthVal is ExactLengthValidator) {
+					msg = ValidatorOptions.LanguageManager.GetString("ExactLength_Simple");
+				}
+				else {
+					msg = ValidatorOptions.LanguageManager.GetString("Length_Simple");
+				}
+
+				return msg;
+			}
 		}
 	}
 }

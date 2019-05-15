@@ -123,6 +123,14 @@ namespace FluentValidation.Tests {
             result.IsValid.ShouldBeFalse();
 	    }
 
+		[Fact]
+		public void Fails_for_array() {
+			var validator = new InlineValidator<string[]>();
+			validator.RuleFor(x => x).NotEmpty();
+			var result = validator.Validate(new string[0]);
+			result.IsValid.ShouldBeFalse();
+		}
+
         public class TestModel {
             public IEnumerable<string> Strings {
                 get { yield break; }

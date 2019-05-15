@@ -17,6 +17,7 @@ sections:
   - Email Validator
   - Credit Card Validator
   - Enum Validator
+  - Enum Name Validator
   - Null Validator
   - ExclusiveBetween Validator
   - InclusiveBetween Validator
@@ -272,7 +273,7 @@ String format args:
 * {PropertyValue} = The current value of the property
 
 #### Enum Validator
-Checks whether an enum value is valid to be in that enum. This is used to prevent numeric values from being cast to an enum type when the resulting value would be invalid. For example, the following is possible:
+Checks whether a numeric value is valid to be in that enum. This is used to prevent numeric values from being cast to an enum type when the resulting value would be invalid. For example, the following is possible:
 
 ```csharp
 public enum ErrorLevel {
@@ -281,15 +282,36 @@ public enum ErrorLevel {
   Notice = 3
 }
 
-ErrorLevel level = (ErrorLevel)4;
+public class Model {
+  public ErrorLevel ErrorLevel { get; set; }
+}
+
+var model = new Model();
+model.ErrorLevel = (ErrorLevel)4;
 ```
 
 The compiler will allow this, but a value of 4 is technically not valid for this enum. The Enum validator can prevent this from happening.
 
 ```csharp
-RuleFor(x => x.ErrorLevel).IsInEnum()
+RuleFor(x => x.ErrorLevel).IsInEnum();
 ```
 Example error: 'Error Level' has a range of values which does not include '4'.
+
+String format args:
+* {PropertyName} = The name of the property being validated
+* {PropertyValue} = The current value of the property
+
+#### Enum Name Validator
+Checks whether a string is a valid enum name. 
+
+```csharp
+// For a case sensiitive comparison
+RuleFor(x => x.ErrorLevelName).IsEnumName(typeof(ErrorLevel));
+
+// For a case-insensitive comparison
+RuleFor(x => x.ErrorLevelName).IsEnumName(typeof(ErrorLevel), caseSensitive: false);
+```
+Example error: 'Error Level' has a range of values which does not include 'Foo'.
 
 String format args:
 * {PropertyName} = The name of the property being validated

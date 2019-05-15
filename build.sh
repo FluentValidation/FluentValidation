@@ -1,1 +1,1 @@
-pwsh -noprofile ./build.ps1
+powershell -noprofile ./build.ps1 $@

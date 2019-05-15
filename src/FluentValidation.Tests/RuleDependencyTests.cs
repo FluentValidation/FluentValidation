@@ -142,16 +142,16 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Async_inside_dependent_rules() {
+		public async Task Async_inside_dependent_rules() {
 			var validator = new AsyncValidator();
-			var result = validator.ValidateAsync(0).Result;
+			var result = await validator.ValidateAsync(0);
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
-		public void Async_inside_dependent_rules_when_parent_rule_not_async() {
+		public async Task Async_inside_dependent_rules_when_parent_rule_not_async() {
 			var validator = new AsyncValidator2();
-			var result = validator.ValidateAsync(0).Result;
+			var result = await validator.ValidateAsync(0);
 			result.IsValid.ShouldBeFalse();
 		}
 

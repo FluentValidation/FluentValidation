@@ -46,14 +46,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void New_Custom_Returns_single_failure_async() {
+		public async Task New_Custom_Returns_single_failure_async() {
 			validator
 				.RuleFor(x => x)
 				.CustomAsync(async (x, context, cancel) => {
 					context.AddFailure("Surname", "Fail");
 				});
 
-			var result = validator.ValidateAsync(new Person()).Result;
+			var result = await validator.ValidateAsync(new Person());
 
 			result.IsValid.ShouldBeFalse();
 			result.Errors[0].ErrorMessage.ShouldEqual("Fail");
@@ -91,7 +91,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void New_CustomAsync_within_ruleset() {
+		public async Task New_CustomAsync_within_ruleset() {
 			var validator = new InlineValidator<Person>();
 
 			validator.RuleSet("foo", () => {
@@ -106,7 +106,7 @@ namespace FluentValidation.Tests {
 				});
 			});
 
-			var result = validator.ValidateAsync(new Person(), ruleSet: "foo").Result;
+			var result = await validator.ValidateAsync(new Person(), ruleSet: "foo");
 			result.Errors.Count.ShouldEqual(1);
 		}
 

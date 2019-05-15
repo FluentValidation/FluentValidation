@@ -64,11 +64,17 @@ namespace FluentValidation.WebApi {
 			var model = GetModel(metadata);
 
 			if ((!isValid || !ImplicitlyValidateChildProperties) && model != null && !HasAlreadyBeenValidated(validationContext, model)) {
-				// default impl skips validating root node if any children fail, so we explicitly validate it in this scenario
-				var rootModelValidators = validationContext.ActionContext.GetValidators(metadata);
-				rootModelValidators = ApplyCustomizationsToValidators(rootModelValidators, customizations, validationContext.ActionContext);
-				ShallowValidate(metadata, validationContext, container, rootModelValidators);
-				return false;
+				// default impl skips validating root node if any children fail, so we explicitly validate it in this scenario.
+				// Only do this for FV validators, otherwise DataAnnotations ends up generating duplicate messages
+				// as it runs during both property validation phase and model validation phase.
+				var fvRootModelValidators = validationContext.ActionContext.GetValidators(metadata)
+					.OfType<FluentValidationModelValidator>()
+					.ToList();
+
+				if (fvRootModelValidators.Count > 0) {
+					var validatorsWithCustomizations = ApplyCustomizationsToValidators(fvRootModelValidators, customizations, validationContext.ActionContext);
+					return ShallowValidate(metadata, validationContext, container, validatorsWithCustomizations);
+				}
 			}
 
 			return isValid;
@@ -86,7 +92,6 @@ namespace FluentValidation.WebApi {
 
 			return projection.ToList();
 		}
-
 
 		private static IEnumerable<ModelValidator> GetValidators(HttpActionContext actionContext, ModelMetadata metadata, IModelValidatorCache validatorCache) {
 			if (validatorCache == null) {

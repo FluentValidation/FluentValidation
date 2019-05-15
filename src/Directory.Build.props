@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <VersionPrefix>8.4.1</VersionPrefix>
+    <Authors>Jeremy Skinner</Authors>
+    <LangVersion>7.3</LangVersion>
+    <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
+    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
+    <Copyright>Copyright (c) Jeremy Skinner 2008-2019</Copyright>
+    <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
+    <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+</Project>

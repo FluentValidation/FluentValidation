@@ -1,15 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.1;netstandard1.6;netstandard2.0;net45</TargetFrameworks>
-    <Authors>Jeremy Skinner</Authors>
-    <Company />
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
-    <Copyright>Copyright (c) Jeremy Skinner 2008-2019</Copyright>
-    <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
-    <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageReleaseNotes>
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
+
+Changes in 8.4.0:
+* Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation. 
+* New enum validator for string properties.
+
+Changes in 8.3.0:
+* Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
+* Improved how LanguageStringSource works with error-code overrides.
+* Fix thread-safety issue with use of PropertyValidatorOptions.Empty (now removed).
+* Improved how calls to When/Unless are handled internally. 
+* DelegatingValidator is now marked as deprecated.
+* Improvements to Croatian language translations.
+* Improvements to Georgian language translations.
+* Resolved subtle bug where top-level WhenAsync wouldn't work correctly when wrapping a top-level call to When.
+
+Changes in 8.2.3:
+* Fix issue in WebApi integration where DataAnnotations validators could generate duplicate messages when in the same project as FluentValidation.
+
+Changes in 8.2.2:
+* Fix FluentValidation.DependencyInjection package name.
+
+Changes in 8.2.1:
+* Resolved issue using InjectValidator with RuleForEach.
+* Add support for a default IValidatorInterceptor to be registered with the ASP.NET Core Service Provider.
 
 Changes in 8.2.0:
 * Add extensions for injecting child validators using the ASP.NET Core Service Provider.
@@ -55,19 +73,11 @@ Changes in 8.0:
 
 Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>
-    <PackageLicenseUrl>https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt</PackageLicenseUrl>
-    <NeutralLanguage>en</NeutralLanguage>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
-    <!-- Signining is only performed as part of the release build -->
+    <!-- Signing is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
     <DelaySign>False</DelaySign>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' and '$(AssemblyOriginatorKeyFile)'!=''">True</PublicSign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.xml</DocumentationFile>
     <DebugType>embedded</DebugType>
-    <LangVersion>7.3</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />

@@ -41,12 +41,17 @@ namespace FluentValidation.Resources {
 			Translate<ExactLengthValidator>("'{PropertyName}' muss genau {MaxLength} lang sein. Es wurden {TotalLength} eingegeben.");
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' muss zwischen {From} und {To} sein (exklusiv). Es wurde {Value} eingegeben.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' muss zwischen {From} and {To} sein. Es wurde {Value} eingegeben.");
-
 			Translate<CreditCardValidator>("'{PropertyName}' ist keine gültige Kreditkartennummer.");
 			Translate<ScalePrecisionValidator>("'{PropertyName}' darf insgesamt nicht mehr als {ExpectedPrecision} Ziffern enthalten, mit Berücksichtigung von {ExpectedScale} Dezimalstellen. Es wurden {Digits} Ziffern und {ActualScale} Dezimalstellen gefunden.");
 			Translate<EmptyValidator>("'{PropertyName}' sollte leer sein.");
 			Translate<NullValidator>("'{PropertyName}' sollte leer sein.");
 			Translate<EnumValidator>("'{PropertyName}' hat einen Wertebereich, der '{PropertyValue}' nicht enthält.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "Die Länge von '{PropertyName}' muss zwischen {MinLength} und {MaxLength} Zeichen liegen.");
+			Translate("MinimumLength_Simple", "Die Länge von '{PropertyName}' muss größer oder gleich {MinLength} sein.");
+			Translate("MaximumLength_Simple", "Die Länge von '{PropertyName}' muss kleiner oder gleich {MaxLength} sein.");
+			Translate("ExactLength_Simple", "'{PropertyName}' muss genau {MaxLength} lang sein.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' muss zwischen {From} and {To} sein.");
 
 		}
 	}

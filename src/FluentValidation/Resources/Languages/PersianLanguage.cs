@@ -46,6 +46,13 @@ namespace FluentValidation.Resources {
 			Translate<EmptyValidator>("'{PropertyName}' باید خالی باشد.");
 			Translate<NullValidator>("'{PropertyName}' باید خالی باشد.");
 			Translate<EnumValidator>("مقدار '{PropertyValue}' در لیست مقادیر قابل قبول برای '{PropertyName}' نمی باشد.");
+			// Additional fallback messages used by clientside validation integration.
+			Translate("Length_Simple", "'{PropertyName}' باید حداقل {MinLength} و حداکثر {MaxLength} کاراکتر داشته باشد.");
+			Translate("MinimumLength_Simple", "'{PropertyName}' باید بزرگتر یا برابر با {MinLength} کاراکتر باشد.");
+			
+			Translate("MaximumLength_Simple", "'{PropertyName}' باید کمتر یا مساوی {MaxLength} باشد.");
+			Translate("ExactLength_Simple", "'{PropertyName}' باید دقیقا {MaxLength} کاراکتر.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' باید بین {From} و {To} باشد.");
 
 		}
 	}

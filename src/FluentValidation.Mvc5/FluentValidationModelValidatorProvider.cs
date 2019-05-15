@@ -102,6 +102,7 @@ namespace FluentValidation.Mvc {
 										  let validators = rule.Validators
 										  where validators.Any()
 										  from propertyValidator in validators
+										  where propertyValidator.Options.Condition == null && propertyValidator.Options.AsyncCondition == null
 										  let modelValidatorForProperty = GetModelValidator(metadata, context, propertyRule, propertyValidator)
 										  where modelValidatorForProperty != null
 										  select modelValidatorForProperty;

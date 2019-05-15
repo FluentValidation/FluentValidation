@@ -104,7 +104,9 @@ namespace FluentValidation.Internal {
 			}
 			else {
 				foreach (var pair in _placeholderValues) {
+#pragma warning disable 618
 					result = ReplacePlaceholderWithValue(result, pair.Key, pair.Value);
+#pragma warning restore 618
 				}
 			}
 

@@ -104,6 +104,10 @@ namespace FluentValidation.Tests.WebApi {
 		public IHttpActionResult TwoParameters([CustomizeValidator(RuleSet = "Names")] RulesetTestModel first, RulesetTestModel second) {
 			return OutputErrors();
 		}
+
+		public IHttpActionResult DataAnnotations(DataAnnotationsModel model) {
+			return OutputErrors();
+		}
 		
 		private JsonResult<List<SimpleError>> OutputErrors() {
 			var q = from x in ModelState

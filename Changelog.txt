@@ -1,3 +1,29 @@
+8.4.0 - 10 May 2019
+Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
+New enum validator for string properties.
+
+8.3.0 - 24 April 2019
+Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
+Improved how LanguageStringSource works with error-code overrides.
+Fix thread-safety issue with use of PropertyValidatorOptions.Empty (now removed).
+Improved how calls to When/Unless are handled internally.
+DelegatingValidator is now marked as deprecated.
+Improvements to Croatian language translations.
+Improvements to Georgian language translations.
+Resolved subtle bug where top-level WhenAsync wouldn't work correctly when wrapping a top-level call to When.
+
+8.2.3 - 12 April 2019
+Fix issue with WebApi integration where DataAnnotations validation could generate duplicate messages when used in the same 
+project as FluentValidation.
+
+8.2.2 - 5 April 2019 
+Fix typo in FluentValidation.DependencyInjectionExtensions package name.
+
+8.2.1 - 4 April 2019
+Resolved issue using InjectValidator with RuleForEach.
+Add support for a default IValidatorInterceptor to be registered with the ASP.NET Core Service Provider.
+Added "Without" test extensions for consistency with existing "With" text extensions.
+
 8.2.0 - 26 March 2019
 Add extensions for injecting child validators using the ASP.NET Core Service Provider.
 WithLocalizedMessage is deprecated. Use the overload of WithMessage that takes a Func instead.
@@ -19,7 +45,7 @@ Fix issue with shared condition cache incorrectly caching when used with RuleFor
 
 8.1.0 - 6 December 2018
 Added format support for message placeholders.
-Added support for overriding inexers for collection rules.
+Added support for overriding indexers for collection rules.
 Allow ErrorCode to be used to override localization key in the Language Manager.
 Additional error details are now shown in the ShouldNotHaveValidationErrorFor test extension.
 Conditions defined with root-level When/WhenAsync/Unless/UnlessAsync are now only executed once (instead of once for each rule).
@@ -92,14 +118,14 @@ Support CustomizeValidatorAttribute in WebApi integration
 Resolved issues with referencing FluentValidation from legacy PCLs.
 
 7.5 - 26 February 2018
-Better handling of clientside messages when using custom overriden language resources
+Better handling of clientside messages when using custom overridden language resources
 Flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration
 Improvements to some of the validation tester's messages
 Added Transform method to transform property values prior to validation
 Improve support for DisplayAttribute / DisplayNameAttribute when inferring property display name
 Added Slovak language support
 Added Hebrew language support
-Added Brizilian Portuguese language support
+Added Brazilian Portuguese language support
 Cache display names by default
 Ensure ShouldHaveChildValidator test method works with model-level rules
 Removed netstandard1.0 support. Supported platforms are now netstandard1.1, netstandard2.0 and net45.
@@ -191,7 +217,7 @@ Rewrote the localization support not to require satellite assemblies
 Fix issue in WebApi integration where a property getter that throws an exception causes validation to fail
 Fix issue in AspNetCore integration where we tried to resolve a collection validator in some situations where a class validator should be used
 Improve SplitPascalCase method to support uppercase character sequences
-ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overriden
+ValidationResult.ErrorCode property now always returns the type of the PropertyValidator that generated the message, unless it's been explicitly overridden
 Fix incorrect clientside validation attributes generated for email validator and credit card validator in the asp.net core integration
 Fix child model validation in webapi integration
 
@@ -218,7 +244,7 @@ Fix enum validator to work correctly with nullable enums
 Make ChildValidatorAdaptor.GetValidator public
 Make some of the private methods in FluentValidationModelValdiatorProvider protected instead of private
 ValidatorSelectors are now globally configurable through ValidatorOptions.ValidatorSelectors
-ValidatorSelectors can be overriden within the CustomizeValidatorAttribute
+ValidatorSelectors can be overridden within the CustomizeValidatorAttribute
 Added "Include" statement
 Switched "dotnet" nuget library to uap10.0
 Add Enum validator
@@ -367,7 +393,7 @@ Update nuget package for wpa81
 
 2.0 - 13 January 2011
 * Fix typo in the name of FallbackAwareResourceAccessorBuilder
-* Fix issue #7062 - allow validator selectors to work against nullable properties with overriden names.
+* Fix issue #7062 - allow validator selectors to work against nullable properties with overridden names.
 * Fix error in German localization.
 * Better support for clientside validation messages.
 

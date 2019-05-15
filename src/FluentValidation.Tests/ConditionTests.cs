@@ -30,9 +30,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Validation_should_succeed_when_async_condition_does_not_match() {
+		public async Task Validation_should_succeed_when_async_condition_does_not_match() {
 			var validator = new TestConditionAsyncValidator();
-			var result = validator.ValidateAsync(new Person {Id = 1}).Result;
+			var result = await validator.ValidateAsync(new Person {Id = 1});
             result.IsValid.ShouldBeTrue();
 		}
 
@@ -44,9 +44,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Validation_should_fail_when_async_condition_matches() {
+		public async Task Validation_should_fail_when_async_condition_matches() {
 			var validator = new TestConditionAsyncValidator();
-			var result = validator.ValidateAsync(new Person()).Result;
+			var result = await validator.ValidateAsync(new Person());
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -58,9 +58,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Validation_should_succeed_when_async_condition_matches() {
+		public async Task Validation_should_succeed_when_async_condition_matches() {
 			var validator = new InverseConditionAsyncValidator();
-			var result = validator.ValidateAsync(new Person()).Result;
+			var result = await validator.ValidateAsync(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -72,9 +72,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Validation_should_fail_when_async_condition_does_not_match() {
+		public async Task Validation_should_fail_when_async_condition_does_not_match() {
 			var validator = new InverseConditionAsyncValidator();
-			var result = validator.ValidateAsync(new Person {Id = 1}).Result;
+			var result = await validator.ValidateAsync(new Person {Id = 1});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -89,15 +89,38 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Async_condition_is_applied_to_all_validators_in_the_chain() {
+		public async Task Async_condition_is_applied_to_all_validators_in_the_chain() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(async (x,c) => x.Id > 0)
 			};
 
-			var result = validator.ValidateAsync(new Person()).Result;
+			var result = await validator.ValidateAsync(new Person());
 			result.Errors.Count.ShouldEqual(0);
 		}
 
+		[Fact]
+		public void Async_condition_is_applied_to_all_validators_in_the_chain_when_executed_synchronously() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(async (x,c) => x.Id > 0)
+			};
+
+			var result = validator.Validate(new Person());
+			result.Errors.Count.ShouldEqual(0);
+		}
+
+		[Fact]
+		public async Task Sync_condition_is_applied_to_async_validators() {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Surname)
+					.MustAsync(async (val, token) => val != null)
+					.MustAsync(async (val, token) => val != "foo")
+					.When(x => x.Id > 0)
+			};
+
+			var result = await validator.ValidateAsync(new Person());
+			result.Errors.Count.ShouldEqual(0);
+		}		
+		
 		[Fact]
 		public void Condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
 			var validator = new TestValidator {
@@ -109,12 +132,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Async_condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
+		public async Task Async_condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(async (x,c) => x.Id > 0, ApplyConditionTo.CurrentValidator)
 			};
 
-			var result = validator.ValidateAsync(new Person()).Result;
+			var result = await validator.ValidateAsync(new Person());
 			result.Errors.Count.ShouldEqual(1);
 		}
 

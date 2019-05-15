@@ -18,6 +18,9 @@
 
 namespace FluentValidation {
 	using System;
+	using System.Collections.Generic;
+	using System.Threading;
+	using System.Threading.Tasks;
 	using Resources;
 	using Validators;
 
@@ -28,6 +31,44 @@ namespace FluentValidation {
 		private IStringSource _errorSource;
 		private IStringSource _errorCodeSource;
 		
+		/// <summary>
+		/// Condition associated with the validator. If the condition fails, the validator will not run.
+		/// </summary>
+		public Func<PropertyValidatorContext, bool> Condition { get; private set; }
+		
+		/// <summary>
+		/// Async condition associated with the validator. If the condition fails, the validator will not run.
+		/// </summary>
+		public Func<PropertyValidatorContext, CancellationToken, Task<bool>> AsyncCondition { get; private set; }
+
+		/// <summary>
+		/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
+		/// </summary>
+		/// <param name="condition"></param>
+		public void ApplyCondition(Func<PropertyValidatorContext, bool> condition) {
+			if (Condition == null) {
+				Condition = condition;
+			}
+			else {
+				var original = Condition;
+				Condition = ctx => condition(ctx) && original(ctx);
+			}
+		}
+
+		/// <summary>
+		/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
+		/// </summary>
+		/// <param name="condition"></param>
+		public void ApplyAsyncCondition(Func<PropertyValidatorContext, CancellationToken, Task<bool>> condition) {
+			if (AsyncCondition == null) {
+				AsyncCondition = condition;
+			}
+			else {
+				var original = AsyncCondition;
+				AsyncCondition = async (ctx, ct) => await condition(ctx, ct) && await original(ctx, ct);
+			}
+		}
+
 		/// <summary>
 		/// Function used to retrieve custom state for the validator
 		/// </summary>
@@ -53,12 +94,5 @@ namespace FluentValidation {
 			get => _errorCodeSource;
 			set => _errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));
 		}
-
-		/// <summary>
-		/// Empty metadata.
-		/// </summary>
-		public static PropertyValidatorOptions Empty { get; } = new PropertyValidatorOptions {
-			_errorSource = new StaticStringSource(string.Empty),
-		};
 	}
 }
