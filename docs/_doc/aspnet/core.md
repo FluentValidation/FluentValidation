@@ -119,11 +119,11 @@ public class PeopleController : Controller {
 
 Now when you post the form, MVC's model-binding infrastructure will validate the `Person` object with the `PersonValidator`, and add the validation results to ModelState.
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](/start.html#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually.
+*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](/start.html#root-context-data) contains an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically (by MVC), or manually.
 
 ### Compatibility with ASP.NET's built-in Validation
 
-By default, after FluentValidation is executed then any other validator providers will also have a chance to execute as well. This means you can mix FluentValidation with DataAnnotations attributes (or any other ASP.NET ModelValidatorProvider implementation).
+By default, after FluentValidation is executed, any other validator providers will also have a chance to execute. This means you can mix FluentValidation with DataAnnotations attributes (or any other ASP.NET ModelValidatorProvider implementation).
 
 If you want to disable this behaviour so that FluentValidation is the only validation library that executes, you can set the `RunDefaultMvcValidationAfterFluentValidationExecutes` to false in your application startup routine:
 
@@ -133,11 +133,11 @@ services.AddMvc().AddFluentValidation(fv => {
 });
 ```
 
-*Note* If you do set `RunDefaultMvcValidationAfterFluentValidationExecutes` to false then support for `IValidatableObject` will also be disabled.
+*Note* If you do set `RunDefaultMvcValidationAfterFluentValidationExecutes` to false, then support for `IValidatableObject` will also be disabled.
 
 ### Implicit vs Explicit Child Property Validation
 
-When validating complex object graphs, by default you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](/start.html#complex-properties))
+When validating complex object graphs, by default, you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](/start.html#complex-properties))
 
 When running an ASP.NET MVC application, you can also optionally enable implicit validation for child properties. When this is enabled, instead of having to specify child validators using `SetValidator`, MVC's validation infrastructure will recursively attempt to automatically find validators for each property. This can be done by setting `ImplicitlyValidateChildProperties` to true:
 
@@ -151,9 +151,9 @@ Note that if you enable this behaviour you should not use `SetValidator` for chi
 
 ### Clientside Validation
 
-FluentValidation is a server-side framework, and does not provide any client-side validation directly. However, it can provide metadata that can be applied to the generated HTML elements that can be used by a client-side framework such as jQuery Validate, in the same way that ASP.NET's default validation attributes.
+FluentValidation is a server-side framework, and does not provide any client-side validation directly. However, it can provide metadata which, when applied to the generated HTML elements, can be used by a client-side framework such as jQuery Validate, in the same way that ASP.NET's default validation attributes work.
 
-Note that not all rules defined in FluentValidation will work with ASP.NET's client-side validation. For exmaple any rules defined using a condition (with When/Unless), custom validators, or calls to `Must` will not run on the client side. Nor will any rules in a `RuleSet` (although this can be changed - see the section below on "RuleSet for client-side messages"). The following validators are supported on the client:
+Note that not all rules defined in FluentValidation will work with ASP.NET's client-side validation. For example, any rules defined using a condition (with When/Unless), custom validators, or calls to `Must` will not run on the client side. Nor will any rules in a `RuleSet` (although this can be changed - see the section below on "RuleSet for client-side messages"). The following validators are supported on the client:
 
 * NotNull/NotEmpty
 * Matches (regex)
