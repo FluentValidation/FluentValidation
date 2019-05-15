@@ -28,12 +28,19 @@ namespace FluentValidation.Tests {
 
 	public class ValidatorTesterTester {
 		private TestValidator validator;
+		private const string sutSameForenameAndSurnameMessage = "A person cannot have the same forename and surname! What the hell, Helle Helle! https://en.wikipedia.org/wiki/Helle_Helle";
 
 		public ValidatorTesterTester() {
 			validator = new TestValidator();
+			validator.RuleFor(x => x).Must(NotHaveSameForenameAndSurname).WithMessage(sutSameForenameAndSurnameMessage);
 			validator.RuleFor(x => x.CreditCard).Must(creditCard => !string.IsNullOrEmpty(creditCard)).WhenAsync((x, cancel) => Task.Run(() => { return x.Age >= 18; }));
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleForEach(person => person.NickNames).MinimumLength(5);
+		}
+
+		private bool NotHaveSameForenameAndSurname(Person person)
+		{
+			return !person.Forename.Equals(person.Surname);
 		}
 
 		[Fact]
@@ -82,6 +89,18 @@ namespace FluentValidation.Tests {
 					Line1 = null,
 				},
 			});
+		}
+
+		[Fact]
+		public void ShouldHaveValidationError_Identity_Should_not_throw_when_there_are_validation_errors() {
+			validator.ShouldHaveValidationErrorFor<Person>(x => x, new Person { Forename = "Helle", Surname = "Helle" }, "default");
+		}
+
+		[Fact]
+		public void ShouldHaveValidationError_Identity_Should_throw_when_there_are_no_validation_errors() {
+			ValidationTestException validationTestException = Assert.Throws<ValidationTestException>(() =>
+				validator.ShouldHaveValidationErrorFor<Person>(x => x, new Person { Forename = "Helle", Surname = "Helle" }, "default"));
+			Assert.Contains(sutSameForenameAndSurnameMessage, validationTestException.Message);
 		}
 
 		[Fact]

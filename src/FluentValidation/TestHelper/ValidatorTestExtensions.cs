@@ -41,6 +41,19 @@ namespace FluentValidation.TestHelper {
 			return testValidationResult.ShouldHaveError();
 		}
 
+		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, string ruleSet)
+            where T : class, new()
+        {
+            T instance = Activator.CreateInstance<T>();
+            return validator.TestValidate<T>(instance, ruleSet).ShouldHaveError<T, T>();
+        }
+
+        public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, T value, string ruleSet)
+            where T : class, new()
+        {
+            return validator.TestValidate<T>(value, ruleSet).ShouldHaveError<T, T>();
+        }
+
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
 				var instanceToValidate = new T();
@@ -53,6 +66,19 @@ namespace FluentValidation.TestHelper {
 			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
 			testValidationResult.ShouldNotHaveError();
 		}
+
+		public static void ShouldNotHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, string ruleSet)
+            where T : class, new()
+        {
+            T instance = Activator.CreateInstance<T>();
+            validator.TestValidate<T>(instance, ruleSet).ShouldNotHaveError<T, T>();
+        }
+
+        public static void ShouldNotHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, T value, string ruleSet)
+            where T : class, new()
+        {
+            validator.TestValidate<T>(value, ruleSet).ShouldNotHaveError<T, T>();
+        }
 
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
 			var descriptor = validator.CreateDescriptor();
