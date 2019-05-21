@@ -60,7 +60,6 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public virtual ILookup<string, IPropertyValidator> GetMembersWithValidators() {
 			var query = from rule in Rules.OfType<PropertyRule>()
-						where rule.PropertyName != null
 						from validator in rule.Validators
 						select new { propertyName = rule.PropertyName, validator };
 
