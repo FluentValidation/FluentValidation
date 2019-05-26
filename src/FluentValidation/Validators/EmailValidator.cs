@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -21,7 +21,22 @@ namespace FluentValidation.Validators {
 	using System.Text.RegularExpressions;
 	using Resources;
 
-	//Email regex matches the one used in the DataAnnotations EmailAddressAttribute for consistency/parity with DataAnnotations. This is not a fully comprehensive solution, but is "good enough" for most cases. 
+	/// <summary>
+	/// Defines which mode should be used for email validation.
+	/// </summary>
+	public enum EmailValidationMode {
+		/// <summary>
+		/// Uses a regular expression for email validation. This is the same regex used by <see cref="System.ComponentModel.DataAnnotations.EmailAddressAttribute"/> in .NET 4.x.
+		/// </summary>
+		Net4xRegex,
+
+		/// <summary>
+		/// Uses the simplified ASP.NET Core logic for checking an email address, which just checks for the presence of an @ sign.
+		/// </summary>
+		AspNetCoreCompatible,
+	}
+
+	//Email regex matches the one used in the DataAnnotations EmailAddressAttribute for consistency/parity with DataAnnotations. This is not a fully comprehensive solution, but is "good enough" for most cases.
 	public class EmailValidator : PropertyValidator, IRegularExpressionValidator, IEmailValidator {
 		private readonly Regex _regex;
 
@@ -47,8 +62,8 @@ namespace FluentValidation.Validators {
 		private static Regex CreateRegEx()
 		{
 			// Workaround for CVE-2015-2526
-			// If no REGEX_DEFAULT_MATCH_TIMEOUT is specified in the AppDomain, default to 2 seconds. 
-			// if we're on Netstandard 1.0 we don't have access to AppDomain, so just always use 2 second timeout there. 
+			// If no REGEX_DEFAULT_MATCH_TIMEOUT is specified in the AppDomain, default to 2 seconds.
+			// if we're on Netstandard 1.0 we don't have access to AppDomain, so just always use 2 second timeout there.
 
 #if NETSTANDARD1_1 || NETSTANDARD1_6
 			return new Regex(_expression, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(2.0));
@@ -63,14 +78,45 @@ namespace FluentValidation.Validators {
 			{
 			}
 
-		
+
 	return new Regex(_expression, RegexOptions.IgnoreCase);
 #endif
 
 		}
 	}
 
+	public class AspNetCoreCompatibleEmailValidator : PropertyValidator, IEmailValidator {
+		public AspNetCoreCompatibleEmailValidator() : base(new LanguageStringSource(nameof(EmailValidator))) {
+
+		}
+
+		protected override bool IsValid(PropertyValidatorContext context) {
+			var value = context.PropertyValue;
+
+			if (value == null) {
+				return true;
+			}
+
+			if (!(value is string valueAsString)) {
+				return false;
+			}
+
+			// only return true if there is only 1 '@' character
+			// and it is neither the first nor the last character
+			int index = valueAsString.IndexOf('@');
+
+			return
+				index > 0 &&
+				index != valueAsString.Length - 1 &&
+				index == valueAsString.LastIndexOf('@');
+		}
+
+		//TODO: Remove this once IEmailValidator no longer implements IRegularExpressionValidator.
+		string IRegularExpressionValidator.Expression => null;
+	}
+
+	//TODO: Remove IRegularExpresionValidator from the inheritance chain for FV9.
 	public interface IEmailValidator : IRegularExpressionValidator {
-		
+
 	}
 }

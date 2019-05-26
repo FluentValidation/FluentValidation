@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 using Xunit.Extensions;
@@ -24,7 +24,7 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Validators;
 
-	
+
 	public class EmailValidatorTests {
 		TestValidator validator;
 
@@ -88,6 +88,39 @@ namespace FluentValidation.Tests {
 		public void Valid_email_addresses(string email) {
 				var result = validator.Validate(new Person {Email = email});
 				result.IsValid.ShouldBeTrue(string.Format("The email address {0} should be valid", email));
+		}
+
+		[Theory]
+		[InlineData((string)null)]
+		[InlineData("1234@someDomain.com")]
+		[InlineData("firstName.lastName@someDomain.com")]
+		[InlineData("\u00A0@someDomain.com")]
+		[InlineData("!#$%&'*+-/=?^_`|~@someDomain.com")]
+		[InlineData("\"firstName.lastName\"@someDomain.com")]
+		[InlineData("someName@someDomain.com")]
+		[InlineData("someName@some~domain.com")]
+		[InlineData("someName@some_domain.com")]
+		[InlineData("someName@1234.com")]
+		[InlineData("someName@someDomain\uFFEF.com")]
+		public void Valid_email_addresses_aspnetcore_compatible(string email) {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Email).EmailAddress(EmailValidationMode.AspNetCoreCompatible);
+			validator.Validate(new Person { Email = email}).IsValid.ShouldBeTrue();
+		}
+
+		[Theory]
+		[InlineData(0)]
+		[InlineData("")]
+		[InlineData(" \r \t \n" )]
+		[InlineData("@someDomain.com")]
+		[InlineData("@someDomain@abc.com")]
+		[InlineData("someName")]
+		[InlineData("someName@")]
+		[InlineData("someName@a@b.com")]
+		public void Fails_email_validation_aspnetcore_compatible(string email) {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Email).EmailAddress(EmailValidationMode.AspNetCoreCompatible);
+			validator.Validate(new Person { Email = email}).IsValid.ShouldBeFalse();
 		}
 	}
 }
