@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -36,11 +36,11 @@ namespace FluentValidation.Mvc {
 		public IValidatorFactory ValidatorFactory { get; set; }
 
 		private Dictionary<Type, FluentValidationModelValidationFactory> validatorFactories = new Dictionary<Type, FluentValidationModelValidationFactory>() {
-			{ typeof(INotNullValidator), (metadata, context, rule, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, rule, validator) },
-			{ typeof(INotEmptyValidator), (metadata, context, rule, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, rule, validator) },
-			// email must come before regex.
-			{ typeof(IEmailValidator), (metadata, context, rule, validator) => new EmailFluentValidationPropertyValidator(metadata, context, rule, validator) },			
-			{ typeof(IRegularExpressionValidator), (metadata, context, rule, validator) => new RegularExpressionFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(NotNullValidator), (metadata, context, rule, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(NotEmptyValidator), (metadata, context, rule, validator) => new RequiredFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(EmailValidator), (metadata, context, rule, validator) => new EmailFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(AspNetCoreCompatibleEmailValidator), (metadata, context, rule, validator) => new EmailFluentValidationPropertyValidator(metadata, context, rule, validator) },
+			{ typeof(RegularExpressionValidator), (metadata, context, rule, validator) => new RegularExpressionFluentValidationPropertyValidator(metadata, context, rule, validator) },
 			{ typeof(ILengthValidator), (metadata, context, rule, validator) => new StringLengthFluentValidationPropertyValidator(metadata, context, rule, validator)},
 			{ typeof(InclusiveBetweenValidator), (metadata, context, rule, validator) => new RangeFluentValidationPropertyValidator(metadata, context, rule, validator) },
 			{ typeof(GreaterThanOrEqualValidator), (metadata, context, rule, validator) => new MinFluentValidationPropertyValidator(metadata, context, rule, validator) },
@@ -106,14 +106,14 @@ namespace FluentValidation.Mvc {
 										  let modelValidatorForProperty = GetModelValidator(metadata, context, propertyRule, propertyValidator)
 										  where modelValidatorForProperty != null
 										  select modelValidatorForProperty;
-					
+
 				modelValidators.AddRange(validatorsWithRules);
 			}
 
 			if(validator != null && metadata.IsRequired && AddImplicitRequiredValidator) {
 				bool hasRequiredValidators = modelValidators.Any(x => x.IsRequired);
 
-				//If the model is 'Required' then we assume it must have a NotNullValidator. 
+				//If the model is 'Required' then we assume it must have a NotNullValidator.
 				//This is consistent with the behaviour of the DataAnnotationsModelValidatorProvider
 				//which silently adds a RequiredAttribute
 
@@ -127,7 +127,7 @@ namespace FluentValidation.Mvc {
 
 		protected virtual ModelValidator GetModelValidator(ModelMetadata meta, ControllerContext context, PropertyRule rule, IPropertyValidator propertyValidator) {
 			var type = propertyValidator.GetType();
-			
+
 			var factory = validatorFactories
 				.Where(x => x.Key.IsAssignableFrom(type))
 				.Select(x => x.Value)

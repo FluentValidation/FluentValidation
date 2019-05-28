@@ -6,9 +6,6 @@
 	using Validators;
 
 	internal class EmailFluentValidationPropertyValidator : FluentValidationPropertyValidator {
-		private IEmailValidator EmailValidator {
-			get { return (IEmailValidator)Validator; }
-		}
 
 		public EmailFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule rule, IPropertyValidator validator) : base(metadata, controllerContext, rule, validator) {
 			ShouldValidate=false;
@@ -23,11 +20,11 @@
 				message = Validator.Options.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				// User provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
+				// User provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default.
 				message = ValidatorOptions.LanguageManager.GetStringForValidator<EmailValidator>();
 			}
 			message = formatter.BuildMessage(message);
-			
+
 			yield return new ModelClientValidationRule {
 			                                           	ValidationType = "email",
 			                                           	ErrorMessage = message
