@@ -232,26 +232,14 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Defines a regular expression validator on the current rule builder, but only for string properties.
-		/// Validation will fail if the value returned by the lambda is not a valid email address.
-		/// </summary>
-		/// <typeparam name="T">Type of object being validated</typeparam>
-		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, string> EmailAddress<T>(this IRuleBuilder<T, string> ruleBuilder) {
-			return ruleBuilder.SetValidator(new EmailValidator());
-		}
-
-		/// <summary>
-		/// Defines a regular expression validator on the current rule builder, but only for string properties.
+		/// Defines an email validator on the current rule builder for string properties.
 		/// Validation will fail if the value returned by the lambda is not a valid email address.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <param name="mode">The mode to use for email validation. If set to <see cref="EmailValidationMode.Net4xRegex"/>, then a regular expression will be used. This is the same regex used by <see cref="System.ComponentModel.DataAnnotations.EmailAddressAttribute"/> in .NET 4.x. If set to <see cref="EmailValidationMode.AspNetCoreCompatible"/> then this uses the simplified ASP.NET Core logic for checking an email address, which just checks for the presence of an @ sign.</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, string> EmailAddress<T>(this IRuleBuilder<T, string> ruleBuilder, EmailValidationMode mode) {
-			// TODO: Merge the 2 email overloads together. This overload was added separately to retain backwards compatibility for the compiler.
+		public static IRuleBuilderOptions<T, string> EmailAddress<T>(this IRuleBuilder<T, string> ruleBuilder, EmailValidationMode mode = EmailValidationMode.AspNetCoreCompatible) {
 			var validator = mode == EmailValidationMode.AspNetCoreCompatible ? new AspNetCoreCompatibleEmailValidator() : (PropertyValidator)new EmailValidator();
 			return ruleBuilder.SetValidator(validator);
 		}

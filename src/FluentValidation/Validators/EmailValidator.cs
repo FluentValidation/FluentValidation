@@ -63,7 +63,6 @@ namespace FluentValidation.Validators {
 		}
 	}
 
-
 	public class AspNetCoreCompatibleEmailValidator : PropertyValidator, IEmailValidator {
 		public AspNetCoreCompatibleEmailValidator() : base(new LanguageStringSource(nameof(EmailValidator))) {
 
@@ -89,13 +88,8 @@ namespace FluentValidation.Validators {
 				index != valueAsString.Length - 1 &&
 				index == valueAsString.LastIndexOf('@');
 		}
-
-		//TODO: Remove this once IEmailValidator no longer implements IRegularExpressionValidator.
-		string IRegularExpressionValidator.Expression => null;
 	}
 
-	//TODO: Remove IRegularExpresionValidator from the inheritance chain for FV9.
-	public interface IEmailValidator : IRegularExpressionValidator {
-
+	public interface IEmailValidator  {
 	}
 }
