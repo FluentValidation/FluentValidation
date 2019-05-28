@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -39,7 +39,7 @@ namespace FluentValidation {
 		public static string PropertyChainSeparator = ".";
 
 		/// <summary>
-		/// Default language manager 
+		/// Default language manager
 		/// </summary>
 		public static ILanguageManager LanguageManager {
 			get => _languageManager;
@@ -76,8 +76,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Pluggable logic for resolving display names
 		/// </summary>
-		public static Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver
-		{
+		public static Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver {
 			get => _displayNameResolver;
 			set => _displayNameResolver = value ?? DefaultDisplayNameResolver;
 		}
@@ -89,14 +88,9 @@ namespace FluentValidation {
 			}
 
 			return memberInfo?.Name;
-		}	
-		
-		static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
-			return memberInfo == null ? null : DisplayNameCache.GetCachedDisplayName(memberInfo);
 		}
 
-
-
+		static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) => null;
 
 		/// <summary>
 		/// Disables the expression accessor cache. Not recommended.
