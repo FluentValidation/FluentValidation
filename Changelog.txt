@@ -5,6 +5,8 @@ Removed ResourceName from ValidationFailure
 Removed ResourceName and ResourceType from IStringSource.
 Removed SetCollectionValidator which was deprecated in 8.0
 Additional overload of OnAnyFailure that can receive a collection of validation failures
+Remove DisplayAttribute integration and reference to DataAnnotations.
+Default email validation mode now uses the same logic as ASP.NET Core. Previous regex behaviour is opt-in.
 
 8.6.0 - 4 December 2019
 Add support for ASP.NET Core 3.1
