@@ -179,7 +179,6 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(new RegularExpressionValidator(expression.CoerceToNonGeneric()));
 		}
 
-
 		/// <summary>
 		/// Defines a regular expression validator on the current rule builder, but only for string properties.
 		/// Validation will fail if the value returned by the lambda does not match the regular expression.
