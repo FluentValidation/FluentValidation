@@ -6,8 +6,8 @@
 	using Validators;
 
 	internal class RegularExpressionFluentValidationPropertyValidator : FluentValidationPropertyValidator {
-		IRegularExpressionValidator RegexValidator {
-			get { return (IRegularExpressionValidator)Validator;}
+		RegularExpressionValidator RegexValidator {
+			get { return (RegularExpressionValidator)Validator;}
 		}
 
 		public RegularExpressionFluentValidationPropertyValidator(ModelMetadata metadata, ControllerContext controllerContext, PropertyRule rule, IPropertyValidator validator)
@@ -26,7 +26,7 @@
 				message = Validator.Options.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default. 
+				// Use provided a message that contains placeholders based on object properties. We can't use that here, so just fall back to the default.
 				message = ValidatorOptions.LanguageManager.GetStringForValidator<RegularExpressionValidator>();
 			}
 			message = formatter.BuildMessage(message);
