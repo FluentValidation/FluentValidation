@@ -104,8 +104,5 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
-  </ItemGroup>
   <Import Project="..\netfx.props" />
 </Project>
