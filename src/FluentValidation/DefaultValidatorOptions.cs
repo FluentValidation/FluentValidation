@@ -82,7 +82,7 @@ namespace FluentValidation {
 			});
 		}
 
-		
+
 		/// <summary>
 		/// Specifies a custom action to be invoked when the validator fails.
 		/// </summary>
@@ -439,13 +439,6 @@ namespace FluentValidation {
 		/// <returns>The translated string</returns>
 		public static string GetStringForValidator<T>(this ILanguageManager languageManager) {
 			return languageManager.GetString(typeof(T).Name);
-		}
-
-		internal static Func<T, object>[] ConvertArrayOfObjectsToArrayOfDelegates<T>(object[] objects) {
-			if(objects == null || objects.Length == 0) {
-				return new Func<T, object>[0];
-			}
-			return objects.Select(obj => new Func<T, object>(x => obj)).ToArray();
 		}
 	}
 }
