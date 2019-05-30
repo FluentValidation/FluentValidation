@@ -305,7 +305,7 @@ String format args:
 Checks whether a string is a valid enum name. 
 
 ```csharp
-// For a case sensiitive comparison
+// For a case sensitive comparison
 RuleFor(x => x.ErrorLevelName).IsEnumName(typeof(ErrorLevel));
 
 // For a case-insensitive comparison
