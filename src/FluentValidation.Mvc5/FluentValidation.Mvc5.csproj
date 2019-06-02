@@ -40,6 +40,9 @@ Changes in 7.5:
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.0" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies"
+                      Version="1.0.0-preview.2"
+                      PrivateAssets="All" />
   </ItemGroup>
 
     <ItemGroup>
@@ -51,6 +54,4 @@ Changes in 7.5:
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Web" />
   </ItemGroup>
-
-  <Import Project="../netfx.props" />
 </Project>
