@@ -12,6 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies"
+                      Version="1.0.0-preview.2"
+                      Condition="'$(OS)'!='Windows_NT'"
+                      PrivateAssets="All" />
   </ItemGroup>
-  <Import Project="../netfx.props" />
 </Project>

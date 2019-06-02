@@ -29,6 +29,10 @@
 		<PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.0" />
 		<PackageReference Include="Microsoft.Web.Infrastructure" Version="1.0.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="6.0.3" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies"
+                      Version="1.0.0-preview.2"
+                      Condition="'$(OS)'!='Windows_NT'"
+                      PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup>
@@ -74,10 +78,4 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1998;0618</NoWarn>
   </PropertyGroup>
-  <Import Project="../netfx.props" />
-  <ItemGroup Condition="'$(TargetFramework)'=='net452' AND '$(OS)'=='Unix'">
-    <!-- Workarounds for Mono -->
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
-  </ItemGroup>
 </Project>

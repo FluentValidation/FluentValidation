@@ -93,5 +93,10 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   <ItemGroup Condition="'$(TargetFramework)'!='netstandard1.1'">
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.4.1" />
   </ItemGroup>
-  <Import Project="..\netfx.props" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies"
+                      Version="1.0.0-preview.2"
+                      Condition="'$(OS)'!='Windows_NT'"
+                      PrivateAssets="All" />
+  </ItemGroup>
 </Project>
