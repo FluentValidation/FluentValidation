@@ -32,27 +32,36 @@ namespace FluentValidation.TestHelper {
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
 			var instanceToValidate = new T();
-			var testValidationResult = validator.TestValidate(expression, instanceToValidate, value, ruleSet);
-			return testValidationResult.ShouldHaveError();
+
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, true);
+			memberAccessor.Set(instanceToValidate, value);
+
+			var testValidationResult = validator.TestValidate(instanceToValidate, ruleSet);
+			return testValidationResult.ShouldHaveValidationErrorFor(expression);
 		}
 
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
-			return testValidationResult.ShouldHaveError();
+			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
+			return testValidationResult.ShouldHaveValidationErrorFor(expression);
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-				var instanceToValidate = new T();
-			var testValidationResult = validator.TestValidate(expression, instanceToValidate, value, ruleSet);
-			testValidationResult.ShouldNotHaveError();
+
+			var instanceToValidate = new T();
+
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, true);
+			memberAccessor.Set(instanceToValidate, value);
+
+			var testValidationResult = validator.TestValidate(instanceToValidate, ruleSet);
+			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
-			testValidationResult.ShouldNotHaveError();
+			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
+			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
 
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
@@ -92,28 +101,18 @@ namespace FluentValidation.TestHelper {
 				.ToArray();
 		}
 
-		private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T instanceToValidate, TValue value, string ruleSet = null, bool setProperty=true) where T : class {
-			var memberAccessor = new MemberAccessor<T, TValue>(expression, setProperty);
-
-			if (setProperty) {
-				memberAccessor.Set(instanceToValidate, value);
-			}
-
-			var validationResult = validator.Validate(instanceToValidate, null, ruleSet: ruleSet);
-
-			return new TestValidationResult<T, TValue>(validationResult, memberAccessor);
-		}
-
 		public static TestValidationResult<T, T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
 			var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
 
 			return new TestValidationResult<T, T>(validationResult, (Expression<Func<T, T>>) (o => o));
 		}
 
+		[Obsolete("Call ShouldHaveValidationErrorFor, passing in an expression")]
 		public static IEnumerable<ValidationFailure> ShouldHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
 			return testValidationResult.Which.ShouldHaveValidationError();
 		}
 
+		[Obsolete("Call ShouldNotHaveValidationErrorFor, passing in an expression")]
 		public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
 			testValidationResult.Which.ShouldNotHaveValidationError();
 		}
