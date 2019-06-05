@@ -1,18 +1,18 @@
 ﻿#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -31,29 +31,20 @@ namespace FluentValidation.TestHelper {
 		}
 
 		private string GetPropertyName(IEnumerable<MemberInfo> properties) {
-			return string.Join(".", 
-                GetMemberNames().Concat(properties
-				.Where(x => x != null)
-				.Select(x => x.Name)));
+			var propertiesList = properties.Where(x => x != null).Select(x => x.Name).ToList();
+
+			if (_testValidationResult.MemberAccessor != null) {
+				string memberName = ValidatorOptions.PropertyNameResolver(typeof(T), _testValidationResult.MemberAccessor.Member, _testValidationResult.MemberAccessor);
+
+				if (!string.IsNullOrEmpty(memberName)) {
+					propertiesList.Insert(0, memberName);
+				}
+			}
+
+			return string.Join(".", propertiesList);
 		}
 
-	    private IEnumerable<string> GetMemberNames() {
-	        if (_testValidationResult.MemberAccessor == null) {
-		        yield break;
-	        }
-
-		    string memberName = ValidatorOptions.PropertyNameResolver(
-			    typeof(T), 
-			    _testValidationResult.MemberAccessor.Member,  
-			    _testValidationResult.MemberAccessor
-			);
-
-		    if (!string.IsNullOrEmpty(memberName)) {
-			    yield return memberName;
-		    }
-	    }
-
-        public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
+		public IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
 
 			var failures = _testValidationResult.Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
