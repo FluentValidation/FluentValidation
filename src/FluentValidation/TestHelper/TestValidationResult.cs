@@ -48,53 +48,27 @@ namespace FluentValidation.TestHelper {
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 			string propertyName = ValidatorOptions.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-			return ShouldHaveValidationError(propertyName);
+			return Result.Errors.ShouldHaveValidationError(propertyName);
 		}
 
 		public void ShouldNotHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 			string propertyName = ValidatorOptions.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-			ShouldNotHaveValidationError(propertyName);
+			Result.Errors.ShouldNotHaveValidationError(propertyName);
 		}
 
 		[Obsolete]
 		IEnumerable<ValidationFailure> IValidationResultTester.ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
-			return ShouldHaveValidationError(propertyName);
+			return Result.Errors.ShouldHaveValidationError(propertyName);
 		}
 
 		[Obsolete]
 		void IValidationResultTester.ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
-			ShouldNotHaveValidationError(propertyName);
+			Result.Errors.ShouldNotHaveValidationError(propertyName);
 		}
 
-		private IEnumerable<ValidationFailure> ShouldHaveValidationError(string propertyName) {
-			var failures = Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
-
-			if (!failures.Any())
-				throw new ValidationTestException($"Expected a validation error for property {propertyName}");
-
-			return failures;
-		}
-
-		private void ShouldNotHaveValidationError(string propertyName) {
-			var failures = Result.Errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
-
-			if (failures.Any()) {
-				var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
-				string errorMessageDetails = "";
-				for (int i = 0; i < failures.Count; i++) {
-					errorMessageDetails += $"[{i}]: {failures[i].ErrorMessage}\n";
-				}
-				var errorMessage = $"{errorMessageBanner}\n----\nValidation Errors:\n{errorMessageDetails}";
-				throw new ValidationTestException(errorMessage, failures);
-			}
-		}
-
-		private static string NormalizePropertyName(string propertyName) {
-			return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
-		}
-
+		[Obsolete]
 		private string GetPropertyName(IEnumerable<MemberInfo> properties) {
 			var propertiesList = properties.Where(x => x != null).Select(x => x.Name).ToList();
 

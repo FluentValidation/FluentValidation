@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -23,6 +23,7 @@ namespace FluentValidation.TestHelper {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Text.RegularExpressions;
 	using Internal;
 	using Results;
 	using Validators;
@@ -62,13 +63,13 @@ namespace FluentValidation.TestHelper {
 				throw new NotSupportedException("ShouldHaveChildValidator can only be used for simple property expressions. It cannot be used for model-level rules or rules that contain anything other than a property reference.");
 			}
 
-			var matchingValidators = 
+			var matchingValidators =
 				expression.IsParameterExpression()	 ? GetModelLevelValidators(descriptor) :
 				descriptor.GetValidatorsForMember(expressionMemberName).ToArray();
 
 
 			matchingValidators = matchingValidators.Concat(GetDependentRules(expressionMemberName, expression, descriptor)).ToArray();
-			
+
 			var childValidatorTypes = matchingValidators.OfType<IChildValidatorAdaptor>().Select(x => x.ValidatorType);
 
 			if (childValidatorTypes.All(x => !childValidatorType.GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()))) {
@@ -127,6 +128,29 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
+		internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(this IEnumerable<ValidationFailure> errors, string propertyName) {
+			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
+
+			if (!failures.Any())
+				throw new ValidationTestException($"Expected a validation error for property {propertyName}");
+
+			return failures;
+		}
+
+		internal static void ShouldNotHaveValidationError(this IEnumerable<ValidationFailure> errors, string propertyName) {
+			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
+
+			if (failures.Any()) {
+				var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
+				string errorMessageDetails = "";
+				for (int i = 0; i < failures.Count; i++) {
+					errorMessageDetails += $"[{i}]: {failures[i].ErrorMessage}\n";
+				}
+				var errorMessage = $"{errorMessageBanner}\n----\nValidation Errors:\n{errorMessageDetails}";
+				throw new ValidationTestException(errorMessage, failures);
+			}
+		}
+
 		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null){
 			bool anyMatched = failures.Any(failurePredicate);
 
@@ -135,7 +159,7 @@ namespace FluentValidation.TestHelper {
 				string message = BuildErrorMessage(failure, exceptionMessage, "Expected validation error was not found");
 				throw new ValidationTestException(message);
 			}
-			
+
 			return failures;
 		}
 
@@ -181,6 +205,10 @@ namespace FluentValidation.TestHelper {
 
 		public static IEnumerable<ValidationFailure> WithoutErrorCode(this IEnumerable<ValidationFailure> failures, string unexpectedErrorCode) {
 			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Found an unexpected error code of '{0}'", unexpectedErrorCode));
+		}
+
+		private static string NormalizePropertyName(string propertyName) {
+			return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 		}
 	}
 }
