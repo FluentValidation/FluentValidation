@@ -28,15 +28,19 @@ namespace FluentValidation.TestHelper {
 	using Internal;
 	using Results;
 
-	public class TestValidationResult<T, TValue> : IValidationResultTester where T : class {
+	// TODO: Remove the TValue generic and the IValidationResultTester interface from this for 9.0.
+	public class TestValidationResult<T, TValue> : ValidationResult, IValidationResultTester where T : class {
+
+		[Obsolete("Use properties on the parent class itself")]
 		public ValidationResult Result { get; private set; }
 
 		[Obsolete]
 		public MemberAccessor<T, TValue> MemberAccessor { get; private set; }
 
-		public TestValidationResult(ValidationResult validationResult, MemberAccessor<T, TValue> memberAccessor) {
+		public TestValidationResult(ValidationResult validationResult, MemberAccessor<T, TValue> memberAccessor) : base(validationResult.Errors){
 			Result = validationResult;
 			MemberAccessor = memberAccessor;
+			RuleSetsExecuted = validationResult.RuleSetsExecuted;
 		}
 
 		[Obsolete("Call ShouldHaveValidationError/ShouldNotHaveValidationError instead of Which.ShouldHaveValidationError/Which.ShouldNotHaveValidationError")]
@@ -48,24 +52,32 @@ namespace FluentValidation.TestHelper {
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 			string propertyName = ValidatorOptions.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-			return Result.Errors.ShouldHaveValidationError(propertyName);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
 		}
 
 		public void ShouldNotHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 			string propertyName = ValidatorOptions.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-			Result.Errors.ShouldNotHaveValidationError(propertyName);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
+		}
+
+		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor(string propertyName) {
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
+		}
+
+		public void ShouldNotHaveValidationErrorFor(string propertyName) {
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
 		}
 
 		[Obsolete]
 		IEnumerable<ValidationFailure> IValidationResultTester.ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
-			return Result.Errors.ShouldHaveValidationError(propertyName);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
 		}
 
 		[Obsolete]
 		void IValidationResultTester.ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = GetPropertyName(properties);
-			Result.Errors.ShouldNotHaveValidationError(propertyName);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
 		}
 
 		[Obsolete]

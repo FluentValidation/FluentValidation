@@ -238,6 +238,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var ex = Assert.Throws<ValidationTestException>(() => {
+				result.ShouldHaveValidationErrorFor("foo");
 				result.ShouldHaveValidationErrorFor(x => x.Address.Line1);
 			});
 

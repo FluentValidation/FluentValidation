@@ -103,7 +103,7 @@ namespace FluentValidation.TestHelper {
 
 		public static TestValidationResult<T, T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
 			var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
-
+			// TODO: For 9.0 remove passing the expression parameter.
 			return new TestValidationResult<T, T>(validationResult, (Expression<Func<T, T>>) (o => o));
 		}
 
@@ -127,8 +127,8 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
-		internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(this IEnumerable<ValidationFailure> errors, string propertyName) {
-			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToArray();
+		internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
+			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))).ToArray();
 
 			if (!failures.Any())
 				throw new ValidationTestException($"Expected a validation error for property {propertyName}");
@@ -136,8 +136,8 @@ namespace FluentValidation.TestHelper {
 			return failures;
 		}
 
-		internal static void ShouldNotHaveValidationError(this IEnumerable<ValidationFailure> errors, string propertyName) {
-			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || string.IsNullOrEmpty(propertyName)).ToList();
+		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
+			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))).ToList();
 
 			if (failures.Any()) {
 				var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
