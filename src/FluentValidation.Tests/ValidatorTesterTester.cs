@@ -548,6 +548,23 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Matches_any_failure() {
+			var validator = new InlineValidator<Person> {
+				v => v.RuleFor(x => x.Surname).NotEqual("foo"),
+			};
+
+			var resultWithFailure = validator.TestValidate(new Person { Surname = "foo"});
+			var resultWithoutFailure = validator.TestValidate(new Person { Surname = ""});
+
+			Assert.Throws<ValidationTestException>(() => resultWithoutFailure.ShouldHaveAnyValidationError());
+			Assert.Throws<ValidationTestException>(() => resultWithFailure.ShouldNotHaveAnyValidationErrors());
+
+			// Neither should throw.
+			resultWithFailure.ShouldHaveAnyValidationError();
+			resultWithoutFailure.ShouldNotHaveAnyValidationErrors();
+		}
+
+		[Fact]
 		public void Model_level_check_fails_if_no_model_level_failures() {
 			var validator = new InlineValidator<Person>();
 			validator.RuleFor(x => x.Surname).Must(x => false);

@@ -109,12 +109,25 @@ namespace FluentValidation.TestHelper {
 			return new TestValidationResult<T, T>(validationResult, (Expression<Func<T, T>>) (o => o));
 		}
 
-		[Obsolete("Call ShouldHaveValidationErrorFor, passing in an expression")]
+		public static IEnumerable<ValidationFailure> ShouldHaveAnyValidationError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
+			// TODO: Remove the second generic for 9.0.
+			if (!testValidationResult.Errors.Any())
+				throw new ValidationTestException($"Expected at least one validation error, but none were found.");
+
+			return testValidationResult.Errors;
+		}
+
+		public static void ShouldNotHaveAnyValidationErrors<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
+			// TODO: Remove the second generic for 9.0.
+			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure);
+		}
+
+		[Obsolete("Call ShouldHaveAnyValidationError")]
 		public static IEnumerable<ValidationFailure> ShouldHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
 			return testValidationResult.Which.ShouldHaveValidationError();
 		}
 
-		[Obsolete("Call ShouldNotHaveValidationErrorFor, passing in an expression")]
+		[Obsolete("Call ShouldNotHaveAnyValidationErrors")]
 		public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
 			testValidationResult.Which.ShouldNotHaveValidationError();
 		}
@@ -149,6 +162,9 @@ namespace FluentValidation.TestHelper {
 
 			if (failures.Any()) {
 				var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
+				if (propertyName == MatchAnyFailure) {
+					errorMessageBanner = "Expected no validation errors";
+				}
 				string errorMessageDetails = "";
 				for (int i = 0; i < failures.Count; i++) {
 					errorMessageDetails += $"[{i}]: {failures[i].ErrorMessage}\n";
