@@ -29,6 +29,8 @@ namespace FluentValidation.TestHelper {
 	using Validators;
 
 	public static class ValidationTestExtension {
+		internal const string MatchAnyFailure = "__FV__ANY";
+
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
 			var instanceToValidate = new T();
@@ -128,7 +130,10 @@ namespace FluentValidation.TestHelper {
 		}
 
 		internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
-			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))).ToArray();
+			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
+			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+			                                 || propertyName == MatchAnyFailure
+			                                 ).ToArray();
 
 			if (!failures.Any())
 				throw new ValidationTestException($"Expected a validation error for property {propertyName}");
@@ -137,7 +142,10 @@ namespace FluentValidation.TestHelper {
 		}
 
 		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
-			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))).ToList();
+			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
+			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+			                                 || propertyName == MatchAnyFailure
+			                                 ).ToList();
 
 			if (failures.Any()) {
 				var errorMessageBanner = $"Expected no validation errors for property {propertyName}";

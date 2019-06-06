@@ -70,13 +70,13 @@ namespace FluentValidation.TestHelper {
 
 		[Obsolete]
 		IEnumerable<ValidationFailure> IValidationResultTester.ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
-			var propertyName = GetPropertyName(properties);
+			var propertyName = properties.Any() ? GetPropertyName(properties) : ValidationTestExtension.MatchAnyFailure;
 			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
 		}
 
 		[Obsolete]
 		void IValidationResultTester.ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
-			var propertyName = GetPropertyName(properties);
+			var propertyName = properties.Any() ? GetPropertyName(properties) : ValidationTestExtension.MatchAnyFailure;
 			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
 		}
 

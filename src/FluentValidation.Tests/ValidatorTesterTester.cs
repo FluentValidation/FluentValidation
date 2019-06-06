@@ -238,7 +238,6 @@ namespace FluentValidation.Tests {
 			});
 
 			var ex = Assert.Throws<ValidationTestException>(() => {
-				result.ShouldHaveValidationErrorFor("foo");
 				result.ShouldHaveValidationErrorFor(x => x.Address.Line1);
 			});
 
@@ -546,6 +545,41 @@ namespace FluentValidation.Tests {
 
 			result.ShouldHaveError().WithErrorCode("nota");
 			result.ShouldHaveError().WithErrorCode("notb");
+		}
+
+		[Fact]
+		public void Model_level_check_fails_if_no_model_level_failures() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).Must(x => false);
+			var result = validator.TestValidate(new Person());
+
+			Assert.Throws<ValidationTestException>(() => {
+				result.ShouldHaveValidationErrorFor(x => x);
+			});
+
+			Assert.Throws<ValidationTestException>(() => {
+				result.ShouldHaveValidationErrorFor("");
+			});
+		}
+
+		[Fact]
+		public void Matches_model_level_rule() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x).Must(x => false);
+			validator.RuleFor(x => x.Surname).Must(x => false);
+
+			var result = validator.TestValidate(new Person());
+
+			bool thrown = false;
+			try {
+				result.ShouldHaveValidationErrorFor(x => x);
+				result.ShouldHaveValidationErrorFor("");
+			}
+			catch (ValidationTestException) {
+				thrown = true;
+			}
+
+			thrown.ShouldBeFalse();
 		}
 
 		private class AddressValidator : AbstractValidator<Address> {
