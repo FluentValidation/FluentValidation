@@ -379,7 +379,7 @@ namespace FluentValidation {
 		/// <param name="severity"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Severity severity) {
-			return rule.Configure(config => config.CurrentValidator.Options.Severity = severity);
+			return rule.Configure(config => config.CurrentValidator.Options.CustomSeverityProvider = (x) => severity);
 		}
 
 		/// <summary>

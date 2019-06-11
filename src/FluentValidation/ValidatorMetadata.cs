@@ -80,11 +80,6 @@ namespace FluentValidation {
 		public Func<PropertyValidatorContext, Severity> CustomSeverityProvider { get; set; }
 
 		/// <summary>
-		/// Severity of error.
-		/// </summary>
-		public Severity Severity { get; set; }
-
-		/// <summary>
 		/// Retrieves the unformatted error message template.
 		/// </summary>
 		public IStringSource ErrorMessageSource {

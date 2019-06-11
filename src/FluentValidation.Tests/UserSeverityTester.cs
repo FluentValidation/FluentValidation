@@ -84,5 +84,15 @@ namespace FluentValidation.Tests {
 			result = validator.Validate(person);
 			result.Errors[0].Severity.ShouldEqual(Severity.Info);
 		}
+
+		[Fact]
+		public void Should_use_last_supplied_severity() {
+			validator.RuleFor(x => x.Surname).NotNull().WithSeverity(x => Severity.Warning).WithSeverity(Severity.Info);
+
+			var person = new Person();
+
+			var result = validator.Validate(person);
+			result.Errors[0].Severity.ShouldEqual(Severity.Info);
+		}
 	}
 }
