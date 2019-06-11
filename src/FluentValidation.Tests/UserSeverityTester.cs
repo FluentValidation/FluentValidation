@@ -77,16 +77,12 @@ namespace FluentValidation.Tests {
 
 			var person = new Person();
 
-			{
-				var result = validator.Validate(person);
-				result.Errors[0].Severity.ShouldEqual(Severity.Warning);
-			}
+			var result = validator.Validate(person);
+			result.Errors[0].Severity.ShouldEqual(Severity.Warning);
 
-			{
-				person.Age = 100;
-				var result = validator.Validate(person);
-				result.Errors[0].Severity.ShouldEqual(Severity.Info);
-			}
+			person.Age = 100;
+			result = validator.Validate(person);
+			result.Errors[0].Severity.ShouldEqual(Severity.Info);
 		}
 	}
 }
