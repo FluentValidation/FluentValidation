@@ -109,6 +109,11 @@ namespace FluentValidation.Validators {
 			}
 
 			failure.Severity = Options.Severity;
+
+			if (Options.CustomSeverityProvider != null) {
+				failure.Severity = Options.CustomSeverityProvider(context);
+			}
+
 			return failure;
 		}
 	}

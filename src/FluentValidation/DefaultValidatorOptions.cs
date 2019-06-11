@@ -383,6 +383,38 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Specifies custom severity that should be stored alongside the validation message when validation fails for this rule.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="severityProvider"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, Severity> severityProvider) {
+			severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
+			var wrapper = new Func<PropertyValidatorContext, Severity>(ctx => severityProvider((T) ctx.Instance));
+			return rule.Configure(config => config.CurrentValidator.Options.CustomSeverityProvider = wrapper);
+		}
+
+		/// <summary>
+		/// Specifies custom severity that should be stored alongside the validation message when validation fails for this rule.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <param name="rule"></param>
+		/// <param name="severityProvider"></param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, Severity> severityProvider) {
+			severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
+
+			var wrapper = new Func<PropertyValidatorContext, Severity>(ctx => {
+				return severityProvider((T) ctx.Instance, (TProperty) ctx.PropertyValue);
+			});
+
+			return rule.Configure(config => config.CurrentValidator.Options.CustomSeverityProvider = wrapper);
+		}
+
+		/// <summary>
 		/// Specifies custom method that will be called when specific rule fails
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
