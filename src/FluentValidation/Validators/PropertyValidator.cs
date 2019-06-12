@@ -108,8 +108,8 @@ namespace FluentValidation.Validators {
 				failure.CustomState = Options.CustomStateProvider(context);
 			}
 
-			if (Options.CustomSeverityProvider != null) {
-				failure.Severity = Options.CustomSeverityProvider(context);
+			if (Options.SeverityProvider != null) {
+				failure.Severity = Options.SeverityProvider(context);
 			}
 
 			return failure;

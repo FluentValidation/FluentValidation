@@ -379,7 +379,7 @@ namespace FluentValidation {
 		/// <param name="severity"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Severity severity) {
-			return rule.Configure(config => config.CurrentValidator.Options.CustomSeverityProvider = (x) => severity);
+			return rule.Configure(config => config.CurrentValidator.Options.SeverityProvider = (x) => severity);
 		}
 
 		/// <summary>
@@ -393,7 +393,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, Severity> severityProvider) {
 			severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
 			var wrapper = new Func<PropertyValidatorContext, Severity>(ctx => severityProvider((T) ctx.Instance));
-			return rule.Configure(config => config.CurrentValidator.Options.CustomSeverityProvider = wrapper);
+			return rule.Configure(config => config.CurrentValidator.Options.SeverityProvider = wrapper);
 		}
 
 		/// <summary>
@@ -411,7 +411,7 @@ namespace FluentValidation {
 				return severityProvider((T) ctx.Instance, (TProperty) ctx.PropertyValue);
 			});
 
-			return rule.Configure(config => config.CurrentValidator.Options.CustomSeverityProvider = wrapper);
+			return rule.Configure(config => config.CurrentValidator.Options.SeverityProvider = wrapper);
 		}
 
 		/// <summary>

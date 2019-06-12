@@ -77,7 +77,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Function used to retrieve the severity for the validator
 		/// </summary>
-		public Func<PropertyValidatorContext, Severity> CustomSeverityProvider { get; set; }
+		public Func<PropertyValidatorContext, Severity> SeverityProvider { get; set; }
 
 		/// <summary>
 		/// Retrieves the unformatted error message template.
