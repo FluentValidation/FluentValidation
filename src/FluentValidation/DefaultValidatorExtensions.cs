@@ -1104,5 +1104,21 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, string> IsEnumName<T>(this IRuleBuilder<T, string> ruleBuilder, Type enumType, bool caseSensitive = true) {
 			return ruleBuilder.SetValidator(new StringEnumValidator(enumType, caseSensitive));
 		}
+
+		/// <summary>
+		/// Defines child rules for a nested property.
+		/// </summary>
+		/// <param name="ruleBuilder">The rule builder.</param>
+		/// <param name="action">Callback that will be invoked to build the rules.</param>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <returns></returns>
+		/// <exception cref="ArgumentNullException"></exception>
+		public static IRuleBuilderOptions<T, TProperty> ChildRules<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<InlineValidator<TProperty>> action) {
+			if (action == null) throw new ArgumentNullException(nameof(action));
+			var validator = new InlineValidator<TProperty>();
+			action(validator);
+			return ruleBuilder.SetValidator(validator);
+		}
 	}
 }
