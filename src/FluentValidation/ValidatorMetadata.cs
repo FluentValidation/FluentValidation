@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -75,10 +75,10 @@ namespace FluentValidation {
 		public Func<PropertyValidatorContext, object> CustomStateProvider { get; set; }
 
 		/// <summary>
-		/// Severity of error.
+		/// Function used to retrieve the severity for the validator
 		/// </summary>
-		public Severity Severity { get; set; }
-		
+		public Func<PropertyValidatorContext, Severity> SeverityProvider { get; set; }
+
 		/// <summary>
 		/// Retrieves the unformatted error message template.
 		/// </summary>
