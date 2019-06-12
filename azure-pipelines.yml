@@ -7,6 +7,7 @@ strategy:
 
 trigger:
 - master
+- 8.5
 
 pool:
   vmImage: $(imageName)
