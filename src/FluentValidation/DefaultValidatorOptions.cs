@@ -83,7 +83,7 @@ namespace FluentValidation {
 			});
 		}
 
-		
+
 		/// <summary>
 		/// Specifies a custom action to be invoked when the validator fails.
 		/// </summary>
@@ -98,7 +98,7 @@ namespace FluentValidation {
 				config.OnFailure = (x, failures) => onFailure((T)x);
 			});
 		}
-		
+
 		/// <summary>
 		/// Specifies a custom action to be invoked when the validator fails.
 		/// </summary>
@@ -394,7 +394,7 @@ namespace FluentValidation {
 			severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
 
 			Severity SeverityProvider(PropertyValidatorContext ctx) {
-				return severityProvider((T)ctx.Instance);
+				return severityProvider((T)ctx.InstanceToValidate);
 			}
 
 			return rule.Configure(config => config.CurrentValidator.Options.SeverityProvider = SeverityProvider);
@@ -412,7 +412,7 @@ namespace FluentValidation {
 			severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
 
 			Severity SeverityProvider(PropertyValidatorContext ctx) {
-				return severityProvider((T)ctx.Instance, (TProperty)ctx.PropertyValue);
+				return severityProvider((T)ctx.InstanceToValidate, (TProperty)ctx.PropertyValue);
 			}
 
 			return rule.Configure(config => config.CurrentValidator.Options.SeverityProvider = SeverityProvider);
