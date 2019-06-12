@@ -8,24 +8,20 @@
 	using Newtonsoft.Json;
 	using Xunit;
 
-	public class ServiceProviderTests : IClassFixture<WebAppFixture<StartupWithContainer>> {
-		private readonly WebAppFixture<StartupWithContainer> _webApp;
+	public class ServiceProviderTests : IClassFixture<WebAppFixture> {
+		private readonly HttpClient _client;
 
-
-		public ServiceProviderTests(WebAppFixture<StartupWithContainer> webApp)
-		{
-			_webApp = webApp;
+		public ServiceProviderTests(WebAppFixture webApp) {
+			_client = webApp.WithContainer().CreateClient();
 		}
 
-
-		//these need writing
 		[Fact]
-        public async Task Gets_validators_from_service_provider() {
+		public async Task Gets_validators_from_service_provider() {
 			var form = new FormData {
 				{ "test.Name", null }
 			};
 
-			var result = await _webApp.GetErrors("Test1", form);
+			var result = await _client.GetErrors("Test1", form);
 
 			result.IsValidField("test.Name").ShouldBeFalse();
 			result.GetError("test.Name").ShouldEqual("Validation Failed");
@@ -33,10 +29,10 @@
 
 		[Fact]
 		public async Task Validators_should_be_transient() {
-			var result = await _webApp.GetErrors("Lifecycle", new FormData());
+			var result = await _client.GetErrors("Lifecycle", new FormData());
 			var hashCode1 = result.GetError("Foo");
 
-			var result2 = await _webApp.GetErrors("Lifecycle", new FormData());
+			var result2 = await _client.GetErrors("Lifecycle", new FormData());
 			var hashCode2 = result2.GetError("Foo");
 
 			Assert.NotNull(hashCode1);
@@ -49,9 +45,8 @@
 
 		[Fact]
 		public async Task Gets_validator_for_model_not_underlying_collection_type() {
-			var result = await _webApp.GetErrors("ModelThatimplementsIEnumerable", new FormData());
+			var result = await _client.GetErrors("ModelThatimplementsIEnumerable", new FormData());
 			result.GetError("Name").ShouldEqual("Foo");
 		}
-
 	}
 }
