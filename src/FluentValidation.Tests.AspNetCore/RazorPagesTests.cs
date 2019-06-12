@@ -6,6 +6,7 @@
 	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
+	using Attributes;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.Abstractions;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -16,15 +17,15 @@
 	using Xunit;
 	using Xunit.Abstractions;
 
-	public class RazorPagesTestsWithImplicitValidationDisabled : IClassFixture<WebAppFixture<StartupWithImplicitValidationDisabled>> {
+	public class RazorPagesTestsWithImplicitValidationDisabled : IClassFixture<WebAppFixture> {
 		private readonly ITestOutputHelper _output;
-		private readonly WebAppFixture<StartupWithImplicitValidationDisabled> _webApp;
+		private readonly HttpClient _client;
 
-		public RazorPagesTestsWithImplicitValidationDisabled(ITestOutputHelper output, WebAppFixture<StartupWithImplicitValidationDisabled> webApp) {
+		public RazorPagesTestsWithImplicitValidationDisabled(ITestOutputHelper output, WebAppFixture webApp) {
 			CultureScope.SetDefaultCulture();
 
-			this._output = output;
-			this._webApp = webApp;
+			_output = output;
+			_client = webApp.WithImplicitValidationEnabled(false).CreateClient();
 		}
 
 		[Fact]
@@ -33,34 +34,34 @@
 				{"Name", null},
 			};
 
-			var result = await _webApp.PostResponse("/TestPage1", form);
+			var result = await _client.PostResponse("/TestPage1", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
 			errors.Count.ShouldEqual(1);
 		}
-		
+
 		[Fact]
 		public async void Validates_with_BindProperty_attribute_when_implicit_validation_disabled_using_prefix() {
 			var form = new FormData {
 				{"Test.Name", null},
 			};
 
-			var result = await _webApp.PostResponse("/TestPageWithPrefix", form);
+			var result = await _client.PostResponse("/TestPageWithPrefix", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
 			errors.Count.ShouldEqual(1);
 		}
 	}
-	
-	public class RazorPagesTestsWithImplicitValidationEnabled : IClassFixture<WebAppFixture<Startup>> {
-		private readonly ITestOutputHelper _output;
-		private readonly WebAppFixture<Startup> _webApp;
 
-		public RazorPagesTestsWithImplicitValidationEnabled(ITestOutputHelper output, WebAppFixture<Startup> webApp) {
+	public class RazorPagesTestsWithImplicitValidationEnabled : IClassFixture<WebAppFixture> {
+		private readonly ITestOutputHelper _output;
+		private readonly HttpClient _client;
+
+		public RazorPagesTestsWithImplicitValidationEnabled(ITestOutputHelper output, WebAppFixture webApp) {
 			CultureScope.SetDefaultCulture();
 
-			this._output = output;
-			this._webApp = webApp;
+			_output = output;
+			_client = webApp.WithImplicitValidationEnabled(true).CreateClient();
 		}
 
 		[Fact]
@@ -69,19 +70,19 @@
 				{"Name", null},
 			};
 
-			var result = await _webApp.PostResponse("/TestPage1", form);
+			var result = await _client.PostResponse("/TestPage1", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
 			errors.Count.ShouldEqual(1);
 		}
-		
+
 		[Fact]
 		public async void Validates_with_BindProperty_attribute_when_implicit_validation_disabled_using_prefix() {
 			var form = new FormData {
 				{"Test.Name", null},
 			};
 
-			var result = await _webApp.PostResponse("/TestPageWithPrefix", form);
+			var result = await _client.PostResponse("/TestPageWithPrefix", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
 			errors.Count.ShouldEqual(1);

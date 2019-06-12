@@ -12,235 +12,191 @@
 	using ValidationResult = Results.ValidationResult;
 
 	[Validator(typeof(TestModel5Validator))]
-    public class TestModel5
-    {
-        public int Id { get; set; }
-        public bool SomeBool { get; set; }
-    }
+	public class TestModel5 {
+		public int Id { get; set; }
+		public bool SomeBool { get; set; }
+	}
 
-    public class TestModel5Validator : AbstractValidator<TestModel5>
-    {
-        public TestModel5Validator()
-        {
-            //force a complex rule
-            RuleFor(x => x.SomeBool).Must(x => x == true);
-            RuleFor(x => x.Id).NotEmpty();
-        }
-    }
+	public class TestModel5Validator : AbstractValidator<TestModel5> {
+		public TestModel5Validator() {
+			//force a complex rule
+			RuleFor(x => x.SomeBool).Must(x => x == true);
+			RuleFor(x => x.Id).NotEmpty();
+		}
+	}
 
-    public class SimplePropertyInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor
-    {
-        readonly string[] properties = new[] { "Surname", "Forename" };
+	public class SimplePropertyInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
+		readonly string[] properties = new[] {"Surname", "Forename"};
 
-        public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context)
-        {
-            var newContext = context.Clone(selector: new FluentValidation.Internal.MemberNameValidatorSelector(properties));
-            return newContext;
-        }
+		public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context) {
+			var newContext = context.Clone(selector: new FluentValidation.Internal.MemberNameValidatorSelector(properties));
+			return newContext;
+		}
 
-        public ValidationResult AfterMvcValidation(ControllerContext cc, ValidationContext context, ValidationResult result)
-        {
-            return result;
-        }
-    }
+		public ValidationResult AfterMvcValidation(ControllerContext cc, ValidationContext context, ValidationResult result) {
+			return result;
+		}
+	}
 
-    public class ClearErrorsInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor
-    {
-        public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context)
-        {
-            return null;
-        }
+	public class ClearErrorsInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
+		public ValidationContext BeforeMvcValidation(ControllerContext cc, ValidationContext context) {
+			return null;
+		}
 
-        public ValidationResult AfterMvcValidation(ControllerContext cc, ValidationContext context, ValidationResult result)
-        {
-            return new ValidationResult();
-        }
-    }
+		public ValidationResult AfterMvcValidation(ControllerContext cc, ValidationContext context, ValidationResult result) {
+			return new ValidationResult();
+		}
+	}
 
-    [Validator(typeof(PropertiesValidator2))]
-    public class PropertiesTestModel2
-    {
-        public string Email { get; set; }
-        public string Surname { get; set; }
-        public string Forename { get; set; }
-    }
-    public class PropertiesValidator2 : AbstractValidator<PropertiesTestModel2>, IValidatorInterceptor
-    {
-        public PropertiesValidator2()
-        {
-            RuleFor(x => x.Email).NotEqual("foo");
-            RuleFor(x => x.Surname).NotEqual("foo");
-            RuleFor(x => x.Forename).NotEqual("foo");
-        }
+	[Validator(typeof(PropertiesValidator2))]
+	public class PropertiesTestModel2 {
+		public string Email { get; set; }
+		public string Surname { get; set; }
+		public string Forename { get; set; }
+	}
 
-        public ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext)
-        {
-            return validationContext;
-        }
+	public class PropertiesValidator2 : AbstractValidator<PropertiesTestModel2>, IValidatorInterceptor {
+		public PropertiesValidator2() {
+			RuleFor(x => x.Email).NotEqual("foo");
+			RuleFor(x => x.Surname).NotEqual("foo");
+			RuleFor(x => x.Forename).NotEqual("foo");
+		}
 
-        public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result)
-        {
-            return new ValidationResult(); //empty errors
-        }
-    }
+		public ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext) {
+			return validationContext;
+		}
+
+		public ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result) {
+			return new ValidationResult(); //empty errors
+		}
+	}
 
 
-    [Validator(typeof(PropertiesValidator))]
-    public class PropertiesTestModel
-    {
-        public string Email { get; set; }
-        public string Surname { get; set; }
-        public string Forename { get; set; }
-    }
+	[Validator(typeof(PropertiesValidator))]
+	public class PropertiesTestModel {
+		public string Email { get; set; }
+		public string Surname { get; set; }
+		public string Forename { get; set; }
+	}
 
 
-    public class PropertiesValidator : AbstractValidator<PropertiesTestModel>
-    {
-        public PropertiesValidator()
-        {
-            RuleFor(x => x.Email).NotEqual("foo");
-            RuleFor(x => x.Surname).NotEqual("foo");
-            RuleFor(x => x.Forename).NotEqual("foo");
-        }
-    }
+	public class PropertiesValidator : AbstractValidator<PropertiesTestModel> {
+		public PropertiesValidator() {
+			RuleFor(x => x.Email).NotEqual("foo");
+			RuleFor(x => x.Surname).NotEqual("foo");
+			RuleFor(x => x.Forename).NotEqual("foo");
+		}
+	}
 
-    [Validator(typeof(RulesetTestValidator))]
-    public class RulesetTestModel
-    {
-        public string Email { get; set; }
-        public string Surname { get; set; }
-        public string Forename { get; set; }
-    }
+	[Validator(typeof(RulesetTestValidator))]
+	public class RulesetTestModel {
+		public string Email { get; set; }
+		public string Surname { get; set; }
+		public string Forename { get; set; }
+	}
 
-    public class RulesetTestValidator : AbstractValidator<RulesetTestModel>
-    {
-        public RulesetTestValidator()
-        {
-            RuleFor(x => x.Email).NotEqual("foo");
+	public class RulesetTestValidator : AbstractValidator<RulesetTestModel> {
+		public RulesetTestValidator() {
+			RuleFor(x => x.Email).NotEqual("foo");
 
-            RuleSet("Names", () => {
-                RuleFor(x => x.Surname).NotEqual("foo");
-                RuleFor(x => x.Forename).NotEqual("foo");
-            });
-        }
-    }
+			RuleSet("Names", () => {
+				RuleFor(x => x.Surname).NotEqual("foo");
+				RuleFor(x => x.Forename).NotEqual("foo");
+			});
+		}
+	}
 
-    [Validator(typeof(TestModelWithOverridenMessageValueTypeValidator))]
-    public  class TestModelWithOverridenMessageValueType
-    {
-        public int Id { get; set; }
-    }
+	[Validator(typeof(TestModelWithOverridenMessageValueTypeValidator))]
+	public class TestModelWithOverridenMessageValueType {
+		public int Id { get; set; }
+	}
 
-    [Validator(typeof(TestModelWithOverridenPropertyNameValidator))]
-    public class TestModelWithOverridenPropertyNameValueType
-    {
-        public int Id { get; set; }
-    }
+	[Validator(typeof(TestModelWithOverridenPropertyNameValidator))]
+	public class TestModelWithOverridenPropertyNameValueType {
+		public int Id { get; set; }
+	}
 
-    public class TestModelWithOverridenMessageValueTypeValidator : AbstractValidator<TestModelWithOverridenMessageValueType>
-    {
-        public TestModelWithOverridenMessageValueTypeValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty().WithMessage("Foo");
-        }
-    }
+	public class TestModelWithOverridenMessageValueTypeValidator : AbstractValidator<TestModelWithOverridenMessageValueType> {
+		public TestModelWithOverridenMessageValueTypeValidator() {
+			RuleFor(x => x.Id).NotEmpty().WithMessage("Foo");
+		}
+	}
 
-    public class TestModelWithOverridenPropertyNameValidator : AbstractValidator<TestModelWithOverridenPropertyNameValueType>
-    {
-        public TestModelWithOverridenPropertyNameValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty().WithName("Foo");
-
-        }
-    }
+	public class TestModelWithOverridenPropertyNameValidator : AbstractValidator<TestModelWithOverridenPropertyNameValueType> {
+		public TestModelWithOverridenPropertyNameValidator() {
+			RuleFor(x => x.Id).NotEmpty().WithName("Foo");
+		}
+	}
 
 
+	public class TestModel2 {
+	}
+
+	[Validator(typeof(TestModelValidator))]
+	public class TestModel {
+		public string Name { get; set; }
+	}
+
+	public class TestModelValidator : AbstractValidator<TestModel> {
+		public TestModelValidator() {
+			RuleFor(x => x.Name).NotNull().WithMessage("Validation Failed");
+		}
+	}
+
+	[Validator(typeof(TestModelValidator3))]
+	public class TestModel3 {
+		public int Id { get; set; }
+	}
+
+	public class TestModelValidator3 : AbstractValidator<TestModel3> {
+		public TestModelValidator3() {
+			RuleFor(x => x.Id).NotEmpty().WithMessage("Validation failed");
+		}
+	}
+
+	public class TestModelWithoutValidator {
+		public int Id { get; set; }
+	}
+
+	[Validator(typeof(TestModel4Validator))]
+	public class TestModel4 {
+		public string Surname { get; set; }
+		public string Forename { get; set; }
+		public string Email { get; set; }
+		public DateTime DateOfBirth { get; set; }
+		public string Address1 { get; set; }
+	}
 
 
-    public class TestModel2
-    {
-    }
+	public class TestModel4Validator : AbstractValidator<TestModel4> {
+		public TestModel4Validator() {
+			RuleFor(x => x.Surname).NotEqual(x => x.Forename);
 
-    [Validator(typeof(TestModelValidator))]
-    public class TestModel
-    {
-        public string Name { get; set; }
-    }
+			RuleFor(x => x.Email)
+				.EmailAddress();
 
-    public class TestModelValidator : AbstractValidator<TestModel>
-    {
-        public TestModelValidator()
-        {
-            RuleFor(x => x.Name).NotNull().WithMessage("Validation Failed");
-        }
-    }
+			RuleFor(x => x.Address1).NotEmpty();
+		}
+	}
 
-    [Validator(typeof(TestModelValidator3))]
-    public class TestModel3
-    {
-        public int Id { get; set; }
-    }
+	[Validator(typeof(TestModel6Validator))]
+	public class TestModel6 {
+		public int Id { get; set; }
+	}
 
-    public class TestModelValidator3 : AbstractValidator<TestModel3>
-    {
-        public TestModelValidator3()
-        {
-            RuleFor(x => x.Id).NotEmpty().WithMessage("Validation failed");
-        }
-    }
+	public class TestModel6Validator : AbstractValidator<TestModel6> {
+		public TestModel6Validator() {
+			//This ctor is intentionally blank.
+		}
+	}
 
-    public class TestModelWithoutValidator
-    {
-        public int Id { get; set; }
-    }
-
-    [Validator(typeof(TestModel4Validator))]
-    public class TestModel4
-    {
-        public string Surname { get; set; }
-        public string Forename { get; set; }
-        public string Email { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public string Address1 { get; set; }
-    }
-
-
-
-    public class TestModel4Validator : AbstractValidator<TestModel4>
-    {
-        public TestModel4Validator()
-        {
-            RuleFor(x => x.Surname).NotEqual(x => x.Forename);
-
-            RuleFor(x => x.Email)
-                .EmailAddress();
-
-            RuleFor(x => x.Address1).NotEmpty();
-        }
-    }
-
-    [Validator(typeof(TestModel6Validator))]
-    public class TestModel6
-    {
-        public int Id { get; set; }
-    }
-
-    public class TestModel6Validator : AbstractValidator<TestModel6>
-    {
-        public TestModel6Validator()
-        {
-            //This ctor is intentionally blank.
-        }
-    }
-
-	// No attribute- only resolved using service provider. 
-	public class LifecycleTestModel {  }
+	// No attribute- only resolved using service provider.
+	public class LifecycleTestModel {
+	}
 
 	public class LifecycleTestValidator : AbstractValidator<LifecycleTestModel> {
 		public LifecycleTestValidator() {
-			RuleFor(x=>x).Custom((x,ctx) => {
-				ctx.AddFailure(new ValidationFailure("Foo", GetHashCode().ToString()));
-			});
+			RuleFor(x => x).Custom((x, ctx) => { ctx.AddFailure(new ValidationFailure("Foo", GetHashCode().ToString())); });
 		}
 	}
 
@@ -273,13 +229,13 @@
 	}
 
 	public class ModelThatImplementsIEnumerable : IEnumerable<ModelPartOfIenumerable> {
-
 		public string Name { get; set; }
 
 		private List<ModelPartOfIenumerable> _something = new List<ModelPartOfIenumerable> {
 			new ModelPartOfIenumerable(),
 			new ModelPartOfIenumerable()
 		};
+
 		IEnumerator IEnumerable.GetEnumerator() {
 			return GetEnumerator();
 		}
@@ -306,7 +262,6 @@
 
 
 		public string SomeOtherProperty { get; set; }
-
 	}
 
 	public class MultiValidationValidator : AbstractValidator<MultiValidationModel> {
@@ -319,7 +274,6 @@
 	public class MultiValidationModel2 {
 		[Required]
 		public string Name { get; set; }
-
 	}
 
 	public class MultiValidationValidator2 : AbstractValidator<MultiValidationModel2> {
@@ -332,7 +286,7 @@
 	[Validator(typeof(MultiValidationValidator3))]
 	public class MultiValidationModel3 {
 		public string Name { get; set; }
-		public ChildModel5 Child {get; set;} = new ChildModel5();
+		public ChildModel5 Child { get; set; } = new ChildModel5();
 	}
 
 	public class MultiValidationValidator3 : AbstractValidator<MultiValidationModel3> {
@@ -347,6 +301,7 @@
 	public class ChildModel5 {
 		[Required]
 		public string Name { get; set; }
+
 		public string Name2 { get; set; }
 	}
 
@@ -365,7 +320,8 @@
 		public string Name { get; set; }
 	}
 
-	public class ParentModelValidator : AbstractValidator<ParentModel> { }
+	public class ParentModelValidator : AbstractValidator<ParentModel> {
+	}
 
 	public class ChildModelValidator : AbstractValidator<ChildModel> {
 		public ChildModelValidator() {
@@ -377,8 +333,9 @@
 	public class ImplementsIValidatableObjectModel : IValidatableObject {
 		public string Name { get; set; }
 		public string Name2 { get; set; }
+
 		public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext) {
-			yield return new System.ComponentModel.DataAnnotations.ValidationResult("Fail", new[] { "Name2"});
+			yield return new System.ComponentModel.DataAnnotations.ValidationResult("Fail", new[] {"Name2"});
 		}
 	}
 
@@ -401,7 +358,7 @@
 		public string Name2 { get; set; }
 
 		public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext) {
-			yield return new System.ComponentModel.DataAnnotations.ValidationResult("Fail", new[] { "Name2"});
+			yield return new System.ComponentModel.DataAnnotations.ValidationResult("Fail", new[] {"Name2"});
 		}
 	}
 
@@ -419,7 +376,6 @@
 	}
 
 
-
 	[Validator(typeof(ParentModelValidator3))]
 	public class ParentModel3 {
 		public ChildModel3 Child { get; set; } = new ChildModel3();
@@ -433,7 +389,8 @@
 		public string Name2 { get; set; }
 	}
 
-	public class ParentModelValidator3 : AbstractValidator<ParentModel3> { }
+	public class ParentModelValidator3 : AbstractValidator<ParentModel3> {
+	}
 
 	public class ChildModelValidator3 : AbstractValidator<ChildModel3> {
 		public ChildModelValidator3() {
@@ -468,7 +425,8 @@
 		public ChildModel Child { get; set; }
 	}
 
-	public class ParentModel5Validator : AbstractValidator<ParentModel5> { }
+	public class ParentModel5Validator : AbstractValidator<ParentModel5> {
+	}
 
 
 	[Validator(typeof(ParentModel6Validator))]
@@ -478,7 +436,6 @@
 
 	public class ParentModel6Validator : AbstractValidator<ParentModel6> {
 		public ParentModel6Validator() {
-			
 		}
 	}
 
@@ -502,11 +459,10 @@
 			RuleFor(x => x.Name).NotNull().WithMessage("NotNullInjected");
 		}
 	}
-	
+
 	public class InjectsExplicitChildValidatorCollection : AbstractValidator<ParentModel6> {
 		public InjectsExplicitChildValidatorCollection() {
 			RuleForEach(x => x.Children).InjectValidator();
 		}
 	}
-
 }

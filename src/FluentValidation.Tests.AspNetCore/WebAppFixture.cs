@@ -1,67 +1,60 @@
 ﻿namespace FluentValidation.Tests {
 	using System;
-	using System.Collections.Generic;
-	using System.Net.Http;
-	using System.Text;
-	using System.Threading.Tasks;
+	using AspNetCore;
 	using AspNetCore.Controllers;
+	using Attributes;
+	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Hosting;
-	using Microsoft.AspNetCore.TestHost;
-	using Newtonsoft.Json;
+	using Microsoft.AspNetCore.Http;
+	using Microsoft.AspNetCore.Mvc.Testing;
+	using Microsoft.Extensions.DependencyInjection;
 
-	public class WebAppFixture<TStartup> where TStartup : class {
-		public TestServer Server { get; }
-		public HttpClient Client { get; }
-
-		public WebAppFixture() {
-			Server = BuildTestServer<TStartup>();
-			Client = Server.CreateClient();
+	public class WebAppFixture : WebApplicationFactory<Startup> {
+		protected override void ConfigureWebHost(IWebHostBuilder builder) {
+			builder.UseContentRoot(".");
 		}
 
-		public static TestServer BuildTestServer<T>() where T : class {
-			return new TestServer(new WebHostBuilder()
+		protected override IWebHostBuilder CreateWebHostBuilder() {
+			return new WebHostBuilder()
 				.UseDefaultServiceProvider((context, options) => options.ValidateScopes = true)
-				.UseStartup<T>());
+				.UseStartup<Startup>();
 		}
 
-		public async Task<string> GetResponse(string url,
-			string querystring = "") {
-			if (!String.IsNullOrEmpty(querystring)) {
-				url += "?" + querystring;
-			}
+		public WebApplicationFactory<Startup> WithContainer(bool registerContextAccessor = true) {
+			return WithWebHostBuilder(cfg => {
+				cfg.ConfigureServices(services => {
+					services.AddFluentValidationForTesting(fv => {
+						fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+					});
+					if (registerContextAccessor) {
+						services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+					}
 
-			var response = await Client.GetAsync(url);
-			response.EnsureSuccessStatusCode();
-			return await response.Content.ReadAsStringAsync();
+					services.AddScoped<ClientsideScopedDependency>();
+				});
+			});
 		}
 
-		public async Task<string> PostResponse(string url,
-			Dictionary<string, string> form) {
-			var c = new FormUrlEncodedContent(form);
-
-			var response = await Client.PostAsync(url, c);
-			response.EnsureSuccessStatusCode();
-
-			return await response.Content.ReadAsStringAsync();
+		public WebApplicationFactory<Startup> WithDataAnnotationsDisabled() {
+			return WithFluentValidation(fv => {
+				fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);
+				fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+			});
 		}
 
-		public async Task<List<SimpleError>> GetErrors(string action, Dictionary<string, string> form) {
-			var response = await PostResponse($"/Test/{action}", form);
-				return JsonConvert.DeserializeObject<List<SimpleError>>(response);
+		public WebApplicationFactory<Startup> WithImplicitValidationEnabled(bool enabled) {
+			return WithFluentValidation(fv => {
+				fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);
+				fv.ImplicitlyValidateChildProperties = enabled;
+			});
 		}
 
-		public Task<List<SimpleError>> GetErrorsViaJSON<T>(string action, T model) {
-			return GetErrorsViaJSONRaw(action, JsonConvert.SerializeObject(model));
+		public WebApplicationFactory<Startup> WithFluentValidation(Action<FluentValidationMvcConfiguration> config) {
+			return WithWebHostBuilder(cfg => {
+				cfg.ConfigureServices(services => {
+					services.AddFluentValidationForTesting(config);
+				});
+			});
 		}
-
-		public async Task<List<SimpleError>> GetErrorsViaJSONRaw(string action, string json) {
-			var request = new HttpRequestMessage(HttpMethod.Post, $"/Test/{action}");
-			request.Content = new StringContent(json, Encoding.UTF8, "application/json");
-			var responseMessage = await Client.SendAsync(request);
-			responseMessage.EnsureSuccessStatusCode();
-			var response = await responseMessage.Content.ReadAsStringAsync();
-			return JsonConvert.DeserializeObject<List<SimpleError>>(response);
-		}
-
 	}
 }
