@@ -11,8 +11,8 @@ sections:
   - /start/creating-your-first-validator
   - /start/chaining-validators
   - /start/exceptions
-  - /start/collections
   - /start/complex-properties
+  - /start/collections
   - /start/rulesets
   - /start/including-rules
   - /start/configuring
