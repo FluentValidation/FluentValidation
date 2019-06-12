@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -23,35 +23,47 @@ namespace FluentValidation.TestHelper {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Text.RegularExpressions;
 	using Internal;
 	using Results;
 	using Validators;
 
 	public static class ValidationTestExtension {
+		internal const string MatchAnyFailure = "__FV__ANY";
+
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
 			var instanceToValidate = new T();
-			var testValidationResult = validator.TestValidate(expression, instanceToValidate, value, ruleSet);
-			return testValidationResult.ShouldHaveError();
+
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, true);
+			memberAccessor.Set(instanceToValidate, value);
+
+			var testValidationResult = validator.TestValidate(instanceToValidate, ruleSet);
+			return testValidationResult.ShouldHaveValidationErrorFor(expression);
 		}
 
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
-			return testValidationResult.ShouldHaveError();
+			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
+			return testValidationResult.ShouldHaveValidationErrorFor(expression);
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-				var instanceToValidate = new T();
-			var testValidationResult = validator.TestValidate(expression, instanceToValidate, value, ruleSet);
-			testValidationResult.ShouldNotHaveError();
+
+			var instanceToValidate = new T();
+
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, true);
+			memberAccessor.Set(instanceToValidate, value);
+
+			var testValidationResult = validator.TestValidate(instanceToValidate, ruleSet);
+			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
-			testValidationResult.ShouldNotHaveError();
+			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
+			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
 
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
@@ -62,13 +74,13 @@ namespace FluentValidation.TestHelper {
 				throw new NotSupportedException("ShouldHaveChildValidator can only be used for simple property expressions. It cannot be used for model-level rules or rules that contain anything other than a property reference.");
 			}
 
-			var matchingValidators = 
+			var matchingValidators =
 				expression.IsParameterExpression()	 ? GetModelLevelValidators(descriptor) :
 				descriptor.GetValidatorsForMember(expressionMemberName).ToArray();
 
 
 			matchingValidators = matchingValidators.Concat(GetDependentRules(expressionMemberName, expression, descriptor)).ToArray();
-			
+
 			var childValidatorTypes = matchingValidators.OfType<IChildValidatorAdaptor>().Select(x => x.ValidatorType);
 
 			if (childValidatorTypes.All(x => !childValidatorType.GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()))) {
@@ -91,28 +103,31 @@ namespace FluentValidation.TestHelper {
 				.ToArray();
 		}
 
-		private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T instanceToValidate, TValue value, string ruleSet = null, bool setProperty=true) where T : class {
-			var memberAccessor = new MemberAccessor<T, TValue>(expression, setProperty);
-
-			if (setProperty) {
-				memberAccessor.Set(instanceToValidate, value);
-			}
-
-			var validationResult = validator.Validate(instanceToValidate, null, ruleSet: ruleSet);
-
-			return new TestValidationResult<T, TValue>(validationResult, memberAccessor);
-		}
-
 		public static TestValidationResult<T, T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
 			var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
-
+			// TODO: For 9.0 remove passing the expression parameter.
 			return new TestValidationResult<T, T>(validationResult, (Expression<Func<T, T>>) (o => o));
 		}
 
+		public static IEnumerable<ValidationFailure> ShouldHaveAnyValidationError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
+			// TODO: Remove the second generic for 9.0.
+			if (!testValidationResult.Errors.Any())
+				throw new ValidationTestException($"Expected at least one validation error, but none were found.");
+
+			return testValidationResult.Errors;
+		}
+
+		public static void ShouldNotHaveAnyValidationErrors<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
+			// TODO: Remove the second generic for 9.0.
+			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure);
+		}
+
+		[Obsolete("Call ShouldHaveAnyValidationError")]
 		public static IEnumerable<ValidationFailure> ShouldHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
 			return testValidationResult.Which.ShouldHaveValidationError();
 		}
 
+		[Obsolete("Call ShouldNotHaveAnyValidationErrors")]
 		public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
 			testValidationResult.Which.ShouldNotHaveValidationError();
 		}
@@ -127,6 +142,38 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
+		internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
+			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
+			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+			                                 || propertyName == MatchAnyFailure
+			                                 ).ToArray();
+
+			if (!failures.Any())
+				throw new ValidationTestException($"Expected a validation error for property {propertyName}");
+
+			return failures;
+		}
+
+		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
+			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
+			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+			                                 || propertyName == MatchAnyFailure
+			                                 ).ToList();
+
+			if (failures.Any()) {
+				var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
+				if (propertyName == MatchAnyFailure) {
+					errorMessageBanner = "Expected no validation errors";
+				}
+				string errorMessageDetails = "";
+				for (int i = 0; i < failures.Count; i++) {
+					errorMessageDetails += $"[{i}]: {failures[i].ErrorMessage}\n";
+				}
+				var errorMessage = $"{errorMessageBanner}\n----\nValidation Errors:\n{errorMessageDetails}";
+				throw new ValidationTestException(errorMessage, failures);
+			}
+		}
+
 		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null){
 			bool anyMatched = failures.Any(failurePredicate);
 
@@ -135,7 +182,7 @@ namespace FluentValidation.TestHelper {
 				string message = BuildErrorMessage(failure, exceptionMessage, "Expected validation error was not found");
 				throw new ValidationTestException(message);
 			}
-			
+
 			return failures;
 		}
 
@@ -181,6 +228,10 @@ namespace FluentValidation.TestHelper {
 
 		public static IEnumerable<ValidationFailure> WithoutErrorCode(this IEnumerable<ValidationFailure> failures, string unexpectedErrorCode) {
 			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Found an unexpected error code of '{0}'", unexpectedErrorCode));
+		}
+
+		private static string NormalizePropertyName(string propertyName) {
+			return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 		}
 	}
 }
