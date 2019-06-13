@@ -204,12 +204,12 @@ namespace FluentValidation.Tests {
 			});
 			testValidator.RuleFor(x => x.Id).NotEqual(0);
 
-			var assertionRoot = testValidator.TestValidate(new Person(), "Names").Which;
+			var assertionRoot = testValidator.TestValidate(new Person(), "Names");
 
-			assertionRoot.Property(x => x.Forename).ShouldHaveValidationError()
+			assertionRoot.ShouldHaveValidationErrorFor(x => x.Forename)
 				.WithErrorCode("NotNullValidator");
-			assertionRoot.Property(x => x.Surname).ShouldHaveValidationError().WithErrorCode("NotNullValidator");
-			assertionRoot.Property(x => x.Id).ShouldNotHaveValidationError();
+			assertionRoot.ShouldHaveValidationErrorFor(x => x.Surname).WithErrorCode("NotNullValidator");
+			assertionRoot.ShouldNotHaveValidationErrorFor(x => x.Id);
 		}
 
 		[Fact]
@@ -222,7 +222,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var ex = Assert.Throws<ValidationTestException>(() => {
-				result.Which.Property(x => x.Address).Property(x => x.Line1).ShouldHaveValidationError();
+				result.ShouldHaveValidationErrorFor(x => x.Address.Line1);
 			});
 
 			ex.Message.ShouldEqual("Expected a validation error for property Address.Line1");
@@ -340,7 +340,7 @@ namespace FluentValidation.Tests {
 				foreach(var msg in errMessages) {
 					validator.Add(v => v.RuleFor(x => x.Surname).NotNull().WithMessage(msg));
 				}
-				validator.TestValidate(new Person { }).Result.Errors.WithoutErrorMessage(withoutErrMsg);
+				validator.TestValidate(new Person { }).Errors.WithoutErrorMessage(withoutErrMsg);
 			}
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
@@ -543,8 +543,8 @@ namespace FluentValidation.Tests {
 			var person = new Person() { Surname = "c" };
 			var result = validator.TestValidate(person);
 
-			result.ShouldHaveError().WithErrorCode("nota");
-			result.ShouldHaveError().WithErrorCode("notb");
+			result.ShouldHaveAnyValidationError().WithErrorCode("nota");
+			result.ShouldHaveAnyValidationError().WithErrorCode("notb");
 		}
 
 		[Fact]

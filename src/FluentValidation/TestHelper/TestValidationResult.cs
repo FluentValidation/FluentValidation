@@ -28,26 +28,10 @@ namespace FluentValidation.TestHelper {
 	using Internal;
 	using Results;
 
-	// TODO: Remove the TValue generic and the IValidationResultTester interface from this for 9.0.
-	public class TestValidationResult<T, TValue> : ValidationResult, IValidationResultTester where T : class {
+	public class TestValidationResult<T> : ValidationResult where T : class {
 
-		[Obsolete("Use properties on the parent class itself")]
-		public ValidationResult Result { get; private set; }
-
-		[Obsolete]
-		public MemberAccessor<T, TValue> MemberAccessor { get; private set; }
-
-		public TestValidationResult(ValidationResult validationResult, MemberAccessor<T, TValue> memberAccessor) : base(validationResult.Errors){
-			Result = validationResult;
-			MemberAccessor = memberAccessor;
+		public TestValidationResult(ValidationResult validationResult) : base(validationResult.Errors){
 			RuleSetsExecuted = validationResult.RuleSetsExecuted;
-		}
-
-		[Obsolete("Call ShouldHaveValidationError/ShouldNotHaveValidationError instead of Which.ShouldHaveValidationError/Which.ShouldNotHaveValidationError")]
-		public ITestPropertyChain<TValue> Which {
-			get {
-				return new TestPropertyChain<TValue, TValue>(this, Enumerable.Empty<MemberInfo>());
-			}
 		}
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
@@ -66,33 +50,6 @@ namespace FluentValidation.TestHelper {
 
 		public void ShouldNotHaveValidationErrorFor(string propertyName) {
 			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
-		}
-
-		[Obsolete]
-		IEnumerable<ValidationFailure> IValidationResultTester.ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
-			var propertyName = properties.Any() ? GetPropertyName(properties) : ValidationTestExtension.MatchAnyFailure;
-			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
-		}
-
-		[Obsolete]
-		void IValidationResultTester.ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
-			var propertyName = properties.Any() ? GetPropertyName(properties) : ValidationTestExtension.MatchAnyFailure;
-			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
-		}
-
-		[Obsolete]
-		private string GetPropertyName(IEnumerable<MemberInfo> properties) {
-			var propertiesList = properties.Where(x => x != null).Select(x => x.Name).ToList();
-
-			if (MemberAccessor != null) {
-				string memberName = ValidatorOptions.PropertyNameResolver(typeof(T), MemberAccessor.Member, MemberAccessor);
-
-				if (!string.IsNullOrEmpty(memberName)) {
-					propertiesList.Insert(0, memberName);
-				}
-			}
-
-			return string.Join(".", propertiesList);
 		}
 	}
 
