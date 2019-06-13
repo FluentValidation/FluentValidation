@@ -5,8 +5,12 @@
     <PackageReleaseNotes>
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
 
-Changes in 8.4.1:
+Changes in 8.5.0:
 * Add additional overload of the EmailAddress validator for compatibility with ASP.NET Core's default email validation.
+* Simplify the advanced testhelper syntax.
+* Add support for ASP.NET Core 3.
+* Add support for defining child rules inline.
+* ValidatorDescriptor now has consistent handling of model-level rules.
 
 Changes in 8.4.0:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
