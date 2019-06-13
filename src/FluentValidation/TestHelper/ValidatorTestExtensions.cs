@@ -103,33 +103,20 @@ namespace FluentValidation.TestHelper {
 				.ToArray();
 		}
 
-		public static TestValidationResult<T, T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
+		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
 			var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
-			// TODO: For 9.0 remove passing the expression parameter.
-			return new TestValidationResult<T, T>(validationResult, (Expression<Func<T, T>>) (o => o));
+			return new TestValidationResult<T>(validationResult);
 		}
 
-		public static IEnumerable<ValidationFailure> ShouldHaveAnyValidationError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			// TODO: Remove the second generic for 9.0.
+		public static IEnumerable<ValidationFailure> ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) where T : class {
 			if (!testValidationResult.Errors.Any())
 				throw new ValidationTestException($"Expected at least one validation error, but none were found.");
 
 			return testValidationResult.Errors;
 		}
 
-		public static void ShouldNotHaveAnyValidationErrors<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			// TODO: Remove the second generic for 9.0.
+		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) where T : class {
 			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure);
-		}
-
-		[Obsolete("Call ShouldHaveAnyValidationError")]
-		public static IEnumerable<ValidationFailure> ShouldHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			return testValidationResult.Which.ShouldHaveValidationError();
-		}
-
-		[Obsolete("Call ShouldNotHaveAnyValidationErrors")]
-		public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			testValidationResult.Which.ShouldNotHaveValidationError();
 		}
 
 		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
