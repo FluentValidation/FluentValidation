@@ -6,7 +6,7 @@
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
     <PackageReleaseNotes>
-Changes in 8.3.1:
+Changes in 8.4.0:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
 
 Changes in 8.3.0:
