@@ -38,7 +38,7 @@ namespace FluentValidation.Resources {
 				new KeyValuePair<string, Language>(EnglishLanguage.Culture, _fallback),
 			});
 		}
-		
+
 		/// <summary>
 		/// Language factory.
 		/// </summary>
@@ -107,13 +107,20 @@ namespace FluentValidation.Resources {
 		/// <param name="culture">The culture to translate into</param>
 		/// <returns></returns>
 		public virtual string GetString(string key, CultureInfo culture=null) {
-			culture = culture ?? Culture ?? CultureInfo.CurrentUICulture;
+			string value;
 
-			var languageToUse = GetCachedLanguage(culture);
-			string value = languageToUse.GetTranslation(key);
+			if (Enabled) {
+				culture = culture ?? Culture ?? CultureInfo.CurrentUICulture;
+				var languageToUse = GetCachedLanguage(culture) ?? _fallback;
+				value = languageToUse.GetTranslation(key);
 
-			// Selected language is missing a translation for this key - fall back to English translation. 
-			if (string.IsNullOrEmpty(value) && languageToUse != _fallback) {
+				// Selected language is missing a translation for this key - fall back to English translation
+				// if we're not using english already.
+				if (string.IsNullOrEmpty(value) && languageToUse != _fallback) {
+					value = _fallback.GetTranslation(key);
+				}
+			}
+			else {
 				value = _fallback.GetTranslation(key);
 			}
 
@@ -121,39 +128,25 @@ namespace FluentValidation.Resources {
 		}
 
 		private Language GetCachedLanguage(CultureInfo culture) {
-			// If the language manager is enabled, try and find matching translations.
-			if (Enabled) {
-				var languageToUse = _languages.GetOrAdd(culture.Name, CreateLanguage);
+			// Find matching translations.
+			var languageToUse = _languages.GetOrAdd(culture.Name, CreateLanguage);
 
-				// If we couldn't find translations for this culture, and it's not a neutral culture
-				// then try and find translations for the parent culture instead.
-				if (languageToUse == null && !culture.IsNeutralCulture) {
-					languageToUse = _languages.GetOrAdd(culture.Parent.Name, CreateLanguage);
-				}
-
-				if (languageToUse != null) {
-					return languageToUse;
-				}
+			// If we couldn't find translations for this culture, and it's not a neutral culture
+			// then try and find translations for the parent culture instead.
+			if (languageToUse == null && !culture.IsNeutralCulture) {
+				languageToUse = _languages.GetOrAdd(culture.Parent.Name, CreateLanguage);
 			}
 
-			return _fallback;
-		}
-
-		public IEnumerable<string> GetSupportedTranslationKeys() {
-			return _fallback.GetSupportedKeys();
+			return languageToUse;
 		}
 
 		public void AddTranslation(string language, string key, string message) {
-			if(string.IsNullOrEmpty(language)) throw new ArgumentNullException(nameof(language));
+			if (string.IsNullOrEmpty(language)) throw new ArgumentNullException(nameof(language));
 			if (string.IsNullOrEmpty(key)) throw new ArgumentNullException(nameof(key));
 			if (string.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
 
-			if (!_languages.ContainsKey(language)) {
-				_languages[language] = new GenericLanguage(language);
-			}
-
-			_languages[language].Translate(key, message);
+			var languageInstance = _languages.GetOrAdd(language, c => CreateLanguage(c) ?? new GenericLanguage(c));
+			languageInstance.Translate(key, message);
 		}
-
 	}
 }

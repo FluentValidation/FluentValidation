@@ -3,9 +3,7 @@
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Resources;
-	using Moq;
+	using System.Reflection;
 	using Resources;
 	using Validators;
 	using Xunit;
@@ -123,18 +121,26 @@
 			}
 		}
 
-
 		[Fact]
 		public void All_localizations_have_same_parameters_as_English() {
+			// We don't expose the language instances publicly as they're an implementation detail, so have to do a bit of
+			// reflection hackery to check all translations across all languages.
+
+			// Get all language instances.
 			var languages = typeof(LanguageManager).Assembly.GetTypes()
 				.Where(t => typeof(Language).IsAssignableFrom(t) && !t.IsAbstract && t.Name != "GenericLanguage")
-				.Select(t => (Language) Activator.CreateInstance(t))
-				.Select(l => l.Name);
+				.Select(t => (Language) Activator.CreateInstance(t)).ToList();
 
-			LanguageManager manager = (LanguageManager)_languages;
-			var keys = manager.GetSupportedTranslationKeys();
+			var languageNames = languages.Select(l => l.Name);
 
-			Assert.All(languages, l => Assert.All(keys, k => CheckParametersMatch(l, k)));
+			var english = languages.Single(x => x.Name == "en");
+
+			// Get the underlying dictionary.
+			var translations = (Dictionary<string, string>) typeof(Language).GetField("_translations", BindingFlags.Instance | BindingFlags.NonPublic)
+				.GetValue(english);
+			var keys = translations.Keys;
+
+			Assert.All(languageNames, l => Assert.All(keys, k => CheckParametersMatch(l, k)));
 		}
 
 		[Fact]
