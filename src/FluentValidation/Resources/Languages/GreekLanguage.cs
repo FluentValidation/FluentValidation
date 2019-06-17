@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using FluentValidation.Validators;
 
 	internal class GreekLanguage : Language {
-		public override string Name => "el";
+		public const string Culture = "el";
+		public override string Name => Culture;
 
 		public GreekLanguage() {
 			Translate<EmailValidator>("Το πεδίο '{PropertyName}' δεν περιέχει μια έγκυρη διεύθυνση email.");

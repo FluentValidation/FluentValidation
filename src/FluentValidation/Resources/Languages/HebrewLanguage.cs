@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class HebrewLanguage : Language {
-		public override string Name => "he";
+		public const string Culture = "he";
+		public override string Name => Culture;
 
 		public HebrewLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' אינה כתובת דוא\"ל חוקית.");

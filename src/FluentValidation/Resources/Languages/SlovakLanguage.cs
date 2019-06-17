@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class SlovakLanguage : Language {
-		public override string Name => "sk";
+		public const string Culture = "sk";
+		public override string Name => Culture;
 
 		public SlovakLanguage() {
 			Translate<EmailValidator>("Pole '{PropertyName}' musí obsahovať platnú emailovú adresu.");

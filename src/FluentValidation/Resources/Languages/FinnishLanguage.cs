@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class FinnishLanguage : Language {
-		public override string Name => "fi";
+		public const string Culture = "fi";
+		public override string Name => Culture;
 
 		public FinnishLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' ei ole kelvollinen sähköpostiosoite.");
