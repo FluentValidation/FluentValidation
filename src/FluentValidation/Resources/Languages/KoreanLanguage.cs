@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class KoreanLanguage : Language {
-		public override string Name => "ko";
+		public const string Culture = "ko";
+		public override string Name => Culture;
 
 		public KoreanLanguage() {
 			Translate<CreditCardValidator>("'{PropertyName}'이(가) 올바른 신용카드 번호가 아닙니다.");

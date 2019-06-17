@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class HindiLanguage : Language	{
-		public override string Name => "hi";
+		public const string Culture = "hi";
+		public override string Name => Culture;
 
 		public HindiLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' मान्य ईमेल एड्रेस नहीं है।");

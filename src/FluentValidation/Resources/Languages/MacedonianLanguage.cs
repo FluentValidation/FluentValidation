@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class MacedonianLanguage : Language {
-		public override string Name => "mk";
+		public const string Culture = "mk";
+		public override string Name => Culture;
 
 		public MacedonianLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' не е валидна емаил адреса.");

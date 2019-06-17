@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class PolishLanguage : Language {
-		public override string Name => "pl";
+		public const string Culture = "pl";
+		public override string Name => Culture;
 
 		public PolishLanguage() {
 			Translate<EmailValidator>("Pole '{PropertyName}' nie zawiera poprawnego adresu email.");
