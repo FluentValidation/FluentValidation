@@ -90,10 +90,10 @@ namespace FluentValidation.Resources {
 		/// Provides a collection of all supported languages.
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete("LanguageManager.GetSupportedLanguages() will be removed in FluentValidation 9.0 as it assumes that all languages are pre-loaded.")]
 		public IEnumerable<string> GetSupportedLanguages() {
 			return _languages.Keys;
 		}
-
 
 		/// <summary>
 		/// Removes all languages except the default.
@@ -131,6 +131,7 @@ namespace FluentValidation.Resources {
 			return value ?? string.Empty;
 		}
 
+		[Obsolete("LanguageManager.GetSupportedTranslationKeys() can return inconsistent information depending on the current culture. This method will be removed in 9.0.")]
 		public IEnumerable<string> GetSupportedTranslationKeys() {
 			return _fallback.GetSupportedKeys();
 		}
