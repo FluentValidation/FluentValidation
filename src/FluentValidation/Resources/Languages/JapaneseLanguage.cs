@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class JapaneseLanguage : Language {
-		public override string Name => "ja";
+		public const string Culture = "ja";
+		public override string Name => Culture;
 
 		public JapaneseLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' は有効なメールアドレスではありません。");

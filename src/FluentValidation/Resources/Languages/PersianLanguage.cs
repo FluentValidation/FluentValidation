@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class PersianLanguage : Language {
-		public override string Name => "fa";
+		public const string Culture = "fa";
+		public override string Name => Culture;
 
 		public PersianLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' وارد شده قالب صحیح یک ایمیل را ندارد.");

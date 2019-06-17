@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class TurkishLanguage : Language {
-		public override string Name => "tr";
+		public const string Culture = "tr";
+		public override string Name => Culture;
 
 		public TurkishLanguage() {
 			Translate<EmailValidator>("'{PropertyName}'  geçerli bir e-posta adresi değil.");

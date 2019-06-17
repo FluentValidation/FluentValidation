@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class ChineseSimplifiedLanguage : Language {
-		public override string Name => "zh-CN";
+		public const string Culture = "zh-CN";
+		public override string Name => Culture;
 
 		public ChineseSimplifiedLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' 不是有效的电子邮件地址。");

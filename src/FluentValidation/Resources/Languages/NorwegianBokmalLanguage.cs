@@ -20,7 +20,8 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class NorwegianBokmalLanguage : Language {
-		public override string Name => "nb";
+		public const string Culture = "nb";
+		public override string Name => Culture;
 
 		public NorwegianBokmalLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' er ikke en gyldig e-postadresse.");
