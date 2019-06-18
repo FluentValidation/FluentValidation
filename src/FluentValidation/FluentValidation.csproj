@@ -100,6 +100,10 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     <DelaySign>False</DelaySign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.xml</DocumentationFile>
     <DebugType>embedded</DebugType>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>1701;1702;1705;1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
