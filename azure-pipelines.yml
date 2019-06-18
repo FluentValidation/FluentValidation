@@ -15,21 +15,6 @@ variables:
 - name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
   value: 1
 steps:
-  # Get the required SDK from global.json. Outputs to variable $(dotnetVersion) 
-- pwsh: ./build.ps1 -t get-dotnet-version
-  displayName: 'Get .NET Core version to use'
-
-  # Install 2.2 as well as the latest 3.x that's specified in global.json.
-- task: DotNetCoreInstaller@1
-  inputs:
-    version: '2.2.105'
-  displayName: '.NET Core SDK Installer (2.x)'
- 
-- task: DotNetCoreInstaller@1
-  inputs:
-    version: $(dotnetVersion)
-  displayName: '.NET Core SDK Installer (3.x)'
-
 - pwsh: ./build.ps1 -t ci
   displayName: 'Build'
   env: 
