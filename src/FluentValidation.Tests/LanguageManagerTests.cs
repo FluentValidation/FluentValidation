@@ -3,7 +3,7 @@
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
-	using System.Linq.Expressions;
+	using System.Reflection;
 	using Resources;
 	using Validators;
 	using Xunit;
@@ -97,22 +97,50 @@
 		[Fact]
 		public void Can_replace_message() {
 			using (new CultureScope("en-US")) {
-				
+
 				var custom = new CustomLanguageManager();
 				var msg = custom.GetStringForValidator<NotNullValidator>();
 				msg.ShouldEqual("foo");
 			}
 		}
 
+		[Fact]
+		public void Can_replace_message_without_overriding_all_languages() {
+			using (new CultureScope("fr-FR")) {
+
+				var custom = new LanguageManager();
+				custom.AddTranslation("fr", "NotNullValidator", "foo");
+				var msg = custom.GetStringForValidator<NotNullValidator>();
+				msg.ShouldEqual("foo");
+
+				// Using a custom translation should only override the single message.
+				// Other messages in the language should be unaffected.
+				// Need to do this test as non-english, as english is always loaded.
+				msg = custom.GetStringForValidator<NotEmptyValidator>();
+				msg.ShouldEqual("'{PropertyName}' ne doit pas être vide.");
+			}
+		}
 
 		[Fact]
 		public void All_localizations_have_same_parameters_as_English() {
+			// We don't expose the language instances publicly as they're an implementation detail, so have to do a bit of
+			// reflection hackery to check all translations across all languages.
 
-			LanguageManager manager = (LanguageManager)_languages;
-			var languages = manager.GetSupportedLanguages();
-			var keys = manager.GetSupportedTranslationKeys();
-			
-			Assert.All(languages, l => Assert.All(keys, k => CheckParametersMatch(l, k)));
+			// Get all language instances.
+			var languages = typeof(LanguageManager).Assembly.GetTypes()
+				.Where(t => typeof(Language).IsAssignableFrom(t) && !t.IsAbstract && t.Name != "GenericLanguage")
+				.Select(t => (Language) Activator.CreateInstance(t)).ToList();
+
+			var languageNames = languages.Select(l => l.Name);
+
+			var english = languages.Single(x => x.Name == "en");
+
+			// Get the underlying dictionary.
+			var translations = (Dictionary<string, string>) typeof(Language).GetField("_translations", BindingFlags.Instance | BindingFlags.NonPublic)
+				.GetValue(english);
+			var keys = translations.Keys;
+
+			Assert.All(languageNames, l => Assert.All(keys, k => CheckParametersMatch(l, k)));
 		}
 
 		[Fact]
@@ -120,12 +148,19 @@
 			var languages = typeof(LanguageManager).Assembly.GetTypes()
 				.Where(t => typeof(Language).IsAssignableFrom(t) && !t.IsAbstract && t.Name != "GenericLanguage")
 				.Select(t => (Language) Activator.CreateInstance(t));
-			
-			var l = (LanguageManager) _languages;
-			var languageCodes = l.GetSupportedLanguages().ToList();
+
+			string englishMessage = _languages.GetString(nameof(NotNullValidator), new CultureInfo("en"));
 
 			foreach (var language in languages) {
-				languageCodes.Contains(language.Name).ShouldBeTrue($"Language {language.Name} is not loaded in the LanguageManager");
+				// Skip english as we know it's always loaded and will match.
+				if (language.Name == "en") {
+					continue;
+				}
+
+				// Get the message from the language manager from the culture. If it's in English, then it's hit the
+				// fallback and means the culture hasn't been loaded.
+				string message = _languages.GetString(nameof(NotNullValidator), new CultureInfo(language.Name));
+				(message != englishMessage).ShouldBeTrue($"Language '{language.Name}' ({language.GetType().Name}) is not loaded in the LanguageManager");
 			}
 		}
 
@@ -133,30 +168,30 @@
 		public void Uses_error_code_as_localization_key() {
 			var originalLanguageManager = ValidatorOptions.LanguageManager;
 			ValidatorOptions.LanguageManager = new CustomLanguageManager();
-			
+
 			var validator = new InlineValidator<Person>();
 			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("CustomKey");
 			var result = validator.Validate(new Person());
 
 			ValidatorOptions.LanguageManager = originalLanguageManager;
-			
+
 			result.Errors[0].ErrorMessage.ShouldEqual("bar");
 		}
-		
+
 		[Fact]
 		public void Falls_back_to_default_localization_key_when_error_code_key_not_found() {
 			var originalLanguageManager = ValidatorOptions.LanguageManager;
 			ValidatorOptions.LanguageManager = new CustomLanguageManager();
-			
+
 			var validator = new InlineValidator<Person>();
 			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("DoesNotExist");
 			var result = validator.Validate(new Person());
 
 			ValidatorOptions.LanguageManager = originalLanguageManager;
-			
+
 			result.Errors[0].ErrorMessage.ShouldEqual("foo");
 		}
-		
+
 		void CheckParametersMatch(string languageCode, string translationKey) {
 			var referenceMessage = _languages.GetString(translationKey);
 			var translatedMessage = _languages.GetString(translationKey, new CultureInfo(languageCode));
@@ -191,7 +226,5 @@
 				return true;
 			}
 		}
-
-
 	}
 }
