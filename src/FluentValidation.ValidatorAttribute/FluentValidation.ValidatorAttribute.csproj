@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.1;netstandard2.0;net45</TargetFrameworks>
     <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
     <Authors>Jeremy Skinner</Authors>
     <Company />
