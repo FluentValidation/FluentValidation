@@ -24,7 +24,9 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		private string GetErrorMessage(ClientModelValidationContext context) {
-			var formatter = ValidatorOptions.MessageFormatterFactory()
+			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
+
+			var formatter = cfg.MessageFormatterFactory()
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("ComparisonValue", RangeValidator.ValueToCompare);
 
@@ -33,7 +35,7 @@ namespace FluentValidation.AspNetCore {
 			try {
 				message = RangeValidator.Options.ErrorMessageSource.GetString(null);
 			} catch (FluentValidationMessageFormatException) {
-				message = ValidatorOptions.LanguageManager.GetStringForValidator<GreaterThanOrEqualValidator>();
+				message = cfg.LanguageManager.GetStringForValidator<GreaterThanOrEqualValidator>();
 			}
 
 			message = formatter.BuildMessage(message);
