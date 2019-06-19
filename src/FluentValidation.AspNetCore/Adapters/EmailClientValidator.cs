@@ -28,14 +28,15 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {
-			var formatter = ValidatorOptions.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
+			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
+			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
 
 			string messageTemplate;
 			try {
 				messageTemplate = Validator.Options.ErrorMessageSource.GetString(null);
 			}
 			catch (FluentValidationMessageFormatException) {
-				messageTemplate = ValidatorOptions.LanguageManager.GetStringForValidator<EmailValidator>();
+				messageTemplate = cfg.LanguageManager.GetStringForValidator<EmailValidator>();
 			}
 
 			string message = formatter.BuildMessage(messageTemplate);

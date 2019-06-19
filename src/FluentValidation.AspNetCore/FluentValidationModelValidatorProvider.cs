@@ -1,18 +1,18 @@
 ﻿#region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -74,9 +74,9 @@ namespace FluentValidation.AspNetCore {
 					}
 				}
 
-				var selector = customizations.ToValidatorSelector();
-				var interceptor = customizations.GetInterceptor() 
-				                  ?? validator as IValidatorInterceptor 
+				var selector = customizations.ToValidatorSelector(mvContext);
+				var interceptor = customizations.GetInterceptor()
+				                  ?? validator as IValidatorInterceptor
 				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IValidatorInterceptor>();
 				var context = new ValidationContext(mvContext.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
@@ -92,7 +92,7 @@ namespace FluentValidation.AspNetCore {
 
 				if (interceptor != null) {
 					// allow the user to provide a custom collection of failures, which could be empty.
-					// However, if they return null then use the original collection of failures. 
+					// However, if they return null then use the original collection of failures.
 					result = interceptor.AfterMvcValidation((ControllerContext)mvContext.ActionContext, context, result) ?? result;
 				}
 
@@ -112,10 +112,10 @@ namespace FluentValidation.AspNetCore {
 			if (! _implicitValidationEnabled) {
 
 				var rootMetadata = GetRootMetadata(mvContext);
-				
+
 				// We should always have root metadata, so this should never happen...
 				if (rootMetadata == null) return true;
-				
+
 				// Careful when handling properties.
 				// If we're processing a property of our root object,
 				// then we always skip if implicit validation is disabled
@@ -128,7 +128,7 @@ namespace FluentValidation.AspNetCore {
 						return true;
 					}
 				}
-				
+
 				// If we're handling a type, we need to make sure we're handling the root type.
 				// When MVC encounters child properties, it will set the MetadataKind to Type,
 				// so we can't use the MetadataKind to differentiate the root from the child property.
@@ -144,7 +144,7 @@ namespace FluentValidation.AspNetCore {
 					}
 				}
 			}
-			
+
 			return false;
 		}
 	}

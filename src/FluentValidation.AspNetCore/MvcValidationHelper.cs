@@ -1,19 +1,19 @@
 ﻿#region License
 
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 
 #endregion
@@ -27,6 +27,7 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc.Controllers;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+	using Microsoft.Extensions.DependencyInjection;
 
 	/// <summary>
 	/// Utilities for working around limitations of the MVC validation api.
@@ -70,7 +71,7 @@ namespace FluentValidation.AspNetCore {
 
 			return requiredErrorsNotHandledByFv;
 		}
-		
+
 		internal static CustomizeValidatorAttribute GetCustomizations(ActionContext actionContext, Type type, string prefix) {
 			if (actionContext?.ActionDescriptor?.Parameters == null) {
 				return new CustomizeValidatorAttribute();
@@ -89,7 +90,7 @@ namespace FluentValidation.AspNetCore {
 			}
 
 			if (descriptors.Count > 1) {
-				// We found more than 1 matching with same prefix and name. 
+				// We found more than 1 matching with same prefix and name.
 			}
 
 			return attribute ?? new CustomizeValidatorAttribute();
@@ -126,13 +127,17 @@ namespace FluentValidation.AspNetCore {
 				}
 			}
 		}
-		
+
 		internal static CustomizeValidatorAttribute GetCustomizations(ActionContext ctx, object model) {
-			if (ctx.HttpContext.Items["_FV_Customizations"] is ValueTuple<object, CustomizeValidatorAttribute> customizations 
+			if (ctx.HttpContext.Items["_FV_Customizations"] is ValueTuple<object, CustomizeValidatorAttribute> customizations
 			    && ReferenceEquals(model, customizations.Item1)) {
 				return customizations.Item2; // the attribute
 			}
 			return new CustomizeValidatorAttribute();
+		}
+
+		internal static ValidatorConfiguration GetValidatorConfiguration(this IServiceProvider serviceProvider) {
+			return serviceProvider.GetRequiredService<ValidatorConfiguration>();
 		}
 
 	}
