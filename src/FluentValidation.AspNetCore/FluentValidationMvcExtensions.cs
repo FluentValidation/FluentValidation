@@ -40,7 +40,7 @@ namespace FluentValidation.AspNetCore {
 		///     MVC services.
 		/// </returns>
 		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
-			var config = new FluentValidationMvcConfiguration();
+			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
 			configurationExpression?.Invoke(config);
 
 			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
@@ -54,7 +54,7 @@ namespace FluentValidation.AspNetCore {
 
 			return mvcBuilder;
 		}
-		
+
 		/// <summary>
 		///     Adds Fluent Validation services to the specified
 		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />.
@@ -64,11 +64,11 @@ namespace FluentValidation.AspNetCore {
 		///     MVC services.
 		/// </returns>
 		public static IMvcBuilder AddFluentValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
-			var config = new FluentValidationMvcConfiguration();
+			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
 			configurationExpression?.Invoke(config);
 
 			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
-			
+
 			RegisterServices(mvcBuilder.Services, config);
 
 			mvcBuilder.AddMvcOptions(options => {
@@ -80,6 +80,8 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		private static void RegisterServices(IServiceCollection services, FluentValidationMvcConfiguration config) {
+			services.AddSingleton(config.ValidatorOptions);
+			
 			if (config.ValidatorFactory != null) {
 				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type.
 				var factory = config.ValidatorFactory;
