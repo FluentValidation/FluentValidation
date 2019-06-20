@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <AssemblyName>FluentValidation.Mvc</AssemblyName>
     <RootNamespace>FluentValidation.Mvc</RootNamespace>
     <PackageId>FluentValidation.Mvc5</PackageId>

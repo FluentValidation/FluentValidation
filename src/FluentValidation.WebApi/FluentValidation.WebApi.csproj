@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <PackageId>FluentValidation.WebApi</PackageId>
     <Description>ASP.NET WebApi integration for FluentValidation</Description>
     <!-- Signing is only performed as part of the release build -->
@@ -16,11 +16,11 @@ Changes in 8.1.0:
 * Added Skip property on CustomizeValidatorAttribute for consistency with ASP.NET Core.
 
 Changes in 7.5.1:
-* Added support for CustomizeValidatorAttribute for consistency with MVC5 and AspNetCore. 
+* Added support for CustomizeValidatorAttribute for consistency with MVC5 and AspNetCore.
 
 Changes in 7.4:
 * Support for WebApi 5.2.4 and improved integration with WebApi's validation pipeline.
-	 
+
 Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
 </PackageReleaseNotes>
   </PropertyGroup>

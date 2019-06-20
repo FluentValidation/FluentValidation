@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net452</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <AssemblyName>FluentValidation.Tests.WebApi</AssemblyName>
     <RootNamespace>FluentValidation.Tests.WebApi</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -55,7 +55,7 @@
     <NoWarn>1998;0618</NoWarn>
   </PropertyGroup>
   <Import Project="../netfx.props" />
-  <ItemGroup Condition="'$(TargetFramework)'=='net452' AND '$(OS)'=='Unix'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net461' AND '$(OS)'=='Unix'">
     <!-- Workarounds for Mono -->
     <Reference Include="System.Runtime" />
     <Reference Include="System.Threading.Tasks" />
