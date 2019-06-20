@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net452;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
     <AssemblyName>FluentValidation.Tests</AssemblyName>
     <RootNamespace>FluentValidation.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -38,7 +38,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="../netfx.props" />
-  <ItemGroup Condition="'$(TargetFramework)'=='net452' AND '$(OS)'=='Unix'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net461' AND '$(OS)'=='Unix'">
     <!-- Workarounds for Mono -->
     <Reference Include="System.Runtime" />
     <Reference Include="System.Threading.Tasks" />
