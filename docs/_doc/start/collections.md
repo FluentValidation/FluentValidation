@@ -19,6 +19,16 @@ public class PersonValidator : AbstractValidator<Person> {
 ```
 The above rule will run a NotNull check against each item in the `AddressLines` collection. 
 
+If you want to access the index of the collection element that caused the validation failure, you can use the special `{CollectionIndex}` placeholder:
+
+```csharp
+public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator() {
+    RuleForEach(x => x.AddressLines).NotNull().WithMessage("Address {CollectionIndex} is required.");
+  }
+}
+```
+
 You can optionally include or exclude certain items in the collection from being validated by using the `Where` method. Note this must come directly after the call to `RuleForEach`:
 
 ```csharp
@@ -26,6 +36,7 @@ RuleForEach(x => x.Orders)
   .Where(x => x.Cost != null)
   .SetValidator(new OrderValidator());
 ```
+
 As of version 8.2, an alternative to using `RuleForEach` is to call `ForEach` as part of a regular `RuleFor`. With this approach you can combine rules that act upon the entire collection with rules which act upon individual elements within the collection. For example, imagine you have the following 2 rules:
 
 ```csharp
