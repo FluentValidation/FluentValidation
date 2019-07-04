@@ -59,7 +59,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// Defines a 'not empty' validator on the current rule builder.
-		/// Validation will fail if the property is null, an empty or the default value for the type (for example, 0 for integers)
+		/// Validation will fail if the property is null, an empty string, whitespace, an empty collection or the default value for the type (for example, 0 for integers but null for nullable integers)
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
