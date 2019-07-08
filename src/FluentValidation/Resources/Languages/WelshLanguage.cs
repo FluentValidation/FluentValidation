@@ -16,16 +16,13 @@
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 
-namespace FluentValidation.Resources
-{
+namespace FluentValidation.Resources {
   using Validators;
 
-  internal class WelshLanguage : Language
-  {
+  internal class WelshLanguage : Language {
     public override string Name => "cy";
 
-    public WelshLanguage()
-    {
+    public WelshLanguage() {
       Translate<EmailValidator>("Nid yw '{PropertyName}' yn gyfeiriad e-bost dilys.");
       Translate<GreaterThanOrEqualValidator>("Rhaid i '{PropertyName}' fod yn fwy na '{ComparisonValue}', neu'n gyfartal ag o.");
       Translate<GreaterThanValidator>("Rhaid i '{PropertyName}' fod yn fwy na '{ComparisonValue}'.");
