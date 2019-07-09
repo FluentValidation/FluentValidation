@@ -4,6 +4,8 @@ namespace FluentValidation.Tests.AspNetCore {
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Builder;
 	using Microsoft.AspNetCore.Localization;
+	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Infrastructure;
 	using Microsoft.Extensions.DependencyInjection;
 
 	public class Startup {
@@ -19,11 +21,20 @@ namespace FluentValidation.Tests.AspNetCore {
 				options.SupportedUICultures = new[] {cultureInfo};
 			});
 
+#if NETCOREAPP3_0
+			app
+				.UseRouting()
+				.UseEndpoints(endpoints => {
+					endpoints.MapRazorPages();
+					endpoints.MapDefaultControllerRoute();
+				});
+#else
 			app.UseMvc(routes => {
 				routes.MapRoute(
 					name: "default",
 					template: "{controller=Home}/{action=Index}/{id?}");
 			});
+#endif
 		}
 	}
 
@@ -31,7 +42,7 @@ namespace FluentValidation.Tests.AspNetCore {
 
 		public static void AddFluentValidationForTesting(this IServiceCollection services, Action<FluentValidationMvcConfiguration> configurator) {
 #if NETCOREAPP3_0
-			var mvcBuilder = services.AddMvc(mvc => mvc.EnableEndpointRouting = false).AddNewtonsoftJson();
+			var mvcBuilder = services.AddMvc().AddNewtonsoftJson();
 #else
 			var mvcBuilder = services.AddMvc();
 #endif
