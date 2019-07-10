@@ -11,6 +11,8 @@ Changes in 8.5.0:
 * Add support for ASP.NET Core 3.
 * Add support for defining child rules inline.
 * ValidatorDescriptor now has consistent handling of model-level rules.
+* RuleForEach can now access collection index in error message with {CollectionIndex} placeholder.
+* Welsh language translations of default error messages.
 
 Changes in 8.4.0:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
