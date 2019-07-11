@@ -42,7 +42,7 @@ namespace FluentValidation.Resources {
 			Translate<ExclusiveBetweenValidator>("'{PropertyName}' pitää olla poissulkevalla välillä {From}-{To}. Syötit {Value}.");
 			Translate<InclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From}-{To}. Syötit {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' ei ole kelvollinen luottokortin numero.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' ei saa sisältää enempää kuin {ExpectedPrecision} numeroa, sallien {ExpectedScale} desimaalia. {Digits} numeroita ja {ActualScale} desimaaleja löytyi.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' ei saa sisältää enempää kuin {ExpectedPrecision} numeroa, sallien {ExpectedScale} desimaalia. {Digits} numeroa ja {ActualScale} desimaalia löytyi.");
 			Translate<EmptyValidator>("'{PropertyName}' pitäisi olla tyhjä.");
 			Translate<NullValidator>("'{PropertyName}' pitäisi olla tyhjä.");
 			Translate<EnumValidator>("'{PropertyName}' arvoista ei löydy '{PropertyValue}'.");
