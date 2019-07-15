@@ -26,32 +26,32 @@ namespace FluentValidation.Resources {
 			Translate<EmailValidator>("'{PropertyName}' ei ole kelvollinen sähköpostiosoite.");
 			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' pitää olla suurempi tai yhtä suuri kuin '{ComparisonValue}'.");
 			Translate<GreaterThanValidator>("'{PropertyName}' pitää olla suurempi kuin '{ComparisonValue}'.");
-			Translate<LengthValidator>("'{PropertyName}' pitää olla välillä {MinLength} ja {MaxLength} merkkiä. Syötit {TotalLength} merkkiä.");
-			Translate<MinimumLengthValidator>("'{PropertyName}' on oltava suurempi tai yhtä suuri kuin {MinLength} merkkiä. Syöt {TotalLength} merkkejä.");
-			Translate<MaximumLengthValidator>("'{PropertyName}' on oltava pienempi tai yhtä suuri kuin {MaxLength} merkkiä. Syöt {TotalLength} merkkejä.");
+			Translate<LengthValidator>("'{PropertyName}' pitää olla {MinLength}-{MaxLength} merkkiä. Syötit {TotalLength} merkkiä.");
+			Translate<MinimumLengthValidator>("'{PropertyName}' pitää olla vähintään {MinLength} merkkiä. Syötit {TotalLength} merkkiä.");
+			Translate<MaximumLengthValidator>("'{PropertyName}' saa olla enintään {MaxLength} merkkiä. Syötit {TotalLength} merkkiä.");
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' pitää olla pienempi tai yhtä suuri kuin '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' pitää olla pienempi kuin '{ComparisonValue}'.");
-			Translate<NotEmptyValidator>("'{PropertyName}' ei pitäisi olla tyhjä.");
-			Translate<NotEqualValidator>("'{PropertyName}' ei voi olla yhtäsuuri kuin '{ComparisonValue}'.");
+			Translate<NotEmptyValidator>("'{PropertyName}' ei voi olla tyhjä.");
+			Translate<NotEqualValidator>("'{PropertyName}' ei voi olla yhtä suuri kuin '{ComparisonValue}'.");
 			Translate<NotNullValidator>("'{PropertyName}' ei voi olla tyhjä.");
-			Translate<PredicateValidator>("Määritetty ehto ei toteutunut '{PropertyName}'.");
-			Translate<AsyncPredicateValidator>("Määritetty ehto ei toteutunut '{PropertyName}'.");
+			Translate<PredicateValidator>("'{PropertyName}' määritetty ehto ei toteutunut.");
+			Translate<AsyncPredicateValidator>("'{PropertyName}' määritetty ehto ei toteutunut.");
 			Translate<RegularExpressionValidator>("'{PropertyName}' ei ole oikeassa muodossa.");
-			Translate<EqualValidator>("'{PropertyName}' pitäisi olla yhtäsuuri kuin '{ComparisonValue}'.");
-			Translate<ExactLengthValidator>("'{PropertyName}' pitää olla {MaxLength} merkkiä pitkä. Syötit {TotalLength} merkkiä.");
-			Translate<ExclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From} ja {To} (exclusive). Syötit {Value}.");
-			Translate<InclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From} ja {To}. Syötit {Value}.");
+			Translate<EqualValidator>("'{PropertyName}' pitäisi olla yhtä suuri kuin '{ComparisonValue}'.");
+			Translate<ExactLengthValidator>("'{PropertyName}' pitää olla {MaxLength} merkkiä. Syötit {TotalLength} merkkiä.");
+			Translate<ExclusiveBetweenValidator>("'{PropertyName}' pitää olla suljetulla välillä {From}-{To}. Syötit {Value}.");
+			Translate<InclusiveBetweenValidator>("'{PropertyName}' pitää olla välillä {From}-{To}. Syötit {Value}.");
 			Translate<CreditCardValidator>("'{PropertyName}' ei ole kelvollinen luottokortin numero.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' ei saa olla enempää kuin {ExpectedPrecision} numerot, joiden arvo on {ExpectedScale} desimaaleja. {Digits} numeroita ja {ActualScale} desimaaleja löytyi.");
+			Translate<ScalePrecisionValidator>("'{PropertyName}' ei saa sisältää enempää kuin {ExpectedPrecision} numeroa, sallien {ExpectedScale} desimaalia. {Digits} numeroa ja {ActualScale} desimaalia löytyi.");
 			Translate<EmptyValidator>("'{PropertyName}' pitäisi olla tyhjä.");
 			Translate<NullValidator>("'{PropertyName}' pitäisi olla tyhjä.");
-			Translate<EnumValidator>("'{PropertyName}' sisältää joukon arvoja, jotka eivät sisällä '{PropertyValue}'.");
+			Translate<EnumValidator>("'{PropertyName}' arvoista ei löydy '{PropertyValue}'.");
 			// Additional fallback messages used by clientside validation integration.
-			Translate("Length_Simple", "'{PropertyName}' pitää olla välillä {MinLength} ja {MaxLength} merkkiä.");
-			Translate("MinimumLength_Simple", "'{PropertyName}' on oltava suurempi tai yhtä suuri kuin {MinLength} merkkiä.");
-			Translate("MaximumLength_Simple", "'{PropertyName}' on oltava pienempi tai yhtä suuri kuin {MaxLength} merkkiä.");
+			Translate("Length_Simple", "'{PropertyName}' pitää olla {MinLength}-{MaxLength} merkkiä.");
+			Translate("MinimumLength_Simple", "'{PropertyName}' saa olla vähintään {MinLength} merkkiä.");
+			Translate("MaximumLength_Simple", "'{PropertyName}' pitää olla enintään {MaxLength} merkkiä.");
 			Translate("ExactLength_Simple", "'{PropertyName}' pitää olla {MaxLength} merkkiä pitkä.");
-			Translate("InclusiveBetween_Simple", "'{PropertyName}' pitää olla välillä {From} ja {To}.");
+			Translate("InclusiveBetween_Simple", "'{PropertyName}' pitää olla välillä {From}-{To}.");
 		}
 	}
 }
