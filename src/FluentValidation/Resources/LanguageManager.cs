@@ -64,6 +64,7 @@ namespace FluentValidation.Resources {
 				HindiLanguage.Culture => new HindiLanguage(),
 				HungarianLanguage.Culture => new HungarianLanguage(),
 				ItalianLanguage.Culture => new ItalianLanguage(),
+				IndonesianLanguage.Culture => new IndonesianLanguage(),
 				JapaneseLanguage.Culture => new JapaneseLanguage(),
 				KoreanLanguage.Culture => new KoreanLanguage(),
 				MacedonianLanguage.Culture => new MacedonianLanguage(),
