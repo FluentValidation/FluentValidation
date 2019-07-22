@@ -500,6 +500,35 @@ namespace FluentValidation.Tests {
 			result.Errors[0].ErrorMessage.ShouldEqual("1");
 		}
 
+		[Fact]
+		public void When_runs_outside_RuleForEach_loop() {
+			// Shouldn't throw an exception if the condition is run outside the loop.
+			var validator = new InlineValidator<Tuple<Person>>();
+			validator.RuleForEach(x => x.Item1.Orders).Must(x => false)
+				.When(x => x.Item1 != null);
+
+			var result = validator.Validate(Tuple.Create((Person) null));
+			result.IsValid.ShouldBeTrue();
+
+			result = validator.Validate(Tuple.Create(new Person() { Orders = new List<Order> { new Order() }}));
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public async Task When_runs_outside_RuleForEach_loop_async() {
+			// Shouldn't throw an exception if the condition is run outside the loop.
+			var validator = new InlineValidator<Tuple<Person>>();
+			validator.RuleForEach(x => x.Item1.Orders)
+				.MustAsync((x,c) => Task.FromResult(false))
+				.When(x => x.Item1 != null);
+
+			var result =	await validator.ValidateAsync(Tuple.Create((Person) null));
+			result.IsValid.ShouldBeTrue();
+
+			result = await validator.ValidateAsync(Tuple.Create(new Person() { Orders = new List<Order> { new Order() }}));
+			result.IsValid.ShouldBeFalse();
+		}
+
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {
 				RuleFor(x => x.ProductName).NotEmpty();
