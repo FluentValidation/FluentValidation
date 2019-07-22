@@ -31,12 +31,12 @@ namespace FluentValidation.Tests {
 	public class ForEachRuleTests {
 		private object _lock = new object();
 		private int _counter;
-		private Person person;
+		private Person _person;
 
 		public ForEachRuleTests() {
 			_counter = 0;
 
-			person = new Person() {
+			_person = new Person() {
 				Orders = new List<Order>() {
 					new Order { Amount = 5},
 					new Order { ProductName = "Foo"}
@@ -340,7 +340,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator())
 			};
 
-			var results = validator.Validate(person);
+			var results = validator.Validate(_person);
 			results.Errors.Count.ShouldEqual(3);
 
 			results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
@@ -354,7 +354,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator())
 			};
 
-			var results = validator.Validate(person, x => x.Orders);
+			var results = validator.Validate(_person, x => x.Orders);
 			results.Errors.Count.ShouldEqual(2);
 		}
 
@@ -365,7 +365,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator())
 			};
 
-			var results = validator.Validate(person, "Orders");
+			var results = validator.Validate(_person, "Orders");
 			results.Errors.Count.ShouldEqual(2);
 		}
 
@@ -376,7 +376,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator())
 			};
 
-			var results = validator.Validate(person, x => x.Forename);
+			var results = validator.Validate(_person, x => x.Forename);
 			results.Errors.Count.ShouldEqual(0);
 		}
 
@@ -386,7 +386,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator()).When(x => x.Orders.Count == 3 /*there are only 2*/)
 			};
 
-			var result = validator.Validate(person);
+			var result = validator.Validate(_person);
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -396,7 +396,7 @@ namespace FluentValidation.Tests {
 	                                                v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator()).WhenAsync(async (x,c) => x.Orders.Count == 3 /*there are only 2*/)
 	                                            };
 
-	        var result = await validator.ValidateAsync(person);
+	        var result = await validator.ValidateAsync(_person);
 	        result.IsValid.ShouldBeTrue();
 	    }
 
@@ -407,8 +407,8 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator())
 			};
 
-			person.Orders[0] = null;
-			var results = validator.Validate(person);
+			_person.Orders[0] = null;
+			var results = validator.Validate(_person);
 			results.Errors.Count.ShouldEqual(2); //2 errors - 1 for person, 1 for 2nd Order.
 		}
 
@@ -418,7 +418,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderInterfaceValidator())
 			};
 
-			var result = validator.Validate(person);
+			var result = validator.Validate(_person);
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -430,7 +430,7 @@ namespace FluentValidation.Tests {
 					.SetValidator(new OrderValidator())
 			};
 
-			var results = validator.Validate(person);
+			var results = validator.Validate(_person);
 			results.Errors.Count.ShouldEqual(1);
 
 		}
@@ -442,7 +442,7 @@ namespace FluentValidation.Tests {
 					.OverridePropertyName("Orders2")
 			};
 
-			var results = validator.Validate(person);
+			var results = validator.Validate(_person);
 			results.Errors[0].PropertyName.ShouldEqual("Orders2[0].ProductName");
 		}
 
@@ -512,6 +512,5 @@ namespace FluentValidation.Tests {
 				RuleFor(x => x.Amount).NotEqual(0);
 			}
 		}
-
 	}
 }
