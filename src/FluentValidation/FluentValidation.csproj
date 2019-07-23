@@ -13,6 +13,9 @@ Changes in 8.5.0:
 * ValidatorDescriptor now has consistent handling of model-level rules.
 * RuleForEach can now access collection index in error message with {CollectionIndex} placeholder.
 * Welsh language translations of default error messages.
+* Hungrian language translations of default error messages.
+* Indonesian language translations of default error messages.
+* Using RuleForEach combined with When is now more intuitive.
 
 Changes in 8.4.0:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.

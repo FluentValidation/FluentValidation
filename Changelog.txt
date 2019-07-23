@@ -6,6 +6,9 @@ Add support for defining child rules inline.
 ValidatorDescriptor now has consistent handling of model-level rules.
 RuleForEach can now access collection index in error message with {CollectionIndex} placeholder.
 Welsh language translations of default error messages.
+Hungrian language translations of default error messages.
+Indonesian language translations of default error messages.
+Using RuleForEach combined with When is now more intuitive.
 
 8.4.0 - 10 May 2019
 Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
