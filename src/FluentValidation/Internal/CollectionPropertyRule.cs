@@ -81,6 +81,10 @@ namespace FluentValidation.Internal {
 			}
 
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
+
+			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
+			if (validator.Options.AsyncCondition != null && !await validator.Options.AsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
+
 			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 
 			if (collectionPropertyValue != null) {
@@ -146,6 +150,9 @@ namespace FluentValidation.Internal {
 			}
 
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
+
+			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
+
 			var results = new List<ValidationFailure>();
 			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
 

@@ -255,13 +255,13 @@ namespace FluentValidation.Internal {
 			if (!context.Selector.CanExecute(this, propertyName, context)) {
 				yield break;
 			}
-			
+
 			if (_condition != null) {
 				if (!_condition(context)) {
 					yield break;
 				}
 			}
-			
+
 			// TODO: For FV 9, throw an exception by default if synchronous validator has async condition.
 			if (_asyncCondition != null) {
 				if (!_asyncCondition(context, default).GetAwaiter().GetResult()) {
@@ -335,13 +335,13 @@ namespace FluentValidation.Internal {
 			if (!context.Selector.CanExecute(this, propertyName, context)) {
 				return Enumerable.Empty<ValidationFailure>();
 			}
-			
+
 			if (_condition != null) {
 				if (!_condition(context)) {
 					return Enumerable.Empty<ValidationFailure>();
 				}
 			}
-			
+
 			// TODO: For FV 9, throw an exception by default if synchronous validator has async condition.
 			if (_asyncCondition != null) {
 				if (! await _asyncCondition(context, cancellation)) {
@@ -430,8 +430,11 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName"></param>
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
-		protected virtual Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
-			return validator.ValidateAsync(new PropertyValidatorContext(context, this, propertyName), cancellation);
+		protected virtual async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
+			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
+			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
+			if (validator.Options.AsyncCondition != null && !await validator.Options.AsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
+			return await validator.ValidateAsync(propertyContext, cancellation);
 		}
 
 		/// <summary>
@@ -439,9 +442,10 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator, string propertyName) {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
+			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			return validator.Validate(propertyContext);
 		}
-		
+
 		/// <summary>
 		/// Applies a condition to the rule
 		/// </summary>
@@ -503,7 +507,7 @@ namespace FluentValidation.Internal {
 				var original = _asyncCondition;
 				_asyncCondition = async (ctx, ct) => await condition(ctx, ct) && await original(ctx, ct);
 			}
-			
+
 		}
 	}
 }

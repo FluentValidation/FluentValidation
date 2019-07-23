@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -29,7 +29,7 @@ namespace FluentValidation.Tests {
 	using Results;
 	using Validators;
 	using System.Reflection;
-	
+
 	public class RuleBuilderTests {
 		RuleBuilder<Person, string> builder;
 
@@ -123,6 +123,7 @@ namespace FluentValidation.Tests {
 		public void Calling_validate_should_delegate_to_underlying_validator() {
 			var person = new Person {Surname = "Foo"};
 			var validator = new Mock<IPropertyValidator>();
+			validator.Setup(x => x.Options).Returns(new PropertyValidatorOptions());
 			builder.SetValidator(validator.Object);
 
 			builder.Rule.Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
@@ -134,6 +135,7 @@ namespace FluentValidation.Tests {
 		public async Task Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
 			var person = new Person { Surname = "Foo" };
 			var validator = new Mock<IPropertyValidator>();
+			validator.Setup(x => x.Options).Returns(new PropertyValidatorOptions());
 			builder.SetValidator(validator.Object);
 
 			await builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
@@ -158,7 +160,7 @@ namespace FluentValidation.Tests {
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
 
 		}
-       
+
 
 		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
@@ -230,7 +232,7 @@ namespace FluentValidation.Tests {
 
 		class TestPropertyValidator : PropertyValidator {
 			public TestPropertyValidator() : base(new LanguageStringSource(nameof(NotNullValidator))) {
-				
+
 			}
 
 			protected override bool IsValid(PropertyValidatorContext context) {
