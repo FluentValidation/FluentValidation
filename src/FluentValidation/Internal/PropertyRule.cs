@@ -320,7 +320,7 @@ namespace FluentValidation.Internal {
 				context.RootContextData["__FV_IsAsyncExecution"] = true;
 			}
 
-			var displayName = GetDisplayName(context);
+			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
 				//No name has been specified. Assume this is a model-level rule, so we should use empty string instead.
@@ -328,7 +328,7 @@ namespace FluentValidation.Internal {
 			}
 
 			// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
-			var propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
+			string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
 
 			// Ensure that this rule is allowed to run.
 			// The validatselector has the opportunity to veto this before any of the validators execute.
@@ -342,7 +342,6 @@ namespace FluentValidation.Internal {
 				}
 			}
 
-			// TODO: For FV 9, throw an exception by default if synchronous validator has async condition.
 			if (_asyncCondition != null) {
 				if (! await _asyncCondition(context, cancellation)) {
 					return Enumerable.Empty<ValidationFailure>();
@@ -350,58 +349,36 @@ namespace FluentValidation.Internal {
 			}
 
 			var cascade = _cascadeModeThunk();
+			bool hasAnyFailure = false;
 			var failures = new List<ValidationFailure>();
 
-			var fastExit = false;
-
-			// Firstly, invoke all synchronous validators and collect their results.
-			foreach (var validator in _validators.Where(v => !v.ShouldValidateAsync(context))) {
+			// Invoke each validator and collect its results.
+			foreach (var validator in _validators) {
 				cancellation.ThrowIfCancellationRequested();
-				failures.AddRange(InvokePropertyValidator(context, validator, propertyName));
+
+				IEnumerable<ValidationFailure> results;
+				if (validator.ShouldValidateAsync(context))
+					results = await InvokePropertyValidatorAsync(context, validator, propertyName, cancellation);
+				else
+					results = InvokePropertyValidator(context, validator, propertyName);
+
+				bool hasFailure = false;
+
+				foreach (var result in results) {
+					hasAnyFailure = true;
+					hasFailure = true;
+					failures.Add(result);
+				}
 
 				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 				// then don't continue to the next rule
-				fastExit = cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0;
-
-				if (fastExit) {
+				if (cascade == FluentValidation.CascadeMode.StopOnFirstFailure && hasFailure) {
 					break;
 				}
 			}
 
-			//if StopOnFirstFailure triggered then we exit
-			if (fastExit && failures.Count > 0) {
+			if (hasAnyFailure) {
 				// Callback if there has been at least one property validator failed.
-				OnFailure(context.InstanceToValidate);
-				return failures;
-			}
-
-			var asyncValidators = _validators.Where(v => v.ShouldValidateAsync(context)).ToList();
-
-			// if there's no async validators then we exit
-			if (asyncValidators.Count == 0) {
-				if (failures.Count > 0) {
-					// Callback if there has been at least one property validator failed.
-					OnFailure(context.InstanceToValidate);
-				}
-				else {
-					failures.AddRange(await RunDependentRulesAsync(context, cancellation));
-				}
-
-				return failures;
-			}
-
-			foreach (var asyncValidator in asyncValidators) {
-				cancellation.ThrowIfCancellationRequested();
-
-				var propertyFailures = await InvokePropertyValidatorAsync(context, asyncValidator, propertyName, cancellation);
-				failures.AddRange(propertyFailures);
-
-				if (cascade == CascadeMode.StopOnFirstFailure && failures.Count > 0) {
-					break;
-				}
-			}
-
-			if (failures.Count > 0) {
 				OnFailure(context.InstanceToValidate);
 			}
 			else {
