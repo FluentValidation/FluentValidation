@@ -32,9 +32,9 @@ namespace FluentValidation.Resources {
 			Translate<MaximumLengthValidator>("Dĺžka poľa '{PropertyName}' musí byť menšia alebo rovná {MaxLength} znakom. Vami zadaná dĺžka je {TotalLength} znakov.");
 			Translate<LessThanOrEqualValidator>("Hodnota poľa '{PropertyName}' musí byť menšia alebo sa rovnať '{ComparisonValue}'.");
 			Translate<LessThanValidator>("Hodnota poľa '{PropertyName}' musí byť menšia ako '{ComparisonValue}'.");
-			Translate<NotEmptyValidator>("Pole '{PropertyName}' nesmie byť prázdné.");
+			Translate<NotEmptyValidator>("Pole '{PropertyName}' nesmie byť prázdne.");
 			Translate<NotEqualValidator>("Pole '{PropertyName}' sa nesmie rovnať '{ComparisonValue}'.");
-			Translate<NotNullValidator>("Pole '{PropertyName}' nesmie byť prázdné.");
+			Translate<NotNullValidator>("Pole '{PropertyName}' nesmie byť prázdne.");
 			Translate<PredicateValidator>("Nebola splnená podmienka pre pole '{PropertyName}'.");
 			Translate<AsyncPredicateValidator>("Nebola splnená podmienka pre pole '{PropertyName}'.");
 			Translate<RegularExpressionValidator>("Pole '{PropertyName}' nemá správný formát.");
