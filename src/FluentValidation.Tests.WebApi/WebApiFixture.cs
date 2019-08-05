@@ -21,7 +21,7 @@
 			return PostForm("/api/Test/" + className, input, contentType);
 		}
 
-		
+
 		public async Task<string> GetResult(string url) {
 			return await _server.HttpClient.GetStringAsync(url);
 		}
@@ -31,6 +31,7 @@
 		}
 
 		public async Task<List<SimpleError>> PostForm(string url, string formData, string contentType = "application/x-www-form-urlencoded") {
+			url = _server.BaseAddress + url;
 			var response = await _server.HttpClient.PostAsync(url, new StringContent(formData, Encoding.UTF8, contentType));
 			string responseStr = await response.Content.ReadAsStringAsync();
 			try {
@@ -45,7 +46,7 @@
 				else throw;
 			}
 		}
-		
+
 		public string ConvertToFormData(Dictionary<string, string> dict) {
 			return string.Join("&", dict.Select((x) => x.Key + "=" + x.Value.ToString()));
 		}
