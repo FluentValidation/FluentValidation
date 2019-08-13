@@ -9,6 +9,7 @@ Welsh language translations of default error messages.
 Hungrian language translations of default error messages.
 Indonesian language translations of default error messages.
 Using RuleForEach combined with When is now more intuitive.
+Fixed order of rule execution when using async validation.
 
 8.4.0 - 10 May 2019
 Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.

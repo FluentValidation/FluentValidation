@@ -16,6 +16,7 @@ Changes in 8.5.0:
 * Hungrian language translations of default error messages.
 * Indonesian language translations of default error messages.
 * Using RuleForEach combined with When is now more intuitive.
+* Fixed order of rule execution when using async validation.
 
 Changes in 8.4.0:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.

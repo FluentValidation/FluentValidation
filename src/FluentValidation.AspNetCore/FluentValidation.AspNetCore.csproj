@@ -6,6 +6,9 @@
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
     <PackageReleaseNotes>
+Changes in 8.5.0:
+* Compatibility with ASP.NET Core 3.
+
 Changes in 8.4.0:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
 
