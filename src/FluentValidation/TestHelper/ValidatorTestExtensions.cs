@@ -142,14 +142,17 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
-		internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
+		internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName) {
 			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
 			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
 			                                 || propertyName == MatchAnyFailure
 			                                 ).ToArray();
 
-			if (!failures.Any())
-				throw new ValidationTestException($"Expected a validation error for property {propertyName}");
+      if (!failures.Any()) {
+        var errorProperties = string.Join(", ", errors.Select(x => x.PropertyName));
+        var errorMessage = $"Expected a validation error for property {propertyName}. Found {errors.Count} error{(errors.Count == 1 ? string.Empty : "s")} with the properties: {errorProperties}.";
+        throw new ValidationTestException(errorMessage);
+      }
 
 			return failures;
 		}
