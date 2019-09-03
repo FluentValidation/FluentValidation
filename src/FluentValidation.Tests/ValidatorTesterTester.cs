@@ -270,7 +270,7 @@ namespace FluentValidation.Tests {
       });
 
       var ex = Assert.Throws<ValidationTestException>(() => result.ShouldHaveValidationErrorFor(x => x.NullableInt.Value));
-      Assert.Equal("Expected a validation error for property NullableInt.Value. Found 1 error for the properties: NullableInt.", ex.Message);
+      Assert.Equal("Expected a validation error for property NullableInt.Value\n----\nProperties with Validation Errors:\n[0]: NullableInt\n", ex.Message);
     }
 
     [Fact]
@@ -287,7 +287,7 @@ namespace FluentValidation.Tests {
       });
 
       var ex = Assert.Throws<ValidationTestException>(() => result.ShouldHaveValidationErrorFor(x => x.NullableInt.Value));
-      Assert.Equal("Expected a validation error for property NullableInt.Value. Found 3 errors for the properties: NullableInt, Age, AnotherInt.", ex.Message);
+      Assert.Equal("Expected a validation error for property NullableInt.Value\n----\nProperties with Validation Errors:\n[0]: NullableInt\n[1]: Age\n[2]: AnotherInt\n", ex.Message);
     }
 
     [Fact]

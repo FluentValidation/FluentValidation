@@ -142,28 +142,34 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
-		internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName) {
-			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
-			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
-			                                 || propertyName == MatchAnyFailure
-			                                 ).ToArray();
+    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName) {
+      var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
+                                       || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+                                       || propertyName == MatchAnyFailure
+                                       ).ToArray();
 
-      if (!failures.Any()) {
-        string errorPropertiesText = string.Empty;
-
-        // If we have some errors, then lets grab the properties that errored.
-        if (errors.Any()) {
-          var errorProperties = string.Join(", ", errors.Select(x => x.PropertyName));
-          errorPropertiesText = $". Found {errors.Count} error{(errors.Count == 1 ? string.Empty : "s")} for the properties: {errorProperties}.";
-        }
-
-        var errorMessage = $"Expected a validation error for property {propertyName}{errorPropertiesText}";
-
-        throw new ValidationTestException(errorMessage);
+      if (failures.Any()) {
+        return failures;
       }
 
-			return failures;
-		}
+      // We expected an error but failed to match it.
+      var errorMessageBanner = $"Expected a validation error for property {propertyName}";
+
+      string errorMessage = "";
+
+      if (errors?.Any() == true) {
+        string errorMessageDetails = "";
+        for (int i = 0; i < errors.Count; i++) {
+          errorMessageDetails += $"[{i}]: {errors[i].PropertyName}\n";
+        }
+        errorMessage = $"{errorMessageBanner}\n----\nProperties with Validation Errors:\n{errorMessageDetails}";
+      }
+      else {
+        errorMessage = $"{errorMessageBanner}";
+      }
+
+      throw new ValidationTestException(errorMessage);
+    }
 
 		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
 			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
