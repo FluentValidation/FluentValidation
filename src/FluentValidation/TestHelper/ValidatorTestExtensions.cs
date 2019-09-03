@@ -149,8 +149,16 @@ namespace FluentValidation.TestHelper {
 			                                 ).ToArray();
 
       if (!failures.Any()) {
-        var errorProperties = string.Join(", ", errors.Select(x => x.PropertyName));
-        var errorMessage = $"Expected a validation error for property {propertyName}. Found {errors.Count} error{(errors.Count == 1 ? string.Empty : "s")} with the properties: {errorProperties}.";
+        string errorPropertiesText = string.Empty;
+
+        // If we have some errors, then lets grab the properties that errored.
+        if (errors.Any()) {
+          var errorProperties = string.Join(", ", errors.Select(x => x.PropertyName));
+          errorPropertiesText = $". Found {errors.Count} error{(errors.Count == 1 ? string.Empty : "s")} for the properties: {errorProperties}.";
+        }
+
+        var errorMessage = $"Expected a validation error for property {propertyName}{errorPropertiesText}";
+
         throw new ValidationTestException(errorMessage);
       }
 
