@@ -67,11 +67,11 @@ You can also combine `RuleForEach` with `SetValidator` when the collection is of
 
 ```csharp
 public class Customer {
-  public List<Order> Orders {get;set;} = new List<Order>();
+  public List<Order> Orders { get; set; } = new List<Order>();
 }
 
 public class Order {
-  public double Total {get;set;}
+  public double Total { get; set; }
 }
 ```
 
