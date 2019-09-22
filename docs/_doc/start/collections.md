@@ -6,7 +6,7 @@ You can use the `RuleForEach` method to apply the same rule to multiple items in
 
 ```csharp
 public class Person {
-  public List<string> AddressLines {get;set;} = new List<string>();
+  public List<string> AddressLines { get; set; } = new List<string>();
 }
 ```
 
