@@ -19,7 +19,7 @@ public class PersonValidator : AbstractValidator<Person> {
 ```
 The above rule will run a NotNull check against each item in the `AddressLines` collection. 
 
-If you want to access the index of the collection element that caused the validation failure, you can use the special `{CollectionIndex}` placeholder:
+As of version 8.5, if you want to access the index of the collection element that caused the validation failure, you can use the special `{CollectionIndex}` placeholder:
 
 ```csharp
 public class PersonValidator : AbstractValidator<Person> {
