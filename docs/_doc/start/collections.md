@@ -6,7 +6,7 @@ You can use the `RuleForEach` method to apply the same rule to multiple items in
 
 ```csharp
 public class Person {
-  public List<string> AddressLines {get;set;} = new List<string>();
+  public List<string> AddressLines { get; set; } = new List<string>();
 }
 ```
 
@@ -19,7 +19,7 @@ public class PersonValidator : AbstractValidator<Person> {
 ```
 The above rule will run a NotNull check against each item in the `AddressLines` collection. 
 
-If you want to access the index of the collection element that caused the validation failure, you can use the special `{CollectionIndex}` placeholder:
+As of version 8.5, if you want to access the index of the collection element that caused the validation failure, you can use the special `{CollectionIndex}` placeholder:
 
 ```csharp
 public class PersonValidator : AbstractValidator<Person> {
@@ -67,11 +67,11 @@ You can also combine `RuleForEach` with `SetValidator` when the collection is of
 
 ```csharp
 public class Customer {
-  public List<Order> Orders {get;set;} = new List<Order>();
+  public List<Order> Orders { get; set; } = new List<Order>();
 }
 
 public class Order {
-  public double Total {get;set;}
+  public double Total { get; set; }
 }
 ```
 

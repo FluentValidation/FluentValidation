@@ -48,11 +48,11 @@ If the child property is null, then the child validator will not be executed.
 Instead of using a child validator, you can define child rules inline, eg:
 
 ```csharp
-RuleFor(customer => customer.Address.PostCode).NotNull()
+RuleFor(customer => customer.Address.Postcode).NotNull()
 ``` 
 
 In this case, a null check will *not* be performed automatically on `Address`, so you should explicitly add a condition
 
 ```csharp
-RuleFor(customer => customer.Address.PostCode).NotNull().When(customer => customer.Address != null)
+RuleFor(customer => customer.Address.Postcode).NotNull().When(customer => customer.Address != null)
 ```
