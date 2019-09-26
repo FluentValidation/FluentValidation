@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -27,7 +27,7 @@ namespace FluentValidation {
 	/// Extension methods for working with a Service Provider.
 	/// </summary>
 	public static class DependencyInjectionExtensions {
-		
+
 		/// <summary>
 		/// Gets the service provider associated with the validation context.
 		/// </summary>
@@ -58,7 +58,7 @@ namespace FluentValidation {
 						return serviceProvider;
 					}
 				}
-				
+
 			}
 
 			throw new InvalidOperationException("The service provider has not been configured to work with FluentValidation. Making use of InjectValidator or GetServiceProvider is only supported when using the automatic MVC integration.");
@@ -98,7 +98,7 @@ namespace FluentValidation {
 			var adaptor = new ChildValidatorAdaptor(context => {
 				var actualContext = (PropertyValidatorContext) context;
 				var serviceProvider = actualContext.ParentContext.GetServiceProvider();
-				var contextToUse = ValidationContext<T>.GetFromNoNGenericContext(actualContext.ParentContext);
+				var contextToUse = ValidationContext<T>.GetFromNonGenericContext(actualContext.ParentContext);
 				var validator = callback(serviceProvider, contextToUse);
 				return validator;
 			}, typeof(IValidator<TProperty>));
