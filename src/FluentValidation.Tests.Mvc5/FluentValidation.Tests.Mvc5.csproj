@@ -77,10 +77,4 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <NoWarn>1998;0618</NoWarn>
   </PropertyGroup>
-  <Import Project="../netfx.props" />
-  <ItemGroup Condition="'$(TargetFramework)'=='net461' AND '$(OS)'=='Unix'">
-    <!-- Workarounds for Mono -->
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
-  </ItemGroup>
 </Project>

@@ -18,5 +18,4 @@
                       Version="1.0.0-preview.2"
                       PrivateAssets="All" />
   </ItemGroup>
-  <Import Project="../netfx.props" />
 </Project>

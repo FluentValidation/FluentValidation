@@ -41,10 +41,4 @@
       <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="../netfx.props" />
-  <ItemGroup Condition="'$(TargetFramework)'=='net461' AND '$(OS)'=='Unix'">
-    <!-- Workarounds for Mono -->
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
-  </ItemGroup>
 </Project>
