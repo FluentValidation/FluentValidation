@@ -1099,7 +1099,6 @@ namespace FluentValidation {
 		/// Defines a enum value validator on the current rule builder that ensures that the specific value is a valid enum name.
 		/// </summary>
 		/// <typeparam name="T">Type of Enum being validated</typeparam>
-		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <param name="enumType">The enum whose the string should match any name</param>
 		/// <param name="caseSensitive">If the comparison between the string and the enum names should be case sensitive</param>
