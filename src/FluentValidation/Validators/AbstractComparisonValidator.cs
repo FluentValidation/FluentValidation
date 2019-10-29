@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
@@ -43,7 +43,7 @@ namespace FluentValidation.Validators {
 		/// <param name="valueToCompareFunc"></param>
 		/// <param name="member"></param>
 		/// <param name="errorSource"></param>
-		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, IStringSource errorSource) : base(errorSource) { 
+		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, IStringSource errorSource) : base(errorSource) {
 			this._valueToCompareFunc = valueToCompareFunc;
 			this.MemberToCompare = member;
 		}
@@ -56,15 +56,15 @@ namespace FluentValidation.Validators {
 		protected sealed override bool IsValid(PropertyValidatorContext context) {
 			if(context.PropertyValue == null) {
 				// If we're working with a nullable type then this rule should not be applied.
-				// If you want to ensure that it's never null then a NotNull rule should also be applied. 
+				// If you want to ensure that it's never null then a NotNull rule should also be applied.
 				return true;
 			}
-			
+
 			var value = GetComparisonValue(context);
 
 			if (!IsValid((IComparable)context.PropertyValue, value)) {
 				context.MessageFormatter.AppendArgument("ComparisonValue", value);
-				context.MessageFormatter.AppendArgument("ComparisonProperty", MemberToCompare == null ? "" : MemberToCompare.Name);
+				context.MessageFormatter.AppendArgument("ComparisonProperty", MemberToCompare == null ? "" : MemberToCompare.Name.SplitPascalCase());
 				return false;
 			}
 
