@@ -1,3 +1,6 @@
+8.5.1 - 
+Ensure lazily loaded calls to WithMessage can be used for client-side validation, provided they don't attempt to access model properties from inside the delegate (eg when using IStringLocalizer).
+
 8.5.0 - 24 September 2019
 Add ASP.NET Core-compatible version of the email address validator.
 Simplify the advanced testhelper syntax.

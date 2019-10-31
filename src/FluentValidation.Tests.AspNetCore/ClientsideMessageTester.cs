@@ -27,7 +27,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		private readonly HttpClient _client;
 
 		public ClientsideMessageTester(WebAppFixture webApp) {
-			_client = webApp.WithContainer().CreateClient();
+			_client = webApp.WithContainer(enableLocalization:true).CreateClient();
 			CultureScope.SetDefaultCulture();
 		}
 
@@ -160,6 +160,12 @@ namespace FluentValidation.Tests.AspNetCore {
 		public async Task Falls_back_to_default_message_when_no_context_available_to_custom_message_format() {
 			var msg = await _client.GetClientsideMessage("MessageWithContext", "data-val-required");
 			msg.ShouldEqual("'Message With Context' must not be empty.");
+		}
+
+		[Fact]
+		public async Task Can_use_localizer() {
+			var msg = await _client.GetClientsideMessage("LocalizedMessage", "data-val-required");
+			msg.ShouldEqual("from localizer");
 		}
 
 		[Fact]

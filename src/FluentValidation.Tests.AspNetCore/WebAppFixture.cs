@@ -20,9 +20,14 @@
 				.UseStartup<Startup>();
 		}
 
-		public WebApplicationFactory<Startup> WithContainer(bool registerContextAccessor = true) {
+		public WebApplicationFactory<Startup> WithContainer(bool registerContextAccessor = true, bool enableLocalization = false) {
 			return WithWebHostBuilder(cfg => {
 				cfg.ConfigureServices(services => {
+
+					if (enableLocalization) {
+						services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
+					}
+
 					services.AddFluentValidationForTesting(fv => {
 						fv.RegisterValidatorsFromAssemblyContaining<TestController>();
 					});
