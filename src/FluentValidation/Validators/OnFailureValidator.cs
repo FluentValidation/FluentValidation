@@ -13,6 +13,17 @@
 		public OnFailureValidator(IPropertyValidator innerValidator, Action<T, PropertyValidatorContext, string> onFailure) {
 			_innerValidator = innerValidator;
 			_onFailure = onFailure;
+			// Make sure any conditions defined on the wrapped validator are applied
+			// to this validator too. They won't be invoked automatically, as conditions
+			// are invoked by the parent rule, which means that only *this* validator's
+			// conditions will be invoked, not the wrapped validator's conditions.
+			if (_innerValidator.Options.Condition != null) {
+				Options.ApplyCondition(_innerValidator.Options.Condition);
+			}
+
+			if (_innerValidator.Options.AsyncCondition != null) {
+				Options.ApplyAsyncCondition(_innerValidator.Options.AsyncCondition);
+			}
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
@@ -31,11 +42,18 @@
 			return results;
 		}
 
+		public override bool ShouldValidateAsync(ValidationContext context) {
+			// If the user has applied an async condition, or the inner validator requires async
+			// validation then always go through the async path.
+			if (Options.AsyncCondition != null || _innerValidator.ShouldValidateAsync(context)) return true;
+			return false;
+		}
+
 		public Type ValidatorType {
 			get {
 				if (_innerValidator is IChildValidatorAdaptor c)
 					return c.ValidatorType;
-				
+
 				return _innerValidator.GetType();
 			}
 		}
