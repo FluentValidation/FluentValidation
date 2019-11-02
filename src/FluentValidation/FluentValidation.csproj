@@ -5,6 +5,10 @@
     <PackageReleaseNotes>
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
 
+Changes in 8.5.1:
+* Ensure lazily loaded calls to WithMessage can be used for client-side validation, provided they don't attempt to access model properties from inside the delegate (eg when using IStringLocalizer).
+* Fix issue where OnFailure didn't work properly when invoked on validators with conditions.
+
 Changes in 8.5.0:
 * Add additional overload of the EmailAddress validator for compatibility with ASP.NET Core's default email validation.
 * Simplify the advanced testhelper syntax.
