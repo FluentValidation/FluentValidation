@@ -52,32 +52,32 @@ namespace FluentValidation.TestHelper {
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 			string propertyName = ValidatorOptions.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, true);
 		}
 
 		public void ShouldNotHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 			string propertyName = ValidatorOptions.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, true);
 		}
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor(string propertyName) {
-			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, false);
 		}
 
 		public void ShouldNotHaveValidationErrorFor(string propertyName) {
-			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, false);
 		}
 
 		[Obsolete]
 		IEnumerable<ValidationFailure> IValidationResultTester.ShouldHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = properties.Any() ? GetPropertyName(properties) : ValidationTestExtension.MatchAnyFailure;
-			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, true);
 		}
 
 		[Obsolete]
 		void IValidationResultTester.ShouldNotHaveValidationError(IEnumerable<MemberInfo> properties) {
 			var propertyName = properties.Any() ? GetPropertyName(properties) : ValidationTestExtension.MatchAnyFailure;
-			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, true);
 		}
 
 		[Obsolete]
