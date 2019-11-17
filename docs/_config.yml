@@ -1,6 +1,6 @@
 # Site settings
 remote_theme: JeremySkinner/PrettyDocs-theme
-url: https://leakyabstractions.github.io
+url: https://fluentvalidation.net/
 title: &site_title FluentValidation
 branding:
   highlight: Fluent
