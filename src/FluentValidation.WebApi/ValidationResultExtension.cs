@@ -33,7 +33,11 @@ namespace FluentValidation.WebApi {
 		public static void AddToModelState(this ValidationResult result, ModelStateDictionary modelState, string prefix) {
 			if (!result.IsValid) {
 				foreach (var error in result.Errors) {
-					string key = string.IsNullOrEmpty(prefix) ? error.PropertyName : prefix + "." + error.PropertyName;
+					string key = string.IsNullOrEmpty(prefix)
+						? error.PropertyName
+						: string.IsNullOrEmpty(error.PropertyName)
+							? prefix
+							: prefix + "." + error.PropertyName;
 
 					if (modelState.ContainsKey(key)) {
 						modelState[key].Errors.Add(error.ErrorMessage);
