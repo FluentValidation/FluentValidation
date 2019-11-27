@@ -111,7 +111,7 @@ context.AddFailure(new ValidationFailure("SomeOtherProperty", "The list must con
 As before, this could be wrapped in an extension method to simplify the consuming code.
 
 ```csharp
-public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T, TElement>(this IRuleBuilder<T, IList<TElement>> ruleBuilder, int num) {
+public static IRuleBuilderInitial<T, IList<TElement>> ListMustContainFewerThan<T, TElement>(this IRuleBuilder<T, IList<TElement>> ruleBuilder, int num) {
 
   return ruleBuilder.Custom((list, context) => {
      if(list.Count > 10) {
