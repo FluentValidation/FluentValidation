@@ -4,7 +4,7 @@
         <AssemblyName>FluentValidation.DependencyInjectionExtensions</AssemblyName>
         <PackageId>FluentValidation.DependencyInjectionExtensions</PackageId>
         <Product>FluentValidation.DependencyInjectionExtensions</Product>
-        <Description>Dependenecy injection extensions for FluentValidation</Description>
+        <Description>Dependency injection extensions for FluentValidation</Description>
         <PackageReleaseNotes>
             Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
         </PackageReleaseNotes>
