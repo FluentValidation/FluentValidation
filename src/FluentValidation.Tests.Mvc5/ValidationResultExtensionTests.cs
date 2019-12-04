@@ -31,6 +31,7 @@ namespace FluentValidation.Tests.Mvc5 {
 			result = new ValidationResult(new[] {
 				new ValidationFailure("foo", "A foo error occurred", "x"),
 				new ValidationFailure("bar", "A bar error occurred", "y"),
+				new ValidationFailure("", "A nameless error occurred", "z"),
 			});
 		}
 
@@ -42,9 +43,11 @@ namespace FluentValidation.Tests.Mvc5 {
 			modelstate.IsValid.ShouldBeFalse();
 			modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
 			modelstate["bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
+			modelstate[""].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
 
 			modelstate["foo"].Value.AttemptedValue.ShouldEqual("x");
 			modelstate["bar"].Value.AttemptedValue.ShouldEqual("y");
+			modelstate[""].Value.AttemptedValue.ShouldEqual("z");
 		}
 
 		[Fact]
@@ -52,6 +55,7 @@ namespace FluentValidation.Tests.Mvc5 {
 			var modelstate = new ModelStateDictionary();
 			result.AddToModelState(modelstate, "");
 			modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
+			modelstate[""].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
 		}
 
 		[Fact]
@@ -62,6 +66,7 @@ namespace FluentValidation.Tests.Mvc5 {
 			modelstate.IsValid.ShouldBeFalse();
 			modelstate["baz.foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
 			modelstate["baz.bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
+			modelstate["baz"].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
 		}
 
 		[Fact]
