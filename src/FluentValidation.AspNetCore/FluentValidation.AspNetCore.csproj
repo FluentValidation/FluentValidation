@@ -6,6 +6,10 @@
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
     <PackageReleaseNotes>
+Changes in 8.6.0:
+* Add support for ASP.NET Core 3.1
+* AddToModelState no longer includes a dot if PropertyName is null
+
 Changes in 8.5.1:
 * Ensure lazily loaded calls to WithMessage can be used for client-side validation, provided they don't attempt to access model properties from inside the delegate (eg when using IStringLocalizer).
 

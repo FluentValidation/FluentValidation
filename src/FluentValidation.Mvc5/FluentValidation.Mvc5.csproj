@@ -12,6 +12,9 @@
     <DelaySign>False</DelaySign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.Mvc.xml</DocumentationFile>
 	  <PackageReleaseNotes>
+Changes in 8.6.0:
+* AddToModelState no longer includes a dot if PropertyName is null
+
 Changes in 8.4.0:
 * Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
 

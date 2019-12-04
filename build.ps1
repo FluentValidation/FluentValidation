@@ -152,7 +152,7 @@ target install-dotnet-core {
     else { 
       $installer = "$build_dir/dotnet-installer"
       write-host Downloading installer to $installer 
-      curl https://dot.net/v1/dotnet-install.sh --output $installer 
+      curl https://dot.net/v1/dotnet-install.sh -L --output $installer 
       chmod +x $installer
     }
 
