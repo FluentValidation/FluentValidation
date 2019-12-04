@@ -1,3 +1,8 @@
+8.6.0 - 4 December 2019
+Add support for ASP.NET Core 3.1
+Fixed issue with property indexers being incorrectly stripped out when using test extensions.
+AddToModelState no longer includes a dot if PropertyName is null
+
 8.5.1 - 2 November 2019
 Ensure lazily loaded calls to WithMessage can be used for client-side validation, provided they don't attempt to access model properties from inside the delegate (eg when using IStringLocalizer).
 Fix issue where OnFailure didn't work properly when invoked on validators with conditions.
