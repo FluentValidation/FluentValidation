@@ -119,7 +119,7 @@ namespace FluentValidation.TestHelper {
 
 		public static void ShouldNotHaveAnyValidationErrors<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
 			// TODO: Remove the second generic for 9.0.
-			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure);
+			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure, true);
 		}
 
 		[Obsolete("Call ShouldHaveAnyValidationError")]
@@ -142,8 +142,9 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
-    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName) {
-      var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
+    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
+
+      var failures = errors.Where(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
                                        || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
                                        || propertyName == MatchAnyFailure
                                        ).ToArray();
@@ -171,8 +172,8 @@ namespace FluentValidation.TestHelper {
       throw new ValidationTestException(errorMessage);
     }
 
-		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
-			var failures = errors.Where(x => NormalizePropertyName(x.PropertyName) == propertyName
+		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
+			var failures = errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
 			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
 			                                 || propertyName == MatchAnyFailure
 			                                 ).ToList();

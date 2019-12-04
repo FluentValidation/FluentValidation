@@ -20,6 +20,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using Xunit;
 	using TestHelper;
@@ -616,6 +617,30 @@ namespace FluentValidation.Tests {
 			}
 
 			thrown.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void Can_use_indexer_in_string_message() {
+			var validator = new InlineValidator<Person>();
+			var orderValidator = new InlineValidator<Order>();
+			orderValidator.RuleFor(x => x.ProductName).NotNull();
+			validator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
+
+			var model = new Person { Orders = new List<Order> { new Order() }};
+			var result = validator.TestValidate(model);
+			result.ShouldHaveValidationErrorFor("Orders[0].ProductName");
+		}
+
+		[Fact]
+		public void Can_use_indexer_in_string_message_inverse() {
+			var validator = new InlineValidator<Person>();
+			var orderValidator = new InlineValidator<Order>();
+			orderValidator.RuleFor(x => x.ProductName).Null();
+			validator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
+
+			var model = new Person { Orders = new List<Order> { new Order() }};
+			var result = validator.TestValidate(model);
+			result.ShouldNotHaveValidationErrorFor("Orders[0].ProductName");
 		}
 
 		private class AddressValidator : AbstractValidator<Address> {
