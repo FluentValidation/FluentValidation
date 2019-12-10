@@ -274,7 +274,7 @@ namespace FluentValidation.Internal {
 			// Invoke each validator and collect its results.
 			foreach (var validator in _validators) {
 				IEnumerable<ValidationFailure> results;
-				if (validator.ShouldValidateAsync(context))
+				if (validator.ShouldValidateAsynchronously(context))
 					//TODO: For FV 9 by default disallow invocation of async validators when running synchronously.
 					results = InvokePropertyValidatorAsync(context, validator, propertyName, default).GetAwaiter().GetResult();
 				else
@@ -355,7 +355,7 @@ namespace FluentValidation.Internal {
 				cancellation.ThrowIfCancellationRequested();
 
 				IEnumerable<ValidationFailure> results;
-				if (validator.ShouldValidateAsync(context))
+				if (validator.ShouldValidateAsynchronously(context))
 					results = await InvokePropertyValidatorAsync(context, validator, propertyName, cancellation);
 				else
 					results = InvokePropertyValidator(context, validator, propertyName);

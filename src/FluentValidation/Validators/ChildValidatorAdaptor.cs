@@ -96,7 +96,7 @@ namespace FluentValidation.Validators {
 			return newContext;
 		}
 
-		public override bool ShouldValidateAsync(ValidationContext context) {
+		public override bool ShouldValidateAsynchronously(ValidationContext context) {
 			return context.IsAsync() || Options.AsyncCondition != null;
 		}
 	}

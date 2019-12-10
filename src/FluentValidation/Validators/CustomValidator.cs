@@ -52,7 +52,7 @@
 			throw new NotImplementedException();
 		}
 
-		public override bool ShouldValidateAsync(ValidationContext context) {
+		public override bool ShouldValidateAsynchronously(ValidationContext context) {
 			return _isAsync && context.IsAsync();
 		}
 	}
