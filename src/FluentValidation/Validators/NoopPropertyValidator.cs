@@ -31,7 +31,7 @@ namespace FluentValidation.Validators {
 			return Task.FromResult(Validate(context));
 		}
 
-		public virtual bool ShouldValidateAsync(ValidationContext context) {
+		public virtual bool ShouldValidateAsynchronously(ValidationContext context) {
 			return false;
 		}
 

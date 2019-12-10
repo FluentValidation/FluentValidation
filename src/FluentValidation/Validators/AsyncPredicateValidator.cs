@@ -47,7 +47,7 @@ namespace FluentValidation.Validators {
 			return Task.Run(() => IsValidAsync(context, new CancellationToken())).GetAwaiter().GetResult();
 		}
 
-		public override bool ShouldValidateAsync(ValidationContext context) {
+		public override bool ShouldValidateAsynchronously(ValidationContext context) {
 			return context.IsAsync();
 		}
 	}

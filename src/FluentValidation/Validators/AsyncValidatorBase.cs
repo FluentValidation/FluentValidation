@@ -28,7 +28,7 @@ namespace FluentValidation.Validators {
 	/// Defines a property validator that can be run asynchronously.
 	/// </summary>
 	public abstract class AsyncValidatorBase : PropertyValidator {
-		public override bool ShouldValidateAsync(ValidationContext context) {
+		public override bool ShouldValidateAsynchronously(ValidationContext context) {
 			return context.IsAsync() || Options.AsyncCondition != null;
 		}
 

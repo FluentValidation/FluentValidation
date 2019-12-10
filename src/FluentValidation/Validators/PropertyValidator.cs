@@ -1,41 +1,40 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 #endregion
 
-using System.Threading;
-
 namespace FluentValidation.Validators {
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Linq.Expressions;
+	using System.Threading;
 	using System.Threading.Tasks;
-	using FluentValidation.Internal;
+	using Internal;
 	using Resources;
 	using Results;
 
 	public abstract class PropertyValidator : IPropertyValidator {
+
+		/// <inheritdoc />
 		public PropertyValidatorOptions Options { get; } = new PropertyValidatorOptions();
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
 			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
-			else if (errorMessageSource is LanguageStringSource l && l.ErrorCodeFunc == null) 
+			else if (errorMessageSource is LanguageStringSource l && l.ErrorCodeFunc == null)
 				l.ErrorCodeFunc = ctx => Options.ErrorCodeSource?.GetString(ctx);
-			
+
 			Options.ErrorMessageSource = errorMessageSource;
 		}
 
@@ -43,22 +42,25 @@ namespace FluentValidation.Validators {
 			Options.ErrorMessageSource = new StaticStringSource(errorMessage);
 		}
 
+		/// <inheritdoc />
 		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			if (IsValid(context)) return Enumerable.Empty<ValidationFailure>();
-			
+
 			PrepareMessageFormatterForValidationError(context);
 			return new[] { CreateValidationError(context) };
 
 		}
 
+		/// <inheritdoc />
 		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			if (await IsValidAsync(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
-			
+
 			PrepareMessageFormatterForValidationError(context);
 			return new[] {CreateValidationError(context)};
 		}
 
-		public virtual bool ShouldValidateAsync(ValidationContext context) {
+		/// <inheritdoc />
+		public virtual bool ShouldValidateAsynchronously(ValidationContext context) {
 			// If the user has applied an async condition, then always go through the async path
 			// even if validator is being run synchronously.
 			if (Options.AsyncCondition != null) return true;
@@ -90,8 +92,8 @@ namespace FluentValidation.Validators {
 		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
 			var messageBuilderContext = new MessageBuilderContext(context, Options.ErrorMessageSource, this);
 
-			var error = context.Rule.MessageBuilder != null 
-				? context.Rule.MessageBuilder(messageBuilderContext) 
+			var error = context.Rule.MessageBuilder != null
+				? context.Rule.MessageBuilder(messageBuilderContext)
 				: messageBuilderContext.GetDefaultMessage();
 
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
