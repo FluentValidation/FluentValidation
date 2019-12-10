@@ -116,7 +116,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) where T : class {
-			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure);
+			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure, true);
 		}
 
 		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {

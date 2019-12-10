@@ -21,10 +21,7 @@
 namespace FluentValidation.TestHelper {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Linq.Expressions;
-	using System.Reflection;
-	using System.Text.RegularExpressions;
 	using Internal;
 	using Results;
 
@@ -35,21 +32,21 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
-			string propertyName = ValidatorOptions.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
+			string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, true);
 		}
 
 		public void ShouldNotHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
-			string propertyName = ValidatorOptions.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
+			string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, true);
 		}
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor(string propertyName) {
-			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, false);
 		}
 
 		public void ShouldNotHaveValidationErrorFor(string propertyName) {
-			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, false);
 		}
 	}
 
