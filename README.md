@@ -64,3 +64,7 @@ IList<ValidationFailure> failures = results.Errors;
 ### Documentation
 
 [Documentation can be found on the project site.](https://fluentvalidation.net)
+
+### License, Copyright etc
+
+FluentValidation is copyright &copy; 2008-2019 [Jeremy Skinner](https://jeremyskinner.co.uk) and other contributors and is licensed under the [Apache2 license](https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt). 
