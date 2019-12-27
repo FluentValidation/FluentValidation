@@ -79,12 +79,14 @@ namespace FluentValidation {
 		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
 		/// <returns></returns>
 		private static IServiceCollection AddScanResult(this IServiceCollection services, AssemblyScanner.AssemblyScanResult scanResult, ServiceLifetime lifetime) {
-			//Register as interface
-			services.Add(
-				new ServiceDescriptor(
-							serviceType: scanResult.InterfaceType,
-							implementationType: scanResult.ValidatorType,
-							lifetime: lifetime));
+      //Register as interface
+      if (!scanResult.ValidatorType.IsGenericTypeDefinition) {
+        services.Add(
+            new ServiceDescriptor(
+                  serviceType: scanResult.InterfaceType,
+                  implementationType: scanResult.ValidatorType,
+                  lifetime: lifetime)); 
+      }
 
 			//Register as self
 			services.Add(
