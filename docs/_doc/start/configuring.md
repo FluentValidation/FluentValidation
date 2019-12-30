@@ -135,6 +135,27 @@ When(customer => customer.IsPreferred, () => {
 });
 ```
 
+By default FluentValidation will apply the condition to all preceding validators in the same call to `RuleFor`. If you only want the condition to apply to the validator that immediately precedes the condition, you must explicitly specify this:
+
+```csharp
+RuleFor(customer => customer.CustomerDiscount)
+    .GreaterThan(0).When(customer => customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator)
+    .EqualTo(0).When(customer => ! customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator);
+```
+
+If the second parameter is not specified, then it defaults to `ApplyConditionTo.AllValidators`, meaning that the condition will apply to all preceding validators in the same chain. 
+
+If you need this behaviour, be aware that you must specify `ApplyConditionTo.CurrentValidator` as part of *every* condition. In the following example the first call to `When` applies to only the call to `Matches`, but not the call to `NotEmpty`. The second call to `When` applies only to the call to `Empty`. 
+
+```csharp
+RuleFor(customer => customer.Photo)
+    .NotEmpty()
+    .Matches("https://wwww.photos.io/\d+\.png")
+    .When(customer => customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator)
+    .Empty()
+    .When(customer => ! customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator);
+```
+
 ### Setting the Cascade mode
 
 You can set the cascade mode to customise how FluentValidation executes chained validators when a particular validator in the chain fails.
