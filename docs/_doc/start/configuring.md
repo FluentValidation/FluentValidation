@@ -135,6 +135,24 @@ When(customer => customer.IsPreferred, () => {
 });
 ```
 
+Beware that, if you need to apply multiple rules with different conditions to the same property, you must specify that the condition only applies to the current validator.
+
+```csharp
+RuleFor(customer => customer.CustomerDiscount)
+    .GreaterThan(0).When(customer => customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator)
+    .EqualTo(0).When(customer => ! customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator);
+```
+Technically, that's because, `.When(customer => customer.IsPreferredCustomer)` is equivalent to ` .When(customer => customer.IsPreferredCustomer, ApplyConditionTo.AllValidators)`
+
+If you are using this kind of construct, take care that you must specify the ApplyConditionTo to *every* rule (in the following example, NotEmpty is always applied because the `When` is only applied on the `Matches` rule)
+
+
+```csharp
+RuleFor(customer => customer.Photo)
+    .NotEmpty().Matches("https://wwww.photos.io/\d+\.png").When(customer => customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator)
+    .Empty().When(customer => ! customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator);
+```
+
 ### Setting the Cascade mode
 
 You can set the cascade mode to customise how FluentValidation executes chained validators when a particular validator in the chain fails.
