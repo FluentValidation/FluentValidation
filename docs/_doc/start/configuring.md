@@ -135,7 +135,7 @@ When(customer => customer.IsPreferred, () => {
 });
 ```
 
-By default, FluentValidation will apply the condition to all preceding validators in the same call to `RuleFor`. If you only want the condition to apply to the validator that immediately precedes the condition, you must explicitly specify this:
+By default FluentValidation will apply the condition to all preceding validators in the same call to `RuleFor`. If you only want the condition to apply to the validator that immediately precedes the condition, you must explicitly specify this:
 
 ```csharp
 RuleFor(customer => customer.CustomerDiscount)
