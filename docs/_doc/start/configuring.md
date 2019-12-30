@@ -145,8 +145,7 @@ RuleFor(customer => customer.CustomerDiscount)
 
 If the second parameter is not specified, then it defaults to `ApplyConditionTo.AllValidators`, meaning that the condition will apply to all preceding validators in the same chain. 
 
-If you need this behaviour, be aware that you must specify the `ApplyConditionTo` as part of *every* condition. In the following example, 
-the first call to `When` applies to only the call to `Matches`, but not the call to `NotEmpty`. The second call to `When` applies only to the call to `Empty`. 
+If you need this behaviour, be aware that you must specify `ApplyConditionTo.CurrentValidator` as part of *every* condition. In the following example the first call to `When` applies to only the call to `Matches`, but not the call to `NotEmpty`. The second call to `When` applies only to the call to `Empty`. 
 
 ```csharp
 RuleFor(customer => customer.Photo)
