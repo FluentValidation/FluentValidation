@@ -99,7 +99,7 @@ namespace FluentValidation.TestHelper {
 
 		private static IPropertyValidator[] GetModelLevelValidators(IValidatorDescriptor descriptor) {
 			var rules = descriptor.GetRulesForMember(null).OfType<PropertyRule>();
-			return rules.Where(x => x.Expression.IsParameterExpression()).SelectMany(x => x.Validators)
+			return rules.Where(x => x.Expression == null || x.Expression.IsParameterExpression()).SelectMany(x => x.Validators)
 				.ToArray();
 		}
 

@@ -88,6 +88,15 @@
 		}
 
 		[Fact]
+		public void ShouldHaveChildValidator_works_with_Include() {
+			_validator.Include(new InlineValidator<Person>() {
+				v => v.RuleFor(x => x.Forename).NotNull(),
+			});
+
+			_validator.ShouldHaveChildValidator(x => x, typeof(InlineValidator<Person>));
+		}
+
+		[Fact]
 		public void WhenWithOnFailure_should_invoke_condition_on_inner_validator() {
 			bool shouldNotBeTrue = false;
 			var validator = new TestValidator();
