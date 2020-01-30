@@ -269,6 +269,9 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 																			   TProperty toCompare, IEqualityComparer comparer = null) {
+			if (comparer == null && typeof(TProperty) == typeof(string)) {
+				comparer = StringComparer.Ordinal;
+			}
 			return ruleBuilder.SetValidator(new NotEqualValidator(toCompare, comparer));
 		}
 
@@ -284,6 +287,9 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 																			   Expression<Func<T, TProperty>> expression, IEqualityComparer comparer = null) {
+			if (comparer == null && typeof(TProperty) == typeof(string)) {
+				comparer = StringComparer.Ordinal;
+			}
 			var func = expression.Compile();
 			return ruleBuilder.SetValidator(new NotEqualValidator(func.CoerceToNonGeneric(), expression.GetMember(), comparer));
 		}
@@ -299,6 +305,9 @@ namespace FluentValidation {
 		/// <param name="comparer">Equality Comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare, IEqualityComparer comparer = null) {
+			if (comparer == null && typeof(TProperty) == typeof(string)) {
+				comparer = StringComparer.Ordinal;
+			}
 			return ruleBuilder.SetValidator(new EqualValidator(toCompare, comparer));
 		}
 
@@ -313,6 +322,9 @@ namespace FluentValidation {
 		/// <param name="comparer">Equality comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression, IEqualityComparer comparer = null) {
+			if (comparer == null && typeof(TProperty) == typeof(string)) {
+				comparer = StringComparer.Ordinal;
+			}
 			var func = expression.Compile();
 			return ruleBuilder.SetValidator(new EqualValidator(func.CoerceToNonGeneric(), expression.GetMember(), comparer));
 		}
