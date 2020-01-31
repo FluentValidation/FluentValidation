@@ -3,7 +3,7 @@
 	using Internal;
 	using Xunit;
 
-	
+
 	public class ComparerTester {
 		public ComparerTester() {
 			CultureScope.SetDefaultCulture();
@@ -14,8 +14,6 @@
 			double myDouble = 100.12;
 			long myLong = 100;
 
-			Comparer.GetEqualsResult(myLong, myDouble).ShouldBeFalse();
-			Comparer.GetEqualsResult(myDouble, myLong).ShouldBeFalse();
 			Comparer.GetComparisonResult(myDouble, myLong).ShouldEqual(1);
 			Comparer.GetComparisonResult(myLong, myDouble).ShouldEqual(-1);
 
@@ -31,8 +29,6 @@
 			double myDouble = 100.12;
 			double myOther = 100.12;
 
-			Comparer.GetEqualsResult(myOther, myDouble).ShouldBeTrue();
-			Comparer.GetEqualsResult(myDouble, myOther).ShouldBeTrue();
 			Comparer.GetComparisonResult(myOther, myDouble).ShouldEqual(0);
 			Comparer.GetComparisonResult(myDouble, myOther).ShouldEqual(0);
 
@@ -48,8 +44,6 @@
 			var first = new MyObject {Id = 5};
 			var second = new MyObject {Id = 5};
 
-			Comparer.GetEqualsResult(first, second).ShouldBeTrue();
-			Comparer.GetEqualsResult(second, first).ShouldBeTrue();
 			Comparer.GetComparisonResult(first, second).ShouldEqual(0);
 			Comparer.GetComparisonResult(second, first).ShouldEqual(0);
 
@@ -65,8 +59,6 @@
 			var first = new MyObject {Id = 5};
 			var second = new MyObject {Id = 6};
 
-			Comparer.GetEqualsResult(first, second).ShouldBeFalse();
-			Comparer.GetEqualsResult(second, first).ShouldBeFalse();
 			Comparer.GetComparisonResult(first, second).ShouldEqual(-1);
 			Comparer.GetComparisonResult(second, first).ShouldEqual(1);
 
@@ -81,9 +73,6 @@
 		public void Should_fail_with_different_object_types() {
 			var first = new MyObject {Id = 5};
 			var second = 5;
-
-			Comparer.GetEqualsResult(first, second).ShouldBeFalse();
-			Comparer.GetEqualsResult(second, first).ShouldBeFalse();
 
 			try {
 				Comparer.GetComparisonResult(first, second);
