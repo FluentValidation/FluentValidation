@@ -17,9 +17,10 @@
 #endregion
 
 namespace FluentValidation.Validators {
+	using System;
 	using Resources;
 
-	public class NotNullValidator : PropertyValidator {
+	public class NotNullValidator : PropertyValidator, INotNullValidator {
 		public NotNullValidator() : base(new LanguageStringSource(nameof(NotNullValidator))) {
 
 		}
@@ -29,5 +30,9 @@ namespace FluentValidation.Validators {
 			}
 			return true;
 		}
+	}
+
+	[Obsolete("FluentValidation metadata interfaces are deprecated and will be removed in FluentValidation 10.")]
+	public interface INotNullValidator : IPropertyValidator {
 	}
 }

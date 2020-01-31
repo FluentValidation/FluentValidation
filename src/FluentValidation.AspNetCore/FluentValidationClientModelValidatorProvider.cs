@@ -27,7 +27,7 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Http;
 #if NETSTANDARD2_0
 	using Microsoft.AspNetCore.Mvc.DataAnnotations.Internal;
-#else 
+#else
 	using Microsoft.AspNetCore.Mvc.DataAnnotations;
 #endif
 	public delegate IClientModelValidator FluentValidationClientValidatorFactory(ClientValidatorProviderContext context, PropertyRule rule, IPropertyValidator validator);
@@ -43,10 +43,18 @@ namespace FluentValidation.AspNetCore {
 
 		private readonly Dictionary<Type, FluentValidationClientValidatorFactory> _validatorFactories = new Dictionary<Type, FluentValidationClientValidatorFactory>() {
 			{ typeof(NotNullValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
+			{ typeof(INotNullValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
+
 			{ typeof(NotEmptyValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
+			{ typeof(INotEmptyValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
+
 			{ typeof(EmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
 			{ typeof(AspNetCoreCompatibleEmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
+			{ typeof(IEmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
+
 			{ typeof(RegularExpressionValidator), (context, rule, validator) => new RegexClientValidator(rule, validator) },
+			{ typeof(IRegularExpressionValidator), (context, rule, validator) => new RegexClientValidator(rule, validator) },
+
 			{ typeof(MaximumLengthValidator), (context, rule, validator) => new MaxLengthClientValidator(rule, validator) },
 			{ typeof(MinimumLengthValidator), (context, rule, validator) => new MinLengthClientValidator(rule, validator) },
 			{ typeof(LengthValidator), (context, rule, validator) => new StringLengthClientValidator(rule, validator)},

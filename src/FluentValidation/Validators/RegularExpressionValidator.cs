@@ -21,7 +21,7 @@ namespace FluentValidation.Validators {
 	using System.Text.RegularExpressions;
 	using Resources;
 
-	public class RegularExpressionValidator : PropertyValidator {
+	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
 		readonly Func<object, Regex> _regexFunc;
 
 		public RegularExpressionValidator(string expression) :base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
@@ -69,5 +69,10 @@ namespace FluentValidation.Validators {
 		}
 
 		public string Expression { get; }
+	}
+
+	[Obsolete("FluentValidation metadata interfaces are deprecated and will be removed in FluentValidation 10.")]
+	public interface IRegularExpressionValidator : IPropertyValidator {
+		string Expression { get; }
 	}
 }
