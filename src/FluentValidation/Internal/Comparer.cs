@@ -81,19 +81,5 @@ namespace FluentValidation.Internal {
 
 			return value.CompareTo(valueToCompare);
 		}
-
-		/// <summary>
-		/// Tries to compare the two objects, but will throw an exception if it fails.
-		/// </summary>
-		/// <returns>True on success, otherwise False.</returns>
-		[Obsolete("IComparable should not be used to compare equality. This method will be removed from FluentValidation 9.")]
-		public static bool GetEqualsResult(IComparable value, IComparable valueToCompare) {
-			int result;
-			if (TryCompare(value, valueToCompare, out result)) {
-				return result == 0;
-			}
-
-			return value.Equals(valueToCompare);
-		}
 	}
 }

@@ -243,14 +243,10 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(validator);
 		}
 
-		// TODO: For 9.x, change ordinal to default for Equal/NotEqual for strings.
 		/// <summary>
 		/// Defines a 'not equal' validator on the current rule builder.
 		/// Validation will fail if the specified value is equal to the value of the property.
-		///
-		/// Note that for string properties, this will perform a culture-specific comparison unless you pass
-		/// StringComparer.Ordinal as the second parameter. This behaviour will be changed with FluentValidation 9 to
-		/// perform an ordinal comparison by default.
+		/// For strings, this performs an ordinal comparison unless you specify a different comparer.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -260,16 +256,16 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 																			   TProperty toCompare, IEqualityComparer comparer = null) {
+			if (comparer == null && typeof(TProperty) == typeof(string)) {
+				comparer = StringComparer.Ordinal;
+			}
 			return ruleBuilder.SetValidator(new NotEqualValidator(toCompare, comparer));
 		}
 
 		/// <summary>
 		/// Defines a 'not equal' validator on the current rule builder using a lambda to specify the value.
 		/// Validation will fail if the value returned by the lambda is equal to the value of the property.
-		///
-		/// Note that for string properties, this will perform a culture-specific comparison unless you pass
-		/// StringComparer.Ordinal as the second parameter. This behaviour will be changed with FluentValidation 9 to
-		/// perform an ordinal comparison by default.
+		/// For strings, this performs an ordinal comparison unless you specify a different comparer.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -279,6 +275,9 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 																			   Expression<Func<T, TProperty>> expression, IEqualityComparer comparer = null) {
+			if (comparer == null && typeof(TProperty) == typeof(string)) {
+				comparer = StringComparer.Ordinal;
+			}
 			var func = expression.Compile();
 			return ruleBuilder.SetValidator(new NotEqualValidator(func.CoerceToNonGeneric(), expression.GetMember(), comparer));
 		}
@@ -286,10 +285,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines an 'equals' validator on the current rule builder.
 		/// Validation will fail if the specified value is not equal to the value of the property.
-		///
-		/// Note that for string properties, this will perform a culture-specific comparison unless you pass
-		/// StringComparer.Ordinal as the second parameter. This behaviour will be changed with FluentValidation 9 to
-		/// perform an ordinal comparison by default.
+		/// For strings, this performs an ordinal comparison unless you specify a different comparer.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -298,16 +294,16 @@ namespace FluentValidation {
 		/// <param name="comparer">Equality Comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare, IEqualityComparer comparer = null) {
+			if (comparer == null && typeof(TProperty) == typeof(string)) {
+				comparer = StringComparer.Ordinal;
+			}
 			return ruleBuilder.SetValidator(new EqualValidator(toCompare, comparer));
 		}
 
 		/// <summary>
 		/// Defines an 'equals' validator on the current rule builder using a lambda to specify the comparison value.
 		/// Validation will fail if the value returned by the lambda is not equal to the value of the property.
-		///
-		/// Note that for string properties, this will perform a culture-specific comparison unless you pass
-		/// StringComparer.Ordinal as the second parameter. This behaviour will be changed with FluentValidation 9 to
-		/// perform an ordinal comparison by default.
+		/// For strings, this performs an ordinal comparison unless you specify a different comparer.
 		/// </summary>
 		/// <typeparam name="T">The type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -316,6 +312,9 @@ namespace FluentValidation {
 		/// <param name="comparer">Equality comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression, IEqualityComparer comparer = null) {
+			if (comparer == null && typeof(TProperty) == typeof(string)) {
+				comparer = StringComparer.Ordinal;
+			}
 			var func = expression.Compile();
 			return ruleBuilder.SetValidator(new EqualValidator(func.CoerceToNonGeneric(), expression.GetMember(), comparer));
 		}
