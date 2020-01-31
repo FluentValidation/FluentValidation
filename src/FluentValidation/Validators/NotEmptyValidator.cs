@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using System.Linq;
 	using Resources;
 
-	public class NotEmptyValidator : PropertyValidator {
+	public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
 		private readonly object _defaultValueForType;
 
 		public NotEmptyValidator(object defaultValueForType) : base(new LanguageStringSource(nameof(NotEmptyValidator))) {
@@ -47,5 +47,9 @@ namespace FluentValidation.Validators {
 
 			return true;
 		}
+	}
+
+	[Obsolete("FluentValidation metadata interfaces are deprecated and will be removed in FluentValidation 10.")]
+	public interface INotEmptyValidator : IPropertyValidator {
 	}
 }
