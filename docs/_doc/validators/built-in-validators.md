@@ -70,6 +70,30 @@ String format args:
 * {PropertyName} = The name of the property being validated
 * {ComparisonValue} = Value that the property should not equal
 
+Optionally, a comparer can be provided to ensure a specific type of comparison is performed:
+
+```csharp
+RuleFor(customer => customer.Surname).NotEqual("Foo", StringComparer.OrdinalIgnoreCase);
+```
+
+<div class="callout-block callout-warning"><div class="icon-holder" markdown="1">*&nbsp;*{: .fa .fa-bug}
+</div><div class="content" markdown="1">
+{: .callout-title}
+#### Important Note
+
+FluentValidation versions prior to 9 will perform a *culture specific* comparison when using `Equal` or `NotEqual` with string properties. Starting with version 9, this will be changed to an ordinal comparison.
+
+If you are using FluentValidation 8.x (or older), you can force an ordinal comparison by using
+
+```
+RuleFor(customer => customre.Surname).NotEqual("Foo", StringComparer.Ordinal);
+```
+
+If you are using FluentValidation 9 (or newer), ordinal will be the default behaviour. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.
+
+</div></div>
+
+
 ### Equal Validator
 Ensures that the value of the specified property is equal to a particular value (or equal to the value of another property)
 
@@ -86,6 +110,28 @@ String format args:
 * {PropertyName} = The name of the property being validated
 * {ComparisonValue} = Value that the property should equal
 * {PropertyValue} = The current value of the property
+
+```csharp
+RuleFor(customer => customer.Surname).Equal("Foo", StringComparer.OrdinalIgnoreCase);
+```
+
+<div class="callout-block callout-warning"><div class="icon-holder" markdown="1">*&nbsp;*{: .fa .fa-bug}
+</div><div class="content" markdown="1">
+{: .callout-title}
+#### Important Note
+
+FluentValidation versions prior to 9 will perform a *culture specific* comparison when using `Equal` or `NotEqual` with string properties. Starting with version 9, this will be changed to an ordinal comparison.
+
+If you are using FluentValidation 8.x (or older), you can force an ordinal comparison by using
+
+```
+RuleFor(customer => customre.Surname).Equal("Foo", StringComparer.Ordinal);
+```
+
+If you are using FluentValidation 9 (or newer), ordinal will be the default behaviour. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.
+
+</div></div>
+
 
 ### Length Validator
 Ensures that the length of a particular string property is within the specified range. However, it doesn't ensure that the string property isn't null.

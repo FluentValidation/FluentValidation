@@ -256,10 +256,14 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(validator);
 		}
 
-
+		// TODO: For 9.x, change ordinal to default for Equal/NotEqual for strings.
 		/// <summary>
 		/// Defines a 'not equal' validator on the current rule builder.
 		/// Validation will fail if the specified value is equal to the value of the property.
+		///
+		/// Note that for string properties, this will perform a culture-specific comparison unless you pass
+		/// StringComparer.Ordinal as the second parameter. This behaviour will be changed with FluentValidation 9 to
+		/// perform an ordinal comparison by default.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -275,6 +279,10 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines a 'not equal' validator on the current rule builder using a lambda to specify the value.
 		/// Validation will fail if the value returned by the lambda is equal to the value of the property.
+		///
+		/// Note that for string properties, this will perform a culture-specific comparison unless you pass
+		/// StringComparer.Ordinal as the second parameter. This behaviour will be changed with FluentValidation 9 to
+		/// perform an ordinal comparison by default.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -291,6 +299,10 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines an 'equals' validator on the current rule builder.
 		/// Validation will fail if the specified value is not equal to the value of the property.
+		///
+		/// Note that for string properties, this will perform a culture-specific comparison unless you pass
+		/// StringComparer.Ordinal as the second parameter. This behaviour will be changed with FluentValidation 9 to
+		/// perform an ordinal comparison by default.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
@@ -305,6 +317,10 @@ namespace FluentValidation {
 		/// <summary>
 		/// Defines an 'equals' validator on the current rule builder using a lambda to specify the comparison value.
 		/// Validation will fail if the value returned by the lambda is not equal to the value of the property.
+		///
+		/// Note that for string properties, this will perform a culture-specific comparison unless you pass
+		/// StringComparer.Ordinal as the second parameter. This behaviour will be changed with FluentValidation 9 to
+		/// perform an ordinal comparison by default.
 		/// </summary>
 		/// <typeparam name="T">The type of object being validated</typeparam>
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
