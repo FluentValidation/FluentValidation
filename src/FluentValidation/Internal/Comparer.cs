@@ -1,18 +1,18 @@
 #region License
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
+//
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 
@@ -22,6 +22,7 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Custom logic for performing comparisons
 	/// </summary>
+	[Obsolete("Comparing equality of different types will no longer be supported in FluentValidation 9, and this class will be removed.")]
 	public static class Comparer {
 		/// <summary>
 		/// Tries to compare the two objects.
@@ -44,8 +45,8 @@ namespace FluentValidation.Internal {
 
 		/// <summary>
 		/// Tries to do a proper comparison but may fail.
-		/// First it tries the default comparison, if this fails, it will see 
-		/// if the values are fractions. If they are, then it does a double 
+		/// First it tries the default comparison, if this fails, it will see
+		/// if the values are fractions. If they are, then it does a double
 		/// comparison, otherwise it does a long comparison.
 		/// </summary>
 		static void Compare(IComparable value, IComparable valueToCompare, out int result) {
@@ -85,6 +86,7 @@ namespace FluentValidation.Internal {
 		/// Tries to compare the two objects, but will throw an exception if it fails.
 		/// </summary>
 		/// <returns>True on success, otherwise False.</returns>
+		[Obsolete("IComparable should not be used to compare equality. This method will be removed from FluentValidation 9.")]
 		public static bool GetEqualsResult(IComparable value, IComparable valueToCompare) {
 			int result;
 			if (TryCompare(value, valueToCompare, out result)) {
