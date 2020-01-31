@@ -1,6 +1,7 @@
 #region License
 
 // Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,21 +17,41 @@
 //
 // The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
 
-#endregion License
+#endregion
 
-namespace FluentValidation.Attributes
-{
-	using Internal;
+namespace FluentValidation.Attributes {
 	using System;
 	using System.Collections.Concurrent;
 	using System.Reflection;
+
+	// Just a straight copy/paste of the legacy FluentValidation.ValidatorAttribute classes
+	// as many of the ASP.NET Core tests assume attribute-based validator location.
+	// This was quicker than rewriting them all to use DI.
+
+	/// <summary>
+	/// Validator attribute to define the class that will describe the Validation rules.
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Parameter)]
+	public class ValidatorAttribute : Attribute {
+		/// <summary>
+		/// The type of the validator used to validate the current type or parameter.
+		/// </summary>
+		public Type ValidatorType { get; }
+
+		/// <summary>
+		/// Creates an instance of <see cref="ValidatorAttribute"/> allowing a validator type to be specified.
+		/// </summary>
+		public ValidatorAttribute(Type validatorType) {
+			ValidatorType = validatorType;
+		}
+	}
 
 	/// <summary>
 	/// Implementation of <see cref="IValidatorFactory"/> and <see cref="IParameterValidatorFactory"/> that looks for
 	/// the <see cref="ValidatorAttribute"/> instance on the specified <see cref="Type"/> or
 	/// <see cref="ParameterInfo"/> in order to provide the validator instance.
 	/// </summary>
-	public class AttributedValidatorFactory : IValidatorFactory, IParameterValidatorFactory {
+	public class AttributedValidatorFactory : IValidatorFactory {
 		private readonly Func<Type, IValidator> _instanceFactory;
 		private readonly ConcurrentDictionary<Type, object> _cache = new ConcurrentDictionary<Type, object>();
 
@@ -72,23 +93,7 @@ namespace FluentValidation.Attributes
 			return GetValidator(attribute);
 		}
 
-		/// <summary>
-		/// Gets a validator for <paramref name="parameterInfo"/>.
-		/// </summary>
-		/// <param name="parameterInfo">The <see cref="ParameterInfo"/> instance to get a validator for.</param>
-		/// <returns>Created <see cref="IValidator"/> instance; <see langword="null"/> if a validator cannot be
-		/// created.</returns>
-		public virtual IValidator GetValidator(ParameterInfo parameterInfo) {
-			if (parameterInfo == null){
-				return null;
-			}
-
-			var attribute = parameterInfo.GetCustomAttribute<ValidatorAttribute>();
-
-			return GetValidator(attribute);
-		}
-
-		private IValidator GetValidator(ValidatorAttribute attribute) {
+			private IValidator GetValidator(ValidatorAttribute attribute) {
 			if (attribute == null || attribute.ValidatorType == null) {
 				return null;
 			}
@@ -98,4 +103,5 @@ namespace FluentValidation.Attributes
 			return validator as IValidator;
 		}
 	}
+
 }
