@@ -11,21 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests", "src\FluentValidation.Tests\FluentValidation.Tests.csproj", "{E353A6E3-5404-4E1E-B33D-4C7BAE646752}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.Mvc5", "src\FluentValidation.Tests.Mvc5\FluentValidation.Tests.Mvc5.csproj", "{8FF90023-30A2-410D-A735-498878BDA168}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Tests.WebApi", "src\FluentValidation.Tests.WebApi\FluentValidation.Tests.WebApi.csproj", "{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.AspNetCore", "src\FluentValidation.AspNetCore\FluentValidation.AspNetCore.csproj", "{D8A44C11-51B8-4AA1-9391-C4F89078181C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation", "src\FluentValidation\FluentValidation.csproj", "{9DB6A8B4-5C9A-4CA1-96A5-4E1E4C3A9A44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.Mvc5", "src\FluentValidation.Mvc5\FluentValidation.Mvc5.csproj", "{028C9E3F-D7C8-41BE-A840-70D42DFC5A8E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentValidation.WebApi", "src\FluentValidation.WebApi\FluentValidation.WebApi.csproj", "{9D1DC734-F71F-4587-B54C-697F0B5872AF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.Tests.AspNetCore", "src\FluentValidation.Tests.AspNetCore\FluentValidation.Tests.AspNetCore.csproj", "{3DFE3035-9685-4B76-AF21-074BCD8F69B7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.ValidatorAttribute", "src\FluentValidation.ValidatorAttribute\FluentValidation.ValidatorAttribute.csproj", "{7898B305-C18A-415F-A676-96D6593383B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentValidation.DependencyInjectionExtensions", "src\FluentValidation.DependencyInjectionExtensions\FluentValidation.DependencyInjectionExtensions.csproj", "{A6E791BA-E0AA-4852-95C3-255B3D62980F}"
 EndProject
@@ -39,14 +29,6 @@ Global
 		{E353A6E3-5404-4E1E-B33D-4C7BAE646752}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E353A6E3-5404-4E1E-B33D-4C7BAE646752}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E353A6E3-5404-4E1E-B33D-4C7BAE646752}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8FF90023-30A2-410D-A735-498878BDA168}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8FF90023-30A2-410D-A735-498878BDA168}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8FF90023-30A2-410D-A735-498878BDA168}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8FF90023-30A2-410D-A735-498878BDA168}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BA9F9F4-E12A-4A2E-B05C-FABAA6CAD1D1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8A44C11-51B8-4AA1-9391-C4F89078181C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,22 +37,10 @@ Global
 		{9DB6A8B4-5C9A-4CA1-96A5-4E1E4C3A9A44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DB6A8B4-5C9A-4CA1-96A5-4E1E4C3A9A44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DB6A8B4-5C9A-4CA1-96A5-4E1E4C3A9A44}.Release|Any CPU.Build.0 = Release|Any CPU
-		{028C9E3F-D7C8-41BE-A840-70D42DFC5A8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{028C9E3F-D7C8-41BE-A840-70D42DFC5A8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{028C9E3F-D7C8-41BE-A840-70D42DFC5A8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{028C9E3F-D7C8-41BE-A840-70D42DFC5A8E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D1DC734-F71F-4587-B54C-697F0B5872AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D1DC734-F71F-4587-B54C-697F0B5872AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D1DC734-F71F-4587-B54C-697F0B5872AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D1DC734-F71F-4587-B54C-697F0B5872AF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3DFE3035-9685-4B76-AF21-074BCD8F69B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3DFE3035-9685-4B76-AF21-074BCD8F69B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DFE3035-9685-4B76-AF21-074BCD8F69B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DFE3035-9685-4B76-AF21-074BCD8F69B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7898B305-C18A-415F-A676-96D6593383B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7898B305-C18A-415F-A676-96D6593383B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7898B305-C18A-415F-A676-96D6593383B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7898B305-C18A-415F-A676-96D6593383B5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A6E791BA-E0AA-4852-95C3-255B3D62980F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A6E791BA-E0AA-4852-95C3-255B3D62980F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6E791BA-E0AA-4852-95C3-255B3D62980F}.Release|Any CPU.ActiveCfg = Release|Any CPU

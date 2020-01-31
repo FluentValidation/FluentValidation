@@ -1,7 +1,0 @@
-{
-	"maxParallelThreads": 1,
-	"parallelizeAssembly": false,
-	"parallelizeTestCollections": false,
-	"preEnumerateTheories": false,
-	"shadowCopy": false
-}
