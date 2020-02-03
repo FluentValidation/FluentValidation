@@ -110,5 +110,6 @@ Example
   :maxdepth: 2
   :caption: Uprade Guides
 
+  upgrading-to-9
   upgrading-to-8
 
