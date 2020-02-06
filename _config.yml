@@ -15,24 +15,3 @@ owner:
 
 # Google Analytics
 google_analytics: UA-884625-14
-
-# Collections
-collections:
-  doc:
-    output: true
-    permalink: /:path
-
-# Default values
-defaults:
-  -
-    scope:
-      path: ""
-      type: doc
-    values:
-      layout: doc
-  -
-    scope:
-      path: ""
-      type: pages
-    values:
-      layout: doc
