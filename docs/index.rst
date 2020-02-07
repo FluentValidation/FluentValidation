@@ -108,7 +108,7 @@ Example
 .. toctree::
   :hidden:
   :maxdepth: 2
-  :caption: Advanced
+  :caption: Uprade Guides
 
   upgrading-to-8
 
