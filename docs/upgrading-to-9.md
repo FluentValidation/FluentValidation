@@ -1,0 +1,119 @@
+# 9.0 Upgrade Guide
+
+### Introduction
+
+FluentValidation 9.0 is a major release that included several breaking changes. Please review this document before upgrading from FluentValidation 8.x to 9.
+
+### Supported Platforms
+
+Support for the following platforms has been dropped:
+- netstandard1.1
+- netstandard1.6
+- net45
+
+FluentValidation still supports netstandard2 and net461, meaning that it'll run on .NET Core 2.0 or higher (3.1 recommended), or .NET Framework 4.6.1 or higher.
+
+FluentValidation.AspNetCore requires .NET Core 2.0 or higher (3.1 recommended).
+
+Integration with MVC5/WebApi 2 is no longer support - both the FluentValidation.Mvc5 and FluentValidation.WebApi packages are deprecated, but will continue to run on .NET Framework 4.6.1 or higher. We recommend migrating to .NET Core as soon as possible.
+
+### Default Email Validation Mode Changed
+
+FluentValidation supports 2 methods for validating email addresses.
+
+The first is compatible with .NET Core's `EmailAddressAttribute` and performs a simple check that an email address contains an `@` character. The second uses a regular expression that is mostly compatible with .NET 4.x's `EmailAddressAttribute`, which also used a regular expression.
+
+In FluentValidation 8 and older, the regex-based email validation was the default. As of 9.0, the ASP.NET Core-compatible email validator is now the default. This change was made for consistency.
+
+If you still want to validate email addresses using the old regular expression, you can specify `RuleFor(customer => customer.Email).EmailAddress(EmailValidationMode.Net4xRegex);`. This will give a deprecation wawrning.
+
+[See the documentation on the email validator](built-in-validators.html#email-validator) for more details on why regular expressions shouldn't be used for validating email addresses.
+
+### TestHelper updates
+
+The TestHelper has been updated with several syntax improvements improvements. It is now possible to chain additional assertions on to `ShouldHaveValidationErrorFor` and `ShouldNotHaveValidationErrorFor`, eg:
+
+```csharp
+var validator = new InlineValidator<Person>();
+validator.RuleFor(x => x.Surname).NotNull().WithMessage("required");
+validator.RuleFor(x => x.Address.Line1).NotEqual("foo");
+
+// New advanced test syntax
+var result = validator.TestValidate(new Person { Address = new Address()) };
+result.ShouldHaveValidationErrorFor(x => x.Surname).WithMessage("required");
+result.ShouldNotHaveValidationErrorFor(x => x.Address.Line1);
+```
+
+[See the documentation for full details on the Test Helper](testing)
+
+### Equal/NotEqual string comparisons
+
+FluentValidation 4.x-8.x contained a bug where using `NotEqual`/`Equal` on string properties would perform a culture-specific check, which would lead to unintented results. 9.0 reverts the bad change which introduced this several years ago. An ordinal string comparison will now be performed instead.
+
+[See the documentation for further details.](built-in-validators.html#equal-validator)
+
+### Severity with callback
+
+Prior to 9.0, changing a rule's severity required hard-coding the severity:
+
+```csharp
+RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Warning);
+```
+
+Alternatively, this can be generated from a callback, allowing the severity to be dynamically determined:
+
+```csharp
+RuleFor(x => x.Surname).NotNull().WithSeverity(x => Severity.Warning);
+```
+
+### Removed inferring property names from [Display] attribute
+
+Older versions of FluentValidation allowed inferring a property's name from the presence of the `[Display]` or `[DisplayName]` attributes on the property. This behaviour has been removed as it causes conflicts with ASP.NET Core's approach to localization using these attributes.
+
+If you want to preserve this old behaviour, you can use a custom display name resolver which can be set during your application's startup routine:
+
+```csharp
+FluentValidation.ValidatorOptions.DisplayNameResolver = (type, memberInfo, expression) => {
+	return memberInfo.GetCustomAttribute<System.ComponentModel.DataAnnotations.DisplayAttribute>()?.GetName();
+};
+```
+
+### ComparisonProperty formatting
+
+The `{ComparisonProperty}` error message placeholder (used in various validators that compare two properties, such as `LessThanOrEqual`) is now formatted consistently with the `{PropertyName}` placeholder, so PascalCased property names will be split.
+
+### Renamed ShouldValidateAsync
+
+Renamed the `PropertyValidator.ShouldValidateAsync` method to `ShouldValidateAsynchronously` to indicate that this is not an async method, which is usually denoted by the Async suffix.
+
+### Removal of WithLocalizedMessage
+
+If you use strongly-typed resource wrappers for localization, older versions of FluentValidation allowed the use of specifying a resource name and resource type in a call to `WithLocalizedMessage`:
+
+```csharp
+RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(typeof(MyLocalizedMessages), "SurnameRequired");
+```
+
+This syntax has been superceded by the callback syntax. To access the localized messages with a strongly-typed, you should now explicitly access the wrapper property inside a callback:
+
+```csharp
+RuleFor(x => x.Surname).NotNull().WithMessage(x => MyLocalizedMessages.SurnameRequired);
+```
+
+Note that support for localization with `IStringLocalzier` is unchanged.
+
+[Full documentation on localization.](localization)
+
+### SetCollectionValidator removed
+
+`SetCollectionValidator` has been removed. This was [deprecated in 8.0](upgrading-to-8).
+
+### Removal of Other Deprecated Features
+
+Several other methods/properties that were deprecated in FluentValidation 8 have been removed in 9.0.
+
+- `ReplacePlaceholderWithValue` and `GetPlaceholder` from `MesageFormatter`
+- `ResourceName` and `ResourceType` have been removed from `IStringSource`.
+- `ResourceName` has been removed from `ValidationFailure`.
+- `Instance` was removed from `PropertyValidatorContext` - use `InstanceToValidate` instead.
+- `DelegatingValidator` has been removed
