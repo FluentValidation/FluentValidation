@@ -39,7 +39,7 @@ public class CustomerValidator : AbstractValidator<Customer> {
       <div class="icon-holder"> <i class="icon fa fa-paper-plane"></i> </div>
       <h3 class="title">Getting Started</h3>
       <p class="intro">Learn how to install FluentValidation and get started creating validators. </p> <a class="link"
-        href="https://docs.fluentvalidation.net/en/latest/start.html"><span></span></a>
+        href="https://docs.fluentvalidation.net/en/latest/installation.html"><span></span></a>
     </div>
   </div>
   <div class="item item-orange col-md-4 col-sm-6 col-xs-6">
