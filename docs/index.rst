@@ -44,8 +44,8 @@ Example
   :caption: Getting Started
 
   installation
-  collections
   start 
+  collections
   rulesets
   including-rules
   upgrading-to-9
