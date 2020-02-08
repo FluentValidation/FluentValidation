@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. note::
-    If you are upgrading to FluentValidation 8 from an older version, `please read the upgrade notes </upgrading-to-8.html>`_.
+    If you are upgrading to FluentValidation 9 from an older version, `please read the upgrade notes <upgrading-to-9.html>`_.
 ```
 
 Before creating any validators, you will need to add a reference to FluentValidation.dll in your project. FluentValidation is available as either a netstandard2.0 library or as a net461 library for older projects.

@@ -268,7 +268,7 @@ The email address validator can work in 2 modes. The default mode just performs 
 
 From the comments:
 
-> "This is not something we plan to implement. The check is intentionally naive because doing something infallible is very hard. The email really should be validated in some other way, such as through an email confirmation flow where an email is actually sent. The validation attribute is designed only to catch egregiously wrong values such as for a U.I."
+> "The check is intentionally naive because doing something infallible is very hard. The email really should be validated in some other way, such as through an email confirmation flow where an email is actually sent. The validation attribute is designed only to catch egregiously wrong values such as for a U.I."
 
 Alternatively, you can use the old email validation behaviour that uses a regular expression consistent with the .NET 4.x version of the ASP.NET `EmailAddressAttribute`. You can use this behaviour in FluentValidation by calling `RuleFor(x => x.Email).EmailAddress(EmailValidationMode.Net4xRegex)`. Note that this approach is deprecated and will generate a warning as regex-based email validation is not recommended. 
 
