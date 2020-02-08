@@ -23,7 +23,7 @@ FluentValidation supports 2 methods for validating email addresses.
 
 The first is compatible with .NET Core's `EmailAddressAttribute` and performs a simple check that an email address contains an `@` character. The second uses a regular expression that is mostly compatible with .NET 4.x's `EmailAddressAttribute`, which also used a regular expression.
 
-In FluentValidation 8 and older, the regex-based email validation was the default. As of 9.0, the ASP.NET Core-compatible email validator is now the default. This change was made for consistency.
+In FluentValidation 8 and older, the regex-based email validation was the default. As of 9.0, the ASP.NET Core-compatible email validator is now the default. This change was made to be consistent with ASP.NET Core's default behaviour.
 
 If you still want to validate email addresses using the old regular expression, you can specify `RuleFor(customer => customer.Email).EmailAddress(EmailValidationMode.Net4xRegex);`. This will give a deprecation wawrning.
 
@@ -31,7 +31,7 @@ If you still want to validate email addresses using the old regular expression, 
 
 ### TestHelper updates
 
-The TestHelper has been updated with several syntax improvements improvements. It is now possible to chain additional assertions on to `ShouldHaveValidationErrorFor` and `ShouldNotHaveValidationErrorFor`, eg:
+The TestHelper has been updated with several syntax improvements. It is now possible to chain additional assertions on to `ShouldHaveValidationErrorFor` and `ShouldNotHaveValidationErrorFor`, eg:
 
 ```csharp
 var validator = new InlineValidator<Person>();
@@ -94,7 +94,7 @@ If you use strongly-typed resource wrappers for localization, older versions of 
 RuleFor(x => x.Surname).NotNull().WithLocalizedMessage(typeof(MyLocalizedMessages), "SurnameRequired");
 ```
 
-This syntax has been superceded by the callback syntax. To access the localized messages with a strongly-typed, you should now explicitly access the wrapper property inside a callback:
+This syntax has been superceded by the callback syntax. To access the localized messages with a strongly-typed wrapper, you should now explicitly access the wrapper property inside a callback:
 
 ```csharp
 RuleFor(x => x.Surname).NotNull().WithMessage(x => MyLocalizedMessages.SurnameRequired);

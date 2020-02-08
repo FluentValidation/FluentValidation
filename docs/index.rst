@@ -40,8 +40,7 @@ Example
 
 .. _user-docs:
 .. toctree::
-  :hidden:
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: Getting Started
 
   installation
@@ -49,11 +48,12 @@ Example
   start 
   rulesets
   including-rules
+  upgrading-to-9
+  upgrading-to-8
 
 .. _config-docs:
 .. toctree::
-  :hidden:
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: Configuring Validators
 
   configuring
@@ -62,8 +62,7 @@ Example
 
 .. _validator-docs:
 .. toctree::
-  :hidden:
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: Building Rules
 
   built-in-validators
@@ -71,24 +70,21 @@ Example
 
 .. _localization-docs:
 .. toctree::
-  :hidden:
-  :maxdepth: 0
+  :maxdepth: 1
   :caption: Localization
 
   localization
 
 .. _testing-docs:
 .. toctree::
-  :hidden: 
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: Testing
 
   testing
 
 .. _aspnet-docs:
 .. toctree::
-  :hidden:
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: ASP.NET Integration 
 
   aspnet
@@ -97,19 +93,8 @@ Example
   
 .. _advanced-docs:
 .. toctree::
-  :hidden:
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: Advanced
 
   async
   advanced
-
-.. _upgrade-docs:
-.. toctree::
-  :hidden:
-  :maxdepth: 2
-  :caption: Uprade Guides
-
-  upgrading-to-9
-  upgrading-to-8
-

@@ -64,7 +64,7 @@ The methods `ShouldHaveValidationErrorFor` and `ShouldNotHaveValidationErrorFor`
 var person = new Person { Name = "Jeremy" };
 var result = validator.TestValidate(person);
 
-// Assert that there should be a failure for the Name property., and that the message is "'Name' must not be empty"
+// Assert that there should be a failure for the Name property.
 result.ShouldHaveValidationErrorFor(x => x.Name);
 
 // Assert that there are no failures for the age property. 
