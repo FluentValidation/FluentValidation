@@ -2,7 +2,7 @@
 
 In some situations, you may wish to define asynchronous rules, for example when working with an external API. By default, FluentValidation allows custom rules defined with `MustAsync` or `CustomAsync` to be run asyhchronously, as well as defining asychronous coniditions with `WhenAsync`. 
 
-A simplistic solution that checks if a user ID is alrady in use using an external web API: 
+A simplistic solution that checks if a user ID is already in use using an external web API: 
 
 ```csharp
 public class CustomerValidator : AbstractValidator<Customer> {
