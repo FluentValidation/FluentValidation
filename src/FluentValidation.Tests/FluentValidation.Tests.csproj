@@ -40,4 +40,9 @@
       <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\FluentValidation\Internal\TrackingCollection.cs">
+      <Link>TestExtensions.cs</Link>
+    </Compile>
+  </ItemGroup>
 </Project>

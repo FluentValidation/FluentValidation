@@ -16,14 +16,12 @@
 // The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
 #endregion
 
-#pragma warning disable 1591
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
 
-	[Obsolete("This class will be internal in FluentValidation 9.")]
-	public class TrackingCollection<T> : IEnumerable<T> {
+	internal class TrackingCollection<T> : IEnumerable<T> {
 		readonly List<T> _innerCollection = new List<T>();
 		public event Action<T> ItemAdded;
 		private Action<T> _capture = null;
