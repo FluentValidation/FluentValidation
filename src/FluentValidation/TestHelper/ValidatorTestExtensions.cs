@@ -120,12 +120,20 @@ namespace FluentValidation.TestHelper {
 		}
 
 		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
-			if (exceptionMessage != null && failure != null) {
-				return exceptionMessage.Replace("{Code}", failure.ErrorCode)
-					.Replace("{Message}", failure.ErrorMessage)
-					.Replace("{State}", failure.CustomState?.ToString() ?? "")
-					.Replace("{Severity}", failure.Severity.ToString());
-			}
+      if (exceptionMessage != null && failure != null) {
+        var formattedExceptionMessage = exceptionMessage.Replace("{Code}", failure.ErrorCode)
+          .Replace("{Message}", failure.ErrorMessage)
+          .Replace("{State}", failure.CustomState?.ToString() ?? "")
+          .Replace("{Severity}", failure.Severity.ToString());
+
+        var messageArgumentMatches = Regex.Matches(formattedExceptionMessage, "{MessageArgument:(.*)}");
+        for (var i = 0; i < messageArgumentMatches.Count; i++) {
+          if (failure.FormattedMessagePlaceholderValues.ContainsKey(messageArgumentMatches[i].Groups[1].Value)) {
+            formattedExceptionMessage = formattedExceptionMessage.Replace(messageArgumentMatches[i].Value, failure.FormattedMessagePlaceholderValues[messageArgumentMatches[i].Groups[1].Value].ToString());
+          }
+        }
+        return formattedExceptionMessage;
+      }
 			return defaultMessage;
 		}
 
@@ -210,6 +218,11 @@ namespace FluentValidation.TestHelper {
 		public static IEnumerable<ValidationFailure> WithCustomState(this IEnumerable<ValidationFailure> failures, object expectedCustomState) {
 			return failures.When(failure => failure.CustomState == expectedCustomState, string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
 		}
+
+    public static IEnumerable<ValidationFailure> WithMessageArgument<T>(this IEnumerable<ValidationFailure> failures, string argumentKey, T argumentValue) {
+      return failures.When(failure => failure.FormattedMessagePlaceholderValues.ContainsKey(argumentKey) && ((T)failure.FormattedMessagePlaceholderValues[argumentKey]).Equals(argumentValue),
+        string.Format("Expected message argument '{0}' with value '{1}'. Actual value was '{{MessageArgument:{0}}}'", argumentKey, argumentValue.ToString()));
+    }
 
 		public static IEnumerable<ValidationFailure> WithErrorMessage(this IEnumerable<ValidationFailure> failures, string expectedErrorMessage) {
 			return failures.When(failure => failure.ErrorMessage == expectedErrorMessage, string.Format("Expected an error message of '{0}'. Actual message was '{{Message}}'", expectedErrorMessage));

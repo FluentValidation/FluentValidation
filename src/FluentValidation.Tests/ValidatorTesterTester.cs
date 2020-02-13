@@ -369,9 +369,32 @@ namespace FluentValidation.Tests {
 			}
 
 			exceptionCaught.ShouldEqual(errMessages.Contains(withoutErrMsg));
-		}
+    }
 
-		[Fact]
+    [Fact]
+    public void Expected_message_argument_check() {
+      bool exceptionCaught = false;
+
+      try {
+        var validator = new InlineValidator<Person> {
+          v => v.RuleFor(x => x.Surname)
+            .Must((x, y, context) => {
+              context.MessageFormatter.AppendArgument("Foo", "bar");
+              return false;
+            })
+            .WithMessage("{Foo}")
+        };
+        validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithMessageArgument("Foo", "foo");
+      }
+      catch (ValidationTestException e) {
+        exceptionCaught = true;
+        e.Message.ShouldEqual("Expected message argument 'Foo' with value 'foo'. Actual value was 'bar'");
+      }
+
+      exceptionCaught.ShouldBeTrue();
+    }
+
+    [Fact]
 		public void Expected_state_check() {
 			bool exceptionCaught = false;
 
