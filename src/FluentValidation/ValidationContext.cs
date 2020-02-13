@@ -91,7 +91,15 @@ namespace FluentValidation {
 				return context.ToGeneric<T>();
 			}
 
-			throw new NotSupportedException("context.InstanceToValidate is not of type " + typeof(T).FullName);
+			if (context.InstanceToValidate == null) {
+				return new ValidationContext<T>(default, context.PropertyChain, context.Selector) {
+					IsChildContext = context.IsChildContext,
+					RootContextData = context.RootContextData,
+					_parentContext = ((IValidationContext)context).ParentContext
+				};
+			}
+
+			throw new InvalidOperationException($"Cannot validate instances of type '{context.InstanceToValidate.GetType().Name}'. This validator can only validate instances of type '{typeof(T).Name}'.");
 		}
 	}
 
@@ -99,12 +107,12 @@ namespace FluentValidation {
 	/// Validation context
 	/// </summary>
 	public class ValidationContext : IValidationContext {
-		private IValidationContext _parentContext;
+		private protected IValidationContext _parentContext;
 
 		/// <summary>
 		/// Additional data associated with the validation request.
 		/// </summary>
-		public IDictionary<string, object> RootContextData { get; private set; } = new Dictionary<string, object>();
+		public IDictionary<string, object> RootContextData { get; private protected set; } = new Dictionary<string, object>();
 
 		/// <summary>
 		/// Creates a new validation context
