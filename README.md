@@ -25,7 +25,7 @@ Install-Package FluentValidation.WebApi
 ```
 
 ---
-[![Build Status](https://dev.azure.com/jeremy0621/FluentValidation/_apis/build/status/JeremySkinner.FluentValidation?branchName=master)](https://dev.azure.com/jeremy0621/FluentValidation/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/jeremy0621/FluentValidation/_apis/build/status/FluentValidation.FluentValidation?branchName=master)](https://dev.azure.com/jeremy0621/FluentValidation/_build/latest?definitionId=5&branchName=master)
 
 |         |       |       |
 | ------- | ----- | ----- |
