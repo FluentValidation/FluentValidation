@@ -357,7 +357,7 @@ Checks whether the property value is in a range between the two specified number
 ```csharp
 RuleFor(x => x.Id).ExclusiveBetween(1,10);
 ```
-Example error: 'Id' must be between 1 and 10 (exclusive). You entered 0.
+Example error: 'Id' must be between 1 and 10 (exclusive). You entered 1.
 
 String format args:
 * {PropertyName} = The name of the property being validated
