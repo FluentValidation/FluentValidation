@@ -19,7 +19,7 @@ To ensure our list property contains fewer than 10 items, we could do this:
 ```csharp
 public class PersonValidator : AbstractValidator<Person> {
   public PersonValidator() {
-    RuleFor(x => x.Pets).Must(list => list.Count <= 10)
+    RuleFor(x => x.Pets).Must(list => list.Count < 10)
       .WithMessage("The list must contain fewer than 10 items");
   }
 }
