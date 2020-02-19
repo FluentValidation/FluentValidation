@@ -1,19 +1,21 @@
 9.0 -
-Removed support for netstandard1.1, netstandard1.6 and net45
+Removed support for netstandard1.1, netstandard1.6 and net45 (net461 still supported)
+Default email validation mode now uses the same logic as ASP.NET Core. Previous regex behaviour is opt-in.
+TestHelper advanced mode now has more features (see https://docs.fluentvalidation.net/en/latest/testing.html#advanced-test-extensions)
+Equal/NotEqual now perform ordinal comparison when used with string properties
+Severity can now be set dynamically with a callback
 Removed WithLocalizedMessage (WithMessage that takes a callback is the replacement)
 Removed ResourceName from ValidationFailure
 Removed ResourceName and ResourceType from IStringSource.
 Removed SetCollectionValidator which was deprecated in 8.0
-Removed various methods from MessageFormatter that were deprecated in 8.x
+Removed DelegatingValidator which was deprecated in 8.x.
 Additional overload of OnAnyFailure that can receive a collection of validation failures
 Remove DisplayAttribute integration and reference to DataAnnotations.
-Default email validation mode now uses the same logic as ASP.NET Core. Previous regex behaviour is opt-in.
-ComparisonProperty placeholder is now formatted like PropertyName.
-Equal/NotEqual now perform ordinal comparisons on string properties by default.
-Severity can now be set with a callback
+ComparisonProperty placeholder is now formatted like PropertyName
+Translations of default error messages into other languages are now lazily-loaded
 PropertyValidator.ShouldValidateAsync reanamed to ShouldValidateAsynchronously to remove confusion where the naming suggested this was an async method
 PropertyValidatorContext.Instance renamed to InstanceToValidate for consistency with ValidationContext.
-Removed DelegatingValidator which was deprecated in 8.x.
+Removed various methods from MessageFormatter that were deprecated in 8.x
 
 8.6.0 - 4 December 2019
 Add support for ASP.NET Core 3.1
