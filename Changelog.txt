@@ -1,13 +1,19 @@
-9.0 - 
-Removed support for netstandard1.1 and netstandard1.6
+9.0 -
+Removed support for netstandard1.1, netstandard1.6 and net45
 Removed WithLocalizedMessage (WithMessage that takes a callback is the replacement)
 Removed ResourceName from ValidationFailure
 Removed ResourceName and ResourceType from IStringSource.
 Removed SetCollectionValidator which was deprecated in 8.0
+Removed various methods from MessageFormatter that were deprecated in 8.x
 Additional overload of OnAnyFailure that can receive a collection of validation failures
 Remove DisplayAttribute integration and reference to DataAnnotations.
 Default email validation mode now uses the same logic as ASP.NET Core. Previous regex behaviour is opt-in.
 ComparisonProperty placeholder is now formatted like PropertyName.
+Equal/NotEqual now perform ordinal comparisons on string properties by default.
+Severity can now be set with a callback
+PropertyValidator.ShouldValidateAsync reanamed to ShouldValidateAsynchronously to remove confusion where the naming suggested this was an async method
+PropertyValidatorContext.Instance renamed to InstanceToValidate for consistency with ValidationContext.
+Removed DelegatingValidator which was deprecated in 8.x.
 
 8.6.0 - 4 December 2019
 Add support for ASP.NET Core 3.1
@@ -46,10 +52,10 @@ Improvements to Georgian language translations.
 Resolved subtle bug where top-level WhenAsync wouldn't work correctly when wrapping a top-level call to When.
 
 8.2.3 - 12 April 2019
-Fix issue with WebApi integration where DataAnnotations validation could generate duplicate messages when used in the same 
+Fix issue with WebApi integration where DataAnnotations validation could generate duplicate messages when used in the same
 project as FluentValidation.
 
-8.2.2 - 5 April 2019 
+8.2.2 - 5 April 2019
 Fix typo in FluentValidation.DependencyInjectionExtensions package name.
 
 8.2.1 - 4 April 2019
@@ -107,11 +113,11 @@ Remove the pre-7 version of Custom/CustomAsync.
 Removed deprecated localization system.
 Remove deprecated RemoveRule/ReplaceRule/ClearRules methods.
 
-7.6.105 - 11 August 2018 
-Added Albanian language translations 
-Added Chinese Traditional language translation 
+7.6.105 - 11 August 2018
+Added Albanian language translations
+Added Chinese Traditional language translation
 Fix #858 ValidationTestExtension.When() incorrectly checks each failure instead of all failures
- 
+
 7.6.104 - 6 July 2018
 Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
 
