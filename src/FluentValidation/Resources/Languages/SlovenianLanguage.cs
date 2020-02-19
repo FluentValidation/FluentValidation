@@ -9,7 +9,7 @@ namespace FluentValidation.Resources
 
         public SlovenianLanguage()
         {
-            Translate<EmailValidator>("'{PropertyName}' ni veljaven e-poštni naslov.");
+Translate<EmailValidator>("'{PropertyName}' ni veljaven e-poštni naslov.");
             Translate<GreaterThanOrEqualValidator>("'{PropertyName}' mora biti večji ali enak '{ComparisonValue}'.");
             Translate<GreaterThanValidator>("'{PropertyName}' mora biti večji od '{ComparisonValue}'.");
             Translate<LengthValidator>("'{PropertyName}' mora imeti dolžino med {MinLength} in {MaxLength} znakov. Vnesli ste {TotalLength} znakov.");
@@ -23,7 +23,7 @@ namespace FluentValidation.Resources
             Translate<PredicateValidator>("Določen pogoj ni bil izpolnjen za '{PropertyName}'.");
             Translate<AsyncPredicateValidator>("Določen pogoj ni bil izpolnjen za '{PropertyName}'.");
             Translate<RegularExpressionValidator>("'{PropertyName}' ni v pravilni obliki.");
-            Translate<EqualValidator>("'{ PropertyName}' mora biti enak '{ComparisonValue}'.");
+            Translate<EqualValidator>("'{PropertyName}' mora biti enak '{ComparisonValue}'.");
             Translate<ExactLengthValidator>("'{PropertyName}' mora imeti {MaxLength} znakov. Vnesli ste {TotalLength} znakov.");
             Translate<InclusiveBetweenValidator>("'{PropertyName}' mora biti med {From} in {To}. Vnesli ste {Value}.");
             Translate<ExclusiveBetweenValidator>("'{PropertyName}' mora biti med {From} in {To} (izključno). Vnesli ste {Value}.");
