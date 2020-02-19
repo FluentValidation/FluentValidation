@@ -16,6 +16,7 @@ Translations of default error messages into other languages are now lazily-loade
 PropertyValidator.ShouldValidateAsync reanamed to ShouldValidateAsynchronously to remove confusion where the naming suggested this was an async method
 PropertyValidatorContext.Instance renamed to InstanceToValidate for consistency with ValidationContext.
 Removed various methods from MessageFormatter that were deprecated in 8.x
+Added Slovenian translations of default error messages.
 
 8.6.0 - 4 December 2019
 Add support for ASP.NET Core 3.1
