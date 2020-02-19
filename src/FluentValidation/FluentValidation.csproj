@@ -37,7 +37,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies"
-                      Version="1.0.0-preview.2"
+                      Version="1.0.0"
                       PrivateAssets="All" />
   </ItemGroup>
 </Project>
