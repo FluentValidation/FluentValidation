@@ -80,11 +80,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_not_throw_when_value_to_compare_is_of_different_type() {
-		    new LessThanValidator(10M).IsValid(5M, 10).ShouldBeTrue();
-		}
-
-		[Fact]
 		public void Extracts_property_from_expression() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt));
 			var propertyValidator = validator.CreateDescriptor().GetValidatorsForMember("Id").OfType<LessThanValidator>().Single();
