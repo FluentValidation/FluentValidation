@@ -54,7 +54,7 @@ Changes in 7.3:
 * Added support for implicat validation of child properties when using the automatic MVC integration
 * Added Skip property to the CustomizeValidatorAttribute to opt-out of validating certain properties
 
-Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
+Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
     </PackageReleaseNotes>
     <!-- Signing is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>

@@ -1,20 +1,20 @@
 #region License
 
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk) and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 
 #endregion
 
@@ -58,7 +58,7 @@ namespace FluentValidation.Tests {
 			results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
 			results.Errors[2].PropertyName.ShouldEqual("Orders[2].ProductName");
 		}
-		
+
 		[Fact]
 		public async Task Validates_collection_asynchronously() {
 			var validator = new TestValidator {
@@ -79,11 +79,11 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleForEach(x => x.Orders).SetValidator(y => new OrderValidator(y))
-			};	
+			};
 
 			var rootValidator = new InlineValidator<Tuple<Person, object>>();
 			rootValidator.RuleFor(x => x.Item1).SetValidator(validator);
-			
+
 			var results = rootValidator.Validate(Tuple.Create(person, new object()));
 			results.Errors.Count.ShouldEqual(3);
 
@@ -96,11 +96,11 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleForEach(x => x.Orders).SetValidator(y => new OrderValidator(y))
-			};	
+			};
 
 			var rootValidator = new InlineValidator<Tuple<Person, object>>();
 			rootValidator.RuleFor(x => x.Item1).SetValidator(validator);
-			
+
 			var results  = await rootValidator.ValidateAsync(Tuple.Create(person, new object()));
 			results.Errors.Count.ShouldEqual(3);
 
@@ -108,7 +108,7 @@ namespace FluentValidation.Tests {
 			results.Errors[2].PropertyName.ShouldEqual("Item1.Orders[2].ProductName");
 		}
 
-		
+
 		[Fact]
 		public void Collection_should_be_explicitly_included_with_expression() {
 			var validator = new TestValidator {

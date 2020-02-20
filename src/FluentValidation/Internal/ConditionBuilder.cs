@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk) and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Internal {
@@ -48,7 +48,7 @@ namespace FluentValidation.Internal {
 
 			bool Condition(ValidationContext context) {
 				string cacheId = null;
-				
+
 				if (context.InstanceToValidate != null) {
 					cacheId = id + context.InstanceToValidate.GetHashCode();
 
@@ -68,7 +68,7 @@ namespace FluentValidation.Internal {
 
 			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
 			foreach (var rule in propertyRules) {
-				//TODO for FV 9 remove explicit reference to CollectionPropertyRule. 
+				//TODO for FV 9 remove explicit reference to CollectionPropertyRule.
 				if (rule is PropertyRule p) {
 					p.ApplySharedCondition(Condition);
 				}
@@ -133,7 +133,7 @@ namespace FluentValidation.Internal {
 			}
 
 			foreach (var rule in propertyRules) {
-				//TODO for FV 9 remove explicit reference to CollectionPropertyRule. 
+				//TODO for FV 9 remove explicit reference to CollectionPropertyRule.
 				if (rule is PropertyRule p) {
 					p.ApplySharedAsyncCondition(Condition);
 				}

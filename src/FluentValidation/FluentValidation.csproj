@@ -22,7 +22,7 @@ Changes in 9.0.0:
 * Added Slovenian translations of default error messages.
 * Added WithMessageArgument to the test helpers.
 
-Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
+Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>
     <!-- Signing is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
