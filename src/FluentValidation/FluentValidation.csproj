@@ -19,6 +19,7 @@ Changes in 9.0.0:
 * Remove DisplayAttribute integration and reference to DataAnnotations.
 * ComparisonProperty placeholder is now formatted like PropertyName
 * Translations of default error messages into other languages are now lazily-loaded
+* Added Slovenian translations of default error messages.
 
 Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>
