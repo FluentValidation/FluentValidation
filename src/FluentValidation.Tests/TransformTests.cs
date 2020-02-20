@@ -28,5 +28,16 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person {Surname = "bar"});
 			result.IsValid.ShouldBeTrue();
 		}
+
+		[Fact]
+		public void Transforms_property_value_to_another_type() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).Transform(name => 1).GreaterThan(10);
+
+			var result = validator.Validate(new Person {Surname = "bar"});
+			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorCode.ShouldEqual("GreaterThanValidator");
+		}
+
 	}
 }

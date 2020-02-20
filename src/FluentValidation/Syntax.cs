@@ -28,6 +28,17 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
 	public interface IRuleBuilderInitial<T, out TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule, IRuleBuilderInitial<T, TProperty>> {
+
+		/// <summary>
+		/// Transforms the property value before validation occurs. The transformed value must be of the same type as the input value.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="TProperty"></typeparam>
+		/// <typeparam name="TNew"></typeparam>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="transformationFunc"></param>
+		/// <returns></returns>
+		IRuleBuilderInitial<T, TNew> Transform<TNew>(Func<TProperty, TNew> transformationFunc);
 	}
 
 	/// <summary>
