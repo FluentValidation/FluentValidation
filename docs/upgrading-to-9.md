@@ -52,6 +52,10 @@ FluentValidation 4.x-8.x contained a bug where using `NotEqual`/`Equal` on strin
 
 [See the documentation for further details.](built-in-validators.html#equal-validator)
 
+### Transform updates
+
+The `Transform` method can now be used to transform a property value to a different type prior to validation occurring. [See the documentation for further details.](transform.html)
+
 ### Severity with callback
 
 Prior to 9.0, changing a rule's severity required hard-coding the severity:
