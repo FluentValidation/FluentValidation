@@ -108,6 +108,12 @@ namespace FluentValidation.Internal {
 			configurator((CollectionPropertyRule<TProperty>) Rule);
 			return this;
 		}
+
+		public IRuleBuilderInitial<T, TNew> Transform<TNew>(Func<TProperty, TNew> transformationFunc) {
+			if (transformationFunc == null) throw new ArgumentNullException(nameof(transformationFunc));
+			Rule.Transformer = transformationFunc.CoerceToNonGeneric();
+			return new RuleBuilder<T, TNew>(Rule, ParentValidator);
+		}
 	}
 
 	internal interface IExposesParentValidator<T> {
