@@ -19,6 +19,7 @@ Removed various methods from MessageFormatter that were deprecated in 8.x
 Added Slovenian translations of default error messages.
 Added WithMessageArgument to the test helpers.
 Transform can now be used to transform property values to other types.
+FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
 
 8.6.0 - 4 December 2019
 Add support for ASP.NET Core 3.1
