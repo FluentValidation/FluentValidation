@@ -236,6 +236,26 @@ namespace FluentValidation.Tests {
 			results.Errors[0].PropertyName.ShouldEqual("test[0].Surname");
 		}
 
+		[Fact]
+		public void Creates_validator_using_context_from_property_value() {
+			var personValidator = new InlineValidator<Person>();
+
+			var normalOrderValidator = new InlineValidator<Order>();
+			normalOrderValidator.RuleFor(x => x.Amount).GreaterThan(0);
+
+			var freeOrderValidator = new InlineValidator<Order>();
+			freeOrderValidator.RuleFor(x => x.Amount).Equal(0);
+
+			personValidator.RuleForEach(x => x.Orders)
+				.SetValidator((p, order) => order.ProductName == "FreeProduct" ? freeOrderValidator : normalOrderValidator);
+
+			var result1 = personValidator.Validate(new Person() {Orders = new List<Order> {new Order {ProductName = "FreeProduct"}}});
+			result1.IsValid.ShouldBeTrue();
+
+			var result2 = personValidator.Validate(new Person() {Orders = new List<Order> {new Order()}});
+			result2.IsValid.ShouldBeFalse();
+			result2.Errors[0].ErrorCode.ShouldEqual("GreaterThanValidator");
+		}
 
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator(Person person) {

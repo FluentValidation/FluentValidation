@@ -21,6 +21,8 @@ Changes in 9.0.0:
 * Translations of default error messages into other languages are now lazily-loaded
 * Added Slovenian translations of default error messages.
 * Added WithMessageArgument to the test helpers.
+* Add additional overload of SetValidator that takes a Func that receives the current property value.
+* ASP.NET Core: FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
 
 Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>
