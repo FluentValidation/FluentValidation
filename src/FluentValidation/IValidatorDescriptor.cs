@@ -22,8 +22,6 @@ namespace FluentValidation {
 	using System.Reflection;
 	using Validators;
 
-	//TODO: Re-visit this interface for FluentValidation v3. Remove some of the duplication.
-
 	/// <summary>
 	/// Provides metadata about a validator.
 	/// </summary>
