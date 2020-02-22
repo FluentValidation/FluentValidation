@@ -272,6 +272,11 @@ From the comments:
 
 Alternatively, you can use the old email validation behaviour that uses a regular expression consistent with the .NET 4.x version of the ASP.NET `EmailAddressAttribute`. You can use this behaviour in FluentValidation by calling `RuleFor(x => x.Email).EmailAddress(EmailValidationMode.Net4xRegex)`. Note that this approach is deprecated and will generate a warning as regex-based email validation is not recommended. 
 
+```eval_rst
+.. note::
+  In FluentValidation 9, the ASP.NET Core-compatible "simple" check is the default mode. In FluentValidation 8.x (and older), the Regex mode is the default.
+```
+
 ## Credit Card Validator
 Checks whether a string property could be a valid credit card number. 
 
