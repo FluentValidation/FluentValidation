@@ -462,8 +462,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		// TODO: Consider making these public and part of the interface for FV 9.
-		internal void ApplySharedCondition(Func<ValidationContext, bool> condition) {
+		public void ApplySharedCondition(Func<ValidationContext, bool> condition) {
 			if (_condition == null) {
 				_condition = condition;
 			}
@@ -473,7 +472,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		internal void ApplySharedAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> condition) {
+		public void ApplySharedAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> condition) {
 			if (_asyncCondition == null) {
 				_asyncCondition = condition;
 			}

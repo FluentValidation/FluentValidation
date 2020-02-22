@@ -54,17 +54,29 @@ namespace FluentValidation {
 		Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation);
 
 		/// <summary>
-		/// Applies a condition to the rule
+		/// Applies a condition to either all the validators in the rule, or the most recent validator in the rule chain.
 		/// </summary>
-		/// <param name="predicate"></param>
-		/// <param name="applyConditionTo"></param>
+		/// <param name="predicate">The condition to apply</param>
+		/// <param name="applyConditionTo">Indicates whether the condition should be applied to all validators in the rule, or only the current one</param>
 		void ApplyCondition(Func<PropertyValidatorContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 
 		/// <summary>
-		/// Applies a condition to the rule asynchronously
+		/// Applies an asynchronous condition to either all the validators in the rule, or the most recent validator in the rule chain.
 		/// </summary>
-		/// <param name="predicate"></param>
-		/// <param name="applyConditionTo"></param>
+		/// <param name="predicate">The condition to apply</param>
+		/// <param name="applyConditionTo">Indicates whether the condition should be applied to all validators in the rule, or only the current one</param>
 		void ApplyAsyncCondition(Func<PropertyValidatorContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
+
+		/// <summary>
+		/// Applies a condition that wraps the entire rule.
+		/// </summary>
+		/// <param name="condition">The condition to apply.</param>
+		void ApplySharedCondition(Func<ValidationContext, bool> condition);
+
+		/// <summary>
+		/// Applies an asynchronous condition that wraps the entire rule.
+		/// </summary>
+		/// <param name="condition">The condition to apply.</param>
+		void ApplySharedAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> condition);
 	}
 }

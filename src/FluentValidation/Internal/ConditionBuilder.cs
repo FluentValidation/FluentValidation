@@ -68,13 +68,7 @@ namespace FluentValidation.Internal {
 
 			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
 			foreach (var rule in propertyRules) {
-				//TODO for FV 9 remove explicit reference to CollectionPropertyRule.
-				if (rule is PropertyRule p) {
-					p.ApplySharedCondition(Condition);
-				}
-				else {
-					throw new NotSupportedException("Cannot call the root-level When/Unless methods on rules that don't inherit from PropertyRule");
-				}
+					rule.ApplySharedCondition(Condition);
 			}
 
 			return new ConditionOtherwiseBuilder(_rules, Condition);
@@ -133,13 +127,7 @@ namespace FluentValidation.Internal {
 			}
 
 			foreach (var rule in propertyRules) {
-				//TODO for FV 9 remove explicit reference to CollectionPropertyRule.
-				if (rule is PropertyRule p) {
-					p.ApplySharedAsyncCondition(Condition);
-				}
-				else {
-					throw new NotSupportedException("Cannot call the root-level When/Unless methods on rules that don't inherit from PropertyRule");
-				}
+				rule.ApplySharedAsyncCondition(Condition);
 			}
 
 			return new AsyncConditionOtherwiseBuilder(_rules, Condition);
@@ -174,12 +162,7 @@ namespace FluentValidation.Internal {
 			}
 
 			foreach (var rule in propertyRules) {
-				if (rule is PropertyRule p) {
-					p.ApplySharedCondition(ctx => !_condition(ctx));
-				}
-				else {
-					throw new NotSupportedException("Cannot call the root-level When/Unless methods on rules that don't inherit from PropertyRule");
-				}
+				rule.ApplySharedCondition(ctx => !_condition(ctx));
 			}
 		}
 	}
@@ -203,12 +186,7 @@ namespace FluentValidation.Internal {
 			}
 
 			foreach (var rule in propertyRules) {
-				if (rule is PropertyRule p) {
-					p.ApplySharedAsyncCondition(async (ctx, ct) => !await _condition(ctx, ct));
-				}
-				else {
-					throw new NotSupportedException("Cannot call the root-level When/Unless methods on rules that don't inherit from PropertyRule");
-				}
+				rule.ApplySharedAsyncCondition(async (ctx, ct) => !await _condition(ctx, ct));
 			}
 		}
 	}
