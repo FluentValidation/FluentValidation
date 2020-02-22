@@ -58,13 +58,7 @@ namespace FluentValidation.Validators {
 						.AppendArgument("ExpectedPrecision", Precision)
 						.AppendArgument("ExpectedScale", Scale)
 						.AppendArgument("Digits", precision - scale)
-						.AppendArgument("ActualScale", scale)
-						// For backwards compatibility, 8.1.2 and older used lowercase placeholders.
-						// TODO consider removing for FV 9
-						.AppendArgument("expectedPrecision", Precision)
-						.AppendArgument("expectedScale", Scale)
-						.AppendArgument("digits", precision - scale)
-						.AppendArgument("actualScale", scale);
+						.AppendArgument("ActualScale", scale);2
 
 					return false;
 				}
