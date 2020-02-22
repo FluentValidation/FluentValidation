@@ -58,7 +58,7 @@ namespace FluentValidation.Validators {
 						.AppendArgument("ExpectedPrecision", Precision)
 						.AppendArgument("ExpectedScale", Scale)
 						.AppendArgument("Digits", precision - scale)
-						.AppendArgument("ActualScale", scale);2
+						.AppendArgument("ActualScale", scale);
 
 					return false;
 				}
