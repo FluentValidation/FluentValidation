@@ -42,6 +42,11 @@ services.AddMvc()
   .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>());
 ```
 
+```eval_rst
+.. note::
+  Validators that are registered automatically using `RegisterValidationsFromAssemblyContaining` are registered as `Transient` with the container. You can choose to register them as a different lifetime by instead using the extension method `AddValidatorsFromAssemblyContaining`, or by explicitly registering individual validators with the container instead of auto-registering.
+```
+
 This example assumes that the PersonValidator is defined to validate a class called `Person`:
 
 ```csharp
