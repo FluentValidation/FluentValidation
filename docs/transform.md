@@ -1,6 +1,6 @@
 # Transforming Values
 
-As of FluentValidation 9.0, you can use the `Transform` method to transform a property value prior to validation being performed againt it. For example, if you have property of type `string` that atually contains numeric input, you could use `Transform` to convert the string value to a number. 
+As of FluentValidation 9.0, you can use the `Transform` method to transform a property value prior to validation being performed against it. For example, if you have property of type `string` that atually contains numeric input, you could use `Transform` to convert the string value to a number. 
 
 
 ```csharp
