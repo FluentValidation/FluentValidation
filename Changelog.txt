@@ -24,6 +24,12 @@ Add additional overload of SetValidator that takes a Func that receives the curr
 Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
 SourceLink integration.
 
+8.6.2 - 29 February 2020
+Fix CollectionIndex placeholder not working with async workflow.
+
+8.6.1 - 28 December 2019
+Add explicit netcoreapp3.1 target to ASP.NET Core integration.
+
 8.6.0 - 4 December 2019
 Add support for ASP.NET Core 3.1
 Fixed issue with property indexers being incorrectly stripped out when using test extensions.

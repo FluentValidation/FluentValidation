@@ -92,16 +92,16 @@ namespace FluentValidation.Internal {
 					throw new InvalidOperationException("Could not automatically determine the property name ");
 				}
 
-				var validatorTasks = collectionPropertyValue.Select(async (v, count) => {
+				var validatorTasks = collectionPropertyValue.Select(async (v, index) => {
 					if (Filter != null && !Filter(v)) {
 						return Enumerable.Empty<ValidationFailure>();
 					}
 
-					string indexer = count.ToString();
+					string indexer = index.ToString();
 					bool useDefaultIndexFormat = true;
 
 					if (IndexBuilder != null) {
-						indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, v, count);
+						indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, v, index);
 						useDefaultIndexFormat = false;
 					}
 
@@ -110,6 +110,7 @@ namespace FluentValidation.Internal {
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
 					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
+					newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
 
 					return await validator.ValidateAsync(newPropertyContext, cancellation);
 				});
