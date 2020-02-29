@@ -22,6 +22,7 @@ Transform can now be used to transform property values to other types.
 FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
 Add additional overload of SetValidator that takes a Func that receives the current property value.
 Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
+SourceLink integration.
 
 8.6.0 - 4 December 2019
 Add support for ASP.NET Core 3.1
