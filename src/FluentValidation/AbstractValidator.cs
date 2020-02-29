@@ -22,13 +22,10 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
-	using System.Reflection;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
 	using Results;
-	using TestHelper;
-	using Validators;
 
 	/// <summary>
 	/// Base class for object validators.
@@ -166,7 +163,8 @@ namespace FluentValidation {
 		}
 
 		bool IValidator.CanValidateInstancesOfType(Type type) {
-			return typeof(T).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo());
+			if (type == null) throw new ArgumentNullException(nameof(type));
+			return typeof(T).IsAssignableFrom(type);
 		}
 
 		/// <summary>
