@@ -494,7 +494,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public async Task Can_access_colletion_index_async() {
 			var validator = new InlineValidator<Person>();
-			validator.RuleForEach(x => x.Orders).NotNull().WithMessage("{CollectionIndex}");
+			validator.RuleForEach(x => x.Orders).MustAsync((x, ct) => Task.FromResult(x != null)).WithMessage("{CollectionIndex}");
 			var result = await validator.ValidateAsync(new Person {Orders = new List<Order>() {new Order(), null}});
 			result.IsValid.ShouldBeFalse();
 			result.Errors[0].ErrorMessage.ShouldEqual("1");

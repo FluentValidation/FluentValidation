@@ -5,6 +5,12 @@
     <PackageReleaseNotes>
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
 
+Changes in 8.6.2:
+* Ensure CollectionIndex works in async workflow.
+
+Changes in 8.6.1:
+* Added explicit netcoreapp3.1 target to the ASP.NET Core integration.
+
 Changes in 8.6.0:
 * Add support for ASP.NET Core 3.1
 * Fixed issue with property indexers being incorrectly stripped out when using test extensions.
