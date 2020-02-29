@@ -9,6 +9,7 @@
 Changes in 9.0.0:
 * Compatibility with FluentValidation 9.0
 * FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
+* Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
 
 Changes in 8.6.0:
 * Add support for ASP.NET Core 3.1
