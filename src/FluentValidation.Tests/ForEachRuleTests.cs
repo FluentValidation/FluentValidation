@@ -529,6 +529,70 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+		[Fact]
+		public void Can_access_parent_index() {
+			var personValidator = new InlineValidator<Person>();
+			var orderValidator = new InlineValidator<Order>();
+
+			orderValidator.RuleFor(order => order.ProductName)
+				.NotEmpty()
+				.WithMessage("{CollectionIndex} must not be empty");
+
+			// Two rules - one for each collection syntax.
+
+			personValidator.RuleFor(x => x.Orders)
+				.NotEmpty()
+				.ForEach(order => {
+					order.SetValidator(orderValidator);
+				});
+
+			personValidator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
+
+			var result = personValidator.Validate(new Person() {
+				Orders = new List<Order> {
+					new Order() { ProductName =  "foo"},
+					new Order(),
+					new Order() { ProductName = "bar" }
+				}
+			});
+
+			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
+			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
+		}
+
+		[Fact]
+		public async Task Can_access_parent_index_async() {
+			var personValidator = new InlineValidator<Person>();
+			var orderValidator = new InlineValidator<Order>();
+
+			orderValidator.RuleFor(order => order.ProductName)
+				.NotEmpty()
+				.WithMessage("{CollectionIndex} must not be empty");
+
+			// Two rules - one for each collection syntax.
+
+			personValidator.RuleFor(x => x.Orders)
+				.NotEmpty()
+				.ForEach(order => {
+					order.SetValidator(orderValidator);
+				});
+
+			personValidator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
+
+			var result = await personValidator.ValidateAsync(new Person() {
+				Orders = new List<Order> {
+					new Order() { ProductName =  "foo"},
+					new Order(),
+					new Order() { ProductName = "bar" }
+				}
+			});
+
+			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
+			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
+		}
+
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {
 				RuleFor(x => x.ProductName).NotEmpty();

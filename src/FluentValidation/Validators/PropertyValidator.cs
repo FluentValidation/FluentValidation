@@ -82,6 +82,18 @@ namespace FluentValidation.Validators {
 		protected virtual void PrepareMessageFormatterForValidationError(PropertyValidatorContext context) {
 			context.MessageFormatter.AppendPropertyName(context.DisplayName);
 			context.MessageFormatter.AppendPropertyValue(context.PropertyValue);
+
+			// If there's a collection index cached in the root context data then add it
+			// to the message formatter. This happens when a child validator is executed
+			// as part of a call to RuleForEach. Usually parameters are not flowed through to
+			// child validators, but we make an exception for collection indices.
+			if (context.ParentContext.RootContextData.TryGetValue("__FV_CollectionIndex", out var index)) {
+				// If our property validator has explicitly added a placeholder for the collection index
+				// don't overwrite it with the cached version.
+				if (!context.MessageFormatter.PlaceholderValues.ContainsKey("CollectionIndex")) {
+					context.MessageFormatter.AppendArgument("CollectionIndex", index);
+				}
+			}
 		}
 
 		/// <summary>

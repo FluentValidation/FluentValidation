@@ -40,7 +40,7 @@ namespace FluentValidation.Validators {
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			if (Options.Condition != null && !Options.Condition(context)) {
 				return Enumerable.Empty<ValidationFailure>();
-			} 
+			}
 
 			if (context.PropertyValue == null) {
 				return Enumerable.Empty<ValidationFailure>();
@@ -53,18 +53,29 @@ namespace FluentValidation.Validators {
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context.PropertyValue, context);
-			return validator.Validate(newContext).Errors;
+
+			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
+			// and pass it down to child validator by caching it in the RootContextData which flows through to
+			// the child validator. PropertyValidator.PrepareMessageFormatterForValidationError handles extracting this.
+			HandleCollectionIndex(context, out object originalIndex, out object currentIndex);
+
+			var results = validator.Validate(newContext).Errors;
+
+			// Reset the collection index
+			ResetCollectionIndex(context, originalIndex, currentIndex);
+
+			return results;
 		}
 
 		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			if (Options.Condition != null && !Options.Condition(context)) {
 				return Enumerable.Empty<ValidationFailure>();
-			} 
-			
+			}
+
 			if (Options.AsyncCondition != null && !await Options.AsyncCondition(context, cancellation)) {
 				return Enumerable.Empty<ValidationFailure>();
 			}
-			
+
 			if (context.PropertyValue == null) {
 				return Enumerable.Empty<ValidationFailure>();
 			}
@@ -76,7 +87,16 @@ namespace FluentValidation.Validators {
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context.PropertyValue, context);
+
+			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
+			// and pass it down to child validator by caching it in the RootContextData which flows through to
+			// the child validator. PropertyValidator.PrepareMessageFormatterForValidationError handles extracting this.
+			HandleCollectionIndex(context, out object originalIndex, out object currentIndex);
+
 			var result = await validator.ValidateAsync(newContext, cancellation);
+
+			ResetCollectionIndex(context, originalIndex, currentIndex);
+
 			return result.Errors;
 		}
 
@@ -98,6 +118,26 @@ namespace FluentValidation.Validators {
 
 		public override bool ShouldValidateAsynchronously(ValidationContext context) {
 			return context.IsAsync() || Options.AsyncCondition != null;
+		}
+
+		private void HandleCollectionIndex(PropertyValidatorContext context, out object originalIndex, out object index) {
+			originalIndex = null;
+			if (context.MessageFormatter.PlaceholderValues.TryGetValue("CollectionIndex", out index)) {
+				context.ParentContext.RootContextData.TryGetValue("__FV_CollectionIndex", out originalIndex);
+				context.ParentContext.RootContextData["__FV_CollectionIndex"] = index;
+			}
+		}
+
+		private void ResetCollectionIndex(PropertyValidatorContext context, object originalIndex, object index) {
+			// Reset the collection index
+			if (index != null) {
+				if (originalIndex != null) {
+					context.ParentContext.RootContextData["__FV_CollectionIndex"] = originalIndex;
+				}
+				else {
+					context.ParentContext.RootContextData.Remove("__FV_CollectionIndex");
+				}
+			}
 		}
 	}
 }

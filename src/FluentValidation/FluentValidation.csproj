@@ -25,6 +25,7 @@ Changes in 9.0.0:
 * ASP.NET Core: FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
 * Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
 * SourceLink integration.
+* {CollectionIndex} placeholder can now be accessed in child validators.
 
 Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
 FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
