@@ -69,6 +69,10 @@ namespace FluentValidation.Tests
 		public string GenderString { get; set; }
 
 		public string ForenameReadOnly => Forename;
+
+		public Person GetSelf() {
+			return this;
+		}
 	}
 
 

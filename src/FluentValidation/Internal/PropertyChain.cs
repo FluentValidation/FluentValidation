@@ -56,23 +56,79 @@ namespace FluentValidation.Internal {
 		/// Creates a PropertyChain from a lambda expression
 		/// </summary>
 		/// <param name="expression"></param>
+		/// <param name="throwOnInvalid">Whether to throw an exception if the expression is not supported (true) or to return an empty property chain (false). Defaults to false (returning an empty property chain)</param>
 		/// <returns></returns>
-		public static PropertyChain FromExpression(LambdaExpression expression) {
-			var memberNames = new Stack<string>();
+		public static PropertyChain FromExpression<T, TProperty>(Expression<Func<T, TProperty>> expression, bool throwOnInvalid = false) {
+			return FromExpression((LambdaExpression) expression, throwOnInvalid);
+		}
 
-			var getMemberExp = new Func<Expression, MemberExpression>(toUnwrap => {
-				if (toUnwrap is UnaryExpression) {
-					return ((UnaryExpression)toUnwrap).Operand as MemberExpression;
+		/// <summary>
+		/// Creates a PropertyChain from a lambda expression
+		/// </summary>
+		/// <param name="expression">The expression to convert</param>
+		/// <param name="throwOnInvalid">Whether to throw an exception if the expression is not supported (true) or to return an empty property chain (false). Defaults to false (returning an empty property chain)</param>
+		/// <returns></returns>
+		public static PropertyChain FromExpression(LambdaExpression expression, bool throwOnInvalid = false) {
+			var memberExp = Extensions.RemoveUnary(expression.Body) as MemberExpression;
+
+			// If it's not a MemberExpression, either throw an exception or return an empty property chain.
+			if (memberExp == null) {
+				if (throwOnInvalid) {
+					throw new NotSupportedException("The expression you passed in isn't supported. Only member-access expressions can be used to create a property chain.");
 				}
+				return new PropertyChain();
+			}
 
-				return toUnwrap as MemberExpression;
-			});
+			var memberNames = new Stack<string>();
+			Expression currentExpr = memberExp;
+			object currentIndexer = null;
 
-			var memberExp = getMemberExp(expression.Body);
+			while (true) {
+				currentExpr = Extensions.RemoveUnary(currentExpr);
+				object indexerToUse = currentIndexer;
+				currentIndexer = null;
 
-			while(memberExp != null) {
-				memberNames.Push(memberExp.Member.Name);
-				memberExp = getMemberExp(memberExp.Expression);
+				if (currentExpr != null && currentExpr is MemberExpression me) {
+					currentExpr = me.Expression;
+					var memberName = me.Member.Name;
+
+					if (indexerToUse != null) {
+						memberName += "[" + indexerToUse + "]";
+					}
+
+					memberNames.Push(memberName);
+				}
+				else if (currentExpr != null && currentExpr is MethodCallExpression methodExp) {
+					// Method calls are OK so long as they're not the last item.
+
+					// Is it an indexer method? If so, normalize it to C# style indexer.
+					// Must be called get_Item, have 1 argument and that argument is constant.
+					if (methodExp.Method.IsSpecialName && methodExp.Method.Name == "get_Item" && methodExp.Arguments.Count == 1 && methodExp.Arguments[0] is ConstantExpression ce) {
+						// TODO: Do we need to care about multi-argument indexers?
+						// Record the indexer for the next round of the loop.
+						currentIndexer = ce.Value;
+					}
+					else {
+						string methodName = methodExp.Method.Name;
+						if (indexerToUse != null) {
+							methodName += "[" + indexerToUse + "]";
+						}
+						memberNames.Push(methodName);
+					}
+
+					currentExpr = methodExp.Object;
+				}
+				else {
+					break;
+				}
+			}
+
+			// The root of the expression must be a ParameterExpression (ie x => x.<something>)
+			if (currentExpr == null || currentExpr.NodeType != ExpressionType.Parameter) {
+				if (throwOnInvalid) {
+					throw new NotSupportedException("The expression you passed in isn't supported. Only member-access expressions can be used to create a property chain.");
+				}
+				return new PropertyChain();
 			}
 
 			return new PropertyChain(memberNames);

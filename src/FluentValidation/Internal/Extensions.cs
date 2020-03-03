@@ -100,7 +100,7 @@ namespace FluentValidation.Internal {
 		}
 
 
-		private static Expression RemoveUnary(Expression toUnwrap) {
+		internal static Expression RemoveUnary(Expression toUnwrap) {
 			if (toUnwrap is UnaryExpression) {
 				return ((UnaryExpression)toUnwrap).Operand;
 			}
