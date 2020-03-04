@@ -19,6 +19,7 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
 
@@ -26,7 +27,7 @@ namespace FluentValidation.Internal {
 	/// Represents a chain of properties
 	/// </summary>
 	public class PropertyChain {
-		readonly List<string> _memberNames = new List<string>(2);
+		private protected readonly List<string> _memberNames = new List<string>(2);
 
 		/// <summary>
 		/// Creates a new PropertyChain.
@@ -69,54 +70,38 @@ namespace FluentValidation.Internal {
 		/// <param name="throwOnInvalid">Whether to throw an exception if the expression is not supported (true) or to return an empty property chain (false). Defaults to false (returning an empty property chain)</param>
 		/// <returns></returns>
 		public static PropertyChain FromExpression(LambdaExpression expression, bool throwOnInvalid = false) {
-			var memberExp = Extensions.RemoveUnary(expression.Body) as MemberExpression;
+			Expression exp = Extensions.RemoveUnary(expression.Body) as MemberExpression;
 
 			// If it's not a MemberExpression, either throw an exception or return an empty property chain.
-			if (memberExp == null) {
+			if (exp == null) {
 				if (throwOnInvalid) {
 					throw new NotSupportedException("The expression you passed in isn't supported. Only member-access expressions can be used to create a property chain.");
 				}
 				return new PropertyChain();
 			}
 
-			var memberNames = new Stack<string>();
-			Expression currentExpr = memberExp;
-			object currentIndexer = null;
+			var chain = new ReversePropertyChain();
 
 			while (true) {
-				currentExpr = Extensions.RemoveUnary(currentExpr);
-				object indexerToUse = currentIndexer;
-				currentIndexer = null;
-
-				if (currentExpr != null && currentExpr is MemberExpression me) {
-					currentExpr = me.Expression;
-					var memberName = me.Member.Name;
-
-					if (indexerToUse != null) {
-						memberName += "[" + indexerToUse + "]";
-					}
-
-					memberNames.Push(memberName);
+				exp = Extensions.RemoveUnary(exp);
+				if (exp is MemberExpression me) {
+					exp = me.Expression;
+					chain.Add(me.Member.Name);
 				}
-				else if (currentExpr != null && currentExpr is MethodCallExpression methodExp) {
+				else if (exp is MethodCallExpression methodExp) {
 					// Method calls are OK so long as they're not the last item.
 
 					// Is it an indexer method? If so, normalize it to C# style indexer.
 					// Must be called get_Item, have 1 argument and that argument is constant.
 					if (methodExp.Method.IsSpecialName && methodExp.Method.Name == "get_Item" && methodExp.Arguments.Count == 1 && methodExp.Arguments[0] is ConstantExpression ce) {
 						// TODO: Do we need to care about multi-argument indexers?
-						// Record the indexer for the next round of the loop.
-						currentIndexer = ce.Value;
+						chain.AddIndexer(ce.Value);
 					}
 					else {
-						string methodName = methodExp.Method.Name;
-						if (indexerToUse != null) {
-							methodName += "[" + indexerToUse + "]";
-						}
-						memberNames.Push(methodName);
+						chain.Add(methodExp.Method.Name);
 					}
 
-					currentExpr = methodExp.Object;
+					exp = methodExp.Object;
 				}
 				else {
 					break;
@@ -124,14 +109,15 @@ namespace FluentValidation.Internal {
 			}
 
 			// The root of the expression must be a ParameterExpression (ie x => x.<something>)
-			if (currentExpr == null || currentExpr.NodeType != ExpressionType.Parameter) {
+			if (exp == null || exp.NodeType != ExpressionType.Parameter) {
 				if (throwOnInvalid) {
 					throw new NotSupportedException("The expression you passed in isn't supported. Only member-access expressions can be used to create a property chain.");
 				}
 				return new PropertyChain();
 			}
 
-			return new PropertyChain(memberNames);
+			// Convert it back to a regular property chain - don't want consumers to experience the reverse behaviour.
+			return new PropertyChain(chain);
 		}
 
 		/// <summary>
@@ -140,14 +126,14 @@ namespace FluentValidation.Internal {
 		/// <param name="member">Member to add</param>
 		public void Add(MemberInfo member) {
 			if(member != null)
-				_memberNames.Add(member.Name);
+				Add(member.Name);
 		}
 
 		/// <summary>
 		/// Adds a property name to the chain
 		/// </summary>
 		/// <param name="propertyName">Name of the property to add</param>
-		public void Add(string propertyName) {
+		public virtual void Add(string propertyName) {
 			if(!string.IsNullOrEmpty(propertyName))
 				_memberNames.Add(propertyName);
 		}
@@ -160,7 +146,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="indexer"></param>
 		/// <param name="surroundWithBrackets">Whether square brackets should be applied before and after the indexer. Default true.</param>
-		public void AddIndexer(object indexer, bool surroundWithBrackets = true) {
+		public virtual void AddIndexer(object indexer, bool surroundWithBrackets = true) {
 			if(_memberNames.Count == 0) {
 				throw new InvalidOperationException("Could not apply an Indexer because the property chain is empty.");
 			}
@@ -214,5 +200,37 @@ namespace FluentValidation.Internal {
 		/// Number of member names in the chain
 		/// </summary>
 		public int Count => _memberNames.Count;
+	}
+
+	internal class ReversePropertyChain : PropertyChain {
+		private string _indexerToUseNext;
+
+		public override void AddIndexer(object indexer, bool surroundWithBrackets = true) {
+			if (indexer != null) {
+				// As this property chain is in reverse order, we won't have the property being indexed yet
+				// so cache it and then use it in the next call to Add.
+				_indexerToUseNext = surroundWithBrackets ? "[" + indexer + "]" : indexer.ToString();
+			}
+		}
+
+		public override void Add(string propertyName) {
+			if (_indexerToUseNext != null) {
+				if (!string.IsNullOrEmpty(propertyName)) {
+					propertyName += _indexerToUseNext;
+				}
+				_indexerToUseNext = null;
+			}
+
+			base.Add(propertyName);
+		}
+
+		public override string ToString() {
+			_indexerToUseNext = null;
+
+			if (Count > 1) {
+				return string.Join(ValidatorOptions.PropertyChainSeparator, _memberNames.AsEnumerable().Reverse());
+			}
+			return base.ToString();
+		}
 	}
 }
