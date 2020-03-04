@@ -32,12 +32,12 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
-			string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
+			string propertyName = PropertyChain.FromExpression(memberAccessor, true).ToString();
 			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, true);
 		}
 
 		public void ShouldNotHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
-			string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
+			string propertyName = PropertyChain.FromExpression(memberAccessor, true).ToString();
 			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, true);
 		}
 
