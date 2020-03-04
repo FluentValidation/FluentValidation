@@ -116,7 +116,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) where T : class {
-			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure, true);
+			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure);
 		}
 
 		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
@@ -137,9 +137,9 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
-    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
+    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName) {
 
-      var failures = errors.Where(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+      var failures = errors.Where(x => x.PropertyName == propertyName
                                        || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
                                        || propertyName == MatchAnyFailure
                                        ).ToArray();
@@ -167,8 +167,8 @@ namespace FluentValidation.TestHelper {
       throw new ValidationTestException(errorMessage);
     }
 
-		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
-			var failures = errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
+			var failures = errors.Where(x => x.PropertyName == propertyName
 			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
 			                                 || propertyName == MatchAnyFailure
 			                                 ).ToList();
@@ -246,10 +246,6 @@ namespace FluentValidation.TestHelper {
 
 		public static IEnumerable<ValidationFailure> WithoutErrorCode(this IEnumerable<ValidationFailure> failures, string unexpectedErrorCode) {
 			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Found an unexpected error code of '{0}'", unexpectedErrorCode));
-		}
-
-		private static string NormalizePropertyName(string propertyName) {
-			return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 		}
 	}
 }

@@ -70,10 +70,9 @@ namespace FluentValidation.Internal {
 		/// <param name="throwOnInvalid">Whether to throw an exception if the expression is not supported (true) or to return an empty property chain (false). Defaults to false (returning an empty property chain)</param>
 		/// <returns></returns>
 		public static PropertyChain FromExpression(LambdaExpression expression, bool throwOnInvalid = false) {
-			Expression exp = Extensions.RemoveUnary(expression.Body) as MemberExpression;
+			var exp  = Extensions.RemoveUnary(expression?.Body);
 
-			// If it's not a MemberExpression, either throw an exception or return an empty property chain.
-			if (exp == null) {
+			if (exp == null || (exp.NodeType != ExpressionType.MemberAccess && exp.NodeType != ExpressionType.Parameter)) {
 				if (throwOnInvalid) {
 					throw new NotSupportedException("The expression you passed in isn't supported. Only member-access expressions can be used to create a property chain.");
 				}
