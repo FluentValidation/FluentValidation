@@ -116,8 +116,7 @@ namespace FluentValidation.Internal {
 				return new PropertyChain();
 			}
 
-			// Convert it back to a regular property chain - don't want consumers to experience the reverse behaviour.
-			return new PropertyChain(chain);
+			return chain;
 		}
 
 		/// <summary>
