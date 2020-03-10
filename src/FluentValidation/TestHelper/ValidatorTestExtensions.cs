@@ -19,6 +19,7 @@
 #pragma warning disable 1591
 namespace FluentValidation.TestHelper {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
@@ -39,6 +40,7 @@ namespace FluentValidation.TestHelper {
 			memberAccessor.Set(instanceToValidate, value);
 
 			var testValidationResult = validator.TestValidate(instanceToValidate, ruleSet);
+			testValidationResult.ValueSetInline = true;
 			return testValidationResult.ShouldHaveValidationErrorFor(expression);
 		}
 
@@ -57,6 +59,7 @@ namespace FluentValidation.TestHelper {
 			memberAccessor.Set(instanceToValidate, value);
 
 			var testValidationResult = validator.TestValidate(instanceToValidate, ruleSet);
+			testValidationResult.ValueSetInline = true;
 			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
 
@@ -116,7 +119,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) where T : class {
-			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure);
+			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure, false);
 		}
 
 		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
@@ -137,11 +140,11 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
-    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName) {
+    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool stripFinalIndexer) {
 
-      var failures = errors.Where(x => x.PropertyName == propertyName
+	    var failures = errors.Where(x => (stripFinalIndexer ?  StripOutFinalIndexer(x.PropertyName) == propertyName : x.PropertyName == propertyName)
                                        || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
-                                       || propertyName == MatchAnyFailure
+	                                            || propertyName == MatchAnyFailure
                                        ).ToArray();
 
       if (failures.Any()) {
@@ -167,10 +170,10 @@ namespace FluentValidation.TestHelper {
       throw new ValidationTestException(errorMessage);
     }
 
-		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName) {
-			var failures = errors.Where(x => x.PropertyName == propertyName
+		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName, bool stripFinalIndexer) {
+			var failures = errors.Where(x => (stripFinalIndexer ? StripOutFinalIndexer(x.PropertyName) == propertyName : x.PropertyName == propertyName)
 			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
-			                                 || propertyName == MatchAnyFailure
+			                                       || propertyName == MatchAnyFailure
 			                                 ).ToList();
 
 			if (failures.Any()) {
@@ -186,7 +189,6 @@ namespace FluentValidation.TestHelper {
 				throw new ValidationTestException(errorMessage, failures);
 			}
 		}
-
 		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null){
 			bool anyMatched = failures.Any(failurePredicate);
 
@@ -246,6 +248,10 @@ namespace FluentValidation.TestHelper {
 
 		public static IEnumerable<ValidationFailure> WithoutErrorCode(this IEnumerable<ValidationFailure> failures, string unexpectedErrorCode) {
 			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Found an unexpected error code of '{0}'", unexpectedErrorCode));
+		}
+
+		private static string StripOutFinalIndexer(string propertyName) {
+			 return Regex.Replace(propertyName, @"\[.*\]$", string.Empty);
 		}
 	}
 }

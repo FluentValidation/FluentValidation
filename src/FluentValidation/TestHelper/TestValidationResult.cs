@@ -20,6 +20,7 @@
 
 namespace FluentValidation.TestHelper {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using Internal;
@@ -31,22 +32,34 @@ namespace FluentValidation.TestHelper {
 			RuleSetsExecuted = validationResult.RuleSetsExecuted;
 		}
 
+		/// <summary>
+		///  Whether this set of assertions set the property value inline (instead of supplying a pre-populated instance).
+		/// </summary>
+		internal bool ValueSetInline { get; set; }
+
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
+			// If the property we're asserting against is a collection (any IEnumerable except string)
+			// then allow assertions against the property without the indexer.
+			// Eg if the error is for "Addresses[0]" then allow assertions to pass if they're against "Addresses".
+			// Note that this is only allowed when using the test extension that sets the property at the same time, as it's
+			// not possible to pass in a collection value and specify the error is against a specific index.
 			string propertyName = PropertyChain.FromExpression(memberAccessor, true).ToString();
-			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
+			bool shouldStripFinalIndexer = ValueSetInline && typeof(IEnumerable).IsAssignableFrom(typeof(TProperty)) && typeof(TProperty) != typeof(string);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, shouldStripFinalIndexer);
 		}
 
 		public void ShouldNotHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 			string propertyName = PropertyChain.FromExpression(memberAccessor, true).ToString();
-			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
+			bool shouldStripFinalIndexer = ValueSetInline && typeof(IEnumerable).IsAssignableFrom(typeof(TProperty)) && typeof(TProperty) != typeof(string);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, shouldStripFinalIndexer);
 		}
 
 		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor(string propertyName) {
-			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName);
+			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, false);
 		}
 
 		public void ShouldNotHaveValidationErrorFor(string propertyName) {
-			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName);
+			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, false);
 		}
 	}
 
