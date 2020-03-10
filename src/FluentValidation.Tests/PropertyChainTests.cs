@@ -86,22 +86,26 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Other_Expression_tests() {
-			PropertyChain.FromExpression<Person, string>(x => x.Address.County).ToString().ShouldEqual("Address.County");
-			PropertyChain.FromExpression<Person, string>(x => x.Surname).ToString().ShouldEqual("Surname");
-			PropertyChain.FromExpression<Person, int>(x => x.Id).ToString().ShouldEqual("Id");
-			PropertyChain.FromExpression<Person, EnumGender>(x => x.Gender).ToString().ShouldEqual("Gender");
-			PropertyChain.FromExpression<Person, string>(x => x.Orders[0].ProductName).ToString().ShouldEqual("Orders[0].ProductName");
+			string FromExpression<T, TProperty>(Expression<Func<T, TProperty>> expr, bool throwOnInvalid = false) {
+				return PropertyChain.FromExpression(expr, throwOnInvalid).ToString();
+			}
+
+			FromExpression<Person, string>(x => x.Address.County).ShouldEqual("Address.County");
+			FromExpression<Person, string>(x => x.Surname).ShouldEqual("Surname");
+			FromExpression<Person, int>(x => x.Id).ShouldEqual("Id");
+			FromExpression<Person, EnumGender>(x => x.Gender).ShouldEqual("Gender");
+			FromExpression<Person, string>(x => x.Orders[0].ProductName).ShouldEqual("Orders[0].ProductName");
 
 			// Parantheses will be stripped out.
-			PropertyChain.FromExpression<Person, string>(x => x.GetSelf().Forename).ToString().ShouldEqual("GetSelf.Forename");
+			FromExpression<Person, string>(x => x.GetSelf().Forename).ToString().ShouldEqual("GetSelf.Forename");
 
-			Assert.Throws<NotSupportedException>(() => PropertyChain.FromExpression<Person, Person>(x => x.GetSelf(), true));
-			Assert.Throws<NotSupportedException>(() => PropertyChain.FromExpression<Person, string>(x => "Foo", true));
-			Assert.Throws<NotSupportedException>(() => PropertyChain.FromExpression<Person, string>(x => this.ToString(), true));
-			Assert.Throws<NotSupportedException>(() => PropertyChain.FromExpression<Person, string>(x => string.Empty, true));
+			Assert.Throws<NotSupportedException>(() => FromExpression<Person, Person>(x => x.GetSelf(), true));
+			Assert.Throws<NotSupportedException>(() => FromExpression<Person, string>(x => "Foo", true));
+			Assert.Throws<NotSupportedException>(() => FromExpression<Person, string>(x => this.ToString(), true));
+			Assert.Throws<NotSupportedException>(() => FromExpression<Person, string>(x => string.Empty, true));
 
 			// Returns an empty property chain if throwOnInvalid is false
-			PropertyChain.FromExpression<Person, Person>(x => x.GetSelf(), false).ToString().ShouldEqual(string.Empty);
+			FromExpression<Person, Person>(x => x.GetSelf(), false).ToString().ShouldEqual(string.Empty);
 		}
 
 		[Fact]

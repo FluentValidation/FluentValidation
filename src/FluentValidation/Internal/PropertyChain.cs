@@ -56,16 +56,6 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a PropertyChain from a lambda expression
 		/// </summary>
-		/// <param name="expression"></param>
-		/// <param name="throwOnInvalid">Whether to throw an exception if the expression is not supported (true) or to return an empty property chain (false). Defaults to false (returning an empty property chain)</param>
-		/// <returns></returns>
-		public static PropertyChain FromExpression<T, TProperty>(Expression<Func<T, TProperty>> expression, bool throwOnInvalid = false) {
-			return FromExpression((LambdaExpression) expression, throwOnInvalid);
-		}
-
-		/// <summary>
-		/// Creates a PropertyChain from a lambda expression
-		/// </summary>
 		/// <param name="expression">The expression to convert</param>
 		/// <param name="throwOnInvalid">Whether to throw an exception if the expression is not supported (true) or to return an empty property chain (false). Defaults to false (returning an empty property chain)</param>
 		/// <returns></returns>
