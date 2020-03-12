@@ -19,6 +19,7 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Runtime.CompilerServices;
@@ -212,6 +213,11 @@ namespace FluentValidation.Internal {
 			var val = value();
 			dict[key] = val;
 			return val;
+		}
+
+		internal static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> self)
+			where T : class {
+			return self.Where(s => s != null);
 		}
 	}
 }

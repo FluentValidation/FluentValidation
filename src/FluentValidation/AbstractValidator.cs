@@ -36,6 +36,14 @@ namespace FluentValidation {
 		private Func<CascadeMode> _cascadeMode = () => ValidatorOptions.CascadeMode;
 
 		/// <summary>
+		/// Maximum number of errors to be returned
+		/// </summary>
+		public int? MaxFailCount {
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Sets the cascade mode for all rules within this validator.
 		/// </summary>
 		public CascadeMode CascadeMode {
@@ -97,10 +105,26 @@ namespace FluentValidation {
 
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
-			var failures = Rules.SelectMany(x => x.Validate(context));
+			if (MaxFailCount.HasValue) {
+				var failCount = MaxFailCount.Value;
+				foreach (var rule in Rules) {
+					var addCount = result.Errors.Count;
 
-			foreach (var validationFailure in failures.Where(failure => failure != null)) {
-				result.Errors.Add(validationFailure);
+					foreach (var fail in rule.Validate(context).Take(failCount).WhereNotNull()) {
+						result.Errors.Add(fail);
+					}
+
+					failCount -= result.Errors.Count - addCount;
+					if(failCount == 0)
+						break;
+				}
+			}
+			else {
+				var failures = Rules.SelectMany(x => x.Validate(context));
+
+				foreach (var validationFailure in failures.WhereNotNull()) {
+					result.Errors.Add(validationFailure);
+				}
 			}
 
 			SetExecutedRulesets(result, context);
@@ -128,12 +152,32 @@ namespace FluentValidation {
 
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
-			foreach (var rule in Rules) {
-				cancellation.ThrowIfCancellationRequested();
-				var failures = await rule.ValidateAsync(context, cancellation);
+			if (MaxFailCount.HasValue) {
+				var failCount = MaxFailCount.Value;
+				foreach (var rule in Rules) {
+					cancellation.ThrowIfCancellationRequested();
 
-				foreach (var failure in failures.Where(f => f != null)) {
-					result.Errors.Add(failure);
+					var addCount = result.Errors.Count;
+
+					var validateEntities = await rule.ValidateAsync(context, cancellation);
+
+					foreach (var fail in validateEntities.Take(failCount).WhereNotNull()) {
+						result.Errors.Add(fail);
+					}
+
+					failCount -= result.Errors.Count - addCount;
+					if(failCount == 0)
+						break;
+				}
+			}
+			else {
+				foreach (var rule in Rules) {
+					cancellation.ThrowIfCancellationRequested();
+					var failures = await rule.ValidateAsync(context, cancellation);
+
+					foreach (var failure in failures.WhereNotNull()) {
+						result.Errors.Add(failure);
+					}
 				}
 			}
 
