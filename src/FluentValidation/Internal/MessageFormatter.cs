@@ -25,7 +25,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	public class MessageFormatter {
 		readonly Dictionary<string, object> _placeholderValues = new Dictionary<string, object>(2);
-		object[] _additionalArguments = new object[0];
+		object[] _additionalArguments = Array.Empty<object>();
 		private bool _shouldUseAdditionalArgs;
 
 		private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled);

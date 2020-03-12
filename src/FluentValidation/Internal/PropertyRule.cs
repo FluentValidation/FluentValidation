@@ -36,7 +36,7 @@ namespace FluentValidation.Internal {
 		Func<CascadeMode> _cascadeModeThunk = () => ValidatorOptions.CascadeMode;
 		string _propertyDisplayName;
 		string _propertyName;
-		private string[] _ruleSet = new string[0];
+		private string[] _ruleSet = Array.Empty<string>();
 		private Func<ValidationContext, bool> _condition;
 		private Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 
@@ -75,7 +75,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public string[] RuleSets {
 			get => _ruleSet;
-			set => _ruleSet = value ?? new string[0];
+			set => _ruleSet = value ?? Array.Empty<string>();
 		}
 
 		/// <summary>

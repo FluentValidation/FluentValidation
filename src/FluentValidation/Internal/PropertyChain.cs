@@ -58,8 +58,6 @@ namespace FluentValidation.Internal {
 		/// <param name="expression"></param>
 		/// <returns></returns>
 		public static PropertyChain FromExpression(LambdaExpression expression) {
-			var memberNames = new Stack<string>();
-
 			var getMemberExp = new Func<Expression, MemberExpression>(toUnwrap => {
 				if (toUnwrap is UnaryExpression) {
 					return ((UnaryExpression)toUnwrap).Operand as MemberExpression;
@@ -70,6 +68,7 @@ namespace FluentValidation.Internal {
 
 			var memberExp = getMemberExp(expression.Body);
 
+			var memberNames = new Stack<string>();
 			while(memberExp != null) {
 				memberNames.Push(memberExp.Member.Name);
 				memberExp = getMemberExp(memberExp.Expression);
