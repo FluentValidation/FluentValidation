@@ -7,7 +7,7 @@
     <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
     <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
-    <Copyright>Copyright (c) Jeremy Skinner and contributors 2008-2020</Copyright>
+    <Copyright>Copyright (c) .NET Foundation and contributors 2008-2020</Copyright>
     <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
     <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>

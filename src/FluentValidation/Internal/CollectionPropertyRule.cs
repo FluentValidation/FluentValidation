@@ -1,6 +1,6 @@
 ﻿#region License
 
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk) and contributors.
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
