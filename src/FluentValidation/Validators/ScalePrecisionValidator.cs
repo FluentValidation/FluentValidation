@@ -22,20 +22,20 @@ namespace FluentValidation.Validators {
 	using System;
 	using Resources;
 
-  // Attribution: This class was contributed to FluentValidation using code posted on StackOverflow by Jon Skeet
-  // The original code can be found at https://stackoverflow.com/a/764102
+	// Attribution: This class was contributed to FluentValidation using code posted on StackOverflow by Jon Skeet
+	// The original code can be found at https://stackoverflow.com/a/764102
 
-  /// <summary>
-  /// Allows a decimal to be validated for scale and precision.
-  /// Scale would be the number of digits to the right of the decimal point.
-  /// Precision would be the number of digits. This number includes both the left and the right sides of the decimal point.
-  ///
-  /// It can be configured to use the effective scale and precision
-  /// (i.e. ignore trailing zeros) if required.
-  ///
-  /// 123.4500 has an scale of 4 and a precision of 7, but an effective scale
-  /// and precision of 2 and 5 respectively.
-  /// </summary>
+	/// <summary>
+	/// Allows a decimal to be validated for scale and precision.
+	/// Scale would be the number of digits to the right of the decimal point.
+	/// Precision would be the number of digits. This number includes both the left and the right sides of the decimal point.
+	///
+	/// It can be configured to use the effective scale and precision
+	/// (i.e. ignore trailing zeros) if required.
+	///
+	/// 123.4500 has an scale of 4 and a precision of 7, but an effective scale
+	/// and precision of 2 and 5 respectively.
+	/// </summary>
   public class ScalePrecisionValidator : PropertyValidator {
 		public ScalePrecisionValidator(int scale, int precision) : base(new LanguageStringSource(nameof(ScalePrecisionValidator))) {
 			Init(scale, precision);
