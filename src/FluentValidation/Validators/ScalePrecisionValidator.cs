@@ -36,7 +36,7 @@ namespace FluentValidation.Validators {
 	/// 123.4500 has an scale of 4 and a precision of 7, but an effective scale
 	/// and precision of 2 and 5 respectively.
 	/// </summary>
-  public class ScalePrecisionValidator : PropertyValidator {
+	public class ScalePrecisionValidator : PropertyValidator {
 		public ScalePrecisionValidator(int scale, int precision) : base(new LanguageStringSource(nameof(ScalePrecisionValidator))) {
 			Init(scale, precision);
 		}
@@ -53,9 +53,9 @@ namespace FluentValidation.Validators {
 			if (decimalValue.HasValue) {
 				var scale = GetScale(decimalValue.Value);
 				var precision = GetPrecision(decimalValue.Value);
-        var actualIntegerDigits = precision - scale;
-        var expectedIntegerDigits = Precision - Scale;
-        if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
+				var actualIntegerDigits = precision - scale;
+				var expectedIntegerDigits = Precision - Scale;
+				if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
 					context.MessageFormatter
 						.AppendArgument("ExpectedPrecision", Precision)
 						.AppendArgument("ExpectedScale", Scale)
