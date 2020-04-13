@@ -228,38 +228,60 @@ namespace FluentValidation {
 			return new ConditionBuilder<T>(Rules).When(predicate, action);
 		}
 
-		/// <summary>
-		/// Defines an inverse condition that applies to several rules
-		/// </summary>
-		/// <param name="predicate">The condition that should be applied to multiple rules</param>
-		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder Unless(Func<T, bool> predicate, Action action) {
+    /// <summary>
+    /// Defines a condition that applies to several rules
+    /// </summary>
+    /// <param name="predicate">The condition that should apply to multiple rules</param>
+    /// <param name="action">Action that encapsulates the rules.</param>
+    /// <returns></returns>
+    public IConditionBuilder When(Func<T, ValidationContext, bool> predicate, Action action) {
+      return new ConditionBuilder<T>(Rules).When(predicate, action);
+    }
+
+    /// <summary>
+    /// Defines an inverse condition that applies to several rules
+    /// </summary>
+    /// <param name="predicate">The condition that should be applied to multiple rules</param>
+    /// <param name="action">Action that encapsulates the rules</param>
+    public IConditionBuilder Unless(Func<T, bool> predicate, Action action) {
 			return new ConditionBuilder<T>(Rules).Unless(predicate, action);
 		}
 
-		/// <summary>
-		/// Defines an asynchronous condition that applies to several rules
-		/// </summary>
-		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
-		/// <param name="action">Action that encapsulates the rules.</param>
-		/// <returns></returns>
-		public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+    public IConditionBuilder Unless(Func<T, ValidationContext, bool> predicate, Action action) {
+      return new ConditionBuilder<T>(Rules).Unless(predicate, action);
+    }
+
+    /// <summary>
+    /// Defines an asynchronous condition that applies to several rules
+    /// </summary>
+    /// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
+    /// <param name="action">Action that encapsulates the rules.</param>
+    /// <returns></returns>
+    public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
 			return new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
 		}
 
-		/// <summary>
-		/// Defines an inverse asynchronous condition that applies to several rules
-		/// </summary>
-		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
-		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+    public IConditionBuilder WhenAsync(Func<T, ValidationContext, CancellationToken, Task<bool>> predicate, Action action) {
+      return new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
+    }
+
+    /// <summary>
+    /// Defines an inverse asynchronous condition that applies to several rules
+    /// </summary>
+    /// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
+    /// <param name="action">Action that encapsulates the rules</param>
+    public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
 			return new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
 		}
 
-		/// <summary>
-		/// Includes the rules from the specified validator
-		/// </summary>
-		public void Include(IValidator<T> rulesToInclude) {
+    public IConditionBuilder UnlessAsync(Func<T, ValidationContext, CancellationToken, Task<bool>> predicate, Action action) {
+      return new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
+    }
+
+    /// <summary>
+    /// Includes the rules from the specified validator
+    /// </summary>
+    public void Include(IValidator<T> rulesToInclude) {
 			rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
 			var rule = IncludeRule.Create<T>(rulesToInclude, () => CascadeMode);
 			AddRule(rule);
