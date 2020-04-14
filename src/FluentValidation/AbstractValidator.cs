@@ -225,7 +225,7 @@ namespace FluentValidation {
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
 		public IConditionBuilder When(Func<T, bool> predicate, Action action) {
-			return new ConditionBuilder<T>(Rules).When(predicate, action);
+			return new ConditionBuilder<T>(Rules).When((x, ctx) => predicate(x), action);
 		}
 
     /// <summary>
@@ -234,7 +234,7 @@ namespace FluentValidation {
     /// <param name="predicate">The condition that should apply to multiple rules</param>
     /// <param name="action">Action that encapsulates the rules.</param>
     /// <returns></returns>
-    public IConditionBuilder When(Func<T, ValidationContext, bool> predicate, Action action) {
+    public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
       return new ConditionBuilder<T>(Rules).When(predicate, action);
     }
 
@@ -244,10 +244,10 @@ namespace FluentValidation {
     /// <param name="predicate">The condition that should be applied to multiple rules</param>
     /// <param name="action">Action that encapsulates the rules</param>
     public IConditionBuilder Unless(Func<T, bool> predicate, Action action) {
-			return new ConditionBuilder<T>(Rules).Unless(predicate, action);
+			return new ConditionBuilder<T>(Rules).Unless((x, ctx) => predicate(x), action);
 		}
 
-    public IConditionBuilder Unless(Func<T, ValidationContext, bool> predicate, Action action) {
+    public IConditionBuilder Unless(Func<T, ValidationContext<T>, bool> predicate, Action action) {
       return new ConditionBuilder<T>(Rules).Unless(predicate, action);
     }
 
@@ -258,10 +258,10 @@ namespace FluentValidation {
     /// <param name="action">Action that encapsulates the rules.</param>
     /// <returns></returns>
     public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
-			return new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
+			return new AsyncConditionBuilder<T>(Rules).WhenAsync((x, ctx, cancel) => predicate(x, cancel), action);
 		}
 
-    public IConditionBuilder WhenAsync(Func<T, ValidationContext, CancellationToken, Task<bool>> predicate, Action action) {
+    public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
       return new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
     }
 
@@ -271,7 +271,7 @@ namespace FluentValidation {
     /// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
     /// <param name="action">Action that encapsulates the rules</param>
     public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
-			return new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
+			return new AsyncConditionBuilder<T>(Rules).UnlessAsync((x, ctx, cancel) => predicate(x, cancel), action);
 		}
 
     public IConditionBuilder UnlessAsync(Func<T, ValidationContext, CancellationToken, Task<bool>> predicate, Action action) {
