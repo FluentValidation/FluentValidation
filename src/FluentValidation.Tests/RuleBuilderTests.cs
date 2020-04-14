@@ -101,7 +101,12 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_when_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).When(null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).When((Func<Person, bool>)null));
+		}
+
+		[Fact]
+		public void Should_throw_when_context_predicate_is_null() {
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).When((Func<Person, ValidationContext<Person>, bool>)null));
 		}
 
 		[Fact]
@@ -110,8 +115,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Should_throw_when_inverse_context_predicate_is_null() {
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).Unless((Func<Person, ValidationContext<Person>, bool>)null));
+		}
+
+		[Fact]
 		public void Should_throw_when_inverse_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).Unless(null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).Unless((Func<Person, bool>)null));
 		}
 
 		[Fact]
