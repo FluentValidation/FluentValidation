@@ -138,7 +138,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder UnlessAsync(Func<T, ValidationContext, CancellationToken, Task<bool>> predicate, Action action) {
+		public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
 			return WhenAsync(async (x, context, ct) => !await predicate(x, context, ct), action);
 		}
 	}
