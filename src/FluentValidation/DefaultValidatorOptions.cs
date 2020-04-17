@@ -165,7 +165,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> When<T,TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
-			return rule.When((x, ctx) => predicate(x));
+			return rule.When((x, ctx) => predicate(x), applyConditionTo);
 		}
 
 		/// <summary>
