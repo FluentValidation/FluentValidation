@@ -28,7 +28,7 @@ namespace FluentValidation.Validators {
 	/// <summary>
 	/// Allows a decimal to be validated for scale and precision.
 	/// Scale would be the number of digits to the right of the decimal point.
-	/// Precision would be the number of digits.
+	/// Precision would be the number of digits. This number includes both the left and the right sides of the decimal point.
 	///
 	/// It can be configured to use the effective scale and precision
 	/// (i.e. ignore trailing zeros) if required.
@@ -53,11 +53,13 @@ namespace FluentValidation.Validators {
 			if (decimalValue.HasValue) {
 				var scale = GetScale(decimalValue.Value);
 				var precision = GetPrecision(decimalValue.Value);
-				if (scale > Scale || precision > Precision) {
+				var actualIntegerDigits = precision - scale;
+				var expectedIntegerDigits = Precision - Scale;
+				if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
 					context.MessageFormatter
 						.AppendArgument("ExpectedPrecision", Precision)
 						.AppendArgument("ExpectedScale", Scale)
-						.AppendArgument("Digits", precision - scale)
+						.AppendArgument("Digits", actualIntegerDigits)
 						.AppendArgument("ActualScale", scale);
 
 					return false;
@@ -122,18 +124,12 @@ namespace FluentValidation.Validators {
 		private int GetPrecision(decimal Decimal) {
 			// Precision: number of times we can divide by 10 before we get to 0
 			uint precision = 0;
-			if (Decimal != 0m) {
-				for (decimal tmp = GetMantissa(Decimal); tmp >= 1; tmp /= 10) {
-					precision++;
-				}
-
-				if (IgnoreTrailingZeros) {
-					return (int) (precision - NumTrailingZeros(Decimal));
-				}
+			for (decimal tmp = GetMantissa(Decimal); tmp >= 1; tmp /= 10) {
+				precision++;
 			}
-			else {
-				// Handle zero differently. It's odd.
-				precision = (uint) GetScale(Decimal) + 1;
+
+			if (IgnoreTrailingZeros) {
+				return (int) (precision - NumTrailingZeros(Decimal));
 			}
 
 			return (int) precision;

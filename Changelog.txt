@@ -25,6 +25,7 @@ Work around a bug in ASP.NET Core's integration testing components that can caus
 SourceLink integration.
 {CollectionIndex} placeholder can now be accessed in child validators.
 Additional ValidationException constructor that allows using both the default message and a custom one together. 
+ScalePrecisionValidator algorithm now matches SQL Server.
 
 8.6.2 - 29 February 2020
 Fix CollectionIndex placeholder not working with async workflow.
