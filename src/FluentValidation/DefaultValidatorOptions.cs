@@ -165,9 +165,22 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> When<T,TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
+			return rule.When((x, ctx) => predicate(x), applyConditionTo);
+		}
+
+		/// <summary>
+		/// Specifies a condition limiting when the validator should run.
+		/// The validator will only be executed if the result of the lambda returns true.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="predicate">A lambda expression that specifies a condition for when the validator should run</param>
+		/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> When<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+			predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			return rule.Configure(config => {
-				config.ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate), applyConditionTo);
+				config.ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate, (ValidationContext<T>)ctx.ParentContext), applyConditionTo);
 			});
 		}
 
@@ -181,7 +194,20 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Unless<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling Unless", nameof(predicate));
-			return rule.When(x => !predicate(x), applyConditionTo);
+			return rule.Unless((x, ctx) => predicate(x), applyConditionTo);
+		}
+
+		/// <summary>
+		/// Specifies a condition limiting when the validator should not run.
+		/// The validator will only be executed if the result of the lambda returns false.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="predicate">A lambda expression that specifies a condition for when the validator should not run</param>
+		/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> Unless<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+			predicate.Guard("A predicate must be specified when calling Unless", nameof(predicate));
+			return rule.When((x, ctx) => !predicate(x, ctx), applyConditionTo);
 		}
 
 		/// <summary>
@@ -194,9 +220,22 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling WhenAsync.", nameof(predicate));
+			return rule.WhenAsync((x, ctx, ct) => predicate(x, ct), applyConditionTo);
+		}
+
+		/// <summary>
+		/// Specifies an asynchronous condition limiting when the validator should run.
+		/// The validator will only be executed if the result of the lambda returns true.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="predicate">A lambda expression that specifies a condition for when the validator should run</param>
+		/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+			predicate.Guard("A predicate must be specified when calling WhenAsync.", nameof(predicate));
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			return rule.Configure(config => {
-				config.ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, ct), applyConditionTo);
+				config.ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, (ValidationContext<T>)ctx.ParentContext, ct), applyConditionTo);
 			});
 		}
 
@@ -210,7 +249,20 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> UnlessAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling UnlessAsync", nameof(predicate));
-			return rule.WhenAsync(async (x, ct) => !await predicate(x, ct), applyConditionTo);
+			return rule.UnlessAsync((x, ctx, ct) => predicate(x, ct), applyConditionTo);
+		}
+
+		/// <summary>
+		/// Specifies an asynchronous condition limiting when the validator should not run.
+		/// The validator will only be executed if the result of the lambda returns false.
+		/// </summary>
+		/// <param name="rule">The current rule</param>
+		/// <param name="predicate">A lambda expression that specifies a condition for when the validator should not run</param>
+		/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> UnlessAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+			predicate.Guard("A predicate must be specified when calling UnlessAsync", nameof(predicate));
+			return rule.WhenAsync(async (x, ctx, ct) => !await predicate(x, ctx, ct), applyConditionTo);
 		}
 
 		/// <summary>

@@ -36,7 +36,7 @@ namespace FluentValidation.Internal {
 		/// <param name="predicate">The condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder When(Func<T, bool> predicate, Action action) {
+		public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
 			var propertyRules = new List<IValidationRule>();
 
 			using (_rules.OnItemAdded(propertyRules.Add)) {
@@ -59,7 +59,7 @@ namespace FluentValidation.Internal {
 					}
 				}
 
-				var executionResult = predicate((T) context.InstanceToValidate);
+				var executionResult = predicate((T)context.InstanceToValidate, (ValidationContext<T>)context);
 				if (context.InstanceToValidate != null) {
 					context.RootContextData[cacheId] = executionResult;
 				}
@@ -68,7 +68,7 @@ namespace FluentValidation.Internal {
 
 			// Must apply the predicate after the rule has been fully created to ensure any rules-specific conditions have already been applied.
 			foreach (var rule in propertyRules) {
-					rule.ApplySharedCondition(Condition);
+				rule.ApplySharedCondition(Condition);
 			}
 
 			return new ConditionOtherwiseBuilder(_rules, Condition);
@@ -79,8 +79,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate">The condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder Unless(Func<T, bool> predicate, Action action) {
-			return When(x => !predicate(x), action);
+		public IConditionBuilder Unless(Func<T, ValidationContext<T>, bool> predicate, Action action) {
+			return When((x, context) => !predicate(x, context), action);
 		}
 	}
 
@@ -97,7 +97,7 @@ namespace FluentValidation.Internal {
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
 			var propertyRules = new List<IValidationRule>();
 
 			using (_rules.OnItemAdded(propertyRules.Add)) {
@@ -119,7 +119,7 @@ namespace FluentValidation.Internal {
 					}
 				}
 
-				var executionResult = await predicate((T) context.InstanceToValidate, ct);
+				var executionResult = await predicate((T)context.InstanceToValidate, (ValidationContext<T>)context, ct);
 				if (context.InstanceToValidate != null) {
 					context.RootContextData[cacheId] = executionResult;
 				}
@@ -138,8 +138,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
-			return WhenAsync(async (x, ct) => !await predicate(x, ct), action);
+		public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+			return WhenAsync(async (x, context, ct) => !await predicate(x, context, ct), action);
 		}
 	}
 
