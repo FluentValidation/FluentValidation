@@ -24,6 +24,7 @@ Add additional overload of SetValidator that takes a Func that receives the curr
 Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
 SourceLink integration.
 {CollectionIndex} placeholder can now be accessed in child validators.
+ScalePrecisionValidator algorithm now matches SQL Server.
 
 8.6.2 - 29 February 2020
 Fix CollectionIndex placeholder not working with async workflow.
