@@ -23,7 +23,7 @@ $keyfile = Resolve-Path "~/Dropbox/FluentValidation-Release.snk" -ErrorAction Ig
 $nuget_key = Resolve-Path "~/Dropbox/nuget-access-key.txt" -ErrorAction Ignore
 
 target default -depends compile, test, deploy
-target ci -depends install-dotnet-core, ci-set-version, decrypt-private-key, default
+target ci -depends init-nuget, install-dotnet-core, ci-set-version, decrypt-private-key, default
 
 $script:version_suffix = ([xml](get-content src/Directory.Build.props)).Project.PropertyGroup.VersionSuffix
 
@@ -50,6 +50,13 @@ target deploy {
   Copy-Item "$path\src\FluentValidation\bin\$configuration" -Destination "$output_dir\FluentValidation" -Recurse
   Copy-Item "$path\src\FluentValidation.AspNetCore\bin\$configuration"  -filter FluentValidation.AspNetCore.* -Destination "$output_dir\FluentValidation.AspNetCore" -Recurse
   Copy-Item "$path\src\FluentValidation.DependencyInjectionExtensions\bin\$configuration" -Destination "$output_dir\FluentValidation.DependencyInjectionExtensions" -Recurse
+}
+
+target init-nuget {
+  # For some reason, sometimes the nuget.org package source is unavailable in the Azure pipelines windows images.
+  # Can't figure out why, so explicitly add.
+  # dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
+  dotnet nuget list source
 }
 
 target verify-package {
