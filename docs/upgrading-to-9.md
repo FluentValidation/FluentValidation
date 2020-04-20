@@ -25,7 +25,7 @@ The first is compatible with .NET Core's `EmailAddressAttribute` and performs a 
 
 In FluentValidation 8 and older, the regex-based email validation was the default. As of 9.0, the ASP.NET Core-compatible email validator is now the default. This change was made to be consistent with ASP.NET Core's default behaviour.
 
-If you still want to validate email addresses using the old regular expression, you can specify `RuleFor(customer => customer.Email).EmailAddress(EmailValidationMode.Net4xRegex);`. This will give a deprecation wawrning.
+If you still want to validate email addresses using the old regular expression, you can specify `RuleFor(customer => customer.Email).EmailAddress(EmailValidationMode.Net4xRegex);`. This will give a deprecation warning.
 
 [See the documentation on the email validator](built-in-validators.html#email-validator) for more details on why regular expressions shouldn't be used for validating email addresses.
 
