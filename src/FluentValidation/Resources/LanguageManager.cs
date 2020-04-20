@@ -83,6 +83,7 @@ namespace FluentValidation.Resources {
 				TurkishLanguage.Culture => new TurkishLanguage(),
 				UkrainianLanguage.Culture => new UkrainianLanguage(),
 				WelshLanguage.Culture => new WelshLanguage(),
+        VietnameseLanguage.Culture => new VietnameseLanguage()
 				_=> (Language)null,
 			};
 		}
