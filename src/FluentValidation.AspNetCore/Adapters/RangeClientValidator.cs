@@ -16,14 +16,14 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.AspNetCore {
-  using Internal;
-  using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-  using Resources;
-  using System;
-  using System.Globalization;
-  using Validators;
+	using Internal;
+	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+	using Resources;
+	using System;
+	using System.Globalization;
+	using Validators;
 
-  internal class RangeClientValidator : ClientValidatorBase {
+	internal class RangeClientValidator : ClientValidatorBase {
 		InclusiveBetweenValidator RangeValidator {
 			get { return (InclusiveBetweenValidator)Validator; }
 		}
