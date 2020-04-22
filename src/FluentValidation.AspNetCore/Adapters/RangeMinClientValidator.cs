@@ -2,6 +2,8 @@ namespace FluentValidation.AspNetCore {
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Resources;
+	using System;
+	using System.Globalization;
 	using Validators;
 
 	internal class RangeMinClientValidator : ClientValidatorBase {
@@ -19,7 +21,7 @@ namespace FluentValidation.AspNetCore {
 			if (compareValue != null) {
 				MergeAttribute(context.Attributes, "data-val", "true");
 				MergeAttribute(context.Attributes, "data-val-range", GetErrorMessage(context));
-				MergeAttribute(context.Attributes, "data-val-range-min", compareValue.ToString());
+				MergeAttribute(context.Attributes, "data-val-range-min", Convert.ToString(compareValue, CultureInfo.InvariantCulture));
 			}
 		}
 
