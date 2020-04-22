@@ -59,7 +59,7 @@ namespace FluentValidation.Internal {
 					}
 				}
 
-				var executionResult = predicate((T)context.InstanceToValidate, (ValidationContext<T>)context);
+				var executionResult = predicate((T)context.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(context));
 				if (context.InstanceToValidate != null) {
 					context.RootContextData[cacheId] = executionResult;
 				}
@@ -119,7 +119,7 @@ namespace FluentValidation.Internal {
 					}
 				}
 
-				var executionResult = await predicate((T)context.InstanceToValidate, (ValidationContext<T>)context, ct);
+				var executionResult = await predicate((T)context.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(context), ct);
 				if (context.InstanceToValidate != null) {
 					context.RootContextData[cacheId] = executionResult;
 				}
