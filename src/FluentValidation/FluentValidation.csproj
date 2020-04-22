@@ -20,113 +20,18 @@ Changes in 9.0.0:
 * ComparisonProperty placeholder is now formatted like PropertyName
 * Translations of default error messages into other languages are now lazily-loaded
 * Added Slovenian translations of default error messages.
+* Added Icelandic translations of default error messages.
 * Added WithMessageArgument to the test helpers.
 * Add additional overload of SetValidator that takes a Func that receives the current property value.
 * ASP.NET Core: FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
 * Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
 * SourceLink integration.
 * {CollectionIndex} placeholder can now be accessed in child validators.
-* Additional ValidationException constructor that allows using both the default message and a custom one together. 
+* Additional ValidationException constructor that allows using both the default message and a custom one together.
 * ScalePrecisionValidator algorithm now matches SQL Server.
+* Additional overload of the When methods that contain the validation context.
 
 Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
-FluentValidation 8 is a major release. Please read the upgrade notes at https://fluentvalidation.net/upgrading-to-8
-
-Changes in 8.6.2:
-* Ensure CollectionIndex works in async workflow.
-
-Changes in 8.6.1:
-* Added explicit netcoreapp3.1 target to the ASP.NET Core integration.
-
-Changes in 8.6.0:
-* Add support for ASP.NET Core 3.1
-* Fixed issue with property indexers being incorrectly stripped out when using test extensions.
-* AddToModelState no longer includes a dot if PropertyName is null
-
-Changes in 8.5.1:
-* Ensure lazily loaded calls to WithMessage can be used for client-side validation, provided they don't attempt to access model properties from inside the delegate (eg when using IStringLocalizer).
-* Fix issue where OnFailure didn't work properly when invoked on validators with conditions.
-
-Changes in 8.5.0:
-* Add additional overload of the EmailAddress validator for compatibility with ASP.NET Core's default email validation.
-* Simplify the advanced testhelper syntax.
-* Add support for ASP.NET Core 3.
-* Add support for defining child rules inline.
-* ValidatorDescriptor now has consistent handling of model-level rules.
-* RuleForEach can now access collection index in error message with {CollectionIndex} placeholder.
-* Welsh language translations of default error messages.
-* Hungrian language translations of default error messages.
-* Indonesian language translations of default error messages.
-* Using RuleForEach combined with When is now more intuitive.
-* Fixed order of rule execution when using async validation.
-
-Changes in 8.4.0:
-* Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
-* New enum validator for string properties.
-
-Changes in 8.3.0:
-* Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
-* Improved how LanguageStringSource works with error-code overrides.
-* Fix thread-safety issue with use of PropertyValidatorOptions.Empty (now removed).
-* Improved how calls to When/Unless are handled internally.
-* DelegatingValidator is now marked as deprecated.
-* Improvements to Croatian language translations.
-* Improvements to Georgian language translations.
-* Resolved subtle bug where top-level WhenAsync wouldn't work correctly when wrapping a top-level call to When.
-
-Changes in 8.2.3:
-* Fix issue in WebApi integration where DataAnnotations validators could generate duplicate messages when in the same project as FluentValidation.
-
-Changes in 8.2.2:
-* Fix FluentValidation.DependencyInjection package name.
-
-Changes in 8.2.1:
-* Resolved issue using InjectValidator with RuleForEach.
-* Add support for a default IValidatorInterceptor to be registered with the ASP.NET Core Service Provider.
-
-Changes in 8.2.0:
-* Add extensions for injecting child validators using the ASP.NET Core Service Provider.
-* Implement RuleFor(...).ForEach(...) as an alternative to RuleForEach.
-* WithLocalizedMessage is deprecated. Use the overload of WithMessage that takes a Func instead.
-
-Changes in 8.1.3:
-* Resolved issue where clientside validation was incorrectly generating metadata for rules with shared conditions.
-* ScalePrecisionValidator now has a public method in the fluent interface.
-* Fix placeholder names in ScalePrecisionValidator for consistency.
-* Updates to Portuguese (Brazil) translations.
-
-Changes in 8.1.2:
-* Fix issue where shared When/Unless conditions didn't execute correctly when used with RuleForEach.
-
-Changes in 8.1.1:
-* Added RuleSetsExecuted property on ValidationResult.
-* Resolved issue introduced in 8.1 where the shared condition cache does not work correctly with RuleForEach (#970).
-
-Changes in 8.1:
-* Add format support in message placeholders.
-* Added support for overriding indexers for collection rules.
-* Allow error codes to be used to override localization key in the Language Manager.
-* Additional error details are now shown in the ShouldNotHaveValidationErrorFor test extension.
-* Conditions defined with root-level When/WhenAsync/Unless/UnlessAsync are now only executed once (instead of once for each rule).
-* Support Otherwise method chained from root-level When/WhenAsync/Unless/UnlessAsync.
-* Minor wording changes to default English error messages.
-* Japanese translation of the default error messages.
-* Added Skip property to MVC5's CustomizeValidatorAttribute for parity with AspNetCore and WebApi.
-* Remove type constraint on the OverridePropertyName overload that takes an expression.
-
-Added Skip property to MVC5's CustomizeValidatorAttribute to bring parity with AspNetCore and WebApi integration.
-Changes in 8.0:
-* Support validating only specific properties by path.
-* Added OnFailure method
-* Deprecated RuleFor(..).SetCollectionValidator in favour of RuleForEach(...).SetValidator
-* IStringSource.GetString now takes a validation context instead of a model instance.
-* Introduce PropertyValidatorOptions in order to clean up the IPropretyValidator interface.
-* Moved the legacy ValidatorAttribute and AttributedValidatorFactory into a separate FluentValidation.Attributes package.
-* Remove the pre-7.0 localization mechanism
-* Remove the pre-7.0 methods for custom validation
-* Removed many other deprecated methods
-
-Full release notes can be found at https://github.com/JeremySkinner/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>
     <!-- Signing is only performed as part of the release build -->
     <SignAssembly Condition="'$(AssemblyOriginatorKeyFile)'!=''">True</SignAssembly>
