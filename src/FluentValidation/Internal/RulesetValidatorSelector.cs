@@ -30,9 +30,9 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyPath">Property path (eg Customer.Address.Line1)</param>
 		/// <param name="context">Contextual information</param>
 		/// <returns>Whether or not the validator can execute.</returns>
-		public virtual bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
+		public virtual bool CanExecute(IValidationRule rule, string propertyPath, IValidationContext context) {
 			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>());
-			
+
 			if (rule.RuleSets.Length == 0 && _rulesetsToExecute.Length > 0) {
 				if (IsIncludeRule(rule)) {
 					return true;
@@ -78,7 +78,7 @@ namespace FluentValidation.Internal {
 		/// <param name="rule"></param>
 		/// <returns></returns>
 		protected bool IsIncludeRule(IValidationRule rule) {
-			return rule is IncludeRule;
+			return rule is IIncludeRule;
 		}
 	}
 }

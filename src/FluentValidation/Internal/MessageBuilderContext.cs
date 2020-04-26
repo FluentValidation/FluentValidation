@@ -2,7 +2,7 @@
 	using Resources;
 	using Validators;
 
-	public class MessageBuilderContext : IValidationContext {
+	public class MessageBuilderContext : ICommonContext {
 		private PropertyValidatorContext _innerContext;
 
 		public MessageBuilderContext(PropertyValidatorContext innerContext, IStringSource errorSource, IPropertyValidator propertyValidator) {
@@ -15,7 +15,7 @@
 
 		public IStringSource ErrorSource { get; }
 
-		public ValidationContext ParentContext => _innerContext.ParentContext;
+		public IValidationContext ParentContext => _innerContext.ParentContext;
 
 		public PropertyRule Rule => _innerContext.Rule;
 
@@ -28,7 +28,7 @@
 		public object InstanceToValidate => _innerContext.InstanceToValidate;
 		public object PropertyValue => _innerContext.PropertyValue;
 		
-		IValidationContext IValidationContext.ParentContext => ParentContext;
+		ICommonContext ICommonContext.ParentContext => ParentContext;
 
 		public string GetDefaultMessage() {
 			return MessageFormatter.BuildMessage(ErrorSource.GetString(_innerContext));

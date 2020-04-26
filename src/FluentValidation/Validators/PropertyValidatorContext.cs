@@ -20,11 +20,11 @@ namespace FluentValidation.Validators {
 	using System;
 	using Internal;
 
-	public class PropertyValidatorContext : IValidationContext {
+	public class PropertyValidatorContext : ICommonContext {
 		private MessageFormatter _messageFormatter;
 		private readonly Lazy<object> _propertyValueContainer;
 
-		public ValidationContext ParentContext { get; private set; }
+		public IValidationContext ParentContext { get; private set; }
 		public PropertyRule Rule { get; private set; }
 		public string PropertyName { get; private set; }
 
@@ -38,9 +38,9 @@ namespace FluentValidation.Validators {
 		public object PropertyValue => _propertyValueContainer.Value;
 
 		// Explicit implementation so we don't have to expose the base interface.
-		IValidationContext IValidationContext.ParentContext => ParentContext;
+		ICommonContext ICommonContext.ParentContext => ParentContext;
 
-		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName) {
+		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
@@ -51,7 +51,7 @@ namespace FluentValidation.Validators {
 			});
 		}
 
-		public PropertyValidatorContext(ValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue) {
+		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;

@@ -60,7 +60,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context">A ValidationContext</param>
 		/// <returns>A ValidationResult object contains any validation failures.</returns>
-		ValidationResult Validate(ValidationContext context);
+		ValidationResult Validate(IValidationContext context);
 
 		/// <summary>
 		/// Validates the specified instance asynchronously.
@@ -68,7 +68,7 @@ namespace FluentValidation {
 		/// <param name="context">A ValidationContext</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object contains any validation failures.</returns>
-		Task<ValidationResult> ValidateAsync(ValidationContext context, CancellationToken cancellation = new CancellationToken());
+		Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellation = new CancellationToken());
 
 		/// <summary>
 		/// Creates a hook to access various meta data properties

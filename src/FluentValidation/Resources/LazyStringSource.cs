@@ -23,12 +23,12 @@ namespace FluentValidation.Resources {
 	/// Lazily loads the string
 	/// </summary>
 	public class LazyStringSource : IStringSource {
-		readonly Func<IValidationContext, string> _stringProvider;
+		readonly Func<ICommonContext, string> _stringProvider;
 
 		/// <summary>
 		/// Creates a LazyStringSource
 		/// </summary>
-		public LazyStringSource(Func<IValidationContext, string> stringProvider) {
+		public LazyStringSource(Func<ICommonContext, string> stringProvider) {
 			_stringProvider = stringProvider;
 		}
 
@@ -36,7 +36,7 @@ namespace FluentValidation.Resources {
 		/// Gets the value
 		/// </summary>
 		/// <returns></returns>
-		public string GetString(IValidationContext context) {
+		public string GetString(ICommonContext context) {
 			try {
 				return _stringProvider(context);
 			}

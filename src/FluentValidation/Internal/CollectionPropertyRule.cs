@@ -32,8 +32,9 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Rule definition for collection properties
 	/// </summary>
-	/// <typeparam name="TProperty"></typeparam>
-	public class CollectionPropertyRule<TProperty> : PropertyRule {
+	/// <typeparam name="TElement"></typeparam>
+	/// <typeparam name="T"></typeparam>
+	public class CollectionPropertyRule<T, TElement> : PropertyRule {
 		/// <summary>
 		/// Initializes new instance of the CollectionPropertyRule class
 		/// </summary>
@@ -49,22 +50,22 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Filter that should include/exclude items in the collection.
 		/// </summary>
-		public Func<TProperty, bool> Filter { get; set; }
+		public Func<TElement, bool> Filter { get; set; }
 
 		/// <summary>
 		/// Constructs the indexer in the property name associated with the error message.
 		/// By default this is "[" + index + "]"
 		/// </summary>
-		public Func<object, IEnumerable<TProperty>, TProperty, int, string> IndexBuilder { get; set; }
+		public Func<object, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		public static CollectionPropertyRule<TProperty> Create<T>(Expression<Func<T, IEnumerable<TProperty>>> expression, Func<CascadeMode> cascadeModeThunk) {
+		public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk) {
 			var member = expression.GetMember();
 			var compiled = expression.Compile();
 
-			return new CollectionPropertyRule<TProperty>(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+			return new CollectionPropertyRule<T, TElement>(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TElement), typeof(T));
 		}
 
 		/// <summary>
@@ -75,7 +76,7 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName"></param>
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
-		protected override async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
+		protected override async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
 			if (string.IsNullOrEmpty(propertyName)) {
 				propertyName = InferPropertyName(Expression);
 			}
@@ -85,12 +86,14 @@ namespace FluentValidation.Internal {
 			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			if (validator.Options.AsyncCondition != null && !await validator.Options.AsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
 
-			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
+			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TElement>;
 
 			if (collectionPropertyValue != null) {
 				if (string.IsNullOrEmpty(propertyName)) {
 					throw new InvalidOperationException("Could not automatically determine the property name ");
 				}
+
+				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
 
 				var validatorTasks = collectionPropertyValue.Select(async (v, index) => {
 					if (Filter != null && !Filter(v)) {
@@ -105,7 +108,7 @@ namespace FluentValidation.Internal {
 						useDefaultIndexFormat = false;
 					}
 
-					var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
+					ValidationContext<T> newContext = actualContext.CloneForChildCollectionValidator(actualContext.InstanceToValidate, preserveParentContext: true);
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
@@ -145,7 +148,7 @@ namespace FluentValidation.Internal {
 		/// <param name="validator"></param>
 		/// <param name="propertyName"></param>
 		/// <returns></returns>
-		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(ValidationContext context, Validators.IPropertyValidator validator, string propertyName) {
+		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(IValidationContext context, Validators.IPropertyValidator validator, string propertyName) {
 			if (string.IsNullOrEmpty(propertyName)) {
 				propertyName = InferPropertyName(Expression);
 			}
@@ -155,7 +158,7 @@ namespace FluentValidation.Internal {
 			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 
 			var results = new List<ValidationFailure>();
-			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TProperty>;
+			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TElement>;
 
 			int count = 0;
 
@@ -163,6 +166,8 @@ namespace FluentValidation.Internal {
 				if (string.IsNullOrEmpty(propertyName)) {
 					throw new InvalidOperationException("Could not automatically determine the property name ");
 				}
+
+				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
 
 				foreach (var element in collectionPropertyValue) {
 					int index = count++;
@@ -179,7 +184,7 @@ namespace FluentValidation.Internal {
 						useDefaultIndexFormat = false;
 					}
 
-					var newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
+					ValidationContext<T> newContext = actualContext.CloneForChildCollectionValidator(actualContext.InstanceToValidate, preserveParentContext: true);
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 

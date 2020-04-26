@@ -145,7 +145,7 @@ namespace FluentValidation.Tests {
 		}
 
 		private class MyAsyncNotNullValidator : NotNullValidator {
-			public override bool ShouldValidateAsynchronously(ValidationContext context) {
+			public override bool ShouldValidateAsynchronously(IValidationContext context) {
 				return context.IsAsync();
 			}
 		}

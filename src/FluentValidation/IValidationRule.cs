@@ -43,7 +43,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		IEnumerable<ValidationFailure> Validate(ValidationContext context);
+		IEnumerable<ValidationFailure> Validate(IValidationContext context);
 
 		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures asynchronously.
@@ -51,7 +51,7 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A collection of validation failures</returns>
-		Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation);
+		Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation);
 
 		/// <summary>
 		/// Applies a condition to either all the validators in the rule, or the most recent validator in the rule chain.
@@ -71,12 +71,12 @@ namespace FluentValidation {
 		/// Applies a condition that wraps the entire rule.
 		/// </summary>
 		/// <param name="condition">The condition to apply.</param>
-		void ApplySharedCondition(Func<ValidationContext, bool> condition);
+		void ApplySharedCondition(Func<IValidationContext, bool> condition);
 
 		/// <summary>
 		/// Applies an asynchronous condition that wraps the entire rule.
 		/// </summary>
 		/// <param name="condition">The condition to apply.</param>
-		void ApplySharedAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> condition);
+		void ApplySharedAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> condition);
 	}
 }

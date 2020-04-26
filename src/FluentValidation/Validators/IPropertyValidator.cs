@@ -50,7 +50,7 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		bool ShouldValidateAsynchronously(ValidationContext context);
+		bool ShouldValidateAsynchronously(IValidationContext context);
 
 		/// <summary>
 		/// Additional options for configuring the property validator.

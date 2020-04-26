@@ -29,6 +29,6 @@ namespace FluentValidation.Resources {
 		/// Construct the error message template
 		/// </summary>
 		/// <returns>Error message template</returns>
-		string GetString(IValidationContext context);
+		string GetString(ICommonContext context);
 	}
 }

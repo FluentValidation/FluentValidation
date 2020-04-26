@@ -78,7 +78,7 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
     <ProjectReference Include="..\FluentValidation.DependencyInjectionExtensions\FluentValidation.DependencyInjectionExtensions.csproj" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

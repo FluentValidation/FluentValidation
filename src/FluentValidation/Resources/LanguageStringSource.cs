@@ -26,18 +26,18 @@ namespace FluentValidation.Resources {
 	/// </summary>
 	public class LanguageStringSource : IStringSource {
 		private readonly string _key;
-		internal Func<IValidationContext, string> ErrorCodeFunc { get; set; }
+		internal Func<ICommonContext, string> ErrorCodeFunc { get; set; }
 
 		public LanguageStringSource(string key) {
 			_key = key;
 		}
 
-		public LanguageStringSource(Func<IValidationContext, string> errorCodeFunc, string fallbackKey) {
+		public LanguageStringSource(Func<ICommonContext, string> errorCodeFunc, string fallbackKey) {
 			ErrorCodeFunc = errorCodeFunc;
 			_key = fallbackKey;
 		}
 
-		public virtual string GetString(IValidationContext context) {
+		public virtual string GetString(ICommonContext context) {
 			var errorCode = ErrorCodeFunc?.Invoke(context);
 
 			if (errorCode != null) {

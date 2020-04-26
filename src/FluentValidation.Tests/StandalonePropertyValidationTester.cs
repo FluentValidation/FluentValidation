@@ -10,7 +10,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_validate_property_value_without_instance() {
 			var validator = new NotNullValidator();
-			var parentContext = new ValidationContext(null);
+			var parentContext = new ValidationContext<string>(null);
 			var rule = new PropertyRule(null, x => null, null, null, typeof(string), null) {
 				PropertyName = "Surname"
 			};

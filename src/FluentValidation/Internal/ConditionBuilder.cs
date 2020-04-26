@@ -46,7 +46,7 @@ namespace FluentValidation.Internal {
 			// Generate unique ID for this shared condition.
 			var id = "_FV_Condition_" + Guid.NewGuid();
 
-			bool Condition(ValidationContext context) {
+			bool Condition(IValidationContext context) {
 				string cacheId = null;
 
 				if (context.InstanceToValidate != null) {
@@ -107,7 +107,7 @@ namespace FluentValidation.Internal {
 			// Generate unique ID for this shared condition.
 			var id = "_FV_AsyncCondition_" + Guid.NewGuid();
 
-			async Task<bool> Condition(ValidationContext context, CancellationToken ct) {
+			async Task<bool> Condition(IValidationContext context, CancellationToken ct) {
 				string cacheId = null;
 				if (context.InstanceToValidate != null) {
 					cacheId = id + context.InstanceToValidate.GetHashCode();
@@ -145,9 +145,9 @@ namespace FluentValidation.Internal {
 
 	internal class ConditionOtherwiseBuilder : IConditionBuilder {
 		private TrackingCollection<IValidationRule> _rules;
-		private readonly Func<ValidationContext, bool> _condition;
+		private readonly Func<IValidationContext, bool> _condition;
 
-		public ConditionOtherwiseBuilder(TrackingCollection<IValidationRule> rules, Func<ValidationContext, bool> condition) {
+		public ConditionOtherwiseBuilder(TrackingCollection<IValidationRule> rules, Func<IValidationContext, bool> condition) {
 			_rules = rules;
 			_condition = condition;
 		}
@@ -169,9 +169,9 @@ namespace FluentValidation.Internal {
 
 	internal class AsyncConditionOtherwiseBuilder : IConditionBuilder {
 		private TrackingCollection<IValidationRule> _rules;
-		private readonly Func<ValidationContext, CancellationToken, Task<bool>> _condition;
+		private readonly Func<IValidationContext, CancellationToken, Task<bool>> _condition;
 
-		public AsyncConditionOtherwiseBuilder(TrackingCollection<IValidationRule> rules, Func<ValidationContext, CancellationToken, Task<bool>> condition) {
+		public AsyncConditionOtherwiseBuilder(TrackingCollection<IValidationRule> rules, Func<IValidationContext, CancellationToken, Task<bool>> condition) {
 			_rules = rules;
 			_condition = condition;
 		}

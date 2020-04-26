@@ -194,7 +194,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="ctx"></param>
 		/// <returns></returns>
-		public static bool IsAsync(this ValidationContext ctx) {
+		public static bool IsAsync(this IValidationContext ctx) {
 			if (ctx.RootContextData.ContainsKey("__FV_IsAsyncExecution")) {
 				return (ctx.RootContextData["__FV_IsAsyncExecution"] as bool?).GetValueOrDefault();
 			}

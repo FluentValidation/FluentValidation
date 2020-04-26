@@ -34,8 +34,8 @@ namespace FluentValidation {
 		/// <param name="context"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public static IServiceProvider GetServiceProvider(this IValidationContext context) {
-			ValidationContext actualContext = null;
+		public static IServiceProvider GetServiceProvider(this ICommonContext context) {
+			IValidationContext actualContext = null;
 
 			switch (context) {
 				case CustomContext cc:
@@ -47,7 +47,7 @@ namespace FluentValidation {
 				case PropertyValidatorContext pvc:
 					actualContext = pvc.ParentContext;
 					break;
-				case ValidationContext vc:
+				case IValidationContext vc:
 					actualContext = vc;
 					break;
 			}
@@ -69,7 +69,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context"></param>
 		/// <param name="serviceProvider"></param>
-		public static void SetServiceProvider(this ValidationContext context, IServiceProvider serviceProvider) {
+		public static void SetServiceProvider(this IValidationContext context, IServiceProvider serviceProvider) {
 			context.RootContextData["_FV_ServiceProvider"] = serviceProvider;
 		}
 
@@ -95,7 +95,7 @@ namespace FluentValidation {
 		/// <typeparam name="TProperty"></typeparam>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> InjectValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<IServiceProvider, ValidationContext<T>, IValidator<TProperty>> callback, params string[] ruleSets) {
-			var adaptor = new ChildValidatorAdaptor(context => {
+			var adaptor = new ChildValidatorAdaptor<T,TProperty>(context => {
 				var actualContext = (PropertyValidatorContext) context;
 				var serviceProvider = actualContext.ParentContext.GetServiceProvider();
 				var contextToUse = ValidationContext<T>.GetFromNonGenericContext(actualContext.ParentContext);

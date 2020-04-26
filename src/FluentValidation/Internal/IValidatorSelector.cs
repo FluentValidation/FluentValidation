@@ -29,6 +29,6 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyPath">Property path (eg Customer.Address.Line1)</param>
 		/// <param name="context">Contextual information</param>
 		/// <returns>Whether or not the validator can execute.</returns>
-		bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context);
+		bool CanExecute(IValidationRule rule, string propertyPath, IValidationContext context);
 	}
 }

@@ -42,7 +42,7 @@
 			return results;
 		}
 
-		public override bool ShouldValidateAsynchronously(ValidationContext context) {
+		public override bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If the user has applied an async condition, or the inner validator requires async
 			// validation then always go through the async path.
 			if (Options.AsyncCondition != null || _innerValidator.ShouldValidateAsynchronously(context)) return true;

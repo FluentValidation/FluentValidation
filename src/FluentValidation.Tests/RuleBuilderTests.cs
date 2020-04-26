@@ -161,7 +161,7 @@ namespace FluentValidation.Tests {
 			tcs.SetResult(Enumerable.Empty<ValidationFailure>());
 
 			var validator = new Mock<PropertyValidator>(MockBehavior.Loose, ValidatorOptions.LanguageManager.GetStringForValidator<AsyncPredicateValidator>()) {CallBase = true};
-			validator.Setup(x => x.ShouldValidateAsynchronously(It.IsAny<ValidationContext>())).Returns(true);
+			validator.Setup(x => x.ShouldValidateAsynchronously(It.IsAny<IValidationContext>())).Returns(true);
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
 			builder.SetValidator(validator.Object);
 
@@ -234,7 +234,7 @@ namespace FluentValidation.Tests {
 			var builder = new RuleBuilder<Person, Address>(PropertyRule.Create<Person, Address>(x => x.Address),null);
 			builder.SetValidator((Person person) => new NoopAddressValidator());
 
-			builder.Rule.Validators.OfType<ChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
+			builder.Rule.Validators.OfType<IChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
 		}
 
 		class NoopAddressValidator : AbstractValidator<Address> {

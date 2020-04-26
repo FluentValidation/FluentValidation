@@ -17,8 +17,8 @@ namespace FluentValidation.Validators {
 		Type ValidatorType { get; }
 	}
 
-	public class ChildValidatorAdaptor : NoopPropertyValidator, IChildValidatorAdaptor {
-		private readonly Func<IValidationContext, IValidator> _validatorProvider;
+	public class ChildValidatorAdaptor<T,TProperty> : NoopPropertyValidator, IChildValidatorAdaptor {
+		private readonly Func<ICommonContext, IValidator> _validatorProvider;
 		private readonly IValidator _validator;
 
 		public Type ValidatorType { get; }
@@ -32,7 +32,7 @@ namespace FluentValidation.Validators {
 			ValidatorType = validatorType;
 		}
 
-		public ChildValidatorAdaptor(Func<IValidationContext, IValidator> validatorProvider, Type validatorType) {
+		public ChildValidatorAdaptor(Func<ICommonContext, IValidator> validatorProvider, Type validatorType) {
 			_validatorProvider = validatorProvider;
 			ValidatorType = validatorType;
 		}
@@ -106,17 +106,18 @@ namespace FluentValidation.Validators {
 			return _validatorProvider != null ? _validatorProvider(context) : _validator;
 		}
 
-		protected ValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
+		protected IValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
 			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
-			var newContext = context.ParentContext.CloneForChildValidator(instanceToValidate, PassThroughParentContext, selector);
+			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
+			var newContext = parentContext.CloneForChildValidator((TProperty)instanceToValidate, PassThroughParentContext, selector);
 
-			if(!context.ParentContext.IsChildCollectionContext)
+			if(!parentContext.IsChildCollectionContext)
 				newContext.PropertyChain.Add(context.Rule.PropertyName);
 
 			return newContext;
 		}
 
-		public override bool ShouldValidateAsynchronously(ValidationContext context) {
+		public override bool ShouldValidateAsynchronously(IValidationContext context) {
 			return context.IsAsync() || Options.AsyncCondition != null;
 		}
 

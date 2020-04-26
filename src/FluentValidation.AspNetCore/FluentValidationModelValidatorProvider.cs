@@ -81,7 +81,8 @@ namespace FluentValidation.AspNetCore {
 				var interceptor = customizations.GetInterceptor()
 				                  ?? validator as IValidatorInterceptor
 				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IValidatorInterceptor>();
-				var context = new ValidationContext(mvContext.Model, new PropertyChain(), selector);
+
+				IValidationContext context = new ValidationContext<object>(mvContext.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
 				context.SetServiceProvider(mvContext.ActionContext.HttpContext.RequestServices);
 
