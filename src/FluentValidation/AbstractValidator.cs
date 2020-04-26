@@ -43,14 +43,6 @@ namespace FluentValidation {
 			set => _cascadeMode = () => value;
 		}
 
-		ValidationResult IValidator.Validate(object instance) {
-			return ((IValidator) this).Validate(new ValidationContext(instance));
-		}
-
-		Task<ValidationResult> IValidator.ValidateAsync(object instance, CancellationToken cancellation) {
-			return ((IValidator)this).ValidateAsync(new ValidationContext(instance), cancellation);
-		}
-
 		ValidationResult IValidator.Validate(ValidationContext context) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			return Validate(ValidationContext<T>.GetFromNonGenericContext(context));

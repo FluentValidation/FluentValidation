@@ -56,21 +56,6 @@ namespace FluentValidation {
 	/// </summary>
 	public interface IValidator {
 		/// <summary>
-		/// Validates the specified instance
-		/// </summary>
-		/// <param name="instance"></param>
-		/// <returns>A ValidationResult containing any validation failures</returns>
-		ValidationResult Validate(object instance);
-
-		/// <summary>
-		/// Validates the specified instance asynchronously
-		/// </summary>
-		/// <param name="instance"></param>
-		/// <param name="cancellation">Cancellation token</param>
-		/// <returns>A ValidationResult containing any validation failures</returns>
-		Task<ValidationResult> ValidateAsync(object instance, CancellationToken cancellation = new CancellationToken());
-
-		/// <summary>
 		/// Validates the specified instance.
 		/// </summary>
 		/// <param name="context">A ValidationContext</param>
