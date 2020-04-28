@@ -15,7 +15,7 @@ FluentValidation still supports netstandard2 and net461, meaning that it'll run 
 
 FluentValidation.AspNetCore requires .NET Core 2.0 or higher (3.1 recommended).
 
-Integration with MVC5/WebApi 2 is no longer support - both the FluentValidation.Mvc5 and FluentValidation.WebApi packages are deprecated, but will continue to run on .NET Framework 4.6.1 or higher. We recommend migrating to .NET Core as soon as possible.
+Integration with MVC5/WebApi 2 is no longer supported - both the FluentValidation.Mvc5 and FluentValidation.WebApi packages were deprecated with the release of FluentValidation 8, but they will now no longer receive further updates. They will continue to run on .NET Framework 4.6.1 or higher, but we recommend migrating to .NET Core as soon as possible.
 
 ### Default Email Validation Mode Changed
 
