@@ -74,6 +74,10 @@ RuleFor(x => x.Surname).NotNull().WithSeverity(x => Severity.Warning);
 
 The algorithm used by the `ScalePrecision` validator has been updated to match SQL Server and other RDBMS systems. The algorithm now correctly checks how many digits are to the left of the decimal point, which it didn't do before. 
 
+### ChildValidatorAdaptor and IncludeRule now have generic parameters
+
+The `ChildvalidatorAdaptor` and `IncludeRule` classes now have generic type parameters. This will not affect users of the public API, but may affect anyone using the internal API. 
+
 ### Removed inferring property names from [Display] attribute
 
 Older versions of FluentValidation allowed inferring a property's name from the presence of the `[Display]` or `[DisplayName]` attributes on the property. This behaviour has been removed as it causes conflicts with ASP.NET Core's approach to localization using these attributes.
