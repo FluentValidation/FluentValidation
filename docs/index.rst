@@ -14,7 +14,7 @@ The following platforms are supported:
 * .NET Core 2.0+
 * `.NET Standard 2.0+ <https://docs.microsoft.com/en-us/dotnet/standard/net-standard>`_
 
-For automatic validation with ASP.NET, FluentValidation supports ASP.NET Core 2.1+ (3.1 recommended)
+For automatic validation with ASP.NET, FluentValidation supports ASP.NET Core 2.1 and 3.1.
 
 If you're new to using FluentValidation, check out the :doc:`start` page.
 

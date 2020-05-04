@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. warning::
-   Integration with ASP.NET WebApi 2 is deprecated. For an optimal experience, we suggest using FluentValidtation with ASP.NET Core.
+   Integration with ASP.NET WebApi 2 is no longer supported as of FluentValidation 9. Please migrate to ASP.NET Core.
 ```
 
 ## Getting Started

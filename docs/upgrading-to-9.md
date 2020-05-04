@@ -13,7 +13,7 @@ Support for the following platforms has been dropped:
 
 FluentValidation still supports netstandard2 and net461, meaning that it'll run on .NET Core 2.0 or higher (3.1 recommended), or .NET Framework 4.6.1 or higher.
 
-FluentValidation.AspNetCore requires .NET Core 2.0 or higher (3.1 recommended).
+FluentValidation.AspNetCore requires .NET Core 2.1 or 3.1 (3.1 recommended).
 
 Integration with MVC5/WebApi 2 is no longer supported - both the FluentValidation.Mvc5 and FluentValidation.WebApi packages were deprecated with the release of FluentValidation 8, but they will now no longer receive further updates. They will continue to run on .NET Framework 4.6.1 or higher, but we recommend migrating to .NET Core as soon as possible.
 
