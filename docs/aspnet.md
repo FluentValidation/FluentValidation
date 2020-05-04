@@ -2,12 +2,13 @@
 
 ### Getting Started
 
-FluentValidation can be integrated with ASP.NET Core. Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure.
+FluentValidation supports integration with ASP.NET Core 2.1 or 3.1 (3.1 recommended). Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure.
 
-To enable MVC integration, you'll need to add a reference to the `FluentValidation.AspNetCore` assembly by installing the appropriate NuGet package:
+
+To enable MVC integration, you'll need to add a reference to the `FluentValidation.AspNetCore` assembly by installing the appropriate NuGet package. From the command line, you can install the package by typing:
 
 ```shell
-Install-Package FluentValidation.AspNetCore
+dotnet add package FluentValidation.AspNetCore
 ```
 
 Once installed, you'll need to configure FluentValidation in your app's Startup class by calling the `AddFluentValidation` extension method inside the `ConfigureServices` method (which requires a `using FluentValidation.AspNetCore`). This method must be called directly after calling `AddMvc`.

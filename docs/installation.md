@@ -21,8 +21,14 @@ Or using the .net core CLI from a terminal window:
 dotnet add package FluentValidation
 ```
 
-For integration with ASP.NET Core, install the FluentValidation.AspNetCore package:
+For integration with ASP.NET Core, install the FluentValidation.AspNetCore package from Visual Studio:
 
 ```shell
 Install-Package FluentValidation.AspNetCore
+```
+
+or from the command line:
+
+```shell
+dotnet add package FluentValidation.AspNetCore
 ```
