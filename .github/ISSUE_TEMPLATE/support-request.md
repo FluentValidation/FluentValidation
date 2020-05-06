@@ -6,6 +6,11 @@ labels: ''
 assignees: ''
 
 ---
+<!--
+Please check the documentation at https://fluentvalidation.net first to see if your question is addressed there.
+If not, please fill in the following details so that we can help you.
+If reporting a bug, please make sure you include ALL sample code necessary to reproduce the problem, or include a link to a sample project that can be downloaded.
+-->
 
 **Which version of FluentValidation are you using?**
 Please specify which version of FluentValidation you're using. 
@@ -20,4 +25,4 @@ A clear and concise description of the issue that you're having.
 Steps to reproduce the behaviour:
 
 **Sample code**
-Provide any necessary sample code to reproduce the issue.
+Provide any necessary sample code to reproduce the issue, or link to a github repository with a sample project. 
