@@ -337,5 +337,14 @@ namespace FluentValidation {
 		protected virtual bool PreValidate(ValidationContext<T> context, ValidationResult result) {
 			return true;
 		}
-	}
+
+		/// <summary>
+		/// Cleanup for subsequent initialization of new rules
+		/// </summary>
+		public void CleanupRules() {
+      lock (Rules)
+		    while (Rules.Count != 0)
+		      Rules.Remove(Rules.Last());
+    }
+  }
 }
