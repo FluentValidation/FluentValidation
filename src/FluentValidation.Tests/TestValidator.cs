@@ -20,8 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 
 	public class TestValidator : InlineValidator<Person> {
-		public TestValidator() {
-				CultureScope.SetDefaultCulture();
+		public TestValidator() {				
 		}
 
 		public TestValidator(params Action<TestValidator>[] actions) {
