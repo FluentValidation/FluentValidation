@@ -182,7 +182,7 @@
 		public void Falls_back_to_default_localization_key_when_error_code_key_not_found() {
 			var originalLanguageManager = ValidatorOptions.LanguageManager;
 			ValidatorOptions.LanguageManager = new CustomLanguageManager();
-
+			ValidatorOptions.LanguageManager.Culture = new CultureInfo("en-US");
 			var validator = new InlineValidator<Person>();
 			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("DoesNotExist");
 			var result = validator.Validate(new Person());

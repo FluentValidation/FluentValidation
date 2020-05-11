@@ -35,6 +35,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.CreditCard).Must(creditCard => !string.IsNullOrEmpty(creditCard)).WhenAsync((x, cancel) => Task.Run(() => { return x.Age >= 18; }));
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleForEach(person => person.NickNames).MinimumLength(5);
+			CultureScope.SetDefaultCulture();
 		}
 
 		[Fact]
