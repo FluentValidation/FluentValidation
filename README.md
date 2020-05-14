@@ -9,19 +9,12 @@ and lambda expressions for building validation rules.
 FluentValidation can be installed using the Nuget package manager or the `dotnet` CLI.
 
 ```
-Install-Package FluentValidation
+dotnet add package FluentValidation
 ```
 
 For ASP.NET Core integration:
 ```
-Install-Package FluentValidation.AspNetCore
-```
-
-For legacy ASP.NET MVC/WebApi integration:
-
-```
-Install-Package FluentValidation.MVC5
-Install-Package FluentValidation.WebApi
+dotnet add package FluentValidation.AspNetCore
 ```
 
 ---
