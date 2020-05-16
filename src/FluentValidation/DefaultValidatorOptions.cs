@@ -56,21 +56,6 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Transforms the property value before validation occurs. The transformed value must be of the same type as the input value.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="TProperty"></typeparam>
-		/// <param name="ruleBuilder"></param>
-		/// <param name="transformationFunc"></param>
-		/// <returns></returns>
-		public static IRuleBuilderInitialCollection<T, TProperty> Transform<T, TProperty>(this IRuleBuilderInitialCollection<T, TProperty> ruleBuilder, Func<TProperty, TProperty> transformationFunc) {
-			return ruleBuilder.Configure(cfg => {
-				cfg.Transformer = transformationFunc.CoerceToNonGeneric();
-			});
-		}
-
-
-		/// <summary>
 		/// Specifies a custom action to be invoked when the validator fails.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
