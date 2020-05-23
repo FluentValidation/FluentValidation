@@ -67,17 +67,6 @@ namespace FluentValidation.Tests {
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
 		}
 
-		[Fact]
-		public void Stores_comparison_property() {
-			Assert.True(false);
-		}
-
-
-		[Fact]
-		public void Comparison_property_uses_custom_resolver() {
-			Assert.True(false);
-		}
-
 
 		[Fact]
 		public void Should_store_comparison_type() {
@@ -90,9 +79,25 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validates_against_property() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal(x => x.Forename) };
-			var result = validator.Validate(new Person { Surname = "foo", Forename = "foo" });
-			result.IsValid.ShouldBeTrue();
+			var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
+			var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
+			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("Forename");
+		}
+
+		[Fact]
+		public void Comparison_property_uses_custom_resolver() {
+			var originalResolver = ValidatorOptions.Global.DisplayNameResolver;
+
+			try {
+				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
+				var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
+				var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
+				result.Errors[0].ErrorMessage.ShouldEqual("ForenameFoo");
+			}
+			finally {
+				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
+			}
 		}
 
 		[Fact]

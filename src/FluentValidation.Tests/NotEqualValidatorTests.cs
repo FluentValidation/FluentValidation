@@ -57,23 +57,35 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Validates_across_properties() {
 			var validator = new TestValidator(
-				v => v.RuleFor(x => x.Forename).NotEqual(x => x.Surname)
+				v => v.RuleFor(x => x.Forename)
+					.NotEqual(x => x.Surname)
+					.WithMessage("{ComparisonProperty}")
 			);
 
 			var result = validator.Validate(new Person { Surname = "foo", Forename = "foo" });
 			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void Stores_comparison_property() {
-			Assert.True(false);
+			result.Errors[0].ErrorMessage.ShouldEqual("Surname");
 		}
 
 		[Fact]
 		public void Comparison_property_uses_custom_resolver() {
-			Assert.True(false);
-		}
+			var originalResolver = ValidatorOptions.Global.DisplayNameResolver;
 
+			try {
+				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
+				var validator = new TestValidator(
+					v => v.RuleFor(x => x.Forename)
+						.NotEqual(x => x.Surname)
+						.WithMessage("{ComparisonProperty}")
+				);
+
+				var result = validator.Validate(new Person { Surname = "foo", Forename = "foo" });
+				result.Errors[0].ErrorMessage.ShouldEqual("SurnameFoo");
+			}
+			finally {
+				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
+			}
+		}
 
 		[Fact]
 		public void Should_store_property_to_compare() {

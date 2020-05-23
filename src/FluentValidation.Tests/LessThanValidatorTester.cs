@@ -73,7 +73,17 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Comparison_property_uses_custom_resolver() {
-			Assert.True(false);
+			var originalResolver = ValidatorOptions.Global.DisplayNameResolver;
+
+			try {
+				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
+				var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
+				var result = validator.Validate(new Person { Id = 2, AnotherInt = 1 });
+				result.Errors[0].ErrorMessage.ShouldEqual("AnotherIntFoo");
+			}
+			finally {
+				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
+			}
 		}
 
 		[Fact]
