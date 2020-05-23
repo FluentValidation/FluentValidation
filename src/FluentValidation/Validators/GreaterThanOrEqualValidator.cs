@@ -27,8 +27,8 @@ namespace FluentValidation.Validators {
 			base(value, new LanguageStringSource(nameof(GreaterThanOrEqualValidator))) {
 		}
 
-		public GreaterThanOrEqualValidator(Func<object, object> valueToCompareFunc, MemberInfo member)
-			: base(valueToCompareFunc, member, new LanguageStringSource(nameof(GreaterThanOrEqualValidator))) {
+		public GreaterThanOrEqualValidator(Func<object, object> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+			: base(valueToCompareFunc, member, memberDisplayName, new LanguageStringSource(nameof(GreaterThanOrEqualValidator))) {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {

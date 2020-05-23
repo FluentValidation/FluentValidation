@@ -68,6 +68,18 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Stores_comparison_property() {
+			Assert.True(false);
+		}
+
+
+		[Fact]
+		public void Comparison_property_uses_custom_resolver() {
+			Assert.True(false);
+		}
+
+
+		[Fact]
 		public void Should_store_comparison_type() {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal("Foo") };
 			var descriptor = validator.CreateDescriptor();

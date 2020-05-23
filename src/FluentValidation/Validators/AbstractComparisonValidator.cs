@@ -28,6 +28,7 @@ namespace FluentValidation.Validators {
 	public abstract class AbstractComparisonValidator : PropertyValidator, IComparisonValidator {
 
 		readonly Func<object, object> _valueToCompareFunc;
+		private readonly string _comparisonMemberDisplayName;
 
 		/// <summary>
 		/// </summary>
@@ -42,10 +43,12 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		/// <param name="valueToCompareFunc"></param>
 		/// <param name="member"></param>
+		/// <param name="memberDisplayName"></param>
 		/// <param name="errorSource"></param>
-		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, IStringSource errorSource) : base(errorSource) {
+		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, string memberDisplayName, IStringSource errorSource) : base(errorSource) {
 			this._valueToCompareFunc = valueToCompareFunc;
 			this.MemberToCompare = member;
+			_comparisonMemberDisplayName = memberDisplayName;
 		}
 
 		/// <summary>
@@ -64,7 +67,7 @@ namespace FluentValidation.Validators {
 
 			if (!IsValid((IComparable)context.PropertyValue, value)) {
 				context.MessageFormatter.AppendArgument("ComparisonValue", value);
-				context.MessageFormatter.AppendArgument("ComparisonProperty", MemberToCompare == null ? "" : MemberToCompare.Name.SplitPascalCase());
+				context.MessageFormatter.AppendArgument("ComparisonProperty", _comparisonMemberDisplayName ?? "");
 				return false;
 			}
 

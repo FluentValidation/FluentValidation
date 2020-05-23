@@ -72,6 +72,11 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Comparison_property_uses_custom_resolver() {
+			Assert.True(false);
+		}
+
+		[Fact]
 		public void Should_throw_when_value_to_compare_is_null() {
 			Expression<Func<Person, int>> nullExpression = null;
 			typeof(ArgumentNullException).ShouldBeThrownBy(() =>

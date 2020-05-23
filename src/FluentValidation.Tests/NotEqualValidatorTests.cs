@@ -64,6 +64,16 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+		[Fact]
+		public void Stores_comparison_property() {
+			Assert.True(false);
+		}
+
+		[Fact]
+		public void Comparison_property_uses_custom_resolver() {
+			Assert.True(false);
+		}
+
 
 		[Fact]
 		public void Should_store_property_to_compare() {

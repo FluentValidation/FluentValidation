@@ -66,9 +66,15 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validates_with_property() {
-			validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThanOrEqualTo(x => x.AnotherInt));
+			validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThanOrEqualTo(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 			var result = validator.Validate(new Person {Id = 1, AnotherInt = 0});
 			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("Another Int");
+		}
+
+		[Fact]
+		public void Comparison_property_uses_custom_resolver() {
+			Assert.True(false);
 		}
 
 		[Fact]

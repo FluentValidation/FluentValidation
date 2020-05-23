@@ -26,10 +26,12 @@ namespace FluentValidation.Validators {
 	public class NotEqualValidator : PropertyValidator, IComparisonValidator {
 		private readonly IEqualityComparer _comparer;
 		private readonly Func<object, object> _func;
+		private readonly string _memberDisplayName;
 
-		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare, IEqualityComparer equalityComparer = null) : base(new LanguageStringSource(nameof(NotEqualValidator))) {
+		public NotEqualValidator(Func<object, object> func, MemberInfo memberToCompare, string memberDisplayName, IEqualityComparer equalityComparer = null) : base(new LanguageStringSource(nameof(NotEqualValidator))) {
 			_func = func;
 			_comparer = equalityComparer;
+			_memberDisplayName = memberDisplayName;
 			MemberToCompare = memberToCompare;
 		}
 
@@ -44,6 +46,7 @@ namespace FluentValidation.Validators {
 
 			if (!success) {
 				context.MessageFormatter.AppendArgument("ComparisonValue", comparisonValue);
+				context.MessageFormatter.AppendArgument("ComparisonProperty", _memberDisplayName ?? "");
 				return false;
 			}
 
