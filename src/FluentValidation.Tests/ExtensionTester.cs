@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
+	using FluentAssertions;
 	using Internal;
 	using Xunit;
 
@@ -29,7 +30,7 @@ namespace FluentValidation.Tests {
 		public void Should_extract_member_from_member_expression() {
 			Expression<Func<Person, string>> expression = person => person.Surname;
 			var member = expression.GetMember();
-			member.Name.ShouldEqual("Surname");
+			member.Name.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -56,7 +57,7 @@ namespace FluentValidation.Tests {
 
 			foreach (var @case in cases) {
 				string name = @case.Key.SplitPascalCase();
-				name.ShouldEqual(@case.Value);
+				name.Should().Be(@case.Value);
 			}
 		}
 

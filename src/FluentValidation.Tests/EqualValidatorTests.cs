@@ -23,6 +23,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Threading;
+	using FluentAssertions;
 	using Internal;
 	using Xunit;
 	using Validators;
@@ -55,7 +56,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal("Foo") };
 			var result = validator.Validate(new Person() {Forename = "Bar"});
 
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' must be equal to 'Foo'.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Forename' must be equal to 'Foo'.");
 		}
 
 		[Fact]
@@ -64,7 +65,7 @@ namespace FluentValidation.Tests {
 			var descriptor = validator.CreateDescriptor();
 			var propertyValidator = descriptor.GetValidatorsForMember("Forename").Cast<EqualValidator>().Single();
 
-			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
+			propertyValidator.MemberToCompare.Should().Be(typeof(Person).GetProperty("Surname"));
 		}
 
 
@@ -74,7 +75,7 @@ namespace FluentValidation.Tests {
 			var descriptor = validator.CreateDescriptor();
 			var propertyValidator = descriptor.GetValidatorsForMember("Surname").Cast<EqualValidator>().Single();
 
-			propertyValidator.Comparison.ShouldEqual(Comparison.Equal);
+			propertyValidator.Comparison.Should().Be(Comparison.Equal);
 		}
 
 		[Fact]
@@ -82,7 +83,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
 			var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Forename");
+			result.Errors[0].ErrorMessage.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -93,7 +94,7 @@ namespace FluentValidation.Tests {
 				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
 				var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
 				var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
-				result.Errors[0].ErrorMessage.ShouldEqual("ForenameFoo");
+				result.Errors[0].ErrorMessage.Should().Be("ForenameFoo");
 			}
 			finally {
 				ValidatorOptions.Global.DisplayNameResolver = originalResolver;

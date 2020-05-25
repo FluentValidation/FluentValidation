@@ -29,6 +29,7 @@ namespace FluentValidation.Tests {
 	using Results;
 	using Validators;
 	using System.Reflection;
+	using FluentAssertions;
 
 	public class RuleBuilderTests {
 		RuleBuilder<Person, string> builder;
@@ -40,13 +41,13 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_build_property_name() {
-			builder.Rule.PropertyName.ShouldEqual("Surname");
+			builder.Rule.PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
 		public void Should_compile_expression() {
 			var person = new Person {Surname = "Foo"};
-			builder.Rule.PropertyFunc(person).ShouldEqual("Foo");
+			builder.Rule.PropertyFunc(person).Should().Be("Foo");
 		}
 
 		[Fact]
@@ -71,7 +72,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-			builder.Rule.CurrentValidator.Options.ErrorMessageSource.GetString(null).ShouldEqual("Bar");
+			builder.Rule.CurrentValidator.Options.ErrorMessageSource.GetString(null).Should().Be("Bar");
 		}
 
 		[Fact]
@@ -175,14 +176,14 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth), null);
-			builder.Rule.GetDisplayName().ShouldEqual("Date Of Birth");
+			builder.Rule.GetDisplayName().Should().Be("Date Of Birth");
 		}
 
 		[Fact]
 		public void PropertyDescription_should_return_custom_property_name() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth),null);
 			builder.NotEqual(default(DateTime)).WithName("Foo");
-			builder.Rule.GetDisplayName().ShouldEqual("Foo");
+			builder.Rule.GetDisplayName().Should().Be("Foo");
 		}
 
 		[Fact]
@@ -211,7 +212,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Property_should_return_property_being_validated() {
 			var property = typeof(Person).GetProperty("Surname");
-			builder.Rule.Member.ShouldEqual(property);
+			builder.Rule.Member.Should().Be(property);
 		}
 
 		[Fact]
@@ -226,7 +227,7 @@ namespace FluentValidation.Tests {
 			builder.GreaterThan(100).WithName("Foo");
 
 			var results = builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
-			results.Single().PropertyName.ShouldEqual("Foo");
+			results.Single().PropertyName.Should().Be("Foo");
 		}
 
 		[Fact]
@@ -234,7 +235,7 @@ namespace FluentValidation.Tests {
 			var builder = new RuleBuilder<Person, Address>(PropertyRule.Create<Person, Address>(x => x.Address),null);
 			builder.SetValidator((Person person) => new NoopAddressValidator());
 
-			builder.Rule.Validators.OfType<IChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
+			builder.Rule.Validators.OfType<IChildValidatorAdaptor>().Single().ValidatorType.Should().Be(typeof(NoopAddressValidator));
 		}
 
 		class NoopAddressValidator : AbstractValidator<Address> {

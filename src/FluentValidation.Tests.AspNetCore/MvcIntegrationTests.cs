@@ -5,6 +5,7 @@
 	using System.Threading.Tasks;
 	using Attributes;
 	using Controllers;
+	using FluentAssertions;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Hosting;
 	using Microsoft.Extensions.DependencyInjection;
@@ -69,7 +70,7 @@
 			var result = await _client.GetErrors("Test1", form);
 
 			result.IsValidField("test.Name").ShouldBeFalse();
-			result.GetError("test.Name").ShouldEqual("Validation Failed");
+			result.GetError("test.Name").Should().Be("Validation Failed");
 		}
 
 		[Fact]
@@ -81,7 +82,7 @@
 			var result = await _client.GetErrors("UpdateModel", form);
 
 			result.IsValidField("Name").ShouldBeFalse();
-			result.GetError("Name").ShouldEqual("Validation Failed");
+			result.GetError("Name").Should().Be("Validation Failed");
 		}
 
 
@@ -92,13 +93,13 @@
 			};
 
 			var result = await _client.GetErrors("Test1a", form);
-			result.GetError("Name").ShouldEqual("Validation Failed");
+			result.GetError("Name").Should().Be("Validation Failed");
 		}
 
 		[Fact]
 		public async Task Should_not_fail_when_no_validator_can_be_found() {
 			var result = await _client.PostResponse("/Test/Test2", new FormData());
-			result.ShouldEqual("not null");
+			result.Should().Be("not null");
 		}
 
 		[Fact]
@@ -108,8 +109,8 @@
 			};
 
 			var errors = await _client.GetErrors("Test3", form);
-			errors.Count.ShouldEqual(1);
-			errors.GetError("Id").ShouldEqual("Validation failed");
+			errors.Count.Should().Be(1);
+			errors.GetError("Id").Should().Be("Validation failed");
 		}
 
 		[Fact]
@@ -120,8 +121,8 @@
 
 			var errors = await _client.GetErrors("Test3", form);
 
-			errors.Count.ShouldEqual(1);
-			errors.GetError("test.Id").ShouldEqual("Validation failed");
+			errors.Count.Should().Be(1);
+			errors.GetError("test.Id").Should().Be("Validation failed");
 		}
 
 		[Fact]
@@ -131,7 +132,7 @@
 
 			var errors = await _client.GetErrors("Test3", form);
 
-			errors.GetError("Id").ShouldEqual("Validation failed");
+			errors.GetError("Id").Should().Be("Validation failed");
 		}
 
 		[Fact]
@@ -141,7 +142,7 @@
 			};
 
 			var result = await _client.GetErrors("Test6", form);
-			result.GetError("Id").ShouldEqual("The value '' is invalid.");
+			result.GetError("Id").Should().Be("The value '' is invalid.");
 		}
 
 		[Fact]
@@ -151,7 +152,7 @@
 			};
 
 			var result = await _client.GetErrors("WithoutValidator", form);
-			result.GetError("Id").ShouldEqual("The value '' is invalid.");
+			result.GetError("Id").Should().Be("The value '' is invalid.");
 		}
 
 		[Fact]
@@ -161,7 +162,7 @@
 			};
 
 			var errors = await _client.GetErrors("TestModelWithOverridenMessageValueType", form);
-			errors.GetError("Id").ShouldEqual("Foo");
+			errors.GetError("Id").Should().Be("Foo");
 		}
 
 		[Fact]
@@ -170,7 +171,7 @@
 				{"Id", ""}
 			};
 			var errors = await _client.GetErrors("TestModelWithOverridenPropertyNameValueType", form);
-			errors.GetError("Id").ShouldEqual("'Foo' must not be empty.");
+			errors.GetError("Id").Should().Be("'Foo' must not be empty.");
 		}
 
 		[Fact]
@@ -226,7 +227,7 @@
 
 			var result = await _client.GetErrors("ClearErrorsInterceptorTest", form);
 
-			result.Count.ShouldEqual(0);
+			result.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -239,7 +240,7 @@
 
 			var result = await _client.GetErrors("BuiltInInterceptorTest", form);
 
-			result.Count.ShouldEqual(0);
+			result.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -271,8 +272,8 @@
 
 			var result = await _client.GetErrors("Collection", form);
 
-			result.Count.ShouldEqual(2);
-			result[0].Name.ShouldEqual("model[0].Name");
+			result.Count.Should().Be(2);
+			result[0].Name.Should().Be("model[0].Name");
 		}
 
 		[Fact]
@@ -284,8 +285,8 @@
 
 			var result = await _client.GetErrors("Collection", form);
 
-			result.Count.ShouldEqual(2);
-			result[0].Name.ShouldEqual("[0].Name");
+			result.Count.Should().Be(2);
+			result[0].Name.Should().Be("[0].Name");
 		}
 
 
@@ -297,27 +298,27 @@
 
 			var result = await _client.GetErrors("MultipleErrors", form);
 			_output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 		}
 
 		[Fact]
 		public async Task Uses_both_dataannotations_and_fv_in_same_model() {
 			var result = await _client.GetErrors("MultipleValidationStrategies", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result));
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 		}
 
 		[Fact]
 		public async Task Uses_both_dataannotations_and_fv_on_same_property() {
 			var result = await _client.GetErrors("MultipleValidationStrategies2", new FormData());
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 		}
 
 		[Fact]
 		public async void Mixes_DataAnnotations_with_FV_on_explicitly_set_child_validator() {
 			var result = await _client.GetErrors("MultipleValidationStrategies3", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result));
-			result.Count.ShouldEqual(3);
+			result.Count.Should().Be(3);
 		}
 
 
@@ -325,49 +326,49 @@
 		public async Task Does_not_use_both_dataannotations_and_fv_in_same_model_when_MVC_val_disabled() {
 			var client = _webApp.WithDataAnnotationsDisabled().CreateClient();
 			var result = await client.GetErrors("MultipleValidationStrategies", new FormData());
-			result.Count.ShouldEqual(1);
-			result[0].Message.ShouldEqual("'Some Other Property' must not be empty.");
+			result.Count.Should().Be(1);
+			result[0].Message.Should().Be("'Some Other Property' must not be empty.");
 		}
 
 		[Fact]
 		public async Task Uses_DataAnnotations_when_no_FV_validatior_defined() {
 			var result = await _client.GetErrors("DataAnnotations", new FormData());
-			result.Count.ShouldEqual(1);
-			result[0].Message.ShouldEqual("The Name field is required.");
+			result.Count.Should().Be(1);
+			result[0].Message.Should().Be("The Name field is required.");
 		}
 
 		[Fact]
 		public async void Does_not_implicitly_run_child_validator_when_disabled() {
 			var client = _webApp.WithImplicitValidationEnabled(false).CreateClient();
 			var result = await client.GetErrors("ImplicitChildValidator", new FormData());
-			result.Count.ShouldEqual(0);
+			result.Count.Should().Be(0);
 		}
 
 		[Fact]
 		public async void Executes_implicit_child_validator_when_enabled() {
 			var result = await _client.GetErrors("ImplicitChildValidator", new FormData());
-			result.Count.ShouldEqual(1);
-			result[0].Name.ShouldEqual("Child.Name");
+			result.Count.Should().Be(1);
+			result[0].Name.Should().Be("Child.Name");
 		}
 
 		[Fact]
 		public async void Ignores_null_child() {
 			var result = await _client.GetErrors("ImplicitChildValidatorWithNullChild", new FormData());
-			result.Count.ShouldEqual(0);
+			result.Count.Should().Be(0);
 		}
 
 		[Fact]
 		public async void Can_mix_FV_with_IValidatableObject() {
 			var result = await _client.GetErrors("ImplementsIValidatableObject", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 		}
 
 
 		[Fact]
 		public async void Executes_implicit_child_validator_and_mixes_with_DataAnnotations() {
 			var result = await _client.GetErrors("ImplicitChildWithDataAnnotations", new FormData());
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -375,17 +376,17 @@
 			var result = await _client.GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
 
-			result.Count.ShouldEqual(3);
+			result.Count.Should().Be(3);
 		}
 
 
 		[Fact]
 		public async void Executes_implicit_child_validator_when_enabled_does_not_execute_multiple_times() {
 			var result = await _client.GetErrors("ImplicitChildValidator", new FormData());
-			result.Count.ShouldEqual(1);
+			result.Count.Should().Be(1);
 
 			result = await _client.GetErrors("ImplicitChildValidator", new FormData());
-			result.Count.ShouldEqual(1);
+			result.Count.Should().Be(1);
 		}
 
 
@@ -393,7 +394,7 @@
 		public async void ImplicitValidation_enabled_but_validator_explicitly_only_includes_error_message_once() {
 			var result = await _client.GetErrors("ImplicitAndExplicitChildValidator", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
-			result.Count.ShouldEqual(1);
+			result.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -411,7 +412,7 @@
 			var result = await _client.GetErrors("DictionaryParameter", form);
 			_output.WriteLine(JsonConvert.SerializeObject(result));
 
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -424,7 +425,7 @@
 			var result = await _client.GetErrors("DictionaryParameter", form);
 			_output.WriteLine(JsonConvert.SerializeObject(result));
 
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 		}
 
 
@@ -432,7 +433,7 @@
 		public async void Can_validate_using_JSON() {
 			var result = await _client.GetErrorsViaJSON("Test5", new TestModel5());
 			result.IsValidField("SomeBool").ShouldBeFalse();
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -448,7 +449,7 @@
 			result.IsValidField("[1].Id").ShouldBeFalse();
 			result.IsValidField("[1].SomeBool").ShouldBeFalse();
 			result.IsValidField("[2].Id").ShouldBeFalse();
-			result.Count.ShouldEqual(3);
+			result.Count.Should().Be(3);
 		}
 
 		[Fact]
@@ -458,7 +459,7 @@
 				{456, new TestModel5()}
 			};
 			var result = await _client.GetErrorsViaJSON("UsingDictionaryWithJsonBody", dictionary);
-			result.Count.ShouldEqual(2);
+			result.Count.Should().Be(2);
 			result.IsValidField("[1].Value.Id").ShouldBeFalse();
 			result.IsValidField("[1].Value.SomeBool").ShouldBeFalse();
 		}
@@ -466,27 +467,27 @@
 		[Fact]
 		public async Task Skips_validation() {
 			var results = await _client.GetErrors("SkipsValidation", new FormData());
-			results.Count.ShouldEqual(0);
+			results.Count.Should().Be(0);
 		}
 
 		[Fact]
 		public async void Skips_implicit_child_validation() {
 			var result = await _client.GetErrors("SkipsImplicitChildValidator", new FormData());
-			result.Count.ShouldEqual(0);
+			result.Count.Should().Be(0);
 		}
 
 		[Fact]
 		public async void Does_not_implicitly_validate_child_collections_by_default() {
 			var client = _webApp.WithImplicitValidationEnabled(false).CreateClient();
 			var result = await client.GetErrorsViaJSONRaw("ImplicitChildCollection", @"{ Children: [ { Name: null } ] }");
-			result.Count.ShouldEqual(0);
+			result.Count.Should().Be(0);
 		}
 
 		[Fact]
 		public async void Does_implicitly_validate_child_collections_by_default_with_DataAnnotations() {
 			var client = _webApp.WithImplicitValidationEnabled(false).CreateClient();
 			var result = await client.GetErrorsViaJSONRaw("ImplicitChildCollectionDataAnnotations", @"{ Children: [ { Name: null } ] }");
-			result.Count.ShouldEqual(1);
+			result.Count.Should().Be(1);
 		}
 
 
@@ -500,7 +501,7 @@
 			var responseMessage = await client.SendAsync(request);
 			responseMessage.EnsureSuccessStatusCode();
 			var response = await responseMessage.Content.ReadAsStringAsync();
-			response.ShouldEqual("0");
+			response.Should().Be("0");
 		}
 
 	}

@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using Xunit;
 	using System.Collections.Generic;
+	using FluentAssertions;
 
 
 	public class ChainingValidatorsTester {
@@ -36,7 +37,7 @@ namespace FluentValidation.Tests {
 				.NotNull()
 				.NotEqual("foo");
 
-			validator.Cast<PropertyRule>().Single().Validators.Count().ShouldEqual(2);
+			validator.Cast<PropertyRule>().Single().Validators.Count().Should().Be(2);
 		}
 
 		[Fact]
@@ -44,7 +45,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).NotNull()
 				.Equal("Foo");
 
-			validator.Validate(new Person()).Errors.Count().ShouldEqual(2);
+			validator.Validate(new Person()).Errors.Count().Should().Be(2);
 		}
 
 		[Fact]
@@ -55,8 +56,8 @@ namespace FluentValidation.Tests {
 				.WithMessage("equal");
 
 			var results = validator.Validate(new Person());
-			results.Errors.ElementAt(0).ErrorMessage.ShouldEqual("null");
-			results.Errors.ElementAt(1).ErrorMessage.ShouldEqual("equal");
+			results.Errors.ElementAt(0).ErrorMessage.Should().Be("null");
+			results.Errors.ElementAt(1).ErrorMessage.Should().Be("equal");
 		}
 	}
 }

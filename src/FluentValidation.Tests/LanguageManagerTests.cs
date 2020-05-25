@@ -4,6 +4,7 @@
 	using System.Globalization;
 	using System.Linq;
 	using System.Reflection;
+	using FluentAssertions;
 	using Resources;
 	using Validators;
 	using Xunit;
@@ -19,7 +20,7 @@
 		public void Gets_translation_for_culture() {
 			using (new CultureScope("fr")) {
 				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
+				msg.Should().Be("'{PropertyName}' ne doit pas avoir la valeur null.");
 			}
 		}
 
@@ -27,7 +28,7 @@
 		public void Gets_translation_for_specific_culture() {
 			using (new CultureScope("zh-CN")) {
 				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("'{PropertyName}' 不能为Null。");
+				msg.Should().Be("'{PropertyName}' 不能为Null。");
 			}
 		}
 
@@ -37,7 +38,7 @@
 			using (new CultureScope("hr-HR"))
 			{
 				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("Niste upisali '{PropertyName}'");
+				msg.Should().Be("Niste upisali '{PropertyName}'");
 			}
 		}
 
@@ -45,7 +46,7 @@
 		public void Falls_back_to_parent_culture() {
 			using (new CultureScope("fr-FR")) {
 				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
+				msg.Should().Be("'{PropertyName}' ne doit pas avoir la valeur null.");
 			}
 		}
 
@@ -53,7 +54,7 @@
 		public void Falls_back_to_english_when_culture_not_registered() {
 			using (new CultureScope("gu-IN")) {
 				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("'{PropertyName}' must not be empty.");
+				msg.Should().Be("'{PropertyName}' must not be empty.");
 			}
 		}
 
@@ -64,7 +65,7 @@
 
 			using (new CultureScope("zh-CN")) {
 				var msg = l.GetStringForValidator<TestValidator>();
-				msg.ShouldEqual("foo");
+				msg.Should().Be("foo");
 			}
 		}
 
@@ -72,7 +73,7 @@
 		public void Always_use_specific_language() {
 			_languages.Culture = new CultureInfo("fr-FR");
 			var msg = _languages.GetStringForValidator<NotNullValidator>();
-			msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
+			msg.Should().Be("'{PropertyName}' ne doit pas avoir la valeur null.");
 		}
 
 		[Fact]
@@ -82,7 +83,7 @@
 			var msg = stringSource.GetString(null);
 			ValidatorOptions.LanguageManager.Culture = null;
 
-			msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
+			msg.Should().Be("'{PropertyName}' ne doit pas avoir la valeur null.");
 		}
 
 		[Fact]
@@ -90,7 +91,7 @@
 			using (new CultureScope("fr")) {
 				_languages.Enabled = false;
 				var msg = _languages.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("'{PropertyName}' must not be empty.");
+				msg.Should().Be("'{PropertyName}' must not be empty.");
 			}
 		}
 
@@ -100,7 +101,7 @@
 
 				var custom = new CustomLanguageManager();
 				var msg = custom.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("foo");
+				msg.Should().Be("foo");
 			}
 		}
 
@@ -111,13 +112,13 @@
 				var custom = new LanguageManager();
 				custom.AddTranslation("fr", "NotNullValidator", "foo");
 				var msg = custom.GetStringForValidator<NotNullValidator>();
-				msg.ShouldEqual("foo");
+				msg.Should().Be("foo");
 
 				// Using a custom translation should only override the single message.
 				// Other messages in the language should be unaffected.
 				// Need to do this test as non-english, as english is always loaded.
 				msg = custom.GetStringForValidator<NotEmptyValidator>();
-				msg.ShouldEqual("'{PropertyName}' ne doit pas être vide.");
+				msg.Should().Be("'{PropertyName}' ne doit pas être vide.");
 			}
 		}
 
@@ -175,7 +176,7 @@
 
 			ValidatorOptions.LanguageManager = originalLanguageManager;
 
-			result.Errors[0].ErrorMessage.ShouldEqual("bar");
+			result.Errors[0].ErrorMessage.Should().Be("bar");
 		}
 
 		[Fact]
@@ -189,7 +190,7 @@
 
 			ValidatorOptions.LanguageManager = originalLanguageManager;
 
-			result.Errors[0].ErrorMessage.ShouldEqual("foo");
+			result.Errors[0].ErrorMessage.Should().Be("foo");
 		}
 
 		void CheckParametersMatch(string languageCode, string translationKey) {

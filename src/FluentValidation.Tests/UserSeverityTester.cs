@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using FluentAssertions;
 	using Xunit;
 
 	public class UserSeverityTester {
@@ -34,14 +35,14 @@ namespace FluentValidation.Tests {
 		public void Stores_user_severity_against_validation_failure() {
 			validator.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Info);
 			var result = validator.Validate(new Person());
-			result.Errors.Single().Severity.ShouldEqual(Severity.Info);
+			result.Errors.Single().Severity.Should().Be(Severity.Info);
 		}
 
 		[Fact]
 		public void Defaults_user_severity_to_error() {
 		    validator.RuleFor( x => x.Surname ).NotNull();
 		    var result = validator.Validate( new Person() );
-		    result.Errors.Single().Severity.ShouldEqual( Severity.Error );
+		    result.Errors.Single().Severity.Should().Be( Severity.Error );
 		}
 
 		[Fact]
@@ -68,7 +69,7 @@ namespace FluentValidation.Tests {
 		public void Can_Provide_severity_for_item_in_collection() {
 			validator.RuleForEach(x => x.Children).NotNull().WithSeverity((person, child) => Severity.Warning);
 			var result = validator.Validate(new Person {Children = new List<Person> {null}});
-			result.Errors[0].Severity.ShouldEqual(Severity.Warning);
+			result.Errors[0].Severity.Should().Be(Severity.Warning);
 		}
 
 		[Fact]
@@ -78,11 +79,11 @@ namespace FluentValidation.Tests {
 			var person = new Person();
 
 			var result = validator.Validate(person);
-			result.Errors[0].Severity.ShouldEqual(Severity.Warning);
+			result.Errors[0].Severity.Should().Be(Severity.Warning);
 
 			person.Age = 100;
 			result = validator.Validate(person);
-			result.Errors[0].Severity.ShouldEqual(Severity.Info);
+			result.Errors[0].Severity.Should().Be(Severity.Info);
 		}
 
 		[Fact]
@@ -92,7 +93,7 @@ namespace FluentValidation.Tests {
 			var person = new Person();
 
 			var result = validator.Validate(person);
-			result.Errors[0].Severity.ShouldEqual(Severity.Info);
+			result.Errors[0].Severity.Should().Be(Severity.Info);
 		}
 	}
 }

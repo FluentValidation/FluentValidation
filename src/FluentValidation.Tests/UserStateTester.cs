@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using FluentAssertions;
 	using Xunit;
 
 
@@ -35,7 +36,7 @@ namespace FluentValidation.Tests {
 		public void Stores_user_state_against_validation_failure() {
 			validator.RuleFor(x => x.Surname).NotNull().WithState(x =>  "foo");
 			var result = validator.Validate(new Person());
-			result.Errors.Single().CustomState.ShouldEqual("foo");
+			result.Errors.Single().CustomState.Should().Be("foo");
 		}
 
 		[Fact]
@@ -62,7 +63,7 @@ namespace FluentValidation.Tests {
 		public void Can_Provide_state_for_item_in_collection() {
 			validator.RuleForEach(x => x.Children).NotNull().WithState((person, child) => "test");
 			var result = validator.Validate(new Person {Children = new List<Person> {null}});
-			result.Errors[0].CustomState.ToString().ShouldEqual("test");
+			result.Errors[0].CustomState.ToString().Should().Be("test");
 		}
 	}
 }

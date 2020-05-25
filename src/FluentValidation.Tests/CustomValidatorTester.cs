@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 	using Xunit;
 	using Results;
 
@@ -41,8 +42,8 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person());
 
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Fail");
-			result.Errors[0].PropertyName.ShouldEqual("Surname");
+			result.Errors[0].ErrorMessage.Should().Be("Fail");
+			result.Errors[0].PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -56,8 +57,8 @@ namespace FluentValidation.Tests {
 			var result = await validator.ValidateAsync(new Person());
 
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Fail");
-			result.Errors[0].PropertyName.ShouldEqual("Surname");
+			result.Errors[0].ErrorMessage.Should().Be("Fail");
+			result.Errors[0].PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -67,7 +68,7 @@ namespace FluentValidation.Tests {
 			person.Orders.Add(new Order());
 			var result = validator.Validate(person);
 
-			result.Errors.Single().PropertyName.ShouldEqual("Orders[0].Amount");
+			result.Errors.Single().PropertyName.Should().Be("Orders[0].Amount");
 		}
 
 		[Fact]
@@ -87,7 +88,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var result = validator.Validate(new Person(), ruleSet: "foo");
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -107,7 +108,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var result = await validator.ValidateAsync(new Person(), ruleSet: "foo");
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -118,7 +119,7 @@ namespace FluentValidation.Tests {
 				});
 
 			var result = validator.Validate(new Person());
-			result.Errors.Single().PropertyName.ShouldEqual("Surname");
+			result.Errors.Single().PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -132,28 +133,28 @@ namespace FluentValidation.Tests {
 				.SetValidator(addressValidator);
 
 			var result = validator.Validate(new Person { Address = new Address() });
-			result.Errors.Single().PropertyName.ShouldEqual("Address.Line1");
+			result.Errors.Single().PropertyName.Should().Be("Address.Line1");
 		}
 
 		[Fact]
 		public void New_custom_uses_empty_property_name_for_model_level_rule() {
 			validator.RuleFor(x => x).Custom((x, ctx) => ctx.AddFailure("Foo"));
 			var result = validator.Validate(new Person());
-			result.Errors.Single().PropertyName.ShouldEqual(string.Empty);
+			result.Errors.Single().PropertyName.Should().Be(string.Empty);
 		}
 
 		[Fact]
 		public void Runs_async_rule_synchronously_when_validator_invoked_synchronously() {
 			validator.RuleFor(x => x.Forename).CustomAsync(async (x, context, cancel) => context.AddFailure("foo"));
 			var result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
 		public async void Runs_sync_rule_asynchronously_when_validator_invoked_asynchronously() {
 			validator.RuleFor(x => x.Forename).Custom((x, context) => context.AddFailure("foo"));
 			var result = await validator.ValidateAsync(new Person());
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		private class NestedOrderValidator : AbstractValidator<Order> {

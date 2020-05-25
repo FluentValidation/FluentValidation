@@ -2,6 +2,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 
 	
@@ -30,7 +31,7 @@ namespace FluentValidation.Tests {
 		public void When_validation_fails_the_default_error_should_be_set() {
 			string creditcard = "foo";
 			var result = validator.Validate(new Person { CreditCard = creditcard });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Credit Card' is not a valid credit card number.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Credit Card' is not a valid credit card number.");
 		}
 
 	}

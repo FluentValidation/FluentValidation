@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using FluentAssertions;
 	using Xunit;
 
 	public class TransformTests {
@@ -36,7 +37,7 @@ namespace FluentValidation.Tests {
 
 			var result = validator.Validate(new Person {Surname = "bar"});
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorCode.ShouldEqual("GreaterThanValidator");
+			result.Errors[0].ErrorCode.Should().Be("GreaterThanValidator");
 		}
 
 	}

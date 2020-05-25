@@ -7,6 +7,7 @@
 	using AspNetCore;
 	using AspNetCore.Controllers;
 	using Attributes;
+	using FluentAssertions;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.Abstractions;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -37,7 +38,7 @@
 			var result = await _client.PostResponse("/TestPage1", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
-			errors.Count.ShouldEqual(1);
+			errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -49,7 +50,7 @@
 			var result = await _client.PostResponse("/TestPageWithPrefix", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
-			errors.Count.ShouldEqual(1);
+			errors.Count.Should().Be(1);
 		}
 	}
 
@@ -73,7 +74,7 @@
 			var result = await _client.PostResponse("/TestPage1", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
-			errors.Count.ShouldEqual(1);
+			errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -85,7 +86,7 @@
 			var result = await _client.PostResponse("/TestPageWithPrefix", form);
 			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
 
-			errors.Count.ShouldEqual(1);
+			errors.Count.Should().Be(1);
 		}
 	}
 

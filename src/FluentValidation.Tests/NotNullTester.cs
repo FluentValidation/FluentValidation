@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 	using Validators;
 
@@ -47,7 +48,7 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotNull());
 			var result = validator.Validate(new Person { Surname = null });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Surname' must not be empty.");
 		}
 
 		[Fact]

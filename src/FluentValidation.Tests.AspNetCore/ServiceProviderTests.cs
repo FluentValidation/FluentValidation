@@ -3,6 +3,7 @@
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Controllers;
+	using FluentAssertions;
 	using Microsoft.AspNetCore.Hosting;
 	using Microsoft.AspNetCore.TestHost;
 	using Newtonsoft.Json;
@@ -24,7 +25,7 @@
 			var result = await _client.GetErrors("Test1", form);
 
 			result.IsValidField("test.Name").ShouldBeFalse();
-			result.GetError("test.Name").ShouldEqual("Validation Failed");
+			result.GetError("test.Name").Should().Be("Validation Failed");
 		}
 
 		[Fact]
@@ -46,7 +47,7 @@
 		[Fact]
 		public async Task Gets_validator_for_model_not_underlying_collection_type() {
 			var result = await _client.GetErrors("ModelThatimplementsIEnumerable", new FormData());
-			result.GetError("Name").ShouldEqual("Foo");
+			result.GetError("Name").Should().Be("Foo");
 		}
 	}
 }

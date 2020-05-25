@@ -23,6 +23,7 @@ namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 	using Internal;
 	using Validators;
 	using Xunit;
@@ -55,7 +56,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(2);
+			result.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -69,8 +70,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(person);
-			result.Errors[0].PropertyName.ShouldEqual("NickNames[0]");
-			result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
+			result.Errors[0].PropertyName.Should().Be("NickNames[0]");
+			result.Errors[1].PropertyName.Should().Be("NickNames[2]");
 		}
 
 		[Fact]
@@ -88,8 +89,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(person);
-			result.Errors[0].PropertyName.ShouldEqual("NickNames<0>");
-			result.Errors[1].PropertyName.ShouldEqual("NickNames<2>");
+			result.Errors[0].PropertyName.Should().Be("NickNames<0>");
+			result.Errors[1].PropertyName.Should().Be("NickNames<2>");
 		}
 
 		[Fact]
@@ -107,8 +108,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors[0].PropertyName.ShouldEqual("NickNames<0>");
-			result.Errors[1].PropertyName.ShouldEqual("NickNames<2>");
+			result.Errors[0].PropertyName.Should().Be("NickNames<0>");
+			result.Errors[1].PropertyName.Should().Be("NickNames<2>");
 		}
 
 		[Fact]
@@ -122,7 +123,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors.Count.ShouldEqual(2);
+			result.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -136,8 +137,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors[0].PropertyName.ShouldEqual("NickNames[0]");
-			result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
+			result.Errors[0].PropertyName.Should().Be("NickNames[0]");
+			result.Errors[1].PropertyName.Should().Be("NickNames[2]");
 		}
 
 		class request {
@@ -156,7 +157,7 @@ namespace FluentValidation.Tests {
 			validator.When(r => r.person != null, () => { validator.RuleForEach(x => x.person.NickNames).NotNull(); });
 
 			var result = validator.Validate(new request());
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -164,7 +165,7 @@ namespace FluentValidation.Tests {
 			var v = new ApplicationViewModelValidator();
 			var result = v.Validate(new ApplicationViewModel());
 
-			result.Errors.Single().PropertyName.ShouldEqual("TradingExperience[0].Questions[0].SelectedAnswerID");
+			result.Errors.Single().PropertyName.Should().Be("TradingExperience[0].Questions[0].SelectedAnswerID");
 		}
 
 		[Fact]
@@ -172,7 +173,7 @@ namespace FluentValidation.Tests {
 			var v = new ApplicationViewModelValidator();
 			var result = await v.ValidateAsync(new ApplicationViewModel());
 
-			result.Errors.Single().PropertyName.ShouldEqual("TradingExperience[0].Questions[0].SelectedAnswerID");
+			result.Errors.Single().PropertyName.Should().Be("TradingExperience[0].Questions[0].SelectedAnswerID");
 		}
 
 		[Fact]
@@ -186,7 +187,7 @@ namespace FluentValidation.Tests {
 			}
 			catch (System.InvalidOperationException ex) {
 				thrown = true;
-				ex.Message.ShouldEqual("Could not infer property name for expression: x => x.NickNames.AsEnumerable(). Please explicitly specify a property name by calling OverridePropertyName as part of the rule chain. Eg: RuleForEach(x => x).NotNull().OverridePropertyName(\"MyProperty\")");
+				ex.Message.Should().Be("Could not infer property name for expression: x => x.NickNames.AsEnumerable(). Please explicitly specify a property name by calling OverridePropertyName as part of the rule chain. Eg: RuleForEach(x => x).NotNull().OverridePropertyName(\"MyProperty\")");
 			}
 
 			thrown.ShouldBeTrue();
@@ -220,7 +221,7 @@ namespace FluentValidation.Tests {
 				.NotEqual("foo");
 
 			var result = validator.Validate(new Person {NickNames = new string[] {null}});
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -250,7 +251,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var result = validator.Validate(new request());
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -263,15 +264,15 @@ namespace FluentValidation.Tests {
 				});
 
 			var result = validator.Validate(new Person {Children = new List<Person> {null, null}});
-			result.Errors.Count.ShouldEqual(3);
-			result.Errors[0].ErrorMessage.ShouldEqual("Foo");
-			result.Errors[0].PropertyName.ShouldEqual("Children");
+			result.Errors.Count.Should().Be(3);
+			result.Errors[0].ErrorMessage.Should().Be("Foo");
+			result.Errors[0].PropertyName.Should().Be("Children");
 
-			result.Errors[1].ErrorMessage.ShouldEqual("Bar");
-			result.Errors[1].PropertyName.ShouldEqual("Children[0]");
+			result.Errors[1].ErrorMessage.Should().Be("Bar");
+			result.Errors[1].PropertyName.Should().Be("Children[0]");
 
-			result.Errors[2].ErrorMessage.ShouldEqual("Bar");
-			result.Errors[2].PropertyName.ShouldEqual("Children[1]");
+			result.Errors[2].ErrorMessage.Should().Be("Bar");
+			result.Errors[2].PropertyName.Should().Be("Children[1]");
 		}
 
 		public class ApplicationViewModel {
@@ -341,10 +342,10 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(_person);
-			results.Errors.Count.ShouldEqual(3);
+			results.Errors.Count.Should().Be(3);
 
-			results.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
-			results.Errors[2].PropertyName.ShouldEqual("Orders[1].Amount");
+			results.Errors[1].PropertyName.Should().Be("Orders[0].ProductName");
+			results.Errors[2].PropertyName.Should().Be("Orders[1].Amount");
 		}
 
 		[Fact]
@@ -355,7 +356,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(_person, x => x.Orders);
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -366,7 +367,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(_person, "Orders");
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -377,7 +378,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(_person, x => x.Forename);
-			results.Errors.Count.ShouldEqual(0);
+			results.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -409,7 +410,7 @@ namespace FluentValidation.Tests {
 
 			_person.Orders[0] = null;
 			var results = validator.Validate(_person);
-			results.Errors.Count.ShouldEqual(2); //2 errors - 1 for person, 1 for 2nd Order.
+			results.Errors.Count.Should().Be(2); //2 errors - 1 for person, 1 for 2nd Order.
 		}
 
 		[Fact]
@@ -431,7 +432,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(_person);
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 
 		}
 
@@ -443,7 +444,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(_person);
-			results.Errors[0].PropertyName.ShouldEqual("Orders2[0].ProductName");
+			results.Errors[0].PropertyName.Should().Be("Orders2[0].ProductName");
 		}
 
 		[Fact]
@@ -456,8 +457,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = v.Validate(orders);
-			result.Errors.Count.ShouldEqual(4);
-			result.Errors[0].PropertyName.ShouldEqual("x[0].ProductName");
+			result.Errors.Count.Should().Be(4);
+			result.Errors[0].PropertyName.Should().Be("x[0].ProductName");
 		}
 
 		[Fact]
@@ -468,7 +469,7 @@ namespace FluentValidation.Tests {
 			validator.RuleForEach(x => x.Children).SetValidator(childValidator);
 
 			validator.Validate(new Person() { Children = new List<Person> { new Person() }});
-			childValidator.WasCalledAsync.ShouldEqual(false);
+			childValidator.WasCalledAsync.Should().Be(false);
 		}
 
 		[Fact]
@@ -479,7 +480,7 @@ namespace FluentValidation.Tests {
 			validator.RuleForEach(x => x.Children).SetValidator(childValidator);
 
 			await validator.ValidateAsync(new Person() {Children = new List<Person> {new Person()}});
-			childValidator.WasCalledAsync.ShouldEqual(true);
+			childValidator.WasCalledAsync.Should().Be(true);
 		}
 
 		[Fact]
@@ -488,7 +489,7 @@ namespace FluentValidation.Tests {
 			validator.RuleForEach(x => x.Orders).NotNull().WithMessage("{CollectionIndex}");
 			var result = validator.Validate(new Person {Orders = new List<Order>() {new Order(), null}});
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("1");
+			result.Errors[0].ErrorMessage.Should().Be("1");
 		}
 
 		[Fact]
@@ -497,7 +498,7 @@ namespace FluentValidation.Tests {
 			validator.RuleForEach(x => x.Orders).MustAsync((x, ct) => Task.FromResult(x != null)).WithMessage("{CollectionIndex}");
 			var result = await validator.ValidateAsync(new Person {Orders = new List<Order>() {new Order(), null}});
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("1");
+			result.Errors[0].ErrorMessage.Should().Be("1");
 		}
 
 		[Fact]
@@ -557,8 +558,8 @@ namespace FluentValidation.Tests {
 			});
 
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
-			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
+			result.Errors[0].ErrorMessage.Should().Be("1 must not be empty");
+			result.Errors[0].ErrorMessage.Should().Be("1 must not be empty");
 		}
 
 		[Fact]
@@ -589,8 +590,8 @@ namespace FluentValidation.Tests {
 			});
 
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
-			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
+			result.Errors[0].ErrorMessage.Should().Be("1 must not be empty");
+			result.Errors[0].ErrorMessage.Should().Be("1 must not be empty");
 		}
 
 		public class OrderValidator : AbstractValidator<Order> {

@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Text.RegularExpressions;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 	using Validators;
 
@@ -76,7 +77,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			var result = validator.Validate(new Person{Surname = "S33"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' is not in the correct format.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Surname' is not in the correct format.");
 		}
 
 		[Fact]
@@ -121,7 +122,7 @@ namespace FluentValidation.Tests {
 			v.RuleFor(x => x.Forename).Matches(@"^\w\d$").WithMessage("test {RegularExpression}");
 
 			var result = v.Validate(new Person {Forename = ""});
-			result.Errors.Single().ErrorMessage.ShouldEqual(@"test ^\w\d$");
+			result.Errors.Single().ErrorMessage.Should().Be(@"test ^\w\d$");
 		}
 
 		[Fact]
@@ -131,7 +132,7 @@ namespace FluentValidation.Tests {
 			v.RuleFor(x => x.Forename).Matches(x => x.Regex).WithMessage("test {RegularExpression}");
 
 			var result = v.Validate(new Person { Forename = "", Regex = @"^\w\d$" });
-			result.Errors.Single().ErrorMessage.ShouldEqual(@"test ^\w\d$");
+			result.Errors.Single().ErrorMessage.Should().Be(@"test ^\w\d$");
 		}
 
 		[Fact]
@@ -141,7 +142,7 @@ namespace FluentValidation.Tests {
 			v.RuleFor(x => x.Forename).Matches(x => x.AnotherRegex).WithMessage("test {RegularExpression}");
 
 			var result = v.Validate(new Person { Forename = "", AnotherRegex = new System.Text.RegularExpressions.Regex(@"^\w\d$") });
-			result.Errors.Single().ErrorMessage.ShouldEqual(@"test ^\w\d$");
+			result.Errors.Single().ErrorMessage.Should().Be(@"test ^\w\d$");
 		}
 
 

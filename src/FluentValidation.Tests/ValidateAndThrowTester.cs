@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
   using System;
   using System.Collections.Generic;
   using System.Linq;
+  using FluentAssertions;
   using Newtonsoft.Json;
   using Results;
   using Xunit;
@@ -151,7 +152,7 @@ namespace FluentValidation.Tests {
       };
 
       var ex = (ValidationException)typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
-      ex.Errors.Count().ShouldEqual(1);
+      ex.Errors.Count().Should().Be(1);
     }
 
     [Fact]
@@ -172,7 +173,7 @@ namespace FluentValidation.Tests {
       var raw = JsonConvert.SerializeObject(v);
       var deserialized = JsonConvert.DeserializeObject<ValidationException>(raw);
 
-      deserialized.Errors.Count().ShouldEqual(1);
+      deserialized.Errors.Count().Should().Be(1);
     }
 
     [Fact]
@@ -182,7 +183,7 @@ namespace FluentValidation.Tests {
       var exception = new ValidationException(validationFailures);
       var exceptionWithUserMessage = new ValidationException(userMessage, validationFailures, true);
 
-      exceptionWithUserMessage.Message.ShouldEqual($"{userMessage} {exception.Message}");
+      exceptionWithUserMessage.Message.Should().Be($"{userMessage} {exception.Message}");
     }
 
     [Fact]
@@ -191,7 +192,7 @@ namespace FluentValidation.Tests {
       var validationFailures = new List<ValidationFailure> { new ValidationFailure("test", "test") };
       var exceptionWithUserMessage = new ValidationException(userMessage, validationFailures, false);
 
-      exceptionWithUserMessage.Message.ShouldEqual(userMessage);
+      exceptionWithUserMessage.Message.Should().Be(userMessage);
     }
   }
 }

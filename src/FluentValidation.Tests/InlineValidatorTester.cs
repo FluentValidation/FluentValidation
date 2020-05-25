@@ -1,4 +1,5 @@
 namespace FluentValidation.Tests {
+	using FluentAssertions;
 	using Xunit;
 	using Results;
 
@@ -9,7 +10,7 @@ namespace FluentValidation.Tests {
 			var cust = new Customer();
 			var result = cust.Validate();
 
-			result.Errors.Count.ShouldEqual(2);
+			result.Errors.Count.Should().Be(2);
 		}
 
 		public class Customer {

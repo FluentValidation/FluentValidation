@@ -23,6 +23,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 	using Xunit;
 	using Results;
 
@@ -53,28 +54,28 @@ namespace FluentValidation.Tests {
 		public void When_the_validators_fail_then_the_errors_Should_be_accessible_via_the_errors_property() {
 			validator.RuleFor(x => x.Forename).NotNull();
 			var result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
 		public void Should_validate_public_Field() {
 			validator.RuleFor(x => x.NameField).NotNull();
 			var result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
 		public void WithMessage_should_override_error_message() {
 			validator.RuleFor(x => x.Forename).NotNull().WithMessage("Foo");
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("Foo");
+			result.Errors[0].ErrorMessage.Should().Be("Foo");
 		}
 
 		[Fact]
 		public void Default_error_code_should_be_class_name() {
 			validator.RuleFor(x => x.Forename).NotNull();
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorCode.ShouldEqual("NotNullValidator");
+			result.Errors[0].ErrorCode.Should().Be("NotNullValidator");
 		}
 
 		[Fact]
@@ -83,50 +84,50 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull();
 			var result = validator.Validate(new Person());
 			ValidatorOptions.ErrorCodeResolver = null;
-			result.Errors[0].ErrorCode.ShouldEqual("NotNullValidator_foo");
+			result.Errors[0].ErrorCode.Should().Be("NotNullValidator_foo");
 		}
 
 		[Fact]
 		public void WithErrorCode_should_override_error_code() {
 			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("ErrCode101");
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorCode.ShouldEqual("ErrCode101");
+			result.Errors[0].ErrorCode.Should().Be("ErrCode101");
 		}
 
 		[Fact]
 		public void WithMessage_and_WithErrorCode_should_override_error_message_and_error_code() {
 			validator.RuleFor(x => x.Forename).NotNull().WithMessage("Foo").WithErrorCode("ErrCode101");
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("Foo");
-			result.Errors[0].ErrorCode.ShouldEqual("ErrCode101");
+			result.Errors[0].ErrorMessage.Should().Be("Foo");
+			result.Errors[0].ErrorCode.Should().Be("ErrCode101");
 		}
 
 		[Fact]
 		public void WithName_should_override_field_name() {
 			validator.RuleFor(x => x.Forename).NotNull().WithName("First Name");
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("'First Name' must not be empty.");
+			result.Errors[0].ErrorMessage.Should().Be("'First Name' must not be empty.");
 		}
 
 		[Fact]
 		public void WithName_should_override_field_name_with_value_from_other_property() {
 			validator.RuleFor(x => x.Forename).NotNull().WithName(x => x.Surname);
 			var result = validator.Validate(new Person(){Surname = "Foo"});
-			result.Errors[0].ErrorMessage.ShouldEqual("'Foo' must not be empty.");
+			result.Errors[0].ErrorMessage.Should().Be("'Foo' must not be empty.");
 		}
 
 		[Fact]
 		public void OverridePropertyName_should_override_property_name() {
 			validator.RuleFor(x => x.Surname).NotNull().OverridePropertyName("foo");
 			var result = validator.Validate(new Person());
-			result.Errors[0].PropertyName.ShouldEqual("foo");
+			result.Errors[0].PropertyName.Should().Be("foo");
 		}
 
 		[Fact]
 		public void OverridePropertyName_with_lambda_should_override_property_name() {
 			validator.RuleFor(x => x.Surname).NotNull().OverridePropertyName(x => x.Forename);
 			var result = validator.Validate(new Person());
-			result.Errors[0].PropertyName.ShouldEqual("Forename");
+			result.Errors[0].PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -134,7 +135,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.Validate(new Person());
 			var result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -147,14 +148,14 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleFor(x => x.Surname).NotNull();
 			var result = validator.Validate(new Person(), x => x.Surname);
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
 		public void Should_validate_single_Field() {
 			validator.RuleFor(x => x.NameField).NotNull();
 			var result = validator.Validate(new Person(), x => x.NameField);
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -174,7 +175,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleFor(x => x.Surname).NotNull();
 			var result = validator.Validate(new Person(), "Surname");
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -182,7 +183,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleFor(x => x.Surname).NotNull();
 			var result = validator.Validate(new Person(), "Surname1");
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -195,8 +196,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull();
 
 			var result = validator.Validate(new Person { Address = new Address() }, properties: "Address.Line1");
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("Address.Line1");
+			result.Errors.Count.Should().Be(1);
+			result.Errors.Single().PropertyName.Should().Be("Address.Line1");
 		}
 
 		[Fact]
@@ -226,7 +227,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Id).NotEqual(0);
 
 			var result = validator.Validate(new Person(), ruleSet: "Names");
-			result.Errors.Count.ShouldEqual(2);
+			result.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]

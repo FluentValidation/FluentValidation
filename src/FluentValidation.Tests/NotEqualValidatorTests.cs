@@ -27,6 +27,7 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Validators;
 	using System.Reflection;
+	using FluentAssertions;
 
 	public class NotEqualValidatorTests {
 		public  NotEqualValidatorTests() {
@@ -51,7 +52,7 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual("Foo"));
 			var result = validator.Validate(new Person { Forename = "Foo" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' must not be equal to 'Foo'.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Forename' must not be equal to 'Foo'.");
 		}
 
 		[Fact]
@@ -64,7 +65,7 @@ namespace FluentValidation.Tests {
 
 			var result = validator.Validate(new Person { Surname = "foo", Forename = "foo" });
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Surname");
+			result.Errors[0].ErrorMessage.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -80,7 +81,7 @@ namespace FluentValidation.Tests {
 				);
 
 				var result = validator.Validate(new Person { Surname = "foo", Forename = "foo" });
-				result.Errors[0].ErrorMessage.ShouldEqual("SurnameFoo");
+				result.Errors[0].ErrorMessage.Should().Be("SurnameFoo");
 			}
 			finally {
 				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
@@ -95,7 +96,7 @@ namespace FluentValidation.Tests {
 				.OfType<NotEqualValidator>()
 				.Single();
 
-			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
+			propertyValidator.MemberToCompare.Should().Be(typeof(Person).GetProperty("Surname"));
 		}
 
 		[Fact]
@@ -105,7 +106,7 @@ namespace FluentValidation.Tests {
 				.GetValidatorsForMember("Forename")
 				.OfType<NotEqualValidator>()
 				.Single();
-			propertyValidator.Comparison.ShouldEqual(Comparison.NotEqual);
+			propertyValidator.Comparison.Should().Be(Comparison.NotEqual);
 		}
 
 		[Fact]
@@ -128,7 +129,7 @@ namespace FluentValidation.Tests {
 			var myTypeValidator = new MyTypeValidator();
 
 			var validationResult = myTypeValidator.Validate(myType);
-			validationResult.IsValid.ShouldEqual(false);
+			validationResult.IsValid.Should().Be(false);
 		}
 
 		[Fact]

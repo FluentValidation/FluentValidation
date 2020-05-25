@@ -27,10 +27,7 @@ namespace FluentValidation.Tests {
 	//Inspired by SpecUnit's SpecificationExtensions
 	//http://code.google.com/p/specunit-net/source/browse/trunk/src/SpecUnit/SpecificationExtensions.cs
 	public static class TestExtensions {
-		public static void ShouldEqual(this object actual, object expected) {
-			Assert.Equal(expected, actual);
-		}
-
+	
 		public static void ShouldBeTheSameAs(this object actual, object expected) {
 			Assert.Same(expected, actual);
 		}

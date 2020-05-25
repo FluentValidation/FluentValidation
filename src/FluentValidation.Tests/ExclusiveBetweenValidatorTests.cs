@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 	using Validators;
 
@@ -79,14 +80,14 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Id).ExclusiveBetween(1, 10) };
 			var result = validator.Validate(new Person { Id = 0 });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Id' must be between 1 and 10 (exclusive). You entered 0.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Id' must be between 1 and 10 (exclusive). You entered 0.");
 		}
 
 		[Fact]
 		public void To_and_from_properties_should_be_set() {
 			var propertyValidator = new ExclusiveBetweenValidator(1, 10);
-			propertyValidator.From.ShouldEqual(1);
-			propertyValidator.To.ShouldEqual(10);
+			propertyValidator.From.Should().Be(1);
+			propertyValidator.To.Should().Be(10);
 		}
 
 		[Fact]
@@ -133,21 +134,21 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set_for_strings() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).ExclusiveBetween("bbb", "zzz"));
 			var result = validator.Validate(new Person { Surname = "aaa" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be between bbb and zzz (exclusive). You entered aaa.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Surname' must be between bbb and zzz (exclusive). You entered aaa.");
 		}
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_strings() {
 			var validator = new ExclusiveBetweenValidator("a", "c");
-			validator.From.ShouldEqual("a");
-			validator.To.ShouldEqual("c");
+			validator.From.Should().Be("a");
+			validator.To.Should().Be("c");
 		}
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_dates() {
 			var validator = new ExclusiveBetweenValidator(fromDate, toDate);
-			validator.From.ShouldEqual(fromDate);
-			validator.To.ShouldEqual(toDate);
+			validator.From.Should().Be(fromDate);
+			validator.To.Should().Be(toDate);
 		}
 
 		[Fact]

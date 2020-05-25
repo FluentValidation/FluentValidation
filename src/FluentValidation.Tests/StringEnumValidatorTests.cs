@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Text;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 	using Xunit;
 
 	public class StringEnumValidatorTests {
@@ -83,7 +84,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			var result = _caseInsensitiveValidator.Validate(new Person { GenderString = "invalid" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Gender String' has a range of values which does not include 'invalid'.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Gender String' has a range of values which does not include 'invalid'.");
 		}
 
 		[Fact]
@@ -94,7 +95,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void When_enumType_is_not_an_enum_it_should_throw() {
 			var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new TestValidator { v => v.RuleFor(x => x.GenderString).IsEnumName(typeof(Person)) });
-			exception.Message.ShouldEqual("The type 'Person' is not an enum and can't be used with IsEnumName." + Environment.NewLine + "Parameter name: enumType");
+			exception.Message.Should().Be("The type 'Person' is not an enum and can't be used with IsEnumName." + Environment.NewLine + "Parameter name: enumType");
 		}
 	}
 }

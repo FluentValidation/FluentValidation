@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 	using Xunit;
 	using Results;
 
@@ -131,7 +132,7 @@ namespace FluentValidation.Tests {
 			var person = new Person(); // fails the shared When predicate
 
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -140,7 +141,7 @@ namespace FluentValidation.Tests {
 			var person = new Person(); // fails the shared When predicate
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -151,7 +152,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(3);
+			result.Errors.Count.Should().Be(3);
 		}
 
 		[Fact]
@@ -162,7 +163,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors.Count.ShouldEqual(3);
+			result.Errors.Count.Should().Be(3);
 		}
 
 		[Fact]
@@ -175,7 +176,7 @@ namespace FluentValidation.Tests {
 			                          };
 
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -188,7 +189,7 @@ namespace FluentValidation.Tests {
 			                          };
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -202,7 +203,7 @@ namespace FluentValidation.Tests {
 			person.Orders.Add(new Order());
 
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -216,7 +217,7 @@ namespace FluentValidation.Tests {
 			person.Orders.Add(new Order());
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -229,7 +230,7 @@ namespace FluentValidation.Tests {
 			person.Orders.Add(new Order()); // fails the inner Unless predicate
 
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -242,7 +243,7 @@ namespace FluentValidation.Tests {
 			person.Orders.Add(new Order()); // fails the inner Unless predicate
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -256,7 +257,7 @@ namespace FluentValidation.Tests {
 			person.Orders.Add(new Order()); // fails the inner Unless predicate
 
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -270,7 +271,7 @@ namespace FluentValidation.Tests {
 			person.Orders.Add(new Order()); // fails the inner Unless predicate
 
 			var result = await validator.ValidateAsync(person);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -280,8 +281,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).NotNull();
 
 			var result = validator.Validate(new Person {Id = 5}, ruleSet : "foo");
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result.Errors.Count.Should().Be(1);
+			result.Errors.Single().PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -295,8 +296,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).NotNull();
 
 			var result = await validator.ValidateAsync(new Person {Id = 5}, ruleSet: "foo");
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result.Errors.Count.Should().Be(1);
+			result.Errors.Single().PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -308,8 +309,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).NotNull();
 
 			var result = validator.Validate(new Person {Id = 5}, ruleSet : "foo");
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result.Errors.Count.Should().Be(1);
+			result.Errors.Single().PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -321,8 +322,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).NotNull();
 
 			var result = await validator.ValidateAsync(new Person {Id = 5}, ruleSet: "foo");
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result.Errors.Count.Should().Be(1);
+			result.Errors.Single().PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -504,7 +505,7 @@ namespace FluentValidation.Tests {
 			});
 
 			validator.Validate(new Person {Age = 11});
-			executions.ShouldEqual(1);
+			executions.Should().Be(1);
 		}
 
 		[Fact]
@@ -520,7 +521,7 @@ namespace FluentValidation.Tests {
 			});
 
 			await validator.ValidateAsync(new Person {Age = 11});
-			executions.ShouldEqual(1);
+			executions.Should().Be(1);
 		}
 
 		[Fact]
@@ -533,9 +534,9 @@ namespace FluentValidation.Tests {
 			});
 
 			var result1 = validator.Validate(new Person {Age = 11});
-			result1.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result1.Errors.Single().PropertyName.Should().Be("Forename");
 			var result2 = validator.Validate(new Person {Age = 9});
-			result2.Errors.Single().PropertyName.ShouldEqual("Surname");
+			result2.Errors.Single().PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -548,9 +549,9 @@ namespace FluentValidation.Tests {
 			});
 
 			var result1 = validator.Validate(new Person {Age = 11});
-			result1.Errors.Single().PropertyName.ShouldEqual("Surname");
+			result1.Errors.Single().PropertyName.Should().Be("Surname");
 			var result2 = validator.Validate(new Person {Age = 9});
-			result2.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result2.Errors.Single().PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -563,9 +564,9 @@ namespace FluentValidation.Tests {
 			});
 
 			var result1 = await validator.ValidateAsync(new Person {Age = 11});
-			result1.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result1.Errors.Single().PropertyName.Should().Be("Forename");
 			var result2 = await validator.ValidateAsync(new Person {Age = 9});
-			result2.Errors.Single().PropertyName.ShouldEqual("Surname");
+			result2.Errors.Single().PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -578,9 +579,9 @@ namespace FluentValidation.Tests {
 			});
 
 			var result1 = await validator.ValidateAsync(new Person {Age = 11});
-			result1.Errors.Single().PropertyName.ShouldEqual("Surname");
+			result1.Errors.Single().PropertyName.Should().Be("Surname");
 			var result2 = await validator.ValidateAsync(new Person {Age = 9});
-			result2.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result2.Errors.Single().PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -606,7 +607,7 @@ namespace FluentValidation.Tests {
 
 			var validationResult = personValidator.Validate(person);
 			validationResult.IsValid.ShouldBeTrue();
-			executions.ShouldEqual(2);
+			executions.Should().Be(2);
 		}
 
 		[Fact]
@@ -632,7 +633,7 @@ namespace FluentValidation.Tests {
 
 			var validationResult = await personValidator.ValidateAsync(person);
 			validationResult.IsValid.ShouldBeTrue();
-			executions.ShouldEqual(2);
+			executions.Should().Be(2);
 		}
 
 		[Fact]

@@ -20,6 +20,7 @@ namespace FluentValidation.Tests
 {
 	using System;
 	using System.Linq;
+	using FluentAssertions;
 	using Xunit;
 
 	public class EnumValidatorTests
@@ -62,7 +63,7 @@ namespace FluentValidation.Tests
 		public void When_validation_fails_the_default_error_should_be_set()
 		{
 			var result = validator.Validate(new Person());
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Gender' has a range of values which does not include '0'.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Gender' has a range of values which does not include '0'.");
 		}
 
 		[Fact]
@@ -142,7 +143,7 @@ namespace FluentValidation.Tests
 
 			result.Errors.SingleOrDefault(x => x.PropertyName == "EnumWithNegativesValue").ShouldNotBeNull();
 			result.Errors.SingleOrDefault(x => x.PropertyName == "EnumWithOverlappingFlagsValue").ShouldNotBeNull();
-			result.Errors.Count().ShouldEqual(2);
+			result.Errors.Count().Should().Be(2);
 			result.IsValid.ShouldBeFalse();
 		}
 

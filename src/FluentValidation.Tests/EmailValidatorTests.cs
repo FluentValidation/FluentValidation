@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Linq;
+	using FluentAssertions;
 	using Xunit;
 	using Validators;
 
@@ -37,7 +38,7 @@ namespace FluentValidation.Tests {
 			};
 			var result = validator.Validate(new Person {Email = email});
 			result.IsValid.ShouldBeFalse();
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Email' is not a valid email address.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Email' is not a valid email address.");
 		}
 
 		[Theory]

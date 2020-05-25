@@ -1,6 +1,7 @@
 ﻿namespace FluentValidation.Tests {
 	using System.Threading.Tasks;
 	using System.Diagnostics;
+	using FluentAssertions;
 	using Xunit;
 	using static ComplexValidationTester;
 	using TestHelper;
@@ -36,7 +37,7 @@
 
 			_validator.Validate(new Person { Forename = "John", Age = 17 });
 
-			invoked.ShouldEqual(4);
+			invoked.Should().Be(4);
 		}
 
 		[Fact]
@@ -63,7 +64,7 @@
 
 			await _validator.ValidateAsync(new Person { Forename = "John", Age = 17 });
 
-			invoked.ShouldEqual(4);
+			invoked.Should().Be(4);
 		}
 
 		[Fact]
@@ -78,7 +79,7 @@
 
 			_validator.Validate(new Person());
 
-			errorMessage.ShouldEqual("You must specify Surname!");
+			errorMessage.Should().Be("You must specify Surname!");
 		}
 
 		[Fact]
@@ -106,7 +107,7 @@
 				.OnFailure(x => shouldNotBeTrue = true);
 
 			var result = validator.Validate(new Person {Id = 0, Surname = "foo"});
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 			shouldNotBeTrue.ShouldBeFalse();
 		}
 
@@ -120,7 +121,7 @@
 				.OnFailure(x => shouldNotBeTrue = true);
 
 			var result = await validator.ValidateAsync(new Person {Id = 0, Surname = "foo"});
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 			shouldNotBeTrue.ShouldBeFalse();
 		}
 
@@ -134,7 +135,7 @@
 				.OnFailure(x => shouldNotBeTrue = true);
 
 			var result = validator.Validate(new Person {Id = 0, Surname = "foo"});
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 			shouldNotBeTrue.ShouldBeFalse();
 		}
 
@@ -148,7 +149,7 @@
 				.OnFailure(x => shouldNotBeTrue = true);
 
 			var result = await validator.ValidateAsync(new Person {Id = 0, Surname = "foo"});
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 			shouldNotBeTrue.ShouldBeFalse();
 		}
 
@@ -162,7 +163,7 @@
 				.OnFailure(x => shouldNotBeTrue = true);
 
 			var result = await validator.ValidateAsync(new Person {Id = 0, Surname = "foo"});
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 			shouldNotBeTrue.ShouldBeFalse();
 		}
 

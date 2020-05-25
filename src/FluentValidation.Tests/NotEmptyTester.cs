@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 
 
@@ -110,7 +111,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person { Surname = null });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Surname' must not be empty.");
 		}
 
 	    [Fact]

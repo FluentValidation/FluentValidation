@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using Xunit;
 	using System.Linq;
+	using FluentAssertions;
 
 
 	public class TrackingCollectionTests {
@@ -28,7 +29,7 @@ namespace FluentValidation.Tests {
 		public void Add_AddsItem() {
 			var items = new TrackingCollection<string>();
 			items.Add("foo");
-			items.Single().ShouldEqual("foo");
+			items.Single().Should().Be("foo");
 		}
 
 		[Fact]
@@ -40,7 +41,7 @@ namespace FluentValidation.Tests {
 				items.Add("foo");
 			}
 
-			addedItem.ShouldEqual("foo");
+			addedItem.Should().Be("foo");
 		}
 
 		[Fact]
@@ -53,7 +54,7 @@ namespace FluentValidation.Tests {
 			}
 			items.Add("bar");
 
-			addedItems.Count.ShouldEqual(1);
+			addedItems.Count.Should().Be(1);
 		}
 	}
 }

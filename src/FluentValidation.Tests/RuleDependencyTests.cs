@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 	using Internal;
 	using Xunit;
 
@@ -32,8 +33,8 @@ namespace FluentValidation.Tests {
 				});
 
 			var results = validator.Validate(new Person {Surname = "foo"});
-			results.Errors.Count.ShouldEqual(1);
-			results.Errors.Single().PropertyName.ShouldEqual("Forename");
+			results.Errors.Count.Should().Be(1);
+			results.Errors.Single().PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -47,8 +48,8 @@ namespace FluentValidation.Tests {
 				});
 
 			var results = validator.Validate(new Person { Surname = null });
-			results.Errors.Count.ShouldEqual(1);
-			results.Errors.Single().PropertyName.ShouldEqual("Surname");
+			results.Errors.Count.Should().Be(1);
+			results.Errors.Single().PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -62,11 +63,11 @@ namespace FluentValidation.Tests {
 				});
 
 			var results = validator.Validate(new Person { Surname = "foo" });
-			results.Errors.Count.ShouldEqual(1);
-			results.Errors.Single().PropertyName.ShouldEqual("Forename");
+			results.Errors.Count.Should().Be(1);
+			results.Errors.Single().PropertyName.Should().Be("Forename");
 			var rule = (PropertyRule) validator.Single();
-			rule.DependentRules.Count.ShouldEqual(1);
-			((PropertyRule) rule.DependentRules[0]).DependentRules.Count.ShouldEqual(1);
+			rule.DependentRules.Count.Should().Be(1);
+			((PropertyRule) rule.DependentRules[0]).DependentRules.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -81,8 +82,8 @@ namespace FluentValidation.Tests {
 			});
 
 			var results = validator.Validate(new Person { Surname = "foo" }, ruleSet: "MyRuleSet");
-			results.Errors.Count.ShouldEqual(1);
-			results.Errors.Single().PropertyName.ShouldEqual("Forename");
+			results.Errors.Count.Should().Be(1);
+			results.Errors.Single().PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -165,8 +166,8 @@ namespace FluentValidation.Tests {
 				});
 
 			var results = validator.Validate(new Person { Surname = null });
-			results.Errors.Count.ShouldEqual(1); //only the root NotNull should fire
-			results.Errors.Single().PropertyName.ShouldEqual("Surname");
+			results.Errors.Count.Should().Be(1); //only the root NotNull should fire
+			results.Errors.Single().PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -190,8 +191,8 @@ namespace FluentValidation.Tests {
 			});
 
 			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, ruleSet: "MyRuleSet");
-			results.Errors.Count.ShouldEqual(1);
-			results.Errors.Single().PropertyName.ShouldEqual("Address");
+			results.Errors.Count.Should().Be(1);
+			results.Errors.Single().PropertyName.Should().Be("Address");
 		}
 
 		[Fact]
@@ -215,8 +216,8 @@ namespace FluentValidation.Tests {
 			});
 
 			var results = validator.Validate(new Person { Surname = null, Forename = "foo" }, ruleSet: "MyRuleSet");
-			results.Errors.Count.ShouldEqual(1);
-			results.Errors[0].PropertyName.ShouldEqual("Surname");
+			results.Errors.Count.Should().Be(1);
+			results.Errors[0].PropertyName.Should().Be("Surname");
 		}
 
 		[Fact]
@@ -240,8 +241,8 @@ namespace FluentValidation.Tests {
 			});
 
 			var results = validator.Validate(new Person { Surname = "bar", Forename = null }, ruleSet: "MyRuleSet");
-			results.Errors.Count.ShouldEqual(1);
-			results.Errors[0].PropertyName.ShouldEqual("Forename");
+			results.Errors.Count.Should().Be(1);
+			results.Errors[0].PropertyName.Should().Be("Forename");
 		}
 
 
@@ -264,8 +265,8 @@ namespace FluentValidation.Tests {
 			});
 
 			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, ruleSet: "MyRuleSet");
-			results.Errors.Count.ShouldEqual(1);
-			results.Errors.Single().PropertyName.ShouldEqual("Address");
+			results.Errors.Count.Should().Be(1);
+			results.Errors.Single().PropertyName.Should().Be("Address");
 		}
 
 		private void BaseValidation(InlineValidator<Person> validator)

@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
     using System;
     using System.Threading.Tasks;
+    using FluentAssertions;
     using Xunit;
 
 
@@ -38,7 +39,7 @@ namespace FluentValidation.Tests {
 		public void Validation_continues_on_failure() {
 			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -47,7 +48,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -56,7 +57,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -64,7 +65,7 @@ namespace FluentValidation.Tests {
 			ValidatorOptions.CascadeMode = CascadeMode.Continue;
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -81,7 +82,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -90,7 +91,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -99,7 +100,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -108,7 +109,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -116,7 +117,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
 			validator.CascadeMode = CascadeMode.StopOnFirstFailure;
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 
@@ -125,7 +126,7 @@ namespace FluentValidation.Tests {
 		public async Task Validation_continues_on_failure_async() {
 			validator.RuleFor(x => x.Surname).MustAsync(async (x,c) => x != null).MustAsync(async (x,c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -134,7 +135,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -143,7 +144,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -151,7 +152,7 @@ namespace FluentValidation.Tests {
 			ValidatorOptions.CascadeMode = CascadeMode.Continue;
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 
@@ -160,7 +161,7 @@ namespace FluentValidation.Tests {
 		    ValidatorOptions.CascadeMode = CascadeMode.Continue;
 		    validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 		    var results = await validator.ValidateAsync(new Person());
-		    results.Errors.Count.ShouldEqual(1);
+		    results.Errors.Count.Should().Be(1);
 	    }
 
 		[Fact]
@@ -177,7 +178,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -186,7 +187,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -195,7 +196,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(2);
+			results.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -204,7 +205,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -212,7 +213,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			validator.CascadeMode = CascadeMode.StopOnFirstFailure;
 			var results = await validator.ValidateAsync(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 	}

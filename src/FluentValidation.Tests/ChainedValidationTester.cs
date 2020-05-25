@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using FluentAssertions;
 	using Xunit;
 
 
@@ -44,45 +45,45 @@ namespace FluentValidation.Tests {
 		public void Validates_chained_property() {
 			var results = validator.Validate(person);
 
-			results.Errors.Count.ShouldEqual(3);
-			results.Errors[0].PropertyName.ShouldEqual("Forename");
-			results.Errors[1].PropertyName.ShouldEqual("Address.Postcode");
-			results.Errors[2].PropertyName.ShouldEqual("Address.Country.Name");
+			results.Errors.Count.Should().Be(3);
+			results.Errors[0].PropertyName.Should().Be("Forename");
+			results.Errors[1].PropertyName.Should().Be("Address.Postcode");
+			results.Errors[2].PropertyName.Should().Be("Address.Country.Name");
 		}
 
 		[Fact]
 		public void Chained_validator_should_not_be_invoked_on_null_property() {
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
 		public void Should_allow_normal_rules_and_chained_property_on_same_property() {
 			validator.RuleFor(x => x.Address.Line1).NotNull();
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(4);
+			result.Errors.Count.Should().Be(4);
 		}
 
 		[Fact]
 		public void Explicitly_included_properties_should_be_propagated_to_nested_validators() {
 			var results = validator.Validate(person, x => x.Address);
-			results.Errors.Count.ShouldEqual(2);
-			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
-			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
+			results.Errors.Count.Should().Be(2);
+			results.Errors.First().PropertyName.Should().Be("Address.Postcode");
+			results.Errors.Last().PropertyName.Should().Be("Address.Country.Name");
 		}
 
 		[Fact]
 		public void Explicitly_included_properties_should_be_propagated_to_nested_validators_using_strings() {
 			var results = validator.Validate(person, "Address");
-			results.Errors.Count.ShouldEqual(2);
-			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
-			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
+			results.Errors.Count.Should().Be(2);
+			results.Errors.First().PropertyName.Should().Be("Address.Postcode");
+			results.Errors.Last().PropertyName.Should().Be("Address.Country.Name");
 		}
 
 		[Fact]
 		public void Chained_property_should_be_excluded() {
 			var results = validator.Validate(person, x => x.Surname);
-			results.Errors.Count.ShouldEqual(0);
+			results.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -93,8 +94,8 @@ namespace FluentValidation.Tests {
 				}
 			};
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(3);
-			result.Errors.Last().PropertyName.ShouldEqual("Address.Line1");
+			result.Errors.Count.Should().Be(3);
+			result.Errors.Last().PropertyName.Should().Be("Address.Line1");
 		}
 
 		[Fact]
@@ -145,8 +146,8 @@ namespace FluentValidation.Tests {
 					Surname = "foo"
 				}
 			});
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.First().PropertyName.ShouldEqual("Assistant.Surname");
+			result.Errors.Count.Should().Be(1);
+			result.Errors.First().PropertyName.Should().Be("Assistant.Surname");
 		}
 
 		[Fact]
@@ -154,11 +155,11 @@ namespace FluentValidation.Tests {
 			var descriptor = validator.CreateDescriptor();
 
 			var members = descriptor.GetMembersWithValidators().ToList();
-			members.Count.ShouldEqual(4);
-			members[0].Key.ShouldEqual("Forename");
-			members[1].Key.ShouldEqual("Address.Postcode");
-			members[2].Key.ShouldEqual("Address.Country.Name");
-			members[3].Key.ShouldEqual("Address.Line1");
+			members.Count.Should().Be(4);
+			members[0].Key.Should().Be("Forename");
+			members[1].Key.Should().Be("Address.Postcode");
+			members[2].Key.Should().Be("Address.Country.Name");
+			members[3].Key.Should().Be("Address.Line1");
 		}
 
 		[Fact]
@@ -172,8 +173,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Address).SetValidator(addressValidator, ruleSets: "ruleset1");
 
 			var result = validator.Validate(new Person {Address = new Address()});
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Address.Line1");
+			result.Errors.Count.Should().Be(1);
+			result.Errors[0].PropertyName.Should().Be("Address.Line1");
 		}
 
 		public class DepartmentValidator : AbstractValidator<Department> {

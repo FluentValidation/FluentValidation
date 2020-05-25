@@ -17,6 +17,7 @@
 #endregion
 namespace FluentValidation.Tests {
 	using System.Linq;
+	using FluentAssertions;
 	using Validators;
 	using Xunit;
 
@@ -32,8 +33,8 @@ namespace FluentValidation.Tests {
 			v.RuleFor(x => x).Must(x => false);
 
 			var result = v.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("");
+			result.Errors.Count.Should().Be(1);
+			result.Errors.Single().PropertyName.Should().Be("");
 		}
 
 		[Fact]
@@ -42,8 +43,8 @@ namespace FluentValidation.Tests {
 			v.RuleFor(x => x).SetValidator(new ChildValidator());
 
 			var result = v.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("Forename");
+			result.Errors.Count.Should().Be(1);
+			result.Errors.Single().PropertyName.Should().Be("Forename");
 
 		}
 

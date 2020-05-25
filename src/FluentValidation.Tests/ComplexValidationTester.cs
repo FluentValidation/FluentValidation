@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 	using Results;
 	using Xunit;
 
@@ -47,10 +48,10 @@ namespace FluentValidation.Tests {
 		public void Validates_complex_property() {
 			var results = validator.Validate(person);
 
-			results.Errors.Count.ShouldEqual(3);
-			results.Errors[0].PropertyName.ShouldEqual("Forename");
-			results.Errors[1].PropertyName.ShouldEqual("Address.Postcode");
-			results.Errors[2].PropertyName.ShouldEqual("Address.Country.Name");
+			results.Errors.Count.Should().Be(3);
+			results.Errors[0].PropertyName.Should().Be("Forename");
+			results.Errors[1].PropertyName.Should().Be("Address.Postcode");
+			results.Errors[2].PropertyName.Should().Be("Address.Country.Name");
 		}
 
 		[Fact]
@@ -61,44 +62,44 @@ namespace FluentValidation.Tests {
 			};
 
 			var results = validator.Validate(person);
-			results.Errors[0].PropertyName.ShouldEqual("Address2.Postcode");
+			results.Errors[0].PropertyName.Should().Be("Address2.Postcode");
 		}
 
 
 		[Fact]
 		public void Complex_validator_should_not_be_invoked_on_null_property() {
 			var results = validator.Validate(new Person());
-			results.Errors.Count.ShouldEqual(1);
+			results.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
 		public void Should_allow_normal_rules_and_complex_property_on_same_property() {
 			validator.RuleFor(x => x.Address.Line1).NotNull();
 			var result = validator.Validate(person);
-			result.Errors.Count.ShouldEqual(4);
+			result.Errors.Count.Should().Be(4);
 		}
 
 		[Fact]
 		public void Explicitly_included_properties_should_be_propagated_to_nested_validators() {
 			var results = validator.Validate(person, x => x.Address);
-			results.Errors.Count.ShouldEqual(2);
-			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
-			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
+			results.Errors.Count.Should().Be(2);
+			results.Errors.First().PropertyName.Should().Be("Address.Postcode");
+			results.Errors.Last().PropertyName.Should().Be("Address.Country.Name");
 		}
 
 		[Fact]
 		public void Explicitly_included_properties_should_be_propagated_to_nested_validators_using_strings() {
 			var results = validator.Validate(person, "Address");
-			results.Errors.Count.ShouldEqual(2);
-			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
-			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
+			results.Errors.Count.Should().Be(2);
+			results.Errors.First().PropertyName.Should().Be("Address.Postcode");
+			results.Errors.Last().PropertyName.Should().Be("Address.Country.Name");
 		}
 
 
 		[Fact]
 		public void Complex_property_should_be_excluded() {
 			var results = validator.Validate(person, x => x.Surname);
-			results.Errors.Count.ShouldEqual(0);
+			results.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -175,7 +176,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Address).SetValidator(addressValidator);
 
 			validator.Validate(new Person() {Address = new Address()});
-			addressValidator.WasCalledAsync.ShouldEqual(false);
+			addressValidator.WasCalledAsync.Should().Be(false);
 		}
 
 		[Fact]
@@ -186,7 +187,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Address).SetValidator(addressValidator);
 
 			validator.ValidateAsync(new Person() {Address = new Address()}).GetAwaiter().GetResult();
-			addressValidator.WasCalledAsync.ShouldEqual(true);
+			addressValidator.WasCalledAsync.Should().Be(true);
 		}
 
         public class TestObject

@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
     using System.Linq;
+    using FluentAssertions;
     using Xunit;
 
 
@@ -44,7 +45,7 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_passes_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Null());
 			var result = validator.Validate(new Person { Surname = "Foo" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be empty.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Surname' must be empty.");
 		}
 
 		[Fact]

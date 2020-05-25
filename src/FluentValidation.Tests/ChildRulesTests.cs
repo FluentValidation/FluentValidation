@@ -20,6 +20,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Collections.Generic;
+	using FluentAssertions;
 	using Xunit;
 
 	public class ChildRulesTests {
@@ -39,9 +40,9 @@ namespace FluentValidation.Tests {
 				new Order { ProductName = "foo", Amount = 10 }
 			}});
 
-			result.Errors.Count.ShouldEqual(2);
-			result.Errors[0].PropertyName.ShouldEqual("Orders[0].ProductName");
-			result.Errors[1].PropertyName.ShouldEqual("Orders[1].Amount");
+			result.Errors.Count.Should().Be(2);
+			result.Errors[0].PropertyName.Should().Be("Orders[0].ProductName");
+			result.Errors[1].PropertyName.Should().Be("Orders[1].Amount");
 		}
 	}
 }

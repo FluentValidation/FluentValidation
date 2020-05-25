@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 	using Validators;
 
@@ -37,7 +38,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull().WithName("First Name");
 			var descriptor = validator.CreateDescriptor();
 			var name = descriptor.GetName("Forename");
-			name.ShouldEqual("First Name");
+			name.Should().Be("First Name");
 		}
 
 		[Fact]
@@ -52,7 +53,7 @@ namespace FluentValidation.Tests {
 		public void Returns_empty_collection_for_property_with_no_validators() {
 			var descriptor = validator.CreateDescriptor();
 			var validators = descriptor.GetValidatorsForMember("NoSuchProperty");
-			validators.Count().ShouldEqual(0);
+			validators.Count().Should().Be(0);
 		}
 
 		[Fact]
@@ -67,8 +68,8 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x).NotNull();
 			var descriptor = validator.CreateDescriptor();
 
-			descriptor.GetValidatorsForMember(null).Count().ShouldEqual(1);
-			descriptor.GetRulesForMember(null).Count().ShouldEqual(1);
+			descriptor.GetValidatorsForMember(null).Count().Should().Be(1);
+			descriptor.GetRulesForMember(null).Count().Should().Be(1);
 		}
 	}
 }

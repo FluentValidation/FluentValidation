@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
+	using FluentAssertions;
 	using Internal;
 	using Xunit;
 
@@ -36,7 +37,7 @@ namespace FluentValidation.Tests {
 				.AppendArgument("foo", "bar")
 				.BuildMessage("{foo}");
 
-			result.ShouldEqual("bar");
+			result.Should().Be("bar");
 		}
 
 		[Fact]
@@ -45,7 +46,7 @@ namespace FluentValidation.Tests {
 				.AppendPropertyName("foo")
 				.BuildMessage("{PropertyName}");
 
-			result.ShouldEqual("foo");
+			result.Should().Be("foo");
 		}
 
 		[Fact]
@@ -55,7 +56,7 @@ namespace FluentValidation.Tests {
 				.AppendAdditionalArguments("baz")
 				.BuildMessage("{foo} {0}");
 
-			result.ShouldEqual("bar baz");
+			result.Should().Be("bar baz");
 		}
 
 		[Fact]
@@ -64,7 +65,7 @@ namespace FluentValidation.Tests {
 				.AppendPropertyValue(123.45)
 				.BuildMessage("{PropertyValue:#.#}");
 
-			result.ShouldEqual("123.5");
+			result.Should().Be("123.5");
 		}
 
 		[Fact]
@@ -77,7 +78,7 @@ namespace FluentValidation.Tests {
 				.AppendArgument("p", 0.912)
 				.BuildMessage("{c:c3} {c:c4} {f:f} {p:p} {d:d} {e:e} {e:e2} {d:0000}");
 
-			result.ShouldEqual($"{-123.456789:c3} {-123.456789:c4} {1234.567:f} {0.912:p} {123:d} {1052.0329112756:e} {1052.0329112756:e2} {123:0000}");
+			result.Should().Be($"{-123.456789:c3} {-123.456789:c4} {1234.567:f} {0.912:p} {123:d} {1052.0329112756:e} {1052.0329112756:e2} {123:0000}");
 		}
 
 		[Fact]
@@ -87,7 +88,7 @@ namespace FluentValidation.Tests {
 				.AppendAdditionalArguments("baz")
 				.BuildMessage("{foo:#.#} {0}");
 
-			result.ShouldEqual("123.4 baz");
+			result.Should().Be("123.4 baz");
 		}
 
 		[Fact]
@@ -97,7 +98,7 @@ namespace FluentValidation.Tests {
 				.AppendAdditionalArguments(.6789)
 				.BuildMessage("{foo:#.#} {0:p1}");
 
-			result.ShouldEqual($"{123.43:#.#} {.6789:p1}");
+			result.Should().Be($"{123.43:#.#} {.6789:p1}");
 		}
 
 		[Fact]
@@ -107,7 +108,7 @@ namespace FluentValidation.Tests {
 				.AppendArgument("now", now)
 				.BuildMessage("{now:g} {now:MM-dd-yy} {now:f}");
 
-			result.ShouldEqual($"{now:g} {now:MM-dd-yy} {now:f}");
+			result.Should().Be($"{now:g} {now:MM-dd-yy} {now:f}");
 		}
 
 		[Fact]
@@ -117,7 +118,7 @@ namespace FluentValidation.Tests {
 				.AppendArgument("foo", now)
 				.BuildMessage("{foo:g} {unknown} {unknown:format}");
 
-			result.ShouldEqual($"{(now.ToString("g"))} {{unknown}} {{unknown:format}}");
+			result.Should().Be($"{(now.ToString("g"))} {{unknown}} {{unknown:format}}");
 		}
 
 		[Fact]
@@ -127,7 +128,7 @@ namespace FluentValidation.Tests {
 				.AppendArgument("foo", now)
 				.BuildMessage("{foo:yyyy-MM-dd} {0}");
 
-			result.ShouldEqual("2018-02-01 {0}");
+			result.Should().Be("2018-02-01 {0}");
 		}
 	}
 }

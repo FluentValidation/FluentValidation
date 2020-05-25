@@ -26,6 +26,7 @@ namespace FluentValidation.Tests {
 	using TestHelper;
 	using Validators;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 
 	public class ValidatorTesterTester {
 		private TestValidator validator;
@@ -138,7 +139,7 @@ namespace FluentValidation.Tests {
 				validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator))
 			);
 
-			ex.Message.ShouldEqual("Expected property 'Address' to have a child validator of type 'AddressValidator.'. Instead found 'none'");
+			ex.Message.Should().Be("Expected property 'Address' to have a child validator of type 'AddressValidator.'. Instead found 'none'");
 		}
 
 
@@ -160,7 +161,7 @@ namespace FluentValidation.Tests {
 				validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator))
 			);
 
-			ex.Message.ShouldEqual("Expected property 'Orders' to have a child validator of type 'OrderValidator.'. Instead found 'none'");
+			ex.Message.Should().Be("Expected property 'Orders' to have a child validator of type 'OrderValidator.'. Instead found 'none'");
 		}
 
 		[Fact]
@@ -170,7 +171,7 @@ namespace FluentValidation.Tests {
 				validator.ShouldHaveChildValidator(x => x.Address, typeof(OrderValidator))
 			);
 
-			ex.Message.ShouldEqual("Expected property 'Address' to have a child validator of type 'OrderValidator.'. Instead found 'AddressValidator'");
+			ex.Message.Should().Be("Expected property 'Address' to have a child validator of type 'OrderValidator.'. Instead found 'AddressValidator'");
 		}
 
 		[Fact]
@@ -227,7 +228,7 @@ namespace FluentValidation.Tests {
 				result.ShouldHaveValidationErrorFor(x => x.Address.Line1);
 			});
 
-			ex.Message.ShouldEqual("Expected a validation error for property Address.Line1");
+			ex.Message.Should().Be("Expected a validation error for property Address.Line1");
 		}
 
 		[Fact]
@@ -243,7 +244,7 @@ namespace FluentValidation.Tests {
 				result.ShouldHaveValidationErrorFor(x => x.Address.Line1);
 			});
 
-			ex.Message.ShouldEqual("Expected a validation error for property Address.Line1");
+			ex.Message.Should().Be("Expected a validation error for property Address.Line1");
 		}
 
 		[Fact]
@@ -336,7 +337,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual("Expected an error message of 'foo'. Actual message was 'bar'");
+				e.Message.Should().Be("Expected an error message of 'foo'. Actual message was 'bar'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -366,10 +367,10 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual($"Found an unexpected error message of '{withoutErrMsg}'");
+				e.Message.Should().Be($"Found an unexpected error message of '{withoutErrMsg}'");
 			}
 
-			exceptionCaught.ShouldEqual(errMessages.Contains(withoutErrMsg));
+			exceptionCaught.Should().Be(errMessages.Contains(withoutErrMsg));
     }
 
     [Fact]
@@ -389,7 +390,7 @@ namespace FluentValidation.Tests {
       }
       catch (ValidationTestException e) {
         exceptionCaught = true;
-        e.Message.ShouldEqual("Expected message argument 'Foo' with value 'foo'. Actual value was 'bar'");
+        e.Message.Should().Be("Expected message argument 'Foo' with value 'foo'. Actual value was 'bar'");
       }
 
       exceptionCaught.ShouldBeTrue();
@@ -408,7 +409,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual("Expected custom state of 'foo'. Actual state was 'bar'");
+				e.Message.Should().Be("Expected custom state of 'foo'. Actual state was 'bar'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -428,7 +429,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual("Found an unexpected custom state of 'bar'");
+				e.Message.Should().Be("Found an unexpected custom state of 'bar'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -447,7 +448,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual("Expected an error code of 'foo'. Actual error code was 'bar'");
+				e.Message.Should().Be("Expected an error code of 'foo'. Actual error code was 'bar'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -467,7 +468,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual("Found an unexpected error code of 'bar'");
+				e.Message.Should().Be("Found an unexpected error code of 'bar'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -486,7 +487,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual($"Expected a severity of '{nameof(Severity.Error)}'. Actual severity was '{nameof(Severity.Warning)}'");
+				e.Message.Should().Be($"Expected a severity of '{nameof(Severity.Error)}'. Actual severity was '{nameof(Severity.Warning)}'");
 			}
 
 			exceptionCaught.ShouldBeTrue();
@@ -506,7 +507,7 @@ namespace FluentValidation.Tests {
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
 
-				e.Message.ShouldEqual($"Found an unexpected severity of '{nameof(Severity.Warning)}'");
+				e.Message.Should().Be($"Found an unexpected severity of '{nameof(Severity.Warning)}'");
 			}
 
 			exceptionCaught.ShouldBeTrue();

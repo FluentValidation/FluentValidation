@@ -3,6 +3,7 @@ namespace FluentValidation.Tests {
 	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
+	using FluentAssertions;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.Extensions.DependencyInjection;
 	using Xunit;
@@ -34,7 +35,7 @@ namespace FluentValidation.Tests {
 		public async Task Resolves_explicit_child_validator() {
 			var result = await _client.GetErrors("InjectsExplicitChildValidator", new FormData());
 			result.IsValidField("Child.Name").ShouldBeFalse();
-			result.GetError("Child.Name").ShouldEqual("NotNullInjected");
+			result.GetError("Child.Name").Should().Be("NotNullInjected");
 		}
 
 		[Fact]
@@ -43,7 +44,7 @@ namespace FluentValidation.Tests {
 			formData.Add("Children[0].Name", null);
 			var result = await _client.GetErrors("InjectsExplicitChildValidatorCollection", formData);
 			result.IsValidField("Children[0].Name").ShouldBeFalse();
-			result.GetError("Children[0].Name").ShouldEqual("NotNullInjected");
+			result.GetError("Children[0].Name").Should().Be("NotNullInjected");
 		}
 	}
 }

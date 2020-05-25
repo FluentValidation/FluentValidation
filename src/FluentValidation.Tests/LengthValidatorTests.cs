@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 	using Validators;
 
@@ -117,14 +118,14 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Length(1, 2));
 			var result = validator.Validate(new Person { Surname = "Gire and gimble in the wabe" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be between 1 and 2 characters. You entered 27 characters.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Surname' must be between 1 and 2 characters. You entered 27 characters.");
 		}
 
 		[Fact]
 		public void Min_and_max_properties_should_be_set() {
 			var validator = new LengthValidator(1, 5);
-			validator.Min.ShouldEqual(1);
-			validator.Max.ShouldEqual(5);
+			validator.Min.Should().Be(1);
+			validator.Max.Should().Be(5);
 		}
 
 		[Fact]
@@ -141,7 +142,7 @@ namespace FluentValidation.Tests {
 		public void When_the_minlength_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).MinimumLength(4));
 			var result = validator.Validate(new Person { Surname = "abc" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("The length of 'Surname' must be at least 4 characters. You entered 3 characters.");
+			result.Errors.Single().ErrorMessage.Should().Be("The length of 'Surname' must be at least 4 characters. You entered 3 characters.");
 		}
 
 
@@ -149,7 +150,7 @@ namespace FluentValidation.Tests {
 		public void When_the_maxlength_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).MaximumLength(4));
 			var result = validator.Validate(new Person { Surname = "abcde" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("The length of 'Surname' must be 4 characters or fewer. You entered 5 characters.");
+			result.Errors.Single().ErrorMessage.Should().Be("The length of 'Surname' must be 4 characters or fewer. You entered 5 characters.");
 		}
 	}
 }

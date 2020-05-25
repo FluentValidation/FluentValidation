@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Threading.Tasks;
+	using FluentAssertions;
 	using Xunit;
 
 
@@ -85,7 +86,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -95,7 +96,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = await validator.ValidateAsync(new Person());
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -105,7 +106,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -118,7 +119,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = await validator.ValidateAsync(new Person());
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -128,7 +129,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -138,7 +139,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = await validator.ValidateAsync(new Person());
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		private class TestConditionValidator : AbstractValidator<Person> {

@@ -35,7 +35,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
 
 			var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+			result.Errors.Single().ErrorMessage.Should().Be("foo");
 
 			validator.RemoveRule(x => x.Surname, typeof(LengthValidator));
 
@@ -48,7 +48,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
 
 			var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+			result.Errors.Single().ErrorMessage.Should().Be("foo");
 
 			validator.ReplaceRule(x => x.Surname, new LengthValidator(10, 20));
 
@@ -61,7 +61,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.NameField).Length(5, 10).WithMessage("foo");
 
 			var result = validator.Validate(new Person { NameField = "Matthew Leibowitz" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+			result.Errors.Single().ErrorMessage.Should().Be("foo");
 
 			validator.ReplaceRule(x => x.NameField, new LengthValidator(10, 20));
 
@@ -74,7 +74,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).Length(5, 10).WithMessage("foo");
 
 			var result = validator.Validate(new Person {Surname = "Matthew Leibowitz"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
+			result.Errors.Single().ErrorMessage.Should().Be("foo");
 
 			validator.ClearRules(x => x.Surname);
 

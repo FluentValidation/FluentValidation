@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 	using Validators;
 
@@ -57,7 +58,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void When_validation_fails_the_default_error_should_be_set() {
 			var result = validator.Validate(new Person{Forename = "Foo"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("The specified condition was not met for 'Forename'.");
+			result.Errors.Single().ErrorMessage.Should().Be("The specified condition was not met for 'Forename'.");
 		}
 
 		[Fact]
@@ -72,18 +73,18 @@ namespace FluentValidation.Tests {
 			var error = result.Errors.Single();
 
 			error.ShouldNotBeNull();
-			error.PropertyName.ShouldEqual("Forename");
-			error.AttemptedValue.ShouldEqual("test");
-			error.ErrorCode.ShouldEqual("PredicateValidator");
+			error.PropertyName.Should().Be("Forename");
+			error.AttemptedValue.Should().Be("test");
+			error.ErrorCode.Should().Be("PredicateValidator");
 
-			error.FormattedMessageArguments.Length.ShouldEqual(0);
+			error.FormattedMessageArguments.Length.Should().Be(0);
 
-			error.FormattedMessagePlaceholderValues.Count.ShouldEqual(2);
+			error.FormattedMessagePlaceholderValues.Count.Should().Be(2);
 			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
 			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyValue").ShouldBeTrue();
 
-			error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Forename");
-			error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
+			error.FormattedMessagePlaceholderValues["PropertyName"].Should().Be("Forename");
+			error.FormattedMessagePlaceholderValues["PropertyValue"].Should().Be("test");
 		}
 	}
 }

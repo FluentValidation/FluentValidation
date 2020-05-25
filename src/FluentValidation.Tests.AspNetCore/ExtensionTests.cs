@@ -19,6 +19,7 @@
 #endregion
 
 namespace FluentValidation.Tests.AspNetCore {
+	using FluentAssertions;
 	using Xunit;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -41,17 +42,17 @@ namespace FluentValidation.Tests.AspNetCore {
 			result.AddToModelState(modelstate, null);
 
 			modelstate.IsValid.ShouldBeFalse();
-			modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
-			modelstate["bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
-			modelstate[""].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
+			modelstate["foo"].Errors[0].ErrorMessage.Should().Be("A foo error occurred");
+			modelstate["bar"].Errors[0].ErrorMessage.Should().Be("A bar error occurred");
+			modelstate[""].Errors[0].ErrorMessage.Should().Be("A nameless error occurred");
 		}
 
 		[Fact]
 		public void Should_persist_modelstate_with_empty_prefix() {
 			var modelstate = new ModelStateDictionary();
 			result.AddToModelState(modelstate, "");
-			modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
-			modelstate[""].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
+			modelstate["foo"].Errors[0].ErrorMessage.Should().Be("A foo error occurred");
+			modelstate[""].Errors[0].ErrorMessage.Should().Be("A nameless error occurred");
 		}
 
 		[Fact]
@@ -60,9 +61,9 @@ namespace FluentValidation.Tests.AspNetCore {
 			result.AddToModelState(modelstate, "baz");
 
 			modelstate.IsValid.ShouldBeFalse();
-			modelstate["baz.foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
-			modelstate["baz.bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
-			modelstate["baz"].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
+			modelstate["baz.foo"].Errors[0].ErrorMessage.Should().Be("A foo error occurred");
+			modelstate["baz.bar"].Errors[0].ErrorMessage.Should().Be("A bar error occurred");
+			modelstate["baz"].Errors[0].ErrorMessage.Should().Be("A nameless error occurred");
 		}
 
 		[Fact]
@@ -79,7 +80,7 @@ namespace FluentValidation.Tests.AspNetCore {
 
 			result.AddToModelState(modelstate, "model");
 
-			modelstate["model.Foo"].Errors.Count.ShouldEqual(2);
+			modelstate["model.Foo"].Errors.Count.Should().Be(2);
 		}
 	}
 }

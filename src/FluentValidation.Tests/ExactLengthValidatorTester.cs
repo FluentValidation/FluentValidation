@@ -20,6 +20,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Xunit;
 	using Validators;
 
@@ -55,14 +56,14 @@ namespace FluentValidation.Tests {
 		public void When_the_validator_fails_the_error_message_should_be_set() {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(2) };
 			var result = validator.Validate(new Person() { Surname = "test"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be 2 characters in length. You entered 4 characters.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Surname' must be 2 characters in length. You entered 4 characters.");
 		}
 
 		[Fact]
 		public void Min_and_max_properties_should_be_set() {
 			var validator = new ExactLengthValidator(5);
-			validator.Min.ShouldEqual(5);
-			validator.Max.ShouldEqual(5);
+			validator.Min.Should().Be(5);
+			validator.Max.Should().Be(5);
 		}
 
 		[Fact]
@@ -73,22 +74,22 @@ namespace FluentValidation.Tests {
 			var error = result.Errors.SingleOrDefault(e => e.ErrorCode == "ExactLengthValidator");
 
 			error.ShouldNotBeNull();
-			error.PropertyName.ShouldEqual("Surname");
-			error.AttemptedValue.ShouldEqual("test");
-			error.FormattedMessageArguments.Length.ShouldEqual(0);
+			error.PropertyName.Should().Be("Surname");
+			error.AttemptedValue.Should().Be("test");
+			error.FormattedMessageArguments.Length.Should().Be(0);
 
-			error.FormattedMessagePlaceholderValues.Count.ShouldEqual(5);
+			error.FormattedMessagePlaceholderValues.Count.Should().Be(5);
 			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
 			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyValue").ShouldBeTrue();
 			error.FormattedMessagePlaceholderValues.ContainsKey("MinLength").ShouldBeTrue();
 			error.FormattedMessagePlaceholderValues.ContainsKey("MaxLength").ShouldBeTrue();
 			error.FormattedMessagePlaceholderValues.ContainsKey("TotalLength").ShouldBeTrue();
 
-			error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Surname");
-			error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
-			error.FormattedMessagePlaceholderValues["MinLength"].ShouldEqual(2);
-			error.FormattedMessagePlaceholderValues["MaxLength"].ShouldEqual(2);
-			error.FormattedMessagePlaceholderValues["TotalLength"].ShouldEqual(4);
+			error.FormattedMessagePlaceholderValues["PropertyName"].Should().Be("Surname");
+			error.FormattedMessagePlaceholderValues["PropertyValue"].Should().Be("test");
+			error.FormattedMessagePlaceholderValues["MinLength"].Should().Be(2);
+			error.FormattedMessagePlaceholderValues["MaxLength"].Should().Be(2);
+			error.FormattedMessagePlaceholderValues["TotalLength"].Should().Be(4);
 		}
 	}
 }

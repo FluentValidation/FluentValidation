@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Linq;
+	using FluentAssertions;
 	using Xunit;
 
 	public class AssemblyScannerTester {
@@ -28,11 +29,11 @@ namespace FluentValidation.Tests {
 			var scanner = new AssemblyScanner(new[] { typeof(Model1Validator), typeof(Model2Validator) });
 			var results = scanner.ToList();
 
-			results[0].ValidatorType.ShouldEqual(typeof(Model1Validator));
-			results[0].InterfaceType.ShouldEqual(typeof(IValidator<Model1>));
+			results[0].ValidatorType.Should().Be(typeof(Model1Validator));
+			results[0].InterfaceType.Should().Be(typeof(IValidator<Model1>));
 
-			results[1].ValidatorType.ShouldEqual(typeof(Model2Validator));
-			results[1].InterfaceType.ShouldEqual(typeof(IValidator<Model2>));
+			results[1].ValidatorType.Should().Be(typeof(Model2Validator));
+			results[1].InterfaceType.Should().Be(typeof(IValidator<Model2>));
 		}
 
 		[Fact]
@@ -41,7 +42,7 @@ namespace FluentValidation.Tests {
 			var results = new List<AssemblyScanner.AssemblyScanResult>();
 
 			scanner.ForEach(x => results.Add(x));
-			results.Count.ShouldEqual(2);
+			results.Count.Should().Be(2);
 		}
 
 		public class Model1 {

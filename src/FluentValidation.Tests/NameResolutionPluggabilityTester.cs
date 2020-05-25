@@ -2,6 +2,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;
     using System;
+	using FluentAssertions;
 	using TestHelper;
 
 	public class NameResolutionPluggabilityTester : IDisposable {
@@ -14,7 +15,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var error = validator.Validate(new Person()).Errors.Single();
-			error.PropertyName.ShouldEqual("foo");
+			error.PropertyName.Should().Be("foo");
 		}
 
 		[Fact]
@@ -24,7 +25,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var error = validator.Validate(new Person { Address = new Address() }).Errors.Single();
-			error.PropertyName.ShouldEqual("Address.Country");
+			error.PropertyName.Should().Be("Address.Country");
 
 		}
 		

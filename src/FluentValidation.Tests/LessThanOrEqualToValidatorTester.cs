@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Threading;
+	using FluentAssertions;
 	using Internal;
 	using Xunit;
 	using Validators;
@@ -56,12 +57,12 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_set_default_error_when_validation_fails() {
 			var result = validator.Validate(new Person{Id=2});
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Id' must be less than or equal to '1'.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Id' must be less than or equal to '1'.");
 		}
 
 		[Fact]
 		public void Comparison_type() {
-			new LessThanOrEqualValidator(value).Comparison.ShouldEqual(Comparison.LessThanOrEqual);
+			new LessThanOrEqualValidator(value).Comparison.Should().Be(Comparison.LessThanOrEqual);
 		}
 
 		[Fact]
@@ -69,7 +70,7 @@ namespace FluentValidation.Tests {
 			validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThanOrEqualTo(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 			var result = validator.Validate(new Person {Id = 1, AnotherInt = 0});
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Another Int");
+			result.Errors[0].ErrorMessage.Should().Be("Another Int");
 		}
 
 		[Fact]
@@ -80,7 +81,7 @@ namespace FluentValidation.Tests {
 				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
 				validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThanOrEqualTo(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 				var result = validator.Validate(new Person {Id = 1, AnotherInt = 0});
-				result.Errors[0].ErrorMessage.ShouldEqual("AnotherIntFoo");
+				result.Errors[0].ErrorMessage.Should().Be("AnotherIntFoo");
 			}
 			finally {
 				ValidatorOptions.Global.DisplayNameResolver = originalResolver;

@@ -26,6 +26,7 @@ namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using FluentAssertions;
 
 
 	public class ValidatorSelectorTests {
@@ -37,7 +38,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new TestObject(), "SomeProperty");
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -47,7 +48,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new TestObject(), "SomeProperty");
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -57,7 +58,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new TestObject(), x => x.SomeProperty);
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -67,7 +68,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new TestObject(), x => x.SomeProperty);
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 		}
 
 		[Fact]
@@ -81,7 +82,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new TestObject { SomeNullableProperty = 0 }, x => x.SomeNullableProperty);
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 		}
 
 		[Fact]
@@ -92,8 +93,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person { Address = new Address() }, "Address.Id");
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
+			result.Errors.Count.Should().Be(1);
+			result.Errors[0].PropertyName.Should().Be("Address.Id");
 		}
 
 		[Fact]
@@ -104,8 +105,8 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person { Address = new Address() }, x => x.Address.Id);
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
+			result.Errors.Count.Should().Be(1);
+			result.Errors[0].PropertyName.Should().Be("Address.Id");
 
 		}
 
@@ -129,8 +130,8 @@ namespace FluentValidation.Tests {
 			validator.Include(validator2);
 
 			var result = validator.Validate(new Person(), "Forename");
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Forename");
+			result.Errors.Count.Should().Be(1);
+			result.Errors[0].PropertyName.Should().Be("Forename");
 		}
 
 		[Fact]
@@ -142,8 +143,8 @@ namespace FluentValidation.Tests {
 			validator.Include(validator2);
 
 			var result = await validator.ValidateAsync(new Person(), default, "Forename");
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Forename");
+			result.Errors.Count.Should().Be(1);
+			result.Errors[0].PropertyName.Should().Be("Forename");
 		}
 
 		private PropertyRule CreateRule(Expression<Func<TestObject, object>> expression) {

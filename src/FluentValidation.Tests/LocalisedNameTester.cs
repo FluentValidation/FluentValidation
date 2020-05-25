@@ -21,6 +21,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
+	using FluentAssertions;
 	using Xunit;
 
 	public class LocalisedNameTester : IDisposable {
@@ -39,7 +40,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
-			result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
+			result.Errors.Single().ErrorMessage.Should().Be("'foo' must not be empty.");
 		}
 
 		[Fact]
@@ -49,7 +50,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var result = validator.Validate(new Person());
-			result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
+			result.Errors.Single().ErrorMessage.Should().Be("'foo' must not be empty.");
 		}
 
 		public static class MyResources {

@@ -26,6 +26,7 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Validators;
 	using System.Reflection;
+	using FluentAssertions;
 
 	public class LessThanValidatorTester {
 		int value = 1;
@@ -60,7 +61,7 @@ namespace FluentValidation.Tests {
 		public void Should_set_default_validation_message_when_validation_fails() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(value));
 			var result = validator.Validate(new Person{Id=2});
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Id' must be less than '1'.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Id' must be less than '1'.");
 		}
 
 		[Fact]
@@ -68,7 +69,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 			var result = validator.Validate(new Person { Id = 2, AnotherInt = 1 });
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Another Int");
+			result.Errors[0].ErrorMessage.Should().Be("Another Int");
 		}
 
 		[Fact]
@@ -79,7 +80,7 @@ namespace FluentValidation.Tests {
 				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
 				var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 				var result = validator.Validate(new Person { Id = 2, AnotherInt = 1 });
-				result.Errors[0].ErrorMessage.ShouldEqual("AnotherIntFoo");
+				result.Errors[0].ErrorMessage.Should().Be("AnotherIntFoo");
 			}
 			finally {
 				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
@@ -98,7 +99,7 @@ namespace FluentValidation.Tests {
 		public void Extracts_property_from_expression() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt));
 			var propertyValidator = validator.CreateDescriptor().GetValidatorsForMember("Id").OfType<LessThanValidator>().Single();
-			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("AnotherInt"));
+			propertyValidator.MemberToCompare.Should().Be(typeof(Person).GetProperty("AnotherInt"));
 		}
 
 		[Fact]
@@ -134,13 +135,13 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Extracts_property_from_constant_using_expression() {
 			IComparisonValidator validator = new LessThanValidator(2);
-			validator.ValueToCompare.ShouldEqual(2);
+			validator.ValueToCompare.Should().Be(2);
 		}
 
 		[Fact]
 		public void Comparison_type() {
 			var validator = new LessThanValidator(1);
-			validator.Comparison.ShouldEqual(Comparison.LessThan);
+			validator.Comparison.Should().Be(Comparison.LessThan);
 		}
 
 		[Fact]

@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
+	using FluentAssertions;
 	using Internal;
 	using Results;
 	using Validators;
@@ -33,7 +34,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			var result = validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new RulesetValidatorSelector("Names")));
 
-			result.Errors.Count.ShouldEqual(2); // 2 rules in this ruleset
+			result.Errors.Count.Should().Be(2); // 2 rules in this ruleset
 			AssertExecuted(result, "Names");
 		}
 
@@ -42,7 +43,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			var result = validator.Validate(new Person());
 
-			result.Errors.Count.ShouldEqual(1); // 1 rule not inside a ruleset
+			result.Errors.Count.Should().Be(1); // 1 rule not inside a ruleset
 			AssertExecuted(result, "default");
 		}
 
@@ -65,7 +66,7 @@ namespace FluentValidation.Tests {
 
 			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector("Test")));
 
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 			AssertExecuted(result, "Test");
 		}
 
@@ -89,7 +90,7 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector("Test")));
 
 
-			result.Errors.Count.ShouldEqual(2); //one for each order
+			result.Errors.Count.Should().Be(2); //one for each order
 			AssertExecuted(result, "Test");
 		}
 
@@ -103,7 +104,7 @@ namespace FluentValidation.Tests {
 			var person = new Person();
 			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector("Names", "Id")));
 
-			result.Errors.Count.ShouldEqual(3);
+			result.Errors.Count.Should().Be(3);
 			AssertExecuted(result, "Names", "Id");
 		}
 
@@ -112,7 +113,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			var person = new Person();
 			var result = validator.Validate(person, ruleSet: "*");
-			result.Errors.Count.ShouldEqual(3);
+			result.Errors.Count.Should().Be(3);
 			AssertExecuted(result, "Names", "default");
 		}
 
@@ -124,7 +125,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var result = validator.Validate(new Person(), ruleSet : "default,Names");
-			result.Errors.Count.ShouldEqual(3);
+			result.Errors.Count.Should().Be(3);
 			AssertExecuted(result, "default", "Names");
 
 		}
@@ -173,7 +174,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var result = validator.Validate(new Person(), ruleSet: "First, Second");
-			result.Errors.Count.ShouldEqual(2);
+			result.Errors.Count.Should().Be(2);
 			AssertExecuted(result, "First", "Second");
 		}
 
@@ -185,19 +186,19 @@ namespace FluentValidation.Tests {
 			});
 
 			var result = validator.Validate(new Person(), ruleSet: "First");
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 			AssertExecuted(result, "First");
 
 			result = validator.Validate(new Person(), ruleSet: "Second");
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 			AssertExecuted(result, "Second");
 
 			result = validator.Validate(new Person(), ruleSet: "Third");
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 			AssertExecuted(result);
 
 			result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 			AssertExecuted(result, "default");
 		}
 
@@ -209,15 +210,15 @@ namespace FluentValidation.Tests {
 			});
 
 			var result = validator.Validate(new Person(), ruleSet: "First");
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 			AssertExecuted(result, "First");
 
 			result = validator.Validate(new Person(), ruleSet: "Second");
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors.Count.Should().Be(0);
 			AssertExecuted(result);
 
 			result = validator.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
+			result.Errors.Count.Should().Be(1);
 			AssertExecuted(result, "default");
 		}
 
@@ -230,13 +231,13 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull();
 
 			var result = validator.Validate(new Person(), ruleSet: "default");
-			result.Errors.Count.ShouldEqual(2);
+			result.Errors.Count.Should().Be(2);
 			AssertExecuted(result, "default");
 		}
 
 		private void AssertExecuted(ValidationResult result, params string[] names) {
-			result.RuleSetsExecuted.Length.ShouldEqual(names.Length);
-			result.RuleSetsExecuted.Intersect(names).Count().ShouldEqual(names.Length);
+			result.RuleSetsExecuted.Length.Should().Be(names.Length);
+			result.RuleSetsExecuted.Intersect(names).Count().Should().Be(names.Length);
 		}
 
 		private class TestValidator : AbstractValidator<Person> {

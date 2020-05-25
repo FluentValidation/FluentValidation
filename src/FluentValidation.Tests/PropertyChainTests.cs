@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using Xunit;
 	using System.Reflection;
+	using FluentAssertions;
 
 
 	public class PropertyChainTests {
@@ -38,7 +39,7 @@ namespace FluentValidation.Tests {
 			chain.Add(typeof(Child).GetProperty("GrandChild"));
 			const string expected = "Child.GrandChild";
 
-			chain.ToString().ShouldEqual(expected);
+			chain.ToString().Should().Be(expected);
 		}
 
 		[Fact]
@@ -48,7 +49,7 @@ namespace FluentValidation.Tests {
 			chain.Add(typeof(Child).GetProperty("GrandChild"));
 			const string expected = "Child[0].GrandChild";
 
-			chain.ToString().ShouldEqual(expected);
+			chain.ToString().Should().Be(expected);
 		}
 
 		[Fact]
@@ -81,7 +82,7 @@ namespace FluentValidation.Tests {
 		public void Creates_from_expression() {
 			Expression<Func<Person, int>> expr = x => x.Address.Id;
 			var chain = PropertyChain.FromExpression(expr);
-			chain.ToString().ShouldEqual("Address.Id");
+			chain.ToString().Should().Be("Address.Id");
 		}
 
 		[Fact]
@@ -89,7 +90,7 @@ namespace FluentValidation.Tests {
 			chain.Add("");
 			chain.Add("Foo");
 
-			chain.ToString().ShouldEqual("Foo");
+			chain.ToString().Should().Be("Foo");
 		}
 
 		public class Parent {

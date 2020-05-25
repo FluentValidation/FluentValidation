@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
+	using FluentAssertions;
 	using Validators;
 	using Xunit;
 
@@ -36,7 +37,7 @@ namespace FluentValidation.Tests {
 			const string expected = "Surname";
 			validator.RuleFor(x => x.Surname).NotNull().WithMessage("{PropertyName}");
 			string error = validator.Validate(new Person()).Errors.Single().ErrorMessage;
-			error.ShouldEqual(expected);
+			error.Should().Be(expected);
         }
 
 		[Fact]
@@ -46,7 +47,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var error = validator.Validate(new Person()).Errors.Single().ErrorMessage;
-			error.ShouldEqual("Test 0");
+			error.Should().Be("Test 0");
 		}
 
 		[Fact]
@@ -60,8 +61,8 @@ namespace FluentValidation.Tests {
 			});
 
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("Foo");
-			result.Errors[1].ErrorMessage.ShouldEqual("'Surname' must not be empty.");
+			result.Errors[0].ErrorMessage.Should().Be("Foo");
+			result.Errors[1].ErrorMessage.Should().Be("'Surname' must not be empty.");
 		}
 
 
@@ -69,21 +70,21 @@ namespace FluentValidation.Tests {
 		public void Uses_property_value_in_message() {
 			validator.RuleFor(x => x.Surname).NotEqual("foo").WithMessage(person => $"was {person.Surname}");
 			var error = validator.Validate(new Person { Surname = "foo"}).Errors.Single().ErrorMessage;
-			error.ShouldEqual("was foo");
+			error.Should().Be("was foo");
 		}
 
 		[Fact]
 		public void Replaces_propertyvalue_placeholder() {
 			validator.RuleFor(x => x.Email).EmailAddress().WithMessage("Was '{PropertyValue}'");
 			var result = validator.Validate(new Person() {Email = "foo"});
-			result.Errors.Single().ErrorMessage.ShouldEqual("Was 'foo'");
+			result.Errors.Single().ErrorMessage.Should().Be("Was 'foo'");
 		}
 
 		[Fact]
 		public void Replaces_propertyvalue_with_empty_string_when_null() {
 			validator.RuleFor(x => x.Surname).NotNull().WithMessage("Was '{PropertyValue}'");
 			var result = validator.Validate(new Person());
-			result.Errors.Single().ErrorMessage.ShouldEqual("Was ''");
+			result.Errors.Single().ErrorMessage.Should().Be("Was ''");
 		}
 
 	}

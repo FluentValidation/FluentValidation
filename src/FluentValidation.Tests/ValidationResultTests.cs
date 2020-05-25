@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System;
+	using FluentAssertions;
 	using Newtonsoft.Json;
 	using Xunit;
 	using Results;
@@ -40,7 +41,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_add_errors() {
 			var result = new ValidationResult(new[] {new ValidationFailure(null, null), new ValidationFailure(null, null)});
-			result.Errors.Count.ShouldEqual(2);
+			result.Errors.Count.Should().Be(2);
 		}
 
 		[Fact]
@@ -48,9 +49,9 @@ namespace FluentValidation.Tests {
 			var result = new ValidationResult(new[] { new ValidationFailure("Property", "Error"),  });
 			var serialized = JsonConvert.SerializeObject(result);
 			var deserialized = JsonConvert.DeserializeObject<ValidationResult>(serialized);
-			deserialized.Errors.Count.ShouldEqual(1);
-			deserialized.Errors[0].ErrorMessage.ShouldEqual("Error");
-			deserialized.Errors[0].PropertyName.ShouldEqual("Property");
+			deserialized.Errors.Count.Should().Be(1);
+			deserialized.Errors[0].ErrorMessage.Should().Be("Error");
+			deserialized.Errors[0].PropertyName.Should().Be("Property");
 		}
 
 		[Fact]
@@ -58,8 +59,8 @@ namespace FluentValidation.Tests {
 			var failure = new ValidationFailure("Property", "Error");
 			var serialized = JsonConvert.SerializeObject(failure);
 			var deserialized = JsonConvert.DeserializeObject<ValidationFailure>(serialized);
-			deserialized.PropertyName.ShouldEqual("Property");
-			deserialized.ErrorMessage.ShouldEqual("Error");
+			deserialized.PropertyName.Should().Be("Property");
+			deserialized.ErrorMessage.Should().Be("Error");
 		}
 
 		[Fact]

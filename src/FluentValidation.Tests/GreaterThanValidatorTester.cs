@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Threading;
+	using FluentAssertions;
 	using Internal;
 	using Xunit;
 	using Validators;
@@ -58,7 +59,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_set_default_error_when_validation_fails() {
 			var result = validator.Validate(new Person{Id=0});
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Id' must be greater than '1'.");
+			result.Errors.Single().ErrorMessage.Should().Be("'Id' must be greater than '1'.");
 		}
 
 		[Fact]
@@ -66,7 +67,7 @@ namespace FluentValidation.Tests {
 			validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThan(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 			var result = validator.Validate(new Person { Id = 0, AnotherInt = 1 });
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Another Int");
+			result.Errors[0].ErrorMessage.Should().Be("Another Int");
 		}
 
 		[Fact]
@@ -77,7 +78,7 @@ namespace FluentValidation.Tests {
 				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
 				validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThan(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 				var result = validator.Validate(new Person { Id = 0, AnotherInt = 1 });
-				result.Errors[0].ErrorMessage.ShouldEqual("AnotherIntFoo");
+				result.Errors[0].ErrorMessage.Should().Be("AnotherIntFoo");
 			}
 			finally {
 				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
@@ -119,7 +120,7 @@ namespace FluentValidation.Tests {
 			var propertyValidator = validator.CreateDescriptor()
 				.GetValidatorsForMember("Id").OfType<GreaterThanValidator>().Single();
 
-			propertyValidator.Comparison.ShouldEqual(Comparison.GreaterThan);
+			propertyValidator.Comparison.Should().Be(Comparison.GreaterThan);
 		}
 
 		[Fact]

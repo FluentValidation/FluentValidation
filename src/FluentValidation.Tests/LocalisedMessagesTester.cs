@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using System.Globalization;
 	using System.Linq;
 	using System.Threading;
+	using FluentAssertions;
 	using Internal;
 	using Xunit;
 	using Resources;
@@ -53,7 +54,7 @@ namespace FluentValidation.Tests {
 					var errorMessage = new MessageFormatter().AppendPropertyName("Surname").BuildMessage(message);
 					Debug.WriteLine(errorMessage);
 					var result = validator.Validate(new Person{Surname = null});
-					result.Errors.Single().ErrorMessage.ShouldEqual(errorMessage);
+					result.Errors.Single().ErrorMessage.Should().Be(errorMessage);
 				}
 			}
 			finally {
@@ -68,7 +69,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => "el foo");
 
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("el foo");
+			result.Errors[0].ErrorMessage.Should().Be("el foo");
 		}
 
 		[Fact]
@@ -76,7 +77,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => string.Format("{{PropertyName}} {0}", x.AnotherInt));
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
+			result.Errors[0].ErrorMessage.Should().Be("Forename 0");
 		}
 
 
@@ -85,7 +86,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => string.Format("{{PropertyName}} {0}", x.AnotherInt));
 			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
+			result.Errors[0].ErrorMessage.Should().Be("Forename 0");
 		}
 
 		[Fact]
@@ -93,7 +94,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Forename).Equal("Foo").WithMessage((x, forename) => $"Hello {forename}");
 			var result = validator.Validate(new Person {Forename = "Jeremy"});
-			result.Errors[0].ErrorMessage.ShouldEqual("Hello Jeremy");
+			result.Errors[0].ErrorMessage.Should().Be("Hello Jeremy");
 		}
 
 		[Fact]
@@ -104,7 +105,7 @@ namespace FluentValidation.Tests {
 				.WithMessage((parent, name) => "x");
 
 			var result = validator.Validate(new Person() {NickNames = new[] {"What"}});
-			result.Errors.Single().ErrorMessage.ShouldEqual("x");
+			result.Errors.Single().ErrorMessage.Should().Be("x");
 		}
 	}
 }
