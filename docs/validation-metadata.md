@@ -31,7 +31,7 @@ Or, in version 9.0 and above:
 RuleFor(x => x.Surname).NotNull().WithSeverity(x=> x.Warning);
 ```
 
-In this case, the `ValidationResult` would still have an `IsValid` result of `false`. However, in the list of `Errors`, the `ValidationFailure` pertaining to this field will have `Severity` property set to `Warning`.
+In this case, the `ValidationResult` would still have an `IsValid` result of `false`. However, in the list of `Errors`, the `ValidationFailure` pertaining to this field will have its `Severity` property set to `Warning`.
 
 By default, the severity level of every validation is `Error`. Available options are `Error`, `Warning`, or `Info`.
 
