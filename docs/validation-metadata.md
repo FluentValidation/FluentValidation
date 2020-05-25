@@ -56,4 +56,5 @@ We could modify the Surname rule to:
 RuleFor(x => x.Surname).NotNull().WithErrorCode("ERR1234");
 ```
 
-In this case, the `ValidationResult` would have, in the list of `Errors`, a `ValidationFailure` pertaining to this field with the `ErrorCode` property set to the string that you've entered.
+In this case, the `ValidationResult` would have, in the list of `Errors`, a `ValidationFailure` pertaining to this field with the `ErrorCode` property set to the string that you've specified in your validator.
+
