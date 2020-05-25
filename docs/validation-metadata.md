@@ -34,3 +34,26 @@ RuleFor(x => x.Surname).NotNull().WithSeverity(x=> x.Warning);
 In this case, the `ValidationResult` would still have an `IsValid` result of `false`. However, in the list of `Errors`, the `ValidationFailure` pertaining to this field will have `Severity` property set to `Warning`.
 
 By default, the severity level of every validation is `Error`. Available options are `Error`, `Warning`, or `Info`.
+
+## Returning Custom Codes using ErrorCode
+
+Given the below `PersonValidator`:
+
+```csharp
+ public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator() {
+        RuleFor(x => x.Surname).NotNull();
+        RuleFor(x => x.Forename).NotNull();
+  }
+}
+```
+
+What if we wanted to add a custom error code when the Surname validation fails?
+
+We could modify the Surname rule to:
+
+```csharp
+RuleFor(x => x.Surname).NotNull().WithErrorCode("ERR1234");
+```
+
+In this case, the `ValidationResult` would have, in the list of `Errors`, a `ValidationFailure` pertaining to this field with the `ErrorCode` property set to the string that you've entered.
