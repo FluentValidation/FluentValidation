@@ -13,6 +13,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
     <PackageReference Include="Microsoft.TestPlatform.TestHost" Version="16.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
