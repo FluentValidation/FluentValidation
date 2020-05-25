@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using FluentAssertions;
 	using Xunit;
 
 
@@ -49,7 +50,7 @@ namespace FluentValidation.Tests {
 
 			validator.Validate(person);
 
-			person.ShouldBeTheSameAs(validatedPerson);
+			person.Should().BeSameAs(validatedPerson);
 		}
 
 		[Fact]

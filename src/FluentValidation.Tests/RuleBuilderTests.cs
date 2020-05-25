@@ -53,14 +53,14 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Adding_a_validator_should_return_builder() {
 			var builderWithOptions = builder.SetValidator(new TestPropertyValidator());
-			builderWithOptions.ShouldBeTheSameAs(builder);
+			builderWithOptions.Should().BeSameAs(builder);
 		}
 
 		[Fact]
 		public void Adding_a_validator_should_store_validator() {
 			var validator = new TestPropertyValidator();
 			builder.SetValidator(validator);
-			builder.Rule.CurrentValidator.ShouldBeTheSameAs(validator);
+			builder.Rule.CurrentValidator.Should().BeSameAs(validator);
 		}
 
 		[Fact]

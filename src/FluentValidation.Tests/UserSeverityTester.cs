@@ -62,7 +62,7 @@ namespace FluentValidation.Tests {
 			var person = new Person();
 			validator.Validate(person);
 
-			resultPerson.ShouldBeTheSameAs(person);
+			resultPerson.Should().BeSameAs(person);
 		}
 
 		[Fact]
