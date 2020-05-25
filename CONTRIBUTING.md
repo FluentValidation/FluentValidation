@@ -42,6 +42,10 @@ Tests must be provided for all pull requests that add or change functionality.
 
 The docs are built separately from the source code. They require Python 3 and Sphinx.
 
-Once you have Python installed, you can install Sphinx by opening a command prompt and running `pip install -U sphinx`.
+Once you have Python installed:
+
+* Install Sphinx by opening a command prompt and running `pip install -U sphinx`.
+* Install recommonmark: `pip install recommonmark`
+* Install the theme: `pip install sphinx_rtd_theme`
 
 Once Sphinx is installed, you can build the docs by heading into the `docs` folder and running `make.bat`.
