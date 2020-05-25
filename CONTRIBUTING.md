@@ -22,9 +22,9 @@ Please log a new issue in the appropriate GitHub repository:
 * [Legacy ASP.NET MVC5 / WebApi 2 extensions](https://github.com/FluentValidation/FluentValidation.LegacyWeb)
 
 ## Filing issues
-The best way to get your bug fixed is to be as detailed as you can be about the problem. 
+The best way to get your bug fixed is to be as detailed as you can be about the problem.
 
-Please first check the documentation at https://fluentvalidation.net first to see if your question is addressed there. 
+Please first check the documentation at https://fluentvalidation.net first to see if your question is addressed there.
 If not, then please provide the exact version of FluentValidation that you're using along with a detailed explanation of the issue and complete steps to reproduce the problem is ideal.
 
 Please ensure all sample code is properly formatted and readable (GitHub supports [markdown](https://github.github.com/github-flavored-markdown/))
@@ -36,4 +36,12 @@ Make sure you can build the code. Familiarize yourself with the project workflow
 
 If you wish to submit a new feature, please open an issue to discuss it with the project maintainers - don't open a pull request without first discussing whether the feature fits with the project roadmap.
 
-Tests must be provided for all pull requests that add or change functionality. 
+Tests must be provided for all pull requests that add or change functionality.
+
+## Building the Docs
+
+The docs are built separately from the source code. They require Python 3 and Sphinx.
+
+Once you have Python installed, you can install Sphinx by opening a command prompt and running `pip install -U sphinx`.
+
+Once Sphinx is installed, you can build the docs by heading into the `docs` folder and running `make.bat`.
