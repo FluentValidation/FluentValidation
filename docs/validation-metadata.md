@@ -58,3 +58,25 @@ RuleFor(x => x.Surname).NotNull().WithErrorCode("ERR1234");
 
 In this case, the `ValidationResult` would have, in the list of `Errors`, a `ValidationFailure` pertaining to this field with the `ErrorCode` property set to the string that you've specified in your validator.
 
+## Supplying Additional Validation Information with CustomState
+
+There may be an occasion where you'd like to return contextual information about the state of your validation when it was run. The `WithCustomState` method allows you to set a custom state object that you can return along with your validation results.
+
+Given the below `PersonValidator`:
+
+```csharp
+ public class PersonValidator : AbstractValidator<Person> {
+  public PersonValidator() {
+        RuleFor(x => x.Surname).NotNull();
+        RuleFor(x => x.Forename).NotNull();
+  }
+}
+```
+
+We could assign a custom state by modifying a line to read:
+
+```csharp
+RuleFor(x => x.Forename).NotNull().WithState(x => 1234);
+```
+
+Then, within the `Errors` property of a validation result, the `ValidationFailure` that corresponds to the property will have a `CustomState` property that contains the contents as set within the validator.
