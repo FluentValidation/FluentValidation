@@ -97,7 +97,7 @@ public class PeopleController : ApiController {
 
 Now when you post data to the controller's `Create` method (for example, as JSON) then WebApi will automatically call into FluentValidation to find the corresponding validator. Any validation failures will be stored in the controller's `ModelState` dictionary which can be used to generate an error response which can be returned to the client. 
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](/advanced.html#root-context-data) contain an entry called `InvokedByWebApi` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by WebApi, or manually. 
+*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contain an entry called `InvokedByWebApi` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by WebApi, or manually. 
 
 ## Manual Validation
 

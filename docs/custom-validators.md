@@ -1,6 +1,6 @@
 # Custom Validators
 
-There are several ways to create a custom, reusable validator. The recommended way is to make use of the [Predicate Validator](/built-in-validators.html#predicate-validator) to write a custom validation function, but you can also write a custom implementation of the PropertyValidator class.
+There are several ways to create a custom, reusable validator. The recommended way is to make use of the [Predicate Validator](built-in-validators.html#predicate-validator) to write a custom validation function, but you can also write a custom implementation of the PropertyValidator class.
 
 For these examples, we'll imagine a scenario where you want to create a reusable validator that will ensure a List object contains fewer than 10 items.
 

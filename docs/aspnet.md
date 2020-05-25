@@ -116,7 +116,7 @@ public class PeopleController : Controller {
 
 Now when you post the form, MVC's model-binding infrastructure will validate the `Person` object with the `PersonValidator`, and add the validation results to ModelState.
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](/advanced.html#root-context-data) contains an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically (by MVC), or manually.
+*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contains an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically (by MVC), or manually.
 
 ### Compatibility with ASP.NET's built-in Validation
 
@@ -134,7 +134,7 @@ services.AddMvc().AddFluentValidation(fv => {
 
 ### Implicit vs Explicit Child Property Validation
 
-When validating complex object graphs, by default, you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](/start.html#complex-properties))
+When validating complex object graphs, by default, you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](start.html#complex-properties))
 
 When running an ASP.NET MVC application, you can also optionally enable implicit validation for child properties. When this is enabled, instead of having to specify child validators using `SetValidator`, MVC's validation infrastructure will recursively attempt to automatically find validators for each property. This can be done by setting `ImplicitlyValidateChildProperties` to true:
 
