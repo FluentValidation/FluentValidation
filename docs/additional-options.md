@@ -21,7 +21,7 @@ By default, if these rules fail they will have a severity of "Error". This can b
 RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Warning);
 ```
 
-Or, in version 9.0 and above a callback can be used, which gives you acces to the item being validated which would allow you to conditionally change the severity:
+In version 9.0 and above a callback can be used instead, which also gives you access to the item being validated:
 
 ```csharp
 RuleFor(person => person.Surname).NotNull().WithSeverity(person => Severity.Warning);
