@@ -4,7 +4,7 @@ Additional information can be associated with validation rules in addition to wh
 
 ## Configuring the Severity of Validation Failures
 
-Given the example below of validating a person:
+Given the following example that validates a `Person` object:
 
 ```csharp
  public class PersonValidator : AbstractValidator<Person> {
