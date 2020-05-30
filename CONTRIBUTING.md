@@ -48,4 +48,4 @@ For example, on Linux / within WSL:
 * `cd docs` to go to the docs directory
 * `pip3 install -r requirements.txt` to install the required packages for the docs
 * On WSL, you may need to exit and restart at this point.
-* `make html` to build the site or `make serve` to do auto watch.
+* `make html` to build the site or `make serve` to watch for changes.
