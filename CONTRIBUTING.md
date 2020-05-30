@@ -47,4 +47,5 @@ For example, on Linux / within WSL:
 * `sudo apt install python3-pip`
 * `cd docs` to go to the docs directory
 * `pip3 install -r requirements.txt` to install the required packages for the docs
+* On WSL, you may need to exit and restart at this point.
 * `make html` to build the site or `make serve` to do auto watch.
