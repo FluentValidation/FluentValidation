@@ -48,4 +48,5 @@ For example, on Linux / within WSL:
 * `cd docs` to go to the docs directory
 * `pip3 install -r requirements.txt` to install the required packages for the docs
 * On WSL, you may need to exit and restart at this point.
+*`PATH=$PATH:~/.local/lib/python3.8/site-packages` (you may want to add this to your `.bashrc` file as well.)
 * `make html` to build the site or `make serve` to watch for changes.
