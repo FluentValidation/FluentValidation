@@ -66,36 +66,51 @@ namespace FluentValidation.AspNetCore {
 		internal bool ClientsideEnabled = true;
 		internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};
 		internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
+		internal Func<AssemblyScanner.AssemblyScanResult, bool> TypeFilter { get; set; }
+
+		/// <summary>
+		/// Whether automatic server-side validation should be enabled (default true).
+		/// </summary>
+		public bool AutomaticValidationEnabled { get; set; } = true;
 
 		/// <summary>
 		/// Registers all validators derived from AbstractValidator within the assembly containing the specified type
 		/// </summary>
-		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>() {
-			return RegisterValidatorsFromAssemblyContaining(typeof(T));
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>(Func<AssemblyScanner.AssemblyScanResult, bool> filter = null) {
+			return RegisterValidatorsFromAssemblyContaining(typeof(T), filter);
 		}
 
 		/// <summary>
 		/// Registers all validators derived from AbstractValidator within the assembly containing the specified type
 		/// </summary>
-		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type) {
-			return RegisterValidatorsFromAssembly(type.GetTypeInfo().Assembly);
+		/// <param name="type">The type that indicates which assembly that should be scanned</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null) {
+			return RegisterValidatorsFromAssembly(type.GetTypeInfo().Assembly, filter);
 		}
 
 		/// <summary>
 		/// Registers all validators derived from AbstractValidator within the specified assembly
 		/// </summary>
-		public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly) {
+		/// <param name="assembly">The assembly to scan</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null) {
 			ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
 			AssembliesToRegister.Add(assembly);
+			TypeFilter = filter;
 			return this;
 		}
 
 		/// <summary>
 		/// Registers all validators derived from AbstractValidator within the specified assemblies
 		/// </summary>
-		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblies(IEnumerable<Assembly> assemblies) {
+		/// <param name="assemblies">The assemblies to scan</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblies(IEnumerable<Assembly> assemblies, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null) {
 			ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
 			AssembliesToRegister.AddRange(assemblies);
+			TypeFilter = filter;
 			return this;
 		}
 

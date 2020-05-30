@@ -44,8 +44,6 @@ namespace FluentValidation.AspNetCore {
 			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
 			configurationExpression?.Invoke(config);
 
-			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
-
 			RegisterServices(mvcBuilder.Services, config);
 
 			mvcBuilder.AddMvcOptions(options => {
@@ -78,8 +76,6 @@ namespace FluentValidation.AspNetCore {
 			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
 			configurationExpression?.Invoke(config);
 
-			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
-
 			RegisterServices(mvcBuilder.Services, config);
 
 			mvcBuilder.AddMvcOptions(options => {
@@ -91,6 +87,7 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		private static void RegisterServices(IServiceCollection services, FluentValidationMvcConfiguration config) {
+			services.AddValidatorsFromAssemblies(config.AssembliesToRegister, ServiceLifetime.Transient, config.TypeFilter);
 			services.AddSingleton(config.ValidatorOptions);
 
 			if (config.ValidatorFactory != null) {
@@ -102,11 +99,13 @@ namespace FluentValidation.AspNetCore {
 				services.Add(ServiceDescriptor.Transient(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 			}
 
-			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
-				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
-				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
-			}));
+			if (config.AutomaticValidationEnabled) {
+				services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
+					var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
+					var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
+					return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
+				}));
+			}
 
 			if (config.ClientsideEnabled) {
 				// Clientside validation requires access to the HttpContext, but MVC's clientside API does not provide it,
