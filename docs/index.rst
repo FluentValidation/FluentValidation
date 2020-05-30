@@ -44,7 +44,7 @@ Example
   :caption: Getting Started
 
   installation
-  start 
+  start
   collections
   rulesets
   including-rules
@@ -58,7 +58,7 @@ Example
 
   configuring
   conditions
-
+  additional-options
 
 .. _validator-docs:
 .. toctree::
@@ -85,12 +85,12 @@ Example
 .. _aspnet-docs:
 .. toctree::
   :maxdepth: 1
-  :caption: ASP.NET Integration 
+  :caption: ASP.NET Integration
 
   aspnet
   mvc5
   webapi
-  
+
 .. _advanced-docs:
 .. toctree::
   :maxdepth: 1
