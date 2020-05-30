@@ -40,12 +40,11 @@ Tests must be provided for all pull requests that add or change functionality.
 
 ## Building the Docs
 
-The docs are built separately from the source code. They require Python 3 and Sphinx.
+The docs are built separately from the source code. Building the docs requires Python 3 and pip. This is then used to install Sphinx and dependencies, which then enable `make` to build the site.
 
-Once you have Python installed:
+For example, on Linux / within WSL:
 
-* Install Sphinx by opening a command prompt and running `pip install -U sphinx`.
-* Install recommonmark: `pip install recommonmark`
-* Install the theme: `pip install sphinx_rtd_theme`
-
-Once Sphinx is installed, you can build the docs by heading into the `docs` folder and running `make.bat`.
+* `sudo apt install python3-pip`
+* `cd docs` to go to the docs directory
+* `pip3 install -r requirements.txt` to install the required packages for the docs
+* `make html` to build the site or `make serve` to do auto watch.
