@@ -7,7 +7,7 @@ Additional information can be associated with validation rules in addition to wh
 Given the following example that validates a `Person` object:
 
 ```csharp
- public class PersonValidator : AbstractValidator<Person> {
+public class PersonValidator : AbstractValidator<Person> {
   public PersonValidator() {
         RuleFor(person => person.Surname).NotNull();
         RuleFor(person => person.Forename).NotNull();
