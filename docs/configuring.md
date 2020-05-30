@@ -38,7 +38,9 @@ It is also possible to use your own custom arguments in the validation message. 
 
 ```csharp
 //Using static values in a custom message:
-RuleFor(customer => x.Surname).NotNull().WithMessage(customer => string.Format("This message references some constant values: {0} {1}", "hello", 5));
+RuleFor(customer => x.Surname)
+  .NotNull()
+  .WithMessage(customer => string.Format("This message references some constant values: {0} {1}", "hello", 5))
 //Result would be "This message references some constant values: hello 5"
 
 //Referencing other property values:
