@@ -71,8 +71,9 @@ Property: Surname Error Code: ERR1234
 Property: Forename Error Code: NotNullValidator
 ```
 
-Note that if an error code is not explicitly specified, it will default to the name of the underlying property validator (eg for a call to `NotNull` it would be `"NotNullValidator"`)
+Note that if an error code is not explicitly specified, it will default to the name of the underlying property validator (eg for a call to `NotNull` it would be `"NotNullValidator"`).
 
+Note that this affects the localized lookups of error messages as well, as the error code is used for the localization key. If you override the error code in a localized environment, you'll need to ensure that you provide a localized value using that error code as well. When there is a custom error code with no key, FluentValidation falls back to the standard key. For example, if you provide an error code of `ERR123` on a `NotNull` validation, you'll want to have a localization value by `ERR123` in your resource file. If you do not supply a translation, the resource for `NotNullValidator` will be used in its place.
 
 ## Supplying Additional Validation Information with CustomState
 
@@ -101,4 +102,4 @@ Property: Surname State:
 Property: Forename State: 1234
 ```
 
-By default the `CustomState` property will be `null` if `WithState` hasn't been called. 
+By default the `CustomState` property will be `null` if `WithState` hasn't been called.
