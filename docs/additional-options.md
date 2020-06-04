@@ -46,34 +46,14 @@ Property: Forename Severity: Error
 
 By default, the severity level of every validation rule is `Error`. Available options are `Error`, `Warning`, or `Info`.
 
-## Returning Custom Codes using ErrorCode
+## ErrorCode and Error Messages
 
-A custom error code can also be associated with validation rules by using the `WithErrorCode` method. We could modify the Surname rule with the following:
+The `ErrorCode` can be useful in providing error messages for lookup. At a high level:
 
-```csharp
-RuleFor(person => person.Surname).NotNull().WithErrorCode("ERR1234");
-```
-
-The resulting error code can be obtained from the `ErrorCode` property on the `ValidationFailure`:
-
-```csharp
-var validator = new PersonValidator();
-var result = validator.Validate(new Person());
-foreach (var failure in result.Errors) {
-  Console.WriteLine($"Property: {failure.PropertyName} Error Code: {failure.ErrorCode}");
-}
-```
-
-The output would be:
-
-```
-Property: Surname Error Code: ERR1234
-Property: Forename Error Code: NotNullValidator
-```
-
-Note that if an error code is not explicitly specified, it will default to the name of the underlying property validator (eg for a call to `NotNull` it would be `"NotNullValidator"`).
-
-Note that this affects the localized lookups of error messages as well, as the error code is used for the localization key. If you override the error code in a localized environment, you'll need to ensure that you provide a localized value using that error code as well. When there is a custom error code with no key, FluentValidation falls back to the standard key. For example, if you provide an error code of `ERR123` on a `NotNull` validation, you'll want to have a localization value by `ERR123` in your resource file. If you do not supply a translation, the resource for `NotNullValidator` will be used in its place.
+* `ErrorCode` is used as the lookup key for an error message. For example, a `.NotNull()` validator has a default error code of `NotNullValidator`, which is what is used to look up the error messages.
+* If you provide an `ErrorCode`, you could also provide a localized message with the name of that error code to create a custom message.
+* If you provide an `ErrorCode` but no custom message, the message will fall back to the default message for that validator. You're not required to add a custom message.
+* Using `ErrorCode` might be useful to override error messages. For example, if you use a `NotEmpty()` validator, but you'd like to reuse the text of your `NotNull()` validator's error message, you could utilize `.WithErrorCode("NotNullValidator")` to achieve this result.
 
 ## Supplying Additional Validation Information with CustomState
 
