@@ -46,6 +46,32 @@ Property: Forename Severity: Error
 
 By default, the severity level of every validation rule is `Error`. Available options are `Error`, `Warning`, or `Info`.
 
+## Returning Custom Codes using ErrorCode
+
+A custom error code can also be associated with validation rules by using the `WithErrorCode` method. We could modify the Surname rule with the following:
+The `ErrorCode` can be useful in providing error messages for lookup. At a high level:
+
+```csharp
+RuleFor(person => person.Surname).NotNull().WithErrorCode("ERR1234");
+```
+
+The resulting error code can be obtained from the `ErrorCode` property on the `ValidationFailure`:
+
+```csharp
+var validator = new PersonValidator();
+var result = validator.Validate(new Person());
+foreach (var failure in result.Errors) {
+  Console.WriteLine($"Property: {failure.PropertyName} Error Code: {failure.ErrorCode}");
+}
+```
+
+The output would be:
+
+```
+Property: Surname Error Code: ERR1234
+Property: Forename Error Code: NotNullValidator
+```
+
 ## ErrorCode and Error Messages
 
 The `ErrorCode` can be useful in providing error messages for lookup. At a high level:
