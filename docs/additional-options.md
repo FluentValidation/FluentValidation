@@ -27,7 +27,7 @@ In version 9.0 and above a callback can be used instead, which also gives you ac
 RuleFor(person => person.Surname).NotNull().WithSeverity(person => Severity.Warning);
 ```
 
-In this case, the `ValidationResult` would still have an `IsValid` result of `false`. However, in the list of `Errors`, the `ValidationFailure` pertaining to this field will have its `Severity` property set to `Warning`:
+In this case, the `ValidationResult` would still have an `IsValid` result of `false`. However, in the list of `Errors`, the `ValidationFailure` associated with this field will have its `Severity` property set to `Warning`:
 
 ```csharp
 var validator = new PersonValidator();
@@ -46,10 +46,9 @@ Property: Forename Severity: Error
 
 By default, the severity level of every validation rule is `Error`. Available options are `Error`, `Warning`, or `Info`.
 
-## Returning Custom Codes using ErrorCode
+## Custom Error Codes
 
-A custom error code can also be associated with validation rules by using the `WithErrorCode` method. We could modify the Surname rule with the following:
-The `ErrorCode` can be useful in providing error messages for lookup. At a high level:
+A custom error code can also be associated with validation rules by calling the `WithErrorCode` method. We could modify the Surname rule with the following:
 
 ```csharp
 RuleFor(person => person.Surname).NotNull().WithErrorCode("ERR1234");
@@ -72,14 +71,14 @@ Property: Surname Error Code: ERR1234
 Property: Forename Error Code: NotNullValidator
 ```
 
-## ErrorCode and Error Messages
+### ErrorCode and Error Messages
 
 The `ErrorCode` is also used to determine the default error message for a particular validator. At a high level:
 
-* `ErrorCode` is used as the lookup key for an error message. For example, a `.NotNull()` validator has a default error code of `NotNullValidator`, which used to look up the error messages from the `LanguageManager`. [See the documentation on localization.](localization)
-* If you provide an `ErrorCode`, you could also provide a localized message with the name of that error code to create a custom message.
-* If you provide an `ErrorCode` but no custom message, the message will fall back to the default message for that validator. You're not required to add a custom message.
-* Using `ErrorCode` can also be used to override the default error message. For example, if you use a custom `Must()` validator, but you'd like to reuse the `NotNull()` validator's default error message, you can call `.WithErrorCode("NotNullValidator")` to achieve this result.
+* The error code is used as the lookup key for an error message. For example, a `NotNull()` validator has a default error code of `NotNullValidator`, which used to look up the error messages from the `LanguageManager`. [See the documentation on localization.](localization)
+* If you provide an error code, you could also provide a localized message with the name of that error code to create a custom message.
+* If you provide an error code but no custom message, the message will fall back to the default message for that validator. You're not required to add a custom message.
+* Using `ErrorCode` can also be used to override the default error message. For example, if you use a custom `Must()` validator, but you'd like to reuse the `NotNull()` validator's default error message, you can call `WithErrorCode("NotNullValidator")` to achieve this result.
 
 ## Supplying Additional Validation Information with CustomState
 
