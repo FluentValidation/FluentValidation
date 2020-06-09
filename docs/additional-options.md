@@ -74,12 +74,12 @@ Property: Forename Error Code: NotNullValidator
 
 ## ErrorCode and Error Messages
 
-The `ErrorCode` can be useful in providing error messages for lookup. At a high level:
+The `ErrorCode` is also used to determine the default error message for a particular validator. At a high level:
 
-* `ErrorCode` is used as the lookup key for an error message. For example, a `.NotNull()` validator has a default error code of `NotNullValidator`, which is what is used to look up the error messages.
+* `ErrorCode` is used as the lookup key for an error message. For example, a `.NotNull()` validator has a default error code of `NotNullValidator`, which used to look up the error messages from the `LanguageManager`. [See the documentation on localization.](localization)
 * If you provide an `ErrorCode`, you could also provide a localized message with the name of that error code to create a custom message.
 * If you provide an `ErrorCode` but no custom message, the message will fall back to the default message for that validator. You're not required to add a custom message.
-* Using `ErrorCode` might be useful to override error messages. For example, if you use a custom `Must()` validator, but you'd like to reuse the text of your `NotNull()` validator's error message, you could utilize `.WithErrorCode("NotNullValidator")` to achieve this result.
+* Using `ErrorCode` can also be used to override the default error message. For example, if you use a custom `Must()` validator, but you'd like to reuse the `NotNull()` validator's default error message, you can call `.WithErrorCode("NotNullValidator")` to achieve this result.
 
 ## Supplying Additional Validation Information with CustomState
 
