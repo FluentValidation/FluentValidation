@@ -58,7 +58,9 @@ Example
 
   configuring
   conditions
-  additional-options
+  severity
+  error-codes
+  custom-state
 
 .. _validator-docs:
 .. toctree::
