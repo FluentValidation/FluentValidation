@@ -33,7 +33,7 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' skal være mindre enn eller lik '{ComparisonValue}'.");
 			Translate<LessThanValidator>("'{PropertyName}' skal være mindre enn '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("'{PropertyName}' kan ikke være tom.");
-      Translate<NotContainsValidator>("'{PropertyName}' ikke inkludert i de gitte verdiene.");
+      Translate<NotContainsValidator>("'{PropertyValue}' ikke inkludert i de gitte verdiene.");
       Translate<NotEqualValidator>("'{PropertyName}' kan ikke være lik med '{ComparisonValue}'.");
 			Translate<NotNullValidator>("'{PropertyName}' kan ikke være tom.");
 			Translate<PredicateValidator>("Den angitte betingelsen var ikke oppfylt for '{PropertyName}'.");

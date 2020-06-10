@@ -33,7 +33,7 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე ნაკლები ან ტოლი.");
 			Translate<LessThanValidator>("'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე ნაკლები.");
 			Translate<NotEmptyValidator>("'{PropertyName}' არ უნდა იყოს ცარიელი.");
-      Translate<NotContainsValidator>("'{PropertyName}' არ შედის მოცემულ მნიშვნელობებში.");
+      Translate<NotContainsValidator>("'{PropertyValue}' არ შედის მოცემულ მნიშვნელობებში.");
       Translate<NotEqualValidator>("'{PropertyName}' არ უნდა უდრიდეს '{ComparisonValue}'-ს.");
 			Translate<NotNullValidator>("'{PropertyName}' არ უნდა იყოს ცარიელი.");
 			Translate<PredicateValidator>("'{PropertyName}'-ისთვის განსაზღვრული პირობა არ დაკმაყოფილდა.");

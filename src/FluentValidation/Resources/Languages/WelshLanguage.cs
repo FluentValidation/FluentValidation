@@ -33,7 +33,7 @@ namespace FluentValidation.Resources {
       Translate<LessThanOrEqualValidator>("Rhaid i '{PropertyName}' fod yn llai na '{ComparisonValue}', neu'n gyfartal ag o.");
       Translate<LessThanValidator>("Rhaid i '{PropertyName}' fod yn llai na '{ComparisonValue}'.");
       Translate<NotEmptyValidator>("Ni ddylai '{PropertyName}' fod yn wag.");
-      Translate<NotContainsValidator>("'{PropertyName}' heb ei gynnwys yn y gwerthoedd a roddir.");
+      Translate<NotContainsValidator>("'{PropertyValue}' heb ei gynnwys yn y gwerthoedd a roddir.");
       Translate<NotEqualValidator>("Ni ddylai '{PropertyName}' fod yn gyfartal â '{ComparisonValue}'.");
       Translate<NotNullValidator>("Ni ddylai '{PropertyName}' fod yn wag.");
       Translate<PredicateValidator>("Ni chyflawnwyd y gofyniad penodol ar gyfer '{PropertyName}'.");

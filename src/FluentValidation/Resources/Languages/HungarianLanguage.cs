@@ -33,7 +33,7 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("A(z) '{PropertyName}' kisebb vagy egyenlő kell, hogy legyen, mint '{ComparisonValue}'.");
 			Translate<LessThanValidator>("A(z) '{PropertyName}' kisebb kell, hogy legyen, mint '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("A(z) '{PropertyName}' nem lehet üres.");
-      Translate<NotContainsValidator>("A(z) '{PropertyName}' nem szerepel a megadott értékekben.");
+      Translate<NotContainsValidator>("A(z) '{PropertyValue}' nem szerepel a megadott értékekben.");
       Translate<NotEqualValidator>("A(z) '{PropertyName}' nem lehet egyenlő ezzel: '{ComparisonValue}'.");
 			Translate<NotNullValidator>("A(z) '{PropertyName}' nem lehet üres.");
 			Translate<PredicateValidator>("A megadott feltétel nem teljesült a(z) '{PropertyName}' mezőre.");

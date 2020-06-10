@@ -38,7 +38,7 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("'{PropertyName}'은(는) '{ComparisonValue}' 이하여야 합니다.");
 			Translate<LessThanValidator>("'{PropertyName}'은(는) '{ComparisonValue}' 보다 작아야 합니다.");
 			Translate<NotEmptyValidator>("'{PropertyName}'은(는) 최소한 한 글자 이상이어야 합니다.");
-      Translate<NotContainsValidator>("'{PropertyName}' 주어진 값에 포함되지 않은.");
+      Translate<NotContainsValidator>("'{PropertyValue}' 주어진 값에 포함되지 않은.");
       Translate<NotEqualValidator>("'{PropertyName}'은(는) '{ComparisonValue}'와 달라야 합니다.");
 			Translate<NotNullValidator>("'{PropertyName}'은(는) 반드시 입력해야 합니다.");
 			Translate<PredicateValidator>("'{PropertyName}'이(가) 유효하지 않습니다.");

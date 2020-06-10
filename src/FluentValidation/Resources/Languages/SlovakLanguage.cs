@@ -33,7 +33,7 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("Hodnota poľa '{PropertyName}' musí byť menšia alebo sa rovnať '{ComparisonValue}'.");
 			Translate<LessThanValidator>("Hodnota poľa '{PropertyName}' musí byť menšia ako '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("Pole '{PropertyName}' nesmie byť prázdne.");
-      Translate<NotContainsValidator>("Pole '{PropertyName}' nie sú zahrnuté v daných hodnotách.");
+      Translate<NotContainsValidator>("Pole '{PropertyValue}' nie sú zahrnuté v daných hodnotách.");
       Translate<NotEqualValidator>("Pole '{PropertyName}' sa nesmie rovnať '{ComparisonValue}'.");
 			Translate<NotNullValidator>("Pole '{PropertyName}' nesmie byť prázdne.");
 			Translate<PredicateValidator>("Nebola splnená podmienka pre pole '{PropertyName}'.");

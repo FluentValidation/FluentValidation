@@ -33,7 +33,7 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' は '{ComparisonValue}' 以下である必要があります。");
 			Translate<LessThanValidator>("'{PropertyName}' は '{ComparisonValue}' 未満である必要があります。");
 			Translate<NotEmptyValidator>("'{PropertyName}' は空であってはなりません。");
-      Translate<NotContainsValidator>("'{PropertyName}' 指定された値に含まれていません。");
+      Translate<NotContainsValidator>("'{PropertyValue}' 指定された値に含まれていません。");
       Translate<NotEqualValidator>("'{PropertyName}' は '{ComparisonValue}' と等しくなってはなりません。");
 			Translate<NotNullValidator>("'{PropertyName}' は空であってはなりません。");
 			Translate<PredicateValidator>("'{PropertyName}' は指定された条件が満たされませんでした。");
