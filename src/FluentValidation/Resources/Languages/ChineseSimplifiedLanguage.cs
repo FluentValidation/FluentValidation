@@ -33,7 +33,8 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("'{PropertyName}' 必须小于或等于 '{ComparisonValue}'。");
 			Translate<LessThanValidator>("'{PropertyName}' 必须小于 '{ComparisonValue}'。");
 			Translate<NotEmptyValidator>("'{PropertyName}' 不能为空。");
-			Translate<NotEqualValidator>("'{PropertyName}' 不能和 '{ComparisonValue}' 相等。");
+      Translate<NotContainsValidator>("'{PropertyName}' 给定值中不包括。");
+      Translate<NotEqualValidator>("'{PropertyName}' 不能和 '{ComparisonValue}' 相等。");
 			Translate<NotNullValidator>("'{PropertyName}' 不能为Null。");
 			Translate<PredicateValidator>("'{PropertyName}' 不符合指定的条件。");
 			Translate<AsyncPredicateValidator>("'{PropertyName}' 不符合指定的条件。");

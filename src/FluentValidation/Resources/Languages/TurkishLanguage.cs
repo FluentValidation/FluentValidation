@@ -46,7 +46,8 @@ namespace FluentValidation.Resources {
 			Translate<ScalePrecisionValidator>("'{PropertyName}', {ExpectedScale} ondalıkları için toplamda {ExpectedPrecision} rakamdan fazla olamaz. {Digits} basamak ve {ActualScale} basamak bulundu.");
 			Translate<EmptyValidator>("'{PropertyName}' boş olmalıdır.");
 			Translate<NullValidator>("'{PropertyName}' boş olmalıdır.");
-			Translate<EnumValidator>("'{PropertyName}', '{PropertyValue}' içermeyen bir değer aralığı içeriyor.");
+      Translate<NotContainsValidator>("'{PropertyValue}' verilen değerler içerisinde bulunmamaktadır.");
+      Translate<EnumValidator>("'{PropertyName}', '{PropertyValue}' içermeyen bir değer aralığı içeriyor.");
 			// Additional fallback messages used by clientside validation integration.
 			Translate("Length_Simple", "'{PropertyName}', {MinLength} ve {MaxLength} arasında karakter uzunluğunda olmalı.");
 			Translate("MinimumLength_Simple", "'{PropertyName}', {MinLength} karakterden büyük veya eşit olmalıdır.");

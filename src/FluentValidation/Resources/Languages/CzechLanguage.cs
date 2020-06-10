@@ -33,7 +33,8 @@ namespace FluentValidation.Resources {
 			Translate<LessThanOrEqualValidator>("Hodnota pole '{PropertyName}' musí být menší nebo rovna '{ComparisonValue}'.");
 			Translate<LessThanValidator>("Hodnota pole '{PropertyName}' musí být menší než '{ComparisonValue}'.");
 			Translate<NotEmptyValidator>("Pole '{PropertyName}' nesmí být prázdné.");
-			Translate<NotEqualValidator>("Pole '{PropertyName}' nesmí být rovno '{ComparisonValue}'.");
+      Translate<NotContainsValidator>("Pole '{PropertyName}' nejsou zahrnuty v daných hodnotách.");
+      Translate<NotEqualValidator>("Pole '{PropertyName}' nesmí být rovno '{ComparisonValue}'.");
 			Translate<NotNullValidator>("Pole '{PropertyName}' nesmí být prázdné.");
 			Translate<PredicateValidator>("Nebyla splněna podmínka pro pole '{PropertyName}'.");
 			Translate<AsyncPredicateValidator>("Nebyla splněna podmínka pro pole '{PropertyName}'.");
