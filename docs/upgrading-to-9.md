@@ -52,6 +52,19 @@ FluentValidation 4.x-8.x contained a bug where using `NotEqual`/`Equal` on strin
 
 [See the documentation for further details.](built-in-validators.html#equal-validator)
 
+### Removal of non-generic Validate overload
+
+The `IValidator.Validate(object model)` overload has been removed to improve type safety. If you were using this method before, you can use the overload that accepts an `IValidationContext` instead:
+
+```csharp
+var context = new ValidationContext<object>(model);
+var result = validator.Validate(context);
+```
+
+### Removal of non-generic ValidationContext.
+
+The non-generic `ValidationContext` has been removed. Anywhere that previously used this class will either accept a `ValidationContext<T>` or a non-generic `IValidationContext` interface instead. If you previously made use of this class in custom code, you will need to update it to use one of these as appropriate.
+
 ### Transform updates
 
 The `Transform` method can now be used to transform a property value to a different type prior to validation occurring. [See the documentation for further details.](transform)
@@ -64,7 +77,7 @@ Prior to 9.0, changing a rule's severity required hard-coding the severity:
 RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Warning);
 ```
 
-Alternatively, this can be generated from a callback, allowing the severity to be dynamically determined:
+Alternatively, this can now be generated from a callback, allowing the severity to be dynamically determined:
 
 ```csharp
 RuleFor(x => x.Surname).NotNull().WithSeverity(x => Severity.Warning);

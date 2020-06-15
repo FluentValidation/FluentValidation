@@ -84,12 +84,3 @@ ValidatorOptions.DisplayNameResolver = (type, member, expression) => {
 ```
 
 This is not a realistic example as it changes all properties to have the suffix "Foo", but hopefully illustrates the point.
-
-Additionally, FluentValidation will respect the use of the DisplayName and Display attributes for generating the property's name within error messages:
-
-```csharp
-public class Person {
-  [Display(Name="Last name")]
-  public string Surname { get; set; }
-}
-```
