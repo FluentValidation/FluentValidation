@@ -63,7 +63,9 @@ namespace FluentValidation.AspNetCore {
 				selector = CreateRulesetValidatorSelector(mvContext, rulesets);
 			}
 			else if (!string.IsNullOrEmpty(Properties)) {
-				var properties = Properties.Split(',', ';');
+				var properties = Properties.Split(',', ';')
+					.Select(x => x.Trim())
+					.ToArray();
 				selector = CreateMemberNameValidatorSelector(mvContext, properties);
 			}
 			else {
