@@ -96,7 +96,7 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		private static void RegisterServices(IServiceCollection services, FluentValidationMvcConfiguration config) {
-			services.AddValidatorsFromAssemblies(config.AssembliesToRegister, ServiceLifetime.Transient, config.TypeFilter);
+			services.AddValidatorsFromAssemblies(config.AssembliesToRegister, config.ServiceLifetime, config.TypeFilter);
 			services.AddSingleton(config.ValidatorOptions);
 
 			if (config.ValidatorFactory != null) {
