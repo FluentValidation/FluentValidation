@@ -10,6 +10,8 @@ Changes in 9.0.0:
 * Compatibility with FluentValidation 9.0
 * FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
 * Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
+* Automatically scanned types can be excluded when calling RegisterValidatorsFromAssemblyContaining in ASP.NET Core projects.
+* New AutomaticValidationEnabled property for use in ASP.NET Core projects (defaults to true).
 * SourceLink integration
 * Dropped support for end-of-life .NET Core versions (2.2 and 3.0). LTS versions are supported (2.1 and 3.1)
 

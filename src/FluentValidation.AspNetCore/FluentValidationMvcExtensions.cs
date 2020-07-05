@@ -79,8 +79,17 @@ namespace FluentValidation.AspNetCore {
 			RegisterServices(mvcBuilder.Services, config);
 
 			mvcBuilder.AddMvcOptions(options => {
-				options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
-				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+				// Check if the providers have already been added.
+				// We shouldn't have to do this, but there's a bug in the ASP.NET Core integration
+				// testing components that can cause Configureservices to be called multple times
+				// meaning we end up with duplicates.
+				if (!options.ModelMetadataDetailsProviders.Any(x => x is FluentValidationBindingMetadataProvider)) {
+					options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
+				}
+
+				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
+					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+				}
 			});
 
 			return mvcBuilder;

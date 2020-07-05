@@ -31,6 +31,8 @@ Changes in 9.0.0:
 * Additional ValidationException constructor that allows using both the default message and a custom one together.
 * ScalePrecisionValidator algorithm now matches SQL Server.
 * Additional overload of the When methods that contain the validation context.
+* Automatically scanned types can be excluded when calling RegisterValidatorsFromAssemblyContaining in ASP.NET Core projects.
+* New AutomaticValidationEnabled property for use in ASP.NET Core projects (defaults to true).
 
 Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
 		</PackageReleaseNotes>
