@@ -1,4 +1,4 @@
-9.0 -
+9.0 - 6 July 2020
 Removed support for netstandard1.1, netstandard1.6 and net45 (net461 still supported)
 Removed support for unsupported .NET Core versions (2.2 and 3.0). LTS versions are supported (2.1 and 3.1)
 Default email validation mode now uses the same logic as ASP.NET Core. Previous regex behaviour is opt-in.
