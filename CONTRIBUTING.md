@@ -38,9 +38,28 @@ If you wish to submit a new feature, please open an issue to discuss it with the
 
 Tests must be provided for all pull requests that add or change functionality.
 
-## Building the Docs
+Please ensure that you follow the existing code-style when adding new code to the project. This may seem pedantic, but it makes it much easier to review pull requests when contributed code matches the existing project style. Specifically:
+- Please ensure that your editor is configured to use tabs for indentation, not spaces
+- Please ensure that the project copyright notice is included in the header for all files. 
+- Please ensure `using` statements are inside the namespace delcaration
+- Please ensure that all opening braces are on the end of line:
 
-The docs are built separately from the source code. Building the docs requires Python 3 and pip. This is then used to install Sphinx and dependencies, which then enable `make` to build the site.
+```csharp
+// Opening braces should be on the end of the line like this
+if (foo) { 
+
+}
+
+// Not like this:
+if (foo)
+{
+   
+}
+```
+
+## Building the Documentation
+
+The docs are built separately from the source code. Building the documentation requires Python 3 and pip. This is then used to install Sphinx and dependencies, which then enable `make` to build the site.
 
 For example, on Linux / within WSL:
 
