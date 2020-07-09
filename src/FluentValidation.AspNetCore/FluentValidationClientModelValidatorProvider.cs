@@ -141,7 +141,9 @@ namespace FluentValidation.AspNetCore {
 
 			if (factory != null) {
 				var ruleSetToGenerateClientSideRules = RuleSetForClientSideMessagesAttribute.GetRuleSetsForClientValidation(_httpContextAccessor?.HttpContext);
-				bool executeDefaultRule = (ruleSetToGenerateClientSideRules.Contains("default", StringComparer.OrdinalIgnoreCase) && (rule.RuleSets.Length == 0 || rule.RuleSets.Contains("default", StringComparer.OrdinalIgnoreCase)));
+				bool executeDefaultRule = ruleSetToGenerateClientSideRules.Contains(RulesetValidatorSelector.DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)
+          && (rule.RuleSets.Length == 0 || rule.RuleSets.Contains(RulesetValidatorSelector.DefaultRuleSetName, StringComparer.OrdinalIgnoreCase));
+
 				bool shouldExecute = ruleSetToGenerateClientSideRules.Intersect(rule.RuleSets, StringComparer.OrdinalIgnoreCase).Any() || executeDefaultRule;
 
 				if (shouldExecute) {

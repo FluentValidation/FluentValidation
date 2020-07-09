@@ -135,7 +135,7 @@ namespace FluentValidation {
 		}
 
 		private void SetExecutedRulesets(ValidationResult result, ValidationContext<T> context) {
-			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>{"default"});
+			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>{RulesetValidatorSelector.DefaultRuleSetName});
 			result.RuleSetsExecuted = executed.ToArray();
 		}
 
