@@ -914,8 +914,10 @@ namespace FluentValidation {
 			}
 
 			if (ruleSet != null) {
-				var ruleSetNames = ruleSet.Split(',', ';').Select(x => x.Trim());
-				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames.ToArray());
+				var ruleSetNames = ruleSet.Split(',', ';')
+					.Select(x => x.Trim())
+					.ToArray();
+				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames);
 			}
 
 			var context = new ValidationContext<T>(instance, new PropertyChain(), selector);
@@ -969,7 +971,9 @@ namespace FluentValidation {
 			}
 
 			if (ruleSet != null) {
-				var ruleSetNames = ruleSet.Split(',', ';');
+				var ruleSetNames = ruleSet.Split(',', ';')
+					.Select(x => x.Trim())
+					.ToArray();
 				selector = ValidatorOptions.ValidatorSelectors.RulesetValidatorSelectorFactory(ruleSetNames);
 			}
 

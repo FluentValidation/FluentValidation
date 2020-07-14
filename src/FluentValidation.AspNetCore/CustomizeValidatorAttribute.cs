@@ -22,6 +22,7 @@ namespace FluentValidation.AspNetCore {
 	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Microsoft.Extensions.DependencyInjection;
+	using System.Linq;
 
 	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
 	public class CustomizeValidatorAttribute : Attribute {
@@ -56,11 +57,15 @@ namespace FluentValidation.AspNetCore {
 			IValidatorSelector selector;
 
 			if (!string.IsNullOrEmpty(RuleSet)) {
-				var rulesets = RuleSet.Split(',', ';');
+				var rulesets = RuleSet.Split(',', ';')
+					.Select(x => x.Trim())
+					.ToArray();
 				selector = CreateRulesetValidatorSelector(mvContext, rulesets);
 			}
 			else if (!string.IsNullOrEmpty(Properties)) {
-				var properties = Properties.Split(',', ';');
+				var properties = Properties.Split(',', ';')
+					.Select(x => x.Trim())
+					.ToArray();
 				selector = CreateMemberNameValidatorSelector(mvContext, properties);
 			}
 			else {
