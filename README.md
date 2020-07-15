@@ -16,6 +16,9 @@ For ASP.NET Core integration:
 ```
 dotnet add package FluentValidation.AspNetCore
 ```
+---
+### Sponsorship
+If you find FluentValidation useful, please consider [becoming a sponsor](https://github.com/sponsors/JeremySkinner), which will help keep the project going 🙏.
 
 ---
 [![Build Status](https://dev.azure.com/jeremy0621/FluentValidation/_apis/build/status/FluentValidation.FluentValidation?branchName=master)](https://dev.azure.com/jeremy0621/FluentValidation/_build/latest?definitionId=5&branchName=master)
