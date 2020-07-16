@@ -95,8 +95,8 @@ namespace FluentValidation.Internal {
 
 				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
 
-				var validatorTasks = collectionPropertyValue.Select(async (v, index) => {
-					if (Filter != null && !Filter(v)) {
+				var validatorTasks = collectionPropertyValue.Select(async (element, index) => {
+					if (Filter != null && !Filter(element)) {
 						return Enumerable.Empty<ValidationFailure>();
 					}
 
@@ -104,7 +104,7 @@ namespace FluentValidation.Internal {
 					bool useDefaultIndexFormat = true;
 
 					if (IndexBuilder != null) {
-						indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, v, index);
+						indexer = IndexBuilder(context.InstanceToValidate, collectionPropertyValue, element, index);
 						useDefaultIndexFormat = false;
 					}
 
@@ -112,7 +112,13 @@ namespace FluentValidation.Internal {
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
-					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), v);
+					object valueToValidate = element;
+
+					if (Transformer != null) {
+						valueToValidate = Transformer(element);
+					}
+
+					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), valueToValidate);
 					newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
 
 					return await validator.ValidateAsync(newPropertyContext, cancellation);
@@ -188,7 +194,13 @@ namespace FluentValidation.Internal {
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
-					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), element);
+					object valueToValidate = element;
+
+					if (Transformer != null) {
+						valueToValidate = Transformer(element);
+					}
+
+					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), valueToValidate);
 					newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
 					results.AddRange(validator.Validate(newPropertyContext));
 				}
@@ -197,5 +209,10 @@ namespace FluentValidation.Internal {
 			return results;
 		}
 
+		internal override object GetPropertyValue(object instanceToValidate) {
+			// Unlike the base class, we do not want to perform the transformation in here, just return the raw value.
+			// with collection rules, the transformation should be applied to individual elements instead.
+			return PropertyFunc(instanceToValidate);
+		}
 	}
 }
