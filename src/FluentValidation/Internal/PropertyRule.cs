@@ -58,7 +58,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that can be invoked to retrieve the value of the property.
 		/// </summary>
-		public Func<object, object> PropertyFunc { get; }
+		public Func<object, object> PropertyFunc { get; private protected set; }
 
 		/// <summary>
 		/// Expression that was used to create the rule.
@@ -418,6 +418,17 @@ namespace FluentValidation.Internal {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			return validator.Validate(propertyContext);
+		}
+
+		/// <summary>
+		/// Gets the property value, including any transformations that need to be applied.
+		/// </summary>
+		/// <param name="instanceToValidate">The parent object</param>
+		/// <returns>The value to be validated</returns>
+		internal virtual object GetPropertyValue(object instanceToValidate) {
+			var value = PropertyFunc(instanceToValidate);
+			if (Transformer != null) value = Transformer(value);
+			return value;
 		}
 
 		/// <summary>
