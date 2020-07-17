@@ -6,8 +6,10 @@
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
 Changes in 9.1:
-* Make ruleset separator character splitting consistent (#1424)
-* Transform now works with RuleForEach (#1450)
+* Make ruleset separator character splitting consistent
+* Transform now works with RuleForEach
+* Introduce constants for rulesets
+* Resolve issue when attempting to use asynchronous conditions in a synchornous validaiton run
 
 Changes in 9.0.0:
 * Removed support for netstandard1.1 and netstandard1.6

@@ -141,6 +141,26 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
+		[Fact]
+		public void Async_condition_executed_synchronosuly_with_synchronous_role() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Surname).NotNull()
+				.WhenAsync((x, token) => Task.FromResult(false));
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Async_condition_executed_synchronosuly_with_asynchronous_rule() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Surname)
+				.MustAsync((surname, c) => Task.FromResult(surname != null))
+				.WhenAsync((x, token) => Task.FromResult(false));
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+		}
+
+
 		private class TestConditionValidator : AbstractValidator<Person> {
 			public TestConditionValidator() {
 				RuleFor(x => x.Forename).NotNull().When(x => x.Id == 0);
