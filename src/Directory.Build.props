@@ -11,7 +11,6 @@
     <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
     <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 </Project>
