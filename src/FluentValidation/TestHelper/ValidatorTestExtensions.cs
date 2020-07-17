@@ -24,6 +24,8 @@ namespace FluentValidation.TestHelper {
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Text.RegularExpressions;
+	using System.Threading;
+	using System.Threading.Tasks;
 	using Internal;
 	using Results;
 	using Validators;
@@ -66,6 +68,42 @@ namespace FluentValidation.TestHelper {
 			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
 
+		public static async Task<IEnumerable<ValidationFailure>> ShouldHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator,
+			Expression<Func<T, TValue>> expression, TValue value, CancellationToken cancellationToken = default, string ruleSet = null) where T : class, new() {
+			var instanceToValidate = new T();
+
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, true);
+			memberAccessor.Set(instanceToValidate, value);
+
+			var testValidationResult = await validator.TestValidateAsync(instanceToValidate, cancellationToken, ruleSet);
+			return testValidationResult.ShouldHaveValidationErrorFor(expression);
+		}
+
+		public static async Task<IEnumerable<ValidationFailure>> ShouldHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) where T : class {
+			var value = expression.Compile()(objectToTest);
+			var testValidationResult = await validator.TestValidateAsync(objectToTest, cancellationToken, ruleSet);
+			return testValidationResult.ShouldHaveValidationErrorFor(expression);
+		}
+
+		public static async Task ShouldNotHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator,
+			Expression<Func<T, TValue>> expression, TValue value, CancellationToken cancellationToken = default, string ruleSet = null) where T : class, new() {
+
+			var instanceToValidate = new T();
+
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, true);
+			memberAccessor.Set(instanceToValidate, value);
+
+			var testValidationResult = await validator.TestValidateAsync(instanceToValidate, cancellationToken, ruleSet);
+			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
+		}
+
+		public static async Task ShouldNotHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) where T : class {
+			var value = expression.Compile()(objectToTest);
+			var testValidationResult = await validator.TestValidateAsync(objectToTest, cancellationToken, ruleSet);
+			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
+		}
+
+
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
 			var descriptor = validator.CreateDescriptor();
 			var expressionMemberName = expression.GetMember()?.Name;
@@ -105,6 +143,11 @@ namespace FluentValidation.TestHelper {
 
 		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
 			var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
+			return new TestValidationResult<T>(validationResult);
+		}
+
+		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) where T : class {
+			var validationResult = await validator.ValidateAsync(objectToTest, cancellationToken, ruleSet: ruleSet);
 			return new TestValidationResult<T>(validationResult);
 		}
 

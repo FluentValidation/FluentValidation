@@ -667,6 +667,24 @@ namespace FluentValidation.Tests {
 			result.ShouldNotHaveValidationErrorFor("Orders[0].ProductName");
 		}
 
+		[Fact]
+		public async Task TestValidate_runs_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(false));
+			var result = await validator.TestValidateAsync(new Person());
+			result.ShouldHaveValidationErrorFor(x => x.Surname);
+		}
+
+		[Fact]
+		public async Task ShouldHaveValidationError_async() {
+
+		}
+
+		[Fact]
+		public async Task ShouldNotHaveValidationError_async() {
+
+		}
+
 		private class AddressValidator : AbstractValidator<Address> {
 		}
 
