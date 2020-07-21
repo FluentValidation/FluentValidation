@@ -251,6 +251,7 @@ Example error: 'Surname' is not in the correct format.
 String format args: 
 * {PropertyName} = The name of the property being validated
 * {PropertyValue} = The current value of the property
+* {RegularExpression} = The regular expression that was not matched
 
 ## Email Validator
 Ensures that the value of the specified property is a valid email address format. 
