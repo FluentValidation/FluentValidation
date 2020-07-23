@@ -217,6 +217,20 @@ namespace FluentValidation.Tests.AspNetCore {
     }
 
     [Fact]
+    public async Task When_action_context_interceptor_specified_Intercepts_validation() {
+      var form = new FormData {
+        {"Email", "foo"},
+        {"Surname", "foo"},
+        {"Forename", "foo"},
+      };
+      var result = await _client.GetErrors("ActionContextInterceptorTest", form);
+
+      result.IsValidField("Forename").ShouldBeFalse();
+      result.IsValidField("Surname").ShouldBeFalse();
+      result.IsValidField("Email").ShouldBeTrue();
+    }
+
+    [Fact]
     public async Task When_global_interceptor_specified_Intercepts_validation_for_razor_pages() {
       var form = new FormData {
         {"Email", "foo"},
@@ -230,6 +244,30 @@ namespace FluentValidation.Tests.AspNetCore {
         })
         .WithWebHostBuilder(builder => builder.ConfigureServices(
 					services => services.AddSingleton<IValidatorInterceptor, SimplePropertyInterceptor>())
+				)
+        .CreateClient();
+      var response = await client.PostResponse($"/TestPage1", form);
+      var result = JsonConvert.DeserializeObject<List<SimpleError>>(response);
+
+      result.IsValidField("Forename").ShouldBeFalse();
+      result.IsValidField("Surname").ShouldBeFalse();
+      result.IsValidField("Email").ShouldBeTrue();
+    }
+
+    [Fact]
+    public async Task When_global_action_context_interceptor_specified_Intercepts_validation_for_razor_pages() {
+      var form = new FormData {
+        {"Email", "foo"},
+        {"Surname", "foo"},
+        {"Forename", "foo"},
+      };
+      var client = _webApp
+        .WithFluentValidation(fv => {
+          fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);
+          fv.ImplicitlyValidateChildProperties = true;
+        })
+        .WithWebHostBuilder(builder => builder.ConfigureServices(
+					services => services.AddSingleton<IActionContextValidatorInterceptor, SimpleActionContextPropertyInterceptor>())
 				)
         .CreateClient();
       var response = await client.PostResponse($"/TestPage1", form);

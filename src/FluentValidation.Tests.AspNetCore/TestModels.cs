@@ -1,4 +1,4 @@
-﻿namespace FluentValidation.Tests.AspNetCore {
+namespace FluentValidation.Tests.AspNetCore {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
@@ -34,6 +34,19 @@
 		}
 
 		public ValidationResult AfterMvcValidation(ControllerContext cc, IValidationContext context, ValidationResult result) {
+			return result;
+		}
+	}
+
+	public class SimpleActionContextPropertyInterceptor : FluentValidation.AspNetCore.IActionContextValidatorInterceptor {
+		readonly string[] properties = new[] {"Surname", "Forename"};
+
+		public IValidationContext BeforeMvcValidation(ActionContext cc, IValidationContext context) {
+			var newContext = new ValidationContext<object>(context.InstanceToValidate, context.PropertyChain, new FluentValidation.Internal.MemberNameValidatorSelector(properties));
+			return newContext;
+		}
+
+		public ValidationResult AfterMvcValidation(ActionContext cc, IValidationContext context, ValidationResult result) {
 			return result;
 		}
 	}

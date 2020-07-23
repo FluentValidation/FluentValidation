@@ -1,4 +1,4 @@
-﻿namespace FluentValidation.Tests.AspNetCore.Controllers {
+namespace FluentValidation.Tests.AspNetCore.Controllers {
 	using System.Collections.Generic;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc;
@@ -69,6 +69,10 @@
 		}
 
 		public ActionResult InterceptorTest([CustomizeValidator(Interceptor = typeof(SimplePropertyInterceptor))] PropertiesTestModel test) {
+			return TestResult();
+		}
+
+		public ActionResult ActionContextInterceptorTest([CustomizeValidator(Interceptor = typeof(SimpleActionContextPropertyInterceptor))] PropertiesTestModel test) {
 			return TestResult();
 		}
 
