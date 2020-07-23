@@ -1,6 +1,7 @@
 namespace FluentValidation.AspNetCore {
 	using System;
-	using Microsoft.AspNetCore.Http;
+  using FluentValidation.Internal;
+  using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc.Filters;
 
 	/// <summary>
@@ -49,10 +50,10 @@ namespace FluentValidation.AspNetCore {
 			// This is OK because if we're actually using the attribute, the OnActionExecuting will have caught the fact that the provider is not registered. 
 
 			if (context?.Items != null && context.Items.ContainsKey(_key)) {
-				return context?.Items[_key] as string[] ?? new[] { "default" };
+				return context?.Items[_key] as string[] ?? new[] { RulesetValidatorSelector.DefaultRuleSetName };
 
 			}
-			return new[] {"default"};
+			return new[] { RulesetValidatorSelector.DefaultRuleSetName};
 		}
 	}
 }

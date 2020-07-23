@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net452;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>FluentValidation.Tests</AssemblyName>
     <RootNamespace>FluentValidation.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
@@ -20,6 +20,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="Moq" Version="4.7.99" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FluentValidation\FluentValidation.csproj" />
@@ -37,10 +38,9 @@
       <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="../netfx.props" />
-  <ItemGroup Condition="'$(TargetFramework)'=='net452' AND '$(OS)'=='Unix'">
-    <!-- Workarounds for Mono -->
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Threading.Tasks" />
+  <ItemGroup>
+    <Compile Include="..\FluentValidation\Internal\TrackingCollection.cs">
+      <Link>TestExtensions.cs</Link>
+    </Compile>
   </ItemGroup>
 </Project>

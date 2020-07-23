@@ -1,5 +1,5 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,22 +13,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-using System.Threading;
-
 namespace FluentValidation.Validators {
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Linq.Expressions;
+	using System.Threading;
 	using System.Threading.Tasks;
-	using FluentValidation.Internal;
+	using Internal;
 	using Resources;
 	using Results;
 
 	public abstract class PropertyValidator : IPropertyValidator {
+
+		/// <inheritdoc />
 		public PropertyValidatorOptions Options { get; } = new PropertyValidatorOptions();
 
 		protected PropertyValidator(IStringSource errorMessageSource) {
@@ -39,18 +38,11 @@ namespace FluentValidation.Validators {
 			Options.ErrorMessageSource = errorMessageSource;
 		}
 
-		[Obsolete("This constructor will be removed in FluentValidation 9.0. Use the overload that takes an IStringSource instead, passing in a LazyStringSource: PropertyValidator(new LazyStringSource(ctx => MyResourceClass.MyResourceName))")]
-		protected PropertyValidator(string errorMessageResourceName, Type errorMessageResourceType) {
-			errorMessageResourceName.Guard("errorMessageResourceName must be specified.", nameof(errorMessageResourceName));
-			errorMessageResourceType.Guard("errorMessageResourceType must be specified.", nameof(errorMessageResourceType));
-
-			Options.ErrorMessageSource = new LocalizedStringSource(errorMessageResourceType, errorMessageResourceName);
-		}
-
 		protected PropertyValidator(string errorMessage) {
 			Options.ErrorMessageSource = new StaticStringSource(errorMessage);
 		}
 
+		/// <inheritdoc />
 		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
 			if (IsValid(context)) return Enumerable.Empty<ValidationFailure>();
 
@@ -59,6 +51,7 @@ namespace FluentValidation.Validators {
 
 		}
 
+		/// <inheritdoc />
 		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			if (await IsValidAsync(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
 
@@ -66,7 +59,8 @@ namespace FluentValidation.Validators {
 			return new[] {CreateValidationError(context)};
 		}
 
-		public virtual bool ShouldValidateAsync(ValidationContext context) {
+		/// <inheritdoc />
+		public virtual bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If the user has applied an async condition, then always go through the async path
 			// even if validator is being run synchronously.
 			if (Options.AsyncCondition != null) return true;
@@ -88,6 +82,18 @@ namespace FluentValidation.Validators {
 		protected virtual void PrepareMessageFormatterForValidationError(PropertyValidatorContext context) {
 			context.MessageFormatter.AppendPropertyName(context.DisplayName);
 			context.MessageFormatter.AppendPropertyValue(context.PropertyValue);
+
+			// If there's a collection index cached in the root context data then add it
+			// to the message formatter. This happens when a child validator is executed
+			// as part of a call to RuleForEach. Usually parameters are not flowed through to
+			// child validators, but we make an exception for collection indices.
+			if (context.ParentContext.RootContextData.TryGetValue("__FV_CollectionIndex", out var index)) {
+				// If our property validator has explicitly added a placeholder for the collection index
+				// don't overwrite it with the cached version.
+				if (!context.MessageFormatter.PlaceholderValues.ContainsKey("CollectionIndex")) {
+					context.MessageFormatter.AppendArgument("CollectionIndex", index);
+				}
+			}
 		}
 
 		/// <summary>
@@ -105,7 +111,6 @@ namespace FluentValidation.Validators {
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-			failure.ResourceName = Options.ErrorMessageSource.ResourceName;
 			failure.ErrorCode = (Options.ErrorCodeSource != null)
 				? Options.ErrorCodeSource.GetString(context)
 				: ValidatorOptions.ErrorCodeResolver(this);
@@ -114,7 +119,10 @@ namespace FluentValidation.Validators {
 				failure.CustomState = Options.CustomStateProvider(context);
 			}
 
-			failure.Severity = Options.Severity;
+			if (Options.SeverityProvider != null) {
+				failure.Severity = Options.SeverityProvider(context);
+			}
+
 			return failure;
 		}
 	}

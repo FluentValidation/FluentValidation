@@ -1,5 +1,5 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 #pragma warning disable 1591
@@ -103,42 +103,37 @@ namespace FluentValidation.TestHelper {
 				.ToArray();
 		}
 
-		public static TestValidationResult<T, T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
+		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
 			var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
-			// TODO: For 9.0 remove passing the expression parameter.
-			return new TestValidationResult<T, T>(validationResult, (Expression<Func<T, T>>) (o => o));
+			return new TestValidationResult<T>(validationResult);
 		}
 
-		public static IEnumerable<ValidationFailure> ShouldHaveAnyValidationError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			// TODO: Remove the second generic for 9.0.
+		public static IEnumerable<ValidationFailure> ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) where T : class {
 			if (!testValidationResult.Errors.Any())
 				throw new ValidationTestException($"Expected at least one validation error, but none were found.");
 
 			return testValidationResult.Errors;
 		}
 
-		public static void ShouldNotHaveAnyValidationErrors<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			// TODO: Remove the second generic for 9.0.
+		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) where T : class {
 			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure, true);
 		}
 
-		[Obsolete("Call ShouldHaveAnyValidationError")]
-		public static IEnumerable<ValidationFailure> ShouldHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			return testValidationResult.Which.ShouldHaveValidationError();
-		}
-
-		[Obsolete("Call ShouldNotHaveAnyValidationErrors")]
-		public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			testValidationResult.Which.ShouldNotHaveValidationError();
-		}
-
 		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
-			if (exceptionMessage != null && failure != null) {
-				return exceptionMessage.Replace("{Code}", failure.ErrorCode)
-					.Replace("{Message}", failure.ErrorMessage)
-					.Replace("{State}", failure.CustomState?.ToString() ?? "")
-					.Replace("{Severity}", failure.Severity.ToString());
-			}
+      if (exceptionMessage != null && failure != null) {
+        var formattedExceptionMessage = exceptionMessage.Replace("{Code}", failure.ErrorCode)
+          .Replace("{Message}", failure.ErrorMessage)
+          .Replace("{State}", failure.CustomState?.ToString() ?? "")
+          .Replace("{Severity}", failure.Severity.ToString());
+
+        var messageArgumentMatches = Regex.Matches(formattedExceptionMessage, "{MessageArgument:(.*)}");
+        for (var i = 0; i < messageArgumentMatches.Count; i++) {
+          if (failure.FormattedMessagePlaceholderValues.ContainsKey(messageArgumentMatches[i].Groups[1].Value)) {
+            formattedExceptionMessage = formattedExceptionMessage.Replace(messageArgumentMatches[i].Value, failure.FormattedMessagePlaceholderValues[messageArgumentMatches[i].Groups[1].Value].ToString());
+          }
+        }
+        return formattedExceptionMessage;
+      }
 			return defaultMessage;
 		}
 
@@ -223,6 +218,11 @@ namespace FluentValidation.TestHelper {
 		public static IEnumerable<ValidationFailure> WithCustomState(this IEnumerable<ValidationFailure> failures, object expectedCustomState) {
 			return failures.When(failure => failure.CustomState == expectedCustomState, string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
 		}
+
+    public static IEnumerable<ValidationFailure> WithMessageArgument<T>(this IEnumerable<ValidationFailure> failures, string argumentKey, T argumentValue) {
+      return failures.When(failure => failure.FormattedMessagePlaceholderValues.ContainsKey(argumentKey) && ((T)failure.FormattedMessagePlaceholderValues[argumentKey]).Equals(argumentValue),
+        string.Format("Expected message argument '{0}' with value '{1}'. Actual value was '{{MessageArgument:{0}}}'", argumentKey, argumentValue.ToString()));
+    }
 
 		public static IEnumerable<ValidationFailure> WithErrorMessage(this IEnumerable<ValidationFailure> failures, string expectedErrorMessage) {
 			return failures.When(failure => failure.ErrorMessage == expectedErrorMessage, string.Format("Expected an error message of '{0}'. Actual message was '{{Message}}'", expectedErrorMessage));

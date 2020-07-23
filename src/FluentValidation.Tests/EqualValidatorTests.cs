@@ -1,22 +1,20 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
-
-using System.Reflection;
 
 namespace FluentValidation.Tests {
 	using System;
@@ -29,7 +27,7 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Validators;
 
-	
+
 	public class EqualValidatorTests {
 
 		public EqualValidatorTests() {
@@ -56,7 +54,7 @@ namespace FluentValidation.Tests {
 		public void When_validation_fails_the_error_should_be_set() {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal("Foo") };
 			var result = validator.Validate(new Person() {Forename = "Bar"});
-			
+
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' must be equal to 'Foo'.");
 		}
 
@@ -69,6 +67,7 @@ namespace FluentValidation.Tests {
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
 		}
 
+
 		[Fact]
 		public void Should_store_comparison_type() {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal("Foo") };
@@ -80,9 +79,25 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validates_against_property() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal(x => x.Forename) };
-			var result = validator.Validate(new Person { Surname = "foo", Forename = "foo" });
-			result.IsValid.ShouldBeTrue();
+			var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
+			var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
+			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("Forename");
+		}
+
+		[Fact]
+		public void Comparison_property_uses_custom_resolver() {
+			var originalResolver = ValidatorOptions.Global.DisplayNameResolver;
+
+			try {
+				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
+				var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
+				var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
+				result.Errors[0].ErrorMessage.ShouldEqual("ForenameFoo");
+			}
+			finally {
+				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
+			}
 		}
 
 		[Fact]
@@ -99,6 +114,14 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person { Surname = "foo", Forename = "FOO"});
 
 			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void Should_use_ordinal_comparison_by_default() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Surname).Equal("a");
+			var result = validator.Validate(new Person {Surname = "a\0"});
+			result.IsValid.ShouldBeFalse();
 		}
 	}
 }

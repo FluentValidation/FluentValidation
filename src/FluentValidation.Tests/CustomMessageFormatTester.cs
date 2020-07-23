@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
@@ -22,7 +22,7 @@ namespace FluentValidation.Tests {
 	using Validators;
 	using Xunit;
 
-	
+
 	public class CustomMessageFormatTester {
 		private TestValidator validator;
 
@@ -42,7 +42,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Uses_custom_delegate_for_building_message() {
 			validator.RuleFor(x => x.Surname).NotNull().Configure(cfg => {
-				cfg.MessageBuilder = context => "Test " + ((Person)context.Instance).Id;
+				cfg.MessageBuilder = context => "Test " + ((Person)context.InstanceToValidate).Id;
 			});
 
 			var error = validator.Validate(new Person()).Errors.Single().ErrorMessage;
@@ -85,6 +85,6 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person());
 			result.Errors.Single().ErrorMessage.ShouldEqual("Was ''");
 		}
-		
+
 	}
 }

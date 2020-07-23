@@ -1,5 +1,5 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,62 +13,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
-using Xunit.Extensions;
+
 namespace FluentValidation.Tests {
-	using System;
-	using System.Globalization;
 	using System.Linq;
-	using System.Threading;
 	using Xunit;
 	using Validators;
 
-
 	public class EmailValidatorTests {
-		TestValidator validator;
 
 		public EmailValidatorTests() {
-            CultureScope.SetDefaultCulture();
-
-            validator = new TestValidator {
-				v => v.RuleFor(x => x.Email).EmailAddress()
+			CultureScope.SetDefaultCulture();
+		}
+		[Theory]
+		[InlineData("")]
+		[InlineData("testperso")]
+		[InlineData("first.last@test..co.uk")]
+		[InlineData("thisisaverylongstringcodeplex.com")]
+		public void Invalid_email_addressex_regex(string email) {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Email).EmailAddress(EmailValidationMode.Net4xRegex)
 			};
-		}
-
-		[Fact]
-		public void When_the_text_is_empty_then_the_validator_should_fail() {
-			string email = String.Empty;
-			var result = validator.Validate(new Person { Email = email });
-			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void When_the_text_is_not_a_valid_email_address_then_the_validator_should_fail() {
-			string email = "testperso";
-			var result = validator.Validate(new Person { Email = email });
-			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void When_validation_fails_the_default_error_should_be_set() {
-			string email = "testperso";
-		var result = validator.Validate(new Person { Email = email });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Email' is not a valid email address.");
-		}
-
-		[Fact]
-		public void This_should_not_hang() {
-			string email = "thisisaverylongstringcodeplex.com";
-			var result = validator.Validate(new Person { Email = email });
-			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void double_period_with_uk_Domain() {
-			string email = "first.last@test..co.uk";
 			var result = validator.Validate(new Person {Email = email});
 			result.IsValid.ShouldBeFalse();
+			result.Errors.Single().ErrorMessage.ShouldEqual("'Email' is not a valid email address.");
 		}
 
 		[Theory]
@@ -85,9 +54,12 @@ namespace FluentValidation.Tests {
 		[InlineData("!def!xyz%abc@example.com")]
 		[InlineData("__somename@example.com")]
 		[InlineData("first.last@test.co.uk")]
-		public void Valid_email_addresses(string email) {
-				var result = validator.Validate(new Person {Email = email});
-				result.IsValid.ShouldBeTrue(string.Format("The email address {0} should be valid", email));
+		public void Valid_email_addresses_regex(string email) {
+			var validator = new TestValidator {
+				v => v.RuleFor(x => x.Email).EmailAddress(EmailValidationMode.Net4xRegex)
+			};
+			var result = validator.Validate(new Person {Email = email});
+			result.IsValid.ShouldBeTrue(string.Format("The email address {0} should be valid", email));
 		}
 
 		[Theory]

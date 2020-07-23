@@ -1,5 +1,5 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Internal {
@@ -37,18 +37,18 @@ namespace FluentValidation.Internal {
 		string _propertyDisplayName;
 		string _propertyName;
 		private string[] _ruleSet = new string[0];
-		private Func<ValidationContext, bool> _condition;
-		private Func<ValidationContext, CancellationToken, Task<bool>> _asyncCondition;
+		private Func<IValidationContext, bool> _condition;
+		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 
 		/// <summary>
 		/// Condition for all validators in this rule.
 		/// </summary>
-		public Func<ValidationContext, bool> Condition => _condition;
+		public Func<IValidationContext, bool> Condition => _condition;
 
 		/// <summary>
 		/// Asynchronous condition for all validators in this rule.
 		/// </summary>
-		public Func<ValidationContext, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
+		public Func<IValidationContext, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
 
 		/// <summary>
 		/// Property associated with this rule.
@@ -58,7 +58,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that can be invoked to retrieve the value of the property.
 		/// </summary>
-		public Func<object, object> PropertyFunc { get; }
+		public Func<object, object> PropertyFunc { get; private protected set; }
 
 		/// <summary>
 		/// Expression that was used to create the rule.
@@ -81,7 +81,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that will be invoked if any of the validators associated with this rule fail.
 		/// </summary>
-		public Action<object> OnFailure { get; set; }
+		public Action<object, IEnumerable<ValidationFailure>> OnFailure { get; set; }
 
 		/// <summary>
 		/// The current validator being configured by this rule.
@@ -119,9 +119,8 @@ namespace FluentValidation.Internal {
 			Member = member;
 			PropertyFunc = propertyFunc;
 			Expression = expression;
-			OnFailure = x => { };
 			TypeToValidate = typeToValidate;
-			this._cascadeModeThunk = cascadeModeThunk;
+			_cascadeModeThunk = cascadeModeThunk;
 
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
@@ -220,7 +219,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Display name for the property.
 		/// </summary>
-		public string GetDisplayName(IValidationContext context) {
+		public string GetDisplayName(ICommonContext context) {
 			string result = null;
 
 			if (DisplayName != null) {
@@ -239,7 +238,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		public virtual IEnumerable<ValidationFailure> Validate(ValidationContext context) {
+		public virtual IEnumerable<ValidationFailure> Validate(IValidationContext context) {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -270,12 +269,12 @@ namespace FluentValidation.Internal {
 			}
 
 			var cascade = _cascadeModeThunk();
-			bool hasAnyFailure = false;
+			var failures = new List<ValidationFailure>();
 
 			// Invoke each validator and collect its results.
 			foreach (var validator in _validators) {
 				IEnumerable<ValidationFailure> results;
-				if (validator.ShouldValidateAsync(context))
+				if (validator.ShouldValidateAsynchronously(context))
 					//TODO: For FV 9 by default disallow invocation of async validators when running synchronously.
 					results = InvokePropertyValidatorAsync(context, validator, propertyName, default).GetAwaiter().GetResult();
 				else
@@ -284,7 +283,7 @@ namespace FluentValidation.Internal {
 				bool hasFailure = false;
 
 				foreach (var result in results) {
-					hasAnyFailure = true;
+					failures.Add(result);
 					hasFailure = true;
 					yield return result;
 				}
@@ -296,9 +295,9 @@ namespace FluentValidation.Internal {
 				}
 			}
 
-			if (hasAnyFailure) {
+			if (failures.Count > 0) {
 				// Callback if there has been at least one property validator failed.
-				OnFailure(context.InstanceToValidate);
+				OnFailure?.Invoke(context.InstanceToValidate, failures);
 			}
 			else {
 				foreach (var dependentRule in DependentRules) {
@@ -315,7 +314,7 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
-		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext context, CancellationToken cancellation) {
+		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation) {
 			if (!context.IsAsync()) {
 				context.RootContextData["__FV_IsAsyncExecution"] = true;
 			}
@@ -349,7 +348,6 @@ namespace FluentValidation.Internal {
 			}
 
 			var cascade = _cascadeModeThunk();
-			bool hasAnyFailure = false;
 			var failures = new List<ValidationFailure>();
 
 			// Invoke each validator and collect its results.
@@ -357,7 +355,7 @@ namespace FluentValidation.Internal {
 				cancellation.ThrowIfCancellationRequested();
 
 				IEnumerable<ValidationFailure> results;
-				if (validator.ShouldValidateAsync(context))
+				if (validator.ShouldValidateAsynchronously(context))
 					results = await InvokePropertyValidatorAsync(context, validator, propertyName, cancellation);
 				else
 					results = InvokePropertyValidator(context, validator, propertyName);
@@ -365,9 +363,8 @@ namespace FluentValidation.Internal {
 				bool hasFailure = false;
 
 				foreach (var result in results) {
-					hasAnyFailure = true;
-					hasFailure = true;
 					failures.Add(result);
+					hasFailure = true;
 				}
 
 				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -377,9 +374,9 @@ namespace FluentValidation.Internal {
 				}
 			}
 
-			if (hasAnyFailure) {
+			if (failures.Count > 0) {
 				// Callback if there has been at least one property validator failed.
-				OnFailure(context.InstanceToValidate);
+				OnFailure?.Invoke(context.InstanceToValidate, failures);
 			}
 			else {
 				failures.AddRange(await RunDependentRulesAsync(context, cancellation));
@@ -388,7 +385,7 @@ namespace FluentValidation.Internal {
 			return failures;
 		}
 
-		private async Task<IEnumerable<ValidationFailure>> RunDependentRulesAsync(ValidationContext context, CancellationToken cancellation) {
+		private async Task<IEnumerable<ValidationFailure>> RunDependentRulesAsync(IValidationContext context, CancellationToken cancellation) {
 			var failures = new List<ValidationFailure>();
 
 			foreach (var rule in DependentRules) {
@@ -407,7 +404,7 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName"></param>
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
-		protected virtual async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(ValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
+		protected virtual async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			if (validator.Options.AsyncCondition != null && !await validator.Options.AsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
@@ -417,10 +414,21 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Invokes a property validator using the specified validation context.
 		/// </summary>
-		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(ValidationContext context, IPropertyValidator validator, string propertyName) {
+		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(IValidationContext context, IPropertyValidator validator, string propertyName) {
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
 			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			return validator.Validate(propertyContext);
+		}
+
+		/// <summary>
+		/// Gets the property value, including any transformations that need to be applied.
+		/// </summary>
+		/// <param name="instanceToValidate">The parent object</param>
+		/// <returns>The value to be validated</returns>
+		internal virtual object GetPropertyValue(object instanceToValidate) {
+			var value = PropertyFunc(instanceToValidate);
+			if (Transformer != null) value = Transformer(value);
+			return value;
 		}
 
 		/// <summary>
@@ -465,8 +473,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		// TODO: Consider making these public and part of the interface for FV 9.
-		internal void ApplySharedCondition(Func<ValidationContext, bool> condition) {
+		public void ApplySharedCondition(Func<IValidationContext, bool> condition) {
 			if (_condition == null) {
 				_condition = condition;
 			}
@@ -476,7 +483,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		internal void ApplySharedAsyncCondition(Func<ValidationContext, CancellationToken, Task<bool>> condition) {
+		public void ApplySharedAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> condition) {
 			if (_asyncCondition == null) {
 				_asyncCondition = condition;
 			}

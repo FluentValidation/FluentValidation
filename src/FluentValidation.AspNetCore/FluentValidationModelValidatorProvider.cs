@@ -1,19 +1,19 @@
 ﻿#region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.AspNetCore {
@@ -24,20 +24,20 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using FluentValidation.Internal;
+	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.Extensions.DependencyInjection;
-	using static MvcValidationHelper;
 
 	/// <summary>
 	/// ModelValidatorProvider implementation only used for child properties.
 	/// </summary>
-	internal class FluentValidationModelValidatorProvider : IModelValidatorProvider {
+	public class FluentValidationModelValidatorProvider : IModelValidatorProvider {
 		private readonly bool _implicitValidationEnabled;
 
 		public FluentValidationModelValidatorProvider(bool implicitValidationEnabled) {
 			_implicitValidationEnabled = implicitValidationEnabled;
 		}
 
-		public void CreateValidators(ModelValidatorProviderContext context) {
+		public virtual void CreateValidators(ModelValidatorProviderContext context) {
 			context.Results.Add(new ValidatorItem {
 				IsReusable = false,
 				Validator = new FluentValidationModelValidator(_implicitValidationEnabled)
@@ -45,14 +45,17 @@ namespace FluentValidation.AspNetCore {
 		}
 	}
 
-	internal class FluentValidationModelValidator : IModelValidator {
+	/// <summary>
+	/// FluentValidation's implementation of an ASP.NET Core model validator.
+	/// </summary>
+	public class FluentValidationModelValidator : IModelValidator {
 		private readonly bool _implicitValidationEnabled;
 
 		public FluentValidationModelValidator(bool implicitValidationEnabled) {
 			_implicitValidationEnabled = implicitValidationEnabled;
 		}
 
-		public IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
+		public virtual IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
 			if (ShouldSkip(mvContext)) {
 				return Enumerable.Empty<ModelValidationResult>();
 			}
@@ -74,11 +77,12 @@ namespace FluentValidation.AspNetCore {
 					}
 				}
 
-				var selector = customizations.ToValidatorSelector();
-				var interceptor = customizations.GetInterceptor() 
-				                  ?? validator as IValidatorInterceptor 
+				var selector = customizations.ToValidatorSelector(mvContext);
+				var interceptor = customizations.GetInterceptor()
+				                  ?? validator as IValidatorInterceptor
 				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IValidatorInterceptor>();
-				var context = new ValidationContext(mvContext.Model, new PropertyChain(), selector);
+
+				IValidationContext context = new ValidationContext<object>(mvContext.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
 				context.SetServiceProvider(mvContext.ActionContext.HttpContext.RequestServices);
 
@@ -92,7 +96,7 @@ namespace FluentValidation.AspNetCore {
 
 				if (interceptor != null) {
 					// allow the user to provide a custom collection of failures, which could be empty.
-					// However, if they return null then use the original collection of failures. 
+					// However, if they return null then use the original collection of failures.
 					result = interceptor.AfterMvcValidation((ControllerContext)mvContext.ActionContext, context, result) ?? result;
 				}
 
@@ -102,7 +106,7 @@ namespace FluentValidation.AspNetCore {
 			return Enumerable.Empty<ModelValidationResult>();
 		}
 
-		private bool ShouldSkip(ModelValidationContext mvContext) {
+		protected bool ShouldSkip(ModelValidationContext mvContext) {
 			// Skip if there's nothing to process.
 			if (mvContext.Model == null) {
 				return true;
@@ -112,10 +116,10 @@ namespace FluentValidation.AspNetCore {
 			if (! _implicitValidationEnabled) {
 
 				var rootMetadata = GetRootMetadata(mvContext);
-				
+
 				// We should always have root metadata, so this should never happen...
 				if (rootMetadata == null) return true;
-				
+
 				// Careful when handling properties.
 				// If we're processing a property of our root object,
 				// then we always skip if implicit validation is disabled
@@ -128,7 +132,7 @@ namespace FluentValidation.AspNetCore {
 						return true;
 					}
 				}
-				
+
 				// If we're handling a type, we need to make sure we're handling the root type.
 				// When MVC encounters child properties, it will set the MetadataKind to Type,
 				// so we can't use the MetadataKind to differentiate the root from the child property.
@@ -144,8 +148,27 @@ namespace FluentValidation.AspNetCore {
 					}
 				}
 			}
-			
+
 			return false;
+		}
+
+		/// <summary>
+		/// Gets the metadata object for the root object being validated.
+		/// </summary>
+		/// <param name="mvContext">MVC Validation context</param>
+		/// <returns>Metadata instance.</returns>
+		protected static ModelMetadata GetRootMetadata(ModelValidationContext mvContext) {
+			return MvcValidationHelper.GetRootMetadata(mvContext);
+		}
+
+		/// <summary>
+		/// Gets customizations associated with this validation request.
+		/// </summary>
+		/// <param name="context">Current action context</param>
+		/// <param name="model">The object being validated</param>
+		/// <returns>Customizations</returns>
+		protected static CustomizeValidatorAttribute GetCustomizations(ActionContext context, object model) {
+			return MvcValidationHelper.GetCustomizations(context, model);
 		}
 	}
 }

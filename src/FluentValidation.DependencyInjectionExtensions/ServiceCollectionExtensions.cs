@@ -1,19 +1,19 @@
 ﻿#region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation {
@@ -29,10 +29,11 @@ namespace FluentValidation {
 		/// <param name="services">The collection of services</param>
 		/// <param name="assembly">The assemblies to scan</param>
 		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <returns></returns>
-		public static IServiceCollection AddValidatorsFromAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies, ServiceLifetime lifetime = ServiceLifetime.Transient) {
+		public static IServiceCollection AddValidatorsFromAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies, ServiceLifetime lifetime = ServiceLifetime.Transient, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null) {
 			foreach (var assembly in assemblies)
-				services.AddValidatorsFromAssembly(assembly, lifetime);
+				services.AddValidatorsFromAssembly(assembly, lifetime, filter);
 
 			return services;
 		}
@@ -43,11 +44,12 @@ namespace FluentValidation {
 		/// <param name="services">The collection of services</param>
 		/// <param name="assembly">The assembly to scan</param>
 		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <returns></returns>
-		public static IServiceCollection AddValidatorsFromAssembly(this IServiceCollection services, Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Transient) {
+		public static IServiceCollection AddValidatorsFromAssembly(this IServiceCollection services, Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Transient, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null) {
 			AssemblyScanner
 				.FindValidatorsInAssembly(assembly)
-				.ForEach(scanResult => services.AddScanResult(scanResult, lifetime));
+				.ForEach(scanResult => services.AddScanResult(scanResult, lifetime, filter));
 
 			return services;
 		}
@@ -58,18 +60,20 @@ namespace FluentValidation {
 		/// <param name="services">The collection of services</param>
 		/// <param name="type">The type whose assembly to scan</param>
 		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <returns></returns>
-		public static IServiceCollection AddValidatorsFromAssemblyContaining(this IServiceCollection services, Type type, ServiceLifetime lifetime = ServiceLifetime.Transient)
-			=> services.AddValidatorsFromAssembly(type.Assembly, lifetime);
+		public static IServiceCollection AddValidatorsFromAssemblyContaining(this IServiceCollection services, Type type, ServiceLifetime lifetime = ServiceLifetime.Transient, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null)
+			=> services.AddValidatorsFromAssembly(type.Assembly, lifetime, filter);
 
 		/// <summary>
 		/// Adds all validators in the assembly of the type specified by the generic parameter
 		/// </summary>
 		/// <param name="services">The collection of services</param>
 		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <returns></returns>
-		public static IServiceCollection AddValidatorsFromAssemblyContaining<T>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Transient)
-			=> services.AddValidatorsFromAssembly(typeof(T).Assembly, lifetime);
+		public static IServiceCollection AddValidatorsFromAssemblyContaining<T>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Transient, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null)
+			=> services.AddValidatorsFromAssembly(typeof(T).Assembly, lifetime, filter);
 
 		/// <summary>
 		/// Helper method to register a validator from an AssemblyScanner result
@@ -77,21 +81,25 @@ namespace FluentValidation {
 		/// <param name="services">The collection of services</param>
 		/// <param name="scanResult">The scan result</param>
 		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <returns></returns>
-		private static IServiceCollection AddScanResult(this IServiceCollection services, AssemblyScanner.AssemblyScanResult scanResult, ServiceLifetime lifetime) {
-			//Register as interface
-			services.Add(
-				new ServiceDescriptor(
-							serviceType: scanResult.InterfaceType,
-							implementationType: scanResult.ValidatorType,
-							lifetime: lifetime));
+		private static IServiceCollection AddScanResult(this IServiceCollection services, AssemblyScanner.AssemblyScanResult scanResult, ServiceLifetime lifetime, Func<AssemblyScanner.AssemblyScanResult, bool> filter) {
+			bool shouldRegister = filter?.Invoke(scanResult) ?? true;
+			if (shouldRegister) {
+				//Register as interface
+				services.Add(
+					new ServiceDescriptor(
+						serviceType: scanResult.InterfaceType,
+						implementationType: scanResult.ValidatorType,
+						lifetime: lifetime));
 
-			//Register as self
-			services.Add(
-				new ServiceDescriptor(
-							serviceType: scanResult.ValidatorType,
-							implementationType: scanResult.ValidatorType,
-							lifetime: lifetime));
+				//Register as self
+				services.Add(
+					new ServiceDescriptor(
+						serviceType: scanResult.ValidatorType,
+						implementationType: scanResult.ValidatorType,
+						lifetime: lifetime));
+			}
 
 			return services;
 		}

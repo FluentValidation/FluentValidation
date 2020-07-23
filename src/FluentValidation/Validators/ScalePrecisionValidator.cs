@@ -1,38 +1,38 @@
 #region License
 
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 
 #endregion
 
 namespace FluentValidation.Validators {
 	using System;
 	using Resources;
-	
+
 	// Attribution: This class was contributed to FluentValidation using code posted on StackOverflow by Jon Skeet
 	// The original code can be found at https://stackoverflow.com/a/764102
 
 	/// <summary>
-	/// Allows a decimal to be validated for scale and precision.  
-	/// Scale would be the number of digits to the right of the decimal point.  
-	/// Precision would be the number of digits.  
-	/// 
-	/// It can be configured to use the effective scale and precision 
+	/// Allows a decimal to be validated for scale and precision.
+	/// Scale would be the number of digits to the right of the decimal point.
+	/// Precision would be the number of digits. This number includes both the left and the right sides of the decimal point.
+	///
+	/// It can be configured to use the effective scale and precision
 	/// (i.e. ignore trailing zeros) if required.
-	/// 
+	///
 	/// 123.4500 has an scale of 4 and a precision of 7, but an effective scale
 	/// and precision of 2 and 5 respectively.
 	/// </summary>
@@ -53,18 +53,14 @@ namespace FluentValidation.Validators {
 			if (decimalValue.HasValue) {
 				var scale = GetScale(decimalValue.Value);
 				var precision = GetPrecision(decimalValue.Value);
-				if (scale > Scale || precision > Precision) {
+				var actualIntegerDigits = precision - scale;
+				var expectedIntegerDigits = Precision - Scale;
+				if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
 					context.MessageFormatter
 						.AppendArgument("ExpectedPrecision", Precision)
 						.AppendArgument("ExpectedScale", Scale)
-						.AppendArgument("Digits", precision - scale)
-						.AppendArgument("ActualScale", scale)
-						// For backwards compatibility, 8.1.2 and older used lowercase placeholders.
-						// TODO consider removing for FV 9
-						.AppendArgument("expectedPrecision", Precision)
-						.AppendArgument("expectedScale", Scale)
-						.AppendArgument("digits", precision - scale)
-						.AppendArgument("actualScale", scale);
+						.AppendArgument("Digits", actualIntegerDigits)
+						.AppendArgument("ActualScale", scale);
 
 					return false;
 				}
@@ -126,20 +122,14 @@ namespace FluentValidation.Validators {
 		}
 
 		private int GetPrecision(decimal Decimal) {
-			// Precision: number of times we can divide by 10 before we get to 0        
+			// Precision: number of times we can divide by 10 before we get to 0
 			uint precision = 0;
-			if (Decimal != 0m) {
-				for (decimal tmp = GetMantissa(Decimal); tmp >= 1; tmp /= 10) {
-					precision++;
-				}
-
-				if (IgnoreTrailingZeros) {
-					return (int) (precision - NumTrailingZeros(Decimal));
-				}
+			for (decimal tmp = GetMantissa(Decimal); tmp >= 1; tmp /= 10) {
+				precision++;
 			}
-			else {
-				// Handle zero differently. It's odd.
-				precision = (uint) GetScale(Decimal) + 1;
+
+			if (IgnoreTrailingZeros) {
+				return (int) (precision - NumTrailingZeros(Decimal));
 			}
 
 			return (int) precision;

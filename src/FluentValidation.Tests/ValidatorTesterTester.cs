@@ -1,6 +1,6 @@
 #region License
 
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 
 #endregion
 
@@ -35,6 +35,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.CreditCard).Must(creditCard => !string.IsNullOrEmpty(creditCard)).WhenAsync((x, cancel) => Task.Run(() => { return x.Age >= 18; }));
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleForEach(person => person.NickNames).MinimumLength(5);
+			CultureScope.SetDefaultCulture();
 		}
 
 		[Fact]
@@ -174,7 +175,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldHaveChildValidator_should_not_throw_when_property_has_collection_validators() {
-			validator.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator());
+			validator.RuleForEach(x => x.Orders).SetValidator(new OrderValidator());
 			validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator));
 		}
 
@@ -205,12 +206,12 @@ namespace FluentValidation.Tests {
 			});
 			testValidator.RuleFor(x => x.Id).NotEqual(0);
 
-			var assertionRoot = testValidator.TestValidate(new Person(), "Names").Which;
+			var assertionRoot = testValidator.TestValidate(new Person(), "Names");
 
-			assertionRoot.Property(x => x.Forename).ShouldHaveValidationError()
+			assertionRoot.ShouldHaveValidationErrorFor(x => x.Forename)
 				.WithErrorCode("NotNullValidator");
-			assertionRoot.Property(x => x.Surname).ShouldHaveValidationError().WithErrorCode("NotNullValidator");
-			assertionRoot.Property(x => x.Id).ShouldNotHaveValidationError();
+			assertionRoot.ShouldHaveValidationErrorFor(x => x.Surname).WithErrorCode("NotNullValidator");
+			assertionRoot.ShouldNotHaveValidationErrorFor(x => x.Id);
 		}
 
 		[Fact]
@@ -223,7 +224,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var ex = Assert.Throws<ValidationTestException>(() => {
-				result.Which.Property(x => x.Address).Property(x => x.Line1).ShouldHaveValidationError();
+				result.ShouldHaveValidationErrorFor(x => x.Address.Line1);
 			});
 
 			ex.Message.ShouldEqual("Expected a validation error for property Address.Line1");
@@ -360,7 +361,7 @@ namespace FluentValidation.Tests {
 				foreach(var msg in errMessages) {
 					validator.Add(v => v.RuleFor(x => x.Surname).NotNull().WithMessage(msg));
 				}
-				validator.TestValidate(new Person { }).Result.Errors.WithoutErrorMessage(withoutErrMsg);
+				validator.TestValidate(new Person { }).Errors.WithoutErrorMessage(withoutErrMsg);
 			}
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
@@ -369,9 +370,32 @@ namespace FluentValidation.Tests {
 			}
 
 			exceptionCaught.ShouldEqual(errMessages.Contains(withoutErrMsg));
-		}
+    }
 
-		[Fact]
+    [Fact]
+    public void Expected_message_argument_check() {
+      bool exceptionCaught = false;
+
+      try {
+        var validator = new InlineValidator<Person> {
+          v => v.RuleFor(x => x.Surname)
+            .Must((x, y, context) => {
+              context.MessageFormatter.AppendArgument("Foo", "bar");
+              return false;
+            })
+            .WithMessage("{Foo}")
+        };
+        validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithMessageArgument("Foo", "foo");
+      }
+      catch (ValidationTestException e) {
+        exceptionCaught = true;
+        e.Message.ShouldEqual("Expected message argument 'Foo' with value 'foo'. Actual value was 'bar'");
+      }
+
+      exceptionCaught.ShouldBeTrue();
+    }
+
+    [Fact]
 		public void Expected_state_check() {
 			bool exceptionCaught = false;
 
@@ -563,8 +587,8 @@ namespace FluentValidation.Tests {
 			var person = new Person() { Surname = "c" };
 			var result = validator.TestValidate(person);
 
-			result.ShouldHaveError().WithErrorCode("nota");
-			result.ShouldHaveError().WithErrorCode("notb");
+			result.ShouldHaveAnyValidationError().WithErrorCode("nota");
+			result.ShouldHaveAnyValidationError().WithErrorCode("notb");
 		}
 
 		[Fact]

@@ -1,5 +1,5 @@
 ﻿#region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.AspNetCore {
@@ -26,6 +26,7 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.Extensions.Options;
 	using FluentValidation;
 	using System.Collections.Generic;
+	using System.Linq;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
 	using Microsoft.Extensions.Logging;
@@ -40,21 +41,29 @@ namespace FluentValidation.AspNetCore {
 		///     MVC services.
 		/// </returns>
 		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
-			var config = new FluentValidationMvcConfiguration();
+			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
 			configurationExpression?.Invoke(config);
-
-			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
 
 			RegisterServices(mvcBuilder.Services, config);
 
 			mvcBuilder.AddMvcOptions(options => {
-				options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
-				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+				// Check if the providers have already been added.
+				// We shouldn't have to do this, but there's a bug in the ASP.NET Core integration
+				// testing components that can cause Configureservices to be called multple times
+				// meaning we end up with duplicates.
+
+				if (!options.ModelMetadataDetailsProviders.Any(x => x is FluentValidationBindingMetadataProvider)) {
+					options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
+				}
+
+				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
+					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+				}
 			});
 
 			return mvcBuilder;
 		}
-		
+
 		/// <summary>
 		///     Adds Fluent Validation services to the specified
 		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />.
@@ -64,22 +73,32 @@ namespace FluentValidation.AspNetCore {
 		///     MVC services.
 		/// </returns>
 		public static IMvcBuilder AddFluentValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
-			var config = new FluentValidationMvcConfiguration();
+			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
 			configurationExpression?.Invoke(config);
 
-			mvcBuilder.Services.AddValidatorsFromAssemblies(config.AssembliesToRegister);
-			
 			RegisterServices(mvcBuilder.Services, config);
 
 			mvcBuilder.AddMvcOptions(options => {
-				options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
-				options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+				// Check if the providers have already been added.
+				// We shouldn't have to do this, but there's a bug in the ASP.NET Core integration
+				// testing components that can cause Configureservices to be called multple times
+				// meaning we end up with duplicates.
+				if (!options.ModelMetadataDetailsProviders.Any(x => x is FluentValidationBindingMetadataProvider)) {
+					options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
+				}
+
+				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
+					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+				}
 			});
 
 			return mvcBuilder;
 		}
 
 		private static void RegisterServices(IServiceCollection services, FluentValidationMvcConfiguration config) {
+			services.AddValidatorsFromAssemblies(config.AssembliesToRegister, config.ServiceLifetime, config.TypeFilter);
+			services.AddSingleton(config.ValidatorOptions);
+
 			if (config.ValidatorFactory != null) {
 				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type.
 				var factory = config.ValidatorFactory;
@@ -89,11 +108,13 @@ namespace FluentValidation.AspNetCore {
 				services.Add(ServiceDescriptor.Transient(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 			}
 
-			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
-				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
-				var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-				return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
-			}));
+			if (config.AutomaticValidationEnabled) {
+				services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
+					var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
+					var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
+					return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
+				}));
+			}
 
 			if (config.ClientsideEnabled) {
 				// Clientside validation requires access to the HttpContext, but MVC's clientside API does not provide it,

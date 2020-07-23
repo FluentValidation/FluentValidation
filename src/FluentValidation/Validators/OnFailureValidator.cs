@@ -30,7 +30,7 @@
 			var results = _innerValidator.Validate(context).ToList();
 			if (!results.Any()) return results;
 			var errorMessage = results.First().ErrorMessage;
-			_onFailure((T) context.Instance, context, errorMessage);
+			_onFailure((T) context.InstanceToValidate, context, errorMessage);
 			return results;
 		}
 
@@ -38,14 +38,14 @@
 			var results = (await _innerValidator.ValidateAsync(context, cancellation)).ToList();
 			if (!results.Any()) return results;
 			var errorMessage = results.First().ErrorMessage;
-			_onFailure((T) context.Instance, context, errorMessage);
+			_onFailure((T) context.InstanceToValidate, context, errorMessage);
 			return results;
 		}
 
-		public override bool ShouldValidateAsync(ValidationContext context) {
+		public override bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If the user has applied an async condition, or the inner validator requires async
 			// validation then always go through the async path.
-			if (Options.AsyncCondition != null || _innerValidator.ShouldValidateAsync(context)) return true;
+			if (Options.AsyncCondition != null || _innerValidator.ShouldValidateAsynchronously(context)) return true;
 			return false;
 		}
 
