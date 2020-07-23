@@ -28,6 +28,7 @@ namespace FluentValidation.Tests {
 			return new JsonResult(errors);
 		}
 	}
+
 	[IgnoreAntiforgeryToken(Order = 1001)]
 	public class RulesetTestPageModel : PageModel {
 
@@ -50,8 +51,6 @@ namespace FluentValidation.Tests {
 			return new JsonResult(errors);
 		}
 	}
-
-
 
 	[IgnoreAntiforgeryToken(Order = 1001)]
 	public class TestPageModelWithPrefix : PageModel {
