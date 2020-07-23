@@ -246,12 +246,9 @@ namespace FluentValidation.Tests.AspNetCore {
 					services => services.AddSingleton<IValidatorInterceptor, SimplePropertyInterceptor>())
 				)
         .CreateClient();
-      var response = await client.PostResponse($"/TestPage1", form);
-      var result = JsonConvert.DeserializeObject<List<SimpleError>>(response);
 
-      result.IsValidField("Forename").ShouldBeFalse();
-      result.IsValidField("Surname").ShouldBeFalse();
-      result.IsValidField("Email").ShouldBeTrue();
+			// IValidatorInterceptor won't be called and shouldn't throw.
+      var response = await client.PostResponse($"/TestPage1", form);
     }
 
     [Fact]
