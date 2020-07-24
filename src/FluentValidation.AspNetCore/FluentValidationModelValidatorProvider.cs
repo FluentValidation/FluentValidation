@@ -93,7 +93,8 @@ namespace FluentValidation.AspNetCore {
 					// Allow the user to provide a customized context
 					// However, if they return null then just use the original context.
 					context = interceptor.BeforeMvcValidation((ControllerContext)mvContext.ActionContext, context) ?? context;
-				} else if (actionContextInterceptor != null) {
+				} 
+        else if (actionContextInterceptor != null) {
 					context = actionContextInterceptor.BeforeMvcValidation(mvContext.ActionContext, context) ?? context;
 				}
 
@@ -103,7 +104,8 @@ namespace FluentValidation.AspNetCore {
 					// allow the user to provide a custom collection of failures, which could be empty.
 					// However, if they return null then use the original collection of failures.
 					result = interceptor.AfterMvcValidation((ControllerContext)mvContext.ActionContext, context, result) ?? result;
-				} else if (actionContextInterceptor != null) {
+				} 
+        else if (actionContextInterceptor != null) {
 					result = actionContextInterceptor.AfterMvcValidation(mvContext.ActionContext, context, result) ?? result;
 				}
 
