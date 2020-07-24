@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -81,23 +81,32 @@ namespace FluentValidation.AspNetCore {
 				var interceptor = customizations.GetInterceptor()
 				                  ?? validator as IValidatorInterceptor
 				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IValidatorInterceptor>();
+				var actionContextInterceptor = customizations.GetActionContextInterceptor()
+				                  ?? validator as IActionContextValidatorInterceptor
+				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IActionContextValidatorInterceptor>();
 
 				IValidationContext context = new ValidationContext<object>(mvContext.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
 				context.SetServiceProvider(mvContext.ActionContext.HttpContext.RequestServices);
 
-				if (interceptor != null) {
+				if (interceptor != null && mvContext.ActionContext is ControllerContext) {
 					// Allow the user to provide a customized context
 					// However, if they return null then just use the original context.
 					context = interceptor.BeforeMvcValidation((ControllerContext)mvContext.ActionContext, context) ?? context;
+				} 
+        else if (actionContextInterceptor != null) {
+					context = actionContextInterceptor.BeforeMvcValidation(mvContext.ActionContext, context) ?? context;
 				}
 
 				var result = validator.Validate(context);
 
-				if (interceptor != null) {
+				if (interceptor != null && mvContext.ActionContext is ControllerContext) {
 					// allow the user to provide a custom collection of failures, which could be empty.
 					// However, if they return null then use the original collection of failures.
 					result = interceptor.AfterMvcValidation((ControllerContext)mvContext.ActionContext, context, result) ?? result;
+				} 
+        else if (actionContextInterceptor != null) {
+					result = actionContextInterceptor.AfterMvcValidation(mvContext.ActionContext, context, result) ?? result;
 				}
 
 				return result.Errors.Select(x => new ModelValidationResult(x.PropertyName, x.ErrorMessage));

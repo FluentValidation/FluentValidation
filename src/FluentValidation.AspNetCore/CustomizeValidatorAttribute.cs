@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -95,6 +95,7 @@ namespace FluentValidation.AspNetCore {
 			if (Interceptor == null) return null;
 
 			if (!typeof(IValidatorInterceptor) .GetTypeInfo().IsAssignableFrom(Interceptor)) {
+				if (typeof(IActionContextValidatorInterceptor).GetTypeInfo().IsAssignableFrom(Interceptor)) return null;
 				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
 			}
 
@@ -102,6 +103,23 @@ namespace FluentValidation.AspNetCore {
 
 			if (instance == null) {
 				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
+			}
+
+			return instance;
+		}
+
+		internal IActionContextValidatorInterceptor GetActionContextInterceptor() {
+			if (Interceptor == null) return null;
+
+			if (!typeof(IActionContextValidatorInterceptor) .GetTypeInfo().IsAssignableFrom(Interceptor)) {
+				if (typeof(IValidatorInterceptor).GetTypeInfo().IsAssignableFrom(Interceptor)) return null;
+				throw new InvalidOperationException("Type {0} is not an IActionContextValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IActionContextValidatorInterceptor.");
+			}
+
+			var instance = Activator.CreateInstance(Interceptor) as IActionContextValidatorInterceptor;
+
+			if (instance == null) {
+				throw new InvalidOperationException("Type {0} is not an IActionContextValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IActionContextValidatorInterceptor.");
 			}
 
 			return instance;
