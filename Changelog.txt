@@ -1,3 +1,74 @@
+9.1 - 
+Make ruleset separator character splitting consistent (#1424)
+Transform now works with RuleForEach (#1450)
+Introduce constants for rulesets (#1435)
+Resolve issue when attempting to use asynchronous conditions in a synchornous validaiton run (#1438)
+
+9.0.1 - 14 July 2020
+Fix assembly version was still 8.
+
+9.0 - 6 July 2020
+Removed support for netstandard1.1, netstandard1.6 and net45 (net461 still supported)
+Removed support for unsupported .NET Core versions (2.2 and 3.0). LTS versions are supported (2.1 and 3.1)
+Default email validation mode now uses the same logic as ASP.NET Core. Previous regex behaviour is opt-in.
+TestHelper advanced mode now has more features (see https://docs.fluentvalidation.net/en/latest/testing.html#advanced-test-extensions)
+Equal/NotEqual now perform ordinal comparison when used with string properties
+Severity can now be set dynamically with a callback
+Removed WithLocalizedMessage (WithMessage that takes a callback is the replacement)
+Removed ResourceName from ValidationFailure
+Removed ResourceName and ResourceType from IStringSource.
+Removed SetCollectionValidator which was deprecated in 8.0
+Removed DelegatingValidator which was deprecated in 8.x.
+Additional overload of OnAnyFailure that can receive a collection of validation failures
+Remove DisplayAttribute integration and reference to DataAnnotations.
+ComparisonProperty placeholder is now formatted like PropertyName
+Translations of default error messages into other languages are now lazily-loaded
+PropertyValidator.ShouldValidateAsync reanamed to ShouldValidateAsynchronously to remove confusion where the naming suggested this was an async method
+PropertyValidatorContext.Instance renamed to InstanceToValidate for consistency with ValidationContext.
+Removed various methods from MessageFormatter that were deprecated in 8.x
+Added Slovenian translations of default error messages.
+Added Icelandic translations of default error messages.
+Added WithMessageArgument to the test helpers.
+Transform can now be used to transform property values to other types.
+FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
+Add additional overload of SetValidator that takes a Func that receives the current property value.
+Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
+SourceLink integration.
+{CollectionIndex} placeholder can now be accessed in child validators.
+Additional ValidationException constructor that allows using both the default message and a custom one together.
+ScalePrecisionValidator algorithm now matches SQL Server.
+Additional overload of the When methods that contain the validation context.
+Automatically scanned types can be excluded when calling RegisterValidatorsFromAssemblyContaining in ASP.NET Core projects.
+New AutomaticValidationEnabled property for use in ASP.NET Core projects (defaults to true).
+
+8.6.2 - 29 February 2020
+Fix CollectionIndex placeholder not working with async workflow.
+
+8.6.1 - 28 December 2019
+Add explicit netcoreapp3.1 target to ASP.NET Core integration.
+
+8.6.0 - 4 December 2019
+Add support for ASP.NET Core 3.1
+Fixed issue with property indexers being incorrectly stripped out when using test extensions.
+AddToModelState no longer includes a dot if PropertyName is null
+
+8.5.1 - 2 November 2019
+Ensure lazily loaded calls to WithMessage can be used for client-side validation, provided they don't attempt to access model properties from inside the delegate (eg when using IStringLocalizer).
+Fix issue where OnFailure didn't work properly when invoked on validators with conditions.
+
+8.5.0 - 24 September 2019
+Add ASP.NET Core-compatible version of the email address validator.
+Simplify the advanced testhelper syntax.
+Add support for ASP.NET Core 3.
+Add support for defining child rules inline.
+ValidatorDescriptor now has consistent handling of model-level rules.
+RuleForEach can now access collection index in error message with {CollectionIndex} placeholder.
+Welsh language translations of default error messages.
+Hungrian language translations of default error messages.
+Indonesian language translations of default error messages.
+Using RuleForEach combined with When is now more intuitive.
+Fixed order of rule execution when using async validation.
+
 8.4.0 - 10 May 2019
 Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
 New enum validator for string properties.
@@ -13,10 +84,10 @@ Improvements to Georgian language translations.
 Resolved subtle bug where top-level WhenAsync wouldn't work correctly when wrapping a top-level call to When.
 
 8.2.3 - 12 April 2019
-Fix issue with WebApi integration where DataAnnotations validation could generate duplicate messages when used in the same 
+Fix issue with WebApi integration where DataAnnotations validation could generate duplicate messages when used in the same
 project as FluentValidation.
 
-8.2.2 - 5 April 2019 
+8.2.2 - 5 April 2019
 Fix typo in FluentValidation.DependencyInjectionExtensions package name.
 
 8.2.1 - 4 April 2019
@@ -74,11 +145,11 @@ Remove the pre-7 version of Custom/CustomAsync.
 Removed deprecated localization system.
 Remove deprecated RemoveRule/ReplaceRule/ClearRules methods.
 
-7.6.105 - 11 August 2018 
-Added Albanian language translations 
-Added Chinese Traditional language translation 
+7.6.105 - 11 August 2018
+Added Albanian language translations
+Added Chinese Traditional language translation
 Fix #858 ValidationTestExtension.When() incorrectly checks each failure instead of all failures
- 
+
 7.6.104 - 6 July 2018
 Added AbstractValidator.PreValidate to allow immediate cancellation of validation.
 

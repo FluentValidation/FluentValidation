@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
@@ -25,7 +25,7 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Validators;
 
-	
+
 	public class GreaterThanValidatorTester {
 		private TestValidator validator;
 		private const int value = 1;
@@ -33,7 +33,7 @@ namespace FluentValidation.Tests {
 		public GreaterThanValidatorTester() {
             CultureScope.SetDefaultCulture();
             validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThan(value));
-          
+
         }
 
 
@@ -63,9 +63,25 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validates_with_property() {
-			validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThan(x => x.AnotherInt));
+			validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThan(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
 			var result = validator.Validate(new Person { Id = 0, AnotherInt = 1 });
 			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("Another Int");
+		}
+
+		[Fact]
+		public void Comparison_property_uses_custom_resolver() {
+			var originalResolver = ValidatorOptions.Global.DisplayNameResolver;
+
+			try {
+				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
+				validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThan(x => x.AnotherInt).WithMessage("{ComparisonProperty}"));
+				var result = validator.Validate(new Person { Id = 0, AnotherInt = 1 });
+				result.Errors[0].ErrorMessage.ShouldEqual("AnotherIntFoo");
+			}
+			finally {
+				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
+			}
 		}
 
 		[Fact]

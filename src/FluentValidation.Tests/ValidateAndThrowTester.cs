@@ -1,188 +1,197 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
-	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-    using System.Linq;
-    using System.Threading;
-	using Newtonsoft.Json;
-	using Results;
-	using Xunit;
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using Newtonsoft.Json;
+  using Results;
+  using Xunit;
 
-	
-	public class ValidateAndThrowTester {
-		public ValidateAndThrowTester() {
-			CultureScope.SetDefaultCulture();
-		}
 
-		[Fact]
-		public void Throws_exception() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull()
-			};
+  public class ValidateAndThrowTester {
+    public ValidateAndThrowTester() {
+      CultureScope.SetDefaultCulture();
+    }
 
-			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
-		}
+    [Fact]
+    public void Throws_exception() {
+      var validator = new TestValidator {
+            v => v.RuleFor(x => x.Surname).NotNull()
+          };
 
-        [Fact]
-        public void Throws_exception_with_a_ruleset() {
-            var validator = new TestValidator {
+      typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+    }
+
+    [Fact]
+    public void Throws_exception_with_a_ruleset() {
+      var validator = new TestValidator {
                 v => v.RuleFor(x => x.Surname).NotNull()
             };
 
-            const string ruleSetName = "blah";
-            validator.RuleSet(ruleSetName, () => {
-                validator.RuleFor(x => x.Forename).NotNull();
-            });
+      const string ruleSetName = "blah";
+      validator.RuleSet(ruleSetName, () => {
+        validator.RuleFor(x => x.Forename).NotNull();
+      });
 
-            typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person(), ruleSetName));
+      typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person(), ruleSetName));
+    }
+
+    [Fact]
+    public void Throws_exception_async() {
+      var validator = new TestValidator {
+            v => v.RuleFor(x => x.Surname).NotNull()
+          };
+
+      typeof(ValidationException).ShouldBeThrownBy(() => {
+        try {
+          validator.ValidateAndThrowAsync(new Person()).Wait();
         }
+        catch (AggregateException agrEx) {
+          throw agrEx.InnerException;
+        }
+      });
+    }
 
-        [Fact]
-		public void Throws_exception_async() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull()
-			};
-
-			typeof(ValidationException).ShouldBeThrownBy(() => {
-				try {
-					validator.ValidateAndThrowAsync(new Person()).Wait();
-				}
-				catch (AggregateException agrEx) {
-					throw agrEx.InnerException;
-				}
-			});
-		}
-
-        [Fact]
-        public void Throws_exception_with_a_ruleset_async()
-        {
-            var validator = new TestValidator {
+    [Fact]
+    public void Throws_exception_with_a_ruleset_async() {
+      var validator = new TestValidator {
                 v => v.RuleFor(x => x.Surname).NotNull()
             };
 
-            const string ruleSetName = "blah";
-            validator.RuleSet(ruleSetName, () => {
-                validator.RuleFor(x => x.Forename).NotNull();
-            });
+      const string ruleSetName = "blah";
+      validator.RuleSet(ruleSetName, () => {
+        validator.RuleFor(x => x.Forename).NotNull();
+      });
 
-            typeof(ValidationException).ShouldBeThrownBy(() => {
-                try
-                {
-                    validator.ValidateAndThrowAsync(new Person(), ruleSetName).Wait();
-                }
-                catch (AggregateException agrEx)
-                {
-                    throw agrEx.InnerException;
-                }
-            });
+      typeof(ValidationException).ShouldBeThrownBy(() => {
+        try {
+          validator.ValidateAndThrowAsync(new Person(), ruleSetName).Wait();
         }
+        catch (AggregateException agrEx) {
+          throw agrEx.InnerException;
+        }
+      });
+    }
 
-        [Fact]
-		public void Does_not_throw_when_valid() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull()
-			};
+    [Fact]
+    public void Does_not_throw_when_valid() {
+      var validator = new TestValidator {
+            v => v.RuleFor(x => x.Surname).NotNull()
+          };
 
-			validator.ValidateAndThrow(new Person {Surname = "foo"});
-		}
+      validator.ValidateAndThrow(new Person { Surname = "foo" });
+    }
 
-        [Fact]
-        public void Does_not_throw_when_valid_and_a_ruleset()
-        {
-            var validator = new TestValidator {
+    [Fact]
+    public void Does_not_throw_when_valid_and_a_ruleset() {
+      var validator = new TestValidator {
                 v => v.RuleFor(x => x.Surname).NotNull()
             };
 
-            const string ruleSetName = "blah";
-            validator.RuleSet(ruleSetName, () => {
-                validator.RuleFor(x => x.Forename).NotNull();
-            });
+      const string ruleSetName = "blah";
+      validator.RuleSet(ruleSetName, () => {
+        validator.RuleFor(x => x.Forename).NotNull();
+      });
 
-            var person = new Person {
-                Forename = "foo",
-                Surname = "foo"
-            };
-            validator.ValidateAndThrow(person, ruleSetName);
-        }
+      var person = new Person {
+        Forename = "foo",
+        Surname = "foo"
+      };
+      validator.ValidateAndThrow(person, ruleSetName);
+    }
 
-        [Fact]
-        public void Does_not_throw_when_valid_async() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull()
-			};
+    [Fact]
+    public void Does_not_throw_when_valid_async() {
+      var validator = new TestValidator {
+            v => v.RuleFor(x => x.Surname).NotNull()
+          };
 
-			validator.ValidateAndThrowAsync(new Person { Surname = "foo" }).Wait();
-		}
+      validator.ValidateAndThrowAsync(new Person { Surname = "foo" }).Wait();
+    }
 
-        [Fact]
-        public void Does_not_throw_when_valid_and_a_ruleset_async()
-        {
-            var validator = new TestValidator {
+    [Fact]
+    public void Does_not_throw_when_valid_and_a_ruleset_async() {
+      var validator = new TestValidator {
                 v => v.RuleFor(x => x.Surname).NotNull()
             };
 
-            const string ruleSetName = "blah";
-            validator.RuleSet(ruleSetName, () => {
-                validator.RuleFor(x => x.Forename).NotNull();
-            });
+      const string ruleSetName = "blah";
+      validator.RuleSet(ruleSetName, () => {
+        validator.RuleFor(x => x.Forename).NotNull();
+      });
 
-            var person = new Person
-            {
-                Forename = "foo",
-                Surname = "foo"
-            };
-            validator.ValidateAndThrowAsync(person, ruleSetName).Wait();
-        }
+      var person = new Person {
+        Forename = "foo",
+        Surname = "foo"
+      };
+      validator.ValidateAndThrowAsync(person, ruleSetName).Wait();
+    }
 
-        [Fact]
-		public void Populates_errors() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull()
-			};
+    [Fact]
+    public void Populates_errors() {
+      var validator = new TestValidator {
+        v => v.RuleFor(x => x.Surname).NotNull()
+      };
 
-			var ex = (ValidationException)typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
-			ex.Errors.Count().ShouldEqual(1);
-		}
+      var ex = (ValidationException)typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+      ex.Errors.Count().ShouldEqual(1);
+    }
 
-		[Fact]
-		public void ToString_provides_error_details() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull(),
-				v => v.RuleFor(x => x.Forename).NotNull()
-			};
+    [Fact]
+    public void ToString_provides_error_details() {
+      var validator = new TestValidator {
+        v => v.RuleFor(x => x.Surname).NotNull(),
+        v => v.RuleFor(x => x.Forename).NotNull()
+      };
 
-			var ex = typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
-            string expected = "FluentValidation.ValidationException: Validation failed: " + Environment.NewLine + " -- Surname: 'Surname' must not be empty." + Environment.NewLine + " -- Forename: 'Forename' must not be empty.";
-            Assert.True(ex.ToString().StartsWith(expected));
-		}
+      var ex = typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+      string expected = "FluentValidation.ValidationException: Validation failed: " + Environment.NewLine + " -- Surname: 'Surname' must not be empty." + Environment.NewLine + " -- Forename: 'Forename' must not be empty.";
+      Assert.True(ex.ToString().StartsWith(expected));
+    }
 
-#if !NETCOREAPP1_1 && !NETCOREAPP2_0
-		[Fact]
-		public void Serializes_exception() {
-			var v = new ValidationException(new List<ValidationFailure> {new ValidationFailure("test", "test")});
-			var raw = JsonConvert.SerializeObject(v);
-			var deserialized = JsonConvert.DeserializeObject<ValidationException>(raw);
+    [Fact]
+    public void Serializes_exception() {
+      var v = new ValidationException(new List<ValidationFailure> { new ValidationFailure("test", "test") });
+      var raw = JsonConvert.SerializeObject(v);
+      var deserialized = JsonConvert.DeserializeObject<ValidationException>(raw);
 
-			deserialized.Errors.Count().ShouldEqual(1);
-		}
-#endif
-	}
+      deserialized.Errors.Count().ShouldEqual(1);
+    }
+
+    [Fact]
+    public void ValidationException_provides_correct_message_when_appendDefaultMessage_true() {
+      var userMessage = "exception occured during testing";
+      var validationFailures = new List<ValidationFailure> { new ValidationFailure("test", "test") };
+      var exception = new ValidationException(validationFailures);
+      var exceptionWithUserMessage = new ValidationException(userMessage, validationFailures, true);
+
+      exceptionWithUserMessage.Message.ShouldEqual($"{userMessage} {exception.Message}");
+    }
+
+    [Fact]
+    public void ValidationException_provides_correct_message_when_appendDefaultMessage_false() {
+      var userMessage = "exception occured during testing";
+      var validationFailures = new List<ValidationFailure> { new ValidationFailure("test", "test") };
+      var exceptionWithUserMessage = new ValidationException(userMessage, validationFailures, false);
+
+      exceptionWithUserMessage.Message.ShouldEqual(userMessage);
+    }
+  }
 }

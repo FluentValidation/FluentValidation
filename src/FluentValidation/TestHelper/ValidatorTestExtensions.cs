@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 #pragma warning disable 1591
@@ -23,22 +23,29 @@ namespace FluentValidation.TestHelper {
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Text.RegularExpressions;
 	using Internal;
 	using Results;
 	using Validators;
 
 	public static class ValidationTestExtension {
+		internal const string MatchAnyFailure = "__FV__ANY";
+
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
 			var instanceToValidate = new T();
-			var testValidationResult = validator.TestValidate(expression, instanceToValidate, value, ruleSet);
-			return testValidationResult.ShouldHaveError();
+
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, true);
+			memberAccessor.Set(instanceToValidate, value);
+
+			var testValidationResult = validator.TestValidate(instanceToValidate, ruleSet);
+			return testValidationResult.ShouldHaveValidationErrorFor(expression);
 		}
 
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
-			return testValidationResult.ShouldHaveError();
+			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
+			return testValidationResult.ShouldHaveValidationErrorFor(expression);
 		}
 
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, string ruleSet)
@@ -56,15 +63,20 @@ namespace FluentValidation.TestHelper {
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
-				var instanceToValidate = new T();
-			var testValidationResult = validator.TestValidate(expression, instanceToValidate, value, ruleSet);
-			testValidationResult.ShouldNotHaveError();
+
+			var instanceToValidate = new T();
+
+			var memberAccessor = new MemberAccessor<T, TValue>(expression, true);
+			memberAccessor.Set(instanceToValidate, value);
+
+			var testValidationResult = validator.TestValidate(instanceToValidate, ruleSet);
+			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, string ruleSet = null) where T : class {
 			var value = expression.Compile()(objectToTest);
-			var testValidationResult = validator.TestValidate(expression, objectToTest, value, ruleSet, setProperty:false);
-			testValidationResult.ShouldNotHaveError();
+			var testValidationResult = validator.TestValidate(objectToTest, ruleSet);
+			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
 
 		public static void ShouldNotHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, string ruleSet)
@@ -88,13 +100,13 @@ namespace FluentValidation.TestHelper {
 				throw new NotSupportedException("ShouldHaveChildValidator can only be used for simple property expressions. It cannot be used for model-level rules or rules that contain anything other than a property reference.");
 			}
 
-			var matchingValidators = 
+			var matchingValidators =
 				expression.IsParameterExpression()	 ? GetModelLevelValidators(descriptor) :
 				descriptor.GetValidatorsForMember(expressionMemberName).ToArray();
 
 
 			matchingValidators = matchingValidators.Concat(GetDependentRules(expressionMemberName, expression, descriptor)).ToArray();
-			
+
 			var childValidatorTypes = matchingValidators.OfType<IChildValidatorAdaptor>().Select(x => x.ValidatorType);
 
 			if (childValidatorTypes.All(x => !childValidatorType.GetTypeInfo().IsAssignableFrom(x.GetTypeInfo()))) {
@@ -113,44 +125,92 @@ namespace FluentValidation.TestHelper {
 
 		private static IPropertyValidator[] GetModelLevelValidators(IValidatorDescriptor descriptor) {
 			var rules = descriptor.GetRulesForMember(null).OfType<PropertyRule>();
-			return rules.Where(x => x.Expression.IsParameterExpression()).SelectMany(x => x.Validators)
+			return rules.Where(x => x.Expression == null || x.Expression.IsParameterExpression()).SelectMany(x => x.Validators)
 				.ToArray();
 		}
 
-		private static TestValidationResult<T, TValue> TestValidate<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T instanceToValidate, TValue value, string ruleSet = null, bool setProperty=true) where T : class {
-			var memberAccessor = new MemberAccessor<T, TValue>(expression, setProperty);
-
-			if (setProperty) {
-				memberAccessor.Set(instanceToValidate, value);
-			}
-
-			var validationResult = validator.Validate(instanceToValidate, null, ruleSet: ruleSet);
-
-			return new TestValidationResult<T, TValue>(validationResult, memberAccessor);
-		}
-
-		public static TestValidationResult<T, T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
+		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
 			var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
-
-			return new TestValidationResult<T, T>(validationResult, (Expression<Func<T, T>>) (o => o));
+			return new TestValidationResult<T>(validationResult);
 		}
 
-		public static IEnumerable<ValidationFailure> ShouldHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			return testValidationResult.Which.ShouldHaveValidationError();
+		public static IEnumerable<ValidationFailure> ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) where T : class {
+			if (!testValidationResult.Errors.Any())
+				throw new ValidationTestException($"Expected at least one validation error, but none were found.");
+
+			return testValidationResult.Errors;
 		}
 
-		public static void ShouldNotHaveError<T, TValue>(this TestValidationResult<T, TValue> testValidationResult) where T : class {
-			testValidationResult.Which.ShouldNotHaveValidationError();
+		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) where T : class {
+			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure, true);
 		}
 
 		private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
-			if (exceptionMessage != null && failure != null) {
-				return exceptionMessage.Replace("{Code}", failure.ErrorCode)
-					.Replace("{Message}", failure.ErrorMessage)
-					.Replace("{State}", failure.CustomState?.ToString() ?? "")
-					.Replace("{Severity}", failure.Severity.ToString());
-			}
+      if (exceptionMessage != null && failure != null) {
+        var formattedExceptionMessage = exceptionMessage.Replace("{Code}", failure.ErrorCode)
+          .Replace("{Message}", failure.ErrorMessage)
+          .Replace("{State}", failure.CustomState?.ToString() ?? "")
+          .Replace("{Severity}", failure.Severity.ToString());
+
+        var messageArgumentMatches = Regex.Matches(formattedExceptionMessage, "{MessageArgument:(.*)}");
+        for (var i = 0; i < messageArgumentMatches.Count; i++) {
+          if (failure.FormattedMessagePlaceholderValues.ContainsKey(messageArgumentMatches[i].Groups[1].Value)) {
+            formattedExceptionMessage = formattedExceptionMessage.Replace(messageArgumentMatches[i].Value, failure.FormattedMessagePlaceholderValues[messageArgumentMatches[i].Groups[1].Value].ToString());
+          }
+        }
+        return formattedExceptionMessage;
+      }
 			return defaultMessage;
+		}
+
+    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
+
+      var failures = errors.Where(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+                                       || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+                                       || propertyName == MatchAnyFailure
+                                       ).ToArray();
+
+      if (failures.Any()) {
+        return failures;
+      }
+
+      // We expected an error but failed to match it.
+      var errorMessageBanner = $"Expected a validation error for property {propertyName}";
+
+      string errorMessage = "";
+
+      if (errors?.Any() == true) {
+        string errorMessageDetails = "";
+        for (int i = 0; i < errors.Count; i++) {
+          errorMessageDetails += $"[{i}]: {errors[i].PropertyName}\n";
+        }
+        errorMessage = $"{errorMessageBanner}\n----\nProperties with Validation Errors:\n{errorMessageDetails}";
+      }
+      else {
+        errorMessage = $"{errorMessageBanner}";
+      }
+
+      throw new ValidationTestException(errorMessage);
+    }
+
+		internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
+			var failures = errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+			                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+			                                 || propertyName == MatchAnyFailure
+			                                 ).ToList();
+
+			if (failures.Any()) {
+				var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
+				if (propertyName == MatchAnyFailure) {
+					errorMessageBanner = "Expected no validation errors";
+				}
+				string errorMessageDetails = "";
+				for (int i = 0; i < failures.Count; i++) {
+					errorMessageDetails += $"[{i}]: {failures[i].ErrorMessage}\n";
+				}
+				var errorMessage = $"{errorMessageBanner}\n----\nValidation Errors:\n{errorMessageDetails}";
+				throw new ValidationTestException(errorMessage, failures);
+			}
 		}
 
 		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null){
@@ -161,7 +221,7 @@ namespace FluentValidation.TestHelper {
 				string message = BuildErrorMessage(failure, exceptionMessage, "Expected validation error was not found");
 				throw new ValidationTestException(message);
 			}
-			
+
 			return failures;
 		}
 
@@ -185,6 +245,11 @@ namespace FluentValidation.TestHelper {
 			return failures.When(failure => failure.CustomState == expectedCustomState, string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
 		}
 
+    public static IEnumerable<ValidationFailure> WithMessageArgument<T>(this IEnumerable<ValidationFailure> failures, string argumentKey, T argumentValue) {
+      return failures.When(failure => failure.FormattedMessagePlaceholderValues.ContainsKey(argumentKey) && ((T)failure.FormattedMessagePlaceholderValues[argumentKey]).Equals(argumentValue),
+        string.Format("Expected message argument '{0}' with value '{1}'. Actual value was '{{MessageArgument:{0}}}'", argumentKey, argumentValue.ToString()));
+    }
+
 		public static IEnumerable<ValidationFailure> WithErrorMessage(this IEnumerable<ValidationFailure> failures, string expectedErrorMessage) {
 			return failures.When(failure => failure.ErrorMessage == expectedErrorMessage, string.Format("Expected an error message of '{0}'. Actual message was '{{Message}}'", expectedErrorMessage));
 		}
@@ -207,6 +272,10 @@ namespace FluentValidation.TestHelper {
 
 		public static IEnumerable<ValidationFailure> WithoutErrorCode(this IEnumerable<ValidationFailure> failures, string unexpectedErrorCode) {
 			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Found an unexpected error code of '{0}'", unexpectedErrorCode));
+		}
+
+		private static string NormalizePropertyName(string propertyName) {
+			return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 		}
 	}
 }

@@ -1,25 +1,26 @@
 #region License
 
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 
 #endregion
 
 namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using Xunit;
 	using TestHelper;
@@ -36,6 +37,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.CreditCard).Must(creditCard => !string.IsNullOrEmpty(creditCard)).WhenAsync((x, cancel) => Task.Run(() => { return x.Age >= 18; }));
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleForEach(person => person.NickNames).MinimumLength(5);
+			CultureScope.SetDefaultCulture();
 		}
 
 		private bool NotHaveSameForenameAndSurname(Person person)
@@ -192,7 +194,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldHaveChildValidator_should_not_throw_when_property_has_collection_validators() {
-			validator.RuleFor(x => x.Orders).SetCollectionValidator(new OrderValidator());
+			validator.RuleForEach(x => x.Orders).SetValidator(new OrderValidator());
 			validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator));
 		}
 
@@ -223,26 +225,93 @@ namespace FluentValidation.Tests {
 			});
 			testValidator.RuleFor(x => x.Id).NotEqual(0);
 
-			var assertionRoot = testValidator.TestValidate(new Person(), "Names").Which;
+			var assertionRoot = testValidator.TestValidate(new Person(), "Names");
 
-			assertionRoot.Property(x => x.Forename).ShouldHaveValidationError()
+			assertionRoot.ShouldHaveValidationErrorFor(x => x.Forename)
 				.WithErrorCode("NotNullValidator");
-			assertionRoot.Property(x => x.Surname).ShouldHaveValidationError().WithErrorCode("NotNullValidator");
-			assertionRoot.Property(x => x.Id).ShouldNotHaveValidationError();
+			assertionRoot.ShouldHaveValidationErrorFor(x => x.Surname).WithErrorCode("NotNullValidator");
+			assertionRoot.ShouldNotHaveValidationErrorFor(x => x.Id);
 		}
 
 		[Fact]
-		public void ShouldHaveValidationError_should_correctly_handle_explicitly_providing_object_to_validate() {
-			var unitOfMeasure = new UnitOfMeasure {
-				Value = 1
-			};
+		public void Tests_nested_property_using_obsolete_method() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Address.Line1).NotEqual("foo");
 
-			var validator = new UnitOfMeasureValidator();
+			var result = validator.TestValidate(new Person() {
+				Address = new Address {Line1 = "bar"}
+			});
 
-			validator.ShouldHaveValidationErrorFor(unit => unit.Type, unitOfMeasure);
+			var ex = Assert.Throws<ValidationTestException>(() => {
+				result.ShouldHaveValidationErrorFor(x => x.Address.Line1);
+			});
+
+			ex.Message.ShouldEqual("Expected a validation error for property Address.Line1");
 		}
 
 		[Fact]
+		public void Tests_nested_property() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Address.Line1).NotEqual("foo");
+
+			var result = validator.TestValidate(new Person() {
+				Address = new Address {Line1 = "bar"}
+			});
+
+			var ex = Assert.Throws<ValidationTestException>(() => {
+				result.ShouldHaveValidationErrorFor(x => x.Address.Line1);
+			});
+
+			ex.Message.ShouldEqual("Expected a validation error for property Address.Line1");
+		}
+
+		[Fact]
+		public void Tests_nested_property_reverse() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Address.Line1).NotEqual("foo");
+
+			var result = validator.TestValidate(new Person() {
+				Address = new Address {Line1 = "foo"}
+			});
+
+			var ex = Assert.Throws<ValidationTestException>(() => {
+				result.ShouldNotHaveValidationErrorFor(x => x.Address.Line1);
+			});
+
+			ex.Message.Contains($"Expected no validation errors for property Address.Line1").ShouldBeTrue();
+		}
+
+		[Fact]
+		public void ShouldHaveValidationError_with_an_unmatched_rule_and_a_single_error_should_throw_an_exception() {
+      var validator = new TestValidator();
+      validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(3);
+
+      var result = validator.TestValidate(new Person() {
+        NullableInt = 1
+      });
+
+      var ex = Assert.Throws<ValidationTestException>(() => result.ShouldHaveValidationErrorFor(x => x.NullableInt.Value));
+      Assert.Equal("Expected a validation error for property NullableInt.Value\n----\nProperties with Validation Errors:\n[0]: NullableInt\n", ex.Message);
+    }
+
+    [Fact]
+    public void ShouldHaveValidationError_with_an_unmatched_rule_and_multiple_errors_should_throw_an_exception() {
+      var validator = new TestValidator();
+      validator.RuleFor(x => x.NullableInt).GreaterThan(1);
+      validator.RuleFor(x => x.Age).GreaterThan(1);
+      validator.RuleFor(x => x.AnotherInt).GreaterThan(2);
+
+      var result = validator.TestValidate(new Person() {
+        NullableInt = 1,
+        Age = 1,
+        AnotherInt = 1
+      });
+
+      var ex = Assert.Throws<ValidationTestException>(() => result.ShouldHaveValidationErrorFor(x => x.NullableInt.Value));
+      Assert.Equal("Expected a validation error for property NullableInt.Value\n----\nProperties with Validation Errors:\n[0]: NullableInt\n[1]: Age\n[2]: AnotherInt\n", ex.Message);
+    }
+
+    [Fact]
 		public void ShouldNotHaveValidationError_should_correctly_handle_explicitly_providing_object_to_validate() {
 			var unitOfMeasure = new UnitOfMeasure {
 				Value = 1,
@@ -311,7 +380,7 @@ namespace FluentValidation.Tests {
 				foreach(var msg in errMessages) {
 					validator.Add(v => v.RuleFor(x => x.Surname).NotNull().WithMessage(msg));
 				}
-				validator.TestValidate(new Person { }).Result.Errors.WithoutErrorMessage(withoutErrMsg);
+				validator.TestValidate(new Person { }).Errors.WithoutErrorMessage(withoutErrMsg);
 			}
 			catch (ValidationTestException e) {
 				exceptionCaught = true;
@@ -320,9 +389,32 @@ namespace FluentValidation.Tests {
 			}
 
 			exceptionCaught.ShouldEqual(errMessages.Contains(withoutErrMsg));
-		}
+    }
 
-		[Fact]
+    [Fact]
+    public void Expected_message_argument_check() {
+      bool exceptionCaught = false;
+
+      try {
+        var validator = new InlineValidator<Person> {
+          v => v.RuleFor(x => x.Surname)
+            .Must((x, y, context) => {
+              context.MessageFormatter.AppendArgument("Foo", "bar");
+              return false;
+            })
+            .WithMessage("{Foo}")
+        };
+        validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithMessageArgument("Foo", "foo");
+      }
+      catch (ValidationTestException e) {
+        exceptionCaught = true;
+        e.Message.ShouldEqual("Expected message argument 'Foo' with value 'foo'. Actual value was 'bar'");
+      }
+
+      exceptionCaught.ShouldBeTrue();
+    }
+
+    [Fact]
 		public void Expected_state_check() {
 			bool exceptionCaught = false;
 
@@ -494,13 +586,13 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void ShouldHaveChildValidator_should_work_with_DependentRules() {
 			var validator = new InlineValidator<Person>();
-			
+
 			validator.RuleFor(x => x.Children)
 				.NotNull().When(p => true)
 				.DependentRules(() => {
 					validator.RuleForEach(p => p.Children).SetValidator(p => new InlineValidator<Person>());
 				});
-			
+
 			validator.ShouldHaveChildValidator(x => x.Children, typeof(InlineValidator<Person>));
 		}
 
@@ -513,9 +605,85 @@ namespace FluentValidation.Tests {
 
 			var person = new Person() { Surname = "c" };
 			var result = validator.TestValidate(person);
-    
-			result.ShouldHaveError().WithErrorCode("nota");
-			result.ShouldHaveError().WithErrorCode("notb");
+
+			result.ShouldHaveAnyValidationError().WithErrorCode("nota");
+			result.ShouldHaveAnyValidationError().WithErrorCode("notb");
+		}
+
+		[Fact]
+		public void Matches_any_failure() {
+			var validator = new InlineValidator<Person> {
+				v => v.RuleFor(x => x.Surname).NotEqual("foo"),
+			};
+
+			var resultWithFailure = validator.TestValidate(new Person { Surname = "foo"});
+			var resultWithoutFailure = validator.TestValidate(new Person { Surname = ""});
+
+			Assert.Throws<ValidationTestException>(() => resultWithoutFailure.ShouldHaveAnyValidationError());
+			Assert.Throws<ValidationTestException>(() => resultWithFailure.ShouldNotHaveAnyValidationErrors());
+
+			// Neither should throw.
+			resultWithFailure.ShouldHaveAnyValidationError();
+			resultWithoutFailure.ShouldNotHaveAnyValidationErrors();
+		}
+
+		[Fact]
+		public void Model_level_check_fails_if_no_model_level_failures() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).Must(x => false);
+			var result = validator.TestValidate(new Person());
+
+			Assert.Throws<ValidationTestException>(() => {
+				result.ShouldHaveValidationErrorFor(x => x);
+			});
+
+			Assert.Throws<ValidationTestException>(() => {
+				result.ShouldHaveValidationErrorFor("");
+			});
+		}
+
+		[Fact]
+		public void Matches_model_level_rule() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x).Must(x => false);
+			validator.RuleFor(x => x.Surname).Must(x => false);
+
+			var result = validator.TestValidate(new Person());
+
+			bool thrown = false;
+			try {
+				result.ShouldHaveValidationErrorFor(x => x);
+				result.ShouldHaveValidationErrorFor("");
+			}
+			catch (ValidationTestException) {
+				thrown = true;
+			}
+
+			thrown.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void Can_use_indexer_in_string_message() {
+			var validator = new InlineValidator<Person>();
+			var orderValidator = new InlineValidator<Order>();
+			orderValidator.RuleFor(x => x.ProductName).NotNull();
+			validator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
+
+			var model = new Person { Orders = new List<Order> { new Order() }};
+			var result = validator.TestValidate(model);
+			result.ShouldHaveValidationErrorFor("Orders[0].ProductName");
+		}
+
+		[Fact]
+		public void Can_use_indexer_in_string_message_inverse() {
+			var validator = new InlineValidator<Person>();
+			var orderValidator = new InlineValidator<Order>();
+			orderValidator.RuleFor(x => x.ProductName).Null();
+			validator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
+
+			var model = new Person { Orders = new List<Order> { new Order() }};
+			var result = validator.TestValidate(model);
+			result.ShouldNotHaveValidationErrorFor("Orders[0].ProductName");
 		}
 
 		private class AddressValidator : AbstractValidator<Address> {

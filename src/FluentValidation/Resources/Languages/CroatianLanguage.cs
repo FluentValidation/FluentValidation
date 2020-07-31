@@ -1,5 +1,5 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,14 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class CroatianLanguage : Language {
-		public override string Name => "hr";
+		public const string Culture = "hr";
+		public override string Name => Culture;
 
 		public CroatianLanguage() {
 			Translate<EmailValidator>("'{PropertyName}' nije ispravna e-mail adresa.");

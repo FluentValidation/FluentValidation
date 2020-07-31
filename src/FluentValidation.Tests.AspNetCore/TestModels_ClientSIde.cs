@@ -1,4 +1,7 @@
 ﻿namespace FluentValidation.Tests.AspNetCore {
+	using Controllers;
+	using Microsoft.Extensions.Localization;
+
 	public class ClientsideModel {
 		public string CreditCard { get; set; }
 		public string Email { get; set; }
@@ -23,6 +26,7 @@
 		public string MessageWithContext { get; set; }
 		public int CustomNameValueType { get; set; }
 		public string LocalizedName { get; set; }
+		public string LocalizedMessage { get; set; }
 	}
 
 	public class ClientsideRulesetModel {
@@ -50,10 +54,10 @@
 
 	public class ClientsideModelValidator : AbstractValidator<ClientsideModel> {
 		public static int TimesInstantiated = 0;
-		
+
 		// Need to inject a scoped dependency here to validate that we allow scoped dependencies when generating clientside rules, as MvcViewOptionSetup is always resolved from root container.
 		// So we may end up with a cannot resolve from root provider error if things aren't configured properly.
-		public ClientsideModelValidator(ClientsideScopedDependency dep) {
+		public ClientsideModelValidator(ClientsideScopedDependency dep, IStringLocalizer<ClientsideController> localizer) {
 			RuleFor(x => x.CreditCard).CreditCard();
 			RuleFor(x => x.Email).EmailAddress();
 			RuleFor(x => x.EqualTo).Equal(x => x.Required);
@@ -80,6 +84,7 @@
 			RuleFor(x => x.LocalizedName).NotNull().WithName(x => TestMessages.notnull_error);
 			RuleFor(x => x.CustomNameValueType).NotNull().WithName("Foo");
 			RuleFor(x => x.MessageWithContext).NotNull().WithMessage(x => $"Foo {x.Required}");
+			RuleFor(x => x.LocalizedMessage).NotNull().WithMessage(x => localizer["from localizer"]);
 
 			TimesInstantiated++;
 

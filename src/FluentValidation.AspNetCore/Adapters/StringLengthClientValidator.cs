@@ -1,5 +1,5 @@
 ﻿#region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.AspNetCore {
 	using System.Collections.Generic;
@@ -37,8 +37,9 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		private string GetErrorMessage(LengthValidator lengthVal, ClientModelValidationContext context) {
+			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
 
-			var formatter = ValidatorOptions.MessageFormatterFactory()
+			var formatter = cfg.MessageFormatterFactory()
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("MinLength", lengthVal.Min)
 				.AppendArgument("MaxLength", lengthVal.Max);
@@ -51,10 +52,10 @@ namespace FluentValidation.AspNetCore {
 			}
 			catch (FluentValidationMessageFormatException) {
 				if (lengthVal is ExactLengthValidator) {
-					message = ValidatorOptions.LanguageManager.GetString("ExactLength_Simple");
+					message = cfg.LanguageManager.GetString("ExactLength_Simple");
 				}
 				else {
-					message = ValidatorOptions.LanguageManager.GetString("Length_Simple");
+					message = cfg.LanguageManager.GetString("Length_Simple");
 				}
 
 				needsSimplifiedMessage = false;
@@ -62,10 +63,10 @@ namespace FluentValidation.AspNetCore {
 
 			if (needsSimplifiedMessage && message.Contains("{TotalLength}")) {
 				if (lengthVal is ExactLengthValidator) {
-					message = ValidatorOptions.LanguageManager.GetString("ExactLength_Simple");
+					message = cfg.LanguageManager.GetString("ExactLength_Simple");
 				}
 				else {
-					message = ValidatorOptions.LanguageManager.GetString("Length_Simple");
+					message = cfg.LanguageManager.GetString("Length_Simple");
 				}
 			}
 

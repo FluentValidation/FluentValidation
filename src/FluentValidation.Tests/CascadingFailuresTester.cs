@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
@@ -119,8 +119,8 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(1);
 		}
 
-	    
-	    
+
+
 	    [Fact]
 		public async Task Validation_continues_on_failure_async() {
 			validator.RuleFor(x => x.Surname).MustAsync(async (x,c) => x != null).MustAsync(async (x,c) => x == "foo");
@@ -154,7 +154,7 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(1);
 		}
 
-	    
+
 	    [Fact]
 	    public async Task Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level_and_async_validator_is_invoked_synchronously() {
 		    ValidatorOptions.CascadeMode = CascadeMode.Continue;
@@ -162,7 +162,7 @@ namespace FluentValidation.Tests {
 		    var results = await validator.ValidateAsync(new Person());
 		    results.Errors.Count.ShouldEqual(1);
 	    }
-	    
+
 		[Fact]
 		public async Task Validation_continues_to_second_validator_when_first_validator_succeeds_and_cascade_set_to_stop_async() {
 			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;

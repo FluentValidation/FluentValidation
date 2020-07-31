@@ -1,5 +1,5 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
+// Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation {
@@ -21,15 +21,12 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using Results;
 	using System.Linq;
-#if !NETSTANDARD1_1 && !NETSTANDARD1_6
 	using System.Runtime.Serialization;
-#endif
+
 	/// <summary>
 	/// An exception that represents failed validation
 	/// </summary>
-#if !NETSTANDARD1_1 && !NETSTANDARD1_6
 	[Serializable]
-#endif
 	public class ValidationException : Exception {
 		/// <summary>
 		/// Validation errors
@@ -52,11 +49,23 @@ namespace FluentValidation {
 		public ValidationException(string message, IEnumerable<ValidationFailure> errors) : base(message) {
 			Errors = errors;
 		}
-		/// <summary>
-		/// Creates a new ValidationException
-		/// </summary>
-		/// <param name="errors"></param>
-		public ValidationException(IEnumerable<ValidationFailure> errors) : base(BuildErrorMessage(errors)) {
+
+    /// <summary>
+    /// Creates a new ValidationException
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="errors"></param>
+    /// <param name="appendDefaultMessage">appends default validation error message to message</param>
+    public ValidationException(string message, IEnumerable<ValidationFailure> errors, bool appendDefaultMessage)
+      : base(appendDefaultMessage ? $"{message} {BuildErrorMessage(errors)}" : message) {
+      Errors = errors;
+    }
+
+    /// <summary>
+    /// Creates a new ValidationException
+    /// </summary>
+    /// <param name="errors"></param>
+    public ValidationException(IEnumerable<ValidationFailure> errors) : base(BuildErrorMessage(errors)) {
 			Errors = errors;
 		}
 
@@ -65,7 +74,6 @@ namespace FluentValidation {
 			return "Validation failed: " + string.Join(string.Empty, arr);
 		}
 
-#if !NETSTANDARD1_1 && !NETSTANDARD1_6
 		public ValidationException(SerializationInfo info, StreamingContext context) : base(info, context) {
 			Errors = info.GetValue("errors", typeof(IEnumerable<ValidationFailure>)) as IEnumerable<ValidationFailure>;
 		}
@@ -76,6 +84,5 @@ namespace FluentValidation {
 			info.AddValue("errors", Errors);
 			base.GetObjectData(info, context);
 		}
-#endif
 	}
 }

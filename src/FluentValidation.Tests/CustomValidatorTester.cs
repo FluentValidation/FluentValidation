@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
@@ -22,7 +22,7 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Results;
 
-	
+
 	public class CustomValidatorTester {
 		private TestValidator validator;
 		public CustomValidatorTester() {
@@ -62,7 +62,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Perserves_property_chain_using_custom() {
-			validator.RuleFor(x => x.Orders).SetCollectionValidator(new NestedOrderValidator());
+			validator.RuleForEach(x => x.Orders).SetValidator(new NestedOrderValidator());
 			var person = new Person();
 			person.Orders.Add(new Order());
 			var result = validator.Validate(person);
@@ -127,7 +127,7 @@ namespace FluentValidation.Tests {
 			addressValidator.RuleFor(x => x.Line1).Custom((x, ctx) => {
 				ctx.AddFailure("Error");
 			});
-			
+
 			validator.RuleFor(x => x.Address)
 				.SetValidator(addressValidator);
 

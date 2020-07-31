@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/JeremySkinner/FluentValidation/master/docs/assets/images/logo/fluent-validation-logo.png" alt="FluentValidation" width="250px" />
+<img src="https://raw.githubusercontent.com/JeremySkinner/FluentValidation/gh-pages/assets/images/logo/fluent-validation-logo.png" alt="FluentValidation" width="250px" />
 
 [Full Documentation](https://fluentvalidation.net)
 
@@ -9,23 +9,19 @@ and lambda expressions for building validation rules.
 FluentValidation can be installed using the Nuget package manager or the `dotnet` CLI.
 
 ```
-Install-Package FluentValidation
+dotnet add package FluentValidation
 ```
 
 For ASP.NET Core integration:
 ```
-Install-Package FluentValidation.AspNetCore
+dotnet add package FluentValidation.AspNetCore
 ```
-
-For legacy ASP.NET MVC/WebApi integration:
-
-```
-Install-Package FluentValidation.MVC5
-Install-Package FluentValidation.WebApi
-```
+---
+### Sponsorship
+If you find FluentValidation useful, please consider [becoming a sponsor](https://github.com/sponsors/JeremySkinner), which will help keep the project going 🙏.
 
 ---
-[![Build Status](https://dev.azure.com/jeremy0621/FluentValidation/_apis/build/status/JeremySkinner.FluentValidation?branchName=master)](https://dev.azure.com/jeremy0621/FluentValidation/_build/latest?definitionId=1&branchName=master)
+[![Build Status](https://dev.azure.com/jeremy0621/FluentValidation/_apis/build/status/FluentValidation.FluentValidation?branchName=master)](https://dev.azure.com/jeremy0621/FluentValidation/_build/latest?definitionId=5&branchName=master)
 
 |         |       |       |
 | ------- | ----- | ----- |
@@ -64,3 +60,18 @@ IList<ValidationFailure> failures = results.Errors;
 ### Documentation
 
 [Documentation can be found on the project site.](https://fluentvalidation.net)
+
+### License, Copyright etc
+
+FluentValidation has adopted the code of conduct defined by the Contributor Covenant to clarify expected behavior in our community.
+For more information see the [.NET Foundation Code of Conduct](https://dotnetfoundation.org/code-of-conduct). 
+
+FluentValidation is copyright &copy; 2008-2020 .NET Foundation, [Jeremy Skinner](https://jeremyskinner.co.uk) and other contributors and is licensed under the [Apache2 license](https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt). 
+
+### .NET Foundation
+
+This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
+
+### JetBrains 
+
+This project is supported by [JetBrains](https://www.jetbrains.com/), who kindly provide licenses for their software, free of charge, to help with the development of this project. 

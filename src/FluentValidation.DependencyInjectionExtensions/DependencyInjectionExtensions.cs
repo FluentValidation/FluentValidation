@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 using FluentValidation.Internal;
@@ -27,15 +27,15 @@ namespace FluentValidation {
 	/// Extension methods for working with a Service Provider.
 	/// </summary>
 	public static class DependencyInjectionExtensions {
-		
+
 		/// <summary>
 		/// Gets the service provider associated with the validation context.
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public static IServiceProvider GetServiceProvider(this IValidationContext context) {
-			ValidationContext actualContext = null;
+		public static IServiceProvider GetServiceProvider(this ICommonContext context) {
+			IValidationContext actualContext = null;
 
 			switch (context) {
 				case CustomContext cc:
@@ -47,7 +47,7 @@ namespace FluentValidation {
 				case PropertyValidatorContext pvc:
 					actualContext = pvc.ParentContext;
 					break;
-				case ValidationContext vc:
+				case IValidationContext vc:
 					actualContext = vc;
 					break;
 			}
@@ -58,7 +58,7 @@ namespace FluentValidation {
 						return serviceProvider;
 					}
 				}
-				
+
 			}
 
 			throw new InvalidOperationException("The service provider has not been configured to work with FluentValidation. Making use of InjectValidator or GetServiceProvider is only supported when using the automatic MVC integration.");
@@ -69,7 +69,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context"></param>
 		/// <param name="serviceProvider"></param>
-		public static void SetServiceProvider(this ValidationContext context, IServiceProvider serviceProvider) {
+		public static void SetServiceProvider(this IValidationContext context, IServiceProvider serviceProvider) {
 			context.RootContextData["_FV_ServiceProvider"] = serviceProvider;
 		}
 
@@ -95,10 +95,10 @@ namespace FluentValidation {
 		/// <typeparam name="TProperty"></typeparam>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> InjectValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<IServiceProvider, ValidationContext<T>, IValidator<TProperty>> callback, params string[] ruleSets) {
-			var adaptor = new ChildValidatorAdaptor(context => {
+			var adaptor = new ChildValidatorAdaptor<T,TProperty>(context => {
 				var actualContext = (PropertyValidatorContext) context;
 				var serviceProvider = actualContext.ParentContext.GetServiceProvider();
-				var contextToUse = ValidationContext<T>.GetFromNoNGenericContext(actualContext.ParentContext);
+				var contextToUse = ValidationContext<T>.GetFromNonGenericContext(actualContext.ParentContext);
 				var validator = callback(serviceProvider, contextToUse);
 				return validator;
 			}, typeof(IValidator<TProperty>));

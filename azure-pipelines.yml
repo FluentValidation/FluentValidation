@@ -11,15 +11,10 @@ trigger:
 pool:
   vmImage: $(imageName)
 
+variables:
+- name: DOTNET_SKIP_FIRST_TIME_EXPERIENCE
+  value: 1
 steps:
-- pwsh: ./build.ps1 -t get-dotnet-version
-  displayName: 'Get .NET Core version to use'
-
-- task: DotNetCoreInstaller@0
-  inputs:
-    version: $(dotnetVersion)
-  displayName: '.NET Core SDK Installer'
-
 - pwsh: ./build.ps1 -t ci
   displayName: 'Build'
   env: 

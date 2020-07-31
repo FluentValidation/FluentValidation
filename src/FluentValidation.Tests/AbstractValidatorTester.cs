@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
@@ -121,7 +121,7 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person());
 			result.Errors[0].PropertyName.ShouldEqual("foo");
 		}
-		
+
 		[Fact]
 		public void OverridePropertyName_with_lambda_should_override_property_name() {
 			validator.RuleFor(x => x.Surname).NotNull().OverridePropertyName(x => x.Forename);
@@ -190,7 +190,7 @@ namespace FluentValidation.Tests {
 			var addressValidator = new InlineValidator<Address>();
 			addressValidator.RuleFor(x => x.Line1).NotNull();
 			addressValidator.RuleFor(x => x.Line2).NotNull();
-		
+
 			validator.RuleFor(x => x.Address).SetValidator(addressValidator);
 			validator.RuleFor(x => x.Forename).NotNull();
 
@@ -234,7 +234,7 @@ namespace FluentValidation.Tests {
 			IValidator nonGenericValidator = validator;
 
 			typeof(InvalidOperationException).ShouldBeThrownBy(() =>
-				nonGenericValidator.Validate("foo"));
+				nonGenericValidator.Validate(new ValidationContext<string>("foo")));
 		}
 
 		[Fact]
@@ -292,7 +292,7 @@ namespace FluentValidation.Tests {
 		public void PreValidate_bypasses_nullcheck_on_instance() {
 			testValidatorWithPreValidate.RuleFor(x => x.Surname).NotNull();
 			testValidatorWithPreValidate.PreValidateMethod = (ctx, r) => false;
-			
+
 			var result = testValidatorWithPreValidate.Validate((Person)null);
 			result.IsValid.ShouldBeTrue();
 

@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
@@ -25,7 +25,7 @@ namespace FluentValidation.Tests {
 	using Results;
 	using Xunit;
 
-	
+
 	public class ComplexValidationTester {
 		PersonValidator validator;
 		Person person;
@@ -38,7 +38,7 @@ namespace FluentValidation.Tests {
 				},
 				Orders = new List<Order> {
 					new Order() { Amount = 5 },
-                    new Order() { ProductName = "Foo" }    	
+                    new Order() { ProductName = "Foo" }
                 }
 			};
 		}
@@ -121,7 +121,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		
+
 		[Fact]
 		public async Task Async_condition_should_work_with_complex_property() {
 			var validator = new TestValidator() {
@@ -141,7 +141,7 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(person);
 			result.IsValid.ShouldBeTrue();
 		}
-		
+
 		[Fact]
 		public void Can_validate_using_validator_for_base_type() {
 			var addressValidator = new InlineValidator<IAddress>() {
@@ -149,7 +149,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Address).SetValidator(addressValidator)	
+				v => v.RuleFor(x => x.Address).SetValidator(addressValidator)
 			};
 
 			var result = validator.Validate(new Person { Address = new Address() });
@@ -162,7 +162,7 @@ namespace FluentValidation.Tests {
             var testObject = new TestObject {
                 Foo2 = new TestDetailObject() { Surname = "Bar" }
             };
-            
+
             //Should not throw
             sut.Validate(testObject);
         }
@@ -253,7 +253,7 @@ namespace FluentValidation.Tests {
 		public class InfiniteLoopValidator : AbstractValidator<InfiniteLoop> {
 			public InfiniteLoopValidator() {
 				RuleFor(x => x.Property).SetValidator(new InfiniteLoop2Validator());
-			} 
+			}
 		}
 
 		public class InfiniteLoop2Validator : AbstractValidator<InfiniteLoop2> {
@@ -264,7 +264,7 @@ namespace FluentValidation.Tests {
 
 		public class TracksAsyncCallValidator<T> : AbstractValidator<T> {
 			public bool? WasCalledAsync;
-			
+
 			public override ValidationResult Validate(ValidationContext<T> context) {
 				WasCalledAsync = false;
 				return base.Validate(context);

@@ -1,26 +1,27 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class SlovakLanguage : Language {
-		public override string Name => "sk";
+		public const string Culture = "sk";
+		public override string Name => Culture;
 
 		public SlovakLanguage() {
 			Translate<EmailValidator>("Pole '{PropertyName}' musí obsahovať platnú emailovú adresu.");
@@ -31,9 +32,9 @@ namespace FluentValidation.Resources {
 			Translate<MaximumLengthValidator>("Dĺžka poľa '{PropertyName}' musí byť menšia alebo rovná {MaxLength} znakom. Vami zadaná dĺžka je {TotalLength} znakov.");
 			Translate<LessThanOrEqualValidator>("Hodnota poľa '{PropertyName}' musí byť menšia alebo sa rovnať '{ComparisonValue}'.");
 			Translate<LessThanValidator>("Hodnota poľa '{PropertyName}' musí byť menšia ako '{ComparisonValue}'.");
-			Translate<NotEmptyValidator>("Pole '{PropertyName}' nesmie byť prázdné.");
+			Translate<NotEmptyValidator>("Pole '{PropertyName}' nesmie byť prázdne.");
 			Translate<NotEqualValidator>("Pole '{PropertyName}' sa nesmie rovnať '{ComparisonValue}'.");
-			Translate<NotNullValidator>("Pole '{PropertyName}' nesmie byť prázdné.");
+			Translate<NotNullValidator>("Pole '{PropertyName}' nesmie byť prázdne.");
 			Translate<PredicateValidator>("Nebola splnená podmienka pre pole '{PropertyName}'.");
 			Translate<AsyncPredicateValidator>("Nebola splnená podmienka pre pole '{PropertyName}'.");
 			Translate<RegularExpressionValidator>("Pole '{PropertyName}' nemá správný formát.");

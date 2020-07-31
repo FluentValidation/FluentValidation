@@ -10,11 +10,13 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	public class RulesetValidatorSelector : IValidatorSelector {
 		readonly string[] _rulesetsToExecute;
+    public const string DefaultRuleSetName = "default";
+    public const string WildcardRuleSetName = "*";
 
-		/// <summary>
-		/// Rule sets
-		/// </summary>
-		public string[] RuleSets => _rulesetsToExecute;
+    /// <summary>
+    /// Rule sets
+    /// </summary>
+    public string[] RuleSets => _rulesetsToExecute;
 
 		/// <summary>
 		/// Creates a new instance of the RulesetValidatorSelector.
@@ -30,9 +32,9 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyPath">Property path (eg Customer.Address.Line1)</param>
 		/// <param name="context">Contextual information</param>
 		/// <returns>Whether or not the validator can execute.</returns>
-		public virtual bool CanExecute(IValidationRule rule, string propertyPath, ValidationContext context) {
+		public virtual bool CanExecute(IValidationRule rule, string propertyPath, IValidationContext context) {
 			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>());
-			
+
 			if (rule.RuleSets.Length == 0 && _rulesetsToExecute.Length > 0) {
 				if (IsIncludeRule(rule)) {
 					return true;
@@ -40,13 +42,13 @@ namespace FluentValidation.Internal {
 			}
 
 			if (rule.RuleSets.Length == 0 && _rulesetsToExecute.Length == 0) {
-				executed.Add("default");
+				executed.Add(DefaultRuleSetName);
 				return true;
 			}
 
-			if (_rulesetsToExecute.Contains("default", StringComparer.OrdinalIgnoreCase)) {
-				if (rule.RuleSets.Length == 0 || rule.RuleSets.Contains("default", StringComparer.OrdinalIgnoreCase)) {
-					executed.Add("default");
+			if (_rulesetsToExecute.Contains(DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)) {
+				if (rule.RuleSets.Length == 0 || rule.RuleSets.Contains(DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)) {
+					executed.Add(DefaultRuleSetName);
 					return true;
 				}
 			}
@@ -59,9 +61,9 @@ namespace FluentValidation.Internal {
 				}
 			}
 
-			if (_rulesetsToExecute.Contains("*")) {
+			if (_rulesetsToExecute.Contains(WildcardRuleSetName)) {
 				if (rule.RuleSets == null || rule.RuleSets.Length == 0) {
-					executed.Add("default");
+					executed.Add(DefaultRuleSetName);
 				}
 				else {
 					rule.RuleSets.ForEach(r => executed.Add(r));
@@ -78,7 +80,7 @@ namespace FluentValidation.Internal {
 		/// <param name="rule"></param>
 		/// <returns></returns>
 		protected bool IsIncludeRule(IValidationRule rule) {
-			return rule is IncludeRule;
+			return rule is IIncludeRule;
 		}
 	}
 }

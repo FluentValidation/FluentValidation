@@ -1,19 +1,19 @@
 ﻿#region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/JeremySkinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
@@ -24,20 +24,20 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Results;
 
-	
+
 	public class SharedConditionTests {
 		class SharedConditionValidator : AbstractValidator<Person> {
 			public SharedConditionValidator() {
 				// Start with a predicate to group rules together.
-				// 
+				//
 				// The AbstractValidator appends this predicate
 				// to each inner RuleFor so you only need write,
 				// maintain, and think about it in one place.
 				//
 				// You can finish with an Unless clause that will
-				// void the validation for the entire set when it's 
+				// void the validation for the entire set when it's
 				// predicate is true.
-				// 
+				//
 				When(x => x.Id > 0, () => {
 					RuleFor(x => x.Forename).NotEmpty();
 					RuleFor(x => x.Surname).NotEmpty().Equal("Smith");
@@ -48,15 +48,15 @@ namespace FluentValidation.Tests {
 		class SharedAsyncConditionValidator : AbstractValidator<Person> {
 			public SharedAsyncConditionValidator() {
 				// Start with a predicate to group rules together.
-				// 
+				//
 				// The AbstractValidator appends this predicate
 				// to each inner RuleFor so you only need write,
 				// maintain, and think about it in one place.
 				//
 				// You can finish with an Unless clause that will
-				// void the validation for the entire set when it's 
+				// void the validation for the entire set when it's
 				// predicate is true.
-				// 
+				//
 				WhenAsync(async (x,c) => x.Id > 0,
 					() => {
 						RuleFor(x => x.Forename).NotEmpty();
@@ -71,9 +71,9 @@ namespace FluentValidation.Tests {
 				// inner RuleFor() calls can contain their own,
 				// locally scoped When and Unless calls that
 				// act only on that individual RuleFor() yet the
-				// RuleFor() respects the grouped When() and 
+				// RuleFor() respects the grouped When() and
 				// Unless() predicates.
-				// 
+				//
 				When(x => x.Id > 0 && x.Age <= 65, () => { RuleFor(x => x.Orders.Count).Equal(0).Unless(x => String.IsNullOrWhiteSpace(x.CreditCard) == false); });
 				//.Unless(x => x.Age > 65);
 			}
@@ -84,9 +84,9 @@ namespace FluentValidation.Tests {
 				// inner RuleFor() calls can contain their own,
 				// locally scoped When and Unless calls that
 				// act only on that individual RuleFor() yet the
-				// RuleFor() respects the grouped When() and 
+				// RuleFor() respects the grouped When() and
 				// Unless() predicates.
-				// 
+				//
 				WhenAsync(async (x,c) => x.Id > 0 && x.Age <= 65,
 					() => {
 						RuleFor(x => x.Orders.Count).Equal(0).UnlessAsync(async (x,c) => String.IsNullOrWhiteSpace(x.CreditCard) == false);
@@ -114,7 +114,7 @@ namespace FluentValidation.Tests {
 				When(x => x != null, () => {
 					RuleFor(x => x).Must(x => x != "foo");
 				});
-				
+
 				WhenAsync(async (x, ct) => x != null, () => {
 					RuleFor(x => x).Must(x => x != "foo");
 				});
@@ -380,7 +380,7 @@ namespace FluentValidation.Tests {
 		{
 			var validator = new TestValidator();
 			validator.When(x => false, () => {
-				
+
 				validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("foo", "bar")));
 			});
 
@@ -392,7 +392,7 @@ namespace FluentValidation.Tests {
 		public async Task Does_not_execute_customasync_Rule_when_async_condition_false() {
 			var validator = new TestValidator();
 			validator.WhenAsync(async (x,c) =>(false), () => {
-				
+
 				validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("foo", "bar")));
 			});
 
@@ -404,8 +404,8 @@ namespace FluentValidation.Tests {
 		public void Executes_custom_rule_when_condition_true() {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {
-				validator.RuleFor(x=>x).Custom((x,ctx) => ctx.AddFailure(new ValidationFailure("foo", "bar"))); 
-				
+				validator.RuleFor(x=>x).Custom((x,ctx) => ctx.AddFailure(new ValidationFailure("foo", "bar")));
+
 			});
 
 			var result = validator.Validate(new Person());
@@ -417,7 +417,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.WhenAsync(async (x,c) =>(true), () => {
 				validator.RuleFor(x=>x).Custom((x,ctx) => ctx.AddFailure(new ValidationFailure("foo", "bar")));
-				
+
 			});
 
 			var result = validator.Validate(new Person());
@@ -448,7 +448,7 @@ namespace FluentValidation.Tests {
 			validator.When(x => true, () => {
 				validator.When(x => false, () => {
 					validator.RuleFor(x=>x).Custom((x,ctx) => ctx.AddFailure(new ValidationFailure("Custom", "The validation failed")));
-					
+
 				});
 			});
 			var result = validator.Validate(new Person());
@@ -490,7 +490,7 @@ namespace FluentValidation.Tests {
 			var result = await validator.ValidateAsync(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
-		
+
 		[Fact]
 		public void When_condition_only_executed_once() {
 			var validator = new TestValidator();
@@ -582,7 +582,7 @@ namespace FluentValidation.Tests {
 			var result2 = await validator.ValidateAsync(new Person {Age = 9});
 			result2.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
-		
+
 		[Fact]
 		public void When_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
 			var person = new Person {
@@ -594,7 +594,7 @@ namespace FluentValidation.Tests {
 
 			var childValidator = new InlineValidator<Person>();
 			int executions = 0;
-			
+
 			childValidator.When(a => {
 				executions++;
 				return a.Id != 0;
@@ -603,12 +603,12 @@ namespace FluentValidation.Tests {
 			});
 			var personValidator = new InlineValidator<Person>();
 			personValidator.RuleForEach(p => p.Children).SetValidator(childValidator);
-			
+
 			var validationResult = personValidator.Validate(person);
 			validationResult.IsValid.ShouldBeTrue();
 			executions.ShouldEqual(2);
 		}
-		
+
 		[Fact]
 		public async Task When_async_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
 			var person = new Person {
@@ -620,7 +620,7 @@ namespace FluentValidation.Tests {
 
 			var childValidator = new InlineValidator<Person>();
 			int executions = 0;
-			
+
 			childValidator.WhenAsync(async (a, ct) => {
 				executions++;
 				return a.Id != 0;
@@ -629,7 +629,7 @@ namespace FluentValidation.Tests {
 			});
 			var personValidator = new InlineValidator<Person>();
 			personValidator.RuleForEach(p => p.Children).SetValidator(childValidator);
-			
+
 			var validationResult = await personValidator.ValidateAsync(person);
 			validationResult.IsValid.ShouldBeTrue();
 			executions.ShouldEqual(2);

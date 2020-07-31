@@ -2,6 +2,8 @@ namespace FluentValidation.AspNetCore {
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Resources;
+	using System;
+	using System.Globalization;
 	using Validators;
 
 	internal class RangeMaxClientValidator : ClientValidatorBase {
@@ -19,14 +21,15 @@ namespace FluentValidation.AspNetCore {
 			if (compareValue != null) {
 				MergeAttribute(context.Attributes, "data-val", "true");
 				MergeAttribute(context.Attributes, "data-val-range", GetErrorMessage(context));
-				MergeAttribute(context.Attributes, "data-val-range-max", compareValue.ToString());
+				MergeAttribute(context.Attributes, "data-val-range-max", Convert.ToString(compareValue, CultureInfo.InvariantCulture));
 				MergeAttribute(context.Attributes, "data-val-range-min", "0");
 			}
 		}
 
 		private string GetErrorMessage(ClientModelValidationContext context) {
-			
-			var formatter = ValidatorOptions.MessageFormatterFactory()
+			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
+
+			var formatter = cfg.MessageFormatterFactory()
 				.AppendPropertyName(Rule.GetDisplayName())
 				.AppendArgument("ComparisonValue", RangeValidator.ValueToCompare);
 
@@ -35,7 +38,7 @@ namespace FluentValidation.AspNetCore {
 			try {
 				message = RangeValidator.Options.ErrorMessageSource.GetString(null);
 			} catch (FluentValidationMessageFormatException) {
-				message = ValidatorOptions.LanguageManager.GetStringForValidator<LessThanOrEqualValidator>();
+				message = cfg.LanguageManager.GetStringForValidator<LessThanOrEqualValidator>();
 			}
 
 			message = formatter.BuildMessage(message);

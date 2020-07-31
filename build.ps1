@@ -23,7 +23,9 @@ $keyfile = Resolve-Path "~/Dropbox/FluentValidation-Release.snk" -ErrorAction Ig
 $nuget_key = Resolve-Path "~/Dropbox/nuget-access-key.txt" -ErrorAction Ignore
 
 target default -depends compile, test, deploy
-target ci -depends ci-set-version, decrypt-private-key, default
+target ci -depends init-nuget, install-dotnet-core, ci-set-version, decrypt-private-key, default
+
+$script:version_suffix = ([xml](get-content src/Directory.Build.props)).Project.PropertyGroup.VersionSuffix
 
 target compile {
   if ($keyfile) {
@@ -46,11 +48,15 @@ target deploy {
 
   # Copy to output dir
   Copy-Item "$path\src\FluentValidation\bin\$configuration" -Destination "$output_dir\FluentValidation" -Recurse
-  Copy-Item "$path\src\FluentValidation.Mvc5\bin\$configuration"  -filter FluentValidation.Mvc.* -Destination "$output_dir\FluentValidation.Mvc5-Legacy" -Recurse
-  Copy-Item "$path\src\FluentValidation.WebApi\bin\$configuration"  -filter FluentValidation.WebApi.* -Destination "$output_dir\FluentValidation.WebApi-Legacy" -Recurse
   Copy-Item "$path\src\FluentValidation.AspNetCore\bin\$configuration"  -filter FluentValidation.AspNetCore.* -Destination "$output_dir\FluentValidation.AspNetCore" -Recurse
-  Copy-Item "$path\src\FluentValidation.ValidatorAttribute\bin\$configuration" -Destination "$output_dir\FluentValidation.ValidatorAttribute" -Recurse
   Copy-Item "$path\src\FluentValidation.DependencyInjectionExtensions\bin\$configuration" -Destination "$output_dir\FluentValidation.DependencyInjectionExtensions" -Recurse
+}
+
+target init-nuget {
+  # For some reason, sometimes the nuget.org package source is unavailable in the Azure pipelines windows images.
+  # Can't figure out why, so explicitly add.
+  # dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
+  dotnet nuget list source
 }
 
 target verify-package {
@@ -125,12 +131,85 @@ target get-dotnet-version {
   echo "##vso[task.setvariable variable=dotnetVersion]$required_version"
 }
 
+target install-dotnet-core {
+  # Find the SDK if there's one already.
+  findSdk
+  # Version check as $IsWindows, $IsLinux etc are not defined in PS 5, only PS Core.
+  $win = (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows)
+  $json = ConvertFrom-Json (Get-Content "$path/global.json" -Raw)
+  $required_version = $json.sdk.version
+  # If there's a version mismatch with what's defined in global.json then a 
+  # call to dotnet --version will generate an error.
+  try { dotnet --version 2>&1>$null } catch { $install_sdk = $true }
+  
+  if ($global:LASTEXITCODE) {
+    $install_sdk = $true;
+    $global:LASTEXITCODE = 0;
+  }
+
+  if ($install_sdk) {
+    $installer = $null;
+    if ($win) {
+      $installer = "$build_dir/dotnet-installer.ps1" 
+      (New-Object System.Net.WebClient).DownloadFile("https://dot.net/v1/dotnet-install.ps1", $installer);
+    }
+    else { 
+      $installer = "$build_dir/dotnet-installer"
+      write-host Downloading installer to $installer 
+      curl https://dot.net/v1/dotnet-install.sh -L --output $installer 
+      chmod +x $installer
+    }
+
+    $dotnet_path = "$path/.dotnetsdk"
+
+    # If running in azure pipelines, use that as the dotnet install path. 
+    if ($env:AGENT_TOOLSDIRECTORY) {
+      $dotnet_path = Join-Path $env:AGENT_TOOLSDIRECTORY dotnet
+    }
+
+    Write-Host Installing $json.sdk.version to $dotnet_path
+    . $installer -i $dotnet_path -v $json.sdk.version
+
+    # Collect installed SDKs.
+    $sdks = & "$dotnet_path/dotnet" --list-sdks | ForEach-Object { 
+      $_.Split(" ")[0]
+    }
+
+    # Install any other SDKs required. Only bother installing if not installed already. 
+    $json.others | Foreach-Object {
+      if (!($sdks -contains $_)) {
+        Write-Host Installing $_ 
+        . $installer -i $dotnet_path -v $_
+      }
+    }
+    # Set process path again 
+    findSdk 
+  }
+}
+
 function verify_assembly($path) {
   $asm = [System.Reflection.Assembly]::LoadFile($path);
   $asmName = $asm.GetName().ToString();
   $search = "PublicKeyToken="
   $token = $asmName.Substring($asmName.IndexOf($search) + $search.Length)
   return $token -eq "7de548da2fbae0f0";
+}
+
+function findSdk() {
+  $dotnet_path = Join-Path $env:AGENT_TOOLSDIRECTORY dotnet
+
+  if (Test-Path $dotnet_path) {
+    Write-Host "Using .NET SDK from $dotnet_path"
+    $env:DOTNET_INSTALL_DIR = $dotnet_path
+
+    if (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows) {
+      $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
+    }
+    else {
+      # Linux uses colon not semicolon, so can't use string interpolation
+      $env:PATH = $env:DOTNET_INSTALL_DIR + ":" + $env:PATH
+    }
+  }
 }
 
 Start-Build $targets

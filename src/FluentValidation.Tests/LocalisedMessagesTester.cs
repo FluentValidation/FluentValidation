@@ -1,19 +1,19 @@
 #region License
-// Copyright (c) Jeremy Skinner (http://www.jeremyskinner.co.uk)
-// 
-// Licensed under the Apache License, Version 2.0 (the "License"); 
-// you may not use this file except in compliance with the License. 
-// You may obtain a copy of the License at 
-// 
-// http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software 
-// distributed under the License is distributed on an "AS IS" BASIS, 
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-// See the License for the specific language governing permissions and 
+// Copyright (c) .NET Foundation and contributors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
 // limitations under the License.
-// 
-// The latest version of this file can be found at https://github.com/jeremyskinner/FluentValidation
+//
+// The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
 namespace FluentValidation.Tests {
@@ -27,7 +27,7 @@ namespace FluentValidation.Tests {
 	using Resources;
 	using Validators;
 
-	
+
 	public class LocalisedMessagesTester : IDisposable {
 
 		public LocalisedMessagesTester() {
@@ -40,7 +40,6 @@ namespace FluentValidation.Tests {
 			CultureScope.SetDefaultCulture();
 		}
 
-#if !NETCOREAPP1_1
 		[Fact]
 		public void Correctly_assigns_default_localized_error_message() {
 
@@ -61,15 +60,6 @@ namespace FluentValidation.Tests {
 				// Always reset the culture.
 				Thread.CurrentThread.CurrentUICulture = originalCulture;
 			}
-		}
-#endif
-		[Fact]
-		public void Sets_localised_message_via_type_name() {
-			var validator = new TestValidator();
-			validator.RuleFor(x => x.Surname).NotEmpty().WithLocalizedMessage(typeof(MyResources), nameof(MyResources.notempty_error));
-			var result = validator.Validate(new Person());
-
-			result.Errors.Single().ErrorMessage.ShouldEqual("foo");
 		}
 
 		[Fact]
@@ -115,29 +105,6 @@ namespace FluentValidation.Tests {
 
 			var result = validator.Validate(new Person() {NickNames = new[] {"What"}});
 			result.Errors.Single().ErrorMessage.ShouldEqual("x");
-		}
-
-
-		private class MyResources {
-			public static string notempty_error {
-				get { return "foo"; }
-			}
-		}
-
-		private class MyOverridenResources {
-			public static string notempty_error {
-				get { return "bar"; }
-			}
-		}
-
-		private class MyPropertyValidator : PropertyValidator {
-			public MyPropertyValidator() : base(nameof(MyOverridenResources.notempty_error), typeof(MyOverridenResources)) {
-				
-			}
-
-			protected override bool IsValid(PropertyValidatorContext context) {
-				return false;
-			}
 		}
 	}
 }
