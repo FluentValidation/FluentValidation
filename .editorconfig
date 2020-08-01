@@ -1,12 +1,6 @@
 # top-most EditorConfig file
 root = true
 
-[*.cs]
-indent_style = tab
-tab_width = 2
-indent_size = tab
-end_of_line = crlf
-
 [*]
 indent_style = space
 indent_size = 2
@@ -39,3 +33,9 @@ resharper_use_indent_from_vs=false
 resharper_xmldoc_indent_child_elements=RemoveIndent
 resharper_xmldoc_indent_text=RemoveIndent
 resharper_xmldoc_wrap_lines=false
+
+[*.cs]
+indent_style = tab
+tab_width = 2
+indent_size = tab
+end_of_line = crlf
