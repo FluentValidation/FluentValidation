@@ -49,17 +49,17 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, string ruleSet)
-            where T : class, new()
+    where T : class, new()
         {
             T instance = Activator.CreateInstance<T>();
-            return validator.TestValidate<T>(instance, ruleSet).ShouldHaveError<T, T>();
+            return validator.TestValidate<T>(instance, ruleSet).ShouldHaveAnyValidationError<T>();
         }
 
-        public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, T value, string ruleSet)
-            where T : class, new()
-        {
-            return validator.TestValidate<T>(value, ruleSet).ShouldHaveError<T, T>();
-        }
+		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, T value, string ruleSet)
+		where T : class, new()
+		{
+			return validator.TestValidate<T>(value, ruleSet).ShouldHaveAnyValidationError<T>();
+		}
 
 		public static void ShouldNotHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
@@ -83,13 +83,13 @@ namespace FluentValidation.TestHelper {
             where T : class, new()
         {
             T instance = Activator.CreateInstance<T>();
-            validator.TestValidate<T>(instance, ruleSet).ShouldNotHaveError<T, T>();
+            validator.TestValidate<T>(instance, ruleSet).ShouldHaveValidationErrorFor<T>(expression);
         }
 
         public static void ShouldNotHaveValidationErrorFor<T>(this IValidator<T> validator, Expression<Func<T, T>> expression, T value, string ruleSet)
             where T : class, new()
         {
-            validator.TestValidate<T>(value, ruleSet).ShouldNotHaveError<T, T>();
+            validator.TestValidate<T>(value, ruleSet).ShouldNotHaveValidationErrorFor<T>(expression);
         }
 
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {

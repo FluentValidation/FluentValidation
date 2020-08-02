@@ -19,12 +19,10 @@
 #endregion
 
 namespace FluentValidation.Tests {
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using Xunit;
 	using TestHelper;
-	using Validators;
 	using System.Threading.Tasks;
 
 	public class ValidatorTesterTester {
@@ -42,7 +40,7 @@ namespace FluentValidation.Tests {
 
 		private bool NotHaveSameForenameAndSurname(Person person)
 		{
-			return !person.Forename.Equals(person.Surname);
+			return !string.Equals(person.Forename, person.Surname);
 		}
 
 		[Fact]
@@ -100,9 +98,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldHaveValidationError_Identity_Should_throw_when_there_are_no_validation_errors() {
-			ValidationTestException validationTestException = Assert.Throws<ValidationTestException>(() =>
-				validator.ShouldHaveValidationErrorFor<Person>(x => x, new Person { Forename = "Helle", Surname = "Helle" }, "default"));
-			Assert.Contains(sutSameForenameAndSurnameMessage, validationTestException.Message);
+			var validationFailures = validator
+				.ShouldHaveValidationErrorFor<Person>(x => x, new Person { Forename = "Helle", Surname = "Helle" }, "default")
+				.WithErrorMessage(sutSameForenameAndSurnameMessage);
 		}
 
 		[Fact]
