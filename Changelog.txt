@@ -3,6 +3,7 @@ Make ruleset separator character splitting consistent (#1424)
 Transform now works with RuleForEach (#1450)
 Introduce constants for rulesets (#1435)
 Resolve issue when attempting to use asynchronous conditions in a synchornous validaiton run (#1438)
+Added asynchronous versions of the TestHelper methods (#1423)
 
 9.0.1 - 14 July 2020
 Fix assembly version was still 8.
