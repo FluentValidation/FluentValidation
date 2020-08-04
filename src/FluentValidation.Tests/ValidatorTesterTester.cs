@@ -676,13 +676,77 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task ShouldHaveValidationError_async() {
+		public async Task TestValidate_runs_async_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(false));
+			var result = await validator.TestValidateAsync(new Person());
+			Assert.Throws<ValidationTestException>(() => {
+				result.ShouldNotHaveValidationErrorFor(x => x.Surname);
+			});
+		}
 
+		[Fact]
+		public async Task ShouldHaveValidationError_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(false));
+			await validator.ShouldHaveValidationErrorForAsync(x => x.Surname, null as string);
+		}
+
+		[Fact]
+		public async Task ShouldHaveValidationError_async_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(true));
+			await Assert.ThrowsAsync<ValidationTestException>(async () => {
+				await validator.ShouldHaveValidationErrorForAsync(x => x.Surname, null as string);
+			});
 		}
 
 		[Fact]
 		public async Task ShouldNotHaveValidationError_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(true));
+			await validator.ShouldNotHaveValidationErrorForAsync(x => x.Surname, null as string);
+		}
 
+		[Fact]
+		public async Task ShouldNotHaveValidationError_async_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(false));
+			await Assert.ThrowsAsync<ValidationTestException>(async () => {
+				await validator.ShouldNotHaveValidationErrorForAsync(x => x.Surname, null as string);
+			});
+		}
+
+		[Fact]
+		public async Task ShouldHaveValidationError_model_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(false));
+			await validator.ShouldHaveValidationErrorForAsync(x => x.Surname, new Person());
+		}
+
+		[Fact]
+		public async Task ShouldHaveValidationError_model_async_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(true));
+			await Assert.ThrowsAsync<ValidationTestException>(async () => {
+				await validator.ShouldHaveValidationErrorForAsync(x => x.Surname, new Person());
+			});
+		}
+
+		[Fact]
+		public async Task ShouldNotHaveValidationError_model_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(true));
+			await validator.ShouldNotHaveValidationErrorForAsync(x => x.Surname, new Person());
+		}
+
+		[Fact]
+		public async Task ShouldNotHaveValidationError_async_model_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(false));
+			await Assert.ThrowsAsync<ValidationTestException>(async () => {
+				await validator.ShouldNotHaveValidationErrorForAsync(x => x.Surname, new Person());
+			});
 		}
 
 		private class AddressValidator : AbstractValidator<Address> {
