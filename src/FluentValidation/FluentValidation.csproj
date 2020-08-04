@@ -10,6 +10,7 @@ Changes in 9.1:
 * Transform now works with RuleForEach
 * Introduce constants for rulesets
 * Resolve issue when attempting to use asynchronous conditions in a synchornous validaiton run
+* Added asynchronous versions of the TestHelper methods.
 
 Changes in 9.0.0:
 * Removed support for netstandard1.1 and netstandard1.6
