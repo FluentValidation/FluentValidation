@@ -63,6 +63,7 @@ namespace FluentValidation.Internal {
 		///<summary>
 		/// Creates a MemberNameValidatorSelector from a collection of expressions.
 		///</summary>
+		[Obsolete("This method will be removed from FluentValidation in 10.0")]
 		public static MemberNameValidatorSelector FromExpressions<T>(params Expression<Func<T, object>>[] propertyExpressions) {
 			var members = propertyExpressions.Select(MemberFromExpression).ToList();
 			return new MemberNameValidatorSelector(members);

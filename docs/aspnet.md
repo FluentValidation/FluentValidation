@@ -208,7 +208,7 @@ This is the equivalent of specifying the ruleset if you were to pass a ruleset n
 ```csharp
 var validator = new CustomerValidator();
 var customer = new Customer();
-var result = validator.Validate(customer, ruleSet: "MyRuleset");
+var result = validator.Validate(customer, options => options.IncludeRuleSet("MyRuleset"));
 ```
 
 The attribute can also be used to invoke validation for individual properties:
@@ -223,7 +223,7 @@ public ActionResult Save([CustomizeValidator(Properties="Surname,Forename")] Cus
 ```csharp
 var validator = new CustomerValidator();
 var customer = new Customer();
-var result = validator.Validate(customer, properties: new[] { "Surname", "Forename" });
+var result = validator.Validate(customer, options => options.IncludeProperties("Surname", "Forename"));
 ```
 
 You can also use the CustomizeValidatorAttribute to skip validation for a particular type. This is useful for if you need to validate a type manually (for example, if you want to perform async validation then you'll need to instantiate the validator manually and call ValidateAsync as MVC's validation pipeline is not asynchronous).

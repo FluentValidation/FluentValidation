@@ -5,6 +5,8 @@ Introduce constants for rulesets (#1435)
 Resolve issue when attempting to use asynchronous conditions in a synchornous validaiton run (#1438)
 Added asynchronous versions of the TestHelper methods (#1423)
 Introduce CascadeMode.Stop and deprecate CascadeMode.StopOnFirstFailure to resolve confusion/abiguity about setting the cascade mode at validator-level (#1437)
+RaiseValidationException can be overridden to customize the exception throwing process (#1162)
+Add new Validate extension methods that allow options to be configured using a strategy (#1467)
 
 9.0.1 - 14 July 2020
 Fix assembly version was still 8.

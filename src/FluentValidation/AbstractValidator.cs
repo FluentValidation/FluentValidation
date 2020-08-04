@@ -107,6 +107,10 @@ namespace FluentValidation {
 
 			SetExecutedRulesets(result, context);
 
+			if (!result.IsValid && context.ThrowOnFailures) {
+				RaiseValidationException(context, result);
+			}
+
 			return result;
 		}
 
@@ -148,6 +152,10 @@ namespace FluentValidation {
 			}
 
 			SetExecutedRulesets(result, context);
+
+			if (!result.IsValid && context.ThrowOnFailures) {
+				RaiseValidationException(context, result);
+			}
 
 			return result;
 		}
@@ -354,6 +362,17 @@ namespace FluentValidation {
 		/// <returns></returns>
 		protected virtual bool PreValidate(ValidationContext<T> context, ValidationResult result) {
 			return true;
+		}
+
+		/// <summary>
+		/// Throws a ValidationException. This method will only be called if the validator has been configured
+		/// to throw exceptions if validation fails. The default behaviour is not to throw an exception.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="result"></param>
+		/// <exception cref="ValidationException"></exception>
+		protected virtual void RaiseValidationException(ValidationContext<T> context, ValidationResult result) {
+			throw new ValidationException(result.Errors);
 		}
 	}
 }

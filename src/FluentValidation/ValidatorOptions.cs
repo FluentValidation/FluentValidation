@@ -203,7 +203,9 @@ namespace FluentValidation {
 	/// ValidatorSelector options
 	/// </summary>
 	public class ValidatorSelectorOptions {
-		private Func<IValidatorSelector>  _defaultValidatorSelector = () => new DefaultValidatorSelector();
+		private static readonly IValidatorSelector DefaultSelector = new DefaultValidatorSelector();
+
+		private Func<IValidatorSelector>  _defaultValidatorSelector = () => DefaultSelector;
 		private Func<string[], IValidatorSelector> _memberNameValidatorSelector = properties => new MemberNameValidatorSelector(properties);
 		private Func<string[], IValidatorSelector> _rulesetValidatorSelector = ruleSets => new RulesetValidatorSelector(ruleSets);
 
@@ -215,6 +217,7 @@ namespace FluentValidation {
 			set => _defaultValidatorSelector = value ?? (() => new DefaultValidatorSelector());
 		}
 
+		//TODO: For FV 10 change this to IEnumerable<string>
 		/// <summary>
 		/// Factory func for creating the member validator selector
 		/// </summary>
@@ -223,6 +226,7 @@ namespace FluentValidation {
 			set => _memberNameValidatorSelector = value ?? (properties => new MemberNameValidatorSelector(properties));
 		}
 
+		//TODO: For FV 10 change this to IEnumerable<string>
 		/// <summary>
 		/// Factory func for creating the ruleset validator selector
 		/// </summary>
