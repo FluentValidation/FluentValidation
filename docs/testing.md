@@ -81,6 +81,9 @@ result.ShouldHaveValidationErrorFor(person => person.Name)
 
 There are also inverse methods avaialble (`WithoutMessage`, `WithoutErrorCode`, `WithoutSeverity`, `WithoutCustomState`)
 
+## Asynchronous TestValidate
+
+There is also an asynchronous `TestValidateAsync` method available which corresponds to the regular `ValidateAsync` method. Usage is similar, except the method returns an awaitable `Task` instead.
 
 ## Simple test extensions
 
@@ -109,6 +112,8 @@ public void Should_not_have_error_when_name_is_specified() {
   result.ShouldNotHaveValidationErrorFor(person => person.Name);
 }
 ```
+
+There are also asynchronous versions of these methods available.
 
 Note that the simplified test extensions have several constraints:
 - The model object must have a default constructor
