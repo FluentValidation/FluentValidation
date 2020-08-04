@@ -17,6 +17,7 @@
 #endregion
 
 namespace FluentValidation.AspNetCore {
+	using System;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -33,7 +34,25 @@ namespace FluentValidation.AspNetCore {
 			ValidateComplexTypesIfChildValidationFails = true;
 		}
 
+		// This overload needs to be in place for both .NET 5 and .NET Core 2/3
 		public override bool Validate(ModelMetadata metadata, string key, object model, bool alwaysValidateAtTopLevel) {
+			bool BaseValidate()
+				=> base.Validate(metadata, key, model, alwaysValidateAtTopLevel);
+
+			return ValidateInternal(metadata, key, model, BaseValidate);
+		}
+
+#if NET5_0
+		// .NET 5 has this additional overload as an entry point.
+		public override bool Validate(ModelMetadata metadata, string key, object model, bool alwaysValidateAtTopLevel, object container) {
+			bool BaseValidate()
+				=> base.Validate(metadata, key, model, alwaysValidateAtTopLevel, container);
+
+			return ValidateInternal(metadata, key, model, BaseValidate);
+		}
+#endif
+
+		private bool ValidateInternal(ModelMetadata metadata, string key, object model, Func<bool> continuation) {
 			SetRootMetadata(Context, metadata);
 
 			// Store and remove any implicit required messages.
@@ -45,7 +64,7 @@ namespace FluentValidation.AspNetCore {
 				CacheCustomizations(Context, model, key);
 			}
 
-			var result = base.Validate(metadata, key, model, alwaysValidateAtTopLevel);
+			var result = continuation();
 
 			// Re-add errors that we took out if FV didn't add a key.
 			ReApplyImplicitRequiredErrorsNotHandledByFV(requiredErrorsNotHandledByFv);
@@ -55,5 +74,6 @@ namespace FluentValidation.AspNetCore {
 
 			return result;
 		}
+
 	}
 }

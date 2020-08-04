@@ -95,7 +95,7 @@ namespace FluentValidation.Tests {
 		public void When_enumType_is_not_an_enum_it_should_throw() {
 			var exception = Assert.Throws<ArgumentOutOfRangeException>(() => new TestValidator { v => v.RuleFor(x => x.GenderString).IsEnumName(typeof(Person)) });
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1 || NET5_0
 			string expectedMessage = "The type 'Person' is not an enum and can't be used with IsEnumName. (Parameter 'enumType')";
 	#else
 			string expectedMessage = "The type 'Person' is not an enum and can't be used with IsEnumName." + Environment.NewLine + "Parameter name: enumType";

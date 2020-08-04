@@ -21,19 +21,19 @@ namespace FluentValidation.Tests.AspNetCore {
 				options.SupportedUICultures = new[] {cultureInfo};
 			});
 
-#if NETCOREAPP3_0 || NETCOREAPP3_1
+#if NETCOREAPP2_1
+			app.UseMvc(routes => {
+				routes.MapRoute(
+					name: "default",
+					template: "{controller=Home}/{action=Index}/{id?}");
+			});
+#else
 			app
 				.UseRouting()
 				.UseEndpoints(endpoints => {
 					endpoints.MapRazorPages();
 					endpoints.MapDefaultControllerRoute();
 				});
-#else
-			app.UseMvc(routes => {
-				routes.MapRoute(
-					name: "default",
-					template: "{controller=Home}/{action=Index}/{id?}");
-			});
 #endif
 		}
 	}
@@ -41,10 +41,10 @@ namespace FluentValidation.Tests.AspNetCore {
 	public static class WebTestExtensions {
 
 		public static void AddFluentValidationForTesting(this IServiceCollection services, Action<FluentValidationMvcConfiguration> configurator) {
-#if NETCOREAPP3_0 || NETCOREAPP3_1
-			var mvcBuilder = services.AddMvc().AddNewtonsoftJson();
-#else
+#if NETCOREAPP2_1
 			var mvcBuilder = services.AddMvc();
+#else
+			var mvcBuilder = services.AddMvc().AddNewtonsoftJson();
 #endif
 			mvcBuilder.AddFluentValidation(configurator);
 		}
