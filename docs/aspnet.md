@@ -125,6 +125,11 @@ Now when you post the form, MVC's model-binding infrastructure will validate the
 
 *Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contains an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically (by MVC), or manually.
 
+```eval_rst
+.. warning::
+  You should not use asynchronous rules when using ASP.NET automatic validation as ASP.NET's validation pipeline is not asynchronous.
+```
+
 ### Compatibility with ASP.NET's built-in Validation
 
 By default, after FluentValidation is executed, any other validator providers will also have a chance to execute. This means you can mix FluentValidation with DataAnnotations attributes (or any other ASP.NET ModelValidatorProvider implementation).

@@ -1,8 +1,8 @@
 # Asynchronous Validation
 
-In some situations, you may wish to define asynchronous rules, for example when working with an external API. By default, FluentValidation allows custom rules defined with `MustAsync` or `CustomAsync` to be run asynchronously, as well as defining asynchronous conditions with `WhenAsync`. 
+In some situations, you may wish to define asynchronous rules, for example when working with an external API. By default, FluentValidation allows custom rules defined with `MustAsync` or `CustomAsync` to be run asynchronously, as well as defining asynchronous conditions with `WhenAsync`.
 
-A simplistic solution that checks if a user ID is already in use using an external web API: 
+A simplistic solution that checks if a user ID is already in use using an external web API:
 
 ```csharp
 public class CustomerValidator : AbstractValidator<Customer> {
@@ -22,7 +22,7 @@ public class CustomerValidator : AbstractValidator<Customer> {
 Invoking the validator is essentially the same, but you should now invoke it by calling `ValidateAsync`:
 
 ```csharp
-var validator = new CustomerValidator();
+var validator = new CustomerValidator(new SomeExternalWebApiClient());
 var result = await validator.ValidateAsync(customer);
 ```
 
@@ -30,5 +30,5 @@ var result = await validator.ValidateAsync(customer);
 .. warning::
   If your validator contains asynchronous validators or asynchronous conditions, it's important that you *always* call `ValidateAsync` on your validator and never `Validate`. If you call `Validate`, then your asynchronous rules *will be run synchronously*, which is not desirable.
 
-  You should not use asynchronous rules when `using automatic validation with ASP.NET <aspnet.html>`_ as ASP.NET's validation pipeline is not asynchronous. If you use asynchronous rules with ASP.NET's automatic validation, they will always be run synchronously. 
+  You should not use asynchronous rules when `using automatic validation with ASP.NET <aspnet.html>`_ as ASP.NET's validation pipeline is not asynchronous. If you use asynchronous rules with ASP.NET's automatic validation, they will always be run synchronously.
 ```
