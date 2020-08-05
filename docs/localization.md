@@ -44,7 +44,7 @@ Here we have a custom class that inherits from the base `LanguageManager`. In it
 Once this is done, we can replace the default LanguageManager by setting the LanaguageManager property in the static `ValidatorOptions` class during your application's startup routine:
 
 ```csharp
-ValidatorOptions.LanguageManager = new CustomLanguageManager();
+ValidatorOptions.Global.LanguageManager = new CustomLanguageManager();
 ```
 
 This is a simple example that only replaces one validator's message in English only, but could be extended to replace the messages for all languages. Instead of inheriting from the default LanguageManager, you could also implement the `ILanguageManager` interface directly if you want to load the messages from a completely different location other than the FluentValidation default (for example, if you wanted to store FluentValidation's default messages in a database).
@@ -60,10 +60,10 @@ If you'd like to contribute a translation of FluentValidation's default messages
 You can completely disable FluentValidation's support for localization, which will force the default English messages to be used, regardless of the thread's CurrentUICulture. This can be done in your application's startup routine by calling into the static `ValidatorOptions` class:
 
 ```csharp
-ValidatorOptions.LanguageManager.Enabled = false;
+ValidatorOptions.Global.LanguageManager.Enabled = false;
 ```
 You can could also force the default messages to always be displayed in a specific language:
 
 ```csharp
-ValidatorOptions.LanguageManager.Culture = new CultureInfo("fr");
+ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr");
 ```
