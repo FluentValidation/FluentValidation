@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Internal;
 	using Results;
 	using Validators;
@@ -232,6 +233,44 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(new Person(), ruleSet: "default");
 			result.Errors.Count.ShouldEqual(2);
 			AssertExecuted(result, "default");
+		}
+
+		[Fact]
+		public void Combines_rulesets_and_explicit_properties() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleFor(x => x.Surname).NotNull();
+			validator.RuleSet("Test", () => {
+				validator.RuleFor(x => x.Age).GreaterThan(0);
+			});
+
+			var result = validator.Validate(new Person(), options => {
+				options.IncludeRuleSets("Test");
+				options.IncludeProperties(x => x.Forename);
+			});
+
+			result.Errors.Count.ShouldEqual(2);
+			result.Errors[0].PropertyName.ShouldEqual("Forename");
+			result.Errors[1].PropertyName.ShouldEqual("Age");
+		}
+
+		[Fact]
+		public async Task Combines_rulesets_and_explicit_properties_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleFor(x => x.Surname).NotNull();
+			validator.RuleSet("Test", () => {
+				validator.RuleFor(x => x.Age).GreaterThan(0);
+			});
+
+			var result = await validator.ValidateAsync(new Person(), options => {
+				options.IncludeRuleSets("Test");
+				options.IncludeProperties(x => x.Forename);
+			});
+
+			result.Errors.Count.ShouldEqual(2);
+			result.Errors[0].PropertyName.ShouldEqual("Forename");
+			result.Errors[1].PropertyName.ShouldEqual("Age");
 		}
 
 		private void AssertExecuted(ValidationResult result, params string[] names) {

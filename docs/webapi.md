@@ -13,7 +13,7 @@ FluentValidation can be configured to work with WebApi 2 projects. To enable Web
 Install-Package FluentValidation.WebApi
 ```
 
-Once installed, you'll need to configure the `FluentValidationModelValidatorProvider` (which lives in the `FluentValidation.WebApi` namespace) during your application's startup routine. This is usually inside the `Register` method of your `WebApiConfig` class which can be found in the App_Start directory. 
+Once installed, you'll need to configure the `FluentValidationModelValidatorProvider` (which lives in the `FluentValidation.WebApi` namespace) during your application's startup routine. This is usually inside the `Register` method of your `WebApiConfig` class which can be found in the App_Start directory.
 
 ```csharp
 public static class WebApiConfig {
@@ -32,21 +32,21 @@ public static class WebApiConfig {
 If you are self-hosting with OWIN, then this should instead be inside your OWIN startup class's `Configuration` method:
 
 ```csharp
-public class Startup { 
-    public void Configuration(IAppBuilder appBuilder) { 
-        var config = new HttpConfiguration(); 
+public class Startup {
+    public void Configuration(IAppBuilder appBuilder) {
+        var config = new HttpConfiguration();
 
-        config.Routes.MapHttpRoute( 
-            name: "DefaultApi", 
-            routeTemplate: "api/{controller}/{id}", 
-            defaults: new { id = RouteParameter.Optional } 
-        ); 
+        config.Routes.MapHttpRoute(
+            name: "DefaultApi",
+            routeTemplate: "api/{controller}/{id}",
+            defaults: new { id = RouteParameter.Optional }
+        );
 
         FluentValidationModelValidatorProvider.Configure(config);
 
 
-        appBuilder.UseWebApi(config); 
-    } 
+        appBuilder.UseWebApi(config);
+    }
 }
 ```
 
@@ -60,7 +60,7 @@ public class Person {
 	public string Email { get; set; }
 	public int Age { get; set; }
 }
- 
+
 public class PersonValidator : AbstractValidator<Person> {
 	public PersonValidator() {
 		RuleFor(x => x.Id).NotNull();
@@ -85,19 +85,19 @@ Finally, we can create the controller:
 public class PeopleController : ApiController {
 	[HttpPost]
 	public IHttpActionResult Create(Person person) {
- 
+
 		if(! ModelState.IsValid) { // re-render the view when validation failed.
 			return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
 		}
- 
+
 		return new HttpResponseMessage(HttpStatusCode.OK);
 	}
 }
 ```
 
-Now when you post data to the controller's `Create` method (for example, as JSON) then WebApi will automatically call into FluentValidation to find the corresponding validator. Any validation failures will be stored in the controller's `ModelState` dictionary which can be used to generate an error response which can be returned to the client. 
+Now when you post data to the controller's `Create` method (for example, as JSON) then WebApi will automatically call into FluentValidation to find the corresponding validator. Any validation failures will be stored in the controller's `ModelState` dictionary which can be used to generate an error response which can be returned to the client.
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contain an entry called `InvokedByWebApi` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by WebApi, or manually. 
+*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contain an entry called `InvokedByWebApi` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by WebApi, or manually.
 
 ## Manual Validation
 
@@ -134,7 +134,7 @@ This is the equivalent of specifying the ruleset if you were to pass a ruleset n
 ```csharp
 var validator = new CustomerValidator();
 var customer = new Customer();
-var result = validator.Validate(customer, ruleSet: "MyRuleset");
+var result = validator.Validate(customer, options => options.IncludeRuleSet("MyRuleset"));
 ```
 
 The attribute can also be used to invoke validation for individual properties:
@@ -149,7 +149,7 @@ public IHttpActionResult Save([CustomizeValidator(Properties="Surname,Forename")
 ```csharp
 var validator = new CustomerValidator();
 var customer = new Customer();
-var result = validator.Validate(customer, properties: new[] { "Surname", "Forename" });
+var result = validator.Validate(customer, options => options.IncludeProperties("Surname", "Forename"));
 ```
 
 You can also use the CustomizeValidatorAttribute to skip validation for a particular type. This is useful for if you need to validate a type manually (for example, if you want to perform async validation then you'll need to instantiate the validator manually and call ValidateAsync as MVC's validation pipeline is not asynchronous).
@@ -168,7 +168,7 @@ You can further customize this process by using an interceptor. An interceptor h
 ```csharp
 public interface IValidatorInterceptor {
     ValidationContext BeforeMvcValidation(HttpActionContext controllerContext, ValidationContext validationContext);
- 
+
     ValidationResult AfterMvcValidation(HttpActionContext controllerContext, ValidationContext validationContext, ValidationResult result);
 }
 ```
@@ -193,9 +193,9 @@ Note that this is considered to be an advanced scenario. Most of the time you pr
 
 ## Using an IoC Container
 
-When using FluentValidation's WebApi integration you may wish to use an Inversion of Control container to instantiate your validators rather than relying on the attribute based approach. This can be achieved by writing a custom Validator Factory. 
+When using FluentValidation's WebApi integration you may wish to use an Inversion of Control container to instantiate your validators rather than relying on the attribute based approach. This can be achieved by writing a custom Validator Factory.
 
-The IValidatorFactory interface defines the contract for validator factories. 
+The IValidatorFactory interface defines the contract for validator factories.
 
 ```csharp
 public interface IValidatorFactory {

@@ -16,7 +16,7 @@ namespace FluentValidation.Internal {
     /// <summary>
     /// Rule sets
     /// </summary>
-    public string[] RuleSets => _rulesetsToExecute;
+    public string[] RuleSets => _rulesetsToExecute; //TODO: Convert to IEnumerable<string> for FV 10
 
 		/// <summary>
 		/// Creates a new instance of the RulesetValidatorSelector.

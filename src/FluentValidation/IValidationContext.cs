@@ -77,6 +77,18 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Creates a new validation context using the specified options.
+		/// </summary>
+		/// <param name="instanceToValidate">The instance to validate</param>
+		/// <param name="options">Callback that allows extra options to be configured.</param>
+		public static ValidationContext<T> CreateWithOptions(T instanceToValidate, Action<ValidationStrategy<T>> options) {
+			if (options == null) throw new ArgumentNullException(nameof(options));
+			var strategy = new ValidationStrategy<T>();
+			options(strategy);
+			return strategy.BuildContext(instanceToValidate);
+		}
+
+		/// <summary>
 		/// The object to validate
 		/// </summary>
 		public T InstanceToValidate { get; private set; }
@@ -85,7 +97,6 @@ namespace FluentValidation {
 		/// Additional data associated with the validation request.
 		/// </summary>
 		public IDictionary<string, object> RootContextData { get; private protected set; } = new Dictionary<string, object>();
-
 
 		/// <summary>
 		/// Property chain
@@ -119,6 +130,7 @@ namespace FluentValidation {
 		// Explicit implementation so it's not exposed necessarily.
 		ICommonContext ICommonContext.ParentContext => _parentContext;
 
+		internal bool ThrowOnFailures { get; set; }
 
 		/// <summary>
 		/// Gets or creates generic validation context from non-generic validation context.

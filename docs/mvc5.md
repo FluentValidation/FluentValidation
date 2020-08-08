@@ -15,7 +15,7 @@ To enable MVC integration, you'll need to add a reference to the `FluentValidati
 Install-Package FluentValidation.Mvc5
 ```
 
-Once installed, you'll need to configure the `FluentValidationModelValidatorProvider` (which lives in the FluentValidation.Mvc namespace) during the `Application_Start` event of your MVC application, which is in your Global.asax. 
+Once installed, you'll need to configure the `FluentValidationModelValidatorProvider` (which lives in the FluentValidation.Mvc namespace) during the `Application_Start` event of your MVC application, which is in your Global.asax.
 
 ```csharp
 protected void Application_Start() {
@@ -38,7 +38,7 @@ public class Person {
 	public string Email { get; set; }
 	public int Age { get; set; }
 }
- 
+
 public class PersonValidator : AbstractValidator<Person> {
 	public PersonValidator() {
 		RuleFor(x => x.Id).NotNull();
@@ -64,17 +64,17 @@ public class PeopleController : Controller {
 	public ActionResult Create() {
 		return View();
 	}
- 
+
 	[HttpPost]
 	public ActionResult Create(Person person) {
- 
+
 		if(! ModelState.IsValid) { // re-render the view when validation failed.
 			return View("Create", person);
 		}
- 
+
 		TempData["notice"] = "Person successfully created";
 		return RedirectToAction("Index");
- 
+
 	}
 }
 ```
@@ -83,31 +83,31 @@ public class PeopleController : Controller {
 
 ```html
 @Html.ValidationSummary()
- 
+
 @using (Html.BeginForm()) {
 	Id: @Html.TextBoxFor(x => x.Id) @Html.ValidationMessageFor(x => x.Id)
 	<br />
-	Name: @Html.TextBoxFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name) 		
+	Name: @Html.TextBoxFor(x => x.Name) @Html.ValidationMessageFor(x => x.Name)
 	<br />
 	Email: @Html.TextBoxFor(x => x.Email) @Html.ValidationMessageFor(x => x.Email)
 	<br />
 	Age: @Html.TextBoxFor(x => x.Age) @Html.ValidationMessageFor(x => x.Age)
- 
+
 	<br /><br />
- 
+
 	<input type="submit" value="submit" />
 }
 ```
 
 Now when you post the form MVC’s `DefaultModelBinder` will validate the Person object using the `FluentValidationModelValidatorProvider`.
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually. 
+*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contain an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically by MVC, or manually.
 
 ## Known Limitations
 
-MVC 5 performs validation in two passes. First it tries to convert the input values from the request into the types declared in your model, and then it performs model-level validation using FluentValidation. If you have non-nullable types in your model (such as `int` or `DateTime`) and there are no values submitted in the request, model-level validations will be skipped, and only the type conversion errors will be returned. 
+MVC 5 performs validation in two passes. First it tries to convert the input values from the request into the types declared in your model, and then it performs model-level validation using FluentValidation. If you have non-nullable types in your model (such as `int` or `DateTime`) and there are no values submitted in the request, model-level validations will be skipped, and only the type conversion errors will be returned.
 
-This is a limitation of MVC 5's validation infrastructure, and there is no way to disable this behaviour. If you want all validation failures to be returned in one go, you must ensure that any value types are marked as nullable in your model (you can still enforce non-nullability with a `NotNull` or `NotEmpty` rule as necessary, but the underlying type must allow nulls). This only applies to MVC5 and WebApi 2. ASP.NET Core does not suffer from this issue as the validation infrastructure has been improved. 
+This is a limitation of MVC 5's validation infrastructure, and there is no way to disable this behaviour. If you want all validation failures to be returned in one go, you must ensure that any value types are marked as nullable in your model (you can still enforce non-nullability with a `NotNull` or `NotEmpty` rule as necessary, but the underlying type must allow nulls). This only applies to MVC5 and WebApi 2. ASP.NET Core does not suffer from this issue as the validation infrastructure has been improved.
 
 ## Clientside Validation
 
@@ -155,7 +155,7 @@ This is the equivalent of specifying the ruleset if you were to pass a ruleset n
 ```csharp
 var validator = new CustomerValidator();
 var customer = new Customer();
-var result = validator.Validate(customer, ruleSet: "MyRuleset");
+var result = validator.Validate(customer, options => options.IncludeRuleSet("MyRuleset"));
 ```
 
 The attribute can also be used to invoke validation for individual properties:
@@ -170,7 +170,7 @@ public ActionResult Save([CustomizeValidator(Properties="Surname,Forename")] Cus
 ```csharp
 var validator = new CustomerValidator();
 var customer = new Customer();
-var result = validator.Validate(customer, properties: new[] { "Surname", "Forename" });
+var result = validator.Validate(customer, options => options.IncludeProperties("Surname", "Forename"));
 ```
 
 You can also use the CustomizeValidatorAttribute to skip validation for a particular type. This is useful for if you need to validate a type manually (for example, if you want to perform async validation then you'll need to instantiate the validator manually and call ValidateAsync as MVC's validation pipeline is not asynchronous).
@@ -188,7 +188,7 @@ You can further customize this process by using an interceptor. An interceptor h
 ```csharp
 public interface IValidatorInterceptor {
     ValidationContext BeforeMvcValidation(ControllerContext controllerContext, ValidationContext validationContext);
- 
+
     ValidationResult AfterMvcValidation(ControllerContext controllerContext, ValidationContext validationContext, ValidationResult result);
 }
 ```
@@ -233,9 +233,9 @@ public ActionResult Index() {
 
 ## Using an IoC container
 
-When using FluentValidation's ASP.NET MVC 5 integration you may wish to use an Inversion of Control container to instantiate your validators rather than relying on the attribute based approach. This can be achieved by writing a custom Validator Factory. 
+When using FluentValidation's ASP.NET MVC 5 integration you may wish to use an Inversion of Control container to instantiate your validators rather than relying on the attribute based approach. This can be achieved by writing a custom Validator Factory.
 
-The IValidatorFactory interface defines the contract for validator factories. 
+The IValidatorFactory interface defines the contract for validator factories.
 
 ```csharp
 public interface IValidatorFactory {
