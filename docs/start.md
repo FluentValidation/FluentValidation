@@ -1,6 +1,6 @@
 # Creating your first validator
 
-To define a set of validation rules for a particular object, you will need to create a class that inherits from `AbstractValidator<T>`, where `T` is the type of class that you wish to validate. 
+To define a set of validation rules for a particular object, you will need to create a class that inherits from `AbstractValidator<T>`, where `T` is the type of class that you wish to validate.
 
 For example, imagine that you have a Customer class:
 
@@ -17,7 +17,7 @@ public class Customer {
 You would define a set of validation rules for this class by inheriting from `AbstractValidator<Customer>`:
 
 ```csharp
-using FluentValidation; 
+using FluentValidation;
 
 public class CustomerValidator : AbstractValidator<Customer> {
 }
@@ -25,8 +25,8 @@ public class CustomerValidator : AbstractValidator<Customer> {
 
 The validation rules themselves should be defined in the validator class's constructor.
 
-To specify a validation rule for a particular property, call the `RuleFor` method, passing a lambda expression 
-that indicates the property that you wish to validate. For example, to ensure that the `Surname` property is not null, 
+To specify a validation rule for a particular property, call the `RuleFor` method, passing a lambda expression
+that indicates the property that you wish to validate. For example, to ensure that the `Surname` property is not null,
 the validator class would look like this:
 
 ```csharp
@@ -72,7 +72,7 @@ You can also call `ToString` on the `ValidationResult` to combine all error mess
 
 ```csharp
 ValidationResult results = validator.Validate(customer);
-string allMessages = results.ToString("~");     // In this case, each message will be separated with a `~` 
+string allMessages = results.ToString("~");     // In this case, each message will be separated with a `~`
 ```
 
 *Note* : if there are no validation errors, `ToString()` will return an empty string.
@@ -85,13 +85,13 @@ You can chain multiple validators together for the same property:
 using FluentValidation;
 
 public class CustomerValidator : AbstractValidator<Customer> {
-  public CustomerValidator() 
+  public CustomerValidator()
     RuleFor(customer => customer.Surname).NotNull().NotEqual("foo");
   }
 }
 ```
 
-This would ensure that the surname is not null and is not equal to the string 'foo'. 
+This would ensure that the surname is not null and is not equal to the string 'foo'.
 
 # Throwing Exceptions
 
@@ -104,12 +104,28 @@ CustomerValidator validator = new CustomerValidator();
 validator.ValidateAndThrow(customer);
 ```
 
-This throws a `ValidationException` which contains the error messages in the Errors property. 
+This throws a `ValidationException` which contains the error messages in the Errors property.
 
 *Note* `ValidateAndThrow` is an extension method, so you must have the `FluentValidation` namespace imported with a `using` statement at the top of your file in order for this method to be available.
 
 ```csharp
 using FluentValidation;
+```
+
+The `ValidateAndThrow` method is helpful wrapper around FluentValidation's options API, and is the equivalent of doing the following:
+
+```csharp
+validator.Validate(customer, options => options.ThrowOnFailures());
+```
+
+If you need to combine throwing an exception with [Rule Sets](rulesets), or validating individual properties, you can combine both options using this syntax:
+
+```csharp
+validator.Validate(customer, options => {
+  options.ThrowOnFailures();
+  options.IncludeRuleSets("MyRuleSets");
+  options.IncludeProperties(x => x.Name);
+});
 ```
 
 # Complex Properties
@@ -151,10 +167,10 @@ public class CustomerValidator : AbstractValidator<Customer> {
     RuleFor(customer => customer.Name).NotNull();
     RuleFor(customer => customer.Address).SetValidator(new AddressValidator());
   }
-} 
+}
 ```
 
-... so when you call `Validate` on the CustomerValidator it will run through the validators defined in both the CustomerValidator and the AddressValidator and combine the results into a single ValidationResult. 
+... so when you call `Validate` on the CustomerValidator it will run through the validators defined in both the CustomerValidator and the AddressValidator and combine the results into a single ValidationResult.
 
 If the child property is null, then the child validator will not be executed.
 
@@ -162,7 +178,7 @@ Instead of using a child validator, you can define child rules inline, eg:
 
 ```csharp
 RuleFor(customer => customer.Address.Postcode).NotNull()
-``` 
+```
 
 In this case, a null check will *not* be performed automatically on `Address`, so you should explicitly add a condition
 
