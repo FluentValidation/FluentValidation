@@ -1,4 +1,4 @@
-9.1 -
+9.1 - 8 August 2020
 Make ruleset separator character splitting consistent (#1424)
 Transform now works with RuleForEach (#1450)
 Introduce constants for rulesets (#1435)
