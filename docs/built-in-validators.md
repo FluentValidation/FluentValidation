@@ -166,7 +166,7 @@ Notes: Only valid on types that implement IComparable<T>
 
 String format args: 
 * {PropertyName} = The name of the property being validated
-* {ComparisonValue} - The value to which the property was compared
+* {ComparisonValue} = The value to which the property was compared
 * {PropertyValue} = The current value of the property
 
 ## Less Than Or Equal Validator
@@ -182,7 +182,7 @@ RuleFor(customer => customer.CreditLimit).LessThanOrEqualTo(customer => customer
 Example error: 'Credit Limit' must be less than or equal to 100.
 Notes: Only valid on types that implement IComparable<T>
 * {PropertyName} = The name of the property being validated
-* {ComparisonValue} - The value to which the property was compared
+* {ComparisonValue} = The value to which the property was compared
 * {PropertyValue} = The current value of the property
 
 ## Greater Than Validator
@@ -198,7 +198,7 @@ RuleFor(customer => customer.CreditLimit).GreaterThan(customer => customer.Minim
 Example error: 'Credit Limit' must be greater than 0.
 Notes: Only valid on types that implement IComparable<T>
 * {PropertyName} = The name of the property being validated
-* {ComparisonValue} - The value to which the property was compared
+* {ComparisonValue} = The value to which the property was compared
 * {PropertyValue} = The current value of the property
 
 ## Greater Than Or Equal Validator
@@ -214,7 +214,7 @@ RuleFor(customer => customer.CreditLimit).GreaterThanOrEqualTo(customer => custo
 Example error: 'Credit Limit' must be greater than or equal to 1.
 Notes: Only valid on types that implement IComparable<T>
 * {PropertyName} = The name of the property being validated
-* {ComparisonValue} - The value to which the property was compared
+* {ComparisonValue} = The value to which the property was compared
 * {PropertyValue} = The current value of the property
 
 ## Predicate Validator
