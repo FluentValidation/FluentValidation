@@ -1,7 +1,6 @@
 param(
   [string]$configuration = 'Release',
   [string]$path = $PSScriptRoot,
-  [string]$keyfile = "",
   [string[]]$targets = 'default'
 )
 
@@ -9,8 +8,8 @@ $ErrorActionPreference = "Stop"
 
 # Boostrap posh-build
 $build_dir = Join-Path $path ".build"
-if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) { 
-  Write-Host "Installing posh-build..."; New-Item -Type Directory $build_dir -ErrorAction Ignore | Out-Null; 
+if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) {
+  Write-Host "Installing posh-build..."; New-Item -Type Directory $build_dir -ErrorAction Ignore | Out-Null;
   (New-Object Net.WebClient).DownloadFile('https://raw.githubusercontent.com/jeremyskinner/posh-build/master/Posh-Build.ps1', "$build_dir/Posh-Build.ps1")
 }
 . (Join-Path $build_dir "Posh-Build.ps1")
@@ -19,32 +18,27 @@ if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) {
 $packages_dir = Join-Path $build_dir "packages"
 $output_dir = Join-Path $build_dir $configuration
 $solution_file = Join-Path $path "FluentValidation.sln"
-$keyfile = Resolve-Path "~/Dropbox/FluentValidation-Release.snk" -ErrorAction Ignore 
 $nuget_key = Resolve-Path "~/Dropbox/nuget-access-key.txt" -ErrorAction Ignore
 
 target default -depends compile, test, deploy
-target ci -depends init-nuget, install-dotnet-core, ci-set-version, decrypt-private-key, default
+target ci -depends install-dotnet-core, ci-set-version, default
 
 $script:version_suffix = ([xml](get-content src/Directory.Build.props)).Project.PropertyGroup.VersionSuffix
 
 target compile {
-  if ($keyfile) {
-    Write-Host "Using key file: $keyfile" -ForegroundColor Cyan
-  }
-
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
-    /p:AssemblyOriginatorKeyFile=$keyfile /p:VersionSuffix=$script:version_suffix
+    /p:VersionSuffix=$script:version_suffix
 }
 
 target test {
-  Invoke-Dotnet test $solution_file -c $configuration --no-build --logger trx 
+  Invoke-Dotnet test $solution_file -c $configuration --no-build --logger trx
 }
 
 target deploy {
   Remove-Item $packages_dir -Force -Recurse -ErrorAction Ignore 2> $null
   Remove-Item $output_dir -Force -Recurse -ErrorAction Ignore 2> $null
-  
-  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:AssemblyOriginatorKeyFile=$keyfile /p:VersionSuffix=$script:version_suffix
+
+  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:VersionSuffix=$script:version_suffix
 
   # Copy to output dir
   Copy-Item "$path\src\FluentValidation\bin\$configuration" -Destination "$output_dir\FluentValidation" -Recurse
@@ -52,22 +46,15 @@ target deploy {
   Copy-Item "$path\src\FluentValidation.DependencyInjectionExtensions\bin\$configuration" -Destination "$output_dir\FluentValidation.DependencyInjectionExtensions" -Recurse
 }
 
-target init-nuget {
-  # For some reason, sometimes the nuget.org package source is unavailable in the Azure pipelines windows images.
-  # Can't figure out why, so explicitly add.
-  # dotnet nuget add source https://api.nuget.org/v3/index.json -n nuget.org
-  dotnet nuget list source
-}
-
 target verify-package {
   if (-not (test-path "$nuget_key")) {
     throw "Could not find the NuGet access key."
   }
-  
-  Get-ChildItem $output_dir -Recurse *.dll | ForEach { 
+
+  Get-ChildItem $output_dir -Recurse *.dll | ForEach {
     $asm = $_.FullName
     if (! (verify_assembly $asm)) {
-      throw "$asm is not signed" 
+      throw "$asm is not signed"
     }
   }
   write-host Package verified
@@ -102,24 +89,10 @@ target publish -depends verify-package {
   }
 }
 
-target ci-set-version { 
+target ci-set-version {
   if ($env:BUILD_BUILDNUMBER) {
     # If there's a build number environment variable provided by CI, use that for the build number suffix.
     $script:version_suffix = "ci-${env:BUILD_BUILDNUMBER}"
-  }
-}
-
-target decrypt-private-key {
-  if ((Test-Path ENV:kek) -and ($ENV:kek.Length -gt 0) -and ($env:SYSTEM_PULLREQUEST.ISFORK -eq $false)) {
-    iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1')) | Out-Null
-    dotnet "appveyor-tools/secure-file.dll" -decrypt src/FluentValidation-Release.snk.enc -secret $ENV:kek
-    if (($LASTEXITCODE -eq 0) -and (Test-Path "$path/src/FluentValidation-Release.snk")) {
-      $script:keyfile = "$path/src/FluentValidation-Release.snk";
-      Write-Host "Decrypted."
-    }
-  }
-  else {
-    Write-Host "No KEK available to decrypt private key."
   }
 }
 
@@ -138,10 +111,10 @@ target install-dotnet-core {
   $win = (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows)
   $json = ConvertFrom-Json (Get-Content "$path/global.json" -Raw)
   $required_version = $json.sdk.version
-  # If there's a version mismatch with what's defined in global.json then a 
+  # If there's a version mismatch with what's defined in global.json then a
   # call to dotnet --version will generate an error.
   try { dotnet --version 2>&1>$null } catch { $install_sdk = $true }
-  
+
   if ($global:LASTEXITCODE) {
     $install_sdk = $true;
     $global:LASTEXITCODE = 0;
@@ -150,19 +123,19 @@ target install-dotnet-core {
   if ($install_sdk) {
     $installer = $null;
     if ($win) {
-      $installer = "$build_dir/dotnet-installer.ps1" 
+      $installer = "$build_dir/dotnet-installer.ps1"
       (New-Object System.Net.WebClient).DownloadFile("https://dot.net/v1/dotnet-install.ps1", $installer);
     }
-    else { 
+    else {
       $installer = "$build_dir/dotnet-installer"
-      write-host Downloading installer to $installer 
-      curl https://dot.net/v1/dotnet-install.sh -L --output $installer 
+      write-host Downloading installer to $installer
+      curl https://dot.net/v1/dotnet-install.sh -L --output $installer
       chmod +x $installer
     }
 
     $dotnet_path = "$path/.dotnetsdk"
 
-    # If running in azure pipelines, use that as the dotnet install path. 
+    # If running in azure pipelines, use that as the dotnet install path.
     if ($env:AGENT_TOOLSDIRECTORY) {
       $dotnet_path = Join-Path $env:AGENT_TOOLSDIRECTORY dotnet
     }
@@ -171,19 +144,19 @@ target install-dotnet-core {
     . $installer -i $dotnet_path -v $json.sdk.version
 
     # Collect installed SDKs.
-    $sdks = & "$dotnet_path/dotnet" --list-sdks | ForEach-Object { 
+    $sdks = & "$dotnet_path/dotnet" --list-sdks | ForEach-Object {
       $_.Split(" ")[0]
     }
 
-    # Install any other SDKs required. Only bother installing if not installed already. 
+    # Install any other SDKs required. Only bother installing if not installed already.
     $json.others | Foreach-Object {
       if (!($sdks -contains $_)) {
-        Write-Host Installing $_ 
+        Write-Host Installing $_
         . $installer -i $dotnet_path -v $_
       }
     }
-    # Set process path again 
-    findSdk 
+    # Set process path again
+    findSdk
   }
 }
 
