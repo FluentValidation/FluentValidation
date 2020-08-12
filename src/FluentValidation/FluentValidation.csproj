@@ -5,6 +5,12 @@
     <PackageReleaseNotes>
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
+Changes in 9.1.2:
+* Make the ValidationContext.ThrowOnFailures getter public.
+
+Changes in 9.1.1:
+* Fix an incorrect deprecation message.
+
 Changes in 9.1:
 * Make ruleset separator character splitting consistent
 * Transform now works with RuleForEach

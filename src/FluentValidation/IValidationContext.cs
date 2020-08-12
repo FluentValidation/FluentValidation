@@ -130,7 +130,11 @@ namespace FluentValidation {
 		// Explicit implementation so it's not exposed necessarily.
 		ICommonContext ICommonContext.ParentContext => _parentContext;
 
-		internal bool ThrowOnFailures { get; set; }
+		/// <summary>
+		/// Whether the root validator should throw an exception when validation fails.
+		/// Defaults to false.
+		/// </summary>
+		public bool ThrowOnFailures { get; internal set; }
 
 		/// <summary>
 		/// Gets or creates generic validation context from non-generic validation context.
