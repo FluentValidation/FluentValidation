@@ -23,6 +23,7 @@ namespace FluentValidation.Validators {
 	using System.Collections.Generic;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using Internal;
 	using Results;
 
 	/// <summary>
@@ -31,7 +32,7 @@ namespace FluentValidation.Validators {
 	/// <typeparam name="T">Root model type</typeparam>
 	/// <typeparam name="TProperty">Base type of property being validated.</typeparam>
 	public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProperty> {
-		readonly Dictionary<Type, IValidator> _derivedValidators = new Dictionary<Type, IValidator>();
+		readonly Dictionary<Type, ValidatorWrapper> _derivedValidators = new Dictionary<Type, ValidatorWrapper>();
 
 		// Need the base constructor call, even though we're just passing null.
 		public PolymorphicValidator() : base((IValidator<TProperty>) null, typeof(IValidator<TProperty>)) {
@@ -41,11 +42,38 @@ namespace FluentValidation.Validators {
 		/// Adds a validator to handle a specific subclass.
 		/// </summary>
 		/// <param name="derivedValidator">The derived validator</param>
+		/// <param name="ruleSets">Optionally specify rulesets to execute. If set, rules not in these rulesets will not be run</param>
 		/// <typeparam name="TDerived"></typeparam>
 		/// <returns></returns>
-		public PolymorphicValidator<T, TProperty> Add<TDerived>(IValidator<TDerived> derivedValidator) where TDerived : TProperty {
+		public PolymorphicValidator<T, TProperty> Add<TDerived>(IValidator<TDerived> derivedValidator, params string[] ruleSets) where TDerived : TProperty {
 			if (derivedValidator == null) throw new ArgumentNullException(nameof(derivedValidator));
-			_derivedValidators[typeof(TDerived)] = derivedValidator;
+			_derivedValidators[typeof(TDerived)] = new ValidatorWrapper(derivedValidator, ruleSets);
+			return this;
+		}
+
+		/// <summary>
+		/// Adds a validator to handle a specific subclass.
+		/// </summary>
+		/// <param name="validatorFactory">The derived validator</param>
+		/// <typeparam name="TDerived"></typeparam>
+		/// <param name="ruleSets">Optionally specify rulesets to execute. If set, rules not in these rulesets will not be run</param>
+		/// <returns></returns>
+		public PolymorphicValidator<T, TProperty> Add<TDerived>(Func<T, IValidator<TDerived>> validatorFactory, params string[] ruleSets) where TDerived : TProperty {
+			if (validatorFactory == null) throw new ArgumentNullException(nameof(validatorFactory));
+			_derivedValidators[typeof(TDerived)] = new ValidatorWrapper(context => validatorFactory((T)context.ParentContext.InstanceToValidate), ruleSets);
+			return this;
+		}
+
+		/// <summary>
+		/// Adds a validator to handle a specific subclass.
+		/// </summary>
+		/// <param name="validatorFactory">The derived validator</param>
+		/// <typeparam name="TDerived"></typeparam>
+		/// <param name="ruleSets">Optionally specify rulesets to execute. If set, rules not in these rulesets will not be run</param>
+		/// <returns></returns>
+		public PolymorphicValidator<T, TProperty> Add<TDerived>(Func<T, TDerived, IValidator<TDerived>> validatorFactory, params string[] ruleSets) where TDerived : TProperty {
+			if (validatorFactory == null) throw new ArgumentNullException(nameof(validatorFactory));
+			_derivedValidators[typeof(TDerived)] = new ValidatorWrapper(context => validatorFactory((T)context.ParentContext.InstanceToValidate, (TDerived)context.PropertyValue), ruleSets);
 			return this;
 		}
 
@@ -54,27 +82,53 @@ namespace FluentValidation.Validators {
 			if (context.PropertyValue == null) return null;
 
 			if (_derivedValidators.TryGetValue(context.PropertyValue.GetType(), out var derivedValidator)) {
-				return new ValidatorWrapper(derivedValidator);
+				return derivedValidator;
 			}
 
 			return null;
 		}
 
+		protected override IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext context, IValidator<TProperty> validator) {
+			// Can't use the base overload as the RuleSets are per inheritance validator.
+
+			var selector = validator is ValidatorWrapper wrapper && wrapper.RuleSets?.Length > 0 ? new RulesetValidatorSelector(wrapper.RuleSets) : null;
+			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
+			var newContext = parentContext.CloneForChildValidator((TProperty)context.PropertyValue, true, selector);
+
+			if(!parentContext.IsChildCollectionContext)
+				newContext.PropertyChain.Add(context.Rule.PropertyName);
+
+			return newContext;
+		}
+
+
 		// This validator is a pass-through to handle the type conversion.
 		private class ValidatorWrapper : IValidator<TProperty> {
 
 			private readonly IValidator _innerValidator;
+			private readonly Func<ICommonContext, IValidator> _validatorFactory;
+			public string[] RuleSets { get; }
 
-			public ValidatorWrapper(IValidator innerValidator) {
+			public ValidatorWrapper(IValidator innerValidator, string[] ruleSets) {
 				_innerValidator = innerValidator;
+				RuleSets = ruleSets;
+			}
+
+			public ValidatorWrapper(Func<ICommonContext, IValidator> validatorFactory, string[] ruleSets) {
+				_validatorFactory = validatorFactory;
+				RuleSets = ruleSets;
 			}
 
 			public ValidationResult Validate(IValidationContext context) {
-				return _innerValidator.Validate(context);
+				return _validatorFactory != null
+					? _validatorFactory(context).Validate(context)
+					: _innerValidator.Validate(context);
 			}
 
 			public Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellation = new CancellationToken()) {
-				return _innerValidator.ValidateAsync(context, cancellation);
+				return _validatorFactory != null
+					? _validatorFactory(context).ValidateAsync(context, cancellation)
+					: _innerValidator.ValidateAsync(context, cancellation);
 			}
 
 			public IValidatorDescriptor CreateDescriptor() {
