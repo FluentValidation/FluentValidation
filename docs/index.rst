@@ -92,6 +92,7 @@ Example
   aspnet
   mvc5
   webapi
+  blazor
 
 .. _advanced-docs:
 .. toctree::
