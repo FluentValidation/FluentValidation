@@ -74,4 +74,4 @@ This project is supported by the [.NET Foundation](https://dotnetfoundation.org)
 
 ### JetBrains 
 
-This project is supported by [JetBrains](https://www.jetbrains.com/), who kindly provide licenses for their software, free of charge, to help with the development of this project. 
+This project is supported by [JetBrains](https://www.jetbrains.com/?from=FluentValidation), who kindly provide licenses for their software, free of charge, to help with the development of this project. 
