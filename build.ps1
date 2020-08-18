@@ -79,14 +79,6 @@ target publish -depends verify-package {
   }
 }
 
-target get-dotnet-version {
-  $json = ConvertFrom-Json (Get-Content "$path/global.json" -Raw)
-  $required_version = $json.sdk.version
-  Write-Host "Required SDK: $required_version"
-  # Special syntax to pass a variable back to azure pipelines.
-  echo "##vso[task.setvariable variable=dotnetVersion]$required_version"
-}
-
 target install-dotnet-core {
   # Find the SDK if there's one already.
   findSdk

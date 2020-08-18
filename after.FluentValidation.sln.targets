@@ -1,4 +1,8 @@
 <Project>
+  <PropertyGroup>
+    <!-- Default CLI builds to Release (IDEs don't make use of this file) -->
+    <Configuration>Release</Configuration>
+  </PropertyGroup>
   <Target Name="AfterClean" AfterTargets="Clean">
     <RemoveDir Directories=".build/packages;.build/Release;.build/Debug" ContinueOnError="True" />
   </Target>
