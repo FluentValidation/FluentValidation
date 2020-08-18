@@ -1,0 +1,5 @@
+<Project>
+  <Target Name="AfterClean" AfterTargets="Clean">
+    <RemoveDir Directories=".build/packages;.build/Release;.build/Debug" ContinueOnError="True" />
+  </Target>
+</Project>

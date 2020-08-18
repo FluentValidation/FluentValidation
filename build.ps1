@@ -21,13 +21,11 @@ $solution_file = Join-Path $path "FluentValidation.sln"
 $nuget_key = Resolve-Path "~/Dropbox/nuget-access-key.txt" -ErrorAction Ignore
 
 target default -depends compile, test, deploy
-target ci -depends install-dotnet-core, ci-set-version, default
-
-$script:version_suffix = ([xml](get-content src/Directory.Build.props)).Project.PropertyGroup.VersionSuffix
+target ci -depends install-dotnet-core, default
 
 target compile {
-  Invoke-Dotnet build $solution_file -c $configuration --no-incremental `
-    /p:VersionSuffix=$script:version_suffix
+  Invoke-Dotnet clean $solution_file -c $configuration
+  Invoke-Dotnet build $solution_file -c $configuration --no-incremental
 }
 
 target test {
@@ -35,15 +33,7 @@ target test {
 }
 
 target deploy {
-  Remove-Item $packages_dir -Force -Recurse -ErrorAction Ignore 2> $null
-  Remove-Item $output_dir -Force -Recurse -ErrorAction Ignore 2> $null
-
-  Invoke-Dotnet pack $solution_file -c $configuration /p:PackageOutputPath=$packages_dir /p:VersionSuffix=$script:version_suffix
-
-  # Copy to output dir
-  Copy-Item "$path\src\FluentValidation\bin\$configuration" -Destination "$output_dir\FluentValidation" -Recurse
-  Copy-Item "$path\src\FluentValidation.AspNetCore\bin\$configuration"  -filter FluentValidation.AspNetCore.* -Destination "$output_dir\FluentValidation.AspNetCore" -Recurse
-  Copy-Item "$path\src\FluentValidation.DependencyInjectionExtensions\bin\$configuration" -Destination "$output_dir\FluentValidation.DependencyInjectionExtensions" -Recurse
+  Invoke-Dotnet pack $solution_file -c $configuration
 }
 
 target verify-package {
@@ -86,13 +76,6 @@ target publish -depends verify-package {
       Invoke-Dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
       write-host
     }
-  }
-}
-
-target ci-set-version {
-  if ($env:BUILD_BUILDNUMBER) {
-    # If there's a build number environment variable provided by CI, use that for the build number suffix.
-    $script:version_suffix = "ci-${env:BUILD_BUILDNUMBER}"
   }
 }
 

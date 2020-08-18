@@ -2,6 +2,8 @@
   <PropertyGroup>
     <VersionPrefix>9.1.2</VersionPrefix>
     <VersionSuffix></VersionSuffix>
+    <!-- Use CI build number as version suffix (if defined) -->
+    <VersionSuffix Condition="'$(BUILD_BUILDNUMBER)'!=''">ci-$(BUILD_BUILDNUMBER)</VersionSuffix>
     <Authors>Jeremy Skinner</Authors>
     <LangVersion>7.3</LangVersion>
     <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
@@ -14,5 +16,6 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)/../FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
+    <PackageOutputPath>$(MSBuildProjectDirectory)/../../.build/packages</PackageOutputPath>
   </PropertyGroup>
 </Project>
