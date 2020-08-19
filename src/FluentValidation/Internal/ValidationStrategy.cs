@@ -70,13 +70,13 @@ namespace FluentValidation.Internal {
 		/// <returns></returns>
 		public ValidationStrategy<T> IncludeRulesNotInRuleSet() {
 			_ruleSets ??= new List<string>();
-			_ruleSets.Add(RulesetValidatorSelector.WildcardRuleSetName);
+			_ruleSets.Add(RulesetValidatorSelector.DefaultRuleSetName);
 			return this;
 		}
 
 		/// <summary>
-		/// Indicates that all rule-sets should be included for validation (the equivalent of calling IncludeRuleSets("*"))
-		/// This method can be combined with IncludeRuleSets and IncludeRulesNotInRuleSet.
+		/// Indicates that all rules should be executed, regardless of whether or not they're in a ruleset.
+		/// This is the equivalent of IncludeRuleSets("*").
 		/// </summary>
 		/// <returns></returns>
 		public ValidationStrategy<T> IncludeAllRuleSets() {

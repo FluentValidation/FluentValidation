@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>9.1.2</VersionPrefix>
+    <VersionPrefix>9.1.3</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <!-- Use CI build number as version suffix (if defined) -->
     <VersionSuffix Condition="'$(BUILD_BUILDNUMBER)'!=''">ci-$(BUILD_BUILDNUMBER)</VersionSuffix>

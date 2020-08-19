@@ -257,10 +257,10 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public async Task Combines_rulesets_and_explicit_properties_async() {
 			var validator = new InlineValidator<Person>();
-			validator.RuleFor(x => x.Forename).NotNull();
-			validator.RuleFor(x => x.Surname).NotNull();
+			validator.RuleFor(x => x.Forename).MustAsync((x,t) => Task.FromResult(x != null));
+			validator.RuleFor(x => x.Surname).MustAsync((x,t) => Task.FromResult(x != null));
 			validator.RuleSet("Test", () => {
-				validator.RuleFor(x => x.Age).GreaterThan(0);
+				validator.RuleFor(x => x.Age).MustAsync((x,t) => Task.FromResult(x > 0));
 			});
 
 			var result = await validator.ValidateAsync(new Person(), options => {
@@ -271,6 +271,82 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(2);
 			result.Errors[0].PropertyName.ShouldEqual("Forename");
 			result.Errors[1].PropertyName.ShouldEqual("Age");
+		}
+
+		[Fact]
+		public void Includes_combination_of_rulesets() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleSet("Test1", () => {
+				validator.RuleFor(x => x.Surname).NotNull();
+			});
+			validator.RuleSet("Test2", () => {
+				validator.RuleFor(x => x.Age).GreaterThan(0);
+			});
+
+			var result = validator.Validate(new Person(), options => {
+				options.IncludeRuleSets("Test1").IncludeRulesNotInRuleSet();
+			});
+
+			result.Errors.Count.ShouldEqual(2);
+			result.Errors[0].PropertyName.ShouldEqual("Forename");
+			result.Errors[1].PropertyName.ShouldEqual("Surname");
+		}
+
+		[Fact]
+		public async Task Includes_combination_of_rulesets_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Forename).MustAsync((x,t) => Task.FromResult(x != null));
+			validator.RuleSet("Test1", () => {
+				validator.RuleFor(x => x.Surname).MustAsync((x,t) => Task.FromResult(x != null));
+			});
+			validator.RuleSet("Test2", () => {
+				validator.RuleFor(x => x.Age).MustAsync((x,t) => Task.FromResult(x > 0));
+			});
+
+			var result = await validator.ValidateAsync(new Person(), options => {
+				options.IncludeRuleSets("Test1").IncludeRulesNotInRuleSet();
+			});
+
+			result.Errors.Count.ShouldEqual(2);
+			result.Errors[0].PropertyName.ShouldEqual("Forename");
+			result.Errors[1].PropertyName.ShouldEqual("Surname");
+		}
+
+		[Fact]
+		public void Includes_all_rulesets() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Forename).NotNull();
+			validator.RuleSet("Test1", () => {
+				validator.RuleFor(x => x.Surname).NotNull();
+			});
+			validator.RuleSet("Test2", () => {
+				validator.RuleFor(x => x.Age).GreaterThan(0);
+			});
+
+			var result = validator.Validate(new Person(), options => {
+				options.IncludeAllRuleSets();
+			});
+
+			result.Errors.Count.ShouldEqual(3);
+		}
+
+		[Fact]
+		public async Task Includes_all_rulesets_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Forename).MustAsync((x,t) => Task.FromResult(x != null));
+			validator.RuleSet("Test1", () => {
+				validator.RuleFor(x => x.Surname).MustAsync((x,t) => Task.FromResult(x != null));
+			});
+			validator.RuleSet("Test2", () => {
+				validator.RuleFor(x => x.Age).MustAsync((x,t) => Task.FromResult(x > 0));
+			});
+
+			var result = await validator.ValidateAsync(new Person(), options => {
+				options.IncludeAllRuleSets();
+			});
+
+			result.Errors.Count.ShouldEqual(3);
 		}
 
 		private void AssertExecuted(ValidationResult result, params string[] names) {
