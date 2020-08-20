@@ -34,8 +34,7 @@ jobs:
       # Use this fork until they have an official solution.
       uses: coderpatros/setup-dotnet@sxs
       with:
-        dotnet-version: $REQUIRED_SDKS
-
+        dotnet-version: ${{ env.RREQUIRED_SDKS }}
     - name: Build and Test
       run: ./build.ps1
       shell: pwsh
