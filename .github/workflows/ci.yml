@@ -15,10 +15,22 @@ jobs:
         os: ['windows-2019', 'ubuntu-20.04']
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout
+      - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Build and Test
-      run: ./build.ps1
+
+    - name: Get SDKs to install
       shell: pwsh
+      # Collect the SDKs we need by parsing global.json
+      # Supplementary sdks are stored in an "others" array.
+      run: |
+        $sdks = @()
+        $json = ConvertFrom-Json (Get-Content global.json -Raw)
+        $sdks = ($json.others + $json.sdk.version) -join ","
+        Write-Output "::set-env name=REQUIRED_SDKS::$sdks"
+    - name: test1
+      echo $REQUIRED_SDKS
+    #- name: Build and Test
+    #  run: ./build.ps1
+    #  shell: pwsh

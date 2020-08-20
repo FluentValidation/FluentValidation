@@ -24,7 +24,6 @@ target default -depends compile, test, deploy
 target ci -depends install-dotnet-core, default
 
 target compile {
-  Invoke-Dotnet clean $solution_file -c $configuration
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental
 }
 
