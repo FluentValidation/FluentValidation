@@ -79,8 +79,6 @@ target publish -depends verify-package {
 }
 
 target install-dotnet-core {
-  # Find the SDK if there's one already.
-  findSdk
   # Version check as $IsWindows, $IsLinux etc are not defined in PS 5, only PS Core.
   $win = (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows)
   $json = ConvertFrom-Json (Get-Content "$path/global.json" -Raw)
@@ -109,11 +107,6 @@ target install-dotnet-core {
 
     $dotnet_path = "$path/.dotnetsdk"
 
-    # If running in azure pipelines, use that as the dotnet install path.
-    if ($env:AGENT_TOOLSDIRECTORY) {
-      $dotnet_path = Join-Path $env:AGENT_TOOLSDIRECTORY dotnet
-    }
-
     Write-Host Installing $json.sdk.version to $dotnet_path
     . $installer -i $dotnet_path -v $json.sdk.version
 
@@ -129,8 +122,9 @@ target install-dotnet-core {
         . $installer -i $dotnet_path -v $_
       }
     }
-    # Set process path again
-    findSdk
+
+    # Tell github about the new SDK location.
+    Write-Output "::add-path::$dotnet_path"
   }
 }
 
@@ -140,23 +134,6 @@ function verify_assembly($path) {
   $search = "PublicKeyToken="
   $token = $asmName.Substring($asmName.IndexOf($search) + $search.Length)
   return $token -eq "7de548da2fbae0f0";
-}
-
-function findSdk() {
-  $dotnet_path = Join-Path $env:AGENT_TOOLSDIRECTORY dotnet
-
-  if (Test-Path $dotnet_path) {
-    Write-Host "Using .NET SDK from $dotnet_path"
-    $env:DOTNET_INSTALL_DIR = $dotnet_path
-
-    if (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows) {
-      $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
-    }
-    else {
-      # Linux uses colon not semicolon, so can't use string interpolation
-      $env:PATH = $env:DOTNET_INSTALL_DIR + ":" + $env:PATH
-    }
-  }
 }
 
 Start-Build $targets
