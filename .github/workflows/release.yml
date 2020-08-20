@@ -47,5 +47,6 @@ jobs:
     - name: Build and Push to NuGet
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       run: ./build.ps1 -t compile,test,deploy,publish-ci
       shell: pwsh

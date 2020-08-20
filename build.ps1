@@ -36,10 +36,6 @@ target deploy {
 }
 
 target verify-package {
-  if (-not (test-path "$nuget_key")) {
-    throw "Could not find the NuGet access key."
-  }
-
   Get-ChildItem $output_dir -Recurse *.dll | ForEach {
     $asm = $_.FullName
     if (! (verify_assembly $asm)) {
@@ -50,6 +46,10 @@ target verify-package {
 }
 
 target publish -depends verify-package {
+  if (-not (test-path "$nuget_key")) {
+    throw "Could not find the NuGet access key."
+  }
+
   $key = get-content $nuget_key
 
   # Find all the packages and display them for confirmation
@@ -77,7 +77,6 @@ target publish -depends verify-package {
     }
   }
 }
-
 
 target publish-ci -depends verify-package {
   if ([string]::IsNullOrEmpty($Env:NUGET_API_KEY)) {
