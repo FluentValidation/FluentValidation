@@ -20,27 +20,26 @@ jobs:
       with:
         fetch-depth: 0
 
-#    - name: Get SDKs to install
-#      shell: pwsh
-#      # Collect the SDKs we need by parsing global.json
-#      # Supplementary sdks are stored in an "others" array.
-#      run: |
-#        $json = ConvertFrom-Json (Get-Content global.json -Raw)
-#        $sdks = ($json.others + $json.sdk.version) -join ","
-#        Write-Output "::set-env name=REQUIRED_SDKS::$sdks"
-
-#    - name: Install .NET SDKs
-#      # Use this fork until they have an official solution.
-#      uses: coderpatros/setup-dotnet@sxs
-#      with:
-#        dotnet-version: ${{ env.RREQUIRED_SDKS }}
+    - name: Get SDKs to install
+      shell: pwsh
+      # Collect the SDKs we need by parsing global.json
+      # Supplementary sdks are stored in an "others" array.
+      run: |
+        $json = ConvertFrom-Json (Get-Content global.json -Raw)
+        $sdks = ($json.others + $json.sdk.version) -join ","
+        Write-Output "::set-env name=REQUIRED_SDKS::$sdks"
 
     # Official actions/setup-dotnet doesn't support multiple side-by-side SDK installation.
     # Remove workaround once https://github.com/actions/setup-dotnet/issues/25 is fixed
     - name: Install .NET SDKs
       uses: JeremySkinner/global-json-dotnet-install@master
-      #with:
+      with:
+        versions: ${{ env.REQUIRED_SDKS }}
       #  path: FluentValidation
+#    - name: Install .NET SDKs
+#      uses: actions/setup-dotnet@v1
+#      with:
+#        dotnet-version: ${{ env.REQUIRED_SDKS }}
     - name: Build and Test
       run: ./build.ps1
       shell: pwsh
