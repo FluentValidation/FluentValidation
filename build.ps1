@@ -126,6 +126,9 @@ target install-dotnet-core {
     # Tell github about the new SDK location.
     Write-Output "::add-path::$dotnet_path"
   }
+  else {
+    Write-Host "SDK $required_version already installed"
+  }
 }
 
 function verify_assembly($path) {
