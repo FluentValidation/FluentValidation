@@ -30,14 +30,15 @@ jobs:
 #        Write-Output "::set-env name=REQUIRED_SDKS::$sdks"
 
 #    - name: Install .NET SDKs
-#      # Official actions/setup-dotnet doesn't support multiple side-by-side SDK installation.
 #      # Use this fork until they have an official solution.
 #      uses: coderpatros/setup-dotnet@sxs
 #      with:
 #        dotnet-version: ${{ env.RREQUIRED_SDKS }}
+# Official actions/setup-dotnet doesn't support multiple side-by-side SDK installation.
     - name: Install .NET SDKs
-      shell: pwsh
-      run: ./build.ps1 -t install-dotnet-core
+      uses: JeremySkinner/global-json-dotnet-install@master
+      #with:
+      #  path: FluentValidation
     - name: Build and Test
       run: ./build.ps1
       shell: pwsh
