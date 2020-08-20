@@ -78,56 +78,20 @@ target publish -depends verify-package {
   }
 }
 
-target install-dotnet-core {
-  # Version check as $IsWindows, $IsLinux etc are not defined in PS 5, only PS Core.
-  $win = (($PSVersionTable.PSVersion.Major -le 5) -or $IsWindows)
-  $json = ConvertFrom-Json (Get-Content "$path/global.json" -Raw)
-  $required_version = $json.sdk.version
-  # If there's a version mismatch with what's defined in global.json then a
-  # call to dotnet --version will generate an error.
-  try { dotnet --version 2>&1>$null } catch { $install_sdk = $true }
 
-  if ($global:LASTEXITCODE) {
-    $install_sdk = $true;
-    $global:LASTEXITCODE = 0;
+target publish-ci -depends verify-package {
+  if ([string]::IsNullOrEmpty($Env:NUGET_API_KEY)) {
+    throw "NUGET_API_KEY is not set. "
   }
 
-  if ($install_sdk) {
-    $installer = $null;
-    if ($win) {
-      $installer = "$build_dir/dotnet-installer.ps1"
-      (New-Object System.Net.WebClient).DownloadFile("https://dot.net/v1/dotnet-install.ps1", $installer);
-    }
-    else {
-      $installer = "$build_dir/dotnet-installer"
-      write-host Downloading installer to $installer
-      curl https://dot.net/v1/dotnet-install.sh -L --output $installer
-      chmod +x $installer
-    }
+  $packages = dir $packages_dir -Filter "*.nupkg"
+  write-host "Packages to upload:"
+  $packages | ForEach-Object { write-host $_.Name }
 
-    $dotnet_path = "$path/.dotnetsdk"
-
-    Write-Host Installing $json.sdk.version to $dotnet_path
-    . $installer -i $dotnet_path -v $json.sdk.version
-
-    # Collect installed SDKs.
-    $sdks = & "$dotnet_path/dotnet" --list-sdks | ForEach-Object {
-      $_.Split(" ")[0]
-    }
-
-    # Install any other SDKs required. Only bother installing if not installed already.
-    $json.others | Foreach-Object {
-      if (!($sdks -contains $_)) {
-        Write-Host Installing $_
-        . $installer -i $dotnet_path -v $_
-      }
-    }
-
-    # Tell github about the new SDK location.
-    Write-Output "::add-path::$dotnet_path"
-  }
-  else {
-    Write-Host "SDK $required_version already installed"
+  $packages | ForEach-Object {
+    $package = $_.FullName
+    Write-Host "Uploading $package"
+    Write-Host
   }
 }
 

@@ -1,4 +1,9 @@
-name: CI
+name: Release
+
+#on:
+#  push:
+#    tags:
+#    - '*.*.*'
 
 on:
   push:
@@ -10,10 +15,7 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: ['windows-2019', 'ubuntu-20.04']
-    runs-on: ${{ matrix.os }}
+    runs-on: 'windows-2019'
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -42,6 +44,8 @@ jobs:
       with:
         versions: ${{ env.REQUIRED_SDKS }}
 
-    - name: Build and Test
-      run: ./build.ps1
+    - name: Build and Push to NuGet
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: ./build.ps1 -t compile,test,deploy,publish-ci
       shell: pwsh
