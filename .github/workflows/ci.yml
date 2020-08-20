@@ -15,7 +15,7 @@ jobs:
         os: ['windows-2019', 'ubuntu-20.04']
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout
+    - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
@@ -30,7 +30,7 @@ jobs:
         $sdks = ($json.others + $json.sdk.version) -join ","
         Write-Output "::set-env name=REQUIRED_SDKS::$sdks"
     - name: test1
-      echo $REQUIRED_SDKS
+      run: echo $REQUIRED_SDKS
     #- name: Build and Test
     #  run: ./build.ps1
     #  shell: pwsh
