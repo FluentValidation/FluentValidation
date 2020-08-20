@@ -46,51 +46,47 @@ target verify-package {
 }
 
 target publish -depends verify-package {
-  if (-not (test-path "$nuget_key")) {
-    throw "Could not find the NuGet access key."
-  }
+  $interactive = $true
+  $key = $Env:NUGET_API_KEY
 
-  $key = get-content $nuget_key
+  if ($key) {
+    $interactive = $false
+  }
+  elseif (test-path "$nuget_key") {
+    $key = get-content $nuget_key
+    $interactive = $true
+  }
+  else {
+    throw "NUGET_API_KEY or local key not set"
+  }
 
   # Find all the packages and display them for confirmation
   $packages = dir $packages_dir -Filter "*.nupkg"
   write-host "Packages to upload:"
   $packages | ForEach-Object { write-host $_.Name }
 
-  # Ensure we haven't run this by accident.
-  $result = New-Prompt "Upload Packages" "Do you want to upload the NuGet packages to the NuGet server?" @(
-    @("&No", "Does not upload the packages."),
-    @("&Yes", "Uploads the packages.")
-  )
+  if ($interactive) {
+    # Ensure we haven't run this by accident.
+    $proceed = New-Prompt "Upload Packages" "Do you want to upload the NuGet packages to the NuGet server?" @(
+      @("&No", "Does not upload the packages."),
+      @("&Yes", "Uploads the packages.")
+    )
+  }
+  else {
+    $proceed = 1;
+  }
 
   # Cancelled
-  if ($result -eq 0) {
+  if ($proceed -eq 0) {
     "Upload aborted"
   }
   # upload
-  elseif ($result -eq 1) {
+  elseif ($proceed -eq 1) {
     $packages | foreach {
       $package = $_.FullName
-      write-host "Uploading $package"
-      Invoke-Dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
-      write-host
+      Write-Host "Uploading $package"
+      Write-Host
     }
-  }
-}
-
-target publish-ci -depends verify-package {
-  if ([string]::IsNullOrEmpty($Env:NUGET_API_KEY)) {
-    throw "NUGET_API_KEY is not set. "
-  }
-
-  $packages = dir $packages_dir -Filter "*.nupkg"
-  write-host "Packages to upload:"
-  $packages | ForEach-Object { write-host $_.Name }
-
-  $packages | ForEach-Object {
-    $package = $_.FullName
-    Write-Host "Uploading $package"
-    Write-Host
   }
 }
 
