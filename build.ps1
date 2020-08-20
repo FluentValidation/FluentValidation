@@ -85,6 +85,7 @@ target publish -depends verify-package {
     $packages | foreach {
       $package = $_.FullName
       Write-Host "Uploading $package"
+      Invoke-Dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
       Write-Host
     }
   }
