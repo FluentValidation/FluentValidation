@@ -24,6 +24,7 @@ namespace FluentValidation.Validators {
 		private MessageFormatter _messageFormatter;
 		private bool _propertyValueSet = false;
 		private object _propertyValue;
+		private Lazy<object> _propertyValueAccessor;
 
 		public IValidationContext ParentContext { get; private set; }
 		public PropertyRule Rule { get; private set; }
@@ -38,10 +39,16 @@ namespace FluentValidation.Validators {
 		//to allow the delegating validator to cancel validation before value is obtained
 		public object PropertyValue {
 			get {
+				if (_propertyValueAccessor != null) {
+					return _propertyValueAccessor.Value;
+				}
+
 				if (_propertyValueSet) {
 					return _propertyValue;
 				}
 
+				// TODO: This is for backwards compatibility. Remove this for 10.0 as the value will always be passed
+				// via the accessor.
 				_propertyValue = Rule.GetPropertyValue(ParentContext.InstanceToValidate);
 				_propertyValueSet = true;
 				return _propertyValue;
@@ -51,6 +58,7 @@ namespace FluentValidation.Validators {
 		// Explicit implementation so we don't have to expose the base interface.
 		ICommonContext ICommonContext.ParentContext => ParentContext;
 
+		[Obsolete("This constructor will be removed from FluentValidation 10. Use the constructor that receives a property value or an accessor instead.")]
 		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName) {
 			ParentContext = parentContext;
 			Rule = rule;
@@ -64,5 +72,14 @@ namespace FluentValidation.Validators {
 			_propertyValue = propertyValue;
 			_propertyValueSet = true;
 		}
+
+		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, Lazy<object> propertyValueAccessor) {
+			ParentContext = parentContext;
+			Rule = rule;
+			PropertyName = propertyName;
+			_propertyValueAccessor = propertyValueAccessor;
+		}
+
+
 	}
 }

@@ -81,7 +81,16 @@ namespace FluentValidation.Internal {
 				propertyName = InferPropertyName(Expression);
 			}
 
-			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
+			PropertyValidatorContext propertyContext;
+			// TODO: For FV10 this will come as a parameter rather than in RootContextData.
+			if (context.RootContextData.TryGetValue("__FV_CurrentAccessor", out var a) && a is Lazy<object> accessor) {
+				propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
+			}
+			else {
+#pragma warning disable 618
+				propertyContext = new PropertyValidatorContext(context, this, propertyName);
+#pragma warning restore 618
+			}
 
 			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			if (validator.Options.AsyncCondition != null && !await validator.Options.AsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
@@ -159,7 +168,16 @@ namespace FluentValidation.Internal {
 				propertyName = InferPropertyName(Expression);
 			}
 
-			var propertyContext = new PropertyValidatorContext(context, this, propertyName);
+			PropertyValidatorContext propertyContext;
+			// TODO: For FV10 this will come as a parameter rather than in RootContextData.
+			if (context.RootContextData.TryGetValue("__FV_CurrentAccessor", out var a) && a is Lazy<object> accessor) {
+				propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
+			}
+			else {
+#pragma warning disable 618
+				propertyContext = new PropertyValidatorContext(context, this, propertyName);
+#pragma warning restore 618
+			}
 
 			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 
