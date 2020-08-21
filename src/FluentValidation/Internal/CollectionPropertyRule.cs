@@ -180,6 +180,8 @@ namespace FluentValidation.Internal {
 			}
 
 			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
+			// There's no need to check for the AsyncCondition here. If the validator has an async condition, then
+			// the parent PropertyRule will call InvokePropertyValidatorAsync instead.
 
 			var results = new List<ValidationFailure>();
 			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TElement>;
