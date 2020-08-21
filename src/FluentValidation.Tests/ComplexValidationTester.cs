@@ -189,6 +189,33 @@ namespace FluentValidation.Tests {
 			addressValidator.WasCalledAsync.ShouldEqual(true);
 		}
 
+		[Fact]
+		public void Multiple_rules_in_chain_with_childvalidator_shouldnt_reuse_accessor() {
+			var validator = new InlineValidator<Person>();
+			var addrValidator = new InlineValidator<Address>();
+			addrValidator.RuleFor(x => x.Line1).NotNull();
+
+			validator.RuleFor(x => x.Address).SetValidator(addrValidator)
+				.Must(a => a != null);
+
+			var result = validator.Validate(new Person() {Address = new Address()});
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+
+		[Fact]
+		public async Task Multiple_rules_in_chain_with_childvalidator_shouldnt_reuse_accessor_async() {
+			var validator = new InlineValidator<Person>();
+			var addrValidator = new InlineValidator<Address>();
+			addrValidator.RuleFor(x => x.Line1).MustAsync((l, t) => Task.FromResult(l != null));
+
+			validator.RuleFor(x => x.Address).SetValidator(addrValidator)
+				.MustAsync((a, t) => Task.FromResult(a != null));
+
+			var result = await validator.ValidateAsync(new Person() {Address = new Address()});
+			result.Errors.Count.ShouldEqual(1);
+		}
+
         public class TestObject
         {
             public TestDetailObject Foo1 { get; set; }

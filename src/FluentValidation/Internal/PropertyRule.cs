@@ -28,6 +28,10 @@ namespace FluentValidation.Internal {
 	using Results;
 	using Validators;
 
+	public class PropertyRule<T, TProperty> {
+
+	}
+
 	/// <summary>
 	/// Defines a rule associated with a property.
 	/// </summary>
@@ -272,12 +276,14 @@ namespace FluentValidation.Internal {
 			var failures = new List<ValidationFailure>();
 			var accessor = new Lazy<object>(() => GetPropertyValue(context.InstanceToValidate), LazyThreadSafetyMode.None);
 
-			// TODO: For FV 10 don't store the accessor in the context. Instead add it as an argument to InvokePropertyValidator
-			// Do not do this in 9.x as it'd be a breaking change.
-			context.RootContextData["__FV_CurrentAccessor"] = accessor;
-
 			// Invoke each validator and collect its results.
 			foreach (var validator in _validators) {
+				// TODO: For FV 10 don't store the accessor in the context. Instead add it as an argument to InvokePropertyValidator
+				// Do not do this in 9.x as it'd be a breaking change.
+				// This must be done *inside* the foreach loop to ensure it's reset for each iteration of the loop.
+				// child validators will have replaced it, so ensure it's reset for each iteration.
+				context.RootContextData["__FV_CurrentAccessor"] = accessor;
+
 				IEnumerable<ValidationFailure> results;
 				if (validator.ShouldValidateAsynchronously(context))
 					//TODO: For FV 9 by default disallow invocation of async validators when running synchronously.
@@ -356,13 +362,15 @@ namespace FluentValidation.Internal {
 			var failures = new List<ValidationFailure>();
 			var accessor = new Lazy<object>(() => GetPropertyValue(context.InstanceToValidate), LazyThreadSafetyMode.None);
 
-			// TODO: For FV 10 don't store the accessor in the context. Instead add it as an argument to InvokePropertyValidator
-			// Do not do this in 9.x as it'd be a breaking change.
-			context.RootContextData["__FV_CurrentAccessor"] = accessor;
-
 			// Invoke each validator and collect its results.
 			foreach (var validator in _validators) {
 				cancellation.ThrowIfCancellationRequested();
+
+				// TODO: For FV 10 don't store the accessor in the context. Instead add it as an argument to InvokePropertyValidator
+				// Do not do this in 9.x as it'd be a breaking change.
+				// This must be done *inside* the foreach loop to ensure it's reset for each iteration of the loop.
+				// child validators will have replaced it, so ensure it's reset for each iteration.
+				context.RootContextData["__FV_CurrentAccessor"] = accessor;
 
 				IEnumerable<ValidationFailure> results;
 				if (validator.ShouldValidateAsynchronously(context))
