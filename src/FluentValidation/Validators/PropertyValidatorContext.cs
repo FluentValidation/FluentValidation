@@ -22,7 +22,8 @@ namespace FluentValidation.Validators {
 
 	public class PropertyValidatorContext : ICommonContext {
 		private MessageFormatter _messageFormatter;
-		private readonly Lazy<object> _propertyValueContainer;
+		private bool _propertyValueSet = false;
+		private object _propertyValue;
 
 		public IValidationContext ParentContext { get; private set; }
 		public PropertyRule Rule { get; private set; }
@@ -35,7 +36,17 @@ namespace FluentValidation.Validators {
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
-		public object PropertyValue => _propertyValueContainer.Value;
+		public object PropertyValue {
+			get {
+				if (_propertyValueSet) {
+					return _propertyValue;
+				}
+
+				_propertyValue = Rule.GetPropertyValue(ParentContext.InstanceToValidate);
+				_propertyValueSet = true;
+				return _propertyValue;
+			}
+		}
 
 		// Explicit implementation so we don't have to expose the base interface.
 		ICommonContext ICommonContext.ParentContext => ParentContext;
@@ -44,14 +55,14 @@ namespace FluentValidation.Validators {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
-			_propertyValueContainer = new Lazy<object>(() => rule.GetPropertyValue(parentContext.InstanceToValidate));
 		}
 
 		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
-			_propertyValueContainer = new Lazy<object>(() => propertyValue);
+			_propertyValue = propertyValue;
+			_propertyValueSet = true;
 		}
 	}
 }
