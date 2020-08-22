@@ -46,6 +46,7 @@ Example
   installation
   start
   collections
+  inheritance
   rulesets
   including-rules
   upgrading-to-9
