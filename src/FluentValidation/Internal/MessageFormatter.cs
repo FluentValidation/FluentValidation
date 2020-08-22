@@ -78,6 +78,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="additionalArgs">Additional arguments</param>
 		/// <returns></returns>
+		[Obsolete("AppendAdditionalArguments will be removed in FluentValidation 10. Please construct your error message with a function instead.")]
 		public MessageFormatter AppendAdditionalArguments(params object[] additionalArgs) {
 			_additionalArguments = additionalArgs;
 			_shouldUseAdditionalArgs = _additionalArguments != null && _additionalArguments.Length > 0;
@@ -101,6 +102,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Additional arguments to use
 		/// </summary>
+		[Obsolete("AdditionalArguments will be removed in FluentValidation 10. Please construct your error message with a function instead.")]
 		public object[] AdditionalArguments => _additionalArguments;
 
 		/// <summary>

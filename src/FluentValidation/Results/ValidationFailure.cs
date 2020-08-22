@@ -80,6 +80,7 @@ namespace FluentValidation.Results {
 		/// Same formatted message can be reused in UI and with same number of format placeholders
 		/// Like "Value {0} that you entered should be {1}"
 		/// </summary>
+		[Obsolete("FormattedMessageArguments is unused and will be removed in FluentValidation 10.")]
 		public object[] FormattedMessageArguments { get; set; }
 
 		/// <summary>
