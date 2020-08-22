@@ -1,6 +1,6 @@
 # Inheritance Validation
 
-As of FluentValidation 9.2, if your object contains a property which is a base class or interface, you can set up specific [child validators](start.html#complex-properties) for individual subclasses/implmenetors.
+As of FluentValidation 9.2, if your object contains a property which is a base class or interface, you can set up specific [child validators](start.html#complex-properties) for individual subclasses/implementors.
 
 For example, imaging the following example:
 
