@@ -108,11 +108,11 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
 
-		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values)	{
+		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values) {
 			return _keyRegex.Replace(template, m =>	{
 				var key = m.Groups[1].Value;
 
-				if (!values.ContainsKey(key))
+				if (!values.TryGetValue(key, out var value))
 					return m.Value; // No placeholder / value
 
 				var format = m.Groups[2].Success // Format specified?
@@ -120,8 +120,8 @@ namespace FluentValidation.Internal {
 					: null;
 
 				return format == null
-					? values[key]?.ToString()
-					: string.Format(format, values[key]);
+					? value?.ToString()
+					: string.Format(format, value);
 			});
 		}
 	}
