@@ -1025,6 +1025,21 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(validator);
 		}
 
+		/// <summary>
+		/// Defines one or more validators that can be used to validate sub-classes or implementors
+		/// in an inheritance hierarchy. This is useful when the property being validated is an interface
+		/// or base-class, but you want to define rules for properties of a specific subclass.
+		/// </summary>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="validatorConfiguration">Callback for setting up the inheritance validators.</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> SetInheritanceValidator<T,TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<PolymorphicValidator<T, TProperty>> validatorConfiguration) {
+			if (validatorConfiguration == null) throw new ArgumentNullException(nameof(validatorConfiguration));
+			var validator = new PolymorphicValidator<T, TProperty>();
+			validatorConfiguration(validator);
+			return ruleBuilder.SetValidator(validator);
+		}
+
 		private static string GetDisplayName<T, TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {
 			return ValidatorOptions.Global.DisplayNameResolver(typeof(T), member, expression) ?? member?.Name.SplitPascalCase();
 		}

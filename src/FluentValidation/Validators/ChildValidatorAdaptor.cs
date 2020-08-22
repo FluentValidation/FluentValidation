@@ -52,7 +52,7 @@ namespace FluentValidation.Validators {
 				return Enumerable.Empty<ValidationFailure>();
 			}
 
-			var newContext = CreateNewValidationContextForChildValidator(context.PropertyValue, context);
+			var newContext = CreateNewValidationContextForChildValidator(context, validator);
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -86,7 +86,7 @@ namespace FluentValidation.Validators {
 				return Enumerable.Empty<ValidationFailure>();
 			}
 
-			var newContext = CreateNewValidationContextForChildValidator(context.PropertyValue, context);
+			var newContext = CreateNewValidationContextForChildValidator(context, validator);
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -106,6 +106,18 @@ namespace FluentValidation.Validators {
 			return _validatorProvider != null ? _validatorProvider(context) : _validator;
 		}
 
+		protected virtual IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext context, IValidator<TProperty> validator) {
+			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
+			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
+			var newContext = parentContext.CloneForChildValidator((TProperty)context.PropertyValue, PassThroughParentContext, selector);
+
+			if(!parentContext.IsChildCollectionContext)
+				newContext.PropertyChain.Add(context.Rule.PropertyName);
+
+			return newContext;
+		}
+
+		[Obsolete("This overload is not used and will be removed from FluentValidation 10.")]
 		protected IValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
 			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
 			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
