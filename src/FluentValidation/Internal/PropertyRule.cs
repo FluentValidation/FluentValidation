@@ -28,10 +28,6 @@ namespace FluentValidation.Internal {
 	using Results;
 	using Validators;
 
-	public class PropertyRule<T, TProperty> {
-
-	}
-
 	/// <summary>
 	/// Defines a rule associated with a property.
 	/// </summary>
