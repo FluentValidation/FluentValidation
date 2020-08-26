@@ -7,6 +7,7 @@ FluentValidation 9 is a major release. Please read the upgrade notes at https://
 
 Changes in 9.2.0:
 * Add inheritance validator
+* Performance improvements
 
 Changes in 9.1.3:
 * Fix an issue with IncludeRulesNotInRuleSet not working correctly
