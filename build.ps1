@@ -32,6 +32,9 @@ target test {
 }
 
 target deploy {
+  Remove-Item $packages_dir -Force -Recurse -ErrorAction Ignore 2> $null
+  Remove-Item $output_dir -Force -Recurse -ErrorAction Ignore 2> $null
+
   Invoke-Dotnet pack $solution_file -c $configuration
 }
 
@@ -60,35 +63,7 @@ target publish -depends verify-package {
     throw "NUGET_API_KEY or local key not set"
   }
 
-  # Find all the packages and display them for confirmation
-  $packages = dir $packages_dir -Filter "*.nupkg"
-  write-host "Packages to upload:"
-  $packages | ForEach-Object { write-host $_.Name }
-
-  if ($interactive) {
-    # Ensure we haven't run this by accident.
-    $proceed = New-Prompt "Upload Packages" "Do you want to upload the NuGet packages to the NuGet server?" @(
-      @("&No", "Does not upload the packages."),
-      @("&Yes", "Uploads the packages.")
-    )
-  }
-  else {
-    $proceed = 1;
-  }
-
-  # Cancelled
-  if ($proceed -eq 0) {
-    "Upload aborted"
-  }
-  # upload
-  elseif ($proceed -eq 1) {
-    $packages | foreach {
-      $package = $_.FullName
-      Write-Host "Uploading $package"
-      Invoke-Dotnet nuget push $package --api-key $key --source "https://www.nuget.org/api/v2/package"
-      Write-Host
-    }
-  }
+  Nuget-Push -directory $packages_dir -key $key -prompt $interactive
 }
 
 function verify_assembly($path) {
