@@ -25,7 +25,7 @@ namespace FluentValidation.AspNetCore {
 	using FluentValidation.Internal;
 	using FluentValidation.Validators;
 	using Microsoft.AspNetCore.Http;
-#if NETCOREAPP2_1 || NETCOREAPP2_2
+#if NETSTANDARD2_0 || NETCOREAPP2_1 || NETCOREAPP2_2
 	using Microsoft.AspNetCore.Mvc.DataAnnotations.Internal;
 #else
 	using Microsoft.AspNetCore.Mvc.DataAnnotations;

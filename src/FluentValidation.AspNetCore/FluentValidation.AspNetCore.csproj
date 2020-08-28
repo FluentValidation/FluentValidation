@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>FluentValidation.AspNetCore</AssemblyName>
     <PackageId>FluentValidation.AspNetCore</PackageId>
     <Product>FluentValidation.AspNetCore</Product>
@@ -71,8 +71,8 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0' Or '$(TargetFramework)'=='netcoreapp2.1'">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
