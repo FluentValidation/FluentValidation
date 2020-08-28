@@ -63,7 +63,7 @@ Full release notes can be found at https://github.com/JeremySkinner/FluentValida
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
