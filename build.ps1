@@ -21,7 +21,6 @@ $solution_file = Join-Path $path "FluentValidation.sln"
 $nuget_key = Resolve-Path "~/Dropbox/nuget-access-key.txt" -ErrorAction Ignore
 
 target default -depends compile, test, deploy
-target ci -depends install-dotnet-core, default
 
 target compile {
   Invoke-Dotnet build $solution_file -c $configuration --no-incremental
@@ -38,17 +37,7 @@ target deploy {
   Invoke-Dotnet pack $solution_file -c $configuration
 }
 
-target verify-package {
-  Get-ChildItem $output_dir -Recurse *.dll | ForEach {
-    $asm = $_.FullName
-    if (! (verify_assembly $asm)) {
-      throw "$asm is not signed"
-    }
-  }
-  write-host Package verified
-}
-
-target publish -depends verify-package {
+target publish {
   $interactive = $true
   $key = $Env:NUGET_API_KEY
 
@@ -64,14 +53,6 @@ target publish -depends verify-package {
   }
 
   Nuget-Push -directory $packages_dir -key $key -prompt $interactive
-}
-
-function verify_assembly($path) {
-  $asm = [System.Reflection.Assembly]::LoadFile($path);
-  $asmName = $asm.GetName().ToString();
-  $search = "PublicKeyToken="
-  $token = $asmName.Substring($asmName.IndexOf($search) + $search.Length)
-  return $token -eq "7de548da2fbae0f0";
 }
 
 Start-Build $targets
