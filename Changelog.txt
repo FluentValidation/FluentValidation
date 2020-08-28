@@ -1,3 +1,6 @@
+8.6.3 - 28 August 2020
+Remove dependency on razor.
+
 8.6.2 - 29 February 2020
 Fix CollectionIndex placeholder not working with async workflow.
 
