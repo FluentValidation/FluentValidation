@@ -189,7 +189,7 @@ public ActionResult DoSomething() {
 }
 ```
 
-The AddToModelState method is implemented as an extension method, and requires a using statement for the FluentValidation namespace. Note that the second parameter is an optional model name, which will cause property names in the ModelState to be prefixed (eg a call to AddToModelState(ModelState, "Foo") will generate property names of "Foo.Id" and "Foo.Name" etc rather than just "Id" or "Name")
+The `AddToModelState` method is implemented as an extension method, and requires a using statement for the `FluentValidation.AspNetCore` namespace. Note that the second parameter is an optional model name, which will cause property names in the ModelState to be prefixed (eg a call to `AddToModelState(ModelState, "Foo")` will generate property names of "Foo.Id" and "Foo.Name" etc rather than just "Id" or "Name")
 
 ### Validator customization
 
