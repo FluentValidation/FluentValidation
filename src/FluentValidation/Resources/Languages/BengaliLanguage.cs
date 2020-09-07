@@ -19,7 +19,7 @@
 namespace FluentValidation.Resources {
 		using Validators;
 
-		internal class BengaliLanguage : Language {
+	internal class BengaliLanguage : Language {
 		public const string Culture = "bn";
 		public override string Name => Culture;
 
