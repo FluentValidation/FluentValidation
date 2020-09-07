@@ -49,6 +49,7 @@ namespace FluentValidation.Resources {
 				EnglishLanguage.Culture => new EnglishLanguage(),
 				AlbanianLanguage.Culture => new AlbanianLanguage(),
 				ArabicLanguage.Culture => new ArabicLanguage(),
+				BengaliLanguage.Culture => new BengaliLanguage(),
 				ChineseSimplifiedLanguage.Culture => new ChineseSimplifiedLanguage(),
 				ChineseTraditionalLanguage.Culture => new ChineseTraditionalLanguage(),
 				CroatianLanguage.Culture => new CroatianLanguage(),
