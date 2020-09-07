@@ -17,7 +17,7 @@
 #endregion
 
 namespace FluentValidation.Resources {
-		using Validators;
+	using Validators;
 
 	internal class BengaliLanguage : Language {
 		public const string Culture = "bn";
