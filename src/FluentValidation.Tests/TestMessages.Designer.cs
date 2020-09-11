@@ -17,26 +17,26 @@ namespace FluentValidation.Tests {
     [System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class TestMessages {
-        
+
         private static System.Resources.ResourceManager resourceMan;
-        
+
         private static System.Globalization.CultureInfo resourceCulture;
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
         internal TestMessages() {
         }
-        
+
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         public static System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.Equals(null, resourceMan)) {
-                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("FluentValidation.Tests.TestMessages", typeof(TestMessages).GetTypeInfo().Assembly);
+                    System.Resources.ResourceManager temp = new System.Resources.ResourceManager("FluentValidation.Tests.TestMessages", typeof(TestMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-        
+
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         public static System.Globalization.CultureInfo Culture {
             get {
@@ -46,25 +46,25 @@ namespace FluentValidation.Tests {
                 resourceCulture = value;
             }
         }
-        
+
         public static string notnull_error {
             get {
                 return ResourceManager.GetString("notnull_error", resourceCulture);
             }
         }
-        
+
         public static string PlaceholderMessage {
             get {
                 return ResourceManager.GetString("PlaceholderMessage", resourceCulture);
             }
         }
-        
+
         public static string PropertyName {
             get {
                 return ResourceManager.GetString("PropertyName", resourceCulture);
             }
         }
-        
+
         public static string ValueOfForPropertyNameIsNotValid {
             get {
                 return ResourceManager.GetString("ValueOfForPropertyNameIsNotValid", resourceCulture);

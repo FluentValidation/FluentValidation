@@ -92,7 +92,7 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Transient</param>
 		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Transient) {
-			return RegisterValidatorsFromAssembly(type.GetTypeInfo().Assembly, filter, lifetime);
+			return RegisterValidatorsFromAssembly(type.Assembly, filter, lifetime);
 		}
 
 		/// <summary>

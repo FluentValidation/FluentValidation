@@ -155,7 +155,7 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		private bool TypeAllowsNullValue(Type type) {
-			return (!type.GetTypeInfo().IsValueType || Nullable.GetUnderlyingType(type) != null);
+			return (!type.IsValueType || Nullable.GetUnderlyingType(type) != null);
 		}
 	}
 

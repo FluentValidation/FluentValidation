@@ -88,7 +88,7 @@ namespace FluentValidation.Attributes {
 				return null;
 			}
 
-			var attribute = type.GetTypeInfo().GetCustomAttribute<ValidatorAttribute>();
+			var attribute = type.GetCustomAttribute<ValidatorAttribute>();
 
 			return GetValidator(attribute);
 		}

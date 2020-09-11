@@ -47,7 +47,7 @@ namespace FluentValidation.Validators {
 		}
 
 		private void CheckTypeIsEnum(Type enumType) {
-			if (!enumType.GetTypeInfo().IsEnum) {
+			if (!enumType.IsEnum) {
 				string message = $"The type '{enumType.Name}' is not an enum and can't be used with IsEnumName.";
 				throw new ArgumentOutOfRangeException(nameof(enumType), message);
 			}

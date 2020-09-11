@@ -94,8 +94,8 @@ namespace FluentValidation.AspNetCore {
 		public IValidatorInterceptor GetInterceptor() {
 			if (Interceptor == null) return null;
 
-			if (!typeof(IValidatorInterceptor) .GetTypeInfo().IsAssignableFrom(Interceptor)) {
-				if (typeof(IActionContextValidatorInterceptor).GetTypeInfo().IsAssignableFrom(Interceptor)) return null;
+			if (!typeof(IValidatorInterceptor).IsAssignableFrom(Interceptor)) {
+				if (typeof(IActionContextValidatorInterceptor).IsAssignableFrom(Interceptor)) return null;
 				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
 			}
 
@@ -111,8 +111,8 @@ namespace FluentValidation.AspNetCore {
 		internal IActionContextValidatorInterceptor GetActionContextInterceptor() {
 			if (Interceptor == null) return null;
 
-			if (!typeof(IActionContextValidatorInterceptor) .GetTypeInfo().IsAssignableFrom(Interceptor)) {
-				if (typeof(IValidatorInterceptor).GetTypeInfo().IsAssignableFrom(Interceptor)) return null;
+			if (!typeof(IActionContextValidatorInterceptor).IsAssignableFrom(Interceptor)) {
+				if (typeof(IValidatorInterceptor).IsAssignableFrom(Interceptor)) return null;
 				throw new InvalidOperationException("Type {0} is not an IActionContextValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IActionContextValidatorInterceptor.");
 			}
 

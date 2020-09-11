@@ -25,8 +25,8 @@
 
 			Assert.NotEqual(compiled1, compiled2);
 
-			var compiled3 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetTypeInfo().GetProperty("Id"), expr1);
-			var compiled4 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetTypeInfo().GetProperty("Id"), expr1);
+			var compiled3 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetProperty("Id"), expr1);
+			var compiled4 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetProperty("Id"), expr1);
 
 			Assert.Equal(compiled3, compiled4);
 		}
