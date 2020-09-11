@@ -108,6 +108,7 @@ namespace FluentValidation.AspNetCore {
 			return instance;
 		}
 
+		[Obsolete]
 		internal IActionContextValidatorInterceptor GetActionContextInterceptor() {
 			if (Interceptor == null) return null;
 

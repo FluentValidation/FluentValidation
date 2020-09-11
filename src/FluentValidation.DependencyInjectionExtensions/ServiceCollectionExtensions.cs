@@ -27,7 +27,7 @@ namespace FluentValidation {
 		/// Adds all validators in specified assemblies
 		/// </summary>
 		/// <param name="services">The collection of services</param>
-		/// <param name="assembly">The assemblies to scan</param>
+		/// <param name="assemblies">The assemblies to scan</param>
 		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
 		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <returns></returns>
