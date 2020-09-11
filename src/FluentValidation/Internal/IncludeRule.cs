@@ -44,7 +44,6 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="validator"></param>
 		/// <param name="cascadeModeThunk"></param>
-		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
 		public static IncludeRule<T> Create(IValidator<T> validator, Func<CascadeMode> cascadeModeThunk) {
 			return new IncludeRule<T>(validator, cascadeModeThunk, typeof(T), typeof(T));
@@ -55,7 +54,6 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="func"></param>
 		/// <param name="cascadeModeThunk"></param>
-		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TValidator"></typeparam>
 		/// <returns></returns>
 		public static IncludeRule<T> Create<TValidator>(Func<T, TValidator> func, Func<CascadeMode> cascadeModeThunk)

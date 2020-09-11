@@ -126,7 +126,7 @@ namespace FluentValidation.Internal {
 				case 1:
 					return _memberNames[0];
 				default:
-					return string.Join(ValidatorOptions.PropertyChainSeparator, _memberNames);
+					return string.Join(ValidatorOptions.Global.PropertyChainSeparator, _memberNames);
 			}
 		}
 

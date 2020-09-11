@@ -32,10 +32,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Transforms the property value before validation occurs.
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="TProperty"></typeparam>
 		/// <typeparam name="TNew"></typeparam>
-		/// <param name="ruleBuilder"></param>
 		/// <param name="transformationFunc"></param>
 		/// <returns></returns>
 		IRuleBuilderInitial<T, TNew> Transform<TNew>(Func<TProperty, TNew> transformationFunc);

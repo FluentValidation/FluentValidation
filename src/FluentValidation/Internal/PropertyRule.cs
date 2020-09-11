@@ -32,10 +32,10 @@ namespace FluentValidation.Internal {
 	/// Defines a rule associated with a property.
 	/// </summary>
 	public class PropertyRule : IValidationRule {
-		readonly List<IPropertyValidator> _validators = new List<IPropertyValidator>();
-		Func<CascadeMode> _cascadeModeThunk = () => ValidatorOptions.CascadeMode;
-		string _propertyDisplayName;
-		string _propertyName;
+		private readonly List<IPropertyValidator> _validators = new List<IPropertyValidator>();
+		private Func<CascadeMode> _cascadeModeThunk;
+		private string _propertyDisplayName;
+		private string _propertyName;
 		private string[] _ruleSet = new string[0];
 		private Func<IValidationContext, bool> _condition;
 		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
@@ -58,7 +58,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that can be invoked to retrieve the value of the property.
 		/// </summary>
-		public Func<object, object> PropertyFunc { get; private protected set; }
+		public Func<object, object> PropertyFunc { get; }
 
 		/// <summary>
 		/// Expression that was used to create the rule.
@@ -123,15 +123,15 @@ namespace FluentValidation.Internal {
 			_cascadeModeThunk = cascadeModeThunk;
 
 			DependentRules = new List<IValidationRule>();
-			PropertyName = ValidatorOptions.PropertyNameResolver(containerType, member, expression);
-			DisplayName = new LazyStringSource(x =>  ValidatorOptions.DisplayNameResolver(containerType, member, expression));
+			PropertyName = ValidatorOptions.Global.PropertyNameResolver(containerType, member, expression);
+			DisplayName = new LazyStringSource(x =>  ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression));
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
 		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression) {
-			return Create(expression, () => ValidatorOptions.CascadeMode);
+			return Create(expression, () => ValidatorOptions.Global.CascadeMode);
 		}
 
 		/// <summary>
@@ -195,7 +195,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Dependent rules
 		/// </summary>
-		public List<IValidationRule> DependentRules { get; private set; }
+		public List<IValidationRule> DependentRules { get; }
 
 		public Func<object, object> Transformer { get; set; }
 
@@ -297,7 +297,9 @@ namespace FluentValidation.Internal {
 
 				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 				// then don't continue to the next rule
+#pragma warning disable 618
 				if (hasFailure && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
+#pragma warning restore 618
 					break;
 				}
 			}
@@ -383,7 +385,9 @@ namespace FluentValidation.Internal {
 
 				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 				// then don't continue to the next rule
+#pragma warning disable 618
 				if (hasFailure && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
+#pragma warning restore 618
 					break;
 				}
 			}

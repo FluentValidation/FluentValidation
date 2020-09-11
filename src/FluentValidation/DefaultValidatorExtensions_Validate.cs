@@ -152,7 +152,7 @@ namespace FluentValidation {
 		/// <param name="instance">The object to validate</param>
 		/// <param name="cancellationToken"></param>
 		/// <param name="properties">The names of the properties to validate.</param>
-		/// <returns>A ValidationResult object containing any validation failures.</returns
+		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		[Obsolete("This method will be removed in FluentValidation 10. Instead use ValidateAsync(instance, options => options.IncludeProperties(properties), cancellationToken)")]
 		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, CancellationToken cancellationToken = default, params string[] properties) {
 			return validator.ValidateAsync(instance, options => options.IncludeProperties(properties), cancellationToken);

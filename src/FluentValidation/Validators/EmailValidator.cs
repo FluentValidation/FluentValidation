@@ -66,7 +66,9 @@ namespace FluentValidation.Validators {
 	}
 
 	public class AspNetCoreCompatibleEmailValidator : PropertyValidator, IEmailValidator {
+#pragma warning disable 618
 		public AspNetCoreCompatibleEmailValidator() : base(new LanguageStringSource(nameof(EmailValidator))) {
+#pragma warning restore 618
 
 		}
 

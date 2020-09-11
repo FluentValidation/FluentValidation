@@ -113,7 +113,7 @@ namespace FluentValidation.Validators {
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
 			failure.ErrorCode = (Options.ErrorCodeSource != null)
 				? Options.ErrorCodeSource.GetString(context)
-				: ValidatorOptions.ErrorCodeResolver(this);
+				: ValidatorOptions.Global.ErrorCodeResolver(this);
 
 			if (Options.CustomStateProvider != null) {
 				failure.CustomState = Options.CustomStateProvider(context);

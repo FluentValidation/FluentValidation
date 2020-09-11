@@ -21,10 +21,10 @@ namespace FluentValidation.Internal {
 		/// <param name="bypassCache"></param>
 		/// <returns>Accessor func</returns>
 		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, bool bypassCache = false) {
-			if (member == null || bypassCache || ValidatorOptions.DisableAccessorCache) {
+			if (member == null || bypassCache || ValidatorOptions.Global.DisableAccessorCache) {
 				return expression.Compile();
 			}
-			
+
 			var key = new Key(member, expression);
 			return (Func<T,TProperty>)_cache.GetOrAdd(key, k => expression.Compile());
 		}

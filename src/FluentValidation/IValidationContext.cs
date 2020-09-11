@@ -61,7 +61,7 @@ namespace FluentValidation {
 		/// Creates a new validation context
 		/// </summary>
 		/// <param name="instanceToValidate"></param>
-		public ValidationContext(T instanceToValidate) : this(instanceToValidate, new PropertyChain(), ValidatorOptions.ValidatorSelectors.DefaultValidatorSelectorFactory()) {
+		public ValidationContext(T instanceToValidate) : this(instanceToValidate, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()) {
 		}
 
 		/// <summary>
