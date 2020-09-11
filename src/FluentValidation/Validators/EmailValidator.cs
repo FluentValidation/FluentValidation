@@ -92,7 +92,6 @@ namespace FluentValidation.Validators {
 		}
 	}
 
-	[Obsolete("FluentValidation metadata interfaces are deprecated and will be removed in FluentValidation 10.")]
 	public interface IEmailValidator {
 	}
 }

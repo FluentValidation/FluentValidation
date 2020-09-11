@@ -71,7 +71,6 @@ namespace FluentValidation.Validators {
 		public string Expression { get; }
 	}
 
-	[Obsolete("FluentValidation metadata interfaces are deprecated and will be removed in FluentValidation 10.")]
 	public interface IRegularExpressionValidator : IPropertyValidator {
 		string Expression { get; }
 	}
