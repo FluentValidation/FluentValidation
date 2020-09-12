@@ -95,7 +95,9 @@ namespace FluentValidation.AspNetCore {
 			if (Interceptor == null) return null;
 
 			if (!typeof(IValidatorInterceptor).IsAssignableFrom(Interceptor)) {
+#pragma warning disable 618
 				if (typeof(IActionContextValidatorInterceptor).IsAssignableFrom(Interceptor)) return null;
+#pragma warning restore 618
 				throw new InvalidOperationException("Type {0} is not an IValidatorInterceptor. The Interceptor property of CustomizeValidatorAttribute must implement IValidatorInterceptor.");
 			}
 

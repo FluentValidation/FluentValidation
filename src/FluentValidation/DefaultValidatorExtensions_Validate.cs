@@ -123,11 +123,7 @@ namespace FluentValidation {
 				}
 
 				if (ruleSet != null) {
-					var ruleSetNames = ruleSet.Split(',', ';')
-						.Select(x => x.Trim())
-						.ToArray();
-
-					options.IncludeRuleSets(ruleSetNames);
+					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
 				}
 			});
 		}
@@ -176,11 +172,7 @@ namespace FluentValidation {
 				}
 
 				if (ruleSet != null) {
-					var ruleSetNames = ruleSet.Split(',', ';')
-						.Select(x => x.Trim())
-						.ToArray();
-
-					options.IncludeRuleSets(ruleSetNames);
+					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
 				}
 			}, cancellationToken);
 		}
@@ -195,12 +187,7 @@ namespace FluentValidation {
 		public static void ValidateAndThrow<T>(this IValidator<T> validator, T instance, string ruleSet) {
 			validator.Validate(instance, options => {
 				if (ruleSet != null) {
-					// Legacy: allow multiple rulesets if they're comma separated.
-					var ruleSetNames = ruleSet.Split(',', ';')
-						.Select(x => x.Trim())
-						.ToArray();
-
-					options.IncludeRuleSets(ruleSetNames);
+					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
 				}
 
 				options.ThrowOnFailures();
@@ -218,12 +205,7 @@ namespace FluentValidation {
 		public static async Task ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance, string ruleSet, CancellationToken cancellationToken = default) {
 			await validator.ValidateAsync(instance, options => {
 				if (ruleSet != null) {
-					// Legacy: allow multiple rulesets if they're comma separated.
-					var ruleSetNames = ruleSet.Split(',', ';')
-						.Select(x => x.Trim())
-						.ToArray();
-
-					options.IncludeRuleSets(ruleSetNames);
+					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
 				}
 
 				options.ThrowOnFailures();

@@ -38,6 +38,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
+	[Obsolete]
 	public class SimpleActionContextPropertyInterceptor : FluentValidation.AspNetCore.IActionContextValidatorInterceptor {
 		readonly string[] properties = new[] {"Surname", "Forename"};
 

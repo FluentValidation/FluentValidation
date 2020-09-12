@@ -141,13 +141,33 @@ namespace FluentValidation.TestHelper {
 				.ToArray();
 		}
 
+		// TODO: For FV10, remove the default null form the ruleset parameter, and mark this method as obsolete.
 		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
-			var validationResult = validator.Validate(objectToTest, null, ruleSet: ruleSet);
+			return validator.TestValidate(objectToTest, options => {
+				if (ruleSet != null) {
+					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
+				}
+			});
+		}
+
+		// TODO: For FV10, remove the default null form the ruleset parameter, and mark this method as obsolete.
+		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) where T : class {
+			return await validator.TestValidateAsync(objectToTest, options => {
+				if (ruleSet != null) {
+					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
+				}
+			}, cancellationToken);
+		}
+
+		// TODO: For FV10, Add a default of null to the options parameter.
+		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options) where T : class {
+			var validationResult = validator.Validate(objectToTest, options);
 			return new TestValidationResult<T>(validationResult);
 		}
 
-		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) where T : class {
-			var validationResult = await validator.ValidateAsync(objectToTest, cancellationToken, ruleSet: ruleSet);
+		// TODO: For FV10, Add a default of null to the options parameter.
+		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options, CancellationToken cancellationToken = default) where T : class {
+			var validationResult = await validator.ValidateAsync(objectToTest, options, cancellationToken);
 			return new TestValidationResult<T>(validationResult);
 		}
 

@@ -26,7 +26,7 @@ namespace FluentValidation.Validators {
 	/// </summary>
 	public enum EmailValidationMode {
 		/// <summary>
-		/// Uses a regular expression for email validation. This is the same regex used by <see cref="System.ComponentModel.DataAnnotations.EmailAddressAttribute"/> in .NET 4.x.
+		/// Uses a regular expression for email validation. This is the same regex used by the EmailAddressAttribute in .NET 4.x.
 		/// </summary>
 		[Obsolete("Regex-based email validation is not recommended and is no longer supported.")]
 		Net4xRegex,

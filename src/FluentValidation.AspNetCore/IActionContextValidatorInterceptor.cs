@@ -30,7 +30,7 @@ namespace FluentValidation.AspNetCore {
 		/// Invoked before MVC validation takes place which allows the ValidationContext to be customized prior to validation.
 		/// It should return a ValidationContext object.
 		/// </summary>
-		/// <param name="controllerContext">Action Context</param>
+		/// <param name="actionContext">Action Context</param>
 		/// <param name="validationContext">Validation Context</param>
 		/// <returns>Validation Context</returns>
 		IValidationContext BeforeMvcValidation(ActionContext actionContext, IValidationContext validationContext);

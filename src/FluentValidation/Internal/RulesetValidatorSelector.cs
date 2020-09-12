@@ -82,5 +82,16 @@ namespace FluentValidation.Internal {
 		protected bool IsIncludeRule(IValidationRule rule) {
 			return rule is IIncludeRule;
 		}
+
+		// Prior to 9.1, FV's primary ruleset syntax allowed specifying multiple rulesets
+		// in a single comma-separated string. This approach was deprecated in 9.1 in favour
+		// of the options syntax, but we still need this logic in a couple of places for backwards compat.
+		internal static string[] LegacyRulesetSplit(string ruleSet) {
+			var ruleSetNames = ruleSet.Split(',', ';')
+				.Select(x => x.Trim())
+				.ToArray();
+
+			return ruleSetNames;
+		}
 	}
 }

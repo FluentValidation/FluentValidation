@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,17 +15,17 @@
 // limitations under the License.
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
+
 #endregion
 
 namespace FluentValidation.AspNetCore {
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Internal;
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using FluentValidation.Internal;
-	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.Extensions.DependencyInjection;
 
 	/// <summary>
@@ -81,9 +82,13 @@ namespace FluentValidation.AspNetCore {
 				var interceptor = customizations.GetInterceptor()
 				                  ?? validator as IValidatorInterceptor
 				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IValidatorInterceptor>();
+#pragma warning disable 612
+#pragma warning disable 618
 				var actionContextInterceptor = customizations.GetActionContextInterceptor()
-				                  ?? validator as IActionContextValidatorInterceptor
-				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IActionContextValidatorInterceptor>();
+				                               ?? validator as IActionContextValidatorInterceptor
+				                               ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IActionContextValidatorInterceptor>();
+#pragma warning restore 618
+#pragma warning restore 612
 
 				IValidationContext context = new ValidationContext<object>(mvContext.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
@@ -92,9 +97,9 @@ namespace FluentValidation.AspNetCore {
 				if (interceptor != null && mvContext.ActionContext is ControllerContext) {
 					// Allow the user to provide a customized context
 					// However, if they return null then just use the original context.
-					context = interceptor.BeforeMvcValidation((ControllerContext)mvContext.ActionContext, context) ?? context;
-				} 
-        else if (actionContextInterceptor != null) {
+					context = interceptor.BeforeMvcValidation((ControllerContext) mvContext.ActionContext, context) ?? context;
+				}
+				else if (actionContextInterceptor != null) {
 					context = actionContextInterceptor.BeforeMvcValidation(mvContext.ActionContext, context) ?? context;
 				}
 
@@ -103,9 +108,9 @@ namespace FluentValidation.AspNetCore {
 				if (interceptor != null && mvContext.ActionContext is ControllerContext) {
 					// allow the user to provide a custom collection of failures, which could be empty.
 					// However, if they return null then use the original collection of failures.
-					result = interceptor.AfterMvcValidation((ControllerContext)mvContext.ActionContext, context, result) ?? result;
-				} 
-        else if (actionContextInterceptor != null) {
+					result = interceptor.AfterMvcValidation((ControllerContext) mvContext.ActionContext, context, result) ?? result;
+				}
+				else if (actionContextInterceptor != null) {
 					result = actionContextInterceptor.AfterMvcValidation(mvContext.ActionContext, context, result) ?? result;
 				}
 
@@ -122,8 +127,7 @@ namespace FluentValidation.AspNetCore {
 			}
 
 			// If implicit validation is disabled, then we want to only validate the root object.
-			if (! _implicitValidationEnabled) {
-
+			if (!_implicitValidationEnabled) {
 				var rootMetadata = GetRootMetadata(mvContext);
 
 				// We should always have root metadata, so this should never happen...
@@ -135,7 +139,7 @@ namespace FluentValidation.AspNetCore {
 				// However if our root object *is* a property (because of [BindProperty])
 				// then this is OK to proceed.
 				if (mvContext.ModelMetadata.MetadataKind == ModelMetadataKind.Property) {
-					if (! ReferenceEquals(rootMetadata, mvContext.ModelMetadata)) {
+					if (!ReferenceEquals(rootMetadata, mvContext.ModelMetadata)) {
 						// The metadata for the current property is not the same as the root metadata
 						// This means we're validating a property on a model, so we want to skip.
 						return true;
@@ -149,7 +153,7 @@ namespace FluentValidation.AspNetCore {
 				// If they're not, then it means we're handling a child property, so we should skip
 				// validation if implicit validation is disabled
 				else if (mvContext.ModelMetadata.MetadataKind == ModelMetadataKind.Type) {
-					if (! ReferenceEquals(rootMetadata, mvContext.ModelMetadata)) {
+					if (!ReferenceEquals(rootMetadata, mvContext.ModelMetadata)) {
 						// The metadata for the current type is not the same as the root metadata
 						// This means we're validating a child element of a collection or sub property.
 						// Skip it as implicit validation is disabled.

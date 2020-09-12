@@ -41,14 +41,14 @@ namespace FluentValidation.Resources {
 			var errorCode = ErrorCodeFunc?.Invoke(context);
 
 			if (errorCode != null) {
-				string result = ValidatorOptions.LanguageManager.GetString(errorCode);
+				string result = ValidatorOptions.Global.LanguageManager.GetString(errorCode);
 
 				if (!string.IsNullOrEmpty(result)) {
 					return result;
 				}
 			}
 
-			return ValidatorOptions.LanguageManager.GetString(_key);
+			return ValidatorOptions.Global.LanguageManager.GetString(_key);
 		}
 	}
 }

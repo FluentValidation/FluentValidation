@@ -12,11 +12,11 @@ namespace FluentValidation.Tests {
 		[BindProperty]
 		public TestModel Test { get; set; }
 
-		public async Task<IActionResult> OnPostAsync() {
-			return TestResult();
+		public Task<IActionResult> OnPostAsync() {
+			return Task.FromResult(TestResult());
 		}
 
-		private ActionResult TestResult() {
+		private IActionResult TestResult() {
 			var errors = new List<SimpleError>();
 
 			foreach (var pair in ModelState) {
@@ -35,11 +35,11 @@ namespace FluentValidation.Tests {
 		[BindProperty]
 		public RulesetTestModel Test { get; set; }
 
-		public async Task<IActionResult> OnPostAsync() {
-			return TestResult();
+		public Task<IActionResult> OnPostAsync() {
+			return Task.FromResult(TestResult());
 		}
 
-		private ActionResult TestResult() {
+		private IActionResult TestResult() {
 			var errors = new List<SimpleError>();
 
 			foreach (var pair in ModelState) {
@@ -58,11 +58,11 @@ namespace FluentValidation.Tests {
 		[BindProperty(Name="Test")]
 		public TestModel Test { get; set; }
 
-		public async Task<IActionResult> OnPostAsync() {
-			return TestResult();
+		public Task<IActionResult> OnPostAsync() {
+			return Task.FromResult(TestResult());
 		}
 
-		private ActionResult TestResult() {
+		private IActionResult TestResult() {
 			var errors = new List<SimpleError>();
 
 			foreach (var pair in ModelState) {

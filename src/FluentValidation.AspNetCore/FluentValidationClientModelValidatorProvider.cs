@@ -48,7 +48,9 @@ namespace FluentValidation.AspNetCore {
 			{ typeof(NotEmptyValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
 			{ typeof(INotEmptyValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
 
+#pragma warning disable 618
 			{ typeof(EmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
+#pragma warning restore 618
 			{ typeof(AspNetCoreCompatibleEmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
 			{ typeof(IEmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
 

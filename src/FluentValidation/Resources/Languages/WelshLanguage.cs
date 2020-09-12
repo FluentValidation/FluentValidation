@@ -25,7 +25,7 @@ namespace FluentValidation.Resources {
 
     public WelshLanguage() {
 	    Translate<EmailValidator>("Nid yw '{PropertyName}' yn gyfeiriad e-bost dilys.");
-      Translate<GreaterThanOrEqualValidator>("Rhaid i '{PropertyName}' fod yn fwy na '{ComparisonValue}', neu'n gyfartal ag o.");
+	    Translate<GreaterThanOrEqualValidator>("Rhaid i '{PropertyName}' fod yn fwy na '{ComparisonValue}', neu'n gyfartal ag o.");
       Translate<GreaterThanValidator>("Rhaid i '{PropertyName}' fod yn fwy na '{ComparisonValue}'.");
       Translate<LengthValidator>("Rhaid i '{PropertyName}' fod rhwng {MinLength} a {MaxLength} o nodau. Rydych wedi rhoi {TotalLength} nod.");
       Translate<MinimumLengthValidator>("Rhaid i '{PropertyName}' fod o leiaf {MinLength} nod o hyd. Rydych wedi rhoi {TotalLength} nod.");
