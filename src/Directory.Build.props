@@ -11,11 +11,14 @@
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
     <Copyright>Copyright (c) .NET Foundation and contributors 2008-2020</Copyright>
     <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
-    <PackageIconUrl>https://fluentvalidation.net/assets/images/logo/fluent-validation-icon.png</PackageIconUrl>
+    <PackageIcon>fluent-validation-icon.png</PackageIcon>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)/../FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
     <PackageOutputPath>$(MSBuildProjectDirectory)/../../.build/packages</PackageOutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\logo\fluent-validation-icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
 </Project>
