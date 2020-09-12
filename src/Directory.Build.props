@@ -7,7 +7,7 @@
     <Authors>Jeremy Skinner</Authors>
     <LangVersion>7.3</LangVersion>
     <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
-    <!--<TreatWarningsAsErrors>true</TreatWarningsAsErrors>-->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
     <Copyright>Copyright (c) .NET Foundation and contributors 2008-2020</Copyright>
     <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>

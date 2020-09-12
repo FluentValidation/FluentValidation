@@ -17,6 +17,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 
 #endregion
+#pragma warning disable 618
 
 namespace FluentValidation.Resources {
 	using Validators;
