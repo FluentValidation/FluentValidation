@@ -43,6 +43,7 @@ namespace FluentValidation.Resources {
 		/// Language factory.
 		/// </summary>
 		/// <param name="culture">The culture code.</param>
+		/// <param name="key">The key to load</param>
 		/// <returns>The corresponding Language instance or null.</returns>
 		private static string GetTranslation(string culture, string key) {
 			return culture switch {
