@@ -29,15 +29,7 @@ namespace FluentValidation.Resources {
 	/// Allows the default error message translations to be managed.
 	/// </summary>
 	public class LanguageManager : ILanguageManager {
-		private readonly ConcurrentDictionary<string, string> _languages;
-
-		/// <summary>
-		/// Creates a new instance of the LanguageManager class.
-		/// </summary>
-		public LanguageManager() {
-			// Initialize with English as the default. Others will be lazily loaded as needed.
-			_languages = new ConcurrentDictionary<string, string>();
-		}
+		private readonly ConcurrentDictionary<string, string> _languages = new ConcurrentDictionary<string, string>();
 
 		/// <summary>
 		/// Language factory.
