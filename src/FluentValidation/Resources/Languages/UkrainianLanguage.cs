@@ -1,7 +1,8 @@
 #region License
+
 // Copyright (c) .NET Foundation and contributors.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
+// Licensed under the Apache License, Version 2.0 (the "License",
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
@@ -14,46 +15,48 @@
 // limitations under the License.
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
+
 #endregion
+
 #pragma warning disable 618
 
 namespace FluentValidation.Resources {
 	using Validators;
 
-	internal class UkrainianLanguage : Language {
+	internal class UkrainianLanguage {
 		public const string Culture = "uk";
-		public override string Name => Culture;
 
-		public UkrainianLanguage() {
-			Translate<EmailValidator>("'{PropertyName}' не є email-адресою.");
-			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' має бути більшим, або дорівнювати '{ComparisonValue}'.");
-			Translate<GreaterThanValidator>("'{PropertyName}' має бути більшим за '{ComparisonValue}'.");
-			Translate<LengthValidator>("'{PropertyName}' має бути довжиною від {MinLength} до {MaxLength} символів. Ви ввели {TotalLength} символів.");
-			Translate<MinimumLengthValidator>("Довжина '{PropertyName}' має бути не меншою ніж {MinLength} символів. Ви ввели {TotalLength} символів.");
-			Translate<MaximumLengthValidator>("Довжина '{PropertyName}' має бути {MaxLength} символів, або менше. Ви ввели {TotalLength} символів.");
-			Translate<LessThanOrEqualValidator>("'{PropertyName}' має бути меншим, або дорівнювати '{ComparisonValue}'.");
-			Translate<LessThanValidator>("'{PropertyName}' має бути меншим за '{ComparisonValue}'.");
-			Translate<NotEmptyValidator>("'{PropertyName}' не може бути порожнім.");
-			Translate<NotEqualValidator>("'{PropertyName}' не може дорівнювати '{ComparisonValue}'.");
-			Translate<NotNullValidator>("'{PropertyName}' не може бути порожнім.");
-			Translate<PredicateValidator>("Вказана умова не є задовільною для '{PropertyName}'.");
-			Translate<AsyncPredicateValidator>("Вказана умова не є задовільною для '{PropertyName}'.");
-			Translate<RegularExpressionValidator>("'{PropertyName}' має неправильний формат.");
-			Translate<EqualValidator>("'{PropertyName}' має дорівнювати '{ComparisonValue}'.");
-			Translate<ExactLengthValidator>("'{PropertyName}' має бути довжиною {MaxLength} символів. Ви ввели {TotalLength} символів.");
-			Translate<InclusiveBetweenValidator>("'{PropertyName}' має бути між {From} та {To} (включно). Ви ввели {Value}.");
-			Translate<ExclusiveBetweenValidator>("'{PropertyName}' має бути між {From} та {To}. Ви ввели {Value}.");
-			Translate<CreditCardValidator>("'{PropertyName}' не є номером кредитної картки.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' не може мати більше за {ExpectedPrecision} цифр всього, з {ExpectedScale} десятковими знаками. {Digits} цифр та {ActualScale} десяткових знаків знайдено.");
-			Translate<EmptyValidator>("'{PropertyName}' має бути порожнім.");
-			Translate<NullValidator>("'{PropertyName}' має бути порожнім.");
-			Translate<EnumValidator>("'{PropertyName}' має діапазон значень, який не включає '{PropertyValue}'.");
+		public static string GetTranslation(string key) => key switch {
+			nameof(EmailValidator) => "'{PropertyName}' не є email-адресою.",
+			nameof(GreaterThanOrEqualValidator) => "'{PropertyName}' має бути більшим, або дорівнювати '{ComparisonValue}'.",
+			nameof(GreaterThanValidator) => "'{PropertyName}' має бути більшим за '{ComparisonValue}'.",
+			nameof(LengthValidator) => "'{PropertyName}' має бути довжиною від {MinLength} до {MaxLength} символів. Ви ввели {TotalLength} символів.",
+			nameof(MinimumLengthValidator) => "Довжина '{PropertyName}' має бути не меншою ніж {MinLength} символів. Ви ввели {TotalLength} символів.",
+			nameof(MaximumLengthValidator) => "Довжина '{PropertyName}' має бути {MaxLength} символів, або менше. Ви ввели {TotalLength} символів.",
+			nameof(LessThanOrEqualValidator) => "'{PropertyName}' має бути меншим, або дорівнювати '{ComparisonValue}'.",
+			nameof(LessThanValidator) => "'{PropertyName}' має бути меншим за '{ComparisonValue}'.",
+			nameof(NotEmptyValidator) => "'{PropertyName}' не може бути порожнім.",
+			nameof(NotEqualValidator) => "'{PropertyName}' не може дорівнювати '{ComparisonValue}'.",
+			nameof(NotNullValidator) => "'{PropertyName}' не може бути порожнім.",
+			nameof(PredicateValidator) => "Вказана умова не є задовільною для '{PropertyName}'.",
+			nameof(AsyncPredicateValidator) => "Вказана умова не є задовільною для '{PropertyName}'.",
+			nameof(RegularExpressionValidator) => "'{PropertyName}' має неправильний формат.",
+			nameof(EqualValidator) => "'{PropertyName}' має дорівнювати '{ComparisonValue}'.",
+			nameof(ExactLengthValidator) => "'{PropertyName}' має бути довжиною {MaxLength} символів. Ви ввели {TotalLength} символів.",
+			nameof(InclusiveBetweenValidator) => "'{PropertyName}' має бути між {From} та {To} (включно). Ви ввели {Value}.",
+			nameof(ExclusiveBetweenValidator) => "'{PropertyName}' має бути між {From} та {To}. Ви ввели {Value}.",
+			nameof(CreditCardValidator) => "'{PropertyName}' не є номером кредитної картки.",
+			nameof(ScalePrecisionValidator) => "'{PropertyName}' не може мати більше за {ExpectedPrecision} цифр всього, з {ExpectedScale} десятковими знаками. {Digits} цифр та {ActualScale} десяткових знаків знайдено.",
+			nameof(EmptyValidator) => "'{PropertyName}' має бути порожнім.",
+			nameof(NullValidator) => "'{PropertyName}' має бути порожнім.",
+			nameof(EnumValidator) => "'{PropertyName}' має діапазон значень, який не включає '{PropertyValue}'.",
 			// Additional fallback messages used by clientside validation integration.
-			Translate("Length_Simple", "'{PropertyName}' має бути довжиною від {MinLength} до {MaxLength} символів.");
-			Translate("MinimumLength_Simple", "Довжина '{PropertyName}' має бути не меншою ніж {MinLength} символів.");
-			Translate("MaximumLength_Simple", "Довжина '{PropertyName}' має бути {MaxLength} символів, або менше.");
-			Translate("ExactLength_Simple", "'{PropertyName}' має бути довжиною {MaxLength} символів.");
-			Translate("InclusiveBetween_Simple", "'{PropertyName}' має бути між {From} та {To} (включно).");
-		}
+			"Length_Simple" => "'{PropertyName}' має бути довжиною від {MinLength} до {MaxLength} символів.",
+			"MinimumLength_Simple" => "Довжина '{PropertyName}' має бути не меншою ніж {MinLength} символів.",
+			"MaximumLength_Simple" => "Довжина '{PropertyName}' має бути {MaxLength} символів, або менше.",
+			"ExactLength_Simple" => "'{PropertyName}' має бути довжиною {MaxLength} символів.",
+			"InclusiveBetween_Simple" => "'{PropertyName}' має бути між {From} та {To} (включно).",
+			_ => null,
+		};
 	}
 }

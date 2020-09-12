@@ -1,7 +1,8 @@
 #region License
+
 // Copyright (c) .NET Foundation and contributors.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
+// Licensed under the Apache License, Version 2.0 (the "License",
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
@@ -14,46 +15,48 @@
 // limitations under the License.
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
+
 #endregion
+
 #pragma warning disable 618
 
 namespace FluentValidation.Resources {
 	using Validators;
 
-	internal class KoreanLanguage : Language {
+	internal class KoreanLanguage {
 		public const string Culture = "ko";
-		public override string Name => Culture;
 
-		public KoreanLanguage() {
-			Translate<CreditCardValidator>("'{PropertyName}'이(가) 올바른 신용카드 번호가 아닙니다.");
-			Translate<EmailValidator>("'{PropertyName}'이(가) 올바른 이메일 주소가 아닙니다.");
-			Translate<EqualValidator>("'{PropertyName}'은(는) '{ComparisonValue}'이어야 합니다.");
-			Translate<ExactLengthValidator>("'{PropertyName}'은(는) {MaxLength} 글자이하의 문자열이어야 합니다. 입력한 문자열은 {TotalLength} 글자 입니다.");
-			Translate<ExclusiveBetweenValidator>("'{PropertyName}'은(는) {From} 이상 {To} 미만이어야 합니다. 입력한 값은 {Value}입니다.");
-			Translate<GreaterThanOrEqualValidator>("'{PropertyName}'은(는) '{ComparisonValue}'이상이어야 합니다.");
-			Translate<GreaterThanValidator>("'{PropertyName}'은(는) '{ComparisonValue}'보다 커야 합니다.");
-			Translate<InclusiveBetweenValidator>("'{PropertyName}'은(는) {From} 이상 {To} 이하여야 합니다. 입력한 값은 {Value}입니다.");
-			Translate<LengthValidator>("'{PropertyName}'은(는) {MinLength} 글자 이상 {MaxLength} 글자 이하여야 합니다. 입력한 문자열은 {TotalLength} 글자입니다.");
-			Translate<MinimumLengthValidator>("'{PropertyName}'은 {MinLength} 자 이상의 값이어야합니다. {TotalLength} 문자를 입력했습니다.");
-			Translate<MaximumLengthValidator>("'{PropertyName}'은 (는) {MaxLength} 자 이하 여야합니다. {TotalLength} 문자를 입력했습니다.");
-			Translate<LessThanOrEqualValidator>("'{PropertyName}'은(는) '{ComparisonValue}' 이하여야 합니다.");
-			Translate<LessThanValidator>("'{PropertyName}'은(는) '{ComparisonValue}' 보다 작아야 합니다.");
-			Translate<NotEmptyValidator>("'{PropertyName}'은(는) 최소한 한 글자 이상이어야 합니다.");
-			Translate<NotEqualValidator>("'{PropertyName}'은(는) '{ComparisonValue}'와 달라야 합니다.");
-			Translate<NotNullValidator>("'{PropertyName}'은(는) 반드시 입력해야 합니다.");
-			Translate<PredicateValidator>("'{PropertyName}'이(가) 유효하지 않습니다.");
-			Translate<AsyncPredicateValidator>("'{PropertyName}'이(가) 유효하지 않습니다.");
-			Translate<RegularExpressionValidator>("'{PropertyName}'이(가) 잘못된 형식입니다.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}'은(는) 소수점 이하 {ExpectedScale}자리 이하, 총 {ExpectedPrecision}자리 이하의 숫자여야 합니다. 입력한 값은 소수점 이하 {ActualScale}자리이고 총 {Digits}자리입니다.");
-			Translate<EmptyValidator>("'{PropertyName}'이 비어 있어야합니다.");
-			Translate<NullValidator>("'{PropertyName}'이 비어 있어야합니다.");
-			Translate<EnumValidator>("'{PropertyName}'에는 '{PropertyValue}'가 포함되지 않은 값 범위가 있습니다.");
+		public static string GetTranslation(string key) => key switch {
+			nameof(CreditCardValidator) => "'{PropertyName}'이(가) 올바른 신용카드 번호가 아닙니다.",
+			nameof(EmailValidator) => "'{PropertyName}'이(가) 올바른 이메일 주소가 아닙니다.",
+			nameof(EqualValidator) => "'{PropertyName}'은(는) '{ComparisonValue}'이어야 합니다.",
+			nameof(ExactLengthValidator) => "'{PropertyName}'은(는) {MaxLength} 글자이하의 문자열이어야 합니다. 입력한 문자열은 {TotalLength} 글자 입니다.",
+			nameof(ExclusiveBetweenValidator) => "'{PropertyName}'은(는) {From} 이상 {To} 미만이어야 합니다. 입력한 값은 {Value}입니다.",
+			nameof(GreaterThanOrEqualValidator) => "'{PropertyName}'은(는) '{ComparisonValue}'이상이어야 합니다.",
+			nameof(GreaterThanValidator) => "'{PropertyName}'은(는) '{ComparisonValue}'보다 커야 합니다.",
+			nameof(InclusiveBetweenValidator) => "'{PropertyName}'은(는) {From} 이상 {To} 이하여야 합니다. 입력한 값은 {Value}입니다.",
+			nameof(LengthValidator) => "'{PropertyName}'은(는) {MinLength} 글자 이상 {MaxLength} 글자 이하여야 합니다. 입력한 문자열은 {TotalLength} 글자입니다.",
+			nameof(MinimumLengthValidator) => "'{PropertyName}'은 {MinLength} 자 이상의 값이어야합니다. {TotalLength} 문자를 입력했습니다.",
+			nameof(MaximumLengthValidator) => "'{PropertyName}'은 (는) {MaxLength} 자 이하 여야합니다. {TotalLength} 문자를 입력했습니다.",
+			nameof(LessThanOrEqualValidator) => "'{PropertyName}'은(는) '{ComparisonValue}' 이하여야 합니다.",
+			nameof(LessThanValidator) => "'{PropertyName}'은(는) '{ComparisonValue}' 보다 작아야 합니다.",
+			nameof(NotEmptyValidator) => "'{PropertyName}'은(는) 최소한 한 글자 이상이어야 합니다.",
+			nameof(NotEqualValidator) => "'{PropertyName}'은(는) '{ComparisonValue}'와 달라야 합니다.",
+			nameof(NotNullValidator) => "'{PropertyName}'은(는) 반드시 입력해야 합니다.",
+			nameof(PredicateValidator) => "'{PropertyName}'이(가) 유효하지 않습니다.",
+			nameof(AsyncPredicateValidator) => "'{PropertyName}'이(가) 유효하지 않습니다.",
+			nameof(RegularExpressionValidator) => "'{PropertyName}'이(가) 잘못된 형식입니다.",
+			nameof(ScalePrecisionValidator) => "'{PropertyName}'은(는) 소수점 이하 {ExpectedScale}자리 이하, 총 {ExpectedPrecision}자리 이하의 숫자여야 합니다. 입력한 값은 소수점 이하 {ActualScale}자리이고 총 {Digits}자리입니다.",
+			nameof(EmptyValidator) => "'{PropertyName}'이 비어 있어야합니다.",
+			nameof(NullValidator) => "'{PropertyName}'이 비어 있어야합니다.",
+			nameof(EnumValidator) => "'{PropertyName}'에는 '{PropertyValue}'가 포함되지 않은 값 범위가 있습니다.",
 			// Additional fallback messages used by clientside validation integration.
-			Translate("ExactLength_Simple", "'{PropertyName}'은(는) {MaxLength} 글자이하의 문자열이어야 합니다.");
-			Translate("InclusiveBetween_Simple", "'{PropertyName}'은(는) {From} 이상 {To} 이하여야 합니다.");
-			Translate("Length_Simple", "'{PropertyName}'은(는) {MinLength} 글자 이상 {MaxLength} 글자 이하여야 합니다.");
-			Translate("MinimumLength_Simple", "'{PropertyName}'은 {MinLength} 자 이상의 값이어야합니다.");
-			Translate("MaximumLength_Simple", "'{PropertyName}'은 (는) {MaxLength} 자 이하 여야합니다.");
-		}
+			"ExactLength_Simple" => "'{PropertyName}'은(는) {MaxLength} 글자이하의 문자열이어야 합니다.",
+			"InclusiveBetween_Simple" => "'{PropertyName}'은(는) {From} 이상 {To} 이하여야 합니다.",
+			"Length_Simple" => "'{PropertyName}'은(는) {MinLength} 글자 이상 {MaxLength} 글자 이하여야 합니다.",
+			"MinimumLength_Simple" => "'{PropertyName}'은 {MinLength} 자 이상의 값이어야합니다.",
+			"MaximumLength_Simple" => "'{PropertyName}'은 (는) {MaxLength} 자 이하 여야합니다.",
+			_ => null,
+		};
 	}
 }

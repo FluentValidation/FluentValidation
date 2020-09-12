@@ -44,47 +44,47 @@ namespace FluentValidation.Resources {
 		/// </summary>
 		/// <param name="culture">The culture code.</param>
 		/// <returns>The corresponding Language instance or null.</returns>
-		private static Language CreateLanguage(string culture) {
+		private static string GetTranslation(string culture, string key) {
 			return culture switch {
-				EnglishLanguage.Culture => new EnglishLanguage(),
-				AlbanianLanguage.Culture => new AlbanianLanguage(),
-				ArabicLanguage.Culture => new ArabicLanguage(),
-				BengaliLanguage.Culture => new BengaliLanguage(),
-				ChineseSimplifiedLanguage.Culture => new ChineseSimplifiedLanguage(),
-				ChineseTraditionalLanguage.Culture => new ChineseTraditionalLanguage(),
-				CroatianLanguage.Culture => new CroatianLanguage(),
-				CzechLanguage.Culture => new CzechLanguage(),
-				DanishLanguage.Culture => new DanishLanguage(),
-				DutchLanguage.Culture => new DutchLanguage(),
-				FinnishLanguage.Culture => new FinnishLanguage(),
-				FrenchLanguage.Culture => new FrenchLanguage(),
-				GermanLanguage.Culture => new GermanLanguage(),
-				GeorgianLanguage.Culture => new GeorgianLanguage(),
-				GreekLanguage.Culture => new GreekLanguage(),
-				HebrewLanguage.Culture => new HebrewLanguage(),
-				HindiLanguage.Culture => new HindiLanguage(),
-				HungarianLanguage.Culture => new HungarianLanguage(),
-				IcelandicLanguage.Culture => new IcelandicLanguage(),
-				ItalianLanguage.Culture => new ItalianLanguage(),
-				IndonesianLanguage.Culture => new IndonesianLanguage(),
-				JapaneseLanguage.Culture => new JapaneseLanguage(),
-				KoreanLanguage.Culture => new KoreanLanguage(),
-				MacedonianLanguage.Culture => new MacedonianLanguage(),
-				NorwegianBokmalLanguage.Culture => new NorwegianBokmalLanguage(),
-				PersianLanguage.Culture => new PersianLanguage(),
-				PolishLanguage.Culture => new PolishLanguage(),
-				PortugueseLanguage.Culture => new PortugueseLanguage(),
-				PortugueseBrazilLanguage.Culture => new PortugueseBrazilLanguage(),
-				RomanianLanguage.Culture => new RomanianLanguage(),
-				RussianLanguage.Culture => new RussianLanguage(),
-				SlovakLanguage.Culture => new SlovakLanguage(),
-				SlovenianLanguage.Culture => new SlovenianLanguage(),
-				SpanishLanguage.Culture => new SpanishLanguage(),
-				SwedishLanguage.Culture => new SwedishLanguage(),
-				TurkishLanguage.Culture => new TurkishLanguage(),
-				UkrainianLanguage.Culture => new UkrainianLanguage(),
-				WelshLanguage.Culture => new WelshLanguage(),
-				_ => (Language) null,
+				EnglishLanguage.Culture => EnglishLanguage.GetTranslation(key),
+				AlbanianLanguage.Culture => AlbanianLanguage.GetTranslation(key),
+				ArabicLanguage.Culture => ArabicLanguage.GetTranslation(key),
+				BengaliLanguage.Culture => BengaliLanguage.GetTranslation(key),
+				ChineseSimplifiedLanguage.Culture => ChineseSimplifiedLanguage.GetTranslation(key),
+				ChineseTraditionalLanguage.Culture => ChineseTraditionalLanguage.GetTranslation(key),
+				CroatianLanguage.Culture => CroatianLanguage.GetTranslation(key),
+				CzechLanguage.Culture => CzechLanguage.GetTranslation(key),
+				DanishLanguage.Culture => DanishLanguage.GetTranslation(key),
+				DutchLanguage.Culture => DutchLanguage.GetTranslation(key),
+				FinnishLanguage.Culture => FinnishLanguage.GetTranslation(key),
+				FrenchLanguage.Culture => FrenchLanguage.GetTranslation(key),
+				GermanLanguage.Culture => GermanLanguage.GetTranslation(key),
+				GeorgianLanguage.Culture => GeorgianLanguage.GetTranslation(key),
+				GreekLanguage.Culture => GreekLanguage.GetTranslation(key),
+				HebrewLanguage.Culture => HebrewLanguage.GetTranslation(key),
+				HindiLanguage.Culture => HindiLanguage.GetTranslation(key),
+				HungarianLanguage.Culture => HungarianLanguage.GetTranslation(key),
+				IcelandicLanguage.Culture => IcelandicLanguage.GetTranslation(key),
+				ItalianLanguage.Culture => ItalianLanguage.GetTranslation(key),
+				IndonesianLanguage.Culture => IndonesianLanguage.GetTranslation(key),
+				JapaneseLanguage.Culture => JapaneseLanguage.GetTranslation(key),
+				KoreanLanguage.Culture => KoreanLanguage.GetTranslation(key),
+				MacedonianLanguage.Culture => MacedonianLanguage.GetTranslation(key),
+				NorwegianBokmalLanguage.Culture => NorwegianBokmalLanguage.GetTranslation(key),
+				PersianLanguage.Culture => PersianLanguage.GetTranslation(key),
+				PolishLanguage.Culture => PolishLanguage.GetTranslation(key),
+				PortugueseLanguage.Culture => PortugueseLanguage.GetTranslation(key),
+				PortugueseBrazilLanguage.Culture => PortugueseBrazilLanguage.GetTranslation(key),
+				RomanianLanguage.Culture => RomanianLanguage.GetTranslation(key),
+				RussianLanguage.Culture => RussianLanguage.GetTranslation(key),
+				SlovakLanguage.Culture => SlovakLanguage.GetTranslation(key),
+				SlovenianLanguage.Culture => SlovenianLanguage.GetTranslation(key),
+				SpanishLanguage.Culture => SpanishLanguage.GetTranslation(key),
+				SwedishLanguage.Culture => SwedishLanguage.GetTranslation(key),
+				TurkishLanguage.Culture => TurkishLanguage.GetTranslation(key),
+				UkrainianLanguage.Culture => UkrainianLanguage.GetTranslation(key),
+				WelshLanguage.Culture => WelshLanguage.GetTranslation(key),
+				_ => null,
 			};
 		}
 
@@ -119,35 +119,23 @@ namespace FluentValidation.Resources {
 				culture = culture ?? Culture ?? CultureInfo.CurrentUICulture;
 
 				string currentCultureKey = culture.Name + ":" + key;
+				value = _languages.GetOrAdd(currentCultureKey, k => GetTranslation(culture.Name, key));
 
-				value = _languages.GetOrAdd(currentCultureKey, k => {
-					// TODO: Move CreateLanguage().GetTranslation() to static methods.
-					string result = CreateLanguage(culture.Name)?.GetTranslation(key);
+				// If the value couldn't be found, try the parent culture.
+				if (value == null && !culture.IsNeutralCulture) {
+					string parentCultureKey = culture.Parent.Name + ":" + key;
+					value = _languages.GetOrAdd(parentCultureKey, k => GetTranslation(culture.Parent.Name, key));
+				}
 
-					if (result == null && !culture.IsNeutralCulture) {
-						string parentCultureKey = culture.Parent.Name + ":" + key;
-						result = _languages.GetOrAdd(parentCultureKey, k2 => {
-							string result2 = CreateLanguage(culture.Parent.Name)?.GetTranslation(key);
-							return result2;
-						});
-					}
-
-					return result;
-				});
-
-				if (value == null && culture.Name != "en") {
+				if (value == null && culture.Name != EnglishLanguage.Culture) {
 					// If it couldn't be found, try the fallback English (if we haven't tried it already).
-					if (!culture.IsNeutralCulture && culture.Parent.Name != "en") {
-						value = _languages.GetOrAdd("en:" + key, k => {
-							return new EnglishLanguage().GetTranslation(key);
-						});
+					if (!culture.IsNeutralCulture && culture.Parent.Name != EnglishLanguage.Culture) {
+						value = _languages.GetOrAdd(EnglishLanguage.Culture + ":" + key, k => EnglishLanguage.GetTranslation(key));
 					}
 				}
 			}
 			else {
-				value = _languages.GetOrAdd("en:" + key, k => {
-					return new EnglishLanguage().GetTranslation(key);
-				});
+				value = _languages.GetOrAdd(EnglishLanguage.Culture + ":" + key, k => EnglishLanguage.GetTranslation(key));
 			}
 
 			return value ?? string.Empty;

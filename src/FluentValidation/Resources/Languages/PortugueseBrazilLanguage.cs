@@ -2,7 +2,7 @@
 
 // Copyright (c) .NET Foundation and contributors.
 //
-// Licensed under the Apache License, Version 2.0 (the "License");
+// Licensed under the Apache License, Version 2.0 (the "License",
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
@@ -17,45 +17,46 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 
 #endregion
+
 #pragma warning disable 618
 
 namespace FluentValidation.Resources {
 	using Validators;
 
-	internal class PortugueseBrazilLanguage : Language {
+	internal class PortugueseBrazilLanguage {
 		public const string Culture = "pt-BR";
-		public override string Name => Culture;
 
-		public PortugueseBrazilLanguage() {
-			Translate<EmailValidator>("'{PropertyName}' é um endereço de email inválido.");
-			Translate<GreaterThanOrEqualValidator>("'{PropertyName}' deve ser superior ou igual a '{ComparisonValue}'.");
-			Translate<GreaterThanValidator>("'{PropertyName}' deve ser superior a '{ComparisonValue}'.");
-			Translate<LengthValidator>("'{PropertyName}' deve ter entre {MinLength} e {MaxLength} caracteres. Você digitou {TotalLength} caracteres.");
-			Translate<MinimumLengthValidator>("'{PropertyName}' deve ser maior ou igual a {MinLength} caracteres. Você digitou {TotalLength} caracteres.");
-			Translate<MaximumLengthValidator>("'{PropertyName}' deve ser menor ou igual a {MaxLength} caracteres. Você digitou {TotalLength} caracteres.");
-			Translate<LessThanOrEqualValidator>("'{PropertyName}' deve ser inferior ou igual a '{ComparisonValue}'.");
-			Translate<LessThanValidator>("'{PropertyName}' deve ser inferior a '{ComparisonValue}'.");
-			Translate<NotEmptyValidator>("'{PropertyName}' deve ser informado.");
-			Translate<NotEqualValidator>("'{PropertyName}' deve ser diferente de '{ComparisonValue}'.");
-			Translate<NotNullValidator>("'{PropertyName}' não pode ser nulo.");
-			Translate<PredicateValidator>("'{PropertyName}' não atende a condição definida.");
-			Translate<AsyncPredicateValidator>("'{PropertyName}' não atende a condição definida.");
-			Translate<RegularExpressionValidator>("'{PropertyName}' não está no formato correto.");
-			Translate<EqualValidator>("'{PropertyName}' deve ser igual a '{ComparisonValue}'.");
-			Translate<ExactLengthValidator>("'{PropertyName}' deve ter no máximo {MaxLength} caracteres. Você digitou {TotalLength} caracteres.");
-			Translate<ExclusiveBetweenValidator>("'{PropertyName}' deve, exclusivamente, estar entre {From} e {To}. Você digitou {Value}.");
-			Translate<InclusiveBetweenValidator>("'{PropertyName}' deve estar entre {From} e {To}. Você digitou {Value}.");
-			Translate<CreditCardValidator>("'{PropertyName}' não é um número válido de cartão de crédito.");
-			Translate<ScalePrecisionValidator>("'{PropertyName}' não pode ter mais do que {ExpectedPrecision} dígitos no total, com {ExpectedScale} dígitos decimais. {Digits} dígitos e {ActualScale} decimais foram informados.");
-			Translate<EmptyValidator>("'{PropertyName}' deve estar vazio.");
-			Translate<NullValidator>("'{PropertyName}' deve estar null.");
-			Translate<EnumValidator>("'{PropertyName}' possui um intervalo de valores que não inclui '{PropertyValue}'.");
+		public static string GetTranslation(string key) => key switch {
+			nameof(EmailValidator) => "'{PropertyName}' é um endereço de email inválido.",
+			nameof(GreaterThanOrEqualValidator) => "'{PropertyName}' deve ser superior ou igual a '{ComparisonValue}'.",
+			nameof(GreaterThanValidator) => "'{PropertyName}' deve ser superior a '{ComparisonValue}'.",
+			nameof(LengthValidator) => "'{PropertyName}' deve ter entre {MinLength} e {MaxLength} caracteres. Você digitou {TotalLength} caracteres.",
+			nameof(MinimumLengthValidator) => "'{PropertyName}' deve ser maior ou igual a {MinLength} caracteres. Você digitou {TotalLength} caracteres.",
+			nameof(MaximumLengthValidator) => "'{PropertyName}' deve ser menor ou igual a {MaxLength} caracteres. Você digitou {TotalLength} caracteres.",
+			nameof(LessThanOrEqualValidator) => "'{PropertyName}' deve ser inferior ou igual a '{ComparisonValue}'.",
+			nameof(LessThanValidator) => "'{PropertyName}' deve ser inferior a '{ComparisonValue}'.",
+			nameof(NotEmptyValidator) => "'{PropertyName}' deve ser informado.",
+			nameof(NotEqualValidator) => "'{PropertyName}' deve ser diferente de '{ComparisonValue}'.",
+			nameof(NotNullValidator) => "'{PropertyName}' não pode ser nulo.",
+			nameof(PredicateValidator) => "'{PropertyName}' não atende a condição definida.",
+			nameof(AsyncPredicateValidator) => "'{PropertyName}' não atende a condição definida.",
+			nameof(RegularExpressionValidator) => "'{PropertyName}' não está no formato correto.",
+			nameof(EqualValidator) => "'{PropertyName}' deve ser igual a '{ComparisonValue}'.",
+			nameof(ExactLengthValidator) => "'{PropertyName}' deve ter no máximo {MaxLength} caracteres. Você digitou {TotalLength} caracteres.",
+			nameof(ExclusiveBetweenValidator) => "'{PropertyName}' deve, exclusivamente, estar entre {From} e {To}. Você digitou {Value}.",
+			nameof(InclusiveBetweenValidator) => "'{PropertyName}' deve estar entre {From} e {To}. Você digitou {Value}.",
+			nameof(CreditCardValidator) => "'{PropertyName}' não é um número válido de cartão de crédito.",
+			nameof(ScalePrecisionValidator) => "'{PropertyName}' não pode ter mais do que {ExpectedPrecision} dígitos no total, com {ExpectedScale} dígitos decimais. {Digits} dígitos e {ActualScale} decimais foram informados.",
+			nameof(EmptyValidator) => "'{PropertyName}' deve estar vazio.",
+			nameof(NullValidator) => "'{PropertyName}' deve estar null.",
+			nameof(EnumValidator) => "'{PropertyName}' possui um intervalo de valores que não inclui '{PropertyValue}'.",
 			// Additional fallback messages used by clientside validation integration.
-			Translate("Length_Simple", "'{PropertyName}' deve ter entre {MinLength} e {MaxLength} caracteres.");
-			Translate("MinimumLength_Simple", "'{PropertyName}' deve ser maior ou igual a {MinLength} caracteres.");
-			Translate("MaximumLength_Simple", "'{PropertyName}' deve ser menor ou igual a {MaxLength} caracteres.");
-			Translate("ExactLength_Simple", "'{PropertyName}' deve ter no máximo {MaxLength} caracteres.");
-			Translate("InclusiveBetween_Simple", "'{PropertyName}' deve estar entre {From} e {To}.");
-		}
+			"Length_Simple" => "'{PropertyName}' deve ter entre {MinLength} e {MaxLength} caracteres.",
+			"MinimumLength_Simple" => "'{PropertyName}' deve ser maior ou igual a {MinLength} caracteres.",
+			"MaximumLength_Simple" => "'{PropertyName}' deve ser menor ou igual a {MaxLength} caracteres.",
+			"ExactLength_Simple" => "'{PropertyName}' deve ter no máximo {MaxLength} caracteres.",
+			"InclusiveBetween_Simple" => "'{PropertyName}' deve estar entre {From} e {To}.",
+			_ => null,
+		};
 	}
 }
