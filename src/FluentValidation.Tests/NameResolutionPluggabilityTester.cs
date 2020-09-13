@@ -7,7 +7,7 @@ namespace FluentValidation.Tests {
 	public class NameResolutionPluggabilityTester : IDisposable {
 		[Fact]
 		public void Uses_custom_property_name() {
-			ValidatorOptions.PropertyNameResolver = (type, prop, expr) => "foo";
+			ValidatorOptions.Global.PropertyNameResolver = (type, prop, expr) => "foo";
 
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Surname).NotNull()
@@ -27,23 +27,23 @@ namespace FluentValidation.Tests {
 			error.PropertyName.ShouldEqual("Address.Country");
 
 		}
-		
+
 		[Fact]
 		public void ShouldHaveValidationError_Should_support_custom_propertynameresolver() {
 			try {
-				ValidatorOptions.PropertyNameResolver = (type, prop, expr) => "foo";
+				ValidatorOptions.Global.PropertyNameResolver = (type, prop, expr) => "foo";
 				var validator = new TestValidator() {
 					v => v.RuleFor(x => x.Surname).NotNull()
 				};
 				validator.ShouldHaveValidationErrorFor(x => x.Surname, (string) null);
 			}
 			finally {
-				ValidatorOptions.PropertyNameResolver = null;
+				ValidatorOptions.Global.PropertyNameResolver = null;
 			}
 		}
 
 		public void Dispose() {
-			ValidatorOptions.PropertyNameResolver = null;
+			ValidatorOptions.Global.PropertyNameResolver = null;
 		}
 	}
 }

@@ -5,7 +5,6 @@
     <RootNamespace>FluentValidation.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
-    <NoWarn>1998;0618</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <None Update="xunit.runner.json">

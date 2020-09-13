@@ -15,6 +15,8 @@
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
+#pragma warning disable 618
+#pragma warning disable 1998
 
 namespace FluentValidation.Tests {
 	using System;
@@ -25,12 +27,12 @@ namespace FluentValidation.Tests {
 		TestValidator validator;
 
 		public CascadingFailuresTester() {
-			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 			validator = new TestValidator();
 		}
 
 		public void Dispose() {
-			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 		}
 
 		[Fact]
@@ -42,7 +44,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validation_stops_on_first_failure() {
-			ValidatorOptions.CascadeMode = CascadeMode.Stop;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
 			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
@@ -51,7 +53,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validation_stops_on_first_failure_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
 
 			validator.RuleFor(x => x.Surname).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
@@ -60,7 +62,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validation_continues_on_failure_when_set_to_Stop_globally_and_overriden_at_rule_level() {
-			ValidatorOptions.CascadeMode = CascadeMode.Stop;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
@@ -69,7 +71,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validation_continues_on_failure_when_set_to_Stop_globally_and_overriden_at_rule_level_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
@@ -79,7 +81,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level() {
-			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Stop).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
 			results.Errors.Count.ShouldEqual(1);
@@ -87,7 +89,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 			var results = validator.Validate(new Person());
 			results.Errors.Count.ShouldEqual(1);
@@ -95,7 +97,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validation_continues_to_second_validator_when_first_validator_succeeds_and_cascade_set_to_stop() {
-			ValidatorOptions.CascadeMode = CascadeMode.Stop;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 			validator.RuleFor(x => x.Surname).NotNull().Length(2, 10);
 			var result = validator.Validate(new Person() {Surname = "x"});
 			result.IsValid.ShouldBeFalse();
@@ -103,7 +105,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Validation_continues_to_second_validator_when_first_validator_succeeds_and_cascade_set_to_stop_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
 			validator.RuleFor(x => x.Surname).NotNull().Length(2, 10);
 			var result = validator.Validate(new Person() {Surname = "x"});
 			result.IsValid.ShouldBeFalse();
@@ -198,7 +200,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_stops_on_first_failure_async() {
-			ValidatorOptions.CascadeMode = CascadeMode.Stop;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
 			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
@@ -207,7 +209,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_stops_on_first_failure_async_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
 
 			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
@@ -216,7 +218,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_continues_on_failure_when_set_to_Stop_globally_and_overriden_at_rule_level_async() {
-			ValidatorOptions.CascadeMode = CascadeMode.Stop;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
@@ -225,7 +227,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_continues_on_failure_when_set_to_Stop_globally_and_overriden_at_rule_level_async_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
 
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Continue).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
@@ -234,7 +236,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level_async() {
-			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Stop).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
@@ -242,7 +244,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level_async_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
@@ -251,7 +253,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level_and_async_validator_is_invoked_synchronously() {
-			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Stop).NotNull().Equal("Foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
@@ -259,7 +261,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level_and_async_validator_is_invoked_synchronously_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.Continue;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 			validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 			var results = await validator.ValidateAsync(new Person());
 			results.Errors.Count.ShouldEqual(1);
@@ -267,7 +269,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_continues_to_second_validator_when_first_validator_succeeds_and_cascade_set_to_stop_async() {
-			ValidatorOptions.CascadeMode = CascadeMode.Stop;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var result = await validator.ValidateAsync(new Person {Surname = "x"});
 			result.IsValid.ShouldBeFalse();
@@ -275,7 +277,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Validation_continues_to_second_validator_when_first_validator_succeeds_and_cascade_set_to_stop_async_legacy() {
-			ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+			ValidatorOptions.Global.CascadeMode = CascadeMode.StopOnFirstFailure;
 			validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 			var result = await validator.ValidateAsync(new Person {Surname = "x"});
 			result.IsValid.ShouldBeFalse();

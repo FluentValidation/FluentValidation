@@ -76,7 +76,9 @@ namespace FluentValidation.Tests {
 			error.AttemptedValue.ShouldEqual("test");
 			error.ErrorCode.ShouldEqual("PredicateValidator");
 
+#pragma warning disable 618
 			error.FormattedMessageArguments.Length.ShouldEqual(0);
+#pragma warning restore 618
 
 			error.FormattedMessagePlaceholderValues.Count.ShouldEqual(2);
 			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();

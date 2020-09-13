@@ -67,7 +67,7 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
     <LangVersion>8</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <NoWarn>1701;1702;1705;1591</NoWarn>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />

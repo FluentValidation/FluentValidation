@@ -15,6 +15,7 @@
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
+#pragma warning disable 1998
 
 namespace FluentValidation.Tests {
 	using System;
@@ -279,7 +280,9 @@ namespace FluentValidation.Tests {
 			validator.RuleSet("foo", () => { validator.When(x => x.Id > 0, () => { validator.RuleFor(x => x.Forename).NotNull(); }); });
 			validator.RuleFor(x => x.Surname).NotNull();
 
+#pragma warning disable 618
 			var result = validator.Validate(new Person {Id = 5}, ruleSet : "foo");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
@@ -294,7 +297,9 @@ namespace FluentValidation.Tests {
 			});
 			validator.RuleFor(x => x.Surname).NotNull();
 
+#pragma warning disable 618
 			var result = await validator.ValidateAsync(new Person {Id = 5}, ruleSet: "foo");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
@@ -307,7 +312,9 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).NotNull();
 
+#pragma warning disable 618
 			var result = validator.Validate(new Person {Id = 5}, ruleSet : "foo");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
@@ -320,7 +327,9 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).NotNull();
 
+#pragma warning disable 618
 			var result = await validator.ValidateAsync(new Person {Id = 5}, ruleSet: "foo");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}

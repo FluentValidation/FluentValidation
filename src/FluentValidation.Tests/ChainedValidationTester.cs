@@ -65,7 +65,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Explicitly_included_properties_should_be_propagated_to_nested_validators() {
+#pragma warning disable 618
 			var results = validator.Validate(person, x => x.Address);
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
 			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
@@ -73,7 +75,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Explicitly_included_properties_should_be_propagated_to_nested_validators_using_strings() {
+#pragma warning disable 618
 			var results = validator.Validate(person, "Address");
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
 			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
@@ -81,7 +85,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Chained_property_should_be_excluded() {
+#pragma warning disable 618
 			var results = validator.Validate(person, x => x.Surname);
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(0);
 		}
 
@@ -178,7 +184,9 @@ namespace FluentValidation.Tests {
 
 		public class DepartmentValidator : AbstractValidator<Department> {
 			public DepartmentValidator() {
-				CascadeMode = CascadeMode.StopOnFirstFailure; ;
+#pragma warning disable 618
+				CascadeMode = CascadeMode.StopOnFirstFailure;
+#pragma warning restore 618
 				RuleFor(x => x.Manager).NotNull();
 				RuleFor(x => x.Assistant.Surname).NotEqual(x => x.Manager.Surname).When(x => x.Assistant != null && x.Manager.Surname != null);
 			}

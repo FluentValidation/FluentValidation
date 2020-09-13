@@ -30,7 +30,9 @@ namespace FluentValidation.Tests {
 			const string ruleSetName = "blah";
 			validator.RuleSet(ruleSetName, () => { validator.RuleFor(x => x.Forename).NotNull(); });
 
+#pragma warning disable 618
 			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person(), ruleSetName));
+#pragma warning restore 618
 		}
 
 		[Fact]
@@ -60,7 +62,9 @@ namespace FluentValidation.Tests {
 
 			typeof(ValidationException).ShouldBeThrownBy(() => {
 				try {
+#pragma warning disable 618
 					validator.ValidateAndThrowAsync(new Person(), ruleSetName).Wait();
+#pragma warning restore 618
 				}
 				catch (AggregateException agrEx) {
 					throw agrEx.InnerException;
@@ -90,7 +94,9 @@ namespace FluentValidation.Tests {
 				Forename = "foo",
 				Surname = "foo"
 			};
+#pragma warning disable 618
 			validator.ValidateAndThrow(person, ruleSetName);
+#pragma warning restore 618
 		}
 
 		[Fact]
@@ -115,7 +121,9 @@ namespace FluentValidation.Tests {
 				Forename = "foo",
 				Surname = "foo"
 			};
+#pragma warning disable 618
 			validator.ValidateAndThrowAsync(person, ruleSetName).Wait();
+#pragma warning restore 618
 		}
 
 		[Fact]

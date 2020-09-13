@@ -239,17 +239,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		[Obsolete("Calling GetDisplayName without a context parameter is deprecated and will be removed in FluentValidation 10. If you really need this behaviour, you can call the overload that takes a context but pass in null.")]
 		public string GetDisplayName() {
-			string result = null;
-
-			if (_displayNameSource != null) {
-				result = _displayNameSource.GetString(null /*We don't have a model object at this point*/);
-			}
-
-			if (result == null) {
-				result = _propertyDisplayName;
-			}
-
-			return result;
+			return GetDisplayName(null);
 		}
 
 		/// <summary>

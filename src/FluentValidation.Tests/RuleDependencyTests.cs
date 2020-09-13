@@ -80,7 +80,9 @@ namespace FluentValidation.Tests {
 					});
 			});
 
+#pragma warning disable 618
 			var results = validator.Validate(new Person { Surname = "foo" }, ruleSet: "MyRuleSet");
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
@@ -189,7 +191,9 @@ namespace FluentValidation.Tests {
 					});
 			});
 
+#pragma warning disable 618
 			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, ruleSet: "MyRuleSet");
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors.Single().PropertyName.ShouldEqual("Address");
 		}
@@ -214,7 +218,9 @@ namespace FluentValidation.Tests {
 					});
 			});
 
+#pragma warning disable 618
 			var results = validator.Validate(new Person { Surname = null, Forename = "foo" }, ruleSet: "MyRuleSet");
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors[0].PropertyName.ShouldEqual("Surname");
 		}
@@ -239,7 +245,9 @@ namespace FluentValidation.Tests {
 					});
 			});
 
+#pragma warning disable 618
 			var results = validator.Validate(new Person { Surname = "bar", Forename = null }, ruleSet: "MyRuleSet");
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors[0].PropertyName.ShouldEqual("Forename");
 		}
@@ -263,7 +271,9 @@ namespace FluentValidation.Tests {
 					});
 			});
 
+#pragma warning disable 618
 			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, ruleSet: "MyRuleSet");
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors.Single().PropertyName.ShouldEqual("Address");
 		}

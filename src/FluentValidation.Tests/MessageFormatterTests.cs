@@ -50,10 +50,12 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Adds_argument_and_custom_arguments() {
+#pragma warning disable 618
 			string result = formatter
 				.AppendArgument("foo", "bar")
 				.AppendAdditionalArguments("baz")
 				.BuildMessage("{foo} {0}");
+#pragma warning restore 618
 
 			result.ShouldEqual("bar baz");
 		}
@@ -82,20 +84,24 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Adds_formatted_argument_and_custom_arguments() {
+#pragma warning disable 618
 			string result = formatter
 				.AppendArgument("foo", 123.43)
 				.AppendAdditionalArguments("baz")
 				.BuildMessage("{foo:#.#} {0}");
+#pragma warning restore 618
 
 			result.ShouldEqual("123.4 baz");
 		}
 
 		[Fact]
 		public void Adds_formatted_argument_and_formatted_custom_arguments() {
+#pragma warning disable 618
 			string result = formatter
 				.AppendArgument("foo", 123.43)
 				.AppendAdditionalArguments(.6789)
 				.BuildMessage("{foo:#.#} {0:p1}");
+#pragma warning restore 618
 
 			result.ShouldEqual($"{123.43:#.#} {.6789:p1}");
 		}

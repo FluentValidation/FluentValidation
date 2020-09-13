@@ -65,13 +65,21 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_set_custom_property_name() {
 			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
+#pragma warning disable 618
 			Assert.Equal(builder.Rule.DisplayName.GetString(null), "Foo");
+#pragma warning restore 618
+			Assert.Equal(builder.Rule.DisplayNameFactory(null), "Foo");
+
 		}
 
 		[Fact]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
+#pragma warning disable 618
 			builder.Rule.CurrentValidator.Options.ErrorMessageSource.GetString(null).ShouldEqual("Bar");
+#pragma warning restore 618
+			builder.Rule.CurrentValidator.Options.ErrorMessageFactory(null).ShouldEqual("Bar");
+
 		}
 
 		[Fact]
@@ -160,7 +168,7 @@ namespace FluentValidation.Tests {
 			TaskCompletionSource<IEnumerable<ValidationFailure>> tcs = new TaskCompletionSource<IEnumerable<ValidationFailure>>();
 			tcs.SetResult(Enumerable.Empty<ValidationFailure>());
 
-			var validator = new Mock<PropertyValidator>(MockBehavior.Loose, ValidatorOptions.LanguageManager.GetStringForValidator<AsyncPredicateValidator>()) {CallBase = true};
+			var validator = new Mock<PropertyValidator>(MockBehavior.Loose, ValidatorOptions.Global.LanguageManager.GetStringForValidator<AsyncPredicateValidator>()) {CallBase = true};
 			validator.Setup(x => x.ShouldValidateAsynchronously(It.IsAny<IValidationContext>())).Returns(true);
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
 			builder.SetValidator(validator.Object);
@@ -175,14 +183,14 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth), null);
-			builder.Rule.GetDisplayName().ShouldEqual("Date Of Birth");
+			builder.Rule.GetDisplayName(null).ShouldEqual("Date Of Birth");
 		}
 
 		[Fact]
 		public void PropertyDescription_should_return_custom_property_name() {
 			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth),null);
 			builder.NotEqual(default(DateTime)).WithName("Foo");
-			builder.Rule.GetDisplayName().ShouldEqual("Foo");
+			builder.Rule.GetDisplayName(null).ShouldEqual("Foo");
 		}
 
 		[Fact]
@@ -196,14 +204,14 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Nullable_object_with_async_condition_should_not_throw() {
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value),null);
-			builder.GreaterThanOrEqualTo(3).WhenAsync(async (x,c) => x.NullableInt != null);
+			builder.GreaterThanOrEqualTo(3).WhenAsync((x,c) => Task.FromResult(x.NullableInt != null));
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
 		[Fact]
 		public void Rule_for_a_non_memberexpression_should_not_generate_property_name() {
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()),null);
-			builder.Rule.GetDisplayName().ShouldBeNull();
+			builder.Rule.GetDisplayName(null).ShouldBeNull();
 			builder.Rule.PropertyName.ShouldBeNull();
 		}
 
@@ -240,12 +248,13 @@ namespace FluentValidation.Tests {
 		}
 
 		class TestPropertyValidator : PropertyValidator {
-			public TestPropertyValidator() : base(new LanguageStringSource(nameof(NotNullValidator))) {
-
-			}
 
 			protected override bool IsValid(PropertyValidatorContext context) {
 				return true;
+			}
+
+			protected override string GetDefaultMessageTemplate() {
+				return Localized(nameof(NotNullValidator));
 			}
 		}
 	}
