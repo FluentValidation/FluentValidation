@@ -35,7 +35,7 @@ namespace FluentValidation.AspNetCore {
 			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName(null));
 			string messageTemplate;
 			try {
-				messageTemplate = regexVal.Options.ErrorMessageFactory.Invoke(null);
+				messageTemplate = regexVal.Options.GetErrorMessageTemplate(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				messageTemplate = cfg.LanguageManager.GetStringForValidator<RegularExpressionValidator>();
