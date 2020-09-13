@@ -29,12 +29,12 @@ namespace FluentValidation.Validators {
 		private readonly string _memberDisplayName;
 		readonly IEqualityComparer _comparer;
 
-		public EqualValidator(object valueToCompare, IEqualityComparer comparer = null) : base(new LanguageStringSource(nameof(EqualValidator))) {
+		public EqualValidator(object valueToCompare, IEqualityComparer comparer = null) {
 			ValueToCompare = valueToCompare;
 			_comparer = comparer;
 		}
 
-		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member, string memberDisplayName, IEqualityComparer comparer = null) : base(new LanguageStringSource(nameof(EqualValidator))) {
+		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member, string memberDisplayName, IEqualityComparer comparer = null) {
 			_func = comparisonProperty;
 			_memberDisplayName = memberDisplayName;
 			MemberToCompare = member;
@@ -74,6 +74,10 @@ namespace FluentValidation.Validators {
 			}
 
 			return Equals(comparisonValue, propertyValue);
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(EqualValidator));
 		}
 	}
 }

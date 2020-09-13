@@ -21,11 +21,11 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class PredicateValidator : PropertyValidator, IPredicateValidator {
-        public delegate bool Predicate(object instanceToValidate, object propertyValue, PropertyValidatorContext propertyValidatorContext);
+		public delegate bool Predicate(object instanceToValidate, object propertyValue, PropertyValidatorContext propertyValidatorContext);
 
 		private readonly Predicate _predicate;
 
-		public PredicateValidator(Predicate predicate) : base(new LanguageStringSource(nameof(PredicateValidator))) {
+		public PredicateValidator(Predicate predicate) {
 			predicate.Guard("A predicate must be specified.", nameof(predicate));
 			this._predicate = predicate;
 		}
@@ -36,6 +36,10 @@ namespace FluentValidation.Validators {
 			}
 
 			return true;
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(PredicateValidator));
 		}
 	}
 

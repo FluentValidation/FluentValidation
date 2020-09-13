@@ -34,7 +34,16 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		/// <param name="value"></param>
 		/// <param name="errorSource"></param>
+		[Obsolete("This constructor will be removed from FV10. Use the overload that doesn't take an errorSource")]
 		protected AbstractComparisonValidator(IComparable value, IStringSource errorSource) : base(errorSource) {
+			value.Guard("value must not be null.", nameof(value));
+			ValueToCompare = value;
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="value"></param>
+		protected AbstractComparisonValidator(IComparable value) {
 			value.Guard("value must not be null.", nameof(value));
 			ValueToCompare = value;
 		}
@@ -45,10 +54,22 @@ namespace FluentValidation.Validators {
 		/// <param name="member"></param>
 		/// <param name="memberDisplayName"></param>
 		/// <param name="errorSource"></param>
+		[Obsolete("This constructor will be removed from FV10. Use the overload that doesn't take an errorSource")]
 		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, string memberDisplayName, IStringSource errorSource) : base(errorSource) {
-			this._valueToCompareFunc = valueToCompareFunc;
-			this.MemberToCompare = member;
+			_valueToCompareFunc = valueToCompareFunc;
 			_comparisonMemberDisplayName = memberDisplayName;
+			MemberToCompare = member;
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="valueToCompareFunc"></param>
+		/// <param name="member"></param>
+		/// <param name="memberDisplayName"></param>
+		protected AbstractComparisonValidator(Func<object, object> valueToCompareFunc, MemberInfo member, string memberDisplayName) {
+			_valueToCompareFunc = valueToCompareFunc;
+			_comparisonMemberDisplayName = memberDisplayName;
+			MemberToCompare = member;
 		}
 
 		/// <summary>

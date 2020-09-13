@@ -16,6 +16,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.AspNetCore {
+	using System;
 	using System.Collections.Generic;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -31,14 +32,18 @@ namespace FluentValidation.AspNetCore {
 		public override void AddValidation(ClientModelValidationContext context) {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
 			var regexVal = (RegularExpressionValidator)Validator;
-			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
+			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName(null));
 			string messageTemplate;
 			try {
-				messageTemplate = regexVal.Options.ErrorMessageSource.GetString(null);
+				messageTemplate = regexVal.Options.ErrorMessageFactory.Invoke(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				messageTemplate = cfg.LanguageManager.GetStringForValidator<RegularExpressionValidator>();
 			}
+			catch (NullReferenceException) {
+				messageTemplate = cfg.LanguageManager.GetStringForValidator<RegularExpressionValidator>();
+			}
+
 			string message = formatter.BuildMessage(messageTemplate);
 
 			MergeAttribute(context.Attributes, "data-val", "true");

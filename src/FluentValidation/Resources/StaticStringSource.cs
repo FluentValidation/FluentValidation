@@ -23,8 +23,11 @@ namespace FluentValidation.Resources {
 	/// <summary>
 	/// Represents a static string.
 	/// </summary>
+	[Obsolete("StaticStringSource is deprecated and will be removed in FluentValidation 10. Use a Func<PropertyValidatorContext, string> instead.")]
 	public class StaticStringSource : IStringSource {
 		readonly string _message;
+
+		internal string String => _message;
 
 		/// <summary>
 		/// Creates a new StringErrorMessageSource using the specified error message as the error template.

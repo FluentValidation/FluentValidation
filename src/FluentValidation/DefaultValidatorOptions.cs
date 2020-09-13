@@ -94,7 +94,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage) {
 			errorMessage.Guard("A message must be specified when calling WithMessage.", nameof(errorMessage));
 			return rule.Configure(config => {
-				config.CurrentValidator.Options.ErrorMessageSource = new StaticStringSource(errorMessage);
+				config.CurrentValidator.Options.ErrorMessageFactory = _ => errorMessage;
 			});
 		}
 
@@ -107,7 +107,14 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 			return rule.Configure(config => {
-				config.CurrentValidator.Options.ErrorMessageSource = new LazyStringSource(ctx => messageProvider((T)ctx?.InstanceToValidate));
+				config.CurrentValidator.Options.ErrorMessageFactory = ctx => {
+					try {
+						return messageProvider((T) ctx?.InstanceToValidate);
+					}
+					catch (NullReferenceException ex) {
+						throw new FluentValidationMessageFormatException("Could not build error message- the message makes use of properties from the containing object, but the containing object was null.", ex);
+					}
+				};
 			});
 		}
 
@@ -121,8 +128,14 @@ namespace FluentValidation {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 
 			return rule.Configure(config => {
-				config.CurrentValidator.Options.ErrorMessageSource
-					= new LazyStringSource(context => messageProvider((T)context?.InstanceToValidate, (TProperty)context?.PropertyValue));
+				config.CurrentValidator.Options.ErrorMessageFactory = context => {
+					try {
+						return messageProvider((T) context?.InstanceToValidate, (TProperty) context?.PropertyValue);
+					}
+					catch (NullReferenceException ex) {
+						throw new FluentValidationMessageFormatException("Could not build error message- the message makes use of properties from the containing object, but the containing object was null.", ex);
+					}
+				};
 			});
 		}
 
@@ -136,7 +149,7 @@ namespace FluentValidation {
 			errorCode.Guard("A error code must be specified when calling WithErrorCode.", nameof(errorCode));
 
 			return rule.Configure(config => {
-				config.CurrentValidator.Options.ErrorCodeSource = new StaticStringSource(errorCode);
+				config.CurrentValidator.Options.ErrorCode = errorCode;
 			});
 		}
 
@@ -314,7 +327,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string overridePropertyName) {
 			overridePropertyName.Guard("A property name must be specified when calling WithName.", nameof(overridePropertyName));
 			return rule.Configure(config => {
-				config.DisplayName = new StaticStringSource(overridePropertyName);
+				config.DisplayNameFactory = _ => overridePropertyName;
 			});
 		}
 
@@ -330,7 +343,7 @@ namespace FluentValidation {
 				// Must use null propagation here.
 				// The MVC clientside validation will try and retrieve the name, but won't
 				// be able to to so if we've used this overload of WithName.
-				config.DisplayName = new LazyStringSource(ctx => nameProvider((T)ctx?.InstanceToValidate));
+				config.DisplayNameFactory = context => nameProvider((T)context?.InstanceToValidate);
 			});
 		}
 

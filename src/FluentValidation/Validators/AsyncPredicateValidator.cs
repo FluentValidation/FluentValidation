@@ -33,7 +33,7 @@ namespace FluentValidation.Validators {
 		/// Creates a new AsyncPredicateValidator
 		/// </summary>
 		/// <param name="predicate"></param>
-		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) : base(new LanguageStringSource(nameof(AsyncPredicateValidator))) {
+		public AsyncPredicateValidator(Func<object, object, PropertyValidatorContext, CancellationToken, Task<bool>> predicate) {
 			predicate.Guard("A predicate must be specified.", nameof(predicate));
 			this._predicate = predicate;
 		}
@@ -49,6 +49,10 @@ namespace FluentValidation.Validators {
 
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {
 			return context.IsAsync() || base.ShouldValidateAsynchronously(context);
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(AsyncPredicateValidator));
 		}
 	}
 }

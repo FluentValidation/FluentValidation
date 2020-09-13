@@ -16,6 +16,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.AspNetCore {
+	using System;
 	using System.Collections.Generic;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -34,14 +35,18 @@ namespace FluentValidation.AspNetCore {
 
 		private string GetErrorMessage(ClientModelValidationContext context) {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
-			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
+			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName(null));
 			string messageTemplate;
 			try {
-				messageTemplate = Validator.Options.ErrorMessageSource.GetString(null);
+				messageTemplate = Validator.Options.ErrorMessageFactory.Invoke(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				messageTemplate = cfg.LanguageManager.GetStringForValidator<NotEmptyValidator>();
 			}
+			catch (NullReferenceException) {
+				messageTemplate = cfg.LanguageManager.GetStringForValidator<NotEmptyValidator>();
+			}
+
 			var message = formatter.BuildMessage(messageTemplate);
 			return message;
 		}

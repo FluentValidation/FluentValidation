@@ -45,23 +45,23 @@ namespace FluentValidation.AspNetCore {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
 
 			var formatter = cfg.MessageFormatterFactory()
-				.AppendPropertyName(Rule.GetDisplayName())
+				.AppendPropertyName(Rule.GetDisplayName(null))
 				.AppendArgument("From", RangeValidator.From)
 				.AppendArgument("To", RangeValidator.To);
-
-			var needsSimplifiedMessage = RangeValidator.Options.ErrorMessageSource is LanguageStringSource;
 
 			string message;
 
 			try {
-				message = RangeValidator.Options.ErrorMessageSource.GetString(null);
+				message = RangeValidator.Options.ErrorMessageFactory.Invoke(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				message = cfg.LanguageManager.GetString("InclusiveBetween_Simple");
-				needsSimplifiedMessage = false;
+			}
+			catch (NullReferenceException) {
+				message = cfg.LanguageManager.GetString("InclusiveBetween_Simple");
 			}
 
-			if (needsSimplifiedMessage && message.Contains("{Value}")) {
+			if (message.Contains("{Value}")) {
 				message = cfg.LanguageManager.GetString("InclusiveBetween_Simple");
 			}
 			message = formatter.BuildMessage(message);

@@ -16,6 +16,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.AspNetCore {
+	using System;
 	using System.Collections.Generic;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -40,15 +41,13 @@ namespace FluentValidation.AspNetCore {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
 
 			var formatter = cfg.MessageFormatterFactory()
-				.AppendPropertyName(Rule.GetDisplayName())
+				.AppendPropertyName(Rule.GetDisplayName(null))
 				.AppendArgument("MinLength", lengthVal.Min)
 				.AppendArgument("MaxLength", lengthVal.Max);
 
-			bool needsSimplifiedMessage = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
-
 			string message;
 			try {
-				message = lengthVal.Options.ErrorMessageSource.GetString(null);
+				message = lengthVal.Options.ErrorMessageFactory.Invoke(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				if (lengthVal is ExactLengthValidator) {
@@ -57,11 +56,18 @@ namespace FluentValidation.AspNetCore {
 				else {
 					message = cfg.LanguageManager.GetString("Length_Simple");
 				}
-
-				needsSimplifiedMessage = false;
+			}
+			catch (NullReferenceException) {
+				if (lengthVal is ExactLengthValidator) {
+					message = cfg.LanguageManager.GetString("ExactLength_Simple");
+				}
+				else {
+					message = cfg.LanguageManager.GetString("Length_Simple");
+				}
 			}
 
-			if (needsSimplifiedMessage && message.Contains("{TotalLength}")) {
+
+			if (message.Contains("{TotalLength}")) {
 				if (lengthVal is ExactLengthValidator) {
 					message = cfg.LanguageManager.GetString("ExactLength_Simple");
 				}

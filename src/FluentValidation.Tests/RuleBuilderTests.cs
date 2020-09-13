@@ -194,8 +194,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Nullable_object_with_async_condition_should_not_throw()
-		{
+		public void Nullable_object_with_async_condition_should_not_throw() {
 			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value),null);
 			builder.GreaterThanOrEqualTo(3).WhenAsync(async (x,c) => x.NullableInt != null);
 			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
