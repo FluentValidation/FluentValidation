@@ -68,8 +68,6 @@ namespace FluentValidation.Tests {
 #pragma warning disable 618
 			Assert.Equal(builder.Rule.DisplayName.GetString(null), "Foo");
 #pragma warning restore 618
-			Assert.Equal(builder.Rule.DisplayNameFactory(null), "Foo");
-
 		}
 
 		[Fact]
