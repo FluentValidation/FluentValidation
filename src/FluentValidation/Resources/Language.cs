@@ -16,11 +16,13 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.Resources {
+	using System;
 	using System.Collections.Generic;
 
 	/// <summary>
 	/// Base class for languages
 	/// </summary>
+	[Obsolete("The Language class is no longer used and will be removed in FluentValidation 10.")]
 	public abstract class Language {
 
 		/// <summary>
@@ -66,6 +68,7 @@ namespace FluentValidation.Resources {
 		}
 	}
 
+	[Obsolete]
 	internal class GenericLanguage : Language {
 		public GenericLanguage(string name) {
 			Name = name;

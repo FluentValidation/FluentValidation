@@ -1,4 +1,5 @@
 9.3.0 -
+Improvements to LanguageManager's lazy loading of resources.
 Updates to Persian translations (#1513)
 Added Bengali translations (#1517)
 
