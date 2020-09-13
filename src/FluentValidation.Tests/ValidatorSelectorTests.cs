@@ -36,7 +36,9 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.SomeProperty).NotNull()
 			};
 
+#pragma warning disable 618
 			var result = validator.Validate(new TestObject(), "SomeProperty");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 		}
 
@@ -46,7 +48,9 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
 			};
 
+#pragma warning disable 618
 			var result = validator.Validate(new TestObject(), "SomeProperty");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(0);
 		}
 
@@ -56,7 +60,9 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.SomeProperty).NotNull()
 			};
 
+#pragma warning disable 618
 			var result = validator.Validate(new TestObject(), x => x.SomeProperty);
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 		}
 
@@ -66,7 +72,9 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
 			};
 
+#pragma warning disable 618
 			var result = validator.Validate(new TestObject(), x => x.SomeProperty);
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(0);
 		}
 
@@ -80,7 +88,9 @@ namespace FluentValidation.Tests {
 				.OverridePropertyName("SomeNullableProperty")
 			};
 
+#pragma warning disable 618
 			var result = validator.Validate(new TestObject { SomeNullableProperty = 0 }, x => x.SomeNullableProperty);
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 		}
 
@@ -91,7 +101,9 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Address.Id).NotEqual(0)
 			};
 
+#pragma warning disable 618
 			var result = validator.Validate(new Person { Address = new Address() }, "Address.Id");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
 		}
@@ -103,7 +115,9 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Address.Id).NotEqual(0)
 			};
 
+#pragma warning disable 618
 			var result = validator.Validate(new Person { Address = new Address() }, x => x.Address.Id);
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
 
@@ -116,7 +130,9 @@ namespace FluentValidation.Tests {
 			validator2.RuleFor(x => x.Forename).NotNull();
 			validator.Include(validator2);
 
+#pragma warning disable 618
 			var result = validator.Validate(new Person(), "Forename");
+#pragma warning restore 618
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -128,7 +144,9 @@ namespace FluentValidation.Tests {
 			validator2.RuleFor(x => x.Surname).NotNull();
 			validator.Include(validator2);
 
+#pragma warning disable 618
 			var result = validator.Validate(new Person(), "Forename");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Forename");
 		}
@@ -141,7 +159,9 @@ namespace FluentValidation.Tests {
 			validator2.RuleFor(x => x.Surname).NotNull();
 			validator.Include(validator2);
 
+#pragma warning disable 618
 			var result = await validator.ValidateAsync(new Person(), default, "Forename");
+#pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Forename");
 		}

@@ -75,10 +75,12 @@
 
 		[Fact]
 		public void Always_use_specific_language_with_string_source() {
-			ValidatorOptions.LanguageManager.Culture = new CultureInfo("fr-FR");
+			ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr-FR");
+#pragma warning disable 618
 			var stringSource = new LanguageStringSource(nameof(NotNullValidator));
+#pragma warning restore 618
 			var msg = stringSource.GetString(null);
-			ValidatorOptions.LanguageManager.Culture = null;
+			ValidatorOptions.Global.LanguageManager.Culture = null;
 
 			msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
 		}
@@ -122,7 +124,9 @@
 
 			// Remember to update this test if new validators are added.
 			string[] keys = {
+#pragma warning disable 618
 				nameof(EmailValidator),
+#pragma warning restore 618
 				nameof(GreaterThanOrEqualValidator),
 				nameof(GreaterThanValidator),
 				nameof(LengthValidator),
@@ -182,9 +186,11 @@
 
 		[Fact]
 		public void All_languages_should_be_loaded() {
-			var languages = typeof(LanguageManager).Assembly.GetTypes()
-				.Where(t => typeof(Language).IsAssignableFrom(t) && !t.IsAbstract && t.Name != "GenericLanguage")
-				.Select(t => (Language) Activator.CreateInstance(t));
+			var languages = from type in typeof(LanguageManager).Assembly.GetTypes()
+				where type.Namespace == "FluentValidation.Resources" && !type.IsPublic
+				let cultureField = type.GetField("Culture", BindingFlags.Public | BindingFlags.Static)
+				where cultureField != null && cultureField.IsLiteral
+				select new { Name = cultureField.GetValue(null) as string, Type = type.Name };
 
 			string englishMessage = _languages.GetString(nameof(NotNullValidator), new CultureInfo("en"));
 
@@ -197,21 +203,21 @@
 				// Get the message from the language manager from the culture. If it's in English, then it's hit the
 				// fallback and means the culture hasn't been loaded.
 				string message = _languages.GetString(nameof(NotNullValidator), new CultureInfo(language.Name));
-				(message != englishMessage).ShouldBeTrue($"Language '{language.Name}' ({language.GetType().Name}) is not loaded in the LanguageManager");
+				(message != englishMessage).ShouldBeTrue($"Language '{language.Name}' ({language.Type}) is not loaded in the LanguageManager");
 			}
 		}
 
 		[Fact]
 		public void Uses_error_code_as_localization_key() {
-			var originalLanguageManager = ValidatorOptions.LanguageManager;
-			ValidatorOptions.LanguageManager = new CustomLanguageManager();
+			var originalLanguageManager = ValidatorOptions.Global.LanguageManager;
+			ValidatorOptions.Global.LanguageManager = new CustomLanguageManager();
 
 			using (new CultureScope("fr-FR")) {
 				var validator = new InlineValidator<Person>();
 				validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("CustomKey");
 				var result = validator.Validate(new Person());
-				
-				ValidatorOptions.LanguageManager = originalLanguageManager;
+
+				ValidatorOptions.Global.LanguageManager = originalLanguageManager;
 
 				result.Errors[0].ErrorMessage.ShouldEqual("bar");
 			}
@@ -219,14 +225,14 @@
 
 		[Fact]
 		public void Falls_back_to_default_localization_key_when_error_code_key_not_found() {
-			var originalLanguageManager = ValidatorOptions.LanguageManager;
-			ValidatorOptions.LanguageManager = new CustomLanguageManager();
-			ValidatorOptions.LanguageManager.Culture = new CultureInfo("fr-FR");
+			var originalLanguageManager = ValidatorOptions.Global.LanguageManager;
+			ValidatorOptions.Global.LanguageManager = new CustomLanguageManager();
+			ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr-FR");
 			var validator = new InlineValidator<Person>();
 			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("DoesNotExist");
 			var result = validator.Validate(new Person());
 
-			ValidatorOptions.LanguageManager = originalLanguageManager;
+			ValidatorOptions.Global.LanguageManager = originalLanguageManager;
 
 			result.Errors[0].ErrorMessage.ShouldEqual("foo");
 		}
@@ -239,9 +245,6 @@
 		}
 
 		private class TestValidator : PropertyValidator {
-			public TestValidator(IStringSource errorMessageSource) : base(errorMessageSource) {
-			}
-
 			public TestValidator(string errorMessage) : base(errorMessage) {
 			}
 

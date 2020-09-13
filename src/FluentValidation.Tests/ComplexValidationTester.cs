@@ -17,6 +17,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 
 #endregion
+#pragma warning disable 1998
 
 namespace FluentValidation.Tests {
 	using System.Collections.Generic;
@@ -80,7 +81,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Explicitly_included_properties_should_be_propagated_to_nested_validators() {
+#pragma warning disable 618
 			var results = validator.Validate(person, x => x.Address);
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
 			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
@@ -88,7 +91,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Explicitly_included_properties_should_be_propagated_to_nested_validators_using_strings() {
+#pragma warning disable 618
 			var results = validator.Validate(person, "Address");
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors.First().PropertyName.ShouldEqual("Address.Postcode");
 			results.Errors.Last().PropertyName.ShouldEqual("Address.Country.Name");
@@ -97,7 +102,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Complex_property_should_be_excluded() {
+#pragma warning disable 618
 			var results = validator.Validate(person, x => x.Surname);
+#pragma warning restore 618
 			results.Errors.Count.ShouldEqual(0);
 		}
 
