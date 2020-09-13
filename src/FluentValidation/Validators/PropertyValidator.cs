@@ -36,13 +36,13 @@ namespace FluentValidation.Validators {
 		protected PropertyValidator(IStringSource errorMessageSource) {
 			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
 			else if (errorMessageSource is LanguageStringSource l && l.ErrorCodeFunc == null)
-				l.ErrorCodeFunc = ctx => Options.ErrorCodeSource?.GetString(ctx);
+				l.ErrorCodeFunc = ctx => ErrorCodeSource?.GetString(ctx);
 
-			Options.ErrorMessageSource = errorMessageSource;
+			ErrorMessageSource = errorMessageSource;
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			Options.SetErrorMessage(errorMessage);
+			SetErrorMessage(errorMessage);
 		}
 
 		protected PropertyValidator() {
@@ -57,7 +57,7 @@ namespace FluentValidation.Validators {
 		/// <param name="fallbackKey">The fallback key to use for translation, if no ErrorCode is available.</param>
 		/// <returns>The translated error message template.</returns>
 		protected string Localized(string fallbackKey) {
-			var errorCode = Options.ErrorCode;
+			var errorCode = ErrorCode;
 
 			if (errorCode != null) {
 				string result = ValidatorOptions.Global.LanguageManager.GetString(errorCode);
@@ -92,7 +92,7 @@ namespace FluentValidation.Validators {
 		public virtual bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If the user has applied an async condition, then always go through the async path
 			// even if validator is being run synchronously.
-			if (Options.AsyncCondition != null) return true;
+			if (AsyncCondition != null) return true;
 			return false;
 		}
 
@@ -143,15 +143,15 @@ namespace FluentValidation.Validators {
 #pragma warning restore 618
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
 #pragma warning disable 618
-			failure.ErrorCode = Options.ErrorCodeSource?.GetString(context) ?? ValidatorOptions.Global.ErrorCodeResolver(this);
+			failure.ErrorCode = ErrorCodeSource?.GetString(context) ?? ValidatorOptions.Global.ErrorCodeResolver(this);
 #pragma warning restore 618
 
-			if (Options.CustomStateProvider != null) {
-				failure.CustomState = Options.CustomStateProvider(context);
+			if (CustomStateProvider != null) {
+				failure.CustomState = CustomStateProvider(context);
 			}
 
-			if (Options.SeverityProvider != null) {
-				failure.Severity = Options.SeverityProvider(context);
+			if (SeverityProvider != null) {
+				failure.Severity = SeverityProvider(context);
 			}
 
 			return failure;
