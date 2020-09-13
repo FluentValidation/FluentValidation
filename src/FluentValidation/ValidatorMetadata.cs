@@ -82,31 +82,6 @@ namespace FluentValidation {
 		public Func<PropertyValidatorContext, Severity> SeverityProvider { get; set; }
 
 		/// <summary>
-		/// Factory for retrieving the unformatted error message template.
-		/// </summary>
-#pragma warning disable 618
-		public Func<PropertyValidatorContext, string> ErrorMessageFactory {
-			get {
-				// TODO: For FV10, change the backing field type to Func and get rid of the
-				// IStringSource backing.
-				if (_errorSource is BackwardsCompatibleStringSource<PropertyValidatorContext> s) {
-					return s.Factory;
-				}
-
-				if (_errorSource != null) {
-					return context => _errorSource.GetString(context);
-				}
-
-				return null;
-			}
-			set {
-				if (value == null) throw new ArgumentNullException(nameof(value));
-				_errorSource = new BackwardsCompatibleStringSource<PropertyValidatorContext>(value);
-			}
-		}
-#pragma warning restore 618
-
-		/// <summary>
 		/// Retrieves the error code.
 		/// </summary>
 #pragma warning disable 618
@@ -130,7 +105,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Retrieves the unformatted error message template.
 		/// </summary>
-		[Obsolete("ErrorMessageSource is deprecated and will be removed in FluentValidation 10. Please use the ErrorMessageFactory property instead, which takes a Func<PropertyValidatorContext, string>")]
+		[Obsolete("ErrorMessageSource is deprecated and will be removed in FluentValidation 10. Please use SetErrorMessageTemplate and GetErrorMessageTemplate instead.")]
 		public IStringSource ErrorMessageSource {
 			get => _errorSource;
 			set => _errorSource = value ?? throw new ArgumentNullException(nameof(value));
@@ -143,6 +118,50 @@ namespace FluentValidation {
 		public IStringSource ErrorCodeSource {
 			get => _errorCodeSource;
 			set => _errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));
+		}
+
+		/// <summary>
+		/// Returns the default error message template for this validator, when not overridden.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual string GetDefaultMessageTemplate() => "No default error message has been specified";
+
+		/// <summary>
+		/// Gets the error message. If a context is supplied, it will be used to format the message if it has placeholders.
+		/// If no context is supplied, the raw unformatted message will be returned, containing placeholders.
+		/// </summary>
+		/// <param name="context">The current property validator context.</param>
+		/// <returns>Either the formatted or unformatted error message.</returns>
+		public string GetErrorMessageTemplate(PropertyValidatorContext context) {
+			string rawTemplate = _errorSource?.GetString(context) ?? GetDefaultMessageTemplate();
+
+			if (context == null) {
+				return rawTemplate;
+			}
+
+			return context.MessageFormatter.BuildMessage(rawTemplate);
+		}
+
+		/// <summary>
+		/// Sets the overridden error message template for this validator.
+		/// </summary>
+		/// <param name="errorFactory">A function for retrieving the error message template.</param>
+		public void SetErrorMessage(Func<PropertyValidatorContext, string> errorFactory) {
+			//TODO: For FV10 use a backing field of the correct type.
+#pragma warning disable 618
+			_errorSource = new BackwardsCompatibleStringSource<PropertyValidatorContext>(errorFactory);
+#pragma warning restore 618
+		}
+
+		/// <summary>
+		/// Sets the overridden error message template for this validator.
+		/// </summary>
+		/// <param name="errorMessage">The error message to set</param>
+		public void SetErrorMessage(string errorMessage) {
+			// TODO: For FV10 use a backing field of the correct type.
+#pragma warning disable 618
+			_errorSource = new StaticStringSource(errorMessage);
+#pragma warning restore 618
 		}
 	}
 }

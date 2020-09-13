@@ -26,10 +26,11 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public abstract class PropertyValidator : IPropertyValidator {
+	public abstract class PropertyValidator : PropertyValidatorOptions, IPropertyValidator {
 
 		/// <inheritdoc />
-		public PropertyValidatorOptions Options { get; } = new PropertyValidatorOptions();
+		//TODO: For FV 10 make this an explicit implementation.
+		public PropertyValidatorOptions Options => this;
 
 		[Obsolete("This constructor is deprecated and will be removed in FluentValidation 10. Either use the constructor that takes a string, or override the GetDefaultMessageTemplate method.")]
 		protected PropertyValidator(IStringSource errorMessageSource) {
@@ -41,20 +42,11 @@ namespace FluentValidation.Validators {
 		}
 
 		protected PropertyValidator(string errorMessage) {
-			//TODO: Remove this.
-			Options.ErrorMessageFactory = _ => errorMessage;
+			Options.SetErrorMessage(errorMessage);
 		}
 
 		protected PropertyValidator() {
-			//TODO: For backwards compatibility. Remove this once we get rid of ErrorMessageFactory.
-			Options.ErrorMessageFactory = c => GetDefaultMessageTemplate();
 		}
-
-		/// <summary>
-		/// Returns the default error message template for this validator.
-		/// </summary>
-		/// <returns></returns>
-		protected virtual string GetDefaultMessageTemplate() => "No default error message has been specified";
 
 		/// <summary>
 		/// Retrieves a localized string from the LanguageManager.
@@ -139,7 +131,7 @@ namespace FluentValidation.Validators {
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
 		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
-			var messageBuilderContext = new MessageBuilderContext(context, Options.ErrorMessageFactory, this);
+			var messageBuilderContext = new MessageBuilderContext(context, this);
 
 			var error = context.Rule.MessageBuilder != null
 				? context.Rule.MessageBuilder(messageBuilderContext)
@@ -150,7 +142,9 @@ namespace FluentValidation.Validators {
 			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
 #pragma warning restore 618
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-			failure.ErrorCode = Options.ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(this);
+#pragma warning disable 618
+			failure.ErrorCode = Options.ErrorCodeSource?.GetString(context) ?? ValidatorOptions.Global.ErrorCodeResolver(this);
+#pragma warning restore 618
 
 			if (Options.CustomStateProvider != null) {
 				failure.CustomState = Options.CustomStateProvider(context);

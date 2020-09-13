@@ -35,7 +35,7 @@ namespace FluentValidation.AspNetCore {
 			string message;
 
 			try {
-				message = RangeValidator.Options.ErrorMessageFactory.Invoke(null);
+				message = RangeValidator.Options.GetErrorMessageTemplate(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				message = cfg.LanguageManager.GetStringForValidator<GreaterThanOrEqualValidator>();

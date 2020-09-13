@@ -44,7 +44,7 @@ namespace FluentValidation.AspNetCore {
 
 			string message;
 			try {
-				message = lengthVal.Options.ErrorMessageFactory.Invoke(null);
+				message = lengthVal.Options.GetErrorMessageTemplate(null);
 			}
 			catch (FluentValidationMessageFormatException) {
 				message = cfg.LanguageManager.GetString("MaximumLength_Simple");

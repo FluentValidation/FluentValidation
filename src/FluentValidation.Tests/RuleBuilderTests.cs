@@ -78,7 +78,6 @@ namespace FluentValidation.Tests {
 #pragma warning disable 618
 			builder.Rule.CurrentValidator.Options.ErrorMessageSource.GetString(null).ShouldEqual("Bar");
 #pragma warning restore 618
-			builder.Rule.CurrentValidator.Options.ErrorMessageFactory(null).ShouldEqual("Bar");
 
 		}
 
