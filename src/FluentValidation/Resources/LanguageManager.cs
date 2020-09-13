@@ -39,6 +39,8 @@ namespace FluentValidation.Resources {
 		/// <returns>The corresponding Language instance or null.</returns>
 		private static string GetTranslation(string culture, string key) {
 			return culture switch {
+				EnglishLanguage.AmericanCulture => EnglishLanguage.GetTranslation(key),
+				EnglishLanguage.BritishCulture => EnglishLanguage.GetTranslation(key),
 				EnglishLanguage.Culture => EnglishLanguage.GetTranslation(key),
 				AlbanianLanguage.Culture => AlbanianLanguage.GetTranslation(key),
 				ArabicLanguage.Culture => ArabicLanguage.GetTranslation(key),

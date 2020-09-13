@@ -25,6 +25,8 @@ namespace FluentValidation.Resources {
 
 	internal class EnglishLanguage {
 		public const string Culture = "en";
+		public const string AmericanCulture = "en-US";
+		public const string BritishCulture = "en-GB";
 
 		public static string GetTranslation(string key) => key switch {
 			nameof(EmailValidator) => "'{PropertyName}' is not a valid email address.",
