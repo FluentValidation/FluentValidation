@@ -329,7 +329,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string overridePropertyName) {
 			overridePropertyName.Guard("A property name must be specified when calling WithName.", nameof(overridePropertyName));
 			return rule.Configure(config => {
-				config.DisplayNameFactory = _ => overridePropertyName;
+				config.SetDisplayName(overridePropertyName);
 			});
 		}
 
@@ -345,7 +345,7 @@ namespace FluentValidation {
 				// Must use null propagation here.
 				// The MVC clientside validation will try and retrieve the name, but won't
 				// be able to to so if we've used this overload of WithName.
-				config.DisplayNameFactory = context => nameProvider((T)context?.InstanceToValidate);
+				config.SetDsiplayName(context => nameProvider((T)context?.InstanceToValidate));
 			});
 		}
 
