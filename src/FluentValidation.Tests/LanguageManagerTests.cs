@@ -94,7 +94,7 @@
 
 		[Fact]
 		public void Can_replace_message() {
-			using (new CultureScope("en-US")) {
+			using (new CultureScope("fr-FR")) {
 				var custom = new CustomLanguageManager();
 				var msg = custom.GetStringForValidator<NotNullValidator>();
 				msg.ShouldEqual("foo");
@@ -206,20 +206,22 @@
 			var originalLanguageManager = ValidatorOptions.LanguageManager;
 			ValidatorOptions.LanguageManager = new CustomLanguageManager();
 
-			var validator = new InlineValidator<Person>();
-			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("CustomKey");
-			var result = validator.Validate(new Person());
+			using (new CultureScope("fr-FR")) {
+				var validator = new InlineValidator<Person>();
+				validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("CustomKey");
+				var result = validator.Validate(new Person());
+				
+				ValidatorOptions.LanguageManager = originalLanguageManager;
 
-			ValidatorOptions.LanguageManager = originalLanguageManager;
-
-			result.Errors[0].ErrorMessage.ShouldEqual("bar");
+				result.Errors[0].ErrorMessage.ShouldEqual("bar");
+			}
 		}
 
 		[Fact]
 		public void Falls_back_to_default_localization_key_when_error_code_key_not_found() {
 			var originalLanguageManager = ValidatorOptions.LanguageManager;
 			ValidatorOptions.LanguageManager = new CustomLanguageManager();
-			ValidatorOptions.LanguageManager.Culture = new CultureInfo("en-US");
+			ValidatorOptions.LanguageManager.Culture = new CultureInfo("fr-FR");
 			var validator = new InlineValidator<Person>();
 			validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("DoesNotExist");
 			var result = validator.Validate(new Person());
@@ -231,8 +233,8 @@
 
 		public class CustomLanguageManager : LanguageManager {
 			public CustomLanguageManager() {
-				AddTranslation("en", "NotNullValidator", "foo");
-				AddTranslation("en", "CustomKey", "bar");
+				AddTranslation("fr", "NotNullValidator", "foo");
+				AddTranslation("fr", "CustomKey", "bar");
 			}
 		}
 
