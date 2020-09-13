@@ -27,7 +27,7 @@ namespace FluentValidation.Validators {
 	public class EnumValidator : PropertyValidator {
 		private readonly Type _enumType;
 
-		public EnumValidator(Type enumType) : base(new LanguageStringSource(nameof(EnumValidator))) {
+		public EnumValidator(Type enumType) {
 			this._enumType = enumType;
 		}
 
@@ -111,6 +111,10 @@ namespace FluentValidation.Validators {
 			}
 
 			return false;
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(EnumValidator));
 		}
 	}
 }

@@ -23,11 +23,11 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class GreaterThanValidator : AbstractComparisonValidator {
-		public GreaterThanValidator(IComparable value) : base(value, new LanguageStringSource(nameof(GreaterThanValidator))) {
+		public GreaterThanValidator(IComparable value) : base(value) {
 		}
 
 		public GreaterThanValidator(Func<object, object> valueToCompareFunc, MemberInfo member, string memberDisplayName)
-			: base(valueToCompareFunc, member, memberDisplayName, new LanguageStringSource(nameof(GreaterThanValidator))) {
+			: base(valueToCompareFunc, member, memberDisplayName) {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {
@@ -38,5 +38,9 @@ namespace FluentValidation.Validators {
 		}
 
 		public override Comparison Comparison => Validators.Comparison.GreaterThan;
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(GreaterThanValidator));
+		}
 	}
 }

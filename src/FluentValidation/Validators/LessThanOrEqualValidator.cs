@@ -22,11 +22,11 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class LessThanOrEqualValidator : AbstractComparisonValidator {
-		public LessThanOrEqualValidator(IComparable value) : base(value, new LanguageStringSource(nameof(LessThanOrEqualValidator))) {
+		public LessThanOrEqualValidator(IComparable value) : base(value) {
 		}
 
 		public LessThanOrEqualValidator(Func<object, object> valueToCompareFunc, MemberInfo member, string memberDisplayName)
-			: base(valueToCompareFunc, member, memberDisplayName, new LanguageStringSource(nameof(LessThanOrEqualValidator))) {
+			: base(valueToCompareFunc, member, memberDisplayName) {
 		}
 
 		public override bool IsValid(IComparable value, IComparable valueToCompare) {
@@ -36,8 +36,10 @@ namespace FluentValidation.Validators {
 			return value.CompareTo(valueToCompare) <= 0;
 		}
 
-		public override Comparison Comparison {
-			get { return Comparison.LessThanOrEqual; }
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(LessThanOrEqualValidator));
 		}
+
+		public override Comparison Comparison => Comparison.LessThanOrEqual;
 	}
 }

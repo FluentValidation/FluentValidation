@@ -28,8 +28,10 @@ namespace FluentValidation {
 	/// Validator metadata.
 	/// </summary>
 	public class PropertyValidatorOptions {
+#pragma warning disable 618
 		private IStringSource _errorSource;
 		private IStringSource _errorCodeSource;
+#pragma warning restore 618
 
 		/// <summary>
 		/// Condition associated with the validator. If the condition fails, the validator will not run.
@@ -80,8 +82,55 @@ namespace FluentValidation {
 		public Func<PropertyValidatorContext, Severity> SeverityProvider { get; set; }
 
 		/// <summary>
+		/// Factory for retrieving the unformatted error message template.
+		/// </summary>
+#pragma warning disable 618
+		public Func<PropertyValidatorContext, string> ErrorMessageFactory {
+			get {
+				// TODO: For FV10, change the backing field type to Func and get rid of the
+				// IStringSource backing.
+				if (_errorSource is BackwardsCompatibleStringSource<PropertyValidatorContext> s) {
+					return s.Factory;
+				}
+
+				if (_errorSource != null) {
+					return context => _errorSource.GetString(context);
+				}
+
+				return null;
+			}
+			set {
+				if (value == null) throw new ArgumentNullException(nameof(value));
+				_errorSource = new BackwardsCompatibleStringSource<PropertyValidatorContext>(value);
+			}
+		}
+#pragma warning restore 618
+
+		/// <summary>
+		/// Retrieves the error code.
+		/// </summary>
+#pragma warning disable 618
+		public string ErrorCode {
+			get {
+				// TODO: For FV10, change the backing field type to string and get rid of the
+				// IStringSource backing.
+				if (_errorCodeSource is StaticStringSource s) {
+					return s.String;
+				}
+
+				return _errorCodeSource?.GetString(null);
+			}
+			set {
+				if (value == null) throw new ArgumentNullException(nameof(value));
+				_errorCodeSource = new StaticStringSource(value);
+			}
+		}
+#pragma warning restore 618
+
+		/// <summary>
 		/// Retrieves the unformatted error message template.
 		/// </summary>
+		[Obsolete("ErrorMessageSource is deprecated and will be removed in FluentValidation 10. Please use the ErrorMessageFactory property instead, which takes a Func<PropertyValidatorContext, string>")]
 		public IStringSource ErrorMessageSource {
 			get => _errorSource;
 			set => _errorSource = value ?? throw new ArgumentNullException(nameof(value));
@@ -90,6 +139,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Retrieves the error code.
 		/// </summary>
+		[Obsolete("ErrorCodeSource is deprecated and will be FluentValidation 10. Please use the ErrorCode property instead.")]
 		public IStringSource ErrorCodeSource {
 			get => _errorCodeSource;
 			set => _errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));

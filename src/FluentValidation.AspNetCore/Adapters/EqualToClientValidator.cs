@@ -16,6 +16,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.AspNetCore {
+	using System;
 	using System.Collections.Generic;
 	using System.Reflection;
 	using Internal;
@@ -47,14 +48,17 @@ namespace FluentValidation.AspNetCore {
 					?? propertyToCompare.Name.SplitPascalCase();
 
 				var formatter = cfg.MessageFormatterFactory()
-					.AppendPropertyName(Rule.GetDisplayName())
+					.AppendPropertyName(Rule.GetDisplayName(null))
 					.AppendArgument("ComparisonValue", comparisonDisplayName);
 
 				string messageTemplate;
 				try {
-					messageTemplate = EqualValidator.Options.ErrorMessageSource.GetString(null);
+					messageTemplate = EqualValidator.Options.ErrorMessageFactory.Invoke(null);
 				}
 				catch (FluentValidationMessageFormatException) {
+					messageTemplate = cfg.LanguageManager.GetStringForValidator<EqualValidator>();
+				}
+				catch (NullReferenceException) {
 					messageTemplate = cfg.LanguageManager.GetStringForValidator<EqualValidator>();
 				}
 				string message = formatter.BuildMessage(messageTemplate);

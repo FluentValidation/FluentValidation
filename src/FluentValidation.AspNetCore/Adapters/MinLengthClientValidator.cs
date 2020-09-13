@@ -1,4 +1,5 @@
 ﻿#region License
+
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,50 +15,53 @@
 // limitations under the License.
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
+
 #endregion
+
 namespace FluentValidation.AspNetCore {
-    using Internal;
-    using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-    using Resources;
-    using Validators;
+	using System;
+	using Internal;
+	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+	using Resources;
+	using Validators;
 
-    internal class MinLengthClientValidator :ClientValidatorBase {
-
+	internal class MinLengthClientValidator : ClientValidatorBase {
 		public override void AddValidation(ClientModelValidationContext context) {
-		    var lengthVal = (MinimumLengthValidator)Validator;
+			var lengthVal = (MinimumLengthValidator) Validator;
 
-		    MergeAttribute(context.Attributes, "data-val", "true");
-		    MergeAttribute(context.Attributes, "data-val-minlength", GetErrorMessage(lengthVal, context));
-		    MergeAttribute(context.Attributes, "data-val-minlength-min", lengthVal.Min.ToString());
-	    }
+			MergeAttribute(context.Attributes, "data-val", "true");
+			MergeAttribute(context.Attributes, "data-val-minlength", GetErrorMessage(lengthVal, context));
+			MergeAttribute(context.Attributes, "data-val-minlength-min", lengthVal.Min.ToString());
+		}
 
-	    private string GetErrorMessage(LengthValidator lengthVal, ClientModelValidationContext context) {
-		    var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
+		private string GetErrorMessage(LengthValidator lengthVal, ClientModelValidationContext context) {
+			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
 
-		    var formatter = cfg.MessageFormatterFactory()
-			    .AppendPropertyName(Rule.GetDisplayName())
-			    .AppendArgument("MinLength", lengthVal.Min)
-			    .AppendArgument("MaxLength", lengthVal.Max);
+			var formatter = cfg.MessageFormatterFactory()
+				.AppendPropertyName(Rule.GetDisplayName(null))
+				.AppendArgument("MinLength", lengthVal.Min)
+				.AppendArgument("MaxLength", lengthVal.Max);
 
-		    bool needsSimifiedMessage = lengthVal.Options.ErrorMessageSource is LanguageStringSource;
-
-		    string message;
-		    try {
-			    message = lengthVal.Options.ErrorMessageSource.GetString(null);
-		    } catch (FluentValidationMessageFormatException) {
+			string message;
+			try {
+				message = lengthVal.Options.ErrorMessageFactory.Invoke(null);
+			}
+			catch (FluentValidationMessageFormatException) {
 				message = cfg.LanguageManager.GetString("MinimumLength_Simple");
-			    needsSimifiedMessage = false;
-		    }
+			}
+			catch (NullReferenceException) {
+				message = cfg.LanguageManager.GetString("MinimumLength_Simple");
+			}
 
-		    if (needsSimifiedMessage && message.Contains("{TotalLength}")) {
-			    message = cfg.LanguageManager.GetString("MinimumLength_Simple");
-		    }
+			if (message.Contains("{TotalLength}")) {
+				message = cfg.LanguageManager.GetString("MinimumLength_Simple");
+			}
 
-		    message = formatter.BuildMessage(message);
-		    return message;
-	    }
+			message = formatter.BuildMessage(message);
+			return message;
+		}
 
-	    public MinLengthClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
-	    }
-    }
+		public MinLengthClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		}
+	}
 }

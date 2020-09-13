@@ -30,14 +30,18 @@ namespace FluentValidation.AspNetCore {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
 
 			var formatter = cfg.MessageFormatterFactory()
-				.AppendPropertyName(Rule.GetDisplayName())
+				.AppendPropertyName(Rule.GetDisplayName(null))
 				.AppendArgument("ComparisonValue", RangeValidator.ValueToCompare);
 
 			string message;
 
 			try {
-				message = RangeValidator.Options.ErrorMessageSource.GetString(null);
-			} catch (FluentValidationMessageFormatException) {
+				message = RangeValidator.Options.ErrorMessageFactory.Invoke(null);
+			}
+			catch (FluentValidationMessageFormatException) {
+				message = cfg.LanguageManager.GetStringForValidator<LessThanOrEqualValidator>();
+			}
+			catch (NullReferenceException) {
 				message = cfg.LanguageManager.GetStringForValidator<LessThanOrEqualValidator>();
 			}
 

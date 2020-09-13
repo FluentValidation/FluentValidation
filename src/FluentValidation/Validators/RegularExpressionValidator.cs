@@ -24,33 +24,33 @@ namespace FluentValidation.Validators {
 	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
 		readonly Func<object, Regex> _regexFunc;
 
-		public RegularExpressionValidator(string expression) :base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
+		public RegularExpressionValidator(string expression) {
 			Expression = expression;
 
 			var regex = CreateRegex(expression);
 			_regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(Regex regex) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
+		public RegularExpressionValidator(Regex regex) {
 			Expression = regex.ToString();
 			_regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(string expression, RegexOptions options) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
+		public RegularExpressionValidator(string expression, RegexOptions options) {
 			Expression = expression;
 			var regex = CreateRegex(expression, options);
 			_regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(Func<object, string> expressionFunc) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
+		public RegularExpressionValidator(Func<object, string> expressionFunc) {
 			_regexFunc = x => CreateRegex(expressionFunc(x));
 		}
 
-		public RegularExpressionValidator(Func<object, Regex> regexFunc) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
+		public RegularExpressionValidator(Func<object, Regex> regexFunc) {
 			_regexFunc = regexFunc;
 		}
 
-		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options) : base(new LanguageStringSource(nameof(RegularExpressionValidator))) {
+		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options) {
 			_regexFunc = x => CreateRegex(expression(x), options);
 		}
 
@@ -69,6 +69,10 @@ namespace FluentValidation.Validators {
 		}
 
 		public string Expression { get; }
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(RegularExpressionValidator));
+		}
 	}
 
 	public interface IRegularExpressionValidator : IPropertyValidator {

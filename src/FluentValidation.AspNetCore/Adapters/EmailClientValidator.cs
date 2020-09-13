@@ -16,6 +16,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.AspNetCore {
+	using System;
 	using System.Collections.Generic;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
@@ -29,17 +30,20 @@ namespace FluentValidation.AspNetCore {
 
 		public override void AddValidation(ClientModelValidationContext context) {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
-			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName());
+			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName(null));
 
 			string messageTemplate;
 			try {
-				messageTemplate = Validator.Options.ErrorMessageSource.GetString(null);
+				messageTemplate = Validator.Options.ErrorMessageFactory.Invoke(null);
 			}
-			catch (FluentValidationMessageFormatException) {
 #pragma warning disable 618
+			catch (FluentValidationMessageFormatException) {
 				messageTemplate = cfg.LanguageManager.GetStringForValidator<EmailValidator>();
-#pragma warning restore 618
 			}
+			catch (NullReferenceException) {
+				messageTemplate = cfg.LanguageManager.GetStringForValidator<EmailValidator>();
+			}
+#pragma warning restore 618
 
 			string message = formatter.BuildMessage(messageTemplate);
 			MergeAttribute(context.Attributes, "data-val", "true");

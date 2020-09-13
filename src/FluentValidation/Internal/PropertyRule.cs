@@ -40,6 +40,11 @@ namespace FluentValidation.Internal {
 		private Func<IValidationContext, bool> _condition;
 		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 
+#pragma warning disable 618
+		//TODO: Replace with Func<IValidationContext, string> for FV 10.
+		private IStringSource _displayNameSource;
+#pragma warning restore 618
+
 		/// <summary>
 		/// Condition for all validators in this rule.
 		/// </summary>
@@ -68,7 +73,37 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// String source that can be used to retrieve the display name (if null, falls back to the property name)
 		/// </summary>
-		public IStringSource DisplayName { get; set; }
+		[Obsolete("This property is deprecated and will be removed in FluentValidation 10. Use the DisplayNameFactory property instead.")]
+		public IStringSource DisplayName {
+			get {
+				if (DisplayNameFactory != null) {
+					return new LazyStringSource(ctx => DisplayNameFactory(ctx as IValidationContext));
+				}
+				return _displayNameSource;
+			}
+			set => _displayNameSource = value;
+		}
+
+		/// <summary>
+		/// Factory used to build the display name (if null, falls back to the property name).
+		/// </summary>
+#pragma warning disable 618
+		public Func<IValidationContext, string> DisplayNameFactory {
+			get {
+				// TODO: For backwards compatibility. Switch the backing field to correct type for FV10.
+				if (_displayNameSource is BackwardsCompatibleStringSource<IValidationContext> s) {
+					return s.Factory;
+				}
+
+				if (_displayNameSource != null) {
+					return context => _displayNameSource.GetString(context);
+				}
+
+				return null;
+			}
+			set => _displayNameSource = new BackwardsCompatibleStringSource<IValidationContext>(value);
+		}
+#pragma warning restore 618
 
 		/// <summary>
 		/// Rule set that this rule belongs to (if specified)
@@ -124,7 +159,7 @@ namespace FluentValidation.Internal {
 
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.Global.PropertyNameResolver(containerType, member, expression);
-			DisplayName = new LazyStringSource(x =>  ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression));
+			DisplayNameFactory = context => ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression);
 		}
 
 		/// <summary>
@@ -202,11 +237,12 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Display name for the property.
 		/// </summary>
+		[Obsolete("Calling GetDisplayName without a context parameter is deprecated and will be removed in FluentValidation 10. If you really need this behaviour, you can call the overload that takes a context but pass in null.")]
 		public string GetDisplayName() {
 			string result = null;
 
-			if (DisplayName != null) {
-				result = DisplayName.GetString(null /*We don't have a model object at this point*/);
+			if (_displayNameSource != null) {
+				result = _displayNameSource.GetString(null /*We don't have a model object at this point*/);
 			}
 
 			if (result == null) {
@@ -220,10 +256,11 @@ namespace FluentValidation.Internal {
 		/// Display name for the property.
 		/// </summary>
 		public string GetDisplayName(ICommonContext context) {
+			//TODO: For FV10, change the parameter from ICommonContext to IValidationContext.
 			string result = null;
 
-			if (DisplayName != null) {
-				result = DisplayName.GetString(context);
+			if (_displayNameSource != null) {
+				result = _displayNameSource.GetString(context);
 			}
 
 			if (result == null) {

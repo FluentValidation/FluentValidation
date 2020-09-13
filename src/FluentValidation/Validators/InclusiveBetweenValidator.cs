@@ -22,7 +22,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class InclusiveBetweenValidator : PropertyValidator, IBetweenValidator {
-		public InclusiveBetweenValidator(IComparable from, IComparable to) : base(new LanguageStringSource(nameof(InclusiveBetweenValidator))) {
+		public InclusiveBetweenValidator(IComparable from, IComparable to) {
 			To = to;
 			From = from;
 
@@ -52,6 +52,10 @@ namespace FluentValidation.Validators {
 				return false;
 			}
 			return true;
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(InclusiveBetweenValidator));
 		}
 	}
 

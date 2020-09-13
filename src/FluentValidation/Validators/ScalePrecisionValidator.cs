@@ -37,7 +37,7 @@ namespace FluentValidation.Validators {
 	/// and precision of 2 and 5 respectively.
 	/// </summary>
 	public class ScalePrecisionValidator : PropertyValidator {
-		public ScalePrecisionValidator(int scale, int precision) : base(new LanguageStringSource(nameof(ScalePrecisionValidator))) {
+		public ScalePrecisionValidator(int scale, int precision) {
 			Init(scale, precision);
 		}
 
@@ -133,6 +133,10 @@ namespace FluentValidation.Validators {
 			}
 
 			return (int) precision;
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(ScalePrecisionValidator));
 		}
 	}
 }

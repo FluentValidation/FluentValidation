@@ -50,7 +50,7 @@ namespace FluentValidation {
 			var nameUsed = Rules
 				.OfType<PropertyRule>()
 				.Where(x => x.PropertyName == property)
-				.Select(x => x.GetDisplayName()).FirstOrDefault();
+				.Select(x => x.GetDisplayName(null)).FirstOrDefault();
 
 			return nameUsed;
 		}

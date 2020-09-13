@@ -27,7 +27,7 @@ namespace FluentValidation.Validators {
 	public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
 		private readonly object _defaultValueForType;
 
-		public NotEmptyValidator(object defaultValueForType) : base(new LanguageStringSource(nameof(NotEmptyValidator))) {
+		public NotEmptyValidator(object defaultValueForType) {
 			_defaultValueForType = defaultValueForType;
 		}
 
@@ -46,6 +46,10 @@ namespace FluentValidation.Validators {
 			}
 
 			return true;
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(NotEmptyValidator));
 		}
 	}
 
