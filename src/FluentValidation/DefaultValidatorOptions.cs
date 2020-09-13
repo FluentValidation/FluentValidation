@@ -345,7 +345,7 @@ namespace FluentValidation {
 				// Must use null propagation here.
 				// The MVC clientside validation will try and retrieve the name, but won't
 				// be able to to so if we've used this overload of WithName.
-				config.SetDsiplayName(context => nameProvider((T)context?.InstanceToValidate));
+				config.SetDisplayName(context => nameProvider((T)context?.InstanceToValidate));
 			});
 		}
 

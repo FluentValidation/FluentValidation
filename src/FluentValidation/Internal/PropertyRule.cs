@@ -93,7 +93,7 @@ namespace FluentValidation.Internal {
 		/// Sets the display name for the property using a function.
 		/// </summary>
 		/// <param name="factory">The function for building the display name</param>
-		public void SetDsiplayName(Func<IValidationContext, string> factory) {
+		public void SetDisplayName(Func<IValidationContext, string> factory) {
 			if (factory == null) throw new ArgumentNullException(nameof(factory));
 #pragma warning disable 618
 			_displayNameSource = new BackwardsCompatibleStringSource<IValidationContext>(factory);
