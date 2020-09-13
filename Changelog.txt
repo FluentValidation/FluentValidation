@@ -1,3 +1,7 @@
+9.3.0 -
+Updates to Persian translations (#1513)
+Added Bengali translations (#1517)
+
 9.2.0 - 26 August 2020
 Add inheritance validator (#1237)
 Performance improvements.
