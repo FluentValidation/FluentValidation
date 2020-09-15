@@ -29,7 +29,7 @@ namespace FluentValidation.Validators {
 	/// </summary>
 	public abstract class AsyncValidatorBase : PropertyValidator {
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {
-			return context.IsAsync() || Options.AsyncCondition != null;
+			return context.IsAsync() || HasAsyncCondition;
 		}
 
 		[Obsolete("This constructor will be removed in FluentValidation 10. Either use the constructor which takes a constant message or override GetDefaultMessageTemplate")]

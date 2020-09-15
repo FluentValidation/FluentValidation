@@ -36,12 +36,25 @@ namespace FluentValidation {
 		/// <summary>
 		/// Condition associated with the validator. If the condition fails, the validator will not run.
 		/// </summary>
+		[Obsolete("The Condition property will not be accessible in FluentValidation 10. Use the HasCondition property to check if a condition is set.")]
 		public Func<PropertyValidatorContext, bool> Condition { get; private set; }
 
 		/// <summary>
 		/// Async condition associated with the validator. If the condition fails, the validator will not run.
 		/// </summary>
+		[Obsolete("The AsyncCondition property will not be accessible in FluentValidation 10. Use the HasAsyncCondition property to check if a condition is set.")]
 		public Func<PropertyValidatorContext, CancellationToken, Task<bool>> AsyncCondition { get; private set; }
+
+#pragma warning disable 618
+		/// <summary>
+		/// Whether or not this validator has a condition associated with it.
+		/// </summary>
+		public bool HasCondition => Condition != null;
+
+		/// <summary>
+		/// Whether or not this validator has an async condition associated with it.
+		/// </summary>
+		public bool HasAsyncCondition => AsyncCondition != null;
 
 		/// <summary>
 		/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
@@ -70,6 +83,23 @@ namespace FluentValidation {
 				AsyncCondition = async (ctx, ct) => await condition(ctx, ct) && await original(ctx, ct);
 			}
 		}
+
+		internal bool InvokeCondition(PropertyValidatorContext context) {
+			if (Condition != null) {
+				return Condition(context);
+			}
+
+			return true;
+		}
+
+		internal async Task<bool> InvokeAsyncCondition(PropertyValidatorContext context, CancellationToken token) {
+			if (AsyncCondition != null) {
+				return await AsyncCondition(context, token);
+			}
+
+			return true;
+		}
+#pragma warning restore 618
 
 		/// <summary>
 		/// Function used to retrieve custom state for the validator

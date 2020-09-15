@@ -17,12 +17,12 @@
 			// to this validator too. They won't be invoked automatically, as conditions
 			// are invoked by the parent rule, which means that only *this* validator's
 			// conditions will be invoked, not the wrapped validator's conditions.
-			if (_innerValidator.Options.Condition != null) {
-				Options.ApplyCondition(_innerValidator.Options.Condition);
+			if (_innerValidator.Options.HasCondition) {
+				Options.ApplyCondition(_innerValidator.Options.InvokeCondition);
 			}
 
-			if (_innerValidator.Options.AsyncCondition != null) {
-				Options.ApplyAsyncCondition(_innerValidator.Options.AsyncCondition);
+			if (_innerValidator.Options.HasAsyncCondition) {
+				Options.ApplyAsyncCondition(_innerValidator.Options.InvokeAsyncCondition);
 			}
 		}
 
@@ -45,7 +45,7 @@
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If the user has applied an async condition, or the inner validator requires async
 			// validation then always go through the async path.
-			if (Options.AsyncCondition != null || _innerValidator.ShouldValidateAsynchronously(context)) return true;
+			if (Options.HasAsyncCondition || _innerValidator.ShouldValidateAsynchronously(context)) return true;
 			return false;
 		}
 

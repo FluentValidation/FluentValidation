@@ -457,8 +457,8 @@ namespace FluentValidation.Internal {
 				propertyContext = new PropertyValidatorContext(context, this, propertyName);
 #pragma warning restore 618
 			}
-			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
-			if (validator.Options.AsyncCondition != null && !await validator.Options.AsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
+			if (!validator.Options.InvokeCondition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
+			if (!await validator.Options.InvokeAsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
 			return await validator.ValidateAsync(propertyContext, cancellation);
 		}
 
@@ -476,7 +476,7 @@ namespace FluentValidation.Internal {
 				propertyContext = new PropertyValidatorContext(context, this, propertyName);
 #pragma warning restore 618
 			}
-			if (validator.Options.Condition != null && !validator.Options.Condition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
+			if (!validator.Options.InvokeCondition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			return validator.Validate(propertyContext);
 		}
 

@@ -92,7 +92,7 @@ namespace FluentValidation.Validators {
 		public virtual bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If the user has applied an async condition, then always go through the async path
 			// even if validator is being run synchronously.
-			if (AsyncCondition != null) return true;
+			if (HasAsyncCondition) return true;
 			return false;
 		}
 

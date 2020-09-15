@@ -91,7 +91,7 @@ namespace FluentValidation.AspNetCore {
 					let validators = rule.Validators
 					where validators.Any()
 					from propertyValidator in validators
-					where propertyValidator.Options.Condition == null && propertyValidator.Options.AsyncCondition == null
+					where !propertyValidator.Options.HasCondition && !propertyValidator.Options.HasAsyncCondition
 					let modelValidatorForProperty = GetModelValidator(context, propertyRule, propertyValidator)
 					where modelValidatorForProperty != null
 					select modelValidatorForProperty;
