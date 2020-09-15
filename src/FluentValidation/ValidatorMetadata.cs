@@ -105,7 +105,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Retrieves the unformatted error message template.
 		/// </summary>
-		[Obsolete("ErrorMessageSource is deprecated and will be removed in FluentValidation 10. Please use SetErrorMessageTemplate and GetErrorMessageTemplate instead.")]
+		[Obsolete("ErrorMessageSource is deprecated and will be removed in FluentValidation 10. Please use SetErrorMessage and GetErrorMessageTemplate instead.")]
 		public IStringSource ErrorMessageSource {
 			get => _errorSource;
 			set => _errorSource = value ?? throw new ArgumentNullException(nameof(value));
