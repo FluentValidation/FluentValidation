@@ -114,7 +114,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Retrieves the error code.
 		/// </summary>
-		[Obsolete("ErrorCodeSource is deprecated and will be FluentValidation 10. Please use the ErrorCode property instead.")]
+		[Obsolete("ErrorCodeSource is deprecated and will be removed FluentValidation 10. Please use the ErrorCode property instead.")]
 		public IStringSource ErrorCodeSource {
 			get => _errorCodeSource;
 			set => _errorCodeSource = value ?? throw new ArgumentNullException(nameof(value));
