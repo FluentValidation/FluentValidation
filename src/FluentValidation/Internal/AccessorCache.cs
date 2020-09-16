@@ -1,7 +1,6 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Concurrent;
-	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Reflection;
 
@@ -9,7 +8,7 @@ namespace FluentValidation.Internal {
 	/// Member accessor cache.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public static class AccessorCache<T> {
+	internal static class AccessorCache<T> {
 		private static readonly ConcurrentDictionary<Key, Delegate> _cache = new ConcurrentDictionary<Key, Delegate>();
 
 		/// <summary>
@@ -19,13 +18,14 @@ namespace FluentValidation.Internal {
 		/// <param name="member">The member represented by the expression</param>
 		/// <param name="expression"></param>
 		/// <param name="bypassCache"></param>
+		/// <param name="cachePrefix">Cache prefix</param>
 		/// <returns>Accessor func</returns>
-		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, bool bypassCache = false) {
+		public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, bool bypassCache = false, string cachePrefix = null) {
 			if (member == null || bypassCache || ValidatorOptions.Global.DisableAccessorCache) {
 				return expression.Compile();
 			}
 
-			var key = new Key(member, expression);
+			var key = new Key(member, expression, cachePrefix);
 			return (Func<T,TProperty>)_cache.GetOrAdd(key, k => expression.Compile());
 		}
 
@@ -37,9 +37,9 @@ namespace FluentValidation.Internal {
 			private readonly MemberInfo _memberInfo;
 			private readonly string _expressionDebugView;
 
-			public Key(MemberInfo member, Expression expression) {
+			public Key(MemberInfo member, Expression expression, string cachePrefix) {
 				_memberInfo = member;
-				_expressionDebugView = expression.ToString();
+				_expressionDebugView = cachePrefix != null ? cachePrefix + expression.ToString() : expression.ToString();
 			}
 
 			protected bool Equals(Key other) {

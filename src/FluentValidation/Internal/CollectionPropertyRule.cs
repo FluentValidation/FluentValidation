@@ -61,10 +61,17 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
+		//TODO: Remove in FV10.
 		public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk) {
-			var member = expression.GetMember();
-			var compiled = expression.Compile();
+			return Create(expression, cascadeModeThunk, false);
+		}
 
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+			var member = expression.GetMember();
+			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache, "FV_RuleForEach");
 			return new CollectionPropertyRule<T, TElement>(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TElement), typeof(T));
 		}
 
