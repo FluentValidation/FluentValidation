@@ -18,7 +18,9 @@
 
 namespace FluentValidation.Tests {
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Threading.Tasks;
+	using Validators;
 	using Xunit;
 
 	public class InheritanceValidatorTest {
@@ -227,6 +229,23 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Foo.Number");
 
+		}
+
+		[Fact]
+		public void Can_use_custom_subclass_with_nongeneric_overload() {
+			var validator = new InlineValidator<Root>();
+			validator.RuleFor(x => x.Foo).SetValidator(new TypeUnsafePolymorphicValidator<Root, IFoo>());
+			var result = validator.Validate(new Root {Foo = new FooImpl1()});
+			result.Errors.Single().PropertyName.ShouldEqual("Foo.Name");
+		}
+
+		private class TypeUnsafePolymorphicValidator<T, TProperty> : PolymorphicValidator<T, TProperty> {
+			public TypeUnsafePolymorphicValidator() {
+				var impl1Validator = new InlineValidator<FooImpl1>();
+				impl1Validator.RuleFor(x => x.Name).NotNull();
+
+				Add(typeof(FooImpl1), impl1Validator);
+			}
 		}
 
 		public interface IFoo {
