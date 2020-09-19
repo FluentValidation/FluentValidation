@@ -77,6 +77,27 @@ namespace FluentValidation.Validators {
 			return this;
 		}
 
+		/// <summary>
+		/// Adds a validator to handle a specific subclass. This method is not publicly exposed as it
+		/// takes a non-generic IValidator instance which could result in a type-unsafe validation operation.
+		/// It allows derived validaors more flexibility in handling type conversion. If you make use of this method, you
+		/// should ensure that the validator can correctly handle the type being validated.
+		/// </summary>
+		/// <param name="subclassType"></param>
+		/// <param name="validator"></param>
+		/// <param name="ruleSets">Optionally specify rulesets to execute. If set, rules not in these rulesets will not be run</param>
+		/// <returns></returns>
+		protected PolymorphicValidator<T, TProperty> Add(Type subclassType, IValidator validator, params string[] ruleSets) {
+			if (subclassType == null) throw new ArgumentNullException(nameof(subclassType));
+			if (validator == null) throw new ArgumentNullException(nameof(validator));
+			if (!validator.CanValidateInstancesOfType(subclassType)) {
+				throw new InvalidOperationException($"Validator {validator.GetType().Name} can't validate instances of type {subclassType.Name}");
+			}
+
+			_derivedValidators[subclassType] = new ValidatorWrapper(validator, ruleSets);
+			return this;
+		}
+
 		public override IValidator<TProperty> GetValidator(PropertyValidatorContext context) {
 			// bail out if the current item is null
 			if (context.PropertyValue == null) return null;
