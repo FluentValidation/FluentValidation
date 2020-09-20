@@ -76,21 +76,12 @@ namespace FluentValidation.Internal {
 		/// <param name="propertyName"></param>
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
-		protected override async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, CancellationToken cancellation) {
+		protected override async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor, CancellationToken cancellation) {
 			if (string.IsNullOrEmpty(propertyName)) {
 				propertyName = InferPropertyName(Expression);
 			}
 
-			PropertyValidatorContext propertyContext;
-			// TODO: For FV10 this will come as a parameter rather than in RootContextData.
-			if (context.RootContextData.TryGetValue("__FV_CurrentAccessor", out var a) && a is Lazy<object> accessor) {
-				propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
-			}
-			else {
-#pragma warning disable 618
-				propertyContext = new PropertyValidatorContext(context, this, propertyName);
-#pragma warning restore 618
-			}
+			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
 
 			if (!validator.Options.InvokeCondition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			if (!await validator.Options.InvokeAsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
@@ -163,21 +154,12 @@ namespace FluentValidation.Internal {
 		/// <param name="validator"></param>
 		/// <param name="propertyName"></param>
 		/// <returns></returns>
-		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(IValidationContext context, Validators.IPropertyValidator validator, string propertyName) {
+		protected override IEnumerable<Results.ValidationFailure> InvokePropertyValidator(IValidationContext context, Validators.IPropertyValidator validator, string propertyName, Lazy<object> accessor) {
 			if (string.IsNullOrEmpty(propertyName)) {
 				propertyName = InferPropertyName(Expression);
 			}
 
-			PropertyValidatorContext propertyContext;
-			// TODO: For FV10 this will come as a parameter rather than in RootContextData.
-			if (context.RootContextData.TryGetValue("__FV_CurrentAccessor", out var a) && a is Lazy<object> accessor) {
-				propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
-			}
-			else {
-#pragma warning disable 618
-				propertyContext = new PropertyValidatorContext(context, this, propertyName);
-#pragma warning restore 618
-			}
+			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
 
 			if (!validator.Options.InvokeCondition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			// There's no need to check for the AsyncCondition here. If the validator has an async condition, then
