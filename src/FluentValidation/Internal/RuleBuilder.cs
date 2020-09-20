@@ -98,27 +98,17 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		/// <summary>
-		/// Sets the validator associated with the rule. Use with complex properties where an IValidator instance is already declared for the property type.
-		/// </summary>
-		/// <param name="validatorProvider">The validator provider to set</param>
-		public IRuleBuilderOptions<T,TProperty> SetValidator<TValidator>(Func<ICommonContext, TValidator> validatorProvider) where TValidator : IValidator<TProperty> {
-			validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
-			SetValidator(new ChildValidatorAdaptor<T,TProperty>(context => validatorProvider(context), typeof (TValidator)));
-			return this;
-		}
-
-		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
+		IRuleBuilderInitial<T, TProperty> IRuleBuilderInitial<T, TProperty>.Configure(Action<PropertyRule> configurator) {
 			configurator(Rule);
 			return this;
 		}
 
-		IRuleBuilderInitial<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderInitial<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
+		IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.Configure(Action<PropertyRule> configurator) {
 			configurator(Rule);
 			return this;
 		}
 
-		IRuleBuilderInitialCollection<T, TProperty> IConfigurable<CollectionPropertyRule<T, TProperty>, IRuleBuilderInitialCollection<T, TProperty>>.Configure(Action<CollectionPropertyRule<T, TProperty>> configurator) {
+		IRuleBuilderInitialCollection<T, TProperty> IRuleBuilderInitialCollection<T, TProperty>.Configure(Action<CollectionPropertyRule<T, TProperty>> configurator) {
 			configurator((CollectionPropertyRule<T, TProperty>) Rule);
 			return this;
 		}
@@ -152,4 +142,5 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 	}
+
 }
