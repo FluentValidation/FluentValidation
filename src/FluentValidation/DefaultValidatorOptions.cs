@@ -107,15 +107,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 			return rule.Configure(config => {
-				config.CurrentValidator.Options.SetErrorMessage(ctx => {
-					try {
-						return messageProvider((T) ctx?.InstanceToValidate);
-					}
-					// TODO: Remove this as client validators now handle catching NRE.
-					catch (NullReferenceException ex) {
-						throw new FluentValidationMessageFormatException("Could not build error message- the message makes use of properties from the containing object, but the containing object was null.", ex);
-					}
-				});
+				config.CurrentValidator.Options.SetErrorMessage(ctx => messageProvider((T) ctx?.InstanceToValidate));
 			});
 		}
 
@@ -129,15 +121,7 @@ namespace FluentValidation {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 
 			return rule.Configure(config => {
-				config.CurrentValidator.Options.SetErrorMessage(context => {
-					try {
-						return messageProvider((T) context?.InstanceToValidate, (TProperty) context?.PropertyValue);
-					}
-					// TODO: FV10 Remove this as client validators now handle catching NRE.
-					catch (NullReferenceException ex) {
-						throw new FluentValidationMessageFormatException("Could not build error message- the message makes use of properties from the containing object, but the containing object was null.", ex);
-					}
-				});
+				config.CurrentValidator.Options.SetErrorMessage(context => messageProvider((T) context?.InstanceToValidate, (TProperty) context?.PropertyValue));
 			});
 		}
 

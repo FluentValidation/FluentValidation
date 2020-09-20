@@ -53,10 +53,7 @@ namespace FluentValidation.AspNetCore {
 
 				string messageTemplate;
 				try {
-					messageTemplate = EqualValidator.Options.GetErrorMessageTemplate(null);
-				}
-				catch (FluentValidationMessageFormatException) {
-					messageTemplate = cfg.LanguageManager.GetStringForValidator<EqualValidator>();
+					messageTemplate = EqualValidator.Options.GetErrorMessage(null);
 				}
 				catch (NullReferenceException) {
 					messageTemplate = cfg.LanguageManager.GetStringForValidator<EqualValidator>();
