@@ -82,6 +82,11 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
 	public interface IRuleBuilderOptions<T, out TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>> {
+
+		/// <summary>
+		/// Creates a scope for declaring dependent rules.
+		/// </summary>
+		IRuleBuilderOptions<T, TProperty> DependentRules(Action action);
 	}
 
 	/// <summary>
