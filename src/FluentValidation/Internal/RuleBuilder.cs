@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Internal {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using Validators;
 
@@ -26,7 +27,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
-	public class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty>, IRuleBuilderInitialCollection<T,TProperty>, IExposesParentValidator<T> {
+	internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty>, IRuleBuilderInitialCollection<T,TProperty> {
 		/// <summary>
 		/// The rule being created by this RuleBuilder.
 		/// </summary>
@@ -35,12 +36,12 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Parent validator
 		/// </summary>
-		public IValidator<T> ParentValidator { get; }
+		public AbstractValidator<T> ParentValidator { get; }
 
 		/// <summary>
 		/// Creates a new instance of the <see cref="RuleBuilder{T,TProperty}">RuleBuilder</see> class.
 		/// </summary>
-		public RuleBuilder(PropertyRule rule, IValidator<T> parent) {
+		public RuleBuilder(PropertyRule rule, AbstractValidator<T> parent) {
 			Rule = rule;
 			ParentValidator = parent;
 		}
@@ -127,9 +128,28 @@ namespace FluentValidation.Internal {
 			Rule.Transformer = transformationFunc.CoerceToNonGeneric();
 			return new RuleBuilder<T, TNew>(Rule, ParentValidator);
 		}
-	}
 
-	internal interface IExposesParentValidator<T> {
-		IValidator<T> ParentValidator { get; }
+		/// <summary>
+		/// Creates a scope for declaring dependent rules.
+		/// </summary>
+		public IRuleBuilderOptions<T, TProperty> DependentRules(Action action) {
+			var dependencyContainer = new List<IValidationRule>();
+
+			// Capture any rules added to the parent validator inside this delegate.
+			using (ParentValidator.Rules.Capture(dependencyContainer.Add)) {
+				action();
+			}
+
+			if (Rule.RuleSets.Length > 0) {
+				foreach (var dependentRule in dependencyContainer) {
+					if (dependentRule is PropertyRule propRule && propRule.RuleSets.Length == 0) {
+						propRule.RuleSets = Rule.RuleSets;
+					}
+				}
+			}
+
+			Rule.DependentRules.AddRange(dependencyContainer);
+			return this;
+		}
 	}
 }
