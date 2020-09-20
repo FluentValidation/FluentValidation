@@ -280,47 +280,6 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Triggers an action when the rule passes. Typically used to configure dependent rules. This applies to all preceding rules in the chain.
-		/// </summary>
-		/// <param name="rule">The current rule</param>
-		/// <param name="action">An action to be invoked if the rule is valid</param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> DependentRules<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action action) {
-
-			var dependencyContainer = new List<IValidationRule>();
-
-			if (rule is IExposesParentValidator<T> exposesParentValidator) {
-				if (exposesParentValidator.ParentValidator is AbstractValidator<T> parent) {
-					// Capture any rules added to the parent validator inside this delegate.
-					using (parent.Rules.Capture(dependencyContainer.Add)) {
-						action();
-					}
-				}
-				else {
-					throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from AbstractValidator");
-				}
-			}
-			else {
-				throw new NotSupportedException("DependentRules can only be called as part of classes that inherit from AbstractValidator");
-			}
-
-			rule.Configure(cfg => {
-
-				if (cfg.RuleSets.Length > 0) {
-					foreach (var dependentRule in dependencyContainer) {
-						if (dependentRule is PropertyRule propRule && propRule.RuleSets.Length == 0) {
-							propRule.RuleSets = cfg.RuleSets;
-						}
-					}
-				}
-
-				cfg.DependentRules.AddRange(dependencyContainer);
-			});
-			return rule;
-		}
-
-
-		/// <summary>
 		/// Specifies a custom property name to use within the error message.
 		/// </summary>
 		/// <param name="rule">The current rule</param>
