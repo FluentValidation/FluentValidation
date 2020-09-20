@@ -168,6 +168,68 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Validates_with_callback_accepting_derived() {
+			var validator = new InlineValidator<Root>();
+			var impl1Validator = new InlineValidator<FooImpl1>();
+			var impl2Validator = new InlineValidator<FooImpl2>();
+
+			impl1Validator.RuleFor(x => x.Name).NotNull();
+			impl2Validator.RuleFor(x => x.Number).GreaterThan(0);
+
+			validator.RuleFor(x => x.Foo).SetInheritanceValidator(v => {
+				v.Add<FooImpl1>((x, impl1) => {
+						Assert.NotNull(impl1);
+						return impl1Validator;
+					})
+					.Add<FooImpl2>((x, impl2) => {
+						Assert.NotNull(impl2);
+						return impl2Validator;
+					});
+			});
+
+			var result = validator.Validate(new Root {Foo = new FooImpl1()});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Foo.Name");
+
+			result = validator.Validate(new Root {Foo = new FooImpl2()});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Foo.Number");
+
+		}
+
+		[Fact]
+		public async Task Validates_with_callback_accepting_derived_async() {
+			var validator = new InlineValidator<Root>();
+			var impl1Validator = new InlineValidator<FooImpl1>();
+			var impl2Validator = new InlineValidator<FooImpl2>();
+
+			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => Task.FromResult(s != null));
+			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => Task.FromResult(i > 0));
+
+			validator.RuleFor(x => x.Foo).SetInheritanceValidator(v => {
+				v.Add<FooImpl1>((x, impl1) => {
+						Assert.NotNull(impl1);
+						return impl1Validator;
+					})
+					.Add<FooImpl2>((x, impl2) => {
+						Assert.NotNull(impl2);
+						return impl2Validator;
+					});
+			});
+
+			var result = await validator.ValidateAsync(new Root {Foo = new FooImpl1()});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Foo.Name");
+
+			result = await validator.ValidateAsync(new Root {Foo = new FooImpl2()});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Foo.Number");
+
+		}
+
+
+
+		[Fact]
 		public void Validates_ruleset() {
 			var validator = new InlineValidator<Root>();
 			var impl1Validator = new InlineValidator<FooImpl1>();
