@@ -31,12 +31,7 @@ namespace FluentValidation.Validators {
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {
 			return context.IsAsync() || HasAsyncCondition;
 		}
-
-		[Obsolete("This constructor will be removed in FluentValidation 10. Either use the constructor which takes a constant message or override GetDefaultMessageTemplate")]
-		protected AsyncValidatorBase(IStringSource errorSource) : base(errorSource) {
-
-		}
-
+		
 		protected AsyncValidatorBase(string errorMessage)
 			: base(errorMessage) {
 		}

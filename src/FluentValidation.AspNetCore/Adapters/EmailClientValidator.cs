@@ -34,12 +34,9 @@ namespace FluentValidation.AspNetCore {
 
 			string messageTemplate;
 			try {
-				messageTemplate = Validator.Options.GetErrorMessageTemplate(null);
+				messageTemplate = Validator.Options.GetErrorMessage(null);
 			}
 #pragma warning disable 618
-			catch (FluentValidationMessageFormatException) {
-				messageTemplate = cfg.LanguageManager.GetStringForValidator<EmailValidator>();
-			}
 			catch (NullReferenceException) {
 				messageTemplate = cfg.LanguageManager.GetStringForValidator<EmailValidator>();
 			}
