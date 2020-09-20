@@ -1,3 +1,6 @@
+9.2.2 - 20 September 2020
+Fix one of the inheritance validator overloads not working correctly (#1528)
+
 9.2.1 - 19 September 2020
 Add non-generic Add method to inheritance validator.
 Updates to Persian translations (#1513)
