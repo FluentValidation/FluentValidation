@@ -25,8 +25,6 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	public class MessageFormatter {
 		readonly Dictionary<string, object> _placeholderValues = new Dictionary<string, object>(2);
-		object[] _additionalArguments = new object[0];
-		private bool _shouldUseAdditionalArgs;
 
 		private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled);
 
@@ -39,10 +37,6 @@ namespace FluentValidation.Internal {
 		/// Default Property Value placeholder.
 		/// </summary>
 		public const string PropertyValue = "PropertyValue";
-
-		public MessageFormatter() {
-
-		}
 
 		/// <summary>
 		/// Adds a value for a validation message placeholder.
@@ -74,47 +68,15 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
-		/// Adds additional arguments to the message for use with standard string placeholders.
-		/// </summary>
-		/// <param name="additionalArgs">Additional arguments</param>
-		/// <returns></returns>
-		[Obsolete("AppendAdditionalArguments will be removed in FluentValidation 10. Please construct your error message with a function instead.")]
-		public MessageFormatter AppendAdditionalArguments(params object[] additionalArgs) {
-			_additionalArguments = additionalArgs;
-			_shouldUseAdditionalArgs = _additionalArguments != null && _additionalArguments.Length > 0;
-			return this;
-		}
-
-		/// <summary>
 		/// Constructs the final message from the specified template.
 		/// </summary>
 		/// <param name="messageTemplate">Message template</param>
 		/// <returns>The message with placeholders replaced with their appropriate values</returns>
 		public virtual string BuildMessage(string messageTemplate) {
-			string result = ReplacePlaceholdersWithValues(messageTemplate, _placeholderValues);
-
-			if (_shouldUseAdditionalArgs) {
-				return string.Format(result, _additionalArguments);
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// Additional arguments to use
-		/// </summary>
-		[Obsolete("AdditionalArguments will be removed in FluentValidation 10. Please construct your error message with a function instead.")]
-		public object[] AdditionalArguments => _additionalArguments;
-
-		/// <summary>
-		/// Additional placeholder values
-		/// </summary>
-		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
-
-		protected virtual string ReplacePlaceholdersWithValues(string template, IDictionary<string, object> values) {
-			return _keyRegex.Replace(template, m =>	{
+			return _keyRegex.Replace(messageTemplate, m =>	{
 				var key = m.Groups[1].Value;
 
-				if (!values.TryGetValue(key, out var value))
+				if (!_placeholderValues.TryGetValue(key, out var value))
 					return m.Value; // No placeholder / value
 
 				var format = m.Groups[2].Success // Format specified?
@@ -126,5 +88,10 @@ namespace FluentValidation.Internal {
 					: string.Format(format, value);
 			});
 		}
+
+		/// <summary>
+		/// Additional placeholder values
+		/// </summary>
+		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
 	}
 }
