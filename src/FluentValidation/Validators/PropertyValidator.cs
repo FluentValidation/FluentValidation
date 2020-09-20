@@ -32,19 +32,6 @@ namespace FluentValidation.Validators {
 		//TODO: For FV 10 make this an explicit implementation.
 		public PropertyValidatorOptions Options => this;
 
-		[Obsolete("This constructor is deprecated and will be removed in FluentValidation 10. Override the GetDefaultMessageTemplate method instead.")]
-		protected PropertyValidator(IStringSource errorMessageSource) {
-			if(errorMessageSource == null) errorMessageSource = new StaticStringSource("No default error message has been specified.");
-			else if (errorMessageSource is LanguageStringSource l && l.ErrorCodeFunc == null)
-				l.ErrorCodeFunc = ctx => ErrorCodeSource?.GetString(ctx);
-
-			ErrorMessageSource = errorMessageSource;
-		}
-
-		[Obsolete("This constructor is deprecated and will be removed in FluentValidation 10. Override the GetDefaultMessageTemplate method instead.")]
-		protected PropertyValidator(string errorMessage) {
-			SetErrorMessage(errorMessage);
-		}
 
 		protected PropertyValidator() {
 		}
@@ -144,7 +131,7 @@ namespace FluentValidation.Validators {
 #pragma warning restore 618
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
 #pragma warning disable 618
-			failure.ErrorCode = ErrorCodeSource?.GetString(context) ?? ValidatorOptions.Global.ErrorCodeResolver(this);
+			failure.ErrorCode = ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(this);
 #pragma warning restore 618
 
 			if (CustomStateProvider != null) {

@@ -98,10 +98,8 @@
 		[Fact]
 		public void Always_use_specific_language_with_string_source() {
 			ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr-FR");
-#pragma warning disable 618
-			var stringSource = new LanguageStringSource(nameof(NotNullValidator));
-#pragma warning restore 618
-			var msg = stringSource.GetString(null);
+			var validator = new NotNullValidator();
+			var msg = validator.GetErrorMessage(null);
 			ValidatorOptions.Global.LanguageManager.Culture = null;
 
 			msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
