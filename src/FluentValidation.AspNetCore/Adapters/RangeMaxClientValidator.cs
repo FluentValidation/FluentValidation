@@ -36,10 +36,7 @@ namespace FluentValidation.AspNetCore {
 			string message;
 
 			try {
-				message = RangeValidator.Options.GetErrorMessageTemplate(null);
-			}
-			catch (FluentValidationMessageFormatException) {
-				message = cfg.LanguageManager.GetStringForValidator<LessThanOrEqualValidator>();
+				message = RangeValidator.Options.GetErrorMessage(null);
 			}
 			catch (NullReferenceException) {
 				message = cfg.LanguageManager.GetStringForValidator<LessThanOrEqualValidator>();
