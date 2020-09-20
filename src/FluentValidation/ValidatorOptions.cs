@@ -114,89 +114,10 @@ namespace FluentValidation {
 	/// Validator runtime options
 	/// </summary>
 	public static class ValidatorOptions {
-
 		/// <summary>
 		/// Global configuration for all validators.
 		/// </summary>
 		public static ValidatorConfiguration Global { get; } = new ValidatorConfiguration();
-
-		/// <summary>
-		/// Default cascade mode
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.CascadeMode instead.")]
-		public static CascadeMode CascadeMode {
-			get => Global.CascadeMode;
-			set => Global.CascadeMode = value;
-		}
-
-		/// <summary>
-		/// Default property chain separator
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.PropertyChainSeparator instead.")]
-		public static string PropertyChainSeparator {
-			get => Global.PropertyChainSeparator;
-			set => Global.PropertyChainSeparator = value;
-		}
-
-		/// <summary>
-		/// Default language manager
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.LanguageManager instead.")]
-		public static ILanguageManager LanguageManager {
-			get => Global.LanguageManager;
-			set => Global.LanguageManager = value;
-		}
-
-		/// <summary>
-		/// Customizations of validator selector
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.ValidatorSelectors instead.")]
-		public static ValidatorSelectorOptions ValidatorSelectors => Global.ValidatorSelectors;
-
-		/// <summary>
-		/// Specifies a factory for creating MessageFormatter instances.
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.MessageFormatterFactory instead.")]
-		public static Func<MessageFormatter> MessageFormatterFactory {
-			get => Global.MessageFormatterFactory;
-			set => Global.MessageFormatterFactory = value;
-		}
-
-		/// <summary>
-		/// Pluggable logic for resolving property names
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.PropertyNameResolver instead.")]
-		public static Func<Type, MemberInfo, LambdaExpression, string> PropertyNameResolver {
-			get => Global.PropertyNameResolver;
-			set => Global.PropertyNameResolver = value;
-		}
-
-		/// <summary>
-		/// Pluggable logic for resolving display names
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.DisplayNameResolver instead.")]
-		public static Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver {
-			get => Global.DisplayNameResolver;
-			set => Global.DisplayNameResolver = value;
-		}
-
-		/// <summary>
-		/// Disables the expression accessor cache. Not recommended.
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.DisableAccessorCache instead.")]
-		public static bool DisableAccessorCache {
-			get => Global.DisableAccessorCache;
-			set => Global.DisableAccessorCache = value;
-		}
-
-		/// <summary>
-		/// Pluggable resolver for default error codes
-		/// </summary>
-		[Obsolete("This property will be removed in FluentValidation 10. Use ValidatorOptions.Global.ErrorCodeResolver instead.")]
-		public static Func<PropertyValidator, string> ErrorCodeResolver {
-			get => Global.ErrorCodeResolver;
-			set => Global.ErrorCodeResolver = value;
-		}
 	}
 
 	/// <summary>

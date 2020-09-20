@@ -75,15 +75,6 @@ namespace FluentValidation.Results {
 		public string ErrorCode { get; set; }
 
 		/// <summary>
-		/// Gets or sets the formatted message arguments.
-		/// These are values for custom formatted message in validator resource files
-		/// Same formatted message can be reused in UI and with same number of format placeholders
-		/// Like "Value {0} that you entered should be {1}"
-		/// </summary>
-		[Obsolete("FormattedMessageArguments is unused and will be removed in FluentValidation 10.")]
-		public object[] FormattedMessageArguments { get; set; }
-
-		/// <summary>
 		/// Gets or sets the formatted message placeholder values.
 		/// </summary>
 		public Dictionary<string, object> FormattedMessagePlaceholderValues { get; set; }
