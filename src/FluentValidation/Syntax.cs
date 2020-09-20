@@ -27,7 +27,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderInitial<T, out TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule, IRuleBuilderInitial<T, TProperty>> {
+	public interface IRuleBuilderInitial<T, out TProperty> : IRuleBuilder<T, TProperty> {
 
 		/// <summary>
 		/// Transforms the property value before validation occurs.
@@ -36,6 +36,13 @@ namespace FluentValidation {
 		/// <param name="transformationFunc"></param>
 		/// <returns></returns>
 		IRuleBuilderInitial<T, TNew> Transform<TNew>(Func<TProperty, TNew> transformationFunc);
+
+		/// <summary>
+		/// Configures the rule.
+		/// </summary>
+		/// <param name="configurator">Action to configure the object.</param>
+		/// <returns></returns>
+		IRuleBuilderInitial<T, TProperty> Configure(Action<PropertyRule> configurator);
 	}
 
 	/// <summary>
@@ -81,7 +88,15 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderOptions<T, out TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>> {
+	public interface IRuleBuilderOptions<T, out TProperty> : IRuleBuilder<T, TProperty> {
+
+		/// <summary>
+		/// Configures the current object.
+		/// </summary>
+		/// <param name="configurator">Action to configure the object.</param>
+		/// <returns></returns>
+		IRuleBuilderOptions<T, TProperty> Configure(Action<PropertyRule> configurator);
+
 
 		/// <summary>
 		/// Creates a scope for declaring dependent rules.
@@ -94,7 +109,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TElement"></typeparam>
-	public interface IRuleBuilderInitialCollection<T, TElement> : IRuleBuilder<T, TElement>, IConfigurable<CollectionPropertyRule<T, TElement>, IRuleBuilderInitialCollection<T, TElement>> {
+	public interface IRuleBuilderInitialCollection<T, TElement> : IRuleBuilder<T, TElement> {
 
 		/// <summary>
 		/// Transforms the collection element value before validation occurs.
@@ -102,6 +117,13 @@ namespace FluentValidation {
 		/// <param name="transformationFunc"></param>
 		/// <returns></returns>
 		IRuleBuilderInitial<T, TNew> Transform<TNew>(Func<TElement, TNew> transformationFunc);
+
+		/// <summary>
+		/// Configures the rule object.
+		/// </summary>
+		/// <param name="configurator">Action to configure the object.</param>
+		/// <returns></returns>
+		IRuleBuilderInitialCollection<T, TElement> Configure(Action<CollectionPropertyRule<T, TElement>> configurator);
 	}
 
 	/// <summary>
