@@ -29,24 +29,29 @@ namespace FluentValidation.Tests {
 	using Results;
 	using Validators;
 	using System.Reflection;
+	using Microsoft.Win32;
 
 	public class RuleBuilderTests {
-		RuleBuilder<Person, string> builder;
+		IRuleBuilderInitial<Person, string> builder;
+		private InlineValidator<Person> _validator;
+		private PropertyRule _rule;
+
 
 		public  RuleBuilderTests() {
-			var rule = PropertyRule.Create<Person,string>(x => x.Surname);
-			builder = new RuleBuilder<Person, string>(rule,null);
+			_validator = new InlineValidator<Person>();
+			builder = _validator.RuleFor(x => x.Surname);
+			builder.Configure(rule => _rule = rule);
 		}
 
 		[Fact]
 		public void Should_build_property_name() {
-			builder.Rule.PropertyName.ShouldEqual("Surname");
+			_rule.PropertyName.ShouldEqual("Surname");
 		}
 
 		[Fact]
 		public void Should_compile_expression() {
 			var person = new Person {Surname = "Foo"};
-			builder.Rule.PropertyFunc(person).ShouldEqual("Foo");
+			_rule.PropertyFunc(person).ShouldEqual("Foo");
 		}
 
 		[Fact]
@@ -59,24 +64,19 @@ namespace FluentValidation.Tests {
 		public void Adding_a_validator_should_store_validator() {
 			var validator = new TestPropertyValidator();
 			builder.SetValidator(validator);
-			builder.Rule.CurrentValidator.ShouldBeTheSameAs(validator);
+			_rule.CurrentValidator.ShouldBeTheSameAs(validator);
 		}
 
 		[Fact]
 		public void Should_set_custom_property_name() {
 			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
-#pragma warning disable 618
-			Assert.Equal(builder.Rule.DisplayName.GetString(null), "Foo");
-#pragma warning restore 618
+			Assert.Equal(_rule.GetDisplayName(null), "Foo");
 		}
 
 		[Fact]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-#pragma warning disable 618
-			builder.Rule.CurrentValidator.Options.ErrorMessageSource.GetString(null).ShouldEqual("Bar");
-#pragma warning restore 618
-
+			_rule.CurrentValidator.Options.GetErrorMessageTemplate(null).ShouldEqual("Bar");
 		}
 
 		[Fact]
@@ -141,7 +141,7 @@ namespace FluentValidation.Tests {
 			validator.Setup(x => x.Options).Returns(new PropertyValidatorOptions());
 			builder.SetValidator(validator.Object);
 
-			builder.Rule.Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
+			_rule.Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 
@@ -153,7 +153,7 @@ namespace FluentValidation.Tests {
 			validator.Setup(x => x.Options).Returns(new PropertyValidatorOptions());
 			builder.SetValidator(validator.Object);
 
-			await builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
+			await _rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 
@@ -170,7 +170,7 @@ namespace FluentValidation.Tests {
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
 			builder.SetValidator(validator.Object);
 
-			await builder.Rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
+			await _rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
 
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
 
@@ -179,66 +179,82 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
-			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth), null);
-			builder.Rule.GetDisplayName(null).ShouldEqual("Date Of Birth");
+			var builder = _validator.RuleFor(x => x.DateOfBirth);
+			PropertyRule rule = null;
+			builder.Configure(r => rule = r);
+			rule.GetDisplayName(null).ShouldEqual("Date Of Birth");
 		}
 
 		[Fact]
 		public void PropertyDescription_should_return_custom_property_name() {
-			var builder = new RuleBuilder<Person, DateTime>(PropertyRule.Create<Person, DateTime>(x => x.DateOfBirth),null);
+			var builder = _validator.RuleFor(x => x.DateOfBirth);
+			PropertyRule rule = null;
+			builder.Configure(r => rule = r);
 			builder.NotEqual(default(DateTime)).WithName("Foo");
-			builder.Rule.GetDisplayName(null).ShouldEqual("Foo");
+			rule.GetDisplayName(null).ShouldEqual("Foo");
 		}
 
 		[Fact]
-		public void Nullable_object_with_condition_should_not_throw()
-		{
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value),null);
+		public void Nullable_object_with_condition_should_not_throw() {
+			var builder = _validator.RuleFor(x => x.NullableInt.Value);
+			PropertyRule rule = null;
+			builder.Configure(r => rule = r);
+
 			builder.GreaterThanOrEqualTo(3).When(x => x.NullableInt != null);
-			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
+			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
 		[Fact]
 		public void Nullable_object_with_async_condition_should_not_throw() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.NullableInt.Value),null);
+			var builder = _validator.RuleFor(x => x.NullableInt.Value);
+			PropertyRule rule = null;
+			builder.Configure(r => rule = r);
+
 			builder.GreaterThanOrEqualTo(3).WhenAsync((x,c) => Task.FromResult(x.NullableInt != null));
-			builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
+			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
 		[Fact]
 		public void Rule_for_a_non_memberexpression_should_not_generate_property_name() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()),null);
-			builder.Rule.GetDisplayName(null).ShouldBeNull();
-			builder.Rule.PropertyName.ShouldBeNull();
+			var builder = _validator.RuleFor(x => x.CalculateSalary());
+			PropertyRule rule = null;
+			builder.Configure(r => rule = r);
+			rule.GetDisplayName(null).ShouldBeNull();
+			rule.PropertyName.ShouldBeNull();
 		}
 
 		[Fact]
 		public void Property_should_return_property_being_validated() {
 			var property = typeof(Person).GetProperty("Surname");
-			builder.Rule.Member.ShouldEqual(property);
+			_rule.Member.ShouldEqual(property);
 		}
 
 		[Fact]
 		public void Property_should_return_null_when_it_is_not_a_property_being_validated() {
-			builder = new RuleBuilder<Person, string>(PropertyRule.Create<Person, string>(x => "Foo"),null);
-			builder.Rule.Member.ShouldBeNull();
+			builder = _validator.RuleFor(x => "Foo");
+			PropertyRule rule = null;
+			builder.Configure(r => rule = r);
+			rule.Member.ShouldBeNull();
 		}
 
 		[Fact]
 		public void Result_should_use_custom_property_name_when_no_property_name_can_be_determined() {
-			var builder = new RuleBuilder<Person, int>(PropertyRule.Create<Person, int>(x => x.CalculateSalary()),null);
+			var builder = _validator.RuleFor(x => x.CalculateSalary());
 			builder.GreaterThan(100).WithName("Foo");
-
-			var results = builder.Rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
+			PropertyRule rule = null;
+			builder.Configure(r => rule = r);
+			var results = rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 			results.Single().PropertyName.ShouldEqual("Foo");
 		}
 
 		[Fact]
 		public void Conditional_child_validator_should_register_with_validator_type_not_property() {
-			var builder = new RuleBuilder<Person, Address>(PropertyRule.Create<Person, Address>(x => x.Address),null);
+			var builder = _validator.RuleFor(x => x.Address);
 			builder.SetValidator((Person person) => new NoopAddressValidator());
+			PropertyRule rule = null;
+			builder.Configure(r => rule = r);
 
-			builder.Rule.Validators.OfType<IChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
+			rule.Validators.OfType<IChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
 		}
 
 		class NoopAddressValidator : AbstractValidator<Address> {
