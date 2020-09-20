@@ -20,6 +20,8 @@ using FluentValidation.Internal;
 
 namespace FluentValidation {
 	using System;
+	using System.Collections;
+	using System.Collections.Generic;
 	using Microsoft.Extensions.DependencyInjection;
 	using Validators;
 
@@ -27,6 +29,52 @@ namespace FluentValidation {
 	/// Extension methods for working with a Service Provider.
 	/// </summary>
 	public static class DependencyInjectionExtensions {
+
+		/// <summary>
+		/// Gets the service provider associated with the validation context.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		/// <exception cref="InvalidOperationException"></exception>
+		public static IServiceProvider GetServiceProvider(this IValidationContext context)
+			=> Get(context.RootContextData);
+
+		/// <summary>
+		/// Gets the service provider associated with the validation context.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		/// <exception cref="InvalidOperationException"></exception>
+		public static IServiceProvider GetServiceProvider(this MessageBuilderContext context)
+			=> Get(context.ParentContext.RootContextData);
+
+		/// <summary>
+		/// Gets the service provider associated with the validation context.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		/// <exception cref="InvalidOperationException"></exception>
+		public static IServiceProvider GetServiceProvider(this PropertyValidatorContext context)
+			=> Get(context.ParentContext.RootContextData);
+
+		/// <summary>
+		/// Gets the service provider associated with the validation context.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <returns></returns>
+		/// <exception cref="InvalidOperationException"></exception>
+		public static IServiceProvider GetServiceProvider(this CustomContext context)
+			=> Get(context.ParentContext.RootContextData);
+
+		private static IServiceProvider Get(IDictionary<string, object> rootContextData) {
+			if (rootContextData.TryGetValue("_FV_ServiceProvider", out var sp)) {
+				if (sp is IServiceProvider serviceProvider) {
+					return serviceProvider;
+				}
+			}
+
+			throw new InvalidOperationException("The service provider has not been configured to work with FluentValidation. Making use of InjectValidator or GetServiceProvider is only supported when using the automatic MVC integration.");
+		}
 
 		/// <summary>
 		/// Gets the service provider associated with the validation context.
