@@ -75,9 +75,6 @@ namespace FluentValidation.Tests {
 			error.ShouldNotBeNull();
 			error.PropertyName.ShouldEqual("Surname");
 			error.AttemptedValue.ShouldEqual("test");
-#pragma warning disable 618
-			error.FormattedMessageArguments.Length.ShouldEqual(0);
-#pragma warning restore 618
 
 			error.FormattedMessagePlaceholderValues.Count.ShouldEqual(5);
 			error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
