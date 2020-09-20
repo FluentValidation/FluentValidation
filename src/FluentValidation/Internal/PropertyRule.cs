@@ -39,11 +39,8 @@ namespace FluentValidation.Internal {
 		private string[] _ruleSet = new string[0];
 		private Func<IValidationContext, bool> _condition;
 		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
-
-#pragma warning disable 618
-		//TODO: Replace with Func<IValidationContext, string> for FV 10.
-		private IStringSource _displayNameSource;
-#pragma warning restore 618
+		private string _displayName;
+		private Func<IValidationContext, string> _displayNameFactory;
 
 		/// <summary>
 		/// Condition for all validators in this rule.
@@ -83,22 +80,12 @@ namespace FluentValidation.Internal {
 		public LambdaExpression Expression { get; }
 
 		/// <summary>
-		/// String source that can be used to retrieve the display name (if null, falls back to the property name)
-		/// </summary>
-		[Obsolete("This property is deprecated and will be removed in FluentValidation 10. Use the GetDisplayName and SetDisplayName instead.")]
-		public IStringSource DisplayName {
-			get => _displayNameSource;
-			set => _displayNameSource = value;
-		}
-
-		/// <summary>
 		/// Sets the display name for the property.
 		/// </summary>
 		/// <param name="name">The property's display name</param>
 		public void SetDisplayName(string name) {
-#pragma warning disable 618
-			_displayNameSource = new StaticStringSource(name);
-#pragma warning restore 618
+			_displayName = name;
+			_displayNameFactory = null;
 		}
 
 		/// <summary>
@@ -107,9 +94,8 @@ namespace FluentValidation.Internal {
 		/// <param name="factory">The function for building the display name</param>
 		public void SetDisplayName(Func<IValidationContext, string> factory) {
 			if (factory == null) throw new ArgumentNullException(nameof(factory));
-#pragma warning disable 618
-			_displayNameSource = new BackwardsCompatibleStringSource<IValidationContext>(factory);
-#pragma warning restore 618
+			_displayNameFactory = factory;
+			_displayName = null;
 		}
 
 		/// <summary>
@@ -166,9 +152,7 @@ namespace FluentValidation.Internal {
 
 			DependentRules = new List<IValidationRule>();
 			PropertyName = ValidatorOptions.Global.PropertyNameResolver(containerType, member, expression);
-#pragma warning disable 618
-			_displayNameSource = new BackwardsCompatibleStringSource<IValidationContext>(context => ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression));
-#pragma warning restore 618
+			_displayNameFactory = context => ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression);
 		}
 
 		/// <summary>
@@ -273,28 +257,8 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Display name for the property.
 		/// </summary>
-		[Obsolete("Calling GetDisplayName without a context parameter is deprecated and will be removed in FluentValidation 10. If you really need this behaviour, you can call the overload that takes a context but pass in null.")]
-		public string GetDisplayName() {
-			return GetDisplayName(null);
-		}
-
-		/// <summary>
-		/// Display name for the property.
-		/// </summary>
-		public string GetDisplayName(ICommonContext context) {
-			//TODO: For FV10, change the parameter from ICommonContext to IValidationContext.
-			string result = null;
-
-			if (_displayNameSource != null) {
-				result = _displayNameSource.GetString(context);
-			}
-
-			if (result == null) {
-				result = _propertyDisplayName;
-			}
-
-			return result;
-		}
+		public string GetDisplayName(IValidationContext context)
+			=> _displayNameFactory?.Invoke(context) ?? _displayName ?? _propertyDisplayName;
 
 		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures.
