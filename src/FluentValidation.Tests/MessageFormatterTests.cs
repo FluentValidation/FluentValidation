@@ -49,18 +49,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Adds_argument_and_custom_arguments() {
-#pragma warning disable 618
-			string result = formatter
-				.AppendArgument("foo", "bar")
-				.AppendAdditionalArguments("baz")
-				.BuildMessage("{foo} {0}");
-#pragma warning restore 618
-
-			result.ShouldEqual("bar baz");
-		}
-
-		[Fact]
 		public void Format_property_value() {
 			string result = formatter
 				.AppendPropertyValue(123.45)
@@ -80,30 +68,6 @@ namespace FluentValidation.Tests {
 				.BuildMessage("{c:c3} {c:c4} {f:f} {p:p} {d:d} {e:e} {e:e2} {d:0000}");
 
 			result.ShouldEqual($"{-123.456789:c3} {-123.456789:c4} {1234.567:f} {0.912:p} {123:d} {1052.0329112756:e} {1052.0329112756:e2} {123:0000}");
-		}
-
-		[Fact]
-		public void Adds_formatted_argument_and_custom_arguments() {
-#pragma warning disable 618
-			string result = formatter
-				.AppendArgument("foo", 123.43)
-				.AppendAdditionalArguments("baz")
-				.BuildMessage("{foo:#.#} {0}");
-#pragma warning restore 618
-
-			result.ShouldEqual("123.4 baz");
-		}
-
-		[Fact]
-		public void Adds_formatted_argument_and_formatted_custom_arguments() {
-#pragma warning disable 618
-			string result = formatter
-				.AppendArgument("foo", 123.43)
-				.AppendAdditionalArguments(.6789)
-				.BuildMessage("{foo:#.#} {0:p1}");
-#pragma warning restore 618
-
-			result.ShouldEqual($"{123.43:#.#} {.6789:p1}");
 		}
 
 		[Fact]

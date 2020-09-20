@@ -126,13 +126,8 @@ namespace FluentValidation.Validators {
 				: messageBuilderContext.GetDefaultMessage();
 
 			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
-#pragma warning disable 618
-			failure.FormattedMessageArguments = context.MessageFormatter.AdditionalArguments;
-#pragma warning restore 618
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-#pragma warning disable 618
 			failure.ErrorCode = ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(this);
-#pragma warning restore 618
 
 			if (CustomStateProvider != null) {
 				failure.CustomState = CustomStateProvider(context);
