@@ -88,28 +88,16 @@ namespace FluentValidation.Validators {
 			return result.Errors;
 		}
 
-		public virtual IValidator<TProperty> GetValidator(PropertyValidatorContext context) {
+		public virtual IValidator GetValidator(PropertyValidatorContext context) {
 			context.Guard("Cannot pass a null context to GetValidator", nameof(context));
 
 			return _validatorProvider != null ? _validatorProvider(context) : _validator;
 		}
 
-		protected virtual IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext context, IValidator<TProperty> validator) {
+		protected virtual IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext context, IValidator validator) {
 			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
 			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
 			var newContext = parentContext.CloneForChildValidator((TProperty)context.PropertyValue, PassThroughParentContext, selector);
-
-			if(!parentContext.IsChildCollectionContext)
-				newContext.PropertyChain.Add(context.Rule.PropertyName);
-
-			return newContext;
-		}
-
-		[Obsolete("This overload is not used and will be removed from FluentValidation 10.")]
-		protected IValidationContext CreateNewValidationContextForChildValidator(object instanceToValidate, PropertyValidatorContext context) {
-			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
-			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
-			var newContext = parentContext.CloneForChildValidator((TProperty)instanceToValidate, PassThroughParentContext, selector);
 
 			if(!parentContext.IsChildCollectionContext)
 				newContext.PropertyChain.Add(context.Rule.PropertyName);
