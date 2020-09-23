@@ -81,12 +81,10 @@ namespace FluentValidation.Internal {
 				propertyName = InferPropertyName(Expression);
 			}
 
-			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
+			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
+			if (!await validator.Options.InvokeAsyncCondition(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
 
-			if (!validator.Options.InvokeCondition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
-			if (!await validator.Options.InvokeAsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
-
-			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TElement>;
+			var collectionPropertyValue = accessor.Value as IEnumerable<TElement>;
 
 			if (collectionPropertyValue != null) {
 				if (string.IsNullOrEmpty(propertyName)) {
@@ -159,14 +157,12 @@ namespace FluentValidation.Internal {
 				propertyName = InferPropertyName(Expression);
 			}
 
-			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
-
-			if (!validator.Options.InvokeCondition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
+			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
 			// There's no need to check for the AsyncCondition here. If the validator has an async condition, then
 			// the parent PropertyRule will call InvokePropertyValidatorAsync instead.
 
 			var results = new List<ValidationFailure>();
-			var collectionPropertyValue = propertyContext.PropertyValue as IEnumerable<TElement>;
+			var collectionPropertyValue = accessor.Value as IEnumerable<TElement>;
 
 			int count = 0;
 
