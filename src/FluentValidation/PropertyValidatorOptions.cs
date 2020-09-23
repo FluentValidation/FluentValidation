@@ -30,8 +30,8 @@ namespace FluentValidation {
 	public class PropertyValidatorOptions {
 		private string _errorMessage;
 		private Func<PropertyValidatorContext, string> _errorMessageFactory;
-		private Func<PropertyValidatorContext, bool> _condition;
-		private Func<PropertyValidatorContext, CancellationToken, Task<bool>> _asyncCondition;
+		private Func<IValidationContext, bool> _condition;
+		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 
 		/// <summary>
 		/// Whether or not this validator has a condition associated with it.
@@ -47,7 +47,7 @@ namespace FluentValidation {
 		/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
 		/// </summary>
 		/// <param name="condition"></param>
-		public void ApplyCondition(Func<PropertyValidatorContext, bool> condition) {
+		public void ApplyCondition(Func<IValidationContext, bool> condition) {
 			if (_condition == null) {
 				_condition = condition;
 			}
@@ -61,7 +61,7 @@ namespace FluentValidation {
 		/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
 		/// </summary>
 		/// <param name="condition"></param>
-		public void ApplyAsyncCondition(Func<PropertyValidatorContext, CancellationToken, Task<bool>> condition) {
+		public void ApplyAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> condition) {
 			if (_asyncCondition == null) {
 				_asyncCondition = condition;
 			}
@@ -71,7 +71,7 @@ namespace FluentValidation {
 			}
 		}
 
-		internal bool InvokeCondition(PropertyValidatorContext context) {
+		internal bool InvokeCondition(IValidationContext context) {
 			if (_condition != null) {
 				return _condition(context);
 			}
@@ -79,7 +79,7 @@ namespace FluentValidation {
 			return true;
 		}
 
-		internal async Task<bool> InvokeAsyncCondition(PropertyValidatorContext context, CancellationToken token) {
+		internal async Task<bool> InvokeAsyncCondition(IValidationContext context, CancellationToken token) {
 			if (_asyncCondition != null) {
 				return await _asyncCondition(context, token);
 			}

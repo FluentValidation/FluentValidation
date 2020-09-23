@@ -57,4 +57,5 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		PropertyValidatorOptions Options { get; }
 	}
+	
 }

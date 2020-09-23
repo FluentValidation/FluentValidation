@@ -58,14 +58,14 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The condition to apply</param>
 		/// <param name="applyConditionTo">Indicates whether the condition should be applied to all validators in the rule, or only the current one</param>
-		void ApplyCondition(Func<PropertyValidatorContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
+		void ApplyCondition(Func<IValidationContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 
 		/// <summary>
 		/// Applies an asynchronous condition to either all the validators in the rule, or the most recent validator in the rule chain.
 		/// </summary>
 		/// <param name="predicate">The condition to apply</param>
 		/// <param name="applyConditionTo">Indicates whether the condition should be applied to all validators in the rule, or only the current one</param>
-		void ApplyAsyncCondition(Func<PropertyValidatorContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
+		void ApplyAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 
 		/// <summary>
 		/// Applies a condition that wraps the entire rule.
