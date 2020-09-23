@@ -399,9 +399,9 @@ namespace FluentValidation.Internal {
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
 		protected virtual async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor, CancellationToken cancellation) {
+			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
+			if (!await validator.Options.InvokeAsyncCondition(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
-			if (!validator.Options.InvokeCondition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
-			if (!await validator.Options.InvokeAsyncCondition(propertyContext, cancellation)) return Enumerable.Empty<ValidationFailure>();
 			return await validator.ValidateAsync(propertyContext, cancellation);
 		}
 
@@ -409,8 +409,8 @@ namespace FluentValidation.Internal {
 		/// Invokes a property validator using the specified validation context.
 		/// </summary>
 		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor) {
+			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
-			if (!validator.Options.InvokeCondition(propertyContext)) return Enumerable.Empty<ValidationFailure>();
 			return validator.Validate(propertyContext);
 		}
 
@@ -430,7 +430,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate"></param>
 		/// <param name="applyConditionTo"></param>
-		public void ApplyCondition(Func<PropertyValidatorContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+		public void ApplyCondition(Func<IValidationContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
 				foreach (var validator in Validators) {
@@ -451,7 +451,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate"></param>
 		/// <param name="applyConditionTo"></param>
-		public void ApplyAsyncCondition(Func<PropertyValidatorContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+		public void ApplyAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
 				foreach (var validator in Validators) {
