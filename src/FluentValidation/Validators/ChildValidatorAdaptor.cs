@@ -18,7 +18,7 @@ namespace FluentValidation.Validators {
 	}
 
 	public class ChildValidatorAdaptor<T,TProperty> : NoopPropertyValidator, IChildValidatorAdaptor {
-		private readonly Func<ICommonContext, IValidator<TProperty>> _validatorProvider;
+		private readonly Func<PropertyValidatorContext, IValidator<TProperty>> _validatorProvider;
 		private readonly IValidator<TProperty> _validator;
 
 		public Type ValidatorType { get; }
@@ -32,7 +32,7 @@ namespace FluentValidation.Validators {
 			ValidatorType = validatorType;
 		}
 
-		public ChildValidatorAdaptor(Func<ICommonContext, IValidator<TProperty>> validatorProvider, Type validatorType) {
+		public ChildValidatorAdaptor(Func<PropertyValidatorContext, IValidator<TProperty>> validatorProvider, Type validatorType) {
 			_validatorProvider = validatorProvider;
 			ValidatorType = validatorType;
 		}

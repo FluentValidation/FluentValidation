@@ -35,7 +35,7 @@ namespace FluentValidation.Internal {
 		/// <param name="typeToValidate"></param>
 		/// <param name="containerType"></param>
 		/// <param name="validatorType"></param>
-		public IncludeRule(Func<ICommonContext, IValidator<T>> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType, Type validatorType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
+		public IncludeRule(Func<PropertyValidatorContext, IValidator<T>> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType, Type validatorType) : base(null, x => x, null, cascadeModeThunk, typeToValidate, containerType) {
 			AddValidator(new ChildValidatorAdaptor<T,T>(func,  validatorType));
 		}
 

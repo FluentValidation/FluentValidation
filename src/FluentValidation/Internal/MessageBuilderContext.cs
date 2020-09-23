@@ -3,7 +3,7 @@
 	using Resources;
 	using Validators;
 
-	public class MessageBuilderContext : ICommonContext {
+	public class MessageBuilderContext {
 		private PropertyValidatorContext _innerContext;
 
 		public MessageBuilderContext(PropertyValidatorContext innerContext, IPropertyValidator propertyValidator) {
@@ -26,15 +26,11 @@
 		public object InstanceToValidate => _innerContext.InstanceToValidate;
 		public object PropertyValue => _innerContext.PropertyValue;
 
-		ICommonContext ICommonContext.ParentContext => ParentContext;
-
 		public string GetDefaultMessage() {
 			return PropertyValidator.Options.GetErrorMessage(_innerContext);
 		}
-
 		public static implicit operator PropertyValidatorContext(MessageBuilderContext ctx) {
 			return ctx._innerContext;
 		}
-
 	}
 }
