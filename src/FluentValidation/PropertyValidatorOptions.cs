@@ -25,7 +25,7 @@ namespace FluentValidation {
 	using Validators;
 
 	/// <summary>
-	/// Validator metadata.
+	/// Validator options.
 	/// </summary>
 	public class PropertyValidatorOptions {
 		private string _errorMessage;
@@ -142,4 +142,5 @@ namespace FluentValidation {
 			_errorMessageFactory = null;
 		}
 	}
+	
 }

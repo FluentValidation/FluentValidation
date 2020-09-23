@@ -25,11 +25,8 @@ namespace FluentValidation.Tests {
 	using Internal;
 	using Moq;
 	using Xunit;
-	using Resources;
 	using Results;
 	using Validators;
-	using System.Reflection;
-	using Microsoft.Win32;
 
 	public class RuleBuilderTests {
 		IRuleBuilderInitial<Person, string> builder;

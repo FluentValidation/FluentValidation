@@ -20,7 +20,7 @@ namespace FluentValidation.Validators {
 	using System;
 	using Internal;
 
-	public class PropertyValidatorContext : ICommonContext {
+	public class PropertyValidatorContext {
 		private MessageFormatter _messageFormatter;
 		private object _propertyValue;
 		private Lazy<object> _propertyValueAccessor;
@@ -39,9 +39,6 @@ namespace FluentValidation.Validators {
 		public object PropertyValue
 			=> _propertyValueAccessor != null ? _propertyValueAccessor.Value : _propertyValue;
 
-		// Explicit implementation so we don't have to expose the base interface.
-		ICommonContext ICommonContext.ParentContext => ParentContext;
-
 		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue) {
 			ParentContext = parentContext;
 			Rule = rule;
@@ -55,7 +52,5 @@ namespace FluentValidation.Validators {
 			PropertyName = propertyName;
 			_propertyValueAccessor = propertyValueAccessor;
 		}
-
-
 	}
 }
