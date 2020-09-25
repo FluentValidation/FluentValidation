@@ -18,6 +18,14 @@ For automatic validation with ASP.NET, FluentValidation supports ASP.NET Core 2.
 
 If you're new to using FluentValidation, check out the :doc:`start` page.
 
+.. note::
+  FluentValidation is developed and supported by `@JeremySkinner <https://github.com/JeremySkinner>`_
+  in his spare time. If you find FluentValidation useful, or if you use FluentValidation in a commercial environment, then
+  please consider financially supporting the project on one of the following platforms, which will help keep the project going.
+
+  * `GitHub sponsors <https://github.com/sponsors/JeremySkinner>`_
+  * `OpenCollective <https://opencollective.com/FluentValidation>`_
+
 Example
 =======
 
