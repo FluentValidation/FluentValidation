@@ -1,0 +1,15 @@
+name: 'Lock closed issues'
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/lock-threads@v2
+        with:
+          github-token: ${{ github.token }}
+          process-only: 'issues'
+          issue-lock-inactive-days: '14'
