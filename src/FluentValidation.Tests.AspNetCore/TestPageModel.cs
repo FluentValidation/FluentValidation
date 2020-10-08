@@ -3,8 +3,8 @@ namespace FluentValidation.Tests {
 	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
-		using FluentValidation.AspNetCore;
-		using Microsoft.AspNetCore.Mvc;
+	using FluentValidation.AspNetCore;
+	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.RazorPages;
 
 	[IgnoreAntiforgeryToken(Order = 1001)]
