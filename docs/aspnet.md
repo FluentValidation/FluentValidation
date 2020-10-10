@@ -339,6 +339,17 @@ Configuration for use with ASP.NET Razor Pages and PageModels is exactly the sam
 
 - You can't define a validator for the whole page-model, only for models exposed as properties on the page model.
 - The `[CustomizeValidator]` attribute is not supported on .net core 2.1 (only 3.1 and 5.0)
-- the `[RuleSetForClientSideMessages]` attribute is not supported
+- the `[RuleSetForClientSideMessages]` attribute is not supported on .net core 2.1 (only 3.1 and 5.0)
+
+When using a `RuleSetForClientSideMessagesAttribute` in a `PageModel` it must be attributed to a handler and will only apply to that handler:
+
+```csharp
+[RuleSetForClientSideMessages("MyRuleset")]
+public IActionResult OnGet() {
+   return Page();
+}
+```
+
+Note that to apply the same rulset for both `GET` and `POST` requests the same attribute must be applied to both handlers.
 
 These are limitations of ASP.NET Razor Pages and are not currently something that FluentValidation can work around.

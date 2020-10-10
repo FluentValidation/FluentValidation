@@ -9,6 +9,7 @@
 Changes in 9.3.0:
 * Support for .net 5
 * CustomizeValidatorAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)
+* RuleSetForClientSideMessagesAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)
 
 Changes in 9.0.0:
 * Compatibility with FluentValidation 9.0
