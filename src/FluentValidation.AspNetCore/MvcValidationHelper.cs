@@ -24,9 +24,14 @@ namespace FluentValidation.AspNetCore {
 	using System.Collections.Generic;
 	using System.Linq;
 	using Microsoft.AspNetCore.Mvc;
+	using Microsoft.AspNetCore.Mvc.Abstractions;
 	using Microsoft.AspNetCore.Mvc.Controllers;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+#if NETCOREAPP3_1 || NET5_0
+	using Microsoft.AspNetCore.Mvc.RazorPages;
+	using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
+#endif
 	using Microsoft.Extensions.DependencyInjection;
 
 	/// <summary>
@@ -73,25 +78,35 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		internal static CustomizeValidatorAttribute GetCustomizations(ActionContext actionContext, Type type, string prefix) {
-			if (actionContext?.ActionDescriptor?.Parameters == null) {
-				return new CustomizeValidatorAttribute();
-			}
 
-			var descriptors = actionContext.ActionDescriptor.Parameters
-				.Where(x => x.ParameterType == type)
-				.Where(x => (x.BindingInfo != null && x.BindingInfo.BinderModelName != null && x.BindingInfo.BinderModelName == prefix) || x.Name == prefix || (prefix == string.Empty && x.BindingInfo?.BinderModelName == null))
-				.OfType<ControllerParameterDescriptor>()
-				.ToList();
+			IList<TDescriptor> FilterParameterDescriptors<TDescriptor>(IList<ParameterDescriptor> parameters) {
+				return parameters
+					.Where(x => x.ParameterType == type)
+					.Where(x => (x.BindingInfo != null && x.BindingInfo.BinderModelName != null && x.BindingInfo.BinderModelName == prefix) || x.Name == prefix || (prefix == string.Empty && x.BindingInfo?.BinderModelName == null))
+					.OfType<TDescriptor>()
+					.ToList();
+			}
 
 			CustomizeValidatorAttribute attribute = null;
 
-			if (descriptors.Count == 1) {
-				attribute = descriptors[0].ParameterInfo.GetCustomAttributes(typeof(CustomizeValidatorAttribute), true).FirstOrDefault() as CustomizeValidatorAttribute;
-			}
+			if (actionContext is ControllerContext controllerContext && controllerContext.ActionDescriptor?.Parameters != null) {
 
-			if (descriptors.Count > 1) {
-				// We found more than 1 matching with same prefix and name.
+				var descriptors = FilterParameterDescriptors<ControllerParameterDescriptor>(actionContext.ActionDescriptor.Parameters);
+
+				if (descriptors.Count == 1) {
+					attribute = descriptors[0].ParameterInfo.GetCustomAttributes(typeof(CustomizeValidatorAttribute), true).FirstOrDefault() as CustomizeValidatorAttribute;
+				}
 			}
+#if NETCOREAPP3_1 || NET5_0
+			else if (actionContext is PageContext pageContext && pageContext.ActionDescriptor?.BoundProperties != null) {
+
+				var descriptors = FilterParameterDescriptors<PageBoundPropertyDescriptor>(pageContext.ActionDescriptor.BoundProperties);
+
+				if (descriptors.Count == 1) {
+					attribute = descriptors[0].Property.GetCustomAttributes(typeof(CustomizeValidatorAttribute), true).FirstOrDefault() as CustomizeValidatorAttribute;
+				}
+			}
+#endif
 
 			return attribute ?? new CustomizeValidatorAttribute();
 		}

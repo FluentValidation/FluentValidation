@@ -24,7 +24,7 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.Extensions.DependencyInjection;
 	using System.Linq;
 
-	[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false)]
+	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property, AllowMultiple = false)]
 	public class CustomizeValidatorAttribute : Attribute {
 
 		/// <summary>
