@@ -335,10 +335,10 @@ Please be aware that `InjectValidator` can *only* be used when using automatic v
 
 ### Use with Page Models
 
-Configuration for use with ASP.NET Web Pages and PageModels is exactly the same as with MVC above, but there are several limitations:
+Configuration for use with ASP.NET Razor Pages and PageModels is exactly the same as with MVC above, but there are several limitations:
 
 - You can't define a validator for the whole page-model, only for models exposed as properties on the page model.
-- The `[CustomizeValidator]` attribute is not supported
+- The `[CustomizeValidator]` attribute is not supported on .net core 2.1 (only 3.1 and 5.0)
 - the `[RuleSetForClientSideMessages]` attribute is not supported
 
-These are limitations of ASP.NET Web Pages and are not currently something that FluentValidation can work around.
+These are limitations of ASP.NET Razor Pages and are not currently something that FluentValidation can work around.

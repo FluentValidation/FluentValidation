@@ -3,6 +3,7 @@ namespace FluentValidation.Tests {
 	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
+	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -33,6 +34,7 @@ namespace FluentValidation.Tests {
 	public class RulesetTestPageModel : PageModel {
 
 		[BindProperty]
+		[CustomizeValidator(RuleSet = "Names")]
 		public RulesetTestModel Test { get; set; }
 
 		public Task<IActionResult> OnPostAsync() {
