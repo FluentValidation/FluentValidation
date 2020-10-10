@@ -40,34 +40,6 @@
 			});
 		}
 
-#if NETCOREAPP3_1 || NET5_0
-		public WebApplicationFactory<Startup> WithRazorPages(bool registerContextAccessor = true, bool enableLocalization = false) {
-			return WithWebHostBuilder(cfg => {
-				cfg.ConfigureServices(services => {
-
-					services.AddRazorPages()
-						.AddMvcOptions(options =>
-						{
-							options.Filters.Add(new RuleSetForClientSideMessagesPageFilter());
-						});
-
-					if (enableLocalization) {
-						services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
-					}
-
-					services.AddFluentValidationForTesting(fv => {
-						fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-					});
-					if (registerContextAccessor) {
-						services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-					}
-
-					services.AddScoped<ClientsideScopedDependency>();
-				});
-			});
-		}
-#endif
-
 		public WebApplicationFactory<Startup> WithDataAnnotationsDisabled() {
 			return WithFluentValidation(fv => {
 				fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);

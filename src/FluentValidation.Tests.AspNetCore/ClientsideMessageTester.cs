@@ -218,7 +218,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		private readonly HttpClient _client;
 
 		public RazorPagesClientsideMessageTester(WebAppFixture webApp) {
-			_client = webApp.WithRazorPages(enableLocalization: true).CreateClient();
+			_client = webApp.WithContainer(enableLocalization: true).CreateClient();
 			CultureScope.SetDefaultCulture();
 		}
 

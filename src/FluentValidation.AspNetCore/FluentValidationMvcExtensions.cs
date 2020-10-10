@@ -18,23 +18,20 @@
 
 namespace FluentValidation.AspNetCore {
 	using System;
-	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
 	using FluentValidation;
-	using System.Collections.Generic;
 	using System.Linq;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
-	using Microsoft.Extensions.Logging;
 
 	public static class FluentValidationMvcExtensions {
 		/// <summary>
 		///     Adds Fluent Validation services to the specified
-		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" />.
+		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder" />.
 		/// </summary>
 		/// <returns>
 		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder" /> that can be used to further configure the
@@ -59,6 +56,12 @@ namespace FluentValidation.AspNetCore {
 				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
 					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
 				}
+
+#if NETCOREAPP3_1 || NET5_0
+				if (config.RazorPagesClientRulesetFilterEnabled) {
+					options.Filters.Add(new RuleSetForClientSideMessagesPageFilter());
+				}
+#endif
 			});
 
 			return mvcBuilder;
@@ -90,6 +93,12 @@ namespace FluentValidation.AspNetCore {
 				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
 					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
 				}
+
+#if NETCOREAPP3_1 || NET5_0
+				if (config.RazorPagesClientRulesetFilterEnabled) {
+					options.Filters.Add(new RuleSetForClientSideMessagesPageFilter());
+				}
+#endif
 			});
 
 			return mvcBuilder;

@@ -76,6 +76,13 @@ namespace FluentValidation.AspNetCore {
 		/// </summary>
 		public bool AutomaticValidationEnabled { get; set; } = true;
 
+#if NETCOREAPP3_1 || NET5_0
+		/// <summary>
+		/// Whether to add the RuleSetForClientSideMessagesPageFilter for every request (default true).
+		/// </summary>
+		public bool RazorPagesClientRulesetFilterEnabled { get; set; } = true;
+#endif
+
 		/// <summary>
 		/// Registers all validators derived from AbstractValidator within the assembly containing the specified type
 		/// </summary>
