@@ -51,6 +51,24 @@
 
 			errors.Count.ShouldEqual(1);
 		}
+
+#if NETCOREAPP3_1 || NET5_0
+		[Fact]
+		public async void Should_only_validate_specified_ruleset() {
+			var form = new FormData {
+				{"Email", "foo"},
+				{"Surname", "foo"},
+				{"Forename", "foo"},
+			};
+
+			var result = await _client.PostResponse("/RuleSetTest", form);
+			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
+
+			errors.IsValidField("Forename").ShouldBeFalse();
+			errors.IsValidField("Surname").ShouldBeFalse();
+			errors.IsValidField("Email").ShouldBeTrue();
+		}
+#endif
 	}
 
 	public class RazorPagesTestsWithImplicitValidationEnabled : IClassFixture<WebAppFixture> {
@@ -87,6 +105,24 @@
 
 			errors.Count.ShouldEqual(1);
 		}
+
+#if NETCOREAPP3_1 || NET5_0
+		[Fact]
+		public async void Should_only_validate_specified_ruleset() {
+			var form = new FormData {
+				{"Email", "foo"},
+				{"Surname", "foo"},
+				{"Forename", "foo"},
+			};
+
+			var result = await _client.PostResponse("/RuleSetTest", form);
+			var errors = JsonConvert.DeserializeObject<List<SimpleError>>(result);
+
+			errors.IsValidField("Forename").ShouldBeFalse();
+			errors.IsValidField("Surname").ShouldBeFalse();
+			errors.IsValidField("Email").ShouldBeTrue();
+		}
+#endif
 	}
 
 }
