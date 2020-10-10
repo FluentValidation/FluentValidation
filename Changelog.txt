@@ -2,6 +2,7 @@
 Support for .NET 5
 Improvements to LanguageManager's lazy loading of resources.
 Deprecate IStringSource and its implementors. Use delegates instead.
+RuleSetForClientSideMessagesAttribute now works in Razor pages (netcore 3.1 and net 5.0 only) (#1544)
 
 9.2.1 - 19 September 2020
 Add non-generic Add method to inheritance validator.
