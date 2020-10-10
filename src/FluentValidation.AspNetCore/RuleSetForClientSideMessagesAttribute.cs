@@ -1,7 +1,7 @@
 namespace FluentValidation.AspNetCore {
 	using System;
-  using FluentValidation.Internal;
-  using Microsoft.AspNetCore.Http;
+	using FluentValidation.Internal;
+	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc.Filters;
 
 	/// <summary>
@@ -16,20 +16,28 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		public RuleSetForClientSideMessagesAttribute(params string[] ruleSets) {
-			this._ruleSets = ruleSets;
+			_ruleSets = ruleSets;
 		}
 
 		public override void OnActionExecuting(ActionExecutingContext filterContext) {
 			var contextAccessor = filterContext.HttpContext.RequestServices.GetService(typeof(IHttpContextAccessor));
 
-			if(contextAccessor == null) {
+			if (contextAccessor == null) {
 				throw new InvalidOperationException("Cannot use the RuleSetForClientSideMessagesAttribute unless the IHttpContextAccessor is registered with the service provider. Make sure the provider is registered by calling services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); in your Startup class's ConfigureServices method");
 			}
 
 			SetRulesetForClientValidation(filterContext.HttpContext, _ruleSets);
 		}
 
-		
+		/// <summary>
+		/// Allows the ruleset used for generating clientside metadata to be overriden.
+		/// By default, only rules not in a ruleset will be used.
+		/// </summary>
+		/// <param name="context"></param>
+		public void SetRulesetForClientValidation(HttpContext context) {
+			SetRulesetForClientValidation(context, _ruleSets);
+		}
+
 		/// <summary>
 		/// Allows the ruleset used for generating clientside metadata to be overriden.
 		/// By default, only rules not in a ruleset will be used.
@@ -53,7 +61,7 @@ namespace FluentValidation.AspNetCore {
 				return context?.Items[_key] as string[] ?? new[] { RulesetValidatorSelector.DefaultRuleSetName };
 
 			}
-			return new[] { RulesetValidatorSelector.DefaultRuleSetName};
+			return new[] { RulesetValidatorSelector.DefaultRuleSetName };
 		}
 	}
 }
