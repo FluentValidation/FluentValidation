@@ -77,5 +77,30 @@ namespace FluentValidation.Tests {
 		}
 	}
 
+	[IgnoreAntiforgeryToken(Order = 1001)]
+	public class TestPageModelWithSpecifiedRuleSet : PageModel {
+
+		[BindProperty(Name = "Test")]
+		public ClientsideRulesetModel Test { get; set; }
+
+		public IActionResult OnGetDefault() {
+			return Page();
+		}
+
+		[RuleSetForClientSideMessages("Foo")]
+		public IActionResult OnGetSpecified() {
+			return Page();
+		}
+
+		[RuleSetForClientSideMessages("Foo", "Bar")]
+		public IActionResult OnGetMultiple() {
+			return Page();
+		}
+
+		[RuleSetForClientSideMessages("Foo", "default")]
+		public IActionResult OnGetDefaultAndSpecified() {
+			return Page();
+		}
+	}
 
 }
