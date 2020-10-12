@@ -34,7 +34,7 @@ namespace FluentValidation.AspNetCore {
 		/// By default, only rules not in a ruleset will be used.
 		/// </summary>
 		/// <param name="context"></param>
-		public void SetRulesetForClientValidation(HttpContext context) {
+		internal void SetRulesetForClientValidation(HttpContext context) {
 			SetRulesetForClientValidation(context, _ruleSets);
 		}
 
