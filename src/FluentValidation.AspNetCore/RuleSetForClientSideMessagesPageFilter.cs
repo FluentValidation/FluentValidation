@@ -26,7 +26,7 @@ namespace FluentValidation.AspNetCore {
 	/// <summary>
 	/// Determines which ruleset should be used when deciding which validators should be used to generate client-side messages.
 	/// </summary>
-	public class RuleSetForClientSideMessagesPageFilter : IAsyncPageFilter {
+	internal class RuleSetForClientSideMessagesPageFilter : IAsyncPageFilter {
 
 		public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context) {
 			return Task.CompletedTask;
