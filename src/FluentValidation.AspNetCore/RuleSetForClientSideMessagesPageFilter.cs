@@ -24,17 +24,15 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc.Filters;
 
 	/// <summary>
-	/// Determines  which ruleset should be used when deciding which validators should be used to generate client-side messages.
+	/// Determines which ruleset should be used when deciding which validators should be used to generate client-side messages.
 	/// </summary>
 	public class RuleSetForClientSideMessagesPageFilter : IAsyncPageFilter {
 
 		public Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context) {
-
 			return Task.CompletedTask;
 		}
 
 		public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next) {
-
 			var attribute = context.HandlerMethod?.MethodInfo?.GetCustomAttributes(typeof(RuleSetForClientSideMessagesAttribute), true).FirstOrDefault();
 
 			if(attribute is RuleSetForClientSideMessagesAttribute ruleSetAttribute) {
