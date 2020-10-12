@@ -58,9 +58,7 @@ namespace FluentValidation.AspNetCore {
 				}
 
 #if NETCOREAPP3_1 || NET5_0
-				if (config.RazorPagesClientRulesetFilterEnabled) {
-					options.Filters.Add(new RuleSetForClientSideMessagesPageFilter());
-				}
+				options.Filters.Add(new RuleSetForClientSideMessagesPageFilter());
 #endif
 			});
 
@@ -95,9 +93,7 @@ namespace FluentValidation.AspNetCore {
 				}
 
 #if NETCOREAPP3_1 || NET5_0
-				if (config.RazorPagesClientRulesetFilterEnabled) {
 					options.Filters.Add(new RuleSetForClientSideMessagesPageFilter());
-				}
 #endif
 			});
 
