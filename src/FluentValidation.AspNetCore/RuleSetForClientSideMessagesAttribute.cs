@@ -10,21 +10,13 @@ namespace FluentValidation.AspNetCore {
 
 		private readonly string[] _ruleSets;
 
-		public RuleSetForClientSideMessagesAttribute(string ruleSet) {
-			_ruleSets = new[] { ruleSet };
-		}
+		public RuleSetForClientSideMessagesAttribute(string ruleSet) => _ruleSets = new[] { ruleSet };
 
-		public RuleSetForClientSideMessagesAttribute(params string[] ruleSets) {
-			_ruleSets = ruleSets;
-		}
+		public RuleSetForClientSideMessagesAttribute(params string[] ruleSets) => _ruleSets = ruleSets;
 
-		public override void OnActionExecuting(ActionExecutingContext filterContext) {
-			SetRulesetOnExecuting(filterContext);
-		}
+		public override void OnActionExecuting(ActionExecutingContext filterContext) => SetRulesetOnExecuting(filterContext);
 
-		public override void OnResultExecuting(ResultExecutingContext context) {
-			SetRulesetOnExecuting(context);
-		}
+		public override void OnResultExecuting(ResultExecutingContext context) => SetRulesetOnExecuting(context);
 
 		/// <summary>
 		/// Allows the ruleset used for generating clientside metadata to be overriden.
@@ -32,18 +24,14 @@ namespace FluentValidation.AspNetCore {
 		/// </summary>
 		/// <param name="context"></param>
 		/// <param name="ruleSets"></param>
-		public static void SetRulesetForClientValidation(HttpContext context, string[] ruleSets) {
-			context.SetRulesetForClientsideMessages(ruleSets);
-		}
+		public static void SetRulesetForClientValidation(HttpContext context, string[] ruleSets) => context.SetRulesetForClientsideMessages(ruleSets);
 
 		/// <summary>
 		/// Gets the rulesets used to generate clientside validation metadata.
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		public static string[] GetRuleSetsForClientValidation(HttpContext context) {
-			return context.GetRuleSetsForClientValidation();
-		}
+		public static string[] GetRuleSetsForClientValidation(HttpContext context) => context.GetRuleSetsForClientValidation();
 
 		private void SetRulesetOnExecuting(FilterContext filterContext) {
 			var contextAccessor = filterContext.HttpContext.RequestServices.GetService(typeof(IHttpContextAccessor));
@@ -52,7 +40,7 @@ namespace FluentValidation.AspNetCore {
 				throw new InvalidOperationException("Cannot use the RuleSetForClientSideMessagesAttribute unless the IHttpContextAccessor is registered with the service provider. Make sure the provider is registered by calling services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); in your Startup class's ConfigureServices method");
 			}
 
-			SetRulesetForClientValidation(filterContext.HttpContext, _ruleSets);
+			filterContext.HttpContext.SetRulesetForClientsideMessages(_ruleSets);
 		}
 	}
 }
