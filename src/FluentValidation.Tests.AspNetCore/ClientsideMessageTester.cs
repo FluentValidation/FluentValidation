@@ -213,7 +213,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-#if NETCOREAPP3_1 || NET5_0
+
 	public class RazorPagesClientsideMessageTester : IClassFixture<WebAppFixture> {
 		private readonly HttpClient _client;
 
@@ -251,6 +251,37 @@ namespace FluentValidation.Tests.AspNetCore {
 			msgs[0].ShouldEqual("first");
 			msgs[1].ShouldEqual("third");
 		}
-	}
+
+#if NETCOREAPP3_1 || NET5_0
+		[Fact]
+		public async Task Should_only_use_rules_from_default_ruleset_extension() {
+			var msg = await _client.RunRulesetAction("/Rulesets/RuleSetForHandlers?handler=default", "Test");
+			msg.Length.ShouldEqual(1);
+			msg[0].ShouldEqual("third");
+		}
+
+		[Fact]
+		public async Task Should_use_rules_from_specified_ruleset_extension() {
+			var msg = await _client.RunRulesetAction("/Rulesets/RuleSetForHandlers?handler=specified", "Test");
+			msg.Length.ShouldEqual(1);
+			msg[0].ShouldEqual("first");
+		}
+
+		[Fact]
+		public async Task Should_use_rules_from_multiple_rulesets_extension() {
+			var msgs = await _client.RunRulesetAction("/Rulesets/RuleSetForHandlers?handler=multiple", "Test");
+			msgs.Length.ShouldEqual(2);
+			msgs[0].ShouldEqual("first");
+			msgs[1].ShouldEqual("second");
+		}
+
+		[Fact]
+		public async Task Should_use_rules_from_default_ruleset_and_specified_ruleset_extension() {
+			var msgs = await _client.RunRulesetAction("/Rulesets/RuleSetForHandlers?handler=defaultAndSpecified", "Test");
+			msgs.Length.ShouldEqual(2);
+			msgs[0].ShouldEqual("first");
+			msgs[1].ShouldEqual("third");
+		}
 #endif
+	}
 }

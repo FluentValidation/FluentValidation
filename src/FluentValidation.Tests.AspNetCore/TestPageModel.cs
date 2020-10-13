@@ -115,4 +115,30 @@ namespace FluentValidation.Tests {
 
 		public IActionResult OnGet() => Page();
 	}
+
+	[IgnoreAntiforgeryToken(Order = 1001)]
+	public class TestPageModelWithRuleSetForHandlers : PageModel {
+
+		[BindProperty(Name = "Test")]
+		public ClientsideRulesetModel Test { get; set; }
+
+		public IActionResult OnGetDefault() => Page();
+
+#if NETCOREAPP3_1 || NET5_0
+		public IActionResult OnGetSpecified() {
+			PageContext.SetRulesetForClientsideMessages("Foo");
+			return Page();
+		}
+
+		public IActionResult OnGetMultiple() {
+			PageContext.SetRulesetForClientsideMessages("Foo", "Bar");
+			return Page();
+		}
+
+		public IActionResult OnGetDefaultAndSpecified() {
+			PageContext.SetRulesetForClientsideMessages("Foo", "default");
+			return Page();
+		}
+#endif
+	}
 }

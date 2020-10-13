@@ -1,6 +1,5 @@
 namespace FluentValidation.AspNetCore {
 	using System;
-	using FluentValidation.Internal;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -8,7 +7,7 @@ namespace FluentValidation.AspNetCore {
 	/// Specifies which ruleset should be used when deciding which validators should be used to generate client-side messages.
 	/// </summary>
 	public class RuleSetForClientSideMessagesAttribute : ActionFilterAttribute {
-		private const string _key = "_FV_ClientSideRuleSet";
+
 		private readonly string[] _ruleSets;
 
 		public RuleSetForClientSideMessagesAttribute(string ruleSet) {
@@ -34,7 +33,7 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="context"></param>
 		/// <param name="ruleSets"></param>
 		public static void SetRulesetForClientValidation(HttpContext context, string[] ruleSets) {
-			context.Items[_key] = ruleSets;
+			context.SetRulesetForClientsideMessages(ruleSets);
 		}
 
 		/// <summary>
@@ -43,14 +42,7 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="context"></param>
 		/// <returns></returns>
 		public static string[] GetRuleSetsForClientValidation(HttpContext context) {
-			// If the httpContext is null (for example, if IHttpContextProvider hasn't been registered) then just assume default ruleset.
-			// This is OK because if we're actually using the attribute, the OnActionExecuting will have caught the fact that the provider is not registered. 
-
-			if (context?.Items != null && context.Items.ContainsKey(_key)) {
-				return context?.Items[_key] as string[] ?? new[] { RulesetValidatorSelector.DefaultRuleSetName };
-
-			}
-			return new[] { RulesetValidatorSelector.DefaultRuleSetName };
+			return context.GetRuleSetsForClientValidation();
 		}
 
 		private void SetRulesetOnExecuting(FilterContext filterContext) {
