@@ -3,6 +3,7 @@ Support for .NET 5
 Improvements to LanguageManager's lazy loading of resources.
 Deprecate IStringSource and its implementors. Use delegates instead.
 CustomizeValidatorAttribute now works in Razor pages (netcore 3.1 and net 5.0 only) (#1541)
+RuleSetForClientSideMessagesAttribute now works in Razor pages (netcore 3.1 and net 5.0 only) (#1544)
 
 9.2.2 - 20 September 2020
 Fix one of the inheritance validator overloads not working correctly (#1528)

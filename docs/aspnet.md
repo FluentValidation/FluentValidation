@@ -237,7 +237,7 @@ public ActionResult Save([CustomizeValidator(Skip=true)] Customer cust) {
 
 ### Validator Interceptors
 
-You can further customize this process by using an interceptor. An interceptor has to implement the IValidatorInterceptor interface from the FluentValidation.Mvc namespace:
+You can further customize this process by using an interceptor. An interceptor has to implement the IValidatorInterceptor interface from the FluentValidation.AspNetCore namespace:
 
 ```csharp
 public interface IValidatorInterceptor	{
@@ -290,7 +290,7 @@ public ActionResult Index() {
 }
 ```
 
-You can also use the `SetRulesetForClientsideMessages` extension method within your controller action (you must have the FluentValidation.Mvc namespace imported):
+You can also use the `SetRulesetForClientsideMessages` extension method within your controller action:
 
 ```csharp
 public ActionResult Index() {
@@ -339,6 +339,15 @@ Configuration for use with ASP.NET Razor Pages and PageModels is exactly the sam
 
 - You can't define a validator for the whole page-model, only for models exposed as properties on the page model.
 - The `[CustomizeValidator]` attribute is not supported on .net core 2.1 (only 3.1 and 5.0)
-- the `[RuleSetForClientSideMessages]` attribute is not supported
+- The `[RuleSetForClientSideMessages]` attribute is not supported on .net core 2.1 (only 3.1 and 5.0)
+
+You can also use the `SetRulesetForClientsideMessages` extension method within your page handler:
+
+```csharp
+public IActionResult OnGet() {
+   PageContext.SetRulesetForClientsideMessages("MyRuleset");
+   return Page();
+}
+```
 
 These are limitations of ASP.NET Razor Pages and are not currently something that FluentValidation can work around.

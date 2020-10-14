@@ -73,12 +73,12 @@ namespace FluentValidation.Tests {
 			return attr.Value;
 		}
 
-		public static async Task<string[]> RunRulesetAction(this HttpClient client, string action) {
+		public static async Task<string[]> RunRulesetAction(this HttpClient client, string action, string modelPrefix = null) {
 
 			var doc = await client.GetClientsideMessages(action);
 
 			var elems = doc.Root.Elements("input")
-				.Where(x => x.Attribute("name").Value.StartsWith("CustomName"));
+				.Where(x => x.Attribute("name").Value.StartsWith($"{(modelPrefix == null ? string.Empty : $"{modelPrefix}.")}CustomName"));
 
 			var results = elems.Select(x => x.Attribute("data-val-required"))
 				.Where(x => x != null)
