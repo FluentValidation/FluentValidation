@@ -29,7 +29,7 @@ namespace FluentValidation.AspNetCore {
 			get { return (EqualValidator)Validator; }
 		}
 
-		public EqualToClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public EqualToClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {

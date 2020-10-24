@@ -236,7 +236,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 		private void AssertValidator<TValidator>() {
-			var rule = (PropertyRule)validator.First();
+			var rule = (IValidationRule)validator.First();
 			rule.CurrentValidator.ShouldBe<TValidator>();
 		}
 

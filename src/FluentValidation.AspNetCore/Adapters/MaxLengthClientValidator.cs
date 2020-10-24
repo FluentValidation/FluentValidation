@@ -61,7 +61,7 @@ namespace FluentValidation.AspNetCore {
 			return message;
 		}
 
-		public MaxLengthClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public MaxLengthClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace FluentValidation.AspNetCore {
 
 	internal class RegexClientValidator : ClientValidatorBase {
 
-		public RegexClientValidator(PropertyRule rule, IPropertyValidator validator)
+		public RegexClientValidator(IValidationRule rule, IPropertyValidator validator)
 			: base(rule, validator) {
 		}
 

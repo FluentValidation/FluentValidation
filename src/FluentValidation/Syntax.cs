@@ -27,7 +27,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderInitial<T, out TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule, IRuleBuilderInitial<T, TProperty>> {
+	public interface IRuleBuilderInitial<T, out TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<IValidationRule<T>, IRuleBuilderInitial<T, TProperty>> {
 
 		/// <summary>
 		/// Transforms the property value before validation occurs.
@@ -81,7 +81,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
-	public interface IRuleBuilderOptions<T, out TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>> {
+	public interface IRuleBuilderOptions<T, out TProperty> : IRuleBuilder<T, TProperty>, IConfigurable<IValidationRule<T>, IRuleBuilderOptions<T, TProperty>> {
 	}
 
 	/// <summary>
@@ -89,7 +89,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TElement"></typeparam>
-	public interface IRuleBuilderInitialCollection<T, TElement> : IRuleBuilder<T, TElement>, IConfigurable<CollectionPropertyRule<T, TElement>, IRuleBuilderInitialCollection<T, TElement>> {
+	public interface IRuleBuilderInitialCollection<T, TElement> : IRuleBuilder<T, TElement>, IConfigurable<ICollectionPropertyRule<T, TElement>, IRuleBuilderInitialCollection<T, TElement>> {
 
 		/// <summary>
 		/// Transforms the collection element value before validation occurs.
@@ -109,5 +109,4 @@ namespace FluentValidation {
 		/// <param name="action"></param>
 		void Otherwise(Action action);
 	}
-
 }

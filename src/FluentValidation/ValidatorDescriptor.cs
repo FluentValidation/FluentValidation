@@ -21,7 +21,8 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
-	using Internal;
+		using System.Runtime.CompilerServices;
+		using Internal;
 	using Validators;
 
 	/// <summary>
@@ -31,13 +32,13 @@ namespace FluentValidation {
 		/// <summary>
 		/// Rules associated with the validator
 		/// </summary>
-		protected IEnumerable<IValidationRule> Rules { get; private set; }
+		protected IEnumerable<IValidationRule<T>> Rules { get; private set; }
 
 		/// <summary>
 		/// Creates a ValidatorDescriptor
 		/// </summary>
 		/// <param name="ruleBuilders"></param>
-		public ValidatorDescriptor(IEnumerable<IValidationRule> ruleBuilders) {
+		public ValidatorDescriptor(IEnumerable<IValidationRule<T>> ruleBuilders) {
 			Rules = ruleBuilders;
 		}
 
@@ -123,7 +124,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <returns></returns>
 		public IEnumerable<RulesetMetadata> GetRulesByRuleset() {
-			var query = from rule in Rules.OfType<PropertyRule>()
+			var query = from rule in Rules.OfType<IValidationRule<T>>()
 						from ruleset in rule.RuleSets
 						group rule by ruleset
 						into grp
@@ -142,7 +143,7 @@ namespace FluentValidation {
 			/// </summary>
 			/// <param name="name"></param>
 			/// <param name="rules"></param>
-			public RulesetMetadata(string name, IEnumerable<PropertyRule> rules) {
+			public RulesetMetadata(string name, IEnumerable<IValidationRule<T>> rules) {
 				Name = name;
 				Rules = rules;
 			}
@@ -155,7 +156,7 @@ namespace FluentValidation {
 			/// <summary>
 			/// Rules in the ruleset
 			/// </summary>
-			public IEnumerable<PropertyRule> Rules { get; private set; }
+			public IEnumerable<IValidationRule<T>> Rules { get; private set; }
 		}
 	}
 }

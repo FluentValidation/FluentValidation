@@ -24,7 +24,7 @@ namespace FluentValidation.AspNetCore {
 	using Validators;
 
 	internal class StringLengthClientValidator : ClientValidatorBase {
-		public StringLengthClientValidator(PropertyRule rule, IPropertyValidator validator)
+		public StringLengthClientValidator(IValidationRule rule, IPropertyValidator validator)
 			: base(rule, validator) {
 		}
 

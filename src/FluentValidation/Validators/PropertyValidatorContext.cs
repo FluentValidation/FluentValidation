@@ -27,7 +27,7 @@ namespace FluentValidation.Validators {
 		private Lazy<object> _propertyValueAccessor;
 
 		public IValidationContext ParentContext { get; private set; }
-		public PropertyRule Rule { get; private set; }
+		public IValidationRule Rule { get; private set; }
 		public string PropertyName { get; private set; }
 
 		public string DisplayName => Rule.GetDisplayName(ParentContext);
@@ -59,13 +59,13 @@ namespace FluentValidation.Validators {
 		ICommonContext ICommonContext.ParentContext => ParentContext;
 
 		[Obsolete("This constructor will be removed from FluentValidation 10. Use the constructor that receives a property value or an accessor instead.")]
-		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName) {
+		public PropertyValidatorContext(IValidationContext parentContext, IValidationRule rule, string propertyName) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
 		}
 
-		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue) {
+		public PropertyValidatorContext(IValidationContext parentContext, IValidationRule rule, string propertyName, object propertyValue) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
@@ -73,7 +73,7 @@ namespace FluentValidation.Validators {
 			_propertyValueSet = true;
 		}
 
-		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, Lazy<object> propertyValueAccessor) {
+		public PropertyValidatorContext(IValidationContext parentContext, IValidationRule rule, string propertyName, Lazy<object> propertyValueAccessor) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;

@@ -11,7 +11,7 @@ namespace FluentValidation.AspNetCore {
 			get { return (GreaterThanOrEqualValidator)Validator; }
 		}
 
-		public RangeMinClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public RangeMinClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 
 		}
 

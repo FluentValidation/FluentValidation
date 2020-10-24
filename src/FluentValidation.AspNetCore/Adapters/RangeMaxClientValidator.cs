@@ -11,7 +11,7 @@ namespace FluentValidation.AspNetCore {
 			get { return (LessThanOrEqualValidator)Validator; }
 		}
 
-		public RangeMaxClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public RangeMaxClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 
 		}
 

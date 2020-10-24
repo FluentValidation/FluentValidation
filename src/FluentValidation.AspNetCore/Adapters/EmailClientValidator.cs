@@ -25,7 +25,7 @@ namespace FluentValidation.AspNetCore {
 
 	internal class EmailClientValidator : ClientValidatorBase {
 
-		public EmailClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public EmailClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {

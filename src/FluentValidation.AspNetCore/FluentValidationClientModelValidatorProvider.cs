@@ -30,7 +30,7 @@ namespace FluentValidation.AspNetCore {
 #else
 	using Microsoft.AspNetCore.Mvc.DataAnnotations;
 #endif
-	public delegate IClientModelValidator FluentValidationClientValidatorFactory(ClientValidatorProviderContext context, PropertyRule rule, IPropertyValidator validator);
+	public delegate IClientModelValidator FluentValidationClientValidatorFactory(ClientValidatorProviderContext context, IValidationRule rule, IPropertyValidator validator);
 
 	/// <summary>
 	/// Used to generate clientside metadata from FluentValidation's rules.
@@ -86,7 +86,7 @@ namespace FluentValidation.AspNetCore {
 				var propertyName = context.ModelMetadata.PropertyName;
 
 				var validatorsWithRules = from rule in descriptor.GetRulesForMember(propertyName)
-					let propertyRule = (PropertyRule) rule
+					let propertyRule = (IValidationRule) rule
 					where propertyRule.Condition == null && propertyRule.AsyncCondition == null
 					let validators = rule.Validators
 					where validators.Any()
@@ -133,7 +133,7 @@ namespace FluentValidation.AspNetCore {
 			}
 		}
 
-		protected virtual IClientModelValidator GetModelValidator(ClientValidatorProviderContext context, PropertyRule rule, IPropertyValidator propertyValidator)	{
+		protected virtual IClientModelValidator GetModelValidator(ClientValidatorProviderContext context, IValidationRule rule, IPropertyValidator propertyValidator)	{
 			var type = propertyValidator.GetType();
 
 			var factory = _validatorFactories

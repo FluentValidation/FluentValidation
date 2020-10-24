@@ -28,10 +28,59 @@ namespace FluentValidation.Internal {
 	using Results;
 	using Validators;
 
+
+	internal class PropertyRule<T, TProperty> : PropertyRule, IValidationRule<T, TProperty> {
+
+		/// <summary>
+		/// Creates a new property rule.
+		/// </summary>
+		/// <param name="member">Property</param>
+		/// <param name="propertyFunc">Function to get the property value</param>
+		/// <param name="expression">Lambda expression used to create the rule</param>
+		/// <param name="cascadeModeThunk">Function to get the cascade mode.</param>
+		/// <param name="typeToValidate">Type to validate</param>
+		/// <param name="containerType">Container type that owns the property</param>
+		public PropertyRule(MemberInfo member, Func<object, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) :
+			base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate, containerType) {
+		}
+
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		public static IValidationRule<T, TProperty> Create(Expression<Func<T, TProperty>> expression) {
+			return Create(expression, () => ValidatorOptions.Global.CascadeMode);
+		}
+
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		public static IValidationRule<T, TProperty> Create(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+			var member = expression.GetMember();
+			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
+			return new PropertyRule<T, TProperty>(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+		}
+	}
+
+	internal class PropertyRule<T> : PropertyRule, IValidationRule<T> {
+
+		/// <summary>
+		/// Creates a new property rule.
+		/// </summary>
+		/// <param name="member">Property</param>
+		/// <param name="propertyFunc">Function to get the property value</param>
+		/// <param name="expression">Lambda expression used to create the rule</param>
+		/// <param name="cascadeModeThunk">Function to get the cascade mode.</param>
+		/// <param name="typeToValidate">Type to validate</param>
+		/// <param name="containerType">Container type that owns the property</param>
+		public PropertyRule(MemberInfo member, Func<object, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) :
+			base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate, containerType) {
+		}
+	}
+
 	/// <summary>
 	/// Defines a rule associated with a property.
 	/// </summary>
-	public class PropertyRule : IValidationRule {
+	internal class PropertyRule : IValidationRule {
 		private readonly List<IPropertyValidator> _validators = new List<IPropertyValidator>();
 		private Func<CascadeMode> _cascadeModeThunk;
 		private string _propertyDisplayName;
@@ -159,21 +208,6 @@ namespace FluentValidation.Internal {
 #pragma warning restore 618
 		}
 
-		/// <summary>
-		/// Creates a new property rule from a lambda expression.
-		/// </summary>
-		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression) {
-			return Create(expression, () => ValidatorOptions.Global.CascadeMode);
-		}
-
-		/// <summary>
-		/// Creates a new property rule from a lambda expression.
-		/// </summary>
-		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
-			var member = expression.GetMember();
-			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
-			return new PropertyRule(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
-		}
 
 		/// <summary>
 		/// Adds a validator to the rule.
@@ -485,7 +519,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="instanceToValidate">The parent object</param>
 		/// <returns>The value to be validated</returns>
-		internal virtual object GetPropertyValue(object instanceToValidate) {
+		public virtual object GetPropertyValue(object instanceToValidate) {
 			var value = PropertyFunc(instanceToValidate);
 			if (Transformer != null) value = Transformer(value);
 			return value;

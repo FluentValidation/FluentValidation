@@ -30,7 +30,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// The rule being created by this RuleBuilder.
 		/// </summary>
-		public PropertyRule Rule { get; }
+		public IValidationRule<T> Rule { get; }
 
 		/// <summary>
 		/// Parent validator
@@ -40,7 +40,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new instance of the <see cref="RuleBuilder{T,TProperty}">RuleBuilder</see> class.
 		/// </summary>
-		public RuleBuilder(PropertyRule rule, IValidator<T> parent) {
+		public RuleBuilder(IValidationRule<T> rule, IValidator<T> parent) {
 			Rule = rule;
 			ParentValidator = parent;
 		}
@@ -107,17 +107,17 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		IRuleBuilderOptions<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderOptions<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
+		IRuleBuilderOptions<T, TProperty> IConfigurable<IValidationRule<T>, IRuleBuilderOptions<T, TProperty>>.Configure(Action<IValidationRule<T>> configurator) {
 			configurator(Rule);
 			return this;
 		}
 
-		IRuleBuilderInitial<T, TProperty> IConfigurable<PropertyRule, IRuleBuilderInitial<T, TProperty>>.Configure(Action<PropertyRule> configurator) {
+		IRuleBuilderInitial<T, TProperty> IConfigurable<IValidationRule<T>, IRuleBuilderInitial<T, TProperty>>.Configure(Action<IValidationRule<T>> configurator) {
 			configurator(Rule);
 			return this;
 		}
 
-		IRuleBuilderInitialCollection<T, TProperty> IConfigurable<CollectionPropertyRule<T, TProperty>, IRuleBuilderInitialCollection<T, TProperty>>.Configure(Action<CollectionPropertyRule<T, TProperty>> configurator) {
+		IRuleBuilderInitialCollection<T, TProperty> IConfigurable<ICollectionPropertyRule<T, TProperty>, IRuleBuilderInitialCollection<T, TProperty>>.Configure(Action<ICollectionPropertyRule<T, TProperty>> configurator) {
 			configurator((CollectionPropertyRule<T, TProperty>) Rule);
 			return this;
 		}

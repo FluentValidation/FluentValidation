@@ -34,7 +34,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="TElement"></typeparam>
 	/// <typeparam name="T"></typeparam>
-	public class CollectionPropertyRule<T, TElement> : PropertyRule {
+	internal class CollectionPropertyRule<T, TElement> : PropertyRule<T, TElement>, ICollectionPropertyRule<T, TElement> {
 		/// <summary>
 		/// Initializes new instance of the CollectionPropertyRule class
 		/// </summary>
@@ -229,7 +229,7 @@ namespace FluentValidation.Internal {
 			return results;
 		}
 
-		internal override object GetPropertyValue(object instanceToValidate) {
+		public override object GetPropertyValue(object instanceToValidate) {
 			// Unlike the base class, we do not want to perform the transformation in here, just return the raw value.
 			// with collection rules, the transformation should be applied to individual elements instead.
 			return PropertyFunc(instanceToValidate);

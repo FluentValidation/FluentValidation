@@ -7,6 +7,7 @@ namespace FluentValidation.Tests {
 
 
 	public class StandalonePropertyValidationTester {
+		/*
 		[Fact]
 		public void Should_validate_property_value_without_instance() {
 			var validator = new NotNullValidator();
@@ -18,5 +19,6 @@ namespace FluentValidation.Tests {
 			var result = validator.Validate(context);
 			result.Single().ShouldNotBeNull();
 		}
+		*/
 	}
 }
