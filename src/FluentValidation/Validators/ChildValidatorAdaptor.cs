@@ -48,7 +48,7 @@ namespace FluentValidation.Validators {
 				return Enumerable.Empty<ValidationFailure>();
 			}
 
-			var newContext = CreateNewValidationContextForChildValidator(context, validator);
+			var newContext = CreateNewValidationContextForChildValidator(context);
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -74,7 +74,7 @@ namespace FluentValidation.Validators {
 				return Enumerable.Empty<ValidationFailure>();
 			}
 
-			var newContext = CreateNewValidationContextForChildValidator(context, validator);
+			var newContext = CreateNewValidationContextForChildValidator(context);
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -94,8 +94,8 @@ namespace FluentValidation.Validators {
 			return _validatorProvider != null ? _validatorProvider(context) : _validator;
 		}
 
-		protected virtual IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext context, IValidator validator) {
-			var selector = RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
+		protected virtual IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext context) {
+			var selector = GetSelector(context);
 			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
 			var newContext = parentContext.CloneForChildValidator((TProperty)context.PropertyValue, PassThroughParentContext, selector);
 
@@ -103,6 +103,10 @@ namespace FluentValidation.Validators {
 				newContext.PropertyChain.Add(context.Rule.PropertyName);
 
 			return newContext;
+		}
+
+		private protected virtual IValidatorSelector GetSelector(PropertyValidatorContext context) {
+			return RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
 		}
 
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {
