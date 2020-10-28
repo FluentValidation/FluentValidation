@@ -22,10 +22,6 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-#if NETCOREAPP2_1 || NETCOREAPP2_2
-	// For aspnetcore 2.x (targetting NS2.0), the ValidationVisitor class lives in the .Internal namespace
-	using Microsoft.AspNetCore.Mvc.Internal;
-#endif
 
 	internal class FluentValidationObjectModelValidator : ObjectModelValidator {
 		private readonly bool _runMvcValidation;
