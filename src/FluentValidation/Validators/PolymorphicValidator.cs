@@ -21,10 +21,7 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
-	using System.Threading;
-	using System.Threading.Tasks;
 	using Internal;
-	using Results;
 
 	/// <summary>
 	/// Performs runtime checking of the value being validated, and passes validation off to a subclass validator.
@@ -103,23 +100,17 @@ namespace FluentValidation.Validators {
 			if (context.PropertyValue == null) return null;
 
 			if (_derivedValidators.TryGetValue(context.PropertyValue.GetType(), out var derivedValidatorFactory)) {
-				return new ValidatorWrapper(derivedValidatorFactory.GetValidator(context), derivedValidatorFactory.RuleSets);
+				return derivedValidatorFactory.GetValidator(context);
 			}
 
 			return null;
 		}
 
-		protected override IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext context, IValidator validator) {
-			// Can't use the base overload as the RuleSets are per inheritance validator.
-
-			var selector = validator is ValidatorWrapper wrapper && wrapper.RuleSets?.Length > 0 ? new RulesetValidatorSelector(wrapper.RuleSets) : null;
-			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
-			var newContext = parentContext.CloneForChildValidator((TProperty)context.PropertyValue, true, selector);
-
-			if(!parentContext.IsChildCollectionContext)
-				newContext.PropertyChain.Add(context.Rule.PropertyName);
-
-			return newContext;
+		private protected override IValidatorSelector GetSelector(PropertyValidatorContext context) {
+			if (_derivedValidators.TryGetValue(context.PropertyValue.GetType(), out var derivedValidatorFactory) && derivedValidatorFactory.RuleSets != null) {
+				return new RulesetValidatorSelector(derivedValidatorFactory.RuleSets);
+			}
+			return null;
 		}
 
 		private class DerivedValidatorFactory {
@@ -139,50 +130,6 @@ namespace FluentValidation.Validators {
 
 			public IValidator GetValidator(PropertyValidatorContext context) {
 				return _factory?.Invoke(context) ?? _innerValidator;
-			}
-		}
-
-
-		// This validator is a pass-through to handle the type conversion.
-		private class ValidatorWrapper : IValidator<TProperty> {
-
-			private readonly IValidator _innerValidator;
-			public string[] RuleSets { get; }
-
-			public ValidatorWrapper(IValidator innerValidator, string[] ruleSets) {
-				_innerValidator = innerValidator;
-				RuleSets = ruleSets;
-			}
-
-			public ValidationResult Validate(IValidationContext context) {
-				return _innerValidator.Validate(context);
-			}
-
-			public Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellation = new CancellationToken()) {
-				return _innerValidator.ValidateAsync(context, cancellation);
-			}
-
-			public IValidatorDescriptor CreateDescriptor() {
-				return _innerValidator.CreateDescriptor();
-			}
-
-			public bool CanValidateInstancesOfType(Type type) {
-				return _innerValidator.CanValidateInstancesOfType(type);
-			}
-
-			public ValidationResult Validate(TProperty instance) {
-				// This overload should never be run.
-				throw new NotSupportedException();
-			}
-
-			public Task<ValidationResult> ValidateAsync(TProperty instance, CancellationToken cancellation = new CancellationToken()) {
-				// This overload should never be run.
-				throw new NotSupportedException();
-			}
-
-			public CascadeMode CascadeMode {
-				get => throw new NotSupportedException();
-				set => throw new NotSupportedException();
 			}
 		}
 	}
