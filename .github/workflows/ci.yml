@@ -28,15 +28,7 @@ jobs:
       run: |
         $json = ConvertFrom-Json (Get-Content global.json -Raw)
         $sdks = ($json.others + $json.sdk.version) -join ","
-        Write-Output "::set-env name=REQUIRED_SDKS::$sdks"
-
-    # Official actions/setup-dotnet doesn't support multiple side-by-side SDK installation.
-    # Remove workaround once https://github.com/actions/setup-dotnet/issues/25 is fixed
-
-    # - name: Install .NET SDKs
-    #   uses: actions/setup-dotnet@v1
-    #   with:
-    #     dotnet-version: ${{ env.REQUIRED_SDKS }}
+        echo "REQUIRED_SDKS=$sdks" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Install .NET SDKs
       uses: JeremySkinner/global-json-dotnet-install@master
