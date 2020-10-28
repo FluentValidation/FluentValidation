@@ -9,6 +9,7 @@ on:
     branches:
       - main
       - 9.x
+      - 10.x
 
 jobs:
   build:
