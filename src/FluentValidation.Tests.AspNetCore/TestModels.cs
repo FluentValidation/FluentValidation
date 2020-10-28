@@ -28,36 +28,35 @@ namespace FluentValidation.Tests.AspNetCore {
 	public class SimplePropertyInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
 		readonly string[] properties = new[] {"Surname", "Forename"};
 
-		public IValidationContext BeforeMvcValidation(ControllerContext cc, IValidationContext context) {
+		public IValidationContext BeforeAspNetValidation(ActionContext cc, IValidationContext context) {
 			var newContext = new ValidationContext<object>(context.InstanceToValidate, context.PropertyChain, new FluentValidation.Internal.MemberNameValidatorSelector(properties));
 			return newContext;
 		}
 
-		public ValidationResult AfterMvcValidation(ControllerContext cc, IValidationContext context, ValidationResult result) {
+		public ValidationResult AfterAspNetValidation(ActionContext cc, IValidationContext context, ValidationResult result) {
 			return result;
 		}
 	}
 
-	[Obsolete]
-	public class SimpleActionContextPropertyInterceptor : FluentValidation.AspNetCore.IActionContextValidatorInterceptor {
+	public class SimpleActionContextPropertyInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
 		readonly string[] properties = new[] {"Surname", "Forename"};
 
-		public IValidationContext BeforeMvcValidation(ActionContext cc, IValidationContext context) {
+		public IValidationContext BeforeAspNetValidation(ActionContext cc, IValidationContext context) {
 			var newContext = new ValidationContext<object>(context.InstanceToValidate, context.PropertyChain, new FluentValidation.Internal.MemberNameValidatorSelector(properties));
 			return newContext;
 		}
 
-		public ValidationResult AfterMvcValidation(ActionContext cc, IValidationContext context, ValidationResult result) {
+		public ValidationResult AfterAspNetValidation(ActionContext cc, IValidationContext context, ValidationResult result) {
 			return result;
 		}
 	}
 
 	public class ClearErrorsInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
-		public IValidationContext BeforeMvcValidation(ControllerContext cc, IValidationContext context) {
+		public IValidationContext BeforeAspNetValidation(ActionContext cc, IValidationContext context) {
 			return null;
 		}
 
-		public ValidationResult AfterMvcValidation(ControllerContext cc, IValidationContext context, ValidationResult result) {
+		public ValidationResult AfterAspNetValidation(ActionContext cc, IValidationContext context, ValidationResult result) {
 			return new ValidationResult();
 		}
 	}
@@ -76,11 +75,11 @@ namespace FluentValidation.Tests.AspNetCore {
 			RuleFor(x => x.Forename).NotEqual("foo");
 		}
 
-		public IValidationContext BeforeMvcValidation(ControllerContext controllerContext, IValidationContext commonContext) {
+		public IValidationContext BeforeAspNetValidation(ActionContext controllerContext, IValidationContext commonContext) {
 			return commonContext;
 		}
 
-		public ValidationResult AfterMvcValidation(ControllerContext controllerContext, IValidationContext commonContext, ValidationResult result) {
+		public ValidationResult AfterAspNetValidation(ActionContext controllerContext, IValidationContext commonContext, ValidationResult result) {
 			return new ValidationResult(); //empty errors
 		}
 	}
