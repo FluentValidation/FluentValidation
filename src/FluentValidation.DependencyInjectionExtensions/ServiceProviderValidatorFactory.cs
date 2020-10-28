@@ -15,11 +15,11 @@
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
-namespace FluentValidation.AspNetCore {
+namespace FluentValidation {
 	using System;
 
 	/// <summary>
-	/// Validator factory implementation that uses the asp.net service provider to consruct validators.
+	/// Validator factory implementation that uses the service provider to construct validators.
 	/// </summary>
 	public class ServiceProviderValidatorFactory : ValidatorFactoryBase {
 		private readonly IServiceProvider _serviceProvider;

@@ -25,39 +25,16 @@ namespace FluentValidation.AspNetCore {
 	/// <summary>
 	/// FluentValidation asp.net core configuration
 	/// </summary>
-	public class FluentValidationMvcConfiguration {
+	public class FluentValidationMvcConfiguration : FluentValidationDiConfiguration {
 
-		public FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions) {
-			ValidatorOptions = validatorOptions;
+		public FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions) :base(validatorOptions) {
+
 		}
-
-		/// <summary>
-		/// Options that are used to configure all validators.
-		/// </summary>
-		public ValidatorConfiguration ValidatorOptions { get; private set; }
-
-		/// <summary>
-		/// The type of validator factory to use. Uses the ServiceProviderValidatorFactory by default.
-		/// </summary>
-		public Type ValidatorFactoryType { get; set; }
-
-		/// <summary>
-		/// The validator factory to use. Uses the ServiceProviderValidatorFactory by default.
-		/// </summary>
-		public IValidatorFactory ValidatorFactory { get; set; }
 
 		/// <summary>
 		/// Whether to run MVC's default validation process (including DataAnnotations) after FluentValidation is executed. True by default.
 		/// </summary>
 		public bool RunDefaultMvcValidationAfterFluentValidationExecutes { get; set; } = true;
-
-		/// <summary>
-		/// Enables or disables localization support within FluentValidation
-		/// </summary>
-		public bool LocalizationEnabled {
-			get => ValidatorOptions.LanguageManager.Enabled;
-			set => ValidatorOptions.LanguageManager.Enabled = value;
-		}
 
 		/// <summary>
 		/// Whether or not child properties should be implicitly validated if a matching validator can be found. By default this is false, and you should wire up child validators using SetValidator.
@@ -68,8 +45,7 @@ namespace FluentValidation.AspNetCore {
 		internal bool ClientsideEnabled = true;
 		internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};
 		internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
-		internal Func<AssemblyScanner.AssemblyScanResult, bool> TypeFilter { get; set; }
-		internal ServiceLifetime ServiceLifetime { get; set; } = ServiceLifetime.Transient;
+
 
 		/// <summary>
 		/// Whether automatic server-side validation should be enabled (default true).

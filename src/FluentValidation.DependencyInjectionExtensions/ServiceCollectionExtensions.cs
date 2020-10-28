@@ -23,17 +23,42 @@ namespace FluentValidation {
 	using System.Reflection;
 
 	public static class ServiceCollectionExtensions	{
+
 		/// <summary>
 		/// Adds all validators in specified assemblies
 		/// </summary>
 		/// <param name="services">The collection of services</param>
 		/// <param name="assemblies">The assemblies to scan</param>
-		/// <param name="lifetime">The lifetime of the validators. The default is transient</param>
-		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		/// <param name="configExpression">Optional config object that contains factory registration information.</param>
 		/// <returns></returns>
-		public static IServiceCollection AddValidatorsFromAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies, ServiceLifetime lifetime = ServiceLifetime.Transient, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null) {
+		public static IServiceCollection AddValidatorsFromAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies, Action<FluentValidationDiConfiguration> configExpression = null) {
+			var config = new FluentValidationDiConfiguration(ValidatorOptions.Global);
+			configExpression?.Invoke(config);
+			return services.AddValidatorsFromAssemblies(assemblies, config);
+		}
+
+		/// <summary>
+		/// Adds all validators in specified assemblies
+		/// </summary>
+		/// <param name="services">The collection of services</param>
+		/// <param name="assemblies">The assemblies to scan</param>
+		/// <param name="config">Optional config object that contains factory registration information.</param>
+		/// <returns></returns>
+		public static IServiceCollection AddValidatorsFromAssemblies(this IServiceCollection services, IEnumerable<Assembly> assemblies, FluentValidationDiConfiguration config = null) {
+
+			var lifetime = config?.ServiceLifetime ?? ServiceLifetime.Transient;
 			foreach (var assembly in assemblies)
-				services.AddValidatorsFromAssembly(assembly, lifetime, filter);
+				services.AddValidatorsFromAssembly(assembly, lifetime, config?.TypeFilter);
+
+			//config = config ?? new FluentValidationDiConfiguration(ValidatorOptions.Global);
+			if (config?.ValidatorFactory != null) {
+				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type.
+				var factory = config.ValidatorFactory;
+				services.Add(ServiceDescriptor.Transient(s => factory));
+			}
+			else {
+				services.Add(ServiceDescriptor.Transient(typeof(IValidatorFactory), config?.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
+			}
 
 			return services;
 		}
@@ -84,7 +109,7 @@ namespace FluentValidation {
 		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <returns></returns>
 		private static IServiceCollection AddScanResult(this IServiceCollection services, AssemblyScanner.AssemblyScanResult scanResult, ServiceLifetime lifetime, Func<AssemblyScanner.AssemblyScanResult, bool> filter) {
-			bool shouldRegister = filter?.Invoke(scanResult) ?? true;
+			var shouldRegister = filter?.Invoke(scanResult) ?? true;
 			if (shouldRegister) {
 				//Register as interface
 				services.Add(
