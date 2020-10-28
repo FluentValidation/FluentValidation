@@ -27,7 +27,7 @@ namespace FluentValidation.AspNetCore {
 	/// </summary>
 	public class FluentValidationMvcConfiguration : FluentValidationDiConfiguration {
 
-		public FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions) :base(validatorOptions) {
+		public FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions) : base(validatorOptions) {
 
 		}
 
