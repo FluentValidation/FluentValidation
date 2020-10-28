@@ -264,11 +264,7 @@ namespace FluentValidation.Tests.AspNetCore {
 					fv.ImplicitlyValidateChildProperties = true;
 				})
 				.WithWebHostBuilder(builder => builder.ConfigureServices(
-#pragma warning disable 618
-#pragma warning disable 612
-						services => services.AddSingleton<IActionContextValidatorInterceptor, SimpleActionContextPropertyInterceptor>())
-#pragma warning restore 612
-#pragma warning restore 618
+						services => services.AddSingleton<IValidatorInterceptor, SimpleActionContextPropertyInterceptor>())
 				)
 				.CreateClient();
 			var response = await client.PostResponse($"/RulesetTest", form);
