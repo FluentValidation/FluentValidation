@@ -21,11 +21,7 @@ namespace FluentValidation.Internal {
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Reflection;
-	using System.Runtime.CompilerServices;
 	using System.Text;
-	using System.Threading;
-	using System.Threading.Tasks;
-	using Validators;
 
 	/// <summary>
 	/// Useful extensions
@@ -54,19 +50,6 @@ namespace FluentValidation.Internal {
 		/// <returns></returns>
 		public static bool IsParameterExpression(this LambdaExpression expression) {
 			return expression.Body.NodeType == ExpressionType.Parameter;
-		}
-
-		/// <summary>
-		/// Gets a MemberInfo from a member expression.
-		/// </summary>
-		public static MemberInfo GetMember(this LambdaExpression expression) {
-			var memberExp = RemoveUnary(expression.Body) as MemberExpression;
-
-			if (memberExp == null) {
-				return null;
-			}
-
-			return memberExp.Member;
 		}
 
 		/// <summary>
@@ -131,63 +114,27 @@ namespace FluentValidation.Internal {
 			return retVal.ToString().Trim();
 		}
 
-		/// <summary>
-		/// Helper method to construct a constant expression from a constant.
-		/// </summary>
-		/// <typeparam name="T">Type of object being validated</typeparam>
-		/// <typeparam name="TProperty">Type of property being validated</typeparam>
-		/// <param name="valueToCompare">The value being compared</param>
-		/// <returns></returns>
-		internal static Expression<Func<T, TProperty>> GetConstantExpressionFromConstant<T, TProperty>(TProperty valueToCompare) {
-			Expression constant = Expression.Constant(valueToCompare, typeof(TProperty));
-			ParameterExpression parameter = Expression.Parameter(typeof(T), "t");
-			return Expression.Lambda<Func<T, TProperty>>(constant, parameter);
-		}
-
 		internal static void ForEach<T>(this IEnumerable<T> source, Action<T> action) {
 			foreach (var item in source) {
 				action(item);
 			}
 		}
 
-#pragma warning disable 1591
-		public static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {
+		internal static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {
 			return x => func((T)x);
 		}
 
-		public static Func<object, bool> CoerceToNonGeneric<T>(this Func<T, bool> func) {
+		internal static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func) {
 			return x => func((T)x);
 		}
 
-		public static Func<object, CancellationToken, Task<bool>> CoerceToNonGeneric<T>(this Func<T, CancellationToken, Task<bool>> func) {
-			return (x, ct) => func((T)x, ct);
-		}
-
-
-		public static Func<object, Task<bool>> CoerceToNonGeneric<T>(this Func<T, Task<bool>> func) {
+		internal static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func) {
 			return x => func((T)x);
 		}
 
-		public static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func) {
+		internal static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func) {
 			return x => func((T)x);
 		}
-
-		public static Func<object, long> CoerceToNonGeneric<T>(this Func<T, long> func) {
-			return x => func((T)x);
-		}
-
-		public static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func) {
-			return x => func((T)x);
-		}
-
-		public static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func) {
-			return x => func((T)x);
-		}
-
-		public static Action<object> CoerceToNonGeneric<T>(this Action<T> action) {
-			return x => action((T)x);
-		}
-#pragma warning restore 1591
 
 		/// <summary>
 		/// Checks whether this is an asynchronous validation run.
