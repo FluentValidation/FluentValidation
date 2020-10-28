@@ -50,7 +50,6 @@ namespace FluentValidation {
 			foreach (var assembly in assemblies)
 				services.AddValidatorsFromAssembly(assembly, lifetime, config?.TypeFilter);
 
-			//config = config ?? new FluentValidationDiConfiguration(ValidatorOptions.Global);
 			if (config?.ValidatorFactory != null) {
 				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type.
 				var factory = config.ValidatorFactory;
