@@ -429,36 +429,20 @@ namespace FluentValidation.Internal {
 			return failures;
 		}
 
-		/// <summary>
-		/// Invokes the validator asynchronously
-		/// </summary>
-		/// <param name="context"></param>
-		/// <param name="validator"></param>
-		/// <param name="propertyName"></param>
-		/// <param name="cancellation"></param>
-		/// <returns></returns>
-		protected virtual async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor, CancellationToken cancellation) {
+		private async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor, CancellationToken cancellation) {
 			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
 			if (!await validator.Options.InvokeAsyncCondition(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
 			return await validator.ValidateAsync(propertyContext, cancellation);
 		}
 
-		/// <summary>
-		/// Invokes a property validator using the specified validation context.
-		/// </summary>
-		protected virtual IEnumerable<ValidationFailure> InvokePropertyValidator(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor) {
+		private protected IEnumerable<ValidationFailure> InvokePropertyValidator(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor) {
 			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
 			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
 			return validator.Validate(propertyContext);
 		}
 
-		/// <summary>
-		/// Gets the property value, including any transformations that need to be applied.
-		/// </summary>
-		/// <param name="instanceToValidate">The parent object</param>
-		/// <returns>The value to be validated</returns>
-		internal virtual object GetPropertyValue(object instanceToValidate) {
+		private object GetPropertyValue(object instanceToValidate) {
 			var value = PropertyFunc(instanceToValidate);
 #pragma warning disable 618
 			if (Transformer != null) value = Transformer(value);
