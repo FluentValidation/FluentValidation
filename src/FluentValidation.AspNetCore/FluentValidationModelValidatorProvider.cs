@@ -99,36 +99,23 @@ namespace FluentValidation.AspNetCore {
 				var interceptor = customizations.GetInterceptor()
 				                  ?? validator as IValidatorInterceptor
 				                  ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IValidatorInterceptor>();
-#pragma warning disable 612
-#pragma warning disable 618
-				var actionContextInterceptor = customizations.GetActionContextInterceptor()
-				                               ?? validator as IActionContextValidatorInterceptor
-				                               ?? mvContext.ActionContext.HttpContext.RequestServices.GetService<IActionContextValidatorInterceptor>();
-#pragma warning restore 618
-#pragma warning restore 612
 
 				IValidationContext context = new ValidationContext<object>(mvContext.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
 				context.SetServiceProvider(mvContext.ActionContext.HttpContext.RequestServices);
 
-				if (interceptor != null && mvContext.ActionContext is ControllerContext) {
+				if (interceptor != null) {
 					// Allow the user to provide a customized context
 					// However, if they return null then just use the original context.
-					context = interceptor.BeforeMvcValidation((ControllerContext) mvContext.ActionContext, context) ?? context;
-				}
-				else if (actionContextInterceptor != null) {
-					context = actionContextInterceptor.BeforeMvcValidation(mvContext.ActionContext, context) ?? context;
+					context = interceptor.BeforeAspNetValidation(mvContext.ActionContext, context) ?? context;
 				}
 
 				var result = validator.Validate(context);
 
-				if (interceptor != null && mvContext.ActionContext is ControllerContext) {
+				if (interceptor != null) {
 					// allow the user to provide a custom collection of failures, which could be empty.
 					// However, if they return null then use the original collection of failures.
-					result = interceptor.AfterMvcValidation((ControllerContext) mvContext.ActionContext, context, result) ?? result;
-				}
-				else if (actionContextInterceptor != null) {
-					result = actionContextInterceptor.AfterMvcValidation(mvContext.ActionContext, context, result) ?? result;
+					result = interceptor.AfterAspNetValidation(mvContext.ActionContext, context, result) ?? result;
 				}
 
 				return result.Errors.Select(x => new ModelValidationResult(x.PropertyName, x.ErrorMessage));
