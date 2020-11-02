@@ -38,6 +38,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\FluentValidation\Internal\AccessorCache.cs">
+      <Link>AccessorCache.cs</Link>
+    </Compile>
     <Compile Include="..\FluentValidation\Internal\TrackingCollection.cs">
       <Link>TestExtensions.cs</Link>
     </Compile>
