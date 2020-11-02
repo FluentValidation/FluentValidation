@@ -1,5 +1,6 @@
 ﻿namespace FluentValidation.Tests {
 	using System;
+	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
 	using System.Diagnostics;
 	using System.Linq.Expressions;
@@ -31,7 +32,6 @@
 			Assert.Equal(compiled3, compiled4);
 		}
 
-
 		[Fact]
 		public void Equality_comparison_check() {
 			Expression<Func<Person, string>> expr1 = x => x.Surname;
@@ -59,6 +59,16 @@
 		public void Gets_member_for_nested_property() {
 			Expression<Func<Person, string>> expr1 = x => x.Address.Line1;
 			expr1.GetMember().ShouldNotBeNull();
+		}
+
+		[Fact]
+		public void No_error_when_accessing_same_property_via_different_collection_type_when_using_different_cache_prefix() {
+			Expression<Func<Person, IEnumerable<Order>>> expr1 = x => x.Orders;
+			Expression<Func<Person, IList<Order>>> expr2 = x => x.Orders;
+
+			var accessor1 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetProperty("Orders"), expr1, false, "Prefix1");
+			var accessor2 = AccessorCache<Person>.GetCachedAccessor(typeof(Person).GetProperty("Orders"), expr2, false, "Prefix2");
+			Assert.NotEqual(accessor1, accessor2);
 		}
 
 		private Person DoStuffToPerson(Person p) {
