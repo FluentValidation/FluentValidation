@@ -57,15 +57,7 @@ namespace FluentValidation.Internal {
 		/// By default this is "[" + index + "]"
 		/// </summary>
 		public Func<object, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
-
-		/// <summary>
-		/// Creates a new property rule from a lambda expression.
-		/// </summary>
-		//TODO: Remove in FV10.
-		public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk) {
-			return Create(expression, cascadeModeThunk, false);
-		}
-
+		
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
