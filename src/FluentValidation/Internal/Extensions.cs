@@ -48,14 +48,14 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="expression"></param>
 		/// <returns></returns>
-		public static bool IsParameterExpression(this LambdaExpression expression) {
+		internal static bool IsParameterExpression(this LambdaExpression expression) {
 			return expression.Body.NodeType == ExpressionType.Parameter;
 		}
 
 		/// <summary>
 		/// Gets a MemberInfo from a member expression.
 		/// </summary>
-		public static MemberInfo GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
+		internal static MemberInfo GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
 			var memberExp = RemoveUnary(expression.Body) as MemberExpression;
 
 			if (memberExp == null) {
@@ -82,7 +82,6 @@ namespace FluentValidation.Internal {
 			return memberExp.Member;
 		}
 
-
 		private static Expression RemoveUnary(Expression toUnwrap) {
 			if (toUnwrap is UnaryExpression) {
 				return ((UnaryExpression)toUnwrap).Operand;
@@ -94,7 +93,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Splits pascal case, so "FooBar" would become "Foo Bar"
 		/// </summary>
-		public static string SplitPascalCase(this string input) {
+		internal static string SplitPascalCase(this string input) {
 			if (string.IsNullOrEmpty(input))
 				return input;
 
