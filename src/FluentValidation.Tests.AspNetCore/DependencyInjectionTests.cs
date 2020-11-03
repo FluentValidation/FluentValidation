@@ -22,9 +22,9 @@ namespace FluentValidation.Tests {
 							fv.ImplicitlyValidateChildProperties = false;
 						});
 						services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-						services.AddTransient<IValidator<ParentModel>, InjectsExplicitChildValidator>();
-						services.AddTransient<IValidator<ChildModel>, InjectedChildValidator>();
-						services.AddTransient<IValidator<ParentModel6>, InjectsExplicitChildValidatorCollection>();
+						services.AddScoped<IValidator<ParentModel>, InjectsExplicitChildValidator>();
+						services.AddScoped<IValidator<ChildModel>, InjectedChildValidator>();
+						services.AddScoped<IValidator<ParentModel6>, InjectsExplicitChildValidatorCollection>();
 					});
 				})
 				.CreateClient();
