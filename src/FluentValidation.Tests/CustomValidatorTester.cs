@@ -166,6 +166,16 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 		}
 
+		[Fact]
+		public void Allows_placeholders() {
+			validator.RuleFor(x => x.Forename).Custom((name, context) => {
+				context.MessageFormatter.AppendArgument("Foo", "1");
+				context.AddFailure("{Foo}");
+			});
+			var result = validator.Validate(new Person());
+			result.Errors.Single().ErrorMessage.ShouldEqual("1");
+		}
+
 		private class NestedOrderValidator : AbstractValidator<Order> {
 			public NestedOrderValidator() {
 				RuleFor(x=>x).Custom((x, ctx) => {

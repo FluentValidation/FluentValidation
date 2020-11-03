@@ -9,16 +9,17 @@
 	/// Custom validator that allows for manual/direct creation of ValidationFailure instances.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class CustomValidator<T> : PropertyValidator {
-		private readonly Action<T, CustomContext> _action;
-		private Func<T, CustomContext, CancellationToken, Task> _asyncAction;
+	/// <typeparam name="TProperty"></typeparam>
+	public class CustomValidator<T, TProperty> : PropertyValidator {
+		private readonly Action<TProperty, CustomContext<T, TProperty>> _action;
+		private Func<TProperty, CustomContext<T, TProperty>, CancellationToken, Task> _asyncAction;
 		private readonly bool _isAsync;
 
 		/// <summary>
 		/// Creates a new instance of the CustomValidator
 		/// </summary>
 		/// <param name="action"></param>
-		public CustomValidator(Action<T, CustomContext> action) {
+		public CustomValidator(Action<TProperty, CustomContext<T, TProperty>> action) {
 			_isAsync = false;
 			_action = action;
 
@@ -29,7 +30,7 @@
 		/// Creates a new instance of the CustomValidator.
 		/// </summary>
 		/// <param name="asyncAction"></param>
-		public CustomValidator(Func<T, CustomContext, CancellationToken, Task> asyncAction) {
+		public CustomValidator(Func<TProperty, CustomContext<T, TProperty>, CancellationToken, Task> asyncAction) {
 			_isAsync = true;
 			_asyncAction = asyncAction;
 			//TODO: For FV 9, throw an exception by default if async validator is being executed synchronously.
@@ -37,14 +38,14 @@
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			var customContext = new CustomContext(context);
-			_action((T) context.PropertyValue, customContext);
+			var customContext = new CustomContext<T, TProperty>(context, this);
+			_action((TProperty) context.PropertyValue, customContext);
 			return customContext.Failures;
 		}
 
 		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			var customContext = new CustomContext(context);
-			await _asyncAction((T)context.PropertyValue, customContext, cancellation);
+			var customContext = new CustomContext<T, TProperty>(context, this);
+			await _asyncAction((TProperty)context.PropertyValue, customContext, cancellation);
 			return customContext.Failures;
 		}
 
@@ -55,21 +56,29 @@
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {
 			return _isAsync && context.IsAsync();
 		}
+
+		internal new ValidationFailure CreateValidationError(PropertyValidatorContext context, string propertyName, string errorMessage) {
+			return base.CreateValidationError(context, propertyName, errorMessage);
+		}
+
 	}
 
 	/// <summary>
 	/// Custom validation context
 	/// </summary>
-	public class CustomContext {
+	public class CustomContext<T, TProperty> {
 		private PropertyValidatorContext _context;
 		private List<ValidationFailure> _failures = new List<ValidationFailure>();
+		private CustomValidator<T, TProperty> _validator;
 
 		/// <summary>
 		/// Creates a new CustomContext
 		/// </summary>
 		/// <param name="context">The parent PropertyValidatorContext that represents this execution</param>
-		public CustomContext(PropertyValidatorContext context) {
+		/// <param name="validator">The validator being executed</param>
+		public CustomContext(PropertyValidatorContext context, CustomValidator<T, TProperty> validator) {
 			_context = context;
+			_validator = validator;
 		}
 
 		/// <summary>
@@ -79,7 +88,9 @@
 		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string propertyName, string errorMessage) {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
-			AddFailure(new ValidationFailure(propertyName ?? string.Empty, errorMessage));
+			errorMessage = _validator.GetErrorMessage(_context, errorMessage);
+			var failure = _validator.CreateValidationError(_context, propertyName ?? string.Empty, errorMessage);
+			AddFailure(failure);
 		}
 
 		/// <summary>
@@ -106,8 +117,8 @@
 		public string PropertyName => _context.PropertyName;
 		public string DisplayName => _context.DisplayName;
 		public MessageFormatter MessageFormatter => _context.MessageFormatter;
-		public object InstanceToValidate => _context.InstanceToValidate;
-		public object PropertyValue => _context.PropertyValue;
+		public T InstanceToValidate => (T)_context.InstanceToValidate;
+		public TProperty PropertyValue => (TProperty)_context.PropertyValue;
 		public IValidationContext ParentContext => _context.ParentContext;
 	}
 }

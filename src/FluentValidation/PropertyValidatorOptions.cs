@@ -113,9 +113,10 @@ namespace FluentValidation {
 		/// If no context is supplied, the raw unformatted message will be returned, containing placeholders.
 		/// </summary>
 		/// <param name="context">The current property validator context.</param>
+		/// <param name="template">The raw error message template. If null, the message will be loaded from the validator's configuration.</param>
 		/// <returns>Either the formatted or unformatted error message.</returns>
-		public string GetErrorMessage(PropertyValidatorContext context) {
-			string rawTemplate = _errorMessageFactory?.Invoke(context) ?? _errorMessage ?? GetDefaultMessageTemplate();
+		public string GetErrorMessage(PropertyValidatorContext context, string template = null) {
+			string rawTemplate = template ?? _errorMessageFactory?.Invoke(context) ?? _errorMessage ?? GetDefaultMessageTemplate();
 
 			if (context == null) {
 				return rawTemplate;
@@ -142,5 +143,5 @@ namespace FluentValidation {
 			_errorMessageFactory = null;
 		}
 	}
-	
+
 }
