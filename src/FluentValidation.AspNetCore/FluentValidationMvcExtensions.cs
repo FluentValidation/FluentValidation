@@ -106,10 +106,10 @@ namespace FluentValidation.AspNetCore {
 			if (config.ValidatorFactory != null) {
 				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type.
 				var factory = config.ValidatorFactory;
-				services.Add(ServiceDescriptor.Transient(s => factory));
+				services.Add(ServiceDescriptor.Scoped(s => factory));
 			}
 			else {
-				services.Add(ServiceDescriptor.Transient(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
+				services.Add(ServiceDescriptor.Scoped(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 			}
 
 			if (config.AutomaticValidationEnabled) {
@@ -124,9 +124,9 @@ namespace FluentValidation.AspNetCore {
 				// Clientside validation requires access to the HttpContext, but MVC's clientside API does not provide it,
 				// so we need to inject the HttpContextAccessor instead.
 				// This is not registered by default, so add it in if the user hasn't done so.
-				services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+				services.AddHttpContextAccessor();
 
-				services.TryAddEnumerable(ServiceDescriptor.Transient<IConfigureOptions<MvcViewOptions>, FluentValidationViewOptionsSetup>(s => {
+				services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<MvcViewOptions>, FluentValidationViewOptionsSetup>(s => {
 					return new FluentValidationViewOptionsSetup(config.ClientsideConfig, s.GetService<IHttpContextAccessor>());
 				}));
 			}

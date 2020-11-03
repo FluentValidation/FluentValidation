@@ -28,7 +28,7 @@
 		}
 
 		[Fact]
-		public async Task Validators_should_be_transient() {
+		public async Task Validators_should_be_scoped() {
 			var result = await _client.GetErrors("Lifecycle", new FormData());
 			var hashCode1 = result.GetError("Foo");
 
