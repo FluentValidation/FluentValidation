@@ -27,7 +27,7 @@ namespace FluentValidation.AspNetCore {
 	/// Caches the validators used when generating clientside metadata.
 	/// Ideally, the validators wouldbe singletons so this happens automatically,
 	/// but we can't rely on this behaviour. The user may have registered them as something else
-	/// And as of 7.2, the default is to auto-register validators as transient as inexperienced developers
+	/// And as of 10.0, the default is to auto-register validators as scoped as inexperienced developers
 	/// often have issues understanding issues that arise from having singleton-scoped objects depending on non-singleton-scoped services
 	/// Instead, we can cache the validators used for clientside validation in Httpcontext.Items to prevent them being instantiated once per property.
 	/// </summary>
