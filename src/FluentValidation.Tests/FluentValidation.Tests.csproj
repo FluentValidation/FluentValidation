@@ -5,6 +5,8 @@
     <RootNamespace>FluentValidation.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
+    <SignAssembly>True</SignAssembly>
+    <DelaySign>False</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <None Update="xunit.runner.json">
@@ -36,13 +38,5 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TestMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\FluentValidation\Internal\AccessorCache.cs">
-      <Link>AccessorCache.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Internal\TrackingCollection.cs">
-      <Link>TestExtensions.cs</Link>
-    </Compile>
   </ItemGroup>
 </Project>
