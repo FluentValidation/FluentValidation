@@ -2,6 +2,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Linq;
 	using Internal;
+	using Results;
 	using Xunit;
 	using Validators;
 
@@ -14,9 +15,10 @@ namespace FluentValidation.Tests {
 			var rule = new PropertyRule(null, x => null, null, null, typeof(string), null) {
 				PropertyName = "Surname"
 			};
-			var context = new PropertyValidatorContext(parentContext, rule, null, null);
-			var result = validator.Validate(context);
-			result.Single().ShouldNotBeNull();
+			var result = new ValidationResult();
+			var context = new PropertyValidatorContext(parentContext, result, rule, null, null);
+			validator.Validate(context);
+			result.Errors.Single().ShouldNotBeNull();
 		}
 	}
 }

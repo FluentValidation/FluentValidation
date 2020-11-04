@@ -63,20 +63,19 @@ namespace FluentValidation.Validators {
 
 
 		/// <inheritdoc />
-		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			if (IsValid(context)) return Enumerable.Empty<ValidationFailure>();
+		public virtual void Validate(PropertyValidatorContext context) {
+			if (IsValid(context)) return;
 
 			PrepareMessageFormatterForValidationError(context);
-			return new[] { CreateValidationError(context) };
-
+			context.AddFailure(CreateValidationError(context));
 		}
 
 		/// <inheritdoc />
-		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			if (await IsValidAsync(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
+		public virtual async Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			if (await IsValidAsync(context, cancellation)) return;
 
 			PrepareMessageFormatterForValidationError(context);
-			return new[] {CreateValidationError(context)};
+			context.AddFailure(CreateValidationError(context));
 		}
 
 		/// <inheritdoc />
@@ -89,11 +88,9 @@ namespace FluentValidation.Validators {
 
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
-#pragma warning disable 1998
-		protected virtual async Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			return IsValid(context);
+		protected virtual Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			return Task.FromResult(IsValid(context));
 		}
-#pragma warning restore 1998
 
 		/// <summary>
 		/// Prepares the <see cref="MessageFormatter"/> of <paramref name="context"/> for an upcoming <see cref="ValidationFailure"/>.

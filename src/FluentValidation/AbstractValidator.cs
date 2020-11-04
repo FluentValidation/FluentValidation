@@ -90,11 +90,7 @@ namespace FluentValidation {
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			foreach (var rule in Rules) {
-				var failures = rule.Validate(context);
-
-				foreach (var validationFailure in failures.Where(failure => failure != null)) {
-					result.Errors.Add(validationFailure);
-				}
+				rule.Validate(context, result);
 
 				if (CascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 					// Bail out if we're "failing-fast".
@@ -136,11 +132,7 @@ namespace FluentValidation {
 
 			foreach (var rule in Rules) {
 				cancellation.ThrowIfCancellationRequested();
-				var failures = await rule.ValidateAsync(context, cancellation);
-
-				foreach (var failure in failures.Where(f => f != null)) {
-					result.Errors.Add(failure);
-				}
+				await rule.ValidateAsync(context, result, cancellation);
 
 				if (CascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 					// Bail out if we're "failing-fast".

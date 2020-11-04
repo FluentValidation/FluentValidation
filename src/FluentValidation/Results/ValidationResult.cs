@@ -26,8 +26,6 @@ namespace FluentValidation.Results {
 	/// </summary>
 	[Serializable]
 	public class ValidationResult {
-		private readonly IList<ValidationFailure> errors;
-
 		/// <summary>
 		/// Whether validation succeeded
 		/// </summary>
@@ -36,7 +34,7 @@ namespace FluentValidation.Results {
 		/// <summary>
 		/// A collection of errors
 		/// </summary>
-		public IList<ValidationFailure> Errors => errors;
+		public List<ValidationFailure> Errors { get; }
 
 		public string[] RuleSetsExecuted { get; internal set; }
 
@@ -44,7 +42,7 @@ namespace FluentValidation.Results {
 		/// Creates a new validationResult
 		/// </summary>
 		public ValidationResult() {
-			this.errors = new List<ValidationFailure>();
+			Errors = new List<ValidationFailure>();
 		}
 
 		/// <summary>
@@ -55,7 +53,7 @@ namespace FluentValidation.Results {
 		/// Every caller is responsible for not adding <c>null</c> to the list.
 		/// </remarks>
 		public ValidationResult(IEnumerable<ValidationFailure> failures) {
-			errors = failures.Where(failure => failure != null).ToList();
+			Errors = failures.Where(failure => failure != null).ToList();
 		}
 
 		/// <summary>
@@ -72,7 +70,7 @@ namespace FluentValidation.Results {
 		/// <param name="separator">The character to separate the error messages.</param>
 		/// <returns></returns>
 		public string ToString(string separator) {
-			return	string.Join(separator, errors.Select(failure => failure.ErrorMessage));
+			return	string.Join(separator, Errors.Select(failure => failure.ErrorMessage));
 		}
 	}
 }

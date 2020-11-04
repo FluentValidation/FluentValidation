@@ -61,20 +61,16 @@ namespace FluentValidation.Internal {
 			return new IncludeRule<T>(ctx => func((T)ctx.InstanceToValidate), cascadeModeThunk, typeof(T), typeof(T), typeof(TValidator));
 		}
 
-
-		public override IEnumerable<ValidationFailure> Validate(IValidationContext context) {
+		public override void Validate(IValidationContext context, ValidationResult result) {
 			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
-			var result = base.Validate(context).ToList();
+			base.Validate(context, result);
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
-			return result;
 		}
 
-		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation) {
+		public override async Task ValidateAsync(IValidationContext context, ValidationResult result, CancellationToken cancellation) {
 			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
-			var result = await base.ValidateAsync(context, cancellation);
-			result = result.ToList();
+			await base.ValidateAsync(context, result, cancellation);
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
-			return result;
 		}
 	}
 }

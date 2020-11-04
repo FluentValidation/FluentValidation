@@ -42,16 +42,18 @@ namespace FluentValidation {
 		/// Performs validation using a validation context and returns a collection of Validation Failures.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
+		/// <param name="result">In-progress result</param>
 		/// <returns>A collection of validation failures</returns>
-		IEnumerable<ValidationFailure> Validate(IValidationContext context);
+		void Validate(IValidationContext context, ValidationResult result);
 
 		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures asynchronously.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
+		/// <param name="result">In-progress result</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A collection of validation failures</returns>
-		Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation);
+		Task ValidateAsync(IValidationContext context, ValidationResult result, CancellationToken cancellation);
 
 		/// <summary>
 		/// Applies a condition to either all the validators in the rule, or the most recent validator in the rule chain.

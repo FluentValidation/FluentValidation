@@ -37,15 +37,15 @@ namespace FluentValidation.Validators {
 			ValidatorType = validatorType;
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+		public override void Validate(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var validator = GetValidator(context);
 
 			if (validator == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context);
@@ -55,23 +55,21 @@ namespace FluentValidation.Validators {
 			// the child validator. PropertyValidator.PrepareMessageFormatterForValidationError handles extracting this.
 			HandleCollectionIndex(context, out object originalIndex, out object currentIndex);
 
-			var results = validator.Validate(newContext).Errors;
+			context.Result.Errors.AddRange(validator.Validate(newContext).Errors);
 
 			// Reset the collection index
 			ResetCollectionIndex(context, originalIndex, currentIndex);
-
-			return results;
 		}
 
-		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+		public override async Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			if (context.PropertyValue == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var validator = GetValidator(context);
 
 			if (validator == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context);
@@ -81,16 +79,14 @@ namespace FluentValidation.Validators {
 			// the child validator. PropertyValidator.PrepareMessageFormatterForValidationError handles extracting this.
 			HandleCollectionIndex(context, out object originalIndex, out object currentIndex);
 
-			var result = await validator.ValidateAsync(newContext, cancellation);
+			var childResult = await validator.ValidateAsync(newContext, cancellation);
+			context.Result.Errors.AddRange(childResult.Errors);
 
 			ResetCollectionIndex(context, originalIndex, currentIndex);
-
-			return result.Errors;
 		}
 
 		public virtual IValidator GetValidator(PropertyValidatorContext context) {
 			context.Guard("Cannot pass a null context to GetValidator", nameof(context));
-
 			return _validatorProvider != null ? _validatorProvider(context) : _validator;
 		}
 

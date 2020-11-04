@@ -19,9 +19,11 @@
 namespace FluentValidation.Validators {
 	using System;
 	using Internal;
+	using Results;
 
 	public class PropertyValidatorContext {
 		private MessageFormatter _messageFormatter;
+		private readonly ValidationResult _result;
 		private object _propertyValue;
 		private Lazy<object> _propertyValueAccessor;
 
@@ -34,22 +36,31 @@ namespace FluentValidation.Validators {
 		public object InstanceToValidate => ParentContext.InstanceToValidate;
 		public MessageFormatter MessageFormatter => _messageFormatter ??= ValidatorOptions.Global.MessageFormatterFactory();
 
+		internal ValidationResult Result => _result;
+
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
 		public object PropertyValue
 			=> _propertyValueAccessor != null ? _propertyValueAccessor.Value : _propertyValue;
 
-		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, object propertyValue) {
+		public void AddFailure(ValidationFailure failure) {
+			if (failure == null) throw new ArgumentNullException(nameof(failure));
+			_result.Errors.Add(failure);
+		}
+
+		public PropertyValidatorContext(IValidationContext parentContext, ValidationResult result, PropertyRule rule, string propertyName, object propertyValue) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
+			_result = result;
 			_propertyValue = propertyValue;
 		}
 
-		public PropertyValidatorContext(IValidationContext parentContext, PropertyRule rule, string propertyName, Lazy<object> propertyValueAccessor) {
+		public PropertyValidatorContext(IValidationContext parentContext, ValidationResult result, PropertyRule rule, string propertyName, Lazy<object> propertyValueAccessor) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
+			_result = result;
 			_propertyValueAccessor = propertyValueAccessor;
 		}
 	}

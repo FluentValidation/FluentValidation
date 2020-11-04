@@ -26,20 +26,24 @@
 			}
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			var results = _innerValidator.Validate(context).ToList();
-			if (!results.Any()) return results;
-			var errorMessage = results.First().ErrorMessage;
-			_onFailure((T) context.InstanceToValidate, context, errorMessage);
-			return results;
+		public override void Validate(PropertyValidatorContext context) {
+			int count = context.Result.Errors.Count;
+			_innerValidator.Validate(context);
+
+			if (context.Result.Errors.Count > count) {
+				var firstNewMessage = context.Result.Errors[count].ErrorMessage;
+				_onFailure((T) context.InstanceToValidate, context, firstNewMessage);
+			}
 		}
 
-		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			var results = (await _innerValidator.ValidateAsync(context, cancellation)).ToList();
-			if (!results.Any()) return results;
-			var errorMessage = results.First().ErrorMessage;
-			_onFailure((T) context.InstanceToValidate, context, errorMessage);
-			return results;
+		public override async Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			int count = context.Result.Errors.Count;
+			await _innerValidator.ValidateAsync(context, cancellation);
+
+			if (context.Result.Errors.Count > count) {
+				var firstNewMessage = context.Result.Errors[count].ErrorMessage;
+				_onFailure((T) context.InstanceToValidate, context, firstNewMessage);
+			}
 		}
 
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {

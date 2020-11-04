@@ -37,16 +37,14 @@
 			_action = (x, ctx) => Task.Run(() => _asyncAction(x, ctx, new CancellationToken())).GetAwaiter().GetResult();
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+		public override void Validate(PropertyValidatorContext context) {
 			var customContext = new CustomContext<T, TProperty>(context, this);
 			_action((TProperty) context.PropertyValue, customContext);
-			return customContext.Failures;
 		}
 
-		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+		public override async Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			var customContext = new CustomContext<T, TProperty>(context, this);
 			await _asyncAction((TProperty)context.PropertyValue, customContext, cancellation);
-			return customContext.Failures;
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
@@ -60,7 +58,6 @@
 		internal new ValidationFailure CreateValidationError(PropertyValidatorContext context, string propertyName, string errorMessage) {
 			return base.CreateValidationError(context, propertyName, errorMessage);
 		}
-
 	}
 
 	/// <summary>
@@ -68,7 +65,6 @@
 	/// </summary>
 	public class CustomContext<T, TProperty> {
 		private PropertyValidatorContext _context;
-		private List<ValidationFailure> _failures = new List<ValidationFailure>();
 		private CustomValidator<T, TProperty> _validator;
 
 		/// <summary>
@@ -107,11 +103,8 @@
 		/// </summary>
 		/// <param name="failure">The failure to add</param>
 		public void AddFailure(ValidationFailure failure) {
-			failure.Guard("A failure must be specified when calling AddFailure.", nameof(failure));
-			_failures.Add(failure);
+			_context.AddFailure(failure);
 		}
-
-		internal IEnumerable<ValidationFailure> Failures => _failures;
 
 		public PropertyRule Rule => _context.Rule;
 		public string PropertyName => _context.PropertyName;
