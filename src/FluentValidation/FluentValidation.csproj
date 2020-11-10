@@ -5,13 +5,15 @@
     <PackageReleaseNotes>
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
-Changes in 9.2.2:
-* Fix one of the inheritance validator overloads not working correctly.
 Changes in 9.3.0:
 * Improvements to LanguageManager's lazy loading of resources.
 * Deprecate IStringSource and its implementors. Use delegates instead.
 * CustomizeValidatorAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)
 * RuleSetForClientSideMessagesAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)
+* Fixes to Spanish language translations.
+
+Changes in 9.2.2:
+* Fix one of the inheritance validator overloads not working correctly.
 
 Changes in 9.2.1:
 * Add non-generic Add method to inheritance validator.
