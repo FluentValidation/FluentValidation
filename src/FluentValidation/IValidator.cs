@@ -44,11 +44,6 @@ namespace FluentValidation {
 		/// <param name="cancellation"></param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new CancellationToken());
-
-		/// <summary>
-		/// Sets the cascade mode for all rules within this validator.
-		/// </summary>
-		CascadeMode CascadeMode { get; set; }
 	}
 
 	/// <summary>
