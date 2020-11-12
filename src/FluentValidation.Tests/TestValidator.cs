@@ -20,6 +20,11 @@ namespace FluentValidation.Tests {
 	using System;
 
 	public class TestValidator : InlineValidator<Person> {
+		public new CascadeMode CascadeMode {
+			get => base.CascadeMode;
+			set => base.CascadeMode = value;
+		}
+
 		public TestValidator() {
 
 		}
