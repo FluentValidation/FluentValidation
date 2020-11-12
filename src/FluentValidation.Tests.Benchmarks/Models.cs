@@ -69,6 +69,10 @@ namespace FluentValidation.Tests.Benchmarks {
 	}
 
 	public class FullModelValidator : AbstractValidator<FullModel> {
+		public new CascadeMode CascadeMode {
+			get => base.CascadeMode;
+			set => base.CascadeMode = value;
+		}
 		public FullModelValidator() {
 			RuleFor(x => x.Text1).NotNull();
 			RuleFor(x => x.Text1).Must(m => m.Contains('a', StringComparison.InvariantCultureIgnoreCase)).WithMessage("Message T1").When(m => m.Text1 != null);
