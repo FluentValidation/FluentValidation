@@ -38,7 +38,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Sets the cascade mode for all rules within this validator.
 		/// </summary>
-		public CascadeMode CascadeMode {
+		protected CascadeMode CascadeMode {
 			get => _cascadeMode();
 			set => _cascadeMode = () => value;
 		}
