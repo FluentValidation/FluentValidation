@@ -19,6 +19,7 @@
 #endregion
 
 namespace FluentValidation.AspNetCore {
+	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using Internal;
@@ -33,15 +34,23 @@ namespace FluentValidation.AspNetCore {
 	/// </summary>
 	public class FluentValidationModelValidatorProvider : IModelValidatorProvider {
 		private readonly bool _implicitValidationEnabled;
+		private readonly bool _implicitRootCollectionElementValidationEnabled;
 
-		public FluentValidationModelValidatorProvider(bool implicitValidationEnabled) {
+		public FluentValidationModelValidatorProvider(bool implicitValidationEnabled)
+			: this(implicitValidationEnabled, false) {
+		}
+
+		public FluentValidationModelValidatorProvider(
+			bool implicitValidationEnabled,
+			bool implicitRootCollectionElementValidationEnabled) {
 			_implicitValidationEnabled = implicitValidationEnabled;
+			_implicitRootCollectionElementValidationEnabled = implicitRootCollectionElementValidationEnabled;
 		}
 
 		public virtual void CreateValidators(ModelValidatorProviderContext context) {
 			context.Results.Add(new ValidatorItem {
 				IsReusable = false,
-				Validator = new FluentValidationModelValidator(_implicitValidationEnabled)
+				Validator = new FluentValidationModelValidator(_implicitValidationEnabled, _implicitRootCollectionElementValidationEnabled),
 			});
 		}
 	}
@@ -51,9 +60,17 @@ namespace FluentValidation.AspNetCore {
 	/// </summary>
 	public class FluentValidationModelValidator : IModelValidator {
 		private readonly bool _implicitValidationEnabled;
+		private readonly bool _implicitRootCollectionElementValidationEnabled;
 
-		public FluentValidationModelValidator(bool implicitValidationEnabled) {
+		public FluentValidationModelValidator(bool implicitValidationEnabled)
+			: this(implicitValidationEnabled, false) {
+		}
+
+		public FluentValidationModelValidator(
+			bool implicitValidationEnabled,
+			bool implicitRootCollectionElementValidationEnabled) {
 			_implicitValidationEnabled = implicitValidationEnabled;
+			_implicitRootCollectionElementValidationEnabled = implicitRootCollectionElementValidationEnabled;
 		}
 
 		public virtual IEnumerable<ModelValidationResult> Validate(ModelValidationContext mvContext) {
@@ -133,13 +150,15 @@ namespace FluentValidation.AspNetCore {
 				// We should always have root metadata, so this should never happen...
 				if (rootMetadata == null) return true;
 
+				var modelMetadata = mvContext.ModelMetadata;
+
 				// Careful when handling properties.
 				// If we're processing a property of our root object,
 				// then we always skip if implicit validation is disabled
 				// However if our root object *is* a property (because of [BindProperty])
 				// then this is OK to proceed.
-				if (mvContext.ModelMetadata.MetadataKind == ModelMetadataKind.Property) {
-					if (!ReferenceEquals(rootMetadata, mvContext.ModelMetadata)) {
+				if (modelMetadata.MetadataKind == ModelMetadataKind.Property) {
+					if (!ReferenceEquals(rootMetadata, modelMetadata)) {
 						// The metadata for the current property is not the same as the root metadata
 						// This means we're validating a property on a model, so we want to skip.
 						return true;
@@ -152,8 +171,14 @@ namespace FluentValidation.AspNetCore {
 				// Instead check if our cached root metadata is the same.
 				// If they're not, then it means we're handling a child property, so we should skip
 				// validation if implicit validation is disabled
-				else if (mvContext.ModelMetadata.MetadataKind == ModelMetadataKind.Type) {
-					if (!ReferenceEquals(rootMetadata, mvContext.ModelMetadata)) {
+				else if (modelMetadata.MetadataKind == ModelMetadataKind.Type) {
+					// If implicit validation of root collection elements is enabled then we
+					// do want to validate the type if it matches the element type of the root collection
+					if (_implicitRootCollectionElementValidationEnabled && IsRootCollectionElementType(rootMetadata, modelMetadata.ModelType)) {
+						return false;
+					}
+
+					if (!ReferenceEquals(rootMetadata, modelMetadata)) {
 						// The metadata for the current type is not the same as the root metadata
 						// This means we're validating a child element of a collection or sub property.
 						// Skip it as implicit validation is disabled.
@@ -182,6 +207,13 @@ namespace FluentValidation.AspNetCore {
 		/// <returns>Customizations</returns>
 		protected static CustomizeValidatorAttribute GetCustomizations(ActionContext context, object model) {
 			return MvcValidationHelper.GetCustomizations(context, model);
+		}
+
+		private static bool IsRootCollectionElementType(ModelMetadata rootMetadata, Type modelType) {
+			if (!rootMetadata.IsEnumerableType)
+				return false;
+
+			return modelType == rootMetadata.ElementType;
 		}
 	}
 }

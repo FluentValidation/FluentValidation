@@ -54,6 +54,14 @@
 			});
 		}
 
+		public WebApplicationFactory<Startup> WithImplicitCollectionValidationEnabled(bool enabled) {
+			return WithFluentValidation(fv => {
+				fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);
+				fv.ImplicitlyValidateChildProperties = false;
+				fv.ImplicitlyValidateRootCollectionElements = enabled;
+			});
+		}
+
 		public WebApplicationFactory<Startup> WithFluentValidation(Action<FluentValidationMvcConfiguration> config) {
 			return WithWebHostBuilder(cfg => {
 				cfg.ConfigureServices(services => {

@@ -420,6 +420,37 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
+		public async void Does_not_implicitly_run_root_collection_element_validator_when_disabled() {
+			var client = _webApp.WithImplicitCollectionValidationEnabled(false).CreateClient();
+			var result = await client.GetErrorsViaJSON(
+				nameof(TestController.ImplicitRootCollectionElementValidator),
+				new[] { new ChildModel() });
+
+			result.Count.ShouldEqual(0);
+		}
+
+		[Fact]
+		public async void Does_not_implicitly_run_child_validator_when_root_collection_element_validation_enabled() {
+			var client = _webApp.WithImplicitCollectionValidationEnabled(true).CreateClient();
+			var result = await client.GetErrorsViaJSON(
+				nameof(TestController.ImplicitRootCollectionElementValidationEnabled),
+				new ParentModel());
+
+			result.Count.ShouldEqual(0);
+		}
+
+		[Fact]
+		public async void Executes_implicit_root_collection_element_validator_when_enabled() {
+			var client = _webApp.WithImplicitCollectionValidationEnabled(true).CreateClient();
+			var result = await client.GetErrorsViaJSON(
+				nameof(TestController.ImplicitRootCollectionElementValidator),
+				new[] { new ChildModel() });
+
+			result.Count.ShouldEqual(1);
+			result[0].Name.ShouldEqual("[0].Name");
+		}
+
+		[Fact]
 		public async void Can_mix_FV_with_IValidatableObject() {
 			var result = await _client.GetErrors("ImplementsIValidatableObject", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
