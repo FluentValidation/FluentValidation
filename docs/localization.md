@@ -5,7 +5,7 @@ Out of the box, FluentValidation provides translations for the default validatio
 You can also use the `WithMessage` and `WithLocalizedMessage` methods to specify a localized error message for a single validation rule.
 
 ### WithMessage
-If you are using Visual Studio's built in support for resx files and their strongly-typed wrappers then you can localize a message by calling the overload of `WithMessage` the accepts a lambda expression:
+If you are using Visual Studio's built in support for resx files and their strongly-typed wrappers, then you can localize a message by calling the overload of `WithMessage` that accepts a lambda expression:
 
 ```
 RuleFor(x => x.Surname).NotNull().WithMessage(x => MyLocalizedMessages.SurnameRequired);
