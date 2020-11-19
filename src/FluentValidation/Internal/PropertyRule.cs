@@ -412,23 +412,15 @@ namespace FluentValidation.Internal {
 				OnFailure?.Invoke(context.InstanceToValidate, failures);
 			}
 			else {
-				failures.AddRange(await RunDependentRulesAsync(context, cancellation));
+				foreach (var dependentRule in DependentRules) {
+					cancellation.ThrowIfCancellationRequested();
+					failures.AddRange(await dependentRule.ValidateAsync(context, cancellation));
+				}
 			}
 
 			return failures;
 		}
-
-		private async Task<IEnumerable<ValidationFailure>> RunDependentRulesAsync(IValidationContext context, CancellationToken cancellation) {
-			var failures = new List<ValidationFailure>();
-
-			foreach (var rule in DependentRules) {
-				cancellation.ThrowIfCancellationRequested();
-				failures.AddRange(await rule.ValidateAsync(context, cancellation));
-			}
-
-			return failures;
-		}
-
+		
 		private async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor, CancellationToken cancellation) {
 			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
 			if (!await validator.Options.InvokeAsyncCondition(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
