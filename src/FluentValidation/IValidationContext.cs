@@ -2,6 +2,7 @@ namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
 	using Internal;
+	using Results;
 
 	// /// <summary>
 	// /// Defines a validation context.
@@ -66,6 +67,8 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	public class ValidationContext<T> : IValidationContext {
 		private IValidationContext _parentContext;
+
+		internal List<ValidationFailure> Failures { get; set; }
 
 		/// <summary>
 		/// Creates a new validation context
