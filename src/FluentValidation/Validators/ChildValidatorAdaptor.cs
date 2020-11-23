@@ -37,15 +37,15 @@ namespace FluentValidation.Validators {
 			ValidatorType = validatorType;
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+		public override void Validate(PropertyValidatorContext context) {
 			if (context.PropertyValue == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var validator = GetValidator(context);
 
 			if (validator == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context);
@@ -55,23 +55,25 @@ namespace FluentValidation.Validators {
 			// the child validator. PropertyValidator.PrepareMessageFormatterForValidationError handles extracting this.
 			HandleCollectionIndex(context, out object originalIndex, out object currentIndex);
 
-			var results = validator.Validate(newContext).Errors;
+			var result = validator.Validate(newContext);
 
 			// Reset the collection index
 			ResetCollectionIndex(context, originalIndex, currentIndex);
 
-			return results;
+			foreach (var failure in result.Errors) {
+				context.AddFailure(failure);
+			}
 		}
 
-		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+		public override async Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			if (context.PropertyValue == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var validator = GetValidator(context);
 
 			if (validator == null) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context);
@@ -85,7 +87,9 @@ namespace FluentValidation.Validators {
 
 			ResetCollectionIndex(context, originalIndex, currentIndex);
 
-			return result.Errors;
+			foreach (var failure in result.Errors) {
+				context.AddFailure(failure);
+			}
 		}
 
 		public virtual IValidator GetValidator(PropertyValidatorContext context) {

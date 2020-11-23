@@ -141,6 +141,8 @@ namespace FluentValidation {
 			_errorMessage = errorMessage;
 			_errorMessageFactory = null;
 		}
+
+		internal Action<object, PropertyValidatorContext, string> OnFailure { get; set; }
 	}
-	
+
 }

@@ -37,16 +37,14 @@
 			_action = (x, ctx) => Task.Run(() => _asyncAction(x, ctx, new CancellationToken())).GetAwaiter().GetResult();
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
+		public override void Validate(PropertyValidatorContext context) {
 			var customContext = new CustomContext<T>(context);
 			_action((TProperty) context.PropertyValue, customContext);
-			return Enumerable.Empty<ValidationFailure>();
 		}
 
-		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+		public override async Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
 			var customContext = new CustomContext<T>(context);
 			await _asyncAction((TProperty)context.PropertyValue, customContext, cancellation);
-			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
