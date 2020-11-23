@@ -62,19 +62,16 @@ namespace FluentValidation.Internal {
 		}
 
 
-		internal override IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
+		internal override void Validate(ValidationContext<T> context) {
 			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
-			var result = base.Validate(context).ToList();
+			base.Validate(context);
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
-			return result;
 		}
 
-		internal override async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
+		internal override async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
-			var result = await base.ValidateAsync(context, cancellation);
-			result = result.ToList();
+			await base.ValidateAsync(context, cancellation);
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
-			return result;
 		}
 	}
 }

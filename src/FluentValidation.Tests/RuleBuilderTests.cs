@@ -138,7 +138,10 @@ namespace FluentValidation.Tests {
 			validator.Setup(x => x.Options).Returns(new PropertyValidatorOptions());
 			builder.SetValidator(validator.Object);
 
-			_rule.Validate(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector())).ToList();
+			var context = new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()) {
+				Failures = new List<ValidationFailure>(),
+			};
+			_rule.Validate(context);
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 
@@ -150,7 +153,9 @@ namespace FluentValidation.Tests {
 			validator.Setup(x => x.Options).Returns(new PropertyValidatorOptions());
 			builder.SetValidator(validator.Object);
 
-			await _rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
+			await _rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()) {
+				Failures = new List<ValidationFailure>()
+			}, new CancellationToken());
 
 			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
 
@@ -167,7 +172,7 @@ namespace FluentValidation.Tests {
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
 			builder.SetValidator(validator.Object);
 
-			await _rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
+			await _rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()) { Failures = new List<ValidationFailure>()}, new CancellationToken());
 
 			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
 
@@ -198,7 +203,9 @@ namespace FluentValidation.Tests {
 			builder.Configure(r => rule = r);
 
 			builder.GreaterThanOrEqualTo(3).When(x => x.NullableInt != null);
-			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
+			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()) {
+				Failures = new List<ValidationFailure>(),
+			});
 		}
 
 		[Fact]
@@ -208,7 +215,9 @@ namespace FluentValidation.Tests {
 			builder.Configure(r => rule = r);
 
 			builder.GreaterThanOrEqualTo(3).WhenAsync((x,c) => Task.FromResult(x.NullableInt != null));
-			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
+			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()) {
+				Failures = new List<ValidationFailure>()
+			});
 		}
 
 		[Fact]
@@ -240,8 +249,11 @@ namespace FluentValidation.Tests {
 			builder.GreaterThan(100).WithName("Foo");
 			PropertyRule<Person> rule = null;
 			builder.Configure(r => rule = r);
-			var results = rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
-			results.Single().PropertyName.ShouldEqual("Foo");
+			var context = new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()) {
+				Failures = new List<ValidationFailure>()
+			};
+			rule.Validate(context);
+			context.Failures.Single().PropertyName.ShouldEqual("Foo");
 		}
 
 		[Fact]
