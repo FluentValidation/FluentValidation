@@ -67,7 +67,7 @@ namespace FluentValidation.Internal {
 			return new CollectionPropertyRule<T, TElement>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TElement));
 		}
 
-		internal override IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
+		internal override void Validate(ValidationContext<T> context) {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -85,18 +85,18 @@ namespace FluentValidation.Internal {
 			// Ensure that this rule is allowed to run.
 			// The validatselector has the opportunity to veto this before any of the validators execute.
 			if (!context.Selector.CanExecute(this, propertyName, context)) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			if (Condition != null) {
 				if (!Condition(context)) {
-					return Enumerable.Empty<ValidationFailure>();
+					return;
 				}
 			}
 
 			if (AsyncCondition != null) {
 				if (! AsyncCondition(context, default).GetAwaiter().GetResult()) {
-					return Enumerable.Empty<ValidationFailure>();
+					return;
 				}
 			}
 
@@ -104,14 +104,14 @@ namespace FluentValidation.Internal {
 
 			if (filteredValidators.Count == 0) {
 				// If there are no property validators to execute after running the conditions, bail out.
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var cascade = CascadeMode;
-			var failures = new List<ValidationFailure>();
 			var collection = PropertyFunc(context.InstanceToValidate) as IEnumerable<TElement>;
 
 			int count = 0;
+			int totalFailures = context.Failures.Count;
 
 			if (collection != null) {
 				if (string.IsNullOrEmpty(propertyName)) {
@@ -141,19 +141,20 @@ namespace FluentValidation.Internal {
 
 					var valueToValidate = Transformer != null ? Transformer(element) : element;
 					var propertyNameToValidate = newContext.PropertyChain.ToString();
+					var totalFailuresInner = context.Failures.Count;
 
 					foreach (var validator in filteredValidators) {
 						if (validator.ShouldValidateAsynchronously(context)) {
-							failures.AddRange(InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, default).GetAwaiter().GetResult());
+							context.Failures.AddRange(InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, default).GetAwaiter().GetResult());
 						}
 						else {
-							failures.AddRange(InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index));
+							context.Failures.AddRange(InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index));
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 						// then don't continue to the next rule
 #pragma warning disable 618
-						if (failures.Count > 0 && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
+						if (context.Failures.Count > totalFailuresInner && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
 							goto AfterValidate; // 🙃
 						}
 #pragma warning restore 618
@@ -163,20 +164,18 @@ namespace FluentValidation.Internal {
 
 			AfterValidate:
 
-			if (failures.Count > 0) {
-				// Callback if there has been at least one property validator failed.
-				OnFailure?.Invoke(context.InstanceToValidate, failures);
+			if (context.Failures.Count > totalFailures) {
+				var failuresThisRound = context.Failures.Skip(totalFailures).ToList();
+				OnFailure?.Invoke(context.InstanceToValidate, failuresThisRound);
 			}
 			else {
 				foreach (var dependentRule in DependentRules) {
-					failures.AddRange(dependentRule.Validate(context));
+					dependentRule.Validate(context);
 				}
 			}
-
-			return failures;
 		}
 
-		internal override async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
+		internal override async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			if (!context.IsAsync()) {
 				context.RootContextData["__FV_IsAsyncExecution"] = true;
 			}
@@ -198,18 +197,18 @@ namespace FluentValidation.Internal {
 			// Ensure that this rule is allowed to run.
 			// The validatselector has the opportunity to veto this before any of the validators execute.
 			if (!context.Selector.CanExecute(this, propertyName, context)) {
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			if (Condition != null) {
 				if (!Condition(context)) {
-					return Enumerable.Empty<ValidationFailure>();
+					return;
 				}
 			}
 
 			if (AsyncCondition != null) {
 				if (! AsyncCondition(context, default).GetAwaiter().GetResult()) {
-					return Enumerable.Empty<ValidationFailure>();
+					return;
 				}
 			}
 
@@ -217,14 +216,14 @@ namespace FluentValidation.Internal {
 
 			if (filteredValidators.Count == 0) {
 				// If there are no property validators to execute after running the conditions, bail out.
-				return Enumerable.Empty<ValidationFailure>();
+				return;
 			}
 
 			var cascade = CascadeMode;
-			var failures = new List<ValidationFailure>();
 			var collection = PropertyFunc(context.InstanceToValidate) as IEnumerable<TElement>;
 
 			int count = 0;
+			int totalFailures = context.Failures.Count;
 
 			if (collection != null) {
 				if (string.IsNullOrEmpty(propertyName)) {
@@ -254,19 +253,20 @@ namespace FluentValidation.Internal {
 
 					var valueToValidate = Transformer != null ? Transformer(element) : element;
 					var propertyNameToValidate = newContext.PropertyChain.ToString();
+					var totalFailuresInner = context.Failures.Count;
 
 					foreach (var validator in filteredValidators) {
 						if (validator.ShouldValidateAsynchronously(context)) {
-							failures.AddRange(await InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, cancellation));
+							context.Failures.AddRange(await InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, cancellation));
 						}
 						else {
-							failures.AddRange(InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index));
+							context.Failures.AddRange(InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index));
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 						// then don't continue to the next rule
 #pragma warning disable 618
-						if (failures.Count > 0 && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
+						if (context.Failures.Count > totalFailuresInner && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
 							goto AfterValidate; // 🙃
 						}
 #pragma warning restore 618
@@ -276,18 +276,16 @@ namespace FluentValidation.Internal {
 
 			AfterValidate:
 
-			if (failures.Count > 0) {
-				// Callback if there has been at least one property validator failed.
-				OnFailure?.Invoke(context.InstanceToValidate, failures);
+			if (context.Failures.Count > totalFailures) {
+				var failuresThisRound = context.Failures.Skip(totalFailures).ToList();
+				OnFailure?.Invoke(context.InstanceToValidate, failuresThisRound);
 			}
 			else {
 				foreach (var dependentRule in DependentRules) {
 					cancellation.ThrowIfCancellationRequested();
-					failures.AddRange(await dependentRule.ValidateAsync(context, cancellation));
+					await dependentRule.ValidateAsync(context, cancellation);
 				}
 			}
-
-			return failures;
 		}
 
 		private List<IPropertyValidator> GetValidatorsToExecute(IValidationContext context) {

@@ -81,6 +81,7 @@ namespace FluentValidation {
 			context.Guard("Cannot pass null to Validate.", nameof(context));
 
 			var result = new ValidationResult();
+			context.Failures = result.Errors;
 			bool shouldContinue = PreValidate(context, result);
 
 			if (!shouldContinue) {
@@ -90,11 +91,7 @@ namespace FluentValidation {
 			EnsureInstanceNotNull(context.InstanceToValidate);
 
 			foreach (var rule in Rules) {
-				var failures = rule.Validate(context);
-
-				foreach (var validationFailure in failures.Where(failure => failure != null)) {
-					result.Errors.Add(validationFailure);
-				}
+				rule.Validate(context);
 
 				if (CascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 					// Bail out if we're "failing-fast".
@@ -125,7 +122,7 @@ namespace FluentValidation {
 			context.RootContextData["__FV_IsAsyncExecution"] = true;
 
 			var result = new ValidationResult();
-
+			context.Failures = result.Errors;
 			bool shouldContinue = PreValidate(context, result);
 
 			if (!shouldContinue) {
@@ -136,11 +133,7 @@ namespace FluentValidation {
 
 			foreach (var rule in Rules) {
 				cancellation.ThrowIfCancellationRequested();
-				var failures = await rule.ValidateAsync(context, cancellation);
-
-				foreach (var failure in failures.Where(f => f != null)) {
-					result.Errors.Add(failure);
-				}
+				await rule.ValidateAsync(context, cancellation);
 
 				if (CascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 					// Bail out if we're "failing-fast".
