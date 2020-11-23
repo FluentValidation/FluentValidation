@@ -88,6 +88,21 @@
 		}
 
 		[Fact]
+		public void Works_with_child_validator() {
+			bool called = false;
+
+			var addressValidator = new InlineValidator<Address>();
+			addressValidator.RuleFor(x => x.Town).NotNull();
+
+			_validator.RuleFor(person => person.Address)
+				.SetValidator(new AddressValidatorWithOnFailure())
+				.OnFailure((p, ctx) => { called = true; });
+
+			_validator.Validate(new Person() {Address = new Address()});
+			called.ShouldBeTrue();
+		}
+
+		[Fact]
 		public void ShouldHaveChildValidator_works_with_Include() {
 			_validator.Include(new InlineValidator<Person>() {
 				v => v.RuleFor(x => x.Forename).NotNull(),

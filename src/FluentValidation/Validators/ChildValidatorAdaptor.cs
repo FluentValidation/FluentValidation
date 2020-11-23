@@ -60,6 +60,10 @@ namespace FluentValidation.Validators {
 			// Reset the collection index
 			ResetCollectionIndex(context, originalIndex, currentIndex);
 
+			if (result.Errors.Count > 0) {
+				Options.OnFailure?.Invoke(context.InstanceToValidate, context, result.Errors[0].ErrorMessage);
+			}
+
 			foreach (var failure in result.Errors) {
 				context.AddFailure(failure);
 			}
@@ -86,6 +90,10 @@ namespace FluentValidation.Validators {
 			var result = await validator.ValidateAsync(newContext, cancellation);
 
 			ResetCollectionIndex(context, originalIndex, currentIndex);
+
+			if (result.Errors.Count > 0) {
+				Options.OnFailure?.Invoke(context.InstanceToValidate, context, result.Errors[0].ErrorMessage);
+			}
 
 			foreach (var failure in result.Errors) {
 				context.AddFailure(failure);
