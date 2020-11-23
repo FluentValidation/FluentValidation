@@ -19,6 +19,7 @@
 namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
+	using System.Reflection;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
@@ -37,21 +38,6 @@ namespace FluentValidation {
 		/// Name of the rule-set to which this rule belongs.
 		/// </summary>
 		string[] RuleSets { get; set; }
-
-		/// <summary>
-		/// Performs validation using a validation context and returns a collection of Validation Failures.
-		/// </summary>
-		/// <param name="context">Validation Context</param>
-		/// <returns>A collection of validation failures</returns>
-		IEnumerable<ValidationFailure> Validate(IValidationContext context);
-
-		/// <summary>
-		/// Performs validation using a validation context and returns a collection of Validation Failures asynchronously.
-		/// </summary>
-		/// <param name="context">Validation Context</param>
-		/// <param name="cancellation">Cancellation token</param>
-		/// <returns>A collection of validation failures</returns>
-		Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation);
 
 		/// <summary>
 		/// Applies a condition to either all the validators in the rule, or the most recent validator in the rule chain.
@@ -78,5 +64,43 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="condition">The condition to apply.</param>
 		void ApplySharedAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> condition);
+
+		/// <summary>
+		/// Gets the display name for the property.
+		/// </summary>
+		/// <param name="context">Current context</param>
+		/// <returns>Display name</returns>
+		string GetDisplayName(IValidationContext context);
+
+		/// <summary>
+		/// Returns the property name for the property being validated.
+		/// Returns null if it is not a property being validated (eg a method call)
+		/// </summary>
+		public string PropertyName { get; }
+
+		/// <summary>
+		/// Allows custom creation of an error message
+		/// </summary>
+		public Func<MessageBuilderContext, string> MessageBuilder { get; }
+
+		/// <summary>
+		/// Property associated with this rule.
+		/// </summary>
+		public MemberInfo Member { get; }
+
+		/// <summary>
+		/// Type of the property being validated
+		/// </summary>
+		public Type TypeToValidate { get; }
+
+		/// <summary>
+		/// Whether the rule has a condition defined.
+		/// </summary>
+		bool HasCondition { get; }
+
+		/// <summary>
+		/// Whether the rule has an async condition defined.
+		/// </summary>
+		bool HasAsyncCondition { get; }
 	}
 }

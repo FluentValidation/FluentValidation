@@ -58,7 +58,7 @@ namespace FluentValidation.AspNetCore {
 			return message;
 		}
 
-		public MinLengthClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public MinLengthClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 		}
 	}
 }

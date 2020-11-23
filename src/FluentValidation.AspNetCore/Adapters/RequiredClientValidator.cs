@@ -24,7 +24,7 @@ namespace FluentValidation.AspNetCore {
 	using Validators;
 
 	internal class RequiredClientValidator : ClientValidatorBase{
-		public RequiredClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public RequiredClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 
 		}
 
