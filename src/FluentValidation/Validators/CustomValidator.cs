@@ -6,10 +6,12 @@
 	using System.Threading.Tasks;
 	using Internal;
 	using Results;
+
 	/// <summary>
 	/// Custom validator that allows for manual/direct creation of ValidationFailure instances.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
 	public class CustomValidator<T, TProperty> : PropertyValidator {
 		private readonly Action<TProperty, CustomContext<T>> _action;
 		private Func<TProperty, CustomContext<T>, CancellationToken, Task> _asyncAction;
