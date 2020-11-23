@@ -62,7 +62,7 @@ namespace FluentValidation {
 		/// <param name="context"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
-		public static IServiceProvider GetServiceProvider(this CustomContext context)
+		public static IServiceProvider GetServiceProvider<T>(this CustomContext<T> context)
 			=> Get(context.ParentContext.RootContextData);
 
 		private static IServiceProvider Get(IDictionary<string, object> rootContextData) {

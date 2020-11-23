@@ -174,7 +174,7 @@ namespace FluentValidation {
 				return new ValidationContext<T>(default, context.PropertyChain, context.Selector) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
-					_parentContext = context.ParentContext
+					_parentContext = context.ParentContext,
 				};
 			}
 
@@ -192,6 +192,7 @@ namespace FluentValidation {
 			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector) {
 				IsChildContext = true,
 				RootContextData = RootContextData,
+				Failures = Failures,
 				_parentContext = preserveParentContext ? this : null
 			};
 		}
@@ -207,6 +208,7 @@ namespace FluentValidation {
 				IsChildContext = true,
 				IsChildCollectionContext = true,
 				RootContextData = RootContextData,
+				Failures = Failures,
 				_parentContext = preserveParentContext ? this : null
 			};
 		}
