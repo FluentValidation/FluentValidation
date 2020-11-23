@@ -37,22 +37,20 @@ namespace FluentValidation.Internal {
 		private string _propertyDisplayName;
 		private string _propertyName;
 		private string[] _ruleSet = new string[0];
-		private Func<IValidationContext, bool> _condition;
-		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
+		private Func<ValidationContext<T>, bool> _condition;
+		private Func<ValidationContext<T>, CancellationToken, Task<bool>> _asyncCondition;
 		private string _displayName;
-		private Func<IValidationContext, string> _displayNameFactory;
+		private Func<ValidationContext<T>, string> _displayNameFactory;
 
 		/// <summary>
 		/// Condition for all validators in this rule.
 		/// </summary>
-		[Obsolete("This property will not be accessible in FluentValidation 10. Use HasCondition/HasAsyncCondition to check if the rule has a condition defined")]
-		public Func<IValidationContext, bool> Condition => _condition;
+		internal Func<ValidationContext<T>, bool> Condition => _condition;
 
 		/// <summary>
 		/// Asynchronous condition for all validators in this rule.
 		/// </summary>
-		[Obsolete("This property will not be accessible in FluentValidation 10. Use HasCondition/HasAsyncCondition to check if the rule has a condition defined")]
-		public Func<IValidationContext, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
+		internal Func<ValidationContext<T>, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
 
 		/// <summary>
 		/// Checks whether this rule has a condition defined.
@@ -92,7 +90,7 @@ namespace FluentValidation.Internal {
 		/// Sets the display name for the property using a function.
 		/// </summary>
 		/// <param name="factory">The function for building the display name</param>
-		public void SetDisplayName(Func<IValidationContext, string> factory) {
+		public void SetDisplayName(Func<ValidationContext<T>, string> factory) {
 			if (factory == null) throw new ArgumentNullException(nameof(factory));
 			_displayNameFactory = factory;
 			_displayName = null;
@@ -260,10 +258,13 @@ namespace FluentValidation.Internal {
 		[Obsolete("This property will be removed in FluentValidation 10")]
 		public Func<object, object> Transformer { get; set; }
 
+		string IValidationRule.GetDisplayName(IValidationContext context) =>
+			GetDisplayName(context != null ? ValidationContext<T>.GetFromNonGenericContext(context) : null);
+
 		/// <summary>
 		/// Display name for the property.
 		/// </summary>
-		public string GetDisplayName(IValidationContext context)
+		public string GetDisplayName(ValidationContext<T> context)
 			=> _displayNameFactory?.Invoke(context) ?? _displayName ?? _propertyDisplayName;
 
 		/// <summary>
@@ -473,7 +474,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		public void ApplySharedCondition(Func<IValidationContext, bool> condition) {
+		public void ApplySharedCondition(Func<ValidationContext<T>, bool> condition) {
 			if (_condition == null) {
 				_condition = condition;
 			}
@@ -483,7 +484,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		public void ApplySharedAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> condition) {
+		public void ApplySharedAsyncCondition(Func<ValidationContext<T>, CancellationToken, Task<bool>> condition) {
 			if (_asyncCondition == null) {
 				_asyncCondition = condition;
 			}
