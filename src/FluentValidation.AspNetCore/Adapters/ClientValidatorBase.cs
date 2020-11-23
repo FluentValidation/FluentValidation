@@ -25,9 +25,9 @@ namespace FluentValidation.AspNetCore {
 
 	public abstract class ClientValidatorBase : IClientModelValidator {
 		public IPropertyValidator Validator { get; }
-		public PropertyRule Rule { get; }
+		public IValidationRule Rule { get; }
 
-		public ClientValidatorBase(PropertyRule rule, IPropertyValidator validator) {
+		public ClientValidatorBase(IValidationRule rule, IPropertyValidator validator) {
 			Validator = validator;
 			Rule = rule;
 		}

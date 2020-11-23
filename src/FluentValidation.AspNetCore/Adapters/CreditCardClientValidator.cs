@@ -25,7 +25,7 @@ namespace FluentValidation.AspNetCore
 	using Validators;
 
 	internal class CreditCardClientValidator : ClientValidatorBase {
-		public CreditCardClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public CreditCardClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {

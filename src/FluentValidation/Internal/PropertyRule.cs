@@ -31,7 +31,7 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Defines a rule associated with a property.
 	/// </summary>
-	public class PropertyRule : IValidationRule {
+	public class PropertyRule<T> : IValidationRule {
 		private readonly List<IPropertyValidator> _validators = new List<IPropertyValidator>();
 		private Func<CascadeMode> _cascadeModeThunk;
 		private string _propertyDisplayName;
@@ -72,7 +72,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that can be invoked to retrieve the value of the property.
 		/// </summary>
-		public Func<object, object> PropertyFunc { get; }
+		public Func<T, object> PropertyFunc { get; }
 
 		/// <summary>
 		/// Expression that was used to create the rule.
@@ -109,7 +109,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that will be invoked if any of the validators associated with this rule fail.
 		/// </summary>
-		public Action<object, IEnumerable<ValidationFailure>> OnFailure { get; set; }
+		public Action<T, IEnumerable<ValidationFailure>> OnFailure { get; set; }
 
 		/// <summary>
 		/// The current validator being configured by this rule.
@@ -120,6 +120,12 @@ namespace FluentValidation.Internal {
 		/// Type of the property being validated
 		/// </summary>
 		public Type TypeToValidate { get; }
+
+		/// <inheritdoc />
+		public bool HasCondition => Condition != null;
+
+		/// <inheritdoc />
+		public bool HasAsyncCondition => AsyncCondition != null;
 
 		/// <summary>
 		/// Cascade mode for this rule.
@@ -142,15 +148,15 @@ namespace FluentValidation.Internal {
 		/// <param name="expression">Lambda expression used to create the rule</param>
 		/// <param name="cascadeModeThunk">Function to get the cascade mode.</param>
 		/// <param name="typeToValidate">Type to validate</param>
-		/// <param name="containerType">Container type that owns the property</param>
-		public PropertyRule(MemberInfo member, Func<object, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) {
+		public PropertyRule(MemberInfo member, Func<T, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate) {
 			Member = member;
 			PropertyFunc = propertyFunc;
 			Expression = expression;
 			TypeToValidate = typeToValidate;
 			_cascadeModeThunk = cascadeModeThunk;
 
-			DependentRules = new List<IValidationRule>();
+			DependentRules = new List<PropertyRule<T>>();
+			var containerType = typeof(T);
 			PropertyName = ValidatorOptions.Global.PropertyNameResolver(containerType, member, expression);
 			_displayNameFactory = context => ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression);
 		}
@@ -158,17 +164,17 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression) {
+		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression) {
 			return Create(expression, () => ValidatorOptions.Global.CascadeMode);
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		public static PropertyRule Create<T, TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
-			return new PropertyRule(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+			return new PropertyRule<T>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TProperty));
 		}
 
 		/// <summary>
@@ -249,7 +255,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Dependent rules
 		/// </summary>
-		public List<IValidationRule> DependentRules { get; }
+		public List<PropertyRule<T>> DependentRules { get; }
 
 		[Obsolete("This property will be removed in FluentValidation 10")]
 		public Func<object, object> Transformer { get; set; }
@@ -265,7 +271,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		public virtual IEnumerable<ValidationFailure> Validate(IValidationContext context) {
+		internal virtual IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -344,7 +350,7 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
-		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation) {
+		internal virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			if (!context.IsAsync()) {
 				context.RootContextData["__FV_IsAsyncExecution"] = true;
 			}
@@ -420,7 +426,7 @@ namespace FluentValidation.Internal {
 
 			return failures;
 		}
-		
+
 		private async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor, CancellationToken cancellation) {
 			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
 			if (!await validator.Options.InvokeAsyncCondition(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
@@ -434,7 +440,7 @@ namespace FluentValidation.Internal {
 			return validator.Validate(propertyContext);
 		}
 
-		private object GetPropertyValue(object instanceToValidate) {
+		private object GetPropertyValue(T instanceToValidate) {
 			var value = PropertyFunc(instanceToValidate);
 #pragma warning disable 618
 			if (Transformer != null) value = Transformer(value);
