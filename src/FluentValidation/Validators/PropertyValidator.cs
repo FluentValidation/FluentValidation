@@ -60,20 +60,23 @@ namespace FluentValidation.Validators {
 
 
 		/// <inheritdoc />
-		public virtual IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			if (IsValid(context)) return Enumerable.Empty<ValidationFailure>();
+		public virtual void Validate(PropertyValidatorContext context) {
+			if (IsValid(context)) return;
 
 			PrepareMessageFormatterForValidationError(context);
-			return new[] { CreateValidationError(context) };
-
+			var failure = CreateValidationError(context);
+			OnFailure?.Invoke(context.InstanceToValidate, context, failure.ErrorMessage);
+			context.AddFailure(failure);
 		}
 
 		/// <inheritdoc />
-		public virtual async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			if (await IsValidAsync(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
+		public virtual async Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			if (await IsValidAsync(context, cancellation)) return;
 
 			PrepareMessageFormatterForValidationError(context);
-			return new[] {CreateValidationError(context)};
+			var failure = CreateValidationError(context);
+			OnFailure?.Invoke(context.InstanceToValidate, context, failure.ErrorMessage);
+			context.AddFailure(failure);
 		}
 
 		/// <inheritdoc />

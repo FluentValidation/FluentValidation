@@ -35,7 +35,7 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
-		IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
+		void Validate(PropertyValidatorContext context);
 
 		/// <summary>
 		/// Performs validation asynchronously.
@@ -43,7 +43,7 @@ namespace FluentValidation.Validators {
 		/// <param name="context"></param>
 		/// <param name="cancellation"></param>
 		/// <returns></returns>
-		Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation);
+		Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation);
 
 		/// <summary>
 		/// Determines whether this validator should be run asynchronously or not.
@@ -57,5 +57,5 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		PropertyValidatorOptions Options { get; }
 	}
-	
+
 }

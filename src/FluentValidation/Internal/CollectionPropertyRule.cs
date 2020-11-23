@@ -145,10 +145,10 @@ namespace FluentValidation.Internal {
 
 					foreach (var validator in filteredValidators) {
 						if (validator.ShouldValidateAsynchronously(context)) {
-							context.Failures.AddRange(InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, default).GetAwaiter().GetResult());
+							InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, default).GetAwaiter().GetResult();
 						}
 						else {
-							context.Failures.AddRange(InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index));
+							InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -257,10 +257,10 @@ namespace FluentValidation.Internal {
 
 					foreach (var validator in filteredValidators) {
 						if (validator.ShouldValidateAsynchronously(context)) {
-							context.Failures.AddRange(await InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, cancellation));
+							await InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, cancellation);
 						}
 						else {
-							context.Failures.AddRange(InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index));
+							InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -344,16 +344,16 @@ namespace FluentValidation.Internal {
 			return validators;
 		}
 
-		private async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, object value, int index, CancellationToken cancellation) {
-			var newPropertyContext = new PropertyValidatorContext(context, this, propertyName, value);
+		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, IPropertyValidator validator, string propertyName, object value, int index, CancellationToken cancellation) {
+			var newPropertyContext = PropertyValidatorContext.Create(context, this, propertyName, value);
 			newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
-			return await validator.ValidateAsync(newPropertyContext, cancellation);
+			await validator.ValidateAsync(newPropertyContext, cancellation);
 		}
 
-		private IEnumerable<Results.ValidationFailure> InvokePropertyValidator(IValidationContext context, IPropertyValidator validator, string propertyName, object value, int index) {
-			var newPropertyContext = new PropertyValidatorContext(context, this, propertyName, value);
+		private void InvokePropertyValidator(ValidationContext<T> context, IPropertyValidator validator, string propertyName, object value, int index) {
+			var newPropertyContext = PropertyValidatorContext.Create<T>(context, this, propertyName, value);
 			newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
-			return validator.Validate(newPropertyContext);
+			validator.Validate(newPropertyContext);
 		}
 
 		private static string InferPropertyName(LambdaExpression expression) {
