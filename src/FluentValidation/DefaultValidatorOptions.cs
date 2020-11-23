@@ -411,7 +411,9 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
-			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T>(config.CurrentValidator, (instance, ctx, message) => onFailure(instance))));
+			return rule.Configure(config => {
+				config.CurrentValidator.Options.OnFailure = (instance, context, msg) => onFailure((T)instance);
+			});
 		}
 
 		/// <summary>
@@ -423,7 +425,9 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext> onFailure) {
-			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T>(config.CurrentValidator, (instance, ctx, message) => onFailure(instance, ctx))));
+			return rule.Configure(config => {
+				config.CurrentValidator.Options.OnFailure = (instance, context, msg) => onFailure((T)instance, context);
+			});
 		}
 
 		/// <summary>
@@ -435,7 +439,9 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext, string> onFailure) {
-			return rule.Configure(config => config.ReplaceValidator(config.CurrentValidator, new OnFailureValidator<T>(config.CurrentValidator, onFailure)));
+			return rule.Configure(config => {
+				config.CurrentValidator.Options.OnFailure = (instance, context, msg) => onFailure((T)instance, context, msg);
+			});
 		}
 
 		/// <summary>

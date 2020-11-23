@@ -309,10 +309,10 @@ namespace FluentValidation.Internal {
 			// Invoke each validator and collect its results.
 			foreach (var validator in _validators) {
 				if (validator.ShouldValidateAsynchronously(context)) {
-					context.Failures.AddRange(InvokePropertyValidatorAsync(context, validator, propertyName, accessor, default).GetAwaiter().GetResult());
+					InvokePropertyValidatorAsync(context, validator, propertyName, accessor, default).GetAwaiter().GetResult();
 				}
 				else {
-					context.Failures.AddRange(InvokePropertyValidator(context, validator, propertyName, accessor));
+					InvokePropertyValidator(context, validator, propertyName, accessor);
 				}
 
 				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -384,10 +384,10 @@ namespace FluentValidation.Internal {
 				cancellation.ThrowIfCancellationRequested();
 
 				if (validator.ShouldValidateAsynchronously(context)) {
-					context.Failures.AddRange(await InvokePropertyValidatorAsync(context, validator, propertyName, accessor, cancellation));
+					await InvokePropertyValidatorAsync(context, validator, propertyName, accessor, cancellation);
 				}
 				else {
-					context.Failures.AddRange(InvokePropertyValidator(context, validator, propertyName, accessor));
+					InvokePropertyValidator(context, validator, propertyName, accessor);
 				}
 
 				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -411,17 +411,17 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		private async Task<IEnumerable<ValidationFailure>> InvokePropertyValidatorAsync(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor, CancellationToken cancellation) {
-			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
-			if (!await validator.Options.InvokeAsyncCondition(context, cancellation)) return Enumerable.Empty<ValidationFailure>();
-			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
-			return await validator.ValidateAsync(propertyContext, cancellation);
+		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, IPropertyValidator validator, string propertyName, Lazy<object> accessor, CancellationToken cancellation) {
+			if (!validator.Options.InvokeCondition(context)) return;
+			if (!await validator.Options.InvokeAsyncCondition(context, cancellation)) return;
+			var propertyContext = PropertyValidatorContext.Create(context, this, propertyName, accessor);
+			await validator.ValidateAsync(propertyContext, cancellation);
 		}
 
-		private protected IEnumerable<ValidationFailure> InvokePropertyValidator(IValidationContext context, IPropertyValidator validator, string propertyName, Lazy<object> accessor) {
-			if (!validator.Options.InvokeCondition(context)) return Enumerable.Empty<ValidationFailure>();
-			var propertyContext = new PropertyValidatorContext(context, this, propertyName, accessor);
-			return validator.Validate(propertyContext);
+		private protected void InvokePropertyValidator(ValidationContext<T> context, IPropertyValidator validator, string propertyName, Lazy<object> accessor) {
+			if (!validator.Options.InvokeCondition(context)) return;
+			var propertyContext = PropertyValidatorContext.Create(context, this, propertyName, accessor);
+			validator.Validate(propertyContext);
 		}
 
 		private object GetPropertyValue(T instanceToValidate) {

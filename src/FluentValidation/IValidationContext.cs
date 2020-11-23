@@ -192,7 +192,6 @@ namespace FluentValidation {
 			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector) {
 				IsChildContext = true,
 				RootContextData = RootContextData,
-				Failures = Failures,
 				_parentContext = preserveParentContext ? this : null
 			};
 		}

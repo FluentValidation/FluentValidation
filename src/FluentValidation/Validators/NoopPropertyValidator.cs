@@ -25,10 +25,11 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public abstract class NoopPropertyValidator : IPropertyValidator {
-		public abstract IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context);
+		public abstract void Validate(PropertyValidatorContext context);
 
-		public virtual Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			return Task.FromResult(Validate(context));
+		public virtual Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			Validate(context);
+			return Task.CompletedTask;
 		}
 
 		public virtual bool ShouldValidateAsynchronously(IValidationContext context) {
