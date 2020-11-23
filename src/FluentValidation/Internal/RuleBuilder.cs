@@ -31,7 +31,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// The rule being created by this RuleBuilder.
 		/// </summary>
-		public PropertyRule Rule { get; }
+		public PropertyRule<T> Rule { get; }
 
 		/// <summary>
 		/// Parent validator
@@ -41,7 +41,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new instance of the <see cref="RuleBuilder{T,TProperty}">RuleBuilder</see> class.
 		/// </summary>
-		public RuleBuilder(PropertyRule rule, AbstractValidator<T> parent) {
+		public RuleBuilder(PropertyRule<T> rule, AbstractValidator<T> parent) {
 			Rule = rule;
 			ParentValidator = parent;
 		}
@@ -98,12 +98,12 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		IRuleBuilderInitial<T, TProperty> IRuleBuilderInitial<T, TProperty>.Configure(Action<PropertyRule> configurator) {
+		IRuleBuilderInitial<T, TProperty> IRuleBuilderInitial<T, TProperty>.Configure(Action<PropertyRule<T>> configurator) {
 			configurator(Rule);
 			return this;
 		}
 
-		IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.Configure(Action<PropertyRule> configurator) {
+		IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.Configure(Action<PropertyRule<T>> configurator) {
 			configurator(Rule);
 			return this;
 		}
@@ -123,7 +123,7 @@ namespace FluentValidation.Internal {
 		/// Creates a scope for declaring dependent rules.
 		/// </summary>
 		public IRuleBuilderOptions<T, TProperty> DependentRules(Action action) {
-			var dependencyContainer = new List<IValidationRule>();
+			var dependencyContainer = new List<PropertyRule<T>>();
 
 			// Capture any rules added to the parent validator inside this delegate.
 			using (ParentValidator.Rules.Capture(dependencyContainer.Add)) {
@@ -132,7 +132,7 @@ namespace FluentValidation.Internal {
 
 			if (Rule.RuleSets.Length > 0) {
 				foreach (var dependentRule in dependencyContainer) {
-					if (dependentRule is PropertyRule propRule && propRule.RuleSets.Length == 0) {
+					if (dependentRule is PropertyRule<T> propRule && propRule.RuleSets.Length == 0) {
 						propRule.RuleSets = Rule.RuleSets;
 					}
 				}

@@ -34,7 +34,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="TElement"></typeparam>
 	/// <typeparam name="T"></typeparam>
-	public class CollectionPropertyRule<T, TElement> : PropertyRule {
+	public class CollectionPropertyRule<T, TElement> : PropertyRule<T> {
 		/// <summary>
 		/// Initializes new instance of the CollectionPropertyRule class
 		/// </summary>
@@ -43,8 +43,8 @@ namespace FluentValidation.Internal {
 		/// <param name="expression"></param>
 		/// <param name="cascadeModeThunk"></param>
 		/// <param name="typeToValidate"></param>
-		/// <param name="containerType"></param>
-		public CollectionPropertyRule(MemberInfo member, Func<object, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type containerType) : base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate, containerType) {
+		public CollectionPropertyRule(MemberInfo member, Func<T, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+			: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
 		}
 
 		/// <summary>
@@ -57,17 +57,17 @@ namespace FluentValidation.Internal {
 		/// By default this is "[" + index + "]"
 		/// </summary>
 		public Func<object, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
-		
+
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
 		public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache, "FV_RuleForEach");
-			return new CollectionPropertyRule<T, TElement>(member, compiled.CoerceToNonGeneric(), expression, cascadeModeThunk, typeof(TElement), typeof(T));
+			return new CollectionPropertyRule<T, TElement>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TElement));
 		}
 
-		public override IEnumerable<ValidationFailure> Validate(IValidationContext context) {
+		internal override IEnumerable<ValidationFailure> Validate(ValidationContext<T> context) {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -176,7 +176,7 @@ namespace FluentValidation.Internal {
 			return failures;
 		}
 
-		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(IValidationContext context, CancellationToken cancellation) {
+		internal override async Task<IEnumerable<ValidationFailure>> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			if (!context.IsAsync()) {
 				context.RootContextData["__FV_IsAsyncExecution"] = true;
 			}

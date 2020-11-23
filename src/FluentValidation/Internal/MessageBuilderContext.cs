@@ -15,7 +15,7 @@
 
 		public IValidationContext ParentContext => _innerContext.ParentContext;
 
-		public PropertyRule Rule => _innerContext.Rule;
+		public IValidationRule Rule => _innerContext.Rule;
 
 		public string PropertyName => _innerContext.PropertyName;
 

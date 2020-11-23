@@ -32,7 +32,7 @@ namespace FluentValidation {
 	/// </summary>
 	/// <typeparam name="T">The type of the object being validated</typeparam>
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
-		internal TrackingCollection<IValidationRule> Rules { get; } = new TrackingCollection<IValidationRule>();
+		internal TrackingCollection<PropertyRule<T>> Rules { get; } = new TrackingCollection<PropertyRule<T>>();
 		private Func<CascadeMode> _cascadeMode = () => ValidatorOptions.Global.CascadeMode;
 
 		/// <summary>
@@ -166,14 +166,6 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Adds a rule to the current validator.
-		/// </summary>
-		/// <param name="rule"></param>
-		protected void AddRule(IValidationRule rule) {
-			Rules.Add(rule);
-		}
-
-		/// <summary>
 		/// Creates a <see cref="IValidatorDescriptor" /> that can be used to obtain metadata about the current validator.
 		/// </summary>
 		public virtual IValidatorDescriptor CreateDescriptor() {
@@ -198,8 +190,8 @@ namespace FluentValidation {
 			expression.Guard("Cannot pass null to RuleFor", nameof(expression));
 			// If rule-level caching is enabled, then bypass the expression-level cache.
 			// Otherwise we essentially end up caching expressions twice unnecessarily.
-			var rule = PropertyRule.Create(expression, () => CascadeMode);
-			AddRule(rule);
+			var rule = PropertyRule<T>.Create(expression, () => CascadeMode);
+			Rules.Add(rule);
 			var ruleBuilder = new RuleBuilder<T, TProperty>(rule, this);
 			return ruleBuilder;
 		}
@@ -213,7 +205,7 @@ namespace FluentValidation {
 		public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 			var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => CascadeMode);
-			AddRule(rule);
+			Rules.Add(rule);
 			var ruleBuilder = new RuleBuilder<T, TElement>(rule, this);
 			return ruleBuilder;
 		}
@@ -318,7 +310,7 @@ namespace FluentValidation {
 		public void Include(IValidator<T> rulesToInclude) {
 			rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
 			var rule = IncludeRule<T>.Create(rulesToInclude, () => CascadeMode);
-			AddRule(rule);
+			Rules.Add(rule);
 		}
 
 		/// <summary>
@@ -327,7 +319,7 @@ namespace FluentValidation {
 		public void Include<TValidator>(Func<T, TValidator> rulesToInclude) where TValidator : IValidator<T> {
 			rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
 			var rule = IncludeRule<T>.Create(rulesToInclude, () => CascadeMode);
-			AddRule(rule);
+			Rules.Add(rule);
 		}
 
 		/// <summary>

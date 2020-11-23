@@ -42,7 +42,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
-		IRuleBuilderInitial<T, TProperty> Configure(Action<PropertyRule> configurator);
+		IRuleBuilderInitial<T, TProperty> Configure(Action<PropertyRule<T>> configurator);
 	}
 
 	/// <summary>
@@ -95,7 +95,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
-		IRuleBuilderOptions<T, TProperty> Configure(Action<PropertyRule> configurator);
+		IRuleBuilderOptions<T, TProperty> Configure(Action<PropertyRule<T>> configurator);
 
 
 		/// <summary>
