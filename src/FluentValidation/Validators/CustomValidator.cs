@@ -1,6 +1,7 @@
 ﻿namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
@@ -9,16 +10,16 @@
 	/// Custom validator that allows for manual/direct creation of ValidationFailure instances.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class CustomValidator<T> : PropertyValidator {
-		private readonly Action<T, CustomContext> _action;
-		private Func<T, CustomContext, CancellationToken, Task> _asyncAction;
+	public class CustomValidator<T, TProperty> : PropertyValidator {
+		private readonly Action<TProperty, CustomContext<T>> _action;
+		private Func<TProperty, CustomContext<T>, CancellationToken, Task> _asyncAction;
 		private readonly bool _isAsync;
 
 		/// <summary>
 		/// Creates a new instance of the CustomValidator
 		/// </summary>
 		/// <param name="action"></param>
-		public CustomValidator(Action<T, CustomContext> action) {
+		public CustomValidator(Action<TProperty, CustomContext<T>> action) {
 			_isAsync = false;
 			_action = action;
 
@@ -29,7 +30,7 @@
 		/// Creates a new instance of the CustomValidator.
 		/// </summary>
 		/// <param name="asyncAction"></param>
-		public CustomValidator(Func<T, CustomContext, CancellationToken, Task> asyncAction) {
+		public CustomValidator(Func<TProperty, CustomContext<T>, CancellationToken, Task> asyncAction) {
 			_isAsync = true;
 			_asyncAction = asyncAction;
 			//TODO: For FV 9, throw an exception by default if async validator is being executed synchronously.
@@ -37,15 +38,15 @@
 		}
 
 		public override IEnumerable<ValidationFailure> Validate(PropertyValidatorContext context) {
-			var customContext = new CustomContext(context);
-			_action((T) context.PropertyValue, customContext);
-			return customContext.Failures;
+			var customContext = new CustomContext<T>(context);
+			_action((TProperty) context.PropertyValue, customContext);
+			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		public override async Task<IEnumerable<ValidationFailure>> ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			var customContext = new CustomContext(context);
-			await _asyncAction((T)context.PropertyValue, customContext, cancellation);
-			return customContext.Failures;
+			var customContext = new CustomContext<T>(context);
+			await _asyncAction((TProperty)context.PropertyValue, customContext, cancellation);
+			return Enumerable.Empty<ValidationFailure>();
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
@@ -60,9 +61,9 @@
 	/// <summary>
 	/// Custom validation context
 	/// </summary>
-	public class CustomContext {
+	public class CustomContext<T> {
 		private PropertyValidatorContext _context;
-		private List<ValidationFailure> _failures = new List<ValidationFailure>();
+		private ValidationContext<T> _parentContext;
 
 		/// <summary>
 		/// Creates a new CustomContext
@@ -70,6 +71,7 @@
 		/// <param name="context">The parent PropertyValidatorContext that represents this execution</param>
 		public CustomContext(PropertyValidatorContext context) {
 			_context = context;
+			_parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
 		}
 
 		/// <summary>
@@ -97,10 +99,8 @@
 		/// <param name="failure">The failure to add</param>
 		public void AddFailure(ValidationFailure failure) {
 			failure.Guard("A failure must be specified when calling AddFailure.", nameof(failure));
-			_failures.Add(failure);
+			_parentContext.Failures.Add(failure);
 		}
-
-		internal IEnumerable<ValidationFailure> Failures => _failures;
 
 		public IValidationRule Rule => _context.Rule;
 		public string PropertyName => _context.PropertyName;
