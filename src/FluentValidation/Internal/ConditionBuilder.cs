@@ -37,7 +37,7 @@ namespace FluentValidation.Internal {
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
 		public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
-			var propertyRules = new List<IValidationRule>();
+			var propertyRules = new List<PropertyRule<T>>();
 
 			using (_rules.OnItemAdded(propertyRules.Add)) {
 				action();
@@ -98,7 +98,7 @@ namespace FluentValidation.Internal {
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
 		public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
-			var propertyRules = new List<IValidationRule>();
+			var propertyRules = new List<PropertyRule<T>>();
 
 			using (_rules.OnItemAdded(propertyRules.Add)) {
 				action();
