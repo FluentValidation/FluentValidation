@@ -24,9 +24,9 @@ namespace FluentValidation.Internal {
 	using Validators;
 
 	internal class ConditionBuilder<T> {
-		private TrackingCollection<IValidationRule> _rules;
+		private TrackingCollection<PropertyRule<T>> _rules;
 
-		public ConditionBuilder(TrackingCollection<IValidationRule> rules) {
+		public ConditionBuilder(TrackingCollection<PropertyRule<T>> rules) {
 			_rules = rules;
 		}
 
@@ -71,7 +71,7 @@ namespace FluentValidation.Internal {
 				rule.ApplySharedCondition(Condition);
 			}
 
-			return new ConditionOtherwiseBuilder(_rules, Condition);
+			return new ConditionOtherwiseBuilder<T>(_rules, Condition);
 		}
 
 		/// <summary>
@@ -85,9 +85,9 @@ namespace FluentValidation.Internal {
 	}
 
 	internal class AsyncConditionBuilder<T> {
-		private TrackingCollection<IValidationRule> _rules;
+		private TrackingCollection<PropertyRule<T>> _rules;
 
-		public AsyncConditionBuilder(TrackingCollection<IValidationRule> rules) {
+		public AsyncConditionBuilder(TrackingCollection<PropertyRule<T>> rules) {
 			_rules = rules;
 		}
 
@@ -130,7 +130,7 @@ namespace FluentValidation.Internal {
 				rule.ApplySharedAsyncCondition(Condition);
 			}
 
-			return new AsyncConditionOtherwiseBuilder(_rules, Condition);
+			return new AsyncConditionOtherwiseBuilder<T>(_rules, Condition);
 		}
 
 		/// <summary>
@@ -143,19 +143,19 @@ namespace FluentValidation.Internal {
 		}
 	}
 
-	internal class ConditionOtherwiseBuilder : IConditionBuilder {
-		private TrackingCollection<IValidationRule> _rules;
+	internal class ConditionOtherwiseBuilder<T> : IConditionBuilder {
+		private TrackingCollection<PropertyRule<T>> _rules;
 		private readonly Func<IValidationContext, bool> _condition;
 
-		public ConditionOtherwiseBuilder(TrackingCollection<IValidationRule> rules, Func<IValidationContext, bool> condition) {
+		public ConditionOtherwiseBuilder(TrackingCollection<PropertyRule<T>> rules, Func<IValidationContext, bool> condition) {
 			_rules = rules;
 			_condition = condition;
 		}
 
 		public virtual void Otherwise(Action action) {
-			var propertyRules = new List<IValidationRule>();
+			var propertyRules = new List<PropertyRule<T>>();
 
-			Action<IValidationRule> onRuleAdded = propertyRules.Add;
+			Action<PropertyRule<T>> onRuleAdded = propertyRules.Add;
 
 			using (_rules.OnItemAdded(onRuleAdded)) {
 				action();
@@ -167,19 +167,19 @@ namespace FluentValidation.Internal {
 		}
 	}
 
-	internal class AsyncConditionOtherwiseBuilder : IConditionBuilder {
-		private TrackingCollection<IValidationRule> _rules;
+	internal class AsyncConditionOtherwiseBuilder<T> : IConditionBuilder {
+		private TrackingCollection<PropertyRule<T>> _rules;
 		private readonly Func<IValidationContext, CancellationToken, Task<bool>> _condition;
 
-		public AsyncConditionOtherwiseBuilder(TrackingCollection<IValidationRule> rules, Func<IValidationContext, CancellationToken, Task<bool>> condition) {
+		public AsyncConditionOtherwiseBuilder(TrackingCollection<PropertyRule<T>> rules, Func<IValidationContext, CancellationToken, Task<bool>> condition) {
 			_rules = rules;
 			_condition = condition;
 		}
 
 		public virtual void Otherwise(Action action) {
-			var propertyRules = new List<IValidationRule>();
+			var propertyRules = new List<PropertyRule<T>>();
 
-			Action<IValidationRule> onRuleAdded = propertyRules.Add;
+			Action<PropertyRule<T>> onRuleAdded = propertyRules.Add;
 
 			using (_rules.OnItemAdded(onRuleAdded)) {
 				action();

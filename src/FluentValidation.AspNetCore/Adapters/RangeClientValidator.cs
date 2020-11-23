@@ -28,7 +28,7 @@ namespace FluentValidation.AspNetCore {
 			get { return (InclusiveBetweenValidator)Validator; }
 		}
 
-		public RangeClientValidator(PropertyRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public RangeClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 
 		}
 

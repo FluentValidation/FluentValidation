@@ -226,8 +226,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task MustAsync_should_not_throw_InvalidCastException() {
-			var model = new Model
-			{
+			var model = new Model {
 				Ids = new Guid[0]
 			};
 			var validator = new AsyncModelTestValidator();
@@ -235,20 +234,18 @@ namespace FluentValidation.Tests {
 			var result = await validator.ValidateAsync(model);
 			result.IsValid.ShouldBeTrue();
 		}
+
 		private void AssertValidator<TValidator>() {
-			var rule = (PropertyRule)validator.First();
+			var rule = (PropertyRule<Person>)validator.First();
 			rule.CurrentValidator.ShouldBe<TValidator>();
 		}
 
-		class Model
-		{
+		class Model {
 			public IEnumerable<Guid> Ids { get; set; }
 		}
 
-		class AsyncModelTestValidator : AbstractValidator<Model>
-		{
-			public AsyncModelTestValidator()
-			{
+		class AsyncModelTestValidator : AbstractValidator<Model> {
+			public AsyncModelTestValidator() {
 				RuleForEach(m => m.Ids)
 					.MustAsync((g, cancel) => Task.FromResult(true));
 			}

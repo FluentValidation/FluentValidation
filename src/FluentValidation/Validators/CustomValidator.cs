@@ -102,7 +102,7 @@
 
 		internal IEnumerable<ValidationFailure> Failures => _failures;
 
-		public PropertyRule Rule => _context.Rule;
+		public IValidationRule Rule => _context.Rule;
 		public string PropertyName => _context.PropertyName;
 		public string DisplayName => _context.DisplayName;
 		public MessageFormatter MessageFormatter => _context.MessageFormatter;
