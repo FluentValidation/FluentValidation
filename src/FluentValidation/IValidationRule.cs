@@ -20,10 +20,7 @@ namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
 	using System.Reflection;
-	using System.Threading;
-	using System.Threading.Tasks;
 	using Internal;
-	using Results;
 	using Validators;
 
 	/// <summary>
@@ -38,32 +35,6 @@ namespace FluentValidation {
 		/// Name of the rule-set to which this rule belongs.
 		/// </summary>
 		string[] RuleSets { get; set; }
-
-		/// <summary>
-		/// Applies a condition to either all the validators in the rule, or the most recent validator in the rule chain.
-		/// </summary>
-		/// <param name="predicate">The condition to apply</param>
-		/// <param name="applyConditionTo">Indicates whether the condition should be applied to all validators in the rule, or only the current one</param>
-		void ApplyCondition(Func<IValidationContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
-
-		/// <summary>
-		/// Applies an asynchronous condition to either all the validators in the rule, or the most recent validator in the rule chain.
-		/// </summary>
-		/// <param name="predicate">The condition to apply</param>
-		/// <param name="applyConditionTo">Indicates whether the condition should be applied to all validators in the rule, or only the current one</param>
-		void ApplyAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
-
-		/// <summary>
-		/// Applies a condition that wraps the entire rule.
-		/// </summary>
-		/// <param name="condition">The condition to apply.</param>
-		void ApplySharedCondition(Func<IValidationContext, bool> condition);
-
-		/// <summary>
-		/// Applies an asynchronous condition that wraps the entire rule.
-		/// </summary>
-		/// <param name="condition">The condition to apply.</param>
-		void ApplySharedAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> condition);
 
 		/// <summary>
 		/// Gets the display name for the property.
