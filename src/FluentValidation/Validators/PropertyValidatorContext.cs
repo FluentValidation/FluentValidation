@@ -18,12 +18,15 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Collections.Generic;
 	using Internal;
+	using Results;
 
 	public class PropertyValidatorContext {
 		private MessageFormatter _messageFormatter;
 		private object _propertyValue;
 		private Lazy<object> _propertyValueAccessor;
+		private List<ValidationFailure> _failures;
 
 		public IValidationContext ParentContext { get; private set; }
 		public IValidationRule Rule { get; private set; }
@@ -39,18 +42,38 @@ namespace FluentValidation.Validators {
 		public object PropertyValue
 			=> _propertyValueAccessor != null ? _propertyValueAccessor.Value : _propertyValue;
 
-		public PropertyValidatorContext(IValidationContext parentContext, IValidationRule rule, string propertyName, object propertyValue) {
+		internal PropertyValidatorContext(IValidationContext parentContext, List<ValidationFailure> failures, IValidationRule rule, string propertyName, object propertyValue) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
 			_propertyValue = propertyValue;
+			_failures = failures;
 		}
 
-		public PropertyValidatorContext(IValidationContext parentContext, IValidationRule rule, string propertyName, Lazy<object> propertyValueAccessor) {
+		internal PropertyValidatorContext(IValidationContext parentContext, List<ValidationFailure> failures, IValidationRule rule, string propertyName, Lazy<object> propertyValueAccessor) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
 			_propertyValueAccessor = propertyValueAccessor;
+			_failures = failures;
+		}
+
+		public static PropertyValidatorContext Create<T>(ValidationContext<T> parentContext, PropertyRule<T> rule, string propertyName, Lazy<object> propertyValueAccessor) {
+			return new PropertyValidatorContext(parentContext, parentContext.Failures, rule, propertyName, propertyValueAccessor);
+		}
+
+		public static PropertyValidatorContext Create<T>(ValidationContext<T> parentContext, PropertyRule<T> rule, string propertyName, object propertyValue) {
+			return new PropertyValidatorContext(parentContext, parentContext.Failures, rule, propertyName, propertyValue);
+		}
+
+		/// <summary>
+		/// Adds a validation failure to the result.
+		/// </summary>
+		/// <param name="failure">The failure to add.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public void AddFailure(ValidationFailure failure) {
+			if (failure == null) throw new ArgumentNullException(nameof(failure), "A failure must be specified when calling AddFailure");
+			_failures.Add(failure);
 		}
 	}
 }
