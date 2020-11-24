@@ -151,7 +151,7 @@ namespace FluentValidation.Internal {
 		}
 
 		internal ValidationContext<T> BuildContext(T instance) {
-			return new ValidationContext<T>(instance, new PropertyChain(), GetSelector()) {
+			return new ValidationContext<T>(instance, null, GetSelector()) {
 				ThrowOnFailures = _throw
 			};
 		}

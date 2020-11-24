@@ -61,20 +61,26 @@ namespace FluentValidation {
 		IValidationContext ParentContext { get; }
 	}
 
+	internal interface IHasFailures {
+		List<ValidationFailure> Failures { get; }
+	}
+
 	/// <summary>
 	/// Validation context
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class ValidationContext<T> : IValidationContext {
+	public class ValidationContext<T> : IValidationContext, IHasFailures {
 		private IValidationContext _parentContext;
 
-		internal List<ValidationFailure> Failures { get; set; }
+		List<ValidationFailure> IHasFailures.Failures => Failures;
+		internal List<ValidationFailure> Failures { get; }
 
 		/// <summary>
 		/// Creates a new validation context
 		/// </summary>
 		/// <param name="instanceToValidate"></param>
-		public ValidationContext(T instanceToValidate) : this(instanceToValidate, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()) {
+		public ValidationContext(T instanceToValidate)
+			: this(instanceToValidate, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()) {
 		}
 
 		/// <summary>
@@ -83,10 +89,15 @@ namespace FluentValidation {
 		/// <param name="instanceToValidate"></param>
 		/// <param name="propertyChain"></param>
 		/// <param name="validatorSelector"></param>
-		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector) {
+		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector)
+			: this(instanceToValidate, propertyChain, validatorSelector, new List<ValidationFailure>()) {
+		}
+
+		internal ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, List<ValidationFailure> failures) {
 			PropertyChain = new PropertyChain(propertyChain);
 			InstanceToValidate = instanceToValidate;
 			Selector = validatorSelector;
+			Failures = failures;
 		}
 
 		/// <summary>
@@ -163,7 +174,9 @@ namespace FluentValidation {
 
 			// Parameters match
 			if (context.InstanceToValidate is T instanceToValidate) {
-				return new ValidationContext<T>(instanceToValidate, context.PropertyChain, context.Selector) {
+				var failures = (context is IHasFailures f) ? f.Failures : new List<ValidationFailure>();
+
+				return new ValidationContext<T>(instanceToValidate, context.PropertyChain, context.Selector, failures) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
 					_parentContext = context.ParentContext
@@ -171,7 +184,9 @@ namespace FluentValidation {
 			}
 
 			if (context.InstanceToValidate == null) {
-				return new ValidationContext<T>(default, context.PropertyChain, context.Selector) {
+				var failures = (context is IHasFailures f) ? f.Failures : new List<ValidationFailure>();
+
+				return new ValidationContext<T>(default, context.PropertyChain, context.Selector, failures) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
 					_parentContext = context.ParentContext,
@@ -189,7 +204,7 @@ namespace FluentValidation {
 		/// <param name="selector"></param>
 		/// <returns></returns>
 		public ValidationContext<TChild> CloneForChildValidator<TChild>(TChild instanceToValidate, bool preserveParentContext = false, IValidatorSelector selector = null) {
-			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector) {
+			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector, Failures) {
 				IsChildContext = true,
 				RootContextData = RootContextData,
 				_parentContext = preserveParentContext ? this : null
@@ -203,11 +218,10 @@ namespace FluentValidation {
 		/// <param name="preserveParentContext"></param>
 		/// <returns></returns>
 		public ValidationContext<TNew> CloneForChildCollectionValidator<TNew>(TNew instanceToValidate, bool preserveParentContext = false) {
-			return new ValidationContext<TNew>(instanceToValidate, null, Selector) {
+			return new ValidationContext<TNew>(instanceToValidate, null, Selector, Failures) {
 				IsChildContext = true,
 				IsChildCollectionContext = true,
 				RootContextData = RootContextData,
-				Failures = Failures,
 				_parentContext = preserveParentContext ? this : null
 			};
 		}

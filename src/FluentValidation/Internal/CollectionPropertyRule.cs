@@ -118,8 +118,6 @@ namespace FluentValidation.Internal {
 					throw new InvalidOperationException("Could not automatically determine the property name ");
 				}
 
-				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
-
 				foreach (var element in collection) {
 					int index = count++;
 
@@ -135,7 +133,7 @@ namespace FluentValidation.Internal {
 						useDefaultIndexFormat = false;
 					}
 
-					ValidationContext<T> newContext = actualContext.CloneForChildCollectionValidator(actualContext.InstanceToValidate, preserveParentContext: true);
+					ValidationContext<T> newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
@@ -230,8 +228,6 @@ namespace FluentValidation.Internal {
 					throw new InvalidOperationException("Could not automatically determine the property name ");
 				}
 
-				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
-
 				foreach (var element in collection) {
 					int index = count++;
 
@@ -247,7 +243,7 @@ namespace FluentValidation.Internal {
 						useDefaultIndexFormat = false;
 					}
 
-					ValidationContext<T> newContext = actualContext.CloneForChildCollectionValidator(actualContext.InstanceToValidate, preserveParentContext: true);
+					ValidationContext<T> newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
