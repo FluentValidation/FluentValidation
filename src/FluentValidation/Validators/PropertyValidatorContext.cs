@@ -71,7 +71,7 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		/// <param name="failure">The failure to add.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		public void AddFailure(ValidationFailure failure) {
+		internal void AddFailure(ValidationFailure failure) {
 			if (failure == null) throw new ArgumentNullException(nameof(failure), "A failure must be specified when calling AddFailure");
 			_failures.Add(failure);
 		}
