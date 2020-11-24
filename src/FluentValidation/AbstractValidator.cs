@@ -80,8 +80,7 @@ namespace FluentValidation {
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
 			context.Guard("Cannot pass null to Validate.", nameof(context));
 
-			var result = new ValidationResult();
-			context.Failures = result.Errors;
+			var result = new ValidationResult(context.Failures);
 			bool shouldContinue = PreValidate(context, result);
 
 			if (!shouldContinue) {
@@ -121,8 +120,7 @@ namespace FluentValidation {
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			context.RootContextData["__FV_IsAsyncExecution"] = true;
 
-			var result = new ValidationResult();
-			context.Failures = result.Errors;
+			var result = new ValidationResult(context.Failures);
 			bool shouldContinue = PreValidate(context, result);
 
 			if (!shouldContinue) {

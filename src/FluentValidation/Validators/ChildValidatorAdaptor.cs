@@ -49,6 +49,7 @@ namespace FluentValidation.Validators {
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context);
+			var totalFailures = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext).Failures.Count;
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -60,12 +61,10 @@ namespace FluentValidation.Validators {
 			// Reset the collection index
 			ResetCollectionIndex(context, originalIndex, currentIndex);
 
-			if (result.Errors.Count > 0) {
-				Options.OnFailure?.Invoke(context.InstanceToValidate, context, result.Errors[0].ErrorMessage);
-			}
-
-			foreach (var failure in result.Errors) {
-				context.AddFailure(failure);
+			if (result.Errors.Count > totalFailures && Options.OnFailure != null) {
+				// Errors collection will contain all the errors from the validation run, not just those for the child validator.
+				var firstError = result.Errors.Skip(totalFailures).First().ErrorMessage;
+				Options.OnFailure(context.InstanceToValidate, context, firstError);
 			}
 		}
 
@@ -81,6 +80,7 @@ namespace FluentValidation.Validators {
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context);
+			var totalFailures = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext).Failures.Count;
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -91,12 +91,10 @@ namespace FluentValidation.Validators {
 
 			ResetCollectionIndex(context, originalIndex, currentIndex);
 
-			if (result.Errors.Count > 0) {
-				Options.OnFailure?.Invoke(context.InstanceToValidate, context, result.Errors[0].ErrorMessage);
-			}
-
-			foreach (var failure in result.Errors) {
-				context.AddFailure(failure);
+			if (result.Errors.Count > totalFailures && Options.OnFailure != null) {
+				// Errors collection will contain all the errors from the validation run, not just those for the child validator.
+				var firstError = result.Errors.Skip(totalFailures).First().ErrorMessage;
+				Options.OnFailure(context.InstanceToValidate, context, firstError);
 			}
 		}
 
