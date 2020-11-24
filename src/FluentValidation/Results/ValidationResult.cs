@@ -44,7 +44,7 @@ namespace FluentValidation.Results {
 		/// Creates a new validationResult
 		/// </summary>
 		public ValidationResult() {
-			this._errors = new List<ValidationFailure>();
+			_errors = new List<ValidationFailure>();
 		}
 
 		/// <summary>
@@ -56,6 +56,10 @@ namespace FluentValidation.Results {
 		/// </remarks>
 		public ValidationResult(IEnumerable<ValidationFailure> failures) {
 			_errors = failures.Where(failure => failure != null).ToList();
+		}
+
+		internal ValidationResult(List<ValidationFailure> errors) {
+			_errors = errors;
 		}
 
 		/// <summary>
