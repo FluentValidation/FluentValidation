@@ -20,12 +20,11 @@
 
 #pragma warning disable 618
 
-namespace FluentValidation.Resources.Languages {
+namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class BosnianLanguage {
 		public const string Culture = "bs";
-		public const string LatinCulture = "bs-Latn";
 
 		public static string GetTranslation(string key) => key switch {
 			nameof(EmailValidator) => "'{PropertyName}' nije validna email adresa.",
