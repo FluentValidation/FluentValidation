@@ -21,9 +21,7 @@
 namespace FluentValidation.Resources {
 	using System;
 	using System.Collections.Concurrent;
-	using System.Collections.Generic;
 	using System.Globalization;
-	using System.Linq;
 
 	/// <summary>
 	/// Allows the default error message translations to be managed.
@@ -45,6 +43,7 @@ namespace FluentValidation.Resources {
 				AlbanianLanguage.Culture => AlbanianLanguage.GetTranslation(key),
 				ArabicLanguage.Culture => ArabicLanguage.GetTranslation(key),
 				BengaliLanguage.Culture => BengaliLanguage.GetTranslation(key),
+				BosnianLanguage.Culture => BosnianLanguage.GetTranslation(key),
 				ChineseSimplifiedLanguage.Culture => ChineseSimplifiedLanguage.GetTranslation(key),
 				ChineseTraditionalLanguage.Culture => ChineseTraditionalLanguage.GetTranslation(key),
 				CroatianLanguage.Culture => CroatianLanguage.GetTranslation(key),
@@ -75,6 +74,7 @@ namespace FluentValidation.Resources {
 				SlovakLanguage.Culture => SlovakLanguage.GetTranslation(key),
 				SlovenianLanguage.Culture => SlovenianLanguage.GetTranslation(key),
 				SpanishLanguage.Culture => SpanishLanguage.GetTranslation(key),
+				SerbianLanguage.Culture => SerbianLanguage.GetTranslation(key),
 				SwedishLanguage.Culture => SwedishLanguage.GetTranslation(key),
 				TurkishLanguage.Culture => TurkishLanguage.GetTranslation(key),
 				UkrainianLanguage.Culture => UkrainianLanguage.GetTranslation(key),
@@ -117,9 +117,11 @@ namespace FluentValidation.Resources {
 				value = _languages.GetOrAdd(currentCultureKey, k => GetTranslation(culture.Name, key));
 
 				// If the value couldn't be found, try the parent culture.
-				if (value == null && !culture.IsNeutralCulture) {
-					string parentCultureKey = culture.Parent.Name + ":" + key;
-					value = _languages.GetOrAdd(parentCultureKey, k => GetTranslation(culture.Parent.Name, key));
+				var currentCulture = culture;
+				while (value == null && currentCulture.Parent != CultureInfo.InvariantCulture) {
+					currentCulture = currentCulture.Parent;
+					string parentCultureKey = currentCulture.Name + ":" + key;
+					value = _languages.GetOrAdd(parentCultureKey, k => GetTranslation(currentCulture.Name, key));
 				}
 
 				if (value == null && culture.Name != EnglishLanguage.Culture) {
