@@ -24,6 +24,7 @@ namespace FluentValidation.Resources {
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
+	using Languages;
 
 	/// <summary>
 	/// Allows the default error message translations to be managed.
@@ -45,6 +46,8 @@ namespace FluentValidation.Resources {
 				AlbanianLanguage.Culture => AlbanianLanguage.GetTranslation(key),
 				ArabicLanguage.Culture => ArabicLanguage.GetTranslation(key),
 				BengaliLanguage.Culture => BengaliLanguage.GetTranslation(key),
+				BosnianLanguage.Culture => BosnianLanguage.GetTranslation(key),
+				BosnianLanguage.LatinCulture => BosnianLanguage.GetTranslation(key),
 				ChineseSimplifiedLanguage.Culture => ChineseSimplifiedLanguage.GetTranslation(key),
 				ChineseTraditionalLanguage.Culture => ChineseTraditionalLanguage.GetTranslation(key),
 				CroatianLanguage.Culture => CroatianLanguage.GetTranslation(key),
@@ -75,6 +78,8 @@ namespace FluentValidation.Resources {
 				SlovakLanguage.Culture => SlovakLanguage.GetTranslation(key),
 				SlovenianLanguage.Culture => SlovenianLanguage.GetTranslation(key),
 				SpanishLanguage.Culture => SpanishLanguage.GetTranslation(key),
+				SerbianLanguage.Culture => SerbianLanguage.GetTranslation(key),
+				SerbianLanguage.LatinCulture => SerbianLanguage.GetTranslation(key),
 				SwedishLanguage.Culture => SwedishLanguage.GetTranslation(key),
 				TurkishLanguage.Culture => TurkishLanguage.GetTranslation(key),
 				UkrainianLanguage.Culture => UkrainianLanguage.GetTranslation(key),

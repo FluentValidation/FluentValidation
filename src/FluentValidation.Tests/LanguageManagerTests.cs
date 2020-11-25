@@ -15,6 +15,28 @@
 			_languages = new LanguageManager();
 		}
 
+		[Theory]
+		[InlineData("bs")]
+		[InlineData("bs-Latn")]
+		[InlineData("bs-Latn-BA")]
+		public void Gets_translation_for_bosnian_latin_culture(string cultureName) {
+			using (new CultureScope(cultureName)) {
+				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				msg.ShouldEqual("'{PropertyName}' ne smije biti prazan.");
+			}
+		}
+
+		[Theory]
+		[InlineData("sr")]
+		[InlineData("sr-Latn")]
+		[InlineData("sr-Latn-RS")]
+		public void Gets_translation_for_serbian_culture(string cultureName) {
+			using (new CultureScope(cultureName)) {
+				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				msg.ShouldEqual("'{PropertyName}' ne smije biti prazan.");
+			}
+		}
+
 		[Fact]
 		public void Gets_translation_for_culture() {
 			using (new CultureScope("fr")) {
