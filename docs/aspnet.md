@@ -174,6 +174,8 @@ Note that not all rules defined in FluentValidation will work with ASP.NET's cli
 * MinLength
 * Length
 
+Alternatively, instead of using client-side validation you could instead execute your full server-side rules via AJAX using a library such as [FormHelper](https://github.com/sinanbozkus/FormHelper). This allows you to use the full power of FluentValidation, while still having a responsive user experience. 
+
 ### Manual validation
 
 Sometimes you may want to manually validate an object in a MVC project. In this case, the validation results can be copied to MVC's modelstate dictionary:
