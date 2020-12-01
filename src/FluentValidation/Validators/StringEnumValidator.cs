@@ -71,7 +71,6 @@ namespace FluentValidation.Validators {
 			if (context.PropertyValue == null) return true;
 
 			string value = context.PropertyValue.ToString();
-			var comparison = _caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
 			return Enum.TryParse<TEnum>(value, !_caseSensitive, out _);
 		}
