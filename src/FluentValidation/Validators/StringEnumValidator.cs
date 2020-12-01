@@ -58,4 +58,27 @@ namespace FluentValidation.Validators {
 			return Localized(nameof(EnumValidator));
 		}
 	}
+
+	public class StringEnumValidator<TEnum> : PropertyValidator where TEnum : struct, Enum {
+
+		private readonly bool _caseSensitive;
+
+		public StringEnumValidator(bool caseSensitive) {
+			_caseSensitive = caseSensitive;
+		}
+
+		protected override bool IsValid(PropertyValidatorContext context) {
+			if (context.PropertyValue == null) return true;
+
+			string value = context.PropertyValue.ToString();
+			var comparison = _caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
+
+			return Enum.TryParse<TEnum>(value, !_caseSensitive, out _);
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			// Intentionally the same message as EnumValidator.
+			return Localized(nameof(EnumValidator));
+		}
+	}
 }
