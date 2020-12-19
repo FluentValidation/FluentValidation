@@ -3,5 +3,5 @@
       "version": "5.0.100",
       "rollForward": "latestFeature"
     },
-    "others": ["3.1.201", "2.1.811"]
+    "others": ["3.1.201"]
 }
