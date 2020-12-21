@@ -23,50 +23,6 @@ namespace FluentValidation.Tests {
 	using Xunit;
 
 	public class TransformTests {
-#pragma warning disable 618
-
-		[Fact]
-		public void Transforms_property_value_old() {
-			var validator = new InlineValidator<Person>();
-			validator.RuleFor(x => x.Surname).Transform(name => "foo" + name).Equal("foobar");
-
-			var result = validator.Validate(new Person {Surname = "bar"});
-			result.IsValid.ShouldBeTrue();
-		}
-
-		[Fact]
-		public void Transforms_property_value_to_another_type_old() {
-			var validator = new InlineValidator<Person>();
-			validator.RuleFor(x => x.Surname).Transform(name => 1).GreaterThan(10);
-
-			var result = validator.Validate(new Person {Surname = "bar"});
-			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorCode.ShouldEqual("GreaterThanValidator");
-		}
-
-		[Fact]
-		public void Transforms_collection_element_old() {
-			var validator = new InlineValidator<Person>();
-			validator.RuleForEach(x => x.Orders)
-				.Transform(order => order.Amount)
-				.GreaterThan(0);
-
-			var result = validator.Validate(new Person() {Orders = new List<Order> {new Order()}});
-			result.Errors.Count.ShouldEqual(1);
-		}
-
-		[Fact]
-		public async Task Transforms_collection_element_async_old() {
-			var validator = new InlineValidator<Person>();
-			validator.RuleForEach(x => x.Orders)
-				.Transform(order => order.Amount)
-				.MustAsync((amt, token) => Task.FromResult(amt > 0));
-
-			var result = await validator.ValidateAsync(new Person() {Orders = new List<Order> {new Order()}});
-			result.Errors.Count.ShouldEqual(1);
-		}
-#pragma warning restore 618
-
 		[Fact]
 		public void Transforms_property_value() {
 			var validator = new InlineValidator<Person>();
@@ -109,7 +65,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Transforms_collection_element() {
 			var validator = new InlineValidator<Person>();
-			validator.TransformForEach(x => x.Orders, to: order => order.Amount)
+			validator.TransformForEach(x => x.Orders, order => order.Amount)
 				.GreaterThan(0);
 
 			var result = validator.Validate(new Person() {Orders = new List<Order> {new Order()}});
@@ -119,7 +75,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public async Task Transforms_collection_element_async() {
 			var validator = new InlineValidator<Person>();
-			validator.TransformForEach(x => x.Orders, to: order => order.Amount)
+			validator.TransformForEach(x => x.Orders, order => order.Amount)
 				.MustAsync((amt, token) => Task.FromResult(amt > 0));
 
 			var result = await validator.ValidateAsync(new Person() {Orders = new List<Order> {new Order()}});
@@ -169,6 +125,5 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Orders[1_12]");
 		}
-
 	}
 }
