@@ -67,6 +67,33 @@ namespace FluentValidation.Internal {
 			return new CollectionPropertyRule<T, TElement>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TElement));
 		}
 
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		internal static CollectionPropertyRule<T, TElement> CreateTransformed<TOriginal>(Expression<Func<T, IEnumerable<TOriginal>>> expression, Func<TOriginal, TElement> transformer, Func<CascadeMode> cascadeModeThunk) {
+			var member = expression.GetMember();
+			var compiled = expression.Compile();
+
+			object PropertyFunc(T instance) =>
+				compiled(instance).Select(transformer);
+
+			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TElement));
+		}
+
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		internal static CollectionPropertyRule<T, TElement> CreateTransformed<TOriginal>(Expression<Func<T, IEnumerable<TOriginal>>> expression, Func<T, TOriginal, TElement> transformer, Func<CascadeMode> cascadeModeThunk) {
+			var member = expression.GetMember();
+			var compiled = expression.Compile();
+
+			object PropertyFunc(T instance) {
+				return compiled(instance).Select(element => transformer(instance, element));
+			}
+
+			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOriginal));
+		}
+
 		internal override void Validate(ValidationContext<T> context) {
 			string displayName = GetDisplayName(context);
 
@@ -137,7 +164,7 @@ namespace FluentValidation.Internal {
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
-					var valueToValidate = Transformer != null ? Transformer(element) : element;
+					var valueToValidate = element;
 					var propertyNameToValidate = newContext.PropertyChain.ToString();
 					var totalFailuresInner = context.Failures.Count;
 
@@ -247,7 +274,7 @@ namespace FluentValidation.Internal {
 					newContext.PropertyChain.Add(propertyName);
 					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
-					var valueToValidate = Transformer != null ? Transformer(element) : element;
+					var valueToValidate = element;
 					var propertyNameToValidate = newContext.PropertyChain.ToString();
 					var totalFailuresInner = context.Failures.Count;
 

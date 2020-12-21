@@ -113,13 +113,6 @@ namespace FluentValidation.Internal {
 			return this;
 		}
 
-		[Obsolete("Use RuleFor(x => x.Property, transformer) instead. This method will be removed in FluentValidation 10.")]
-		public IRuleBuilderInitial<T, TNew> Transform<TNew>(Func<TProperty, TNew> transformationFunc) {
-			if (transformationFunc == null) throw new ArgumentNullException(nameof(transformationFunc));
-			Rule.Transformer = transformationFunc.CoerceToNonGeneric();
-			return new RuleBuilder<T, TNew>(Rule, ParentValidator);
-		}
-
 		/// <summary>
 		/// Creates a scope for declaring dependent rules.
 		/// </summary>

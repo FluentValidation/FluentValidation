@@ -53,16 +53,6 @@ namespace FluentValidation.Internal {
 		internal Func<ValidationContext<T>, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
 
 		/// <summary>
-		/// Checks whether this rule has a condition defined.
-		/// </summary>
-		public bool HasCondition => _condition != null;
-
-		/// <summary>
-		/// Checks whether this rule has an async condition defined.
-		/// </summary>
-		public bool HasAsyncCondition => _asyncCondition != null;
-
-		/// <summary>
 		/// Property associated with this rule.
 		/// </summary>
 		public MemberInfo Member { get; }
@@ -178,27 +168,27 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		internal static PropertyRule Create<T, TProperty, TTransformed>(Expression<Func<T, TProperty>> expression, Func<TProperty, TTransformed> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		internal static PropertyRule<T> Create<TProperty, TTransformed>(Expression<Func<T, TProperty>> expression, Func<TProperty, TTransformed> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
 
-			object PropertyFunc(object instance)
-				=> transformer(compiled((T)instance));
+			object PropertyFunc(T instance)
+				=> transformer(compiled(instance));
 
-			return new PropertyRule(member, PropertyFunc, expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+			return new PropertyRule<T>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TProperty));
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		internal static PropertyRule Create<T, TProperty, TTransformed>(Expression<Func<T, TProperty>> expression, Func<T, TProperty, TTransformed> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		internal static PropertyRule<T> Create<TProperty, TTransformed>(Expression<Func<T, TProperty>> expression, Func<T, TProperty, TTransformed> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
 
-			object PropertyFunc(object instance)
-				=> transformer((T)instance, compiled((T)instance));
+			object PropertyFunc(T instance)
+				=> transformer(instance, compiled(instance));
 
-			return new PropertyRule(member, PropertyFunc, expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+			return new PropertyRule<T>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TProperty));
 		}
 
 		/// <summary>
@@ -254,9 +244,6 @@ namespace FluentValidation.Internal {
 		/// Dependent rules
 		/// </summary>
 		public List<PropertyRule<T>> DependentRules { get; }
-
-		[Obsolete("This property will be removed in FluentValidation 10")]
-		public Func<object, object> Transformer { get; set; }
 
 		string IValidationRule.GetDisplayName(IValidationContext context) =>
 			GetDisplayName(context != null ? ValidationContext<T>.GetFromNonGenericContext(context) : null);
@@ -426,9 +413,6 @@ namespace FluentValidation.Internal {
 
 		private object GetPropertyValue(T instanceToValidate) {
 			var value = PropertyFunc(instanceToValidate);
-#pragma warning disable 618
-			if (Transformer != null) value = Transformer(value);
-#pragma warning restore 618
 			return value;
 		}
 
