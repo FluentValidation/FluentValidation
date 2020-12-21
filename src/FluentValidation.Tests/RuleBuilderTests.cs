@@ -163,7 +163,7 @@ namespace FluentValidation.Tests {
 			TaskCompletionSource<IEnumerable<ValidationFailure>> tcs = new TaskCompletionSource<IEnumerable<ValidationFailure>>();
 			tcs.SetResult(Enumerable.Empty<ValidationFailure>());
 
-			var validator = new Mock<PropertyValidator>(MockBehavior.Loose, ValidatorOptions.Global.LanguageManager.GetStringForValidator<AsyncPredicateValidator>()) {CallBase = true};
+			var validator = new Mock<PropertyValidator>(MockBehavior.Loose) {CallBase = true};
 			validator.Setup(x => x.ShouldValidateAsynchronously(It.IsAny<IValidationContext>())).Returns(true);
 			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
 			builder.SetValidator(validator.Object);

@@ -67,13 +67,33 @@ namespace FluentValidation.Validators {
 		}
 
 		/// <summary>
-		/// Adds a validation failure to the result.
+		/// Adds a new validation failure.
 		/// </summary>
 		/// <param name="failure">The failure to add.</param>
 		/// <exception cref="ArgumentNullException"></exception>
-		internal void AddFailure(ValidationFailure failure) {
+		public void AddFailure(ValidationFailure failure) {
 			if (failure == null) throw new ArgumentNullException(nameof(failure), "A failure must be specified when calling AddFailure");
 			_failures.Add(failure);
 		}
+
+		/// <summary>
+		/// Adds a new validation failure.
+		/// </summary>
+		/// <param name="propertyName">The property name</param>
+		/// <param name="errorMessage">The error message</param>
+		public void AddFailure(string propertyName, string errorMessage) {
+			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+			AddFailure(new ValidationFailure(propertyName ?? string.Empty, errorMessage));
+		}
+
+		/// <summary>
+		/// Adds a new validation failure (the property name is inferred)
+		/// </summary>
+		/// <param name="errorMessage">The error message</param>
+		public void AddFailure(string errorMessage) {
+			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+			AddFailure(PropertyName, errorMessage);
+		}
+
 	}
 }

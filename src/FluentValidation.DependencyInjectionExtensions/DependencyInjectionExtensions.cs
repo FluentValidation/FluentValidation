@@ -56,15 +56,6 @@ namespace FluentValidation {
 		public static IServiceProvider GetServiceProvider(this PropertyValidatorContext context)
 			=> Get(context.ParentContext.RootContextData);
 
-		/// <summary>
-		/// Gets the service provider associated with the validation context.
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		public static IServiceProvider GetServiceProvider<T>(this CustomContext<T> context)
-			=> Get(context.ParentContext.RootContextData);
-
 		private static IServiceProvider Get(IDictionary<string, object> rootContextData) {
 			if (rootContextData.TryGetValue("_FV_ServiceProvider", out var sp)) {
 				if (sp is IServiceProvider serviceProvider) {
