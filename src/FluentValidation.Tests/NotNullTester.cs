@@ -26,8 +26,8 @@ namespace FluentValidation.Tests {
 
 	public class NotNullTester {
 		public NotNullTester() {
-            CultureScope.SetDefaultCulture();
-        }
+			CultureScope.SetDefaultCulture();
+		}
 
 		[Fact]
 		public void NotNullValidator_should_pass_if_value_has_value() {

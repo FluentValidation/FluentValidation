@@ -22,7 +22,7 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	public class GreaterThanOrEqualValidator : AbstractComparisonValidator  {
+	public class GreaterThanOrEqualValidator : AbstractComparisonValidator {
 		public GreaterThanOrEqualValidator(IComparable value) :
 			base(value) {
 		}

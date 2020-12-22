@@ -37,7 +37,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).NotNull().WithMessage("{PropertyName}");
 			string error = validator.Validate(new Person()).Errors.Single().ErrorMessage;
 			error.ShouldEqual(expected);
-        }
+		}
 
 		[Fact]
 		public void Uses_custom_delegate_for_building_message() {

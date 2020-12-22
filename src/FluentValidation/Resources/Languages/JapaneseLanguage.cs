@@ -32,7 +32,7 @@ namespace FluentValidation.Resources {
 			nameof(GreaterThanValidator) => "'{PropertyName}' は '{ComparisonValue}' よりも大きくなければなりません。",
 			nameof(LengthValidator) => "'{PropertyName}' は {MinLength} から {MaxLength} 文字の間で入力する必要があります。 {TotalLength} 文字入力されています。",
 			nameof(MinimumLengthValidator) => "'{PropertyName}' は少なくとも {MinLength} 文字を入力しなければなりません。 {TotalLength} 文字入力されています。",
-			nameof(MaximumLengthValidator) => "'{PropertyName}' は {MaxLength} 文字以下でなければなりません。 {TotalLength}  文字入力されています。",
+			nameof(MaximumLengthValidator) => "'{PropertyName}' は {MaxLength} 文字以下でなければなりません。 {TotalLength} 文字入力されています。",
 			nameof(LessThanOrEqualValidator) => "'{PropertyName}' は '{ComparisonValue}' 以下である必要があります。",
 			nameof(LessThanValidator) => "'{PropertyName}' は '{ComparisonValue}' 未満である必要があります。",
 			nameof(NotEmptyValidator) => "'{PropertyName}' は空であってはなりません。",

@@ -32,7 +32,7 @@ namespace FluentValidation.Tests {
 
 		public EqualValidatorTests() {
 			CultureScope.SetDefaultCulture();
-        }
+		}
 
 		[Fact]
 		public void When_the_objects_are_equal_validation_should_succeed() {

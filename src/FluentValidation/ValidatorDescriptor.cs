@@ -112,7 +112,7 @@ namespace FluentValidation {
 		public IEnumerable<IPropertyValidator> GetValidatorsForMember<TValue>(MemberAccessor<T, TValue> accessor)
 		{
 			return from rule in Rules.OfType<PropertyRule>()
-			       where Equals(rule.Member, accessor.Member)
+						 where Equals(rule.Member, accessor.Member)
 			       from validator in rule.Validators
 			       select validator;
 		}

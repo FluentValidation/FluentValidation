@@ -30,9 +30,9 @@ namespace FluentValidation.Tests {
 	public class GreaterThanOrEqualToValidatorTester {
 		private TestValidator validator;
 		private const int value = 1;
-        public GreaterThanOrEqualToValidatorTester() {
-            CultureScope.SetDefaultCulture();
-            validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(value));
+		public GreaterThanOrEqualToValidatorTester() {
+			CultureScope.SetDefaultCulture();
+			validator = new TestValidator(v => v.RuleFor(x => x.Id).GreaterThanOrEqualTo(value));
 		}
 
 		[Fact]
@@ -145,20 +145,18 @@ namespace FluentValidation.Tests {
 			}
 		}
 
-    [Fact]
-    public void Validates_with_nullable_when_property_is_null_cross_property()
-    {
-        validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.Id));
-        var result = validator.Validate(new Person { Id = 5 });
-        result.IsValid.ShouldBeTrue();
-    }
+		[Fact]
+		public void Validates_with_nullable_when_property_is_null_cross_property() {
+			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.Id));
+			var result = validator.Validate(new Person { Id = 5 });
+			result.IsValid.ShouldBeTrue();
+		}
 
-    [Fact]
-    public void Validates_with_nullable_when_property_not_null_cross_property()
-    {
-        validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x=>x.Id));
-        var result = validator.Validate(new Person { NullableInt = 1, Id = 5 });
-        result.IsValid.ShouldBeFalse();
-    }
+		[Fact]
+		public void Validates_with_nullable_when_property_not_null_cross_property() {
+			validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x=>x.Id));
+			var result = validator.Validate(new Person { NullableInt = 1, Id = 5 });
+			result.IsValid.ShouldBeFalse();
+		}
 	}
 }

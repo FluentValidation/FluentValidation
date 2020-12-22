@@ -30,7 +30,7 @@ namespace FluentValidation.Tests {
 		TestValidator validator2;
 		TestValidator validator3;
 
-		public  RegularExpressionValidatorTests() {
+		public RegularExpressionValidatorTests() {
 			CultureScope.SetDefaultCulture();
 			validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).Matches(@"^\w\d$")

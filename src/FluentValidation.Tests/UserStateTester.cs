@@ -27,13 +27,13 @@ namespace FluentValidation.Tests {
 		TestValidator validator;
 
 
-		public  UserStateTester() {
+		public UserStateTester() {
 			validator = new TestValidator();
 		}
 
 		[Fact]
 		public void Stores_user_state_against_validation_failure() {
-			validator.RuleFor(x => x.Surname).NotNull().WithState(x =>  "foo");
+			validator.RuleFor(x => x.Surname).NotNull().WithState(x => "foo");
 			var result = validator.Validate(new Person());
 			result.Errors.Single().CustomState.ShouldEqual("foo");
 		}

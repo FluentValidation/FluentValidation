@@ -32,7 +32,7 @@ namespace FluentValidation.Tests {
 
 		public LessThanValidatorTester() {
 			 CultureScope.SetDefaultCulture();
-        }
+		}
 
 		[Fact]
 		public void Should_fail_when_greater_than_input() {
@@ -157,18 +157,18 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-	    [Fact]
-	    public void Validates_with_nullable_when_property_null_cross_property() {
-	        var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(x => x.Id));
-	        var result = validator.Validate(new Person {Id = 5});
-	        result.IsValid.ShouldBeTrue();
-	    }
+		[Fact]
+		public void Validates_with_nullable_when_property_null_cross_property() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(x => x.Id));
+			var result = validator.Validate(new Person {Id = 5});
+			result.IsValid.ShouldBeTrue();
+		}
 
-	    [Fact]
-	    public void Validates_with_nullable_when_property_not_null_cross_property() {
-	        var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(x => x.Id));
-	        var result = validator.Validate(new Person {NullableInt = 10, Id = 5});
-	        result.IsValid.ShouldBeFalse();
-	    }
+		[Fact]
+		public void Validates_with_nullable_when_property_not_null_cross_property() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).LessThan(x => x.Id));
+			var result = validator.Validate(new Person {NullableInt = 10, Id = 5});
+			result.IsValid.ShouldBeFalse();
+		}
 	}
 }

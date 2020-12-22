@@ -27,8 +27,8 @@ namespace FluentValidation.Tests {
 
 	public class NotEmptyTester {
 		public NotEmptyTester() {
-          CultureScope.SetDefaultCulture();
-        }
+			CultureScope.SetDefaultCulture();
+		}
 
 		[Fact]
 		public void When_there_is_a_value_then_the_validator_should_pass() {
@@ -113,15 +113,15 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
 		}
 
-	    [Fact]
-	    public void Fails_for_ienumerable_that_doesnt_implement_ICollection() {
-	        var validator = new InlineValidator<TestModel> {
-                v => v.RuleFor(x => x.Strings).NotEmpty()
-	        };
+		[Fact]
+		public void Fails_for_ienumerable_that_doesnt_implement_ICollection() {
+			var validator = new InlineValidator<TestModel> {
+				v => v.RuleFor(x => x.Strings).NotEmpty()
+			};
 
-	        var result = validator.Validate(new TestModel());
-            result.IsValid.ShouldBeFalse();
-	    }
+			var result = validator.Validate(new TestModel());
+			result.IsValid.ShouldBeFalse();
+		}
 
 		[Fact]
 		public void Fails_for_array() {
@@ -131,10 +131,10 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-        public class TestModel {
-            public IEnumerable<string> Strings {
-                get { yield break; }
-            }
-        }
+		public class TestModel {
+			public IEnumerable<string> Strings {
+				get { yield break; }
+			}
+		}
 	}
 }

@@ -26,7 +26,7 @@ namespace FluentValidation.Tests {
 	public class PropertyRuleValidatorExtensionsTester {
 		AbstractValidator<Person> validator;
 
-		public  PropertyRuleValidatorExtensionsTester() {
+		public PropertyRuleValidatorExtensionsTester() {
 			validator = new TestValidator();
 		}
 

@@ -27,9 +27,9 @@ namespace FluentValidation.Tests {
 
 	public class ExclusiveBetweenValidatorTests {
 		DateTime fromDate;
-        DateTime toDate;
+		DateTime toDate;
 
-        public ExclusiveBetweenValidatorTests() {
+		public ExclusiveBetweenValidatorTests() {
 			CultureScope.SetDefaultCulture();
 			fromDate = new DateTime(2009, 1, 1);
 			toDate = new DateTime(2009, 12, 31);

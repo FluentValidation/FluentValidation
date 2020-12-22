@@ -399,16 +399,16 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-	    public async Task Async_condition_should_work_with_child_collection() {
-	        var validator = new TestValidator() {
-	                                                v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator()).WhenAsync( (x,c) => Task.FromResult(x.Orders.Count == 3) /*there are only 2*/)
-	                                            };
+		public async Task Async_condition_should_work_with_child_collection() {
+			var validator = new TestValidator() {
+				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator()).WhenAsync( (x,c) => Task.FromResult(x.Orders.Count == 3) /*there are only 2*/)
+			};
 
-	        var result = await validator.ValidateAsync(_person);
-	        result.IsValid.ShouldBeTrue();
-	    }
+			var result = await validator.ValidateAsync(_person);
+			result.IsValid.ShouldBeTrue();
+		}
 
-	    [Fact]
+		[Fact]
 		public void Skips_null_items() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
@@ -558,7 +558,7 @@ namespace FluentValidation.Tests {
 
 			var result = personValidator.Validate(new Person() {
 				Orders = new List<Order> {
-					new Order() { ProductName =  "foo"},
+					new Order() { ProductName = "foo"},
 					new Order(),
 					new Order() { ProductName = "bar" }
 				}
@@ -590,7 +590,7 @@ namespace FluentValidation.Tests {
 
 			var result = await personValidator.ValidateAsync(new Person() {
 				Orders = new List<Order> {
-					new Order() { ProductName =  "foo"},
+					new Order() { ProductName = "foo"},
 					new Order(),
 					new Order() { ProductName = "bar" }
 				}

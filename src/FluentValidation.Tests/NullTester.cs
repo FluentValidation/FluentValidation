@@ -17,14 +17,14 @@
 #endregion
 
 namespace FluentValidation.Tests {
-    using System.Linq;
-    using Xunit;
+	using System.Linq;
+	using Xunit;
 
 
-    public class NullTester {
+	public class NullTester {
 		public NullTester() {
-            CultureScope.SetDefaultCulture();
-        }
+			CultureScope.SetDefaultCulture();
+		}
 
 		[Fact]
 		public void NullValidator_should_fail_if_value_has_value() {

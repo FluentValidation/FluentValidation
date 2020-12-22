@@ -102,7 +102,7 @@ namespace FluentValidation.Resources {
 
 		/// <summary>
 		/// Gets a translated string based on its key. If the culture is specific and it isn't registered, we try the neutral culture instead.
-		/// If no matching culture is found  to be registered we use English.
+		/// If no matching culture is found to be registered we use English.
 		/// </summary>
 		/// <param name="key">The key</param>
 		/// <param name="culture">The culture to translate into</param>

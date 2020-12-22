@@ -46,7 +46,7 @@ namespace FluentValidation.Resources {
 			nameof(InclusiveBetweenValidator) => "Hodnota poľa '{PropertyName}' musí byť medzi {From} a {To} (vrátane). Vami zadaná hodnota je {Value}.",
 			nameof(ExclusiveBetweenValidator) => "Hodnota poľa '{PropertyName}' musí byť väčšia ako {From} a menšia ako {To}. Vami zadaná hodnota {Value}.",
 			nameof(CreditCardValidator) => "Pole '{PropertyName}' nie je správné číslo kreditnej karty.",
-			nameof(ScalePrecisionValidator) => "Pole '{PropertyName}' nemôže mať viac  ako {ExpectedPrecision} čísiel a {ExpectedScale} desatinných miest. Vami bolo zadané {Digits} číslic a {ActualScale} desatinných miest.",
+			nameof(ScalePrecisionValidator) => "Pole '{PropertyName}' nemôže mať viac ako {ExpectedPrecision} čísiel a {ExpectedScale} desatinných miest. Vami bolo zadané {Digits} číslic a {ActualScale} desatinných miest.",
 			nameof(EmptyValidator) => "Pole '{PropertyName}' musí byť prázdne.",
 			nameof(NullValidator) => "Pole '{PropertyName}' musí byť prázdne.",
 			nameof(EnumValidator) => "Pole '{PropertyName}' má rozsah hodnôt, ktoré neobsahujú '{PropertyValue}'.",

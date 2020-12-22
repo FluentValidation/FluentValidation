@@ -163,7 +163,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname).NotNull()
 				.DependentRules(() => {
-					validator.RuleFor(x => x.Forename).NotNull();  // Shouldn't be invoked
+					validator.RuleFor(x => x.Forename).NotNull(); // Shouldn't be invoked
 				});
 
 			var results = validator.Validate(new Person { Surname = null });

@@ -37,9 +37,9 @@ namespace FluentValidation {
 		/// Creates a new ValidationException
 		/// </summary>
 		/// <param name="message"></param>
-	    public ValidationException(string message) : this(message, Enumerable.Empty<ValidationFailure>()) {
+		public ValidationException(string message) : this(message, Enumerable.Empty<ValidationFailure>()) {
 
-	    }
+		}
 
 		/// <summary>
 		/// Creates a new ValidationException
@@ -50,22 +50,22 @@ namespace FluentValidation {
 			Errors = errors;
 		}
 
-    /// <summary>
-    /// Creates a new ValidationException
-    /// </summary>
-    /// <param name="message"></param>
-    /// <param name="errors"></param>
-    /// <param name="appendDefaultMessage">appends default validation error message to message</param>
-    public ValidationException(string message, IEnumerable<ValidationFailure> errors, bool appendDefaultMessage)
-      : base(appendDefaultMessage ? $"{message} {BuildErrorMessage(errors)}" : message) {
-      Errors = errors;
-    }
+		/// <summary>
+		/// Creates a new ValidationException
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="errors"></param>
+		/// <param name="appendDefaultMessage">appends default validation error message to message</param>
+		public ValidationException(string message, IEnumerable<ValidationFailure> errors, bool appendDefaultMessage)
+			: base(appendDefaultMessage ? $"{message} {BuildErrorMessage(errors)}" : message) {
+			Errors = errors;
+		}
 
-    /// <summary>
-    /// Creates a new ValidationException
-    /// </summary>
-    /// <param name="errors"></param>
-    public ValidationException(IEnumerable<ValidationFailure> errors) : base(BuildErrorMessage(errors)) {
+		/// <summary>
+		/// Creates a new ValidationException
+		/// </summary>
+		/// <param name="errors"></param>
+		public ValidationException(IEnumerable<ValidationFailure> errors) : base(BuildErrorMessage(errors)) {
 			Errors = errors;
 		}
 

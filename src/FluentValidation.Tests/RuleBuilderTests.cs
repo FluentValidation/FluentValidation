@@ -37,7 +37,7 @@ namespace FluentValidation.Tests {
 		private PropertyRule _rule;
 
 
-		public  RuleBuilderTests() {
+		public RuleBuilderTests() {
 			_validator = new InlineValidator<Person>();
 			builder = _validator.RuleFor(x => x.Surname);
 			builder.Configure(rule => _rule = rule);

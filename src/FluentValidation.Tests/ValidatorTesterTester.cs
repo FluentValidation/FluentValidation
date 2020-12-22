@@ -264,35 +264,35 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldHaveValidationError_with_an_unmatched_rule_and_a_single_error_should_throw_an_exception() {
-      var validator = new TestValidator();
-      validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(3);
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(3);
 
-      var result = validator.TestValidate(new Person() {
-        NullableInt = 1
-      });
+			var result = validator.TestValidate(new Person() {
+				NullableInt = 1
+			});
 
-      var ex = Assert.Throws<ValidationTestException>(() => result.ShouldHaveValidationErrorFor(x => x.NullableInt.Value));
-      Assert.Equal("Expected a validation error for property NullableInt.Value\n----\nProperties with Validation Errors:\n[0]: NullableInt\n", ex.Message);
-    }
+			var ex = Assert.Throws<ValidationTestException>(() => result.ShouldHaveValidationErrorFor(x => x.NullableInt.Value));
+			Assert.Equal("Expected a validation error for property NullableInt.Value\n----\nProperties with Validation Errors:\n[0]: NullableInt\n", ex.Message);
+		}
 
-    [Fact]
-    public void ShouldHaveValidationError_with_an_unmatched_rule_and_multiple_errors_should_throw_an_exception() {
-      var validator = new TestValidator();
-      validator.RuleFor(x => x.NullableInt).GreaterThan(1);
-      validator.RuleFor(x => x.Age).GreaterThan(1);
-      validator.RuleFor(x => x.AnotherInt).GreaterThan(2);
+		[Fact]
+		public void ShouldHaveValidationError_with_an_unmatched_rule_and_multiple_errors_should_throw_an_exception() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.NullableInt).GreaterThan(1);
+			validator.RuleFor(x => x.Age).GreaterThan(1);
+			validator.RuleFor(x => x.AnotherInt).GreaterThan(2);
 
-      var result = validator.TestValidate(new Person() {
-        NullableInt = 1,
-        Age = 1,
-        AnotherInt = 1
-      });
+			var result = validator.TestValidate(new Person() {
+				NullableInt = 1,
+				Age = 1,
+				AnotherInt = 1
+			});
 
-      var ex = Assert.Throws<ValidationTestException>(() => result.ShouldHaveValidationErrorFor(x => x.NullableInt.Value));
-      Assert.Equal("Expected a validation error for property NullableInt.Value\n----\nProperties with Validation Errors:\n[0]: NullableInt\n[1]: Age\n[2]: AnotherInt\n", ex.Message);
-    }
+			var ex = Assert.Throws<ValidationTestException>(() => result.ShouldHaveValidationErrorFor(x => x.NullableInt.Value));
+			Assert.Equal("Expected a validation error for property NullableInt.Value\n----\nProperties with Validation Errors:\n[0]: NullableInt\n[1]: Age\n[2]: AnotherInt\n", ex.Message);
+		}
 
-    [Fact]
+		[Fact]
 		public void ShouldNotHaveValidationError_should_correctly_handle_explicitly_providing_object_to_validate() {
 			var unitOfMeasure = new UnitOfMeasure {
 				Value = 1,
@@ -370,32 +370,32 @@ namespace FluentValidation.Tests {
 			}
 
 			exceptionCaught.ShouldEqual(errMessages.Contains(withoutErrMsg));
-    }
+		}
 
-    [Fact]
-    public void Expected_message_argument_check() {
-      bool exceptionCaught = false;
+		[Fact]
+		public void Expected_message_argument_check() {
+			bool exceptionCaught = false;
 
-      try {
-        var validator = new InlineValidator<Person> {
-          v => v.RuleFor(x => x.Surname)
-            .Must((x, y, context) => {
-              context.MessageFormatter.AppendArgument("Foo", "bar");
-              return false;
-            })
-            .WithMessage("{Foo}")
-        };
-        validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithMessageArgument("Foo", "foo");
-      }
-      catch (ValidationTestException e) {
-        exceptionCaught = true;
-        e.Message.ShouldEqual("Expected message argument 'Foo' with value 'foo'. Actual value was 'bar'");
-      }
+			try {
+				var validator = new InlineValidator<Person> {
+					v => v.RuleFor(x => x.Surname)
+						.Must((x, y, context) => {
+							context.MessageFormatter.AppendArgument("Foo", "bar");
+							return false;
+						})
+						.WithMessage("{Foo}")
+				};
+				validator.ShouldHaveValidationErrorFor(x => x.Surname, null as string).WithMessageArgument("Foo", "foo");
+			}
+			catch (ValidationTestException e) {
+				exceptionCaught = true;
+				e.Message.ShouldEqual("Expected message argument 'Foo' with value 'foo'. Actual value was 'bar'");
+			}
 
-      exceptionCaught.ShouldBeTrue();
-    }
+			exceptionCaught.ShouldBeTrue();
+		}
 
-    [Fact]
+		[Fact]
 		public void Expected_state_check() {
 			bool exceptionCaught = false;
 

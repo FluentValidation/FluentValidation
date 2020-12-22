@@ -29,9 +29,9 @@ namespace FluentValidation.Tests {
 	using System.Reflection;
 
 	public class NotEqualValidatorTests {
-		public  NotEqualValidatorTests() {
-          CultureScope.SetDefaultCulture();
-        }
+		public NotEqualValidatorTests() {
+			CultureScope.SetDefaultCulture();
+		}
 
 		[Fact]
 		public void When_the_objects_are_equal_then_the_validator_should_fail() {

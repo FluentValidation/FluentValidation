@@ -39,9 +39,9 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Defaults_user_severity_to_error() {
-		    validator.RuleFor( x => x.Surname ).NotNull();
-		    var result = validator.Validate( new Person() );
-		    result.Errors.Single().Severity.ShouldEqual( Severity.Error );
+			validator.RuleFor( x => x.Surname ).NotNull();
+			var result = validator.Validate( new Person() );
+			result.Errors.Single().Severity.ShouldEqual( Severity.Error );
 		}
 
 		[Fact]

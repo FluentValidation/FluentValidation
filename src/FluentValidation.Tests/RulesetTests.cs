@@ -61,7 +61,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var person = new Person {
-			    Address = new Address()
+				Address = new Address()
 			};
 
 			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector("Test")));

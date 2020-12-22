@@ -33,7 +33,7 @@ namespace FluentValidation.Resources {
 			nameof(LengthValidator) => "'{PropertyName}' duhet të jetë midis {MinLength} dhe {MaxLength} karakteresh. Ju keni shkruar {TotalLength} karaktere.",
 			nameof(MinimumLengthValidator) => "Gjatësia e '{PropertyName}' duhet të jetë të paktën {MinLength} karaktere. Ju keni shkruar {TotalLength} karaktere.",
 			nameof(MaximumLengthValidator) => "Gjatësia e '{PropertyName}' duhet të jetë {MaxLength} karaktere ose më pak. Ju keni shkruar {TotalLength} karaktere.",
-			nameof(LessThanOrEqualValidator) => "'{PropertyName}'  duhet të jetë më e vogël ose e barabartë me '{ComparisonValue}'.",
+			nameof(LessThanOrEqualValidator) => "'{PropertyName}' duhet të jetë më e vogël ose e barabartë me '{ComparisonValue}'.",
 			nameof(LessThanValidator) => "'{PropertyName}' duhet të jetë më e vogël se '{ComparisonValue}'.",
 			nameof(NotEmptyValidator) => "'{PropertyName}' nuk duhet të jetë bosh.",
 			nameof(NotEqualValidator) => "'{PropertyName}' nuk duhet të jetë e barabartë me '{ComparisonValue}'.",

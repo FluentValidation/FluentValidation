@@ -205,7 +205,7 @@ namespace FluentValidation {
 	public class ValidatorSelectorOptions {
 		private static readonly IValidatorSelector DefaultSelector = new DefaultValidatorSelector();
 
-		private Func<IValidatorSelector>  _defaultValidatorSelector = () => DefaultSelector;
+		private Func<IValidatorSelector> _defaultValidatorSelector = () => DefaultSelector;
 		private Func<string[], IValidatorSelector> _memberNameValidatorSelector = properties => new MemberNameValidatorSelector(properties);
 		private Func<string[], IValidatorSelector> _rulesetValidatorSelector = ruleSets => new RulesetValidatorSelector(ruleSets);
 

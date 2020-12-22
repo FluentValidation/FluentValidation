@@ -101,7 +101,7 @@ namespace FluentValidation.Tests {
 			var rootValidator = new InlineValidator<Tuple<Person, object>>();
 			rootValidator.RuleFor(x => x.Item1).SetValidator(validator);
 
-			var results  = await rootValidator.ValidateAsync(Tuple.Create(person, new object()));
+			var results = await rootValidator.ValidateAsync(Tuple.Create(person, new object()));
 			results.Errors.Count.ShouldEqual(3);
 
 			results.Errors[1].PropertyName.ShouldEqual("Item1.Orders[0].ProductName");

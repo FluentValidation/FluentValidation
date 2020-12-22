@@ -49,7 +49,7 @@
 		}
 	}
 
-	public class ClientsideScopedDependency {  }
+	public class ClientsideScopedDependency { }
 
 
 	public class ClientsideModelValidator : AbstractValidator<ClientsideModel> {

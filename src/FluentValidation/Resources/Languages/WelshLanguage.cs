@@ -46,7 +46,7 @@ namespace FluentValidation.Resources {
 			nameof(InclusiveBetweenValidator) => "Rhaid i '{PropertyName}' fod rhwng {From} a {To}. Rydych wedi rhoi {Value}.",
 			nameof(ExclusiveBetweenValidator) => "Rhaid i '{PropertyName}' fod rhwng {From} a {To} (ddim yn gynwysedig). Rydych wedi rhoi {Value}.",
 			nameof(CreditCardValidator) => "Nid yw '{PropertyName}' yn rhif cerdyn credyd dilys.",
-			nameof(ScalePrecisionValidator) => "Ni ddylai '{PropertyName}' fod yn fwy na {ExpectedPrecision} digid i gyd  gan ganiatáu ar gyfer {ExpectedScale} degolyn. Canfuwyd {Digits} digid a {ActualScale} degolyn.",
+			nameof(ScalePrecisionValidator) => "Ni ddylai '{PropertyName}' fod yn fwy na {ExpectedPrecision} digid i gyd gan ganiatáu ar gyfer {ExpectedScale} degolyn. Canfuwyd {Digits} digid a {ActualScale} degolyn.",
 			nameof(EmptyValidator) => "Rhaid i '{PropertyName}' fod yn wag.",
 			nameof(NullValidator) => "Rhaid i '{PropertyName}' fod yn wag.",
 			nameof(EnumValidator) => "Mae gan '{PropertyName}' ystod o werthoedd nad ydynt yn cynnwys '{PropertyValue}'.",

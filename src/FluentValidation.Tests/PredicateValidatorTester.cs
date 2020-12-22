@@ -29,8 +29,8 @@ namespace FluentValidation.Tests {
 		private TestValidator validator;
 
 		public PredicateValidatorTester() {
-           CultureScope.SetDefaultCulture();
-            validator = new TestValidator {
+			CultureScope.SetDefaultCulture();
+			validator = new TestValidator {
 				v => v.RuleFor(x => x.Forename).Must(forename => forename == "Jeremy")
 			};
 		}

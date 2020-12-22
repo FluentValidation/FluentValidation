@@ -35,8 +35,8 @@ namespace FluentValidation.Tests {
 			CultureScope.SetDefaultCulture();
 		}
 
-        public void Dispose()
-        {
+		public void Dispose()
+		{
 			CultureScope.SetDefaultCulture();
 		}
 

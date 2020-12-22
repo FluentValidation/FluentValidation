@@ -44,7 +44,7 @@ namespace FluentValidation.Resources {
 			nameof(EqualValidator) => "Το πεδίο '{PropertyName}' πρέπει να έχει τιμή ίση με '{ComparisonValue}'.",
 			nameof(ExactLengthValidator) => "Το πεδίο '{PropertyName}' πρέπει να έχει μήκος ίσο με {MaxLength} χαρακτήρες. Έχετε καταχωρίσει {TotalLength} χαρακτήρες.",
 			nameof(InclusiveBetweenValidator) => "Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μεταξύ {From} και {To}. Καταχωρίσατε την τιμή {Value}.",
-			nameof(ExclusiveBetweenValidator) => "Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μεγαλύτερη από {From} και μικρότερη από {To}. Καταχωρίσατε την τιμή  {Value}.",
+			nameof(ExclusiveBetweenValidator) => "Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μεγαλύτερη από {From} και μικρότερη από {To}. Καταχωρίσατε την τιμή {Value}.",
 			nameof(CreditCardValidator) => "Το πεδίο '{PropertyName}' δεν περιέχει αποδεκτό αριθμό πιστωτικής κάρτας.",
 			nameof(ScalePrecisionValidator) => "'Το πεδίο '{PropertyName}' δεν μπορεί να έχει περισσότερα από {ExpectedPrecision} ψηφία στο σύνολο, με μέγιστο επιτρεπόμενο αριθμό δεκαδικών τα {ExpectedScale} ψηφία. Έχετε καταχωρίσει {Digits} ψηφία συνολικά με {ActualScale} δεκαδικά.",
 			nameof(EmptyValidator) => "Το πεδίο '{PropertyName}' πρέπει να είναι κενό.",

@@ -45,7 +45,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Can_serialize_result() {
-			var result = new ValidationResult(new[] { new ValidationFailure("Property", "Error"),  });
+			var result = new ValidationResult(new[] { new ValidationFailure("Property", "Error"), });
 			var serialized = JsonConvert.SerializeObject(result);
 			var deserialized = JsonConvert.DeserializeObject<ValidationResult>(serialized);
 			deserialized.Errors.Count.ShouldEqual(1);

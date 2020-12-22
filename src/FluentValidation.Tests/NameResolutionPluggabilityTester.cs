@@ -1,7 +1,7 @@
 namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;
-    using System;
+	using System;
 	using TestHelper;
 
 	public class NameResolutionPluggabilityTester : IDisposable {

@@ -398,7 +398,7 @@ Patch - Added optional RuleSet arguments to the validation test extensions.
 Patch - Support MVC4/5 client-side validation for GreaterThanOrEqualToValidator
 Patch - Support MVC4/5 client-side validation for LessThanOrEqualValidator
 Patch - Remove duplication in Min/MaxFluentValidationPropertyValidator
-Patch -  Async validation for ChildCollectionValidatorAdaptor
+Patch - Async validation for ChildCollectionValidatorAdaptor
 Update nuget package for wpa81
 
 5.4 - 03 Jul 2014
@@ -571,7 +571,7 @@ Update nuget package for wpa81
 * Model Binder now works with empty prefixes
 * Added Adam Schroder xVal integration in the new FluentValidation.xValIntegration project (experimental)
 * Allow the validator cascade mode to be set globally. The existing behaviour is the default (Continue). It can now also be set to StopOnFirstFailure:
-    ValidationOptions.CascadeMode = ValidatorCascadeMode.StopOnFirstFailure
+	ValidationOptions.CascadeMode = ValidatorCascadeMode.StopOnFirstFailure
 * Allow the validator cascade mode to be set at the rule level (overrides the global option):
 	RuleFor(x => x.Surname).Cascade().StopOnFirstFailure()
 * User state can be stored along side validation failures.

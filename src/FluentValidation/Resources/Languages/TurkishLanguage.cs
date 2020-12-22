@@ -27,7 +27,7 @@ namespace FluentValidation.Resources {
 		public const string Culture = "tr";
 
 		public static string GetTranslation(string key) => key switch {
-			nameof(EmailValidator) => "'{PropertyName}'  geçerli bir e-posta adresi değil.",
+			nameof(EmailValidator) => "'{PropertyName}' geçerli bir e-posta adresi değil.",
 			nameof(GreaterThanOrEqualValidator) => "'{PropertyName}' değeri '{ComparisonValue}' değerinden büyük veya eşit olmalı.",
 			nameof(GreaterThanValidator) => "'{PropertyName}' değeri '{ComparisonValue}' değerinden büyük olmalı.",
 			nameof(LengthValidator) => "'{PropertyName}', {MinLength} ve {MaxLength} arasında karakter uzunluğunda olmalı . Toplam {TotalLength} adet karakter girdiniz.",

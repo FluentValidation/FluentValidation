@@ -64,7 +64,7 @@ namespace FluentValidation.Tests
 
 		public int MaxLength { get; set; }
 
-        public EnumGender Gender { get; set; }
+		public EnumGender Gender { get; set; }
 
 		public string GenderString { get; set; }
 
@@ -104,9 +104,8 @@ namespace FluentValidation.Tests
 		public decimal Amount { get; set; }
 	}
 
-    public enum EnumGender
-    {
-        Female = 1,
-        Male = 2
-    }
+	public enum EnumGender {
+		Female = 1,
+		Male = 2
+	}
 }

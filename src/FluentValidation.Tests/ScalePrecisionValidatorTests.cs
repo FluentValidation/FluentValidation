@@ -123,17 +123,17 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-    [Fact]
-    public void Scale_precision_should_not_be_valid_when_ignoring_trailing_zeroes() {
-      var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 4, true));
+		[Fact]
+		public void Scale_precision_should_not_be_valid_when_ignoring_trailing_zeroes() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 4, true));
 
-      var result = validator.Validate(new Person { Discount = 1565.0M });
-      result.IsValid.ShouldBeFalse();
-      result.Errors[0].ErrorMessage.ShouldEqual("'Discount' must not be more than 4 digits in total, with allowance for 2 decimals. 4 digits and 0 decimals were found.");
+			var result = validator.Validate(new Person { Discount = 1565.0M });
+			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("'Discount' must not be more than 4 digits in total, with allowance for 2 decimals. 4 digits and 0 decimals were found.");
 
-      result = validator.Validate(new Person { Discount = 15.0000000000000000000000001M });
-      result.IsValid.ShouldBeFalse();
-      result.Errors[0].ErrorMessage.ShouldEqual("'Discount' must not be more than 4 digits in total, with allowance for 2 decimals. 2 digits and 25 decimals were found.");
-    }
-  }
+			result = validator.Validate(new Person { Discount = 15.0000000000000000000000001M });
+			result.IsValid.ShouldBeFalse();
+			result.Errors[0].ErrorMessage.ShouldEqual("'Discount' must not be more than 4 digits in total, with allowance for 2 decimals. 2 digits and 25 decimals were found.");
+		}
+	}
 }

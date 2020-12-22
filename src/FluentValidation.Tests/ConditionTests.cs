@@ -34,7 +34,7 @@ namespace FluentValidation.Tests {
 		public async Task Validation_should_succeed_when_async_condition_does_not_match() {
 			var validator = new TestConditionAsyncValidator();
 			var result = await validator.ValidateAsync(new Person {Id = 1});
-            result.IsValid.ShouldBeTrue();
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Fact]

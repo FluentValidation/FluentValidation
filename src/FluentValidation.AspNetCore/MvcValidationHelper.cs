@@ -145,7 +145,7 @@ namespace FluentValidation.AspNetCore {
 
 		internal static CustomizeValidatorAttribute GetCustomizations(ActionContext ctx, object model) {
 			if (ctx.HttpContext.Items["_FV_Customizations"] is ValueTuple<object, CustomizeValidatorAttribute> customizations
-			    && ReferenceEquals(model, customizations.Item1)) {
+						&& ReferenceEquals(model, customizations.Item1)) {
 				return customizations.Item2; // the attribute
 			}
 			return new CustomizeValidatorAttribute();

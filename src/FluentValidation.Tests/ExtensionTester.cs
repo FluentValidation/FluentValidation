@@ -41,18 +41,18 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_split_pascal_cased_member_name() {
 			var cases = new Dictionary<string, string> {
-				            {"DateOfBirth", "Date Of Birth"},
-				            {"DATEOFBIRTH", "DATEOFBIRTH"},
-				            {"dateOfBirth", "date Of Birth"},
-				            {"dateofbirth", "dateofbirth"},
-							{"Date_Of_Birth", "Date_ Of_ Birth"},
-							{"Name2", "Name2"},
-                           {"ProductID", "Product ID"},
-                           {"MyTVRemote", "My TV Remote"},
-                           {"TVRemote", "TV Remote"},
-                           {"XCopy", "X Copy"},
-                           {"ThisXCopy", "This X Copy"},
-						};
+				{"DateOfBirth", "Date Of Birth"},
+				{"DATEOFBIRTH", "DATEOFBIRTH"},
+				{"dateOfBirth", "date Of Birth"},
+				{"dateofbirth", "dateofbirth"},
+				{"Date_Of_Birth", "Date_ Of_ Birth"},
+				{"Name2", "Name2"},
+				{"ProductID", "Product ID"},
+				{"MyTVRemote", "My TV Remote"},
+				{"TVRemote", "TV Remote"},
+				{"XCopy", "X Copy"},
+				{"ThisXCopy", "This X Copy"},
+			};
 
 			foreach (var @case in cases) {
 				string name = @case.Key.SplitPascalCase();
