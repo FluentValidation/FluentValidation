@@ -32,11 +32,12 @@ namespace FluentValidation.Validators {
 			return context.IsAsync() || HasAsyncCondition;
 		}
 
-		[Obsolete("This constructor will be removed in FluentValidation 10. Either use the constructor which takes a constant message or override GetDefaultMessageTemplate")]
+		[Obsolete("This constructor is deprecated and will be removed in FluentValidation 10. Override the GetDefaultMessageTemplate method instead.")]
 		protected AsyncValidatorBase(IStringSource errorSource) : base(errorSource) {
 
 		}
 
+		[Obsolete("This constructor is deprecated and will be removed in FluentValidation 10. Override the GetDefaultMessageTemplate method instead.")]
 		protected AsyncValidatorBase(string errorMessage)
 			: base(errorMessage) {
 		}

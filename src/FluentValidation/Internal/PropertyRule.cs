@@ -48,12 +48,24 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Condition for all validators in this rule.
 		/// </summary>
+		[Obsolete("This property will not be accessible in FluentValidation 10. Use HasCondition/HasAsyncCondition to check if the rule has a condition defined")]
 		public Func<IValidationContext, bool> Condition => _condition;
 
 		/// <summary>
 		/// Asynchronous condition for all validators in this rule.
 		/// </summary>
+		[Obsolete("This property will not be accessible in FluentValidation 10. Use HasCondition/HasAsyncCondition to check if the rule has a condition defined")]
 		public Func<IValidationContext, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
+
+		/// <summary>
+		/// Checks whether this rule has a condition defined.
+		/// </summary>
+		public bool HasCondition => _condition != null;
+
+		/// <summary>
+		/// Checks whether this rule has an async condition defined.
+		/// </summary>
+		public bool HasAsyncCondition => _asyncCondition != null;
 
 		/// <summary>
 		/// Property associated with this rule.

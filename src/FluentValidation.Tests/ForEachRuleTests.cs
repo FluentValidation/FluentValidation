@@ -311,10 +311,6 @@ namespace FluentValidation.Tests {
 		}
 
 		public class AppropriatenessAnswerViewModelRequiredValidator : PropertyValidator {
-			public AppropriatenessAnswerViewModelRequiredValidator()
-				: base("Error message here.") {
-			}
-
 			protected override bool IsValid(PropertyValidatorContext context) {
 				return false;
 			}

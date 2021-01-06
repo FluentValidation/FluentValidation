@@ -1,6 +1,6 @@
 # Custom Validators
 
-There are several ways to create a custom, reusable validator. The recommended way is to make use of the [Predicate Validator](built-in-validators.html#predicate-validator) to write a custom validation function, but you can also write a custom implementation of the PropertyValidator class.
+There are several ways to create a custom, reusable validator. The recommended way is to make use of the [Predicate Validator](built-in-validators.html#predicate-validator) to write a custom validation function, but you can also use the `Custom` method to take full control of the validation process.
 
 For these examples, we'll imagine a scenario where you want to create a reusable validator that will ensure a List object contains fewer than 10 items.
 
@@ -130,10 +130,9 @@ using System.Collections.Generic;
 using FluentValidation.Validators;
 
 public class ListCountValidator<T> : PropertyValidator {
-        private int _max;
+	private int _max;
 
-	public ListCountValidator(int max)
-		: base("{PropertyName} must contain fewer than {MaxElements} items.") {
+	public ListCountValidator(int max) {
 		_max = max;
 	}
 
@@ -147,6 +146,9 @@ public class ListCountValidator<T> : PropertyValidator {
 
 		return true;
 	}
+
+	protected override string GetDefaultMessageTemplate()
+		=> "{PropertyName} must contain fewer than {MaxElements} items.";
 }
 ```
 When you inherit from `PropertyValidator` you must override the `IsValid` method. This method takes a `PropertyValidatorContext` object and should return a boolean indicating whether validation succeeded.

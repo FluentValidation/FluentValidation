@@ -87,7 +87,7 @@ namespace FluentValidation.AspNetCore {
 
 				var validatorsWithRules = from rule in descriptor.GetRulesForMember(propertyName)
 					let propertyRule = (PropertyRule) rule
-					where propertyRule.Condition == null && propertyRule.AsyncCondition == null
+					where !propertyRule.HasCondition && !propertyRule.HasAsyncCondition
 					let validators = rule.Validators
 					where validators.Any()
 					from propertyValidator in validators

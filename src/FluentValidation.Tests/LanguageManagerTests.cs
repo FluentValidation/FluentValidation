@@ -267,9 +267,6 @@
 		}
 
 		private class TestValidator : PropertyValidator {
-			public TestValidator(string errorMessage) : base(errorMessage) {
-			}
-
 			protected override bool IsValid(PropertyValidatorContext context) {
 				return true;
 			}
