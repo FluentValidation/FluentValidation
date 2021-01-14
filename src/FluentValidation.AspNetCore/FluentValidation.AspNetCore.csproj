@@ -6,6 +6,9 @@
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
     <PackageReleaseNotes>
+Changes in 9.4.0:
+* Added ImplicitlyValidateRootCollectionElements option to MVC integration
+
 Changes in 9.3.0:
 * Support for .net 5
 * CustomizeValidatorAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)

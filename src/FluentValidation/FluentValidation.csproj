@@ -7,6 +7,7 @@ FluentValidation 9 is a major release. Please read the upgrade notes at https://
 
 Changes in 9.4.0:
 * ChildRules now work as expected when inside a ruleset
+* Added ImplicitlyValidateRootCollectionElements option to MVC integration
 
 Changes in 9.3.0:
 * Improvements to LanguageManager's lazy loading of resources.
