@@ -57,7 +57,9 @@ namespace FluentValidation.AspNetCore {
 				}
 
 				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
-					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(
+						config.ImplicitlyValidateChildProperties,
+						config.ImplicitlyValidateRootCollectionElements));
 				}
 			});
 
@@ -88,7 +90,9 @@ namespace FluentValidation.AspNetCore {
 				}
 
 				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
-					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(config.ImplicitlyValidateChildProperties));
+					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(
+						config.ImplicitlyValidateChildProperties,
+						config.ImplicitlyValidateRootCollectionElements));
 				}
 			});
 

@@ -158,6 +158,24 @@ services.AddMvc().AddFluentValidation(fv => {
 
 Note that if you enable this behaviour you should not use `SetValidator` for child properties, or the validator will be executed twice.
 
+### Implicit Validation of Collection-Type Models
+
+By default, you must create a specific collection validator or enable implicit child property validation to validate a model that is of a collection type. For example, no validation of the following model will occur with the default settings unless you define a validator that inherits from `AbstractValidator<List<Person>>`.
+
+```csharp
+public ActionResult DoSomething(List<Person> people) => Ok();
+```
+
+With implicit child property validation enabled (see above), you don't have to explicitly create a collection validator class as each person element in the collection will be validated automatically. However, any child properties on the `Person` object will be automatically validated too meaning you can no longer use `SetValidator`. If you don't want this behaviour, you can also optionally enable implicit validation for root collection elements only. For example, if you want each `Person` element in the collection to be validated automatically, but not its child properties you can set `ImplicitlyValidateRootCollectionElements` to true:
+
+```csharp
+services.AddMvc().AddFluentValidation(fv => {
+ fv.ImplicitlyValidateRootCollectionElements = true;
+});
+```
+
+Note that this setting is ignored when `ImplicitlyValidateChildProperties` is true.
+
 ### Clientside Validation
 
 FluentValidation is a server-side framework, and does not provide any client-side validation directly. However, it can provide metadata which, when applied to the generated HTML elements, can be used by a client-side framework such as jQuery Validate, in the same way that ASP.NET's default validation attributes work.

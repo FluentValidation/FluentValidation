@@ -130,6 +130,14 @@ namespace FluentValidation.Tests.AspNetCore.Controllers {
 			return TestResult();
 		}
 
+		public ActionResult ImplicitRootCollectionElementValidator([FromBody] IEnumerable<ChildModel> model) {
+			return TestResult();
+		}
+
+		public ActionResult ImplicitRootCollectionElementValidationEnabled(ParentModel model) {
+			return TestResult();
+		}
+
 		public ActionResult ImplementsIValidatableObject(ImplementsIValidatableObjectModel model) {
 			return TestResult();
 		}

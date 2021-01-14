@@ -64,6 +64,13 @@ namespace FluentValidation.AspNetCore {
 		/// </summary>
 		public bool ImplicitlyValidateChildProperties { get; set; }
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the elements of a root model should be implicitly validated when
+		/// the root model is a collection type and a matching validator can be found for the element type.
+		/// By default this is <see langword="false"/>, and you will need to create a validator for the collection type
+		/// (unless <see cref="ImplicitlyValidateChildProperties"/> is <see langword="true"/>.
+		/// </summary>
+		public bool ImplicitlyValidateRootCollectionElements { get; set; }
 
 		internal bool ClientsideEnabled = true;
 		internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};
