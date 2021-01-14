@@ -58,11 +58,11 @@ namespace FluentValidation.Validators {
 			_failures = failures;
 		}
 
-		public static PropertyValidatorContext Create<T>(ValidationContext<T> parentContext, PropertyRule<T> rule, string propertyName, Lazy<object> propertyValueAccessor) {
+		public static PropertyValidatorContext Create<T, TProperty>(ValidationContext<T> parentContext, IValidationRule<T, TProperty> rule, string propertyName, Lazy<object> propertyValueAccessor) {
 			return new PropertyValidatorContext(parentContext, parentContext.Failures, rule, propertyName, propertyValueAccessor);
 		}
 
-		public static PropertyValidatorContext Create<T>(ValidationContext<T> parentContext, PropertyRule<T> rule, string propertyName, object propertyValue) {
+		public static PropertyValidatorContext Create<T, TProperty>(ValidationContext<T> parentContext, IValidationRule<T, TProperty> rule, string propertyName, object propertyValue) {
 			return new PropertyValidatorContext(parentContext, parentContext.Failures, rule, propertyName, propertyValue);
 		}
 

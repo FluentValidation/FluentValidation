@@ -19,7 +19,6 @@
 namespace FluentValidation {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -32,6 +31,41 @@ namespace FluentValidation {
 	/// Default options that can be used to configure a validator.
 	/// </summary>
 	public static class DefaultValidatorOptions {
+		/// <summary>
+		/// Configures the rule.
+		/// </summary>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="configurator">Action to configure the object.</param>
+		/// <returns></returns>
+		public static IRuleBuilderInitial<T, TProperty> Configure<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, Action<IValidationRule<T, TProperty>> configurator) {
+			var rb = (RuleBuilder<T, TProperty>) ruleBuilder;
+			configurator((IValidationRule<T, TProperty>) rb.Rule);
+			return rb;
+		}
+
+		/// <summary>
+		/// Configures the current object.
+		/// </summary>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="configurator">Action to configure the object.</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> Configure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> ruleBuilder, Action<IValidationRule<T, TProperty>> configurator) {
+			var rb = (RuleBuilder<T, TProperty>) ruleBuilder;
+			configurator((IValidationRule<T, TProperty>) rb.Rule);
+			return rb;
+		}
+
+		/// <summary>
+		/// Configures the rule object.
+		/// </summary>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="configurator">Action to configure the object.</param>
+		/// <returns></returns>
+		public static IRuleBuilderInitialCollection<T, TElement> Configure<T, TElement>(this IRuleBuilderInitialCollection<T, TElement> ruleBuilder, Action<ICollectionRule<T, TElement>> configurator) {
+			var rb = (RuleBuilder<T, TElement>) ruleBuilder;
+			configurator((CollectionPropertyRule<T, TElement>) rb.Rule);
+			return rb;
+		}
 
 		/// <summary>
 		/// Specifies the cascade mode for failures.
@@ -288,10 +322,10 @@ namespace FluentValidation {
 				// Must use null propagation here.
 				// The MVC clientside validation will try and retrieve the name, but won't
 				// be able to to so if we've used this overload of WithName.
-				config.SetDisplayName(context => {
+				config.SetDisplayName((context => {
 					T instance = context == null ? default : context.InstanceToValidate;
 					return nameProvider(instance);
-				});
+				}));
 			});
 		}
 
