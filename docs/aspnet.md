@@ -166,7 +166,7 @@ By default, you must create a specific collection validator or enable implicit c
 public ActionResult DoSomething(List<Person> people) => Ok();
 ```
 
-With implicit child property validation enabled, each person element will be validated but so will any child properties of each `Person`. When running an ASP.NET MVC application, you can also optionally enable implicit validation for root collection elements only. For example, if you want each `Person` element to be validated but not its child properties. This can be done by setting `ImplicitlyValidateRootCollectionElements` to true:
+With implicit child property validation enabled (see above), you don't have to explicitly create a collection validator class as each person element in the collection will be validated automatically. However, any child properties on the `Person` object will be automatically validated too meaning you can no longer use `SetValidator`. If you don't want this behaviour, you can also optionally enable implicit validation for root collection elements only. For example, if you want each `Person` element in the collection to be validated automatically, but not its child properties you can set `ImplicitlyValidateRootCollectionElements` to true:
 
 ```csharp
 services.AddMvc().AddFluentValidation(fv => {
