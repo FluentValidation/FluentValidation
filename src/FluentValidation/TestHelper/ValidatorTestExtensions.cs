@@ -129,14 +129,14 @@ namespace FluentValidation.TestHelper {
 
 		private static IEnumerable<IPropertyValidator> GetDependentRules<T, TProperty>(string expressionMemberName, Expression<Func<T, TProperty>> expression, IValidatorDescriptor descriptor) {
 			var member = expression.IsParameterExpression() ? null : expressionMemberName;
-			var rules = descriptor.GetRulesForMember(member).OfType<PropertyRule<T>>().SelectMany(x => x.DependentRules)
+			var rules = descriptor.GetRulesForMember(member).OfType<PropertyRule<T, TProperty>>().SelectMany(x => x.DependentRules)
 				.SelectMany(x => x.Validators);
 
 			return rules;
 		}
 
 		private static IPropertyValidator[] GetModelLevelValidators<T>(IValidatorDescriptor descriptor) {
-			var rules = descriptor.GetRulesForMember(null).OfType<PropertyRule<T>>();
+			var rules = descriptor.GetRulesForMember(null).OfType<IValidationRule<T>>();
 			return rules.Where(x => x.Expression == null || x.Expression.IsParameterExpression()).SelectMany(x => x.Validators)
 				.ToArray();
 		}

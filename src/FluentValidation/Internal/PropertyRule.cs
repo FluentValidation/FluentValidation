@@ -31,7 +31,7 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Defines a rule associated with a property.
 	/// </summary>
-	public class PropertyRule<T> : IValidationRule {
+	internal class PropertyRule<T, TProperty> : IValidationRule<T, TProperty> {
 		private readonly List<IPropertyValidator> _validators = new List<IPropertyValidator>();
 		private Func<CascadeMode> _cascadeModeThunk;
 		private string _propertyDisplayName;
@@ -60,7 +60,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Function that can be invoked to retrieve the value of the property.
 		/// </summary>
-		public Func<T, object> PropertyFunc { get; }
+		public Func<T, TProperty> PropertyFunc { get; }
 
 		/// <summary>
 		/// Expression that was used to create the rule.
@@ -136,14 +136,14 @@ namespace FluentValidation.Internal {
 		/// <param name="expression">Lambda expression used to create the rule</param>
 		/// <param name="cascadeModeThunk">Function to get the cascade mode.</param>
 		/// <param name="typeToValidate">Type to validate</param>
-		public PropertyRule(MemberInfo member, Func<T, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate) {
+		public PropertyRule(MemberInfo member, Func<T, TProperty> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate) {
 			Member = member;
 			PropertyFunc = propertyFunc;
 			Expression = expression;
 			TypeToValidate = typeToValidate;
 			_cascadeModeThunk = cascadeModeThunk;
 
-			DependentRules = new List<PropertyRule<T>>();
+			DependentRules = new List<IValidationRule<T>>();
 			var containerType = typeof(T);
 			PropertyName = ValidatorOptions.Global.PropertyNameResolver(containerType, member, expression);
 			_displayNameFactory = context => ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression);
@@ -152,43 +152,43 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression) {
+		public static PropertyRule<T, TProperty> Create(Expression<Func<T, TProperty>> expression) {
 			return Create(expression, () => ValidatorOptions.Global.CascadeMode);
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		public static PropertyRule<T> Create<TProperty>(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		public static PropertyRule<T, TProperty> Create(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
-			return new PropertyRule<T>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TProperty));
+			return new PropertyRule<T, TProperty>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TProperty));
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		internal static PropertyRule<T> Create<TProperty, TTransformed>(Expression<Func<T, TProperty>> expression, Func<TProperty, TTransformed> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		internal static PropertyRule<T, TProperty> Create<TOld>(Expression<Func<T, TOld>> expression, Func<TOld, TProperty> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
 
-			object PropertyFunc(T instance)
+			TProperty PropertyFunc(T instance)
 				=> transformer(compiled(instance));
 
-			return new PropertyRule<T>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TProperty));
+			return new PropertyRule<T, TProperty>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOld));
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		internal static PropertyRule<T> Create<TProperty, TTransformed>(Expression<Func<T, TProperty>> expression, Func<T, TProperty, TTransformed> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		internal static PropertyRule<T, TProperty> Create<TOld>(Expression<Func<T, TOld>> expression, Func<T, TOld, TProperty> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
 
-			object PropertyFunc(T instance)
+			TProperty PropertyFunc(T instance)
 				=> transformer(instance, compiled(instance));
 
-			return new PropertyRule<T>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TProperty));
+			return new PropertyRule<T, TProperty>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOld));
 		}
 
 		/// <summary>
@@ -243,7 +243,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Dependent rules
 		/// </summary>
-		public List<PropertyRule<T>> DependentRules { get; }
+		internal List<IValidationRule<T>> DependentRules { get; }
 
 		string IValidationRule.GetDisplayName(IValidationContext context) =>
 			GetDisplayName(context != null ? ValidationContext<T>.GetFromNonGenericContext(context) : null);
@@ -253,6 +253,12 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public string GetDisplayName(ValidationContext<T> context)
 			=> _displayNameFactory?.Invoke(context) ?? _displayName ?? _propertyDisplayName;
+
+		void IValidationRule<T>.Validate(ValidationContext<T> context)
+			=> Validate(context);
+
+		Task IValidationRule<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation)
+			=> ValidateAsync(context, cancellation);
 
 		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures.
@@ -290,7 +296,7 @@ namespace FluentValidation.Internal {
 			}
 
 			var cascade = _cascadeModeThunk();
-			var accessor = new Lazy<object>(() => GetPropertyValue(context.InstanceToValidate), LazyThreadSafetyMode.None);
+			var accessor = new Lazy<object>(() => PropertyFunc(context.InstanceToValidate), LazyThreadSafetyMode.None);
 			var totalFailures = context.Failures.Count;
 
 			// Invoke each validator and collect its results.
@@ -476,7 +482,10 @@ namespace FluentValidation.Internal {
 				var original = _asyncCondition;
 				_asyncCondition = async (ctx, ct) => await condition(ctx, ct) && await original(ctx, ct);
 			}
+		}
 
+		void IValidationRule<T>.AddDependentRules(IEnumerable<IValidationRule<T>> rules) {
+			DependentRules.AddRange(rules);
 		}
 	}
 }

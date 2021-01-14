@@ -34,7 +34,7 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="TElement"></typeparam>
 	/// <typeparam name="T"></typeparam>
-	public class CollectionPropertyRule<T, TElement> : PropertyRule<T> {
+	internal class CollectionPropertyRule<T, TElement> : PropertyRule<T, IEnumerable<TElement>>, ICollectionRule<T, TElement> {
 		/// <summary>
 		/// Initializes new instance of the CollectionPropertyRule class
 		/// </summary>
@@ -43,7 +43,7 @@ namespace FluentValidation.Internal {
 		/// <param name="expression"></param>
 		/// <param name="cascadeModeThunk"></param>
 		/// <param name="typeToValidate"></param>
-		public CollectionPropertyRule(MemberInfo member, Func<T, object> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+		public CollectionPropertyRule(MemberInfo member, Func<T, IEnumerable<TElement>> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
 			: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
 		}
 
@@ -56,12 +56,12 @@ namespace FluentValidation.Internal {
 		/// Constructs the indexer in the property name associated with the error message.
 		/// By default this is "[" + index + "]"
 		/// </summary>
-		public Func<object, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
+		public Func<T, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		public new static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache, "FV_RuleForEach");
 			return new CollectionPropertyRule<T, TElement>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TElement));
@@ -74,7 +74,7 @@ namespace FluentValidation.Internal {
 			var member = expression.GetMember();
 			var compiled = expression.Compile();
 
-			object PropertyFunc(T instance) =>
+			IEnumerable<TElement> PropertyFunc(T instance) =>
 				compiled(instance).Select(transformer);
 
 			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TElement));
@@ -87,7 +87,7 @@ namespace FluentValidation.Internal {
 			var member = expression.GetMember();
 			var compiled = expression.Compile();
 
-			object PropertyFunc(T instance) {
+			IEnumerable<TElement> PropertyFunc(T instance) {
 				return compiled(instance).Select(element => transformer(instance, element));
 			}
 
@@ -368,13 +368,13 @@ namespace FluentValidation.Internal {
 		}
 
 		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, IPropertyValidator validator, string propertyName, object value, int index, CancellationToken cancellation) {
-			var newPropertyContext = PropertyValidatorContext.Create(context, this, propertyName, value);
+			var newPropertyContext = PropertyValidatorContext.Create<T, TElement>(context, this, propertyName, value);
 			newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
 			await validator.ValidateAsync(newPropertyContext, cancellation);
 		}
 
 		private void InvokePropertyValidator(ValidationContext<T> context, IPropertyValidator validator, string propertyName, object value, int index) {
-			var newPropertyContext = PropertyValidatorContext.Create<T>(context, this, propertyName, value);
+			var newPropertyContext = PropertyValidatorContext.Create<T, TElement>(context, this, propertyName, value);
 			newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
 			validator.Validate(newPropertyContext);
 		}
@@ -388,5 +388,6 @@ namespace FluentValidation.Internal {
 
 			return paramExp.Name;
 		}
+
 	}
 }
