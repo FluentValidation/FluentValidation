@@ -160,10 +160,10 @@ Note that if you enable this behaviour you should not use `SetValidator` for chi
 
 ### Implicit Validation of Collection-Type Models
 
-By default, you must create a specific collection validator or enable implicit child property validation to validate a model that is of a collection type. For example, no validation of the following model will occur with the default settings.
+By default, you must create a specific collection validator or enable implicit child property validation to validate a model that is of a collection type. For example, no validation of the following model will occur with the default settings unless you define a validator that inherits from `AbstractValidator<List<Person>>`.
 
 ```csharp
-public ActionResult DoSomething(ICollection<Person> people) => Ok();
+public ActionResult DoSomething(List<Person> people) => Ok();
 ```
 
 With implicit child property validation enabled, each person element will be validated but so will any child properties of each `Person`. When running an ASP.NET MVC application, you can also optionally enable implicit validation for root collection elements only. For example, if you want each `Person` element to be validated but not its child properties. This can be done by setting `ImplicitlyValidateRootCollectionElements` to true:
