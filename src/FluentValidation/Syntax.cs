@@ -27,12 +27,6 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
 	public interface IRuleBuilderInitial<T, out TProperty> : IRuleBuilder<T, TProperty> {
-		/// <summary>
-		/// Configures the rule.
-		/// </summary>
-		/// <param name="configurator">Action to configure the object.</param>
-		/// <returns></returns>
-		IRuleBuilderInitial<T, TProperty> Configure(Action<PropertyRule<T>> configurator);
 	}
 
 	/// <summary>
@@ -79,12 +73,7 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
 	public interface IRuleBuilderOptions<T, out TProperty> : IRuleBuilder<T, TProperty> {
-		/// <summary>
-		/// Configures the current object.
-		/// </summary>
-		/// <param name="configurator">Action to configure the object.</param>
-		/// <returns></returns>
-		IRuleBuilderOptions<T, TProperty> Configure(Action<PropertyRule<T>> configurator);
+
 
 
 		/// <summary>
@@ -99,12 +88,6 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TElement"></typeparam>
 	public interface IRuleBuilderInitialCollection<T, TElement> : IRuleBuilder<T, TElement> {
-		/// <summary>
-		/// Configures the rule object.
-		/// </summary>
-		/// <param name="configurator">Action to configure the object.</param>
-		/// <returns></returns>
-		IRuleBuilderInitialCollection<T, TElement> Configure(Action<CollectionPropertyRule<T, TElement>> configurator);
 	}
 
 	/// <summary>

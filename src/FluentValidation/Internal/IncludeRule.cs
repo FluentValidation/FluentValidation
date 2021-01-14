@@ -15,7 +15,7 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Include rule
 	/// </summary>
-	public class IncludeRule<T> : PropertyRule<T>, IIncludeRule {
+	internal class IncludeRule<T> : PropertyRule<T, T>, IIncludeRule {
 		/// <summary>
 		/// Creates a new IncludeRule
 		/// </summary>
