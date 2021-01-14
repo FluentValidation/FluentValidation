@@ -1,3 +1,6 @@
+9.5.0 - 31 January 2021
+Introduce new syntax for applying transformations and deprecate the old syntax (#1613)
+
 9.4.0 - 14 January 2021
 ChildRules now work as expected when inside a ruleset (#1597)
 Added ImplicitlyValidateRootCollectionElements option to MVC integration (#1585)
