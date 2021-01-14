@@ -43,5 +43,43 @@ namespace FluentValidation.Tests {
 			result.Errors[0].PropertyName.ShouldEqual("Orders[0].ProductName");
 			result.Errors[1].PropertyName.ShouldEqual("Orders[1].Amount");
 		}
+
+		[Fact]
+		public void ChildRules_works_with_RuleSet() {
+			var validator = new RulesetChildRulesValidator();
+
+			// As Child Rules are implemented as a child validator, the child rules are technically
+			// not inside the "testing" ruleset (going by the usual way rulesets cascade).
+			// However, child rules should still be executed.
+			var result = validator.Validate(new Person {
+				Orders = new List<Order> {
+					new Order()
+				}
+			}, options => options.IncludeRuleSets("testing"));
+
+			result.Errors.Count.ShouldEqual(2);
+			result.Errors[0].PropertyName.ShouldEqual("Surname");
+			result.Errors[1].PropertyName.ShouldEqual("Orders[0].ProductName");
+
+			// They shouldn't be executed if a different ruleset is chosen.
+			result = validator.Validate(new Person {
+				Orders = new List<Order> {
+					new Order()
+				}
+			}, options => options.IncludeRuleSets("other"));
+
+			result.Errors.Count.ShouldEqual(0);
+		}
+
+		private class RulesetChildRulesValidator : AbstractValidator<Person>  {
+			public RulesetChildRulesValidator() {
+				RuleSet("testing", () => {
+					RuleFor(a => a.Surname).NotEmpty();
+					RuleForEach(a => a.Orders).ChildRules(child => {
+						child.RuleFor(o => o.ProductName).NotEmpty();
+					});
+				});
+			}
+		}
 	}
 }

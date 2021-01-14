@@ -1024,7 +1024,7 @@ namespace FluentValidation {
 			if (action == null) throw new ArgumentNullException(nameof(action));
 			var validator = new InlineValidator<TProperty>();
 			action(validator);
-			return ruleBuilder.SetValidator(validator);
+			return ruleBuilder.SetValidator(validator, "*");
 		}
 
 		/// <summary>

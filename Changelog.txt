@@ -1,3 +1,6 @@
+9.4.0 - 14 January 2021
+ChildRules now work as expected when inside a ruleset (#1597)
+
 9.3.0 - 10 November 2020
 Support for .NET 5
 Improvements to LanguageManager's lazy loading of resources.

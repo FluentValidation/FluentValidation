@@ -5,6 +5,9 @@
     <PackageReleaseNotes>
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
+Changes in 9.4.0:
+* ChildRules now work as expected when inside a ruleset
+
 Changes in 9.3.0:
 * Improvements to LanguageManager's lazy loading of resources.
 * Deprecate IStringSource and its implementors. Use delegates instead.
