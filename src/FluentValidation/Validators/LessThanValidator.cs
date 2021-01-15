@@ -19,10 +19,10 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Reflection;
-	using Internal;
-	using Resources;
 
 	public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> {
+		public override string Name => "LessThanValidator";
+
 		public LessThanValidator(IComparable value) : base(value) {
 		}
 
@@ -40,7 +40,7 @@ namespace FluentValidation.Validators {
 		public override Comparison Comparison => Validators.Comparison.LessThan;
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("LessThanValidator");
+			return Localized(Name);
 		}
 	}
 }

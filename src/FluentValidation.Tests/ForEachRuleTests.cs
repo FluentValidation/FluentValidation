@@ -311,6 +311,9 @@ namespace FluentValidation.Tests {
 		}
 
 		public class AppropriatenessAnswerViewModelRequiredValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+
+			public override string Name => "AppropriatenessAnswerViewModelRequiredValidator";
+
 			protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 				return false;
 			}

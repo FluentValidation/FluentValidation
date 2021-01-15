@@ -34,13 +34,11 @@ namespace FluentValidation.AspNetCore {
 
 			string messageTemplate;
 			try {
-				messageTemplate = Validator.Options.GetErrorMessage(null);
+				messageTemplate = Validator.GetUnformattedErrorMessage();
 			}
-#pragma warning disable 618
 			catch (NullReferenceException) {
-				messageTemplate = cfg.LanguageManager.GetStringForValidator<EmailValidator>();
+				messageTemplate = cfg.LanguageManager.GetString("EmailValidator");
 			}
-#pragma warning restore 618
 
 			string message = formatter.BuildMessage(messageTemplate);
 			MergeAttribute(context.Attributes, "data-val", "true");

@@ -125,6 +125,14 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Gets the raw unformatted error message. Placeholders will not have been rewritten.
+		/// </summary>
+		/// <returns></returns>
+		public string GetUnformattedErrorMessage() {
+			return _errorMessageFactory?.Invoke(null) ?? _errorMessage ?? GetDefaultMessageTemplate();
+		}
+
+		/// <summary>
 		/// Sets the overridden error message template for this validator.
 		/// </summary>
 		/// <param name="errorFactory">A function for retrieving the error message template.</param>

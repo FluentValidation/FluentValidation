@@ -28,6 +28,8 @@ namespace FluentValidation.Validators {
 		private readonly Func<T, TProperty> _func;
 		private readonly string _memberDisplayName;
 
+		public override string Name => "NotEqualValidator";
+
 		public NotEqualValidator(Func<T, TProperty> func, MemberInfo memberToCompare, string memberDisplayName, IEqualityComparer equalityComparer = null) {
 			_func = func;
 			_comparer = equalityComparer;
@@ -77,7 +79,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("NotEqualValidator");
+			return Localized(Name);
 		}
 	}
 }

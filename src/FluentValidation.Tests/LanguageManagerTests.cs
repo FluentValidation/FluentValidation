@@ -265,6 +265,8 @@
 		}
 
 		private class TestValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+			public override string Name => "TestValidator";
+
 			protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 				return true;
 			}

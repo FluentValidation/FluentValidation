@@ -22,6 +22,9 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class LessThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> {
+
+		public override string Name => "LessThanOrEqualValidator";
+
 		public LessThanOrEqualValidator(IComparable value) : base(value) {
 		}
 
@@ -37,7 +40,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("LessThanOrEqualValidator");
+			return Localized(Name);
 		}
 
 		public override Comparison Comparison => Comparison.LessThanOrEqual;

@@ -27,14 +27,14 @@ namespace FluentValidation.AspNetCore {
 
 	internal class MaxLengthClientValidator : ClientValidatorBase {
 		public override void AddValidation(ClientModelValidationContext context) {
-			var lengthVal = (MaximumLengthValidator) Validator;
+			var lengthVal = (ILengthValidator) Validator;
 
 			MergeAttribute(context.Attributes, "data-val", "true");
 			MergeAttribute(context.Attributes, "data-val-maxlength", GetErrorMessage(lengthVal, context));
 			MergeAttribute(context.Attributes, "data-val-maxlength-max", lengthVal.Max.ToString());
 		}
 
-		private string GetErrorMessage(LengthValidator lengthVal, ClientModelValidationContext context) {
+		private string GetErrorMessage(ILengthValidator lengthVal, ClientModelValidationContext context) {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
 
 			var formatter = cfg.MessageFormatterFactory()
@@ -44,7 +44,7 @@ namespace FluentValidation.AspNetCore {
 
 			string message;
 			try {
-				message = lengthVal.Options.GetErrorMessage(null);
+				message = lengthVal.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
 				message = cfg.LanguageManager.GetString("MaximumLength_Simple");

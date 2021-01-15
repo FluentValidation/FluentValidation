@@ -29,7 +29,7 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {
-			var lengthVal = (LengthValidator)Validator;
+			var lengthVal = (ILengthValidator)Validator;
 
 			MergeAttribute(context.Attributes, "data-val", "true");
 			MergeAttribute(context.Attributes, "data-val-length", GetErrorMessage(lengthVal, context));
@@ -37,7 +37,7 @@ namespace FluentValidation.AspNetCore {
 			MergeAttribute(context.Attributes, "data-val-length-min", lengthVal.Min.ToString());
 		}
 
-		private string GetErrorMessage(LengthValidator lengthVal, ClientModelValidationContext context) {
+		private string GetErrorMessage(ILengthValidator lengthVal, ClientModelValidationContext context) {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
 
 			var formatter = cfg.MessageFormatterFactory()
@@ -47,10 +47,10 @@ namespace FluentValidation.AspNetCore {
 
 			string message;
 			try {
-				message = lengthVal.Options.GetErrorMessage(null);
+				message = lengthVal.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
-				if (lengthVal is ExactLengthValidator) {
+				if (lengthVal.Name == "ExactLengthValidator") {
 					message = cfg.LanguageManager.GetString("ExactLength_Simple");
 				}
 				else {
@@ -60,7 +60,7 @@ namespace FluentValidation.AspNetCore {
 
 
 			if (message.Contains("{TotalLength}")) {
-				if (lengthVal is ExactLengthValidator) {
+				if (lengthVal.Name == "ExactLengthValidator") {
 					message = cfg.LanguageManager.GetString("ExactLength_Simple");
 				}
 				else {

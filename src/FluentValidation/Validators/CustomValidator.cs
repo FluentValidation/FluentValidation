@@ -17,6 +17,8 @@
 		private Func<TProperty, PropertyValidatorContext<T,TProperty>, CancellationToken, Task> _asyncAction;
 		private readonly bool _isAsync;
 
+		public override string Name => "CustomValidator";
+
 		/// <summary>
 		/// Creates a new instance of the CustomValidator
 		/// </summary>

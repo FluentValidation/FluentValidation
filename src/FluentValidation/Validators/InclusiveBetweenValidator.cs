@@ -22,6 +22,9 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class InclusiveBetweenValidator<T, TProperty> : PropertyValidator<T, TProperty>, IBetweenValidator {
+
+		public override string Name => "InclusiveBetweenValidator";
+
 		public InclusiveBetweenValidator(IComparable from, IComparable to) {
 			To = to;
 			From = from;
@@ -55,7 +58,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("InclusiveBetweenValidator");
+			return Localized(Name);
 		}
 	}
 

@@ -27,6 +27,8 @@ namespace FluentValidation.Validators {
 	public class EnumValidator<T, TProperty> : PropertyValidator<T,TProperty> {
 		private readonly Type _enumType = typeof(TProperty);
 
+		public override string Name => "EnumValidator";
+
 		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			if (context.PropertyValue == null) return true;
 
@@ -110,7 +112,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("EnumValidator");
+			return Localized(Name);
 		}
 	}
 }

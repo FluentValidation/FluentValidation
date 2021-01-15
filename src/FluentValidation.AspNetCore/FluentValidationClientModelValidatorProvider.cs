@@ -36,44 +36,31 @@ namespace FluentValidation.AspNetCore {
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly ValidatorDescriptorCache _descriptorCache = new ValidatorDescriptorCache();
 
-		public Dictionary<Type, FluentValidationClientValidatorFactory> ClientValidatorFactories => _validatorFactories;
-
-		private readonly Dictionary<Type, FluentValidationClientValidatorFactory> _validatorFactories = new Dictionary<Type, FluentValidationClientValidatorFactory>() {
-			{ typeof(NotNullValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
-			{ typeof(INotNullValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
-
-			{ typeof(NotEmptyValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
-			{ typeof(INotEmptyValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
-
-#pragma warning disable 618
-			{ typeof(EmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
-#pragma warning restore 618
-			{ typeof(AspNetCoreCompatibleEmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
-			{ typeof(IEmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
-
-			{ typeof(RegularExpressionValidator), (context, rule, validator) => new RegexClientValidator(rule, validator) },
-			{ typeof(IRegularExpressionValidator), (context, rule, validator) => new RegexClientValidator(rule, validator) },
-
-			{ typeof(MaximumLengthValidator), (context, rule, validator) => new MaxLengthClientValidator(rule, validator) },
-			{ typeof(MinimumLengthValidator), (context, rule, validator) => new MinLengthClientValidator(rule, validator) },
-			{ typeof(LengthValidator), (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
-			{ typeof(ExactLengthValidator), (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
-			{ typeof(InclusiveBetweenValidator), (context, rule, validator) => new RangeClientValidator(rule, validator) },
-			{ typeof(GreaterThanOrEqualValidator), (context, rule, validator) => new RangeMinClientValidator(rule, validator) },
-			{ typeof(LessThanOrEqualValidator), (context, rule, validator) => new RangeMaxClientValidator(rule, validator) },
-			{ typeof(EqualValidator), (context, rule, validator) => new EqualToClientValidator(rule, validator) },
-			{ typeof(CreditCardValidator), (context, rule, validator) => new CreditCardClientValidator(rule, validator) },
+		public Dictionary<string, FluentValidationClientValidatorFactory> ClientValidatorFactories { get; } = new() {
+			{ "NotNullValidator", (context, rule, validator) => new RequiredClientValidator(rule, validator) },
+			{ "NotEmptyValidator", (context, rule, validator) => new RequiredClientValidator(rule, validator) },
+			{ "EmailValidator", (context, rule, validator) => new EmailClientValidator(rule, validator) },
+			{ "RegularExpressionValidator", (context, rule, validator) => new RegexClientValidator(rule, validator) },
+			{ "MaximumLengthValidator", (context, rule, validator) => new MaxLengthClientValidator(rule, validator) },
+			{ "MinimumLengthValidator", (context, rule, validator) => new MinLengthClientValidator(rule, validator) },
+			{ "LengthValidator", (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
+			{ "ExactLengthValidator", (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
+			{ "InclusiveBetweenValidator", (context, rule, validator) => new RangeClientValidator(rule, validator) },
+			{ "GreaterThanOrEqualValidator", (context, rule, validator) => new RangeMinClientValidator(rule, validator) },
+			{ "LessThanOrEqualValidator", (context, rule, validator) => new RangeMaxClientValidator(rule, validator) },
+			{ "EqualValidator", (context, rule, validator) => new EqualToClientValidator(rule, validator) },
+			{ "CreditCardValidator", (context, rule, validator) => new CreditCardClientValidator(rule, validator) },
 		};
 
 		public FluentValidationClientModelValidatorProvider(IHttpContextAccessor httpContextAccessor) {
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-		public void Add(Type validatorType, FluentValidationClientValidatorFactory factory) {
-			if (validatorType == null) throw new ArgumentNullException(nameof(validatorType));
+		public void Add(string validatorName, FluentValidationClientValidatorFactory factory) {
+			if (validatorName == null) throw new ArgumentNullException(nameof(validatorName));
 			if (factory == null) throw new ArgumentNullException(nameof(factory));
 
-			_validatorFactories[validatorType] = factory;
+			ClientValidatorFactories[validatorName] = factory;
 		}
 
 		public void CreateValidators(ClientValidatorProviderContext context) {
@@ -87,7 +74,7 @@ namespace FluentValidation.AspNetCore {
 					let validators = rule.Validators
 					where validators.Any()
 					from propertyValidator in validators
-					where !propertyValidator.Options.HasCondition && !propertyValidator.Options.HasAsyncCondition
+					where !propertyValidator.HasCondition && !propertyValidator.HasAsyncCondition
 					let modelValidatorForProperty = GetModelValidator(context, rule, propertyValidator)
 					where modelValidatorForProperty != null
 					select modelValidatorForProperty;
@@ -132,8 +119,8 @@ namespace FluentValidation.AspNetCore {
 		protected virtual IClientModelValidator GetModelValidator(ClientValidatorProviderContext context, IValidationRule rule, IPropertyValidator propertyValidator)	{
 			var type = propertyValidator.GetType();
 
-			var factory = _validatorFactories
-				.Where(x => x.Key.IsAssignableFrom(type))
+			var factory = ClientValidatorFactories
+				.Where(x => x.Key == propertyValidator.Name)
 				.Select(x => x.Value)
 				.FirstOrDefault();
 

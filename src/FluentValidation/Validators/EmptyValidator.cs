@@ -24,7 +24,10 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using System.Linq;
 
-	public class EmptyValidator<T,TProperty> : PropertyValidator<T,TProperty>, IEmptyValidator {
+	public class EmptyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+
+		public override string Name => "EmptyValidator";
+
 		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			switch (context.PropertyValue) {
 				case null:
@@ -45,10 +48,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("EmptyValidator");
+			return Localized(Name);
 		}
-	}
-
-	public interface IEmptyValidator : IPropertyValidator {
 	}
 }

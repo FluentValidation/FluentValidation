@@ -75,6 +75,7 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
     <DelaySign>False</DelaySign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.AspNetCore.xml</DocumentationFile>
     <DebugType>embedded</DebugType>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />

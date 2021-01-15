@@ -29,6 +29,8 @@ namespace FluentValidation.Validators {
 	public class AsyncPredicateValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 		private readonly Func<T, TProperty, PropertyValidatorContext<T,TProperty>, CancellationToken, Task<bool>> _predicate;
 
+		public override string Name => "AsyncPredicateValidator";
+
 		/// <summary>
 		/// Creates a new AsyncPredicateValidator
 		/// </summary>
@@ -52,7 +54,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("AsyncPredicateValidator");
+			return Localized(Name);
 		}
 	}
 }

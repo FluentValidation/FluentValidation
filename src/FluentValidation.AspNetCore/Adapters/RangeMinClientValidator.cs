@@ -7,7 +7,7 @@ namespace FluentValidation.AspNetCore {
 	using Validators;
 
 	internal class RangeMinClientValidator : ClientValidatorBase {
-		GreaterThanOrEqualValidator RangeValidator => (GreaterThanOrEqualValidator)Validator;
+		IComparisonValidator RangeValidator => (IComparisonValidator)Validator;
 
 		public RangeMinClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 
@@ -33,10 +33,10 @@ namespace FluentValidation.AspNetCore {
 			string message;
 
 			try {
-				message = RangeValidator.Options.GetErrorMessage(null);
+				message = RangeValidator.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
-				message = cfg.LanguageManager.GetStringForValidator<GreaterThanOrEqualValidator>();
+				message = cfg.LanguageManager.GetString("GreaterThanOrEqualValidator");
 			}
 
 			message = formatter.BuildMessage(message);

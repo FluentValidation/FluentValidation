@@ -29,6 +29,9 @@ namespace FluentValidation.Validators {
 		private readonly string _memberDisplayName;
 		readonly IEqualityComparer _comparer;
 
+		public override string Name => "EqualValidator";
+
+
 		public EqualValidator(TProperty valueToCompare, IEqualityComparer comparer = null) {
 			ValueToCompare = valueToCompare;
 			_comparer = comparer;
@@ -79,7 +82,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("EqualValidator");
+			return Localized(Name);
 		}
 	}
 }

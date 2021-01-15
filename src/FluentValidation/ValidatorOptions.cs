@@ -106,8 +106,7 @@ namespace FluentValidation {
 		static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) => null;
 
 		static string DefaultErrorCodeResolver(IPropertyValidator validator) {
-			//TODO: Change this to use the Name property of the validator once this is introduced.
-			return validator.GetType().Name.Split('`')[0];
+			return validator.Name;
 		}
 	}
 
