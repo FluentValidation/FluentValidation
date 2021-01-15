@@ -24,6 +24,8 @@ namespace FluentValidation.Validators {
 	public class RegularExpressionValidator<T> : PropertyValidator<T,string>, IRegularExpressionValidator {
 		readonly Func<T, Regex> _regexFunc;
 
+		public override string Name => "RegularExpressionValidator";
+
 		public RegularExpressionValidator(string expression) {
 			Expression = expression;
 
@@ -71,7 +73,7 @@ namespace FluentValidation.Validators {
 		public string Expression { get; }
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("RegularExpressionValidator");
+			return Localized(Name);
 		}
 	}
 

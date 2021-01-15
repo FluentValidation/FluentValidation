@@ -42,6 +42,8 @@ namespace FluentValidation.Validators {
 			Init(scale, precision);
 		}
 
+		public override string Name => "ScalePrecisionValidator";
+
 		public int Scale { get; set; }
 
 		public int Precision { get; set; }
@@ -137,7 +139,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("ScalePrecisionValidator");
+			return Localized(Name);
 		}
 	}
 }

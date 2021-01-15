@@ -21,6 +21,8 @@ namespace FluentValidation.Validators {
 		private readonly Func<PropertyValidatorContext<T, TProperty>, IValidator<TProperty>> _validatorProvider;
 		private readonly IValidator<TProperty> _validator;
 
+		public override string Name => "ChildValidatorAdaptor";
+
 		public Type ValidatorType { get; }
 
 		public string[] RuleSets { get; set; }

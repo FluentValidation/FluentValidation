@@ -27,8 +27,10 @@ namespace FluentValidation.Validators {
 	public class CreditCardValidator<T> : PropertyValidator<T,string> {
 		// This logic was taken from the CreditCardAttribute in the ASP.NET MVC3 source.
 
+		public override string Name => "CreditCardValidator";
+
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("CreditCardValidator");
+			return Localized(Name);
 		}
 
 		protected override bool IsValid(PropertyValidatorContext<T,string> context) {

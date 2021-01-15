@@ -22,6 +22,9 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class ExclusiveBetweenValidator<T,TProperty> : PropertyValidator<T,TProperty>, IBetweenValidator {
+
+		public override string Name => "ExclusiveBetweenValidator";
+
 		public ExclusiveBetweenValidator(IComparable from, IComparable to) {
 			To = to;
 			From = from;
@@ -54,7 +57,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("ExclusiveBetweenValidator");
+			return Localized(Name);
 		}
 	}
 }

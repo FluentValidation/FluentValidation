@@ -495,14 +495,5 @@ namespace FluentValidation {
 				cfg.IndexBuilder = (x, collection, element, index) => callback((T)x, (IEnumerable<TCollectionElement>)collection, (TCollectionElement)element, index);
 			});
 		}
-
-		/// <summary>
-		/// Gets the default message for a property validator
-		/// </summary>
-		/// <typeparam name="T">The validator type</typeparam>
-		/// <returns>The translated string</returns>
-		public static string GetStringForValidator<T>(this ILanguageManager languageManager) {
-			return languageManager.GetString(typeof(T).Name);
-		}
 	}
 }

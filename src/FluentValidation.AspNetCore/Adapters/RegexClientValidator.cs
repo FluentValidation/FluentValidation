@@ -31,14 +31,14 @@ namespace FluentValidation.AspNetCore {
 
 		public override void AddValidation(ClientModelValidationContext context) {
 			var cfg = context.ActionContext.HttpContext.RequestServices.GetValidatorConfiguration();
-			var regexVal = (RegularExpressionValidator)Validator;
+			var regexVal = (IRegularExpressionValidator)Validator;
 			var formatter = cfg.MessageFormatterFactory().AppendPropertyName(Rule.GetDisplayName(null));
 			string messageTemplate;
 			try {
-				messageTemplate = regexVal.Options.GetErrorMessage(null);
+				messageTemplate = regexVal.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
-				messageTemplate = cfg.LanguageManager.GetStringForValidator<RegularExpressionValidator>();
+				messageTemplate = cfg.LanguageManager.GetString("RegularExpressionValidator");
 			}
 
 			string message = formatter.BuildMessage(messageTemplate);
