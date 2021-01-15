@@ -119,18 +119,22 @@ namespace FluentValidation.Internal {
 			}
 		}
 
+		[Obsolete]
 		internal static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {
 			return x => func((T)x);
 		}
 
+		[Obsolete]
 		internal static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func) {
 			return x => func((T)x);
 		}
 
+		[Obsolete]
 		internal static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func) {
 			return x => func((T)x);
 		}
 
+		[Obsolete]
 		internal static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func) {
 			return x => func((T)x);
 		}

@@ -122,7 +122,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Min_and_max_properties_should_be_set() {
-			var validator = new LengthValidator(1, 5);
+			var validator = new LengthValidator<Person>(1, 5);
 			validator.Min.ShouldEqual(1);
 			validator.Max.ShouldEqual(5);
 		}

@@ -95,7 +95,7 @@ namespace FluentValidation.Validators {
 			return this;
 		}
 
-		public override IValidator GetValidator(PropertyValidatorContext context) {
+		public override IValidator GetValidator(PropertyValidatorContext<T,TProperty> context) {
 			// bail out if the current item is null
 			if (context.PropertyValue == null) return null;
 
@@ -106,7 +106,7 @@ namespace FluentValidation.Validators {
 			return null;
 		}
 
-		private protected override IValidatorSelector GetSelector(PropertyValidatorContext context) {
+		private protected override IValidatorSelector GetSelector(PropertyValidatorContext<T,TProperty> context) {
 			if (_derivedValidators.TryGetValue(context.PropertyValue.GetType(), out var derivedValidatorFactory) && derivedValidatorFactory.RuleSets != null) {
 				return new RulesetValidatorSelector(derivedValidatorFactory.RuleSets);
 			}
@@ -115,7 +115,7 @@ namespace FluentValidation.Validators {
 
 		private class DerivedValidatorFactory {
 			private IValidator _innerValidator;
-			private readonly Func<PropertyValidatorContext, IValidator> _factory;
+			private readonly Func<PropertyValidatorContext<T,TProperty>, IValidator> _factory;
 			public string[] RuleSets { get; }
 
 			public DerivedValidatorFactory(IValidator innerValidator, string[] ruleSets) {
@@ -123,12 +123,12 @@ namespace FluentValidation.Validators {
 				RuleSets = ruleSets;
 			}
 
-			public DerivedValidatorFactory(Func<PropertyValidatorContext, IValidator> factory, string[] ruleSets) {
+			public DerivedValidatorFactory(Func<PropertyValidatorContext<T,TProperty>, IValidator> factory, string[] ruleSets) {
 				RuleSets = ruleSets;
 				_factory = factory;
 			}
 
-			public IValidator GetValidator(PropertyValidatorContext context) {
+			public IValidator GetValidator(PropertyValidatorContext<T,TProperty> context) {
 				return _factory?.Invoke(context) ?? _innerValidator;
 			}
 		}

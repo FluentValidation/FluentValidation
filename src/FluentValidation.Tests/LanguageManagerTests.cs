@@ -21,7 +21,7 @@
 		[InlineData("bs-Latn-BA")]
 		public void Gets_translation_for_bosnian_latin_culture(string cultureName) {
 			using (new CultureScope(cultureName)) {
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var msg = _languages.GetString("NotNullValidator");
 				msg.ShouldEqual("'{PropertyName}' ne smije biti prazan.");
 			}
 		}
@@ -32,7 +32,7 @@
 		[InlineData("sr-Latn-RS")]
 		public void Gets_translation_for_serbian_culture(string cultureName) {
 			using (new CultureScope(cultureName)) {
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var msg = _languages.GetString("NotNullValidator");
 				msg.ShouldEqual("'{PropertyName}' ne smije biti prazan.");
 			}
 		}
@@ -40,7 +40,7 @@
 		[Fact]
 		public void Gets_translation_for_culture() {
 			using (new CultureScope("fr")) {
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var msg = _languages.GetString("NotNullValidator");
 				msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
 			}
 		}
@@ -48,7 +48,7 @@
 		[Fact]
 		public void Gets_translation_for_specific_culture() {
 			using (new CultureScope("zh-CN")) {
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var msg = _languages.GetString("NotNullValidator");
 				msg.ShouldEqual("'{PropertyName}' 不能为Null。");
 			}
 		}
@@ -56,7 +56,7 @@
 		[Fact]
 		public void Gets_translation_for_croatian_culture() {
 			using (new CultureScope("hr-HR")) {
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var msg = _languages.GetString("NotNullValidator");
 				msg.ShouldEqual("Niste upisali '{PropertyName}'");
 			}
 		}
@@ -64,7 +64,7 @@
 		[Fact]
 		public void Falls_back_to_parent_culture() {
 			using (new CultureScope("fr-FR")) {
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var msg = _languages.GetString("NotNullValidator");
 				msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
 			}
 		}
@@ -72,7 +72,7 @@
 		[Fact]
 		public void Falls_back_to_english_when_culture_not_registered() {
 			using (new CultureScope("gu-IN")) {
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var msg = _languages.GetString("NotNullValidator");
 				msg.ShouldEqual("'{PropertyName}' must not be empty.");
 			}
 		}
@@ -83,7 +83,7 @@
 			l.AddTranslation("en", "TestValidator", "foo");
 
 			using (new CultureScope("zh-CN")) {
-				var msg = l.GetStringForValidator<TestValidator>();
+				var msg = l.GetString("TestValidator");
 				msg.ShouldEqual("foo");
 			}
 		}
@@ -91,14 +91,14 @@
 		[Fact]
 		public void Always_use_specific_language() {
 			_languages.Culture = new CultureInfo("fr-FR");
-			var msg = _languages.GetStringForValidator<NotNullValidator>();
+			var msg = _languages.GetString("NotNullValidator");
 			msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
 		}
 
 		[Fact]
 		public void Always_use_specific_language_with_string_source() {
 			ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr-FR");
-			var validator = new NotNullValidator();
+			var validator = new NotNullValidator<Person,string>();
 			var msg = validator.GetErrorMessage(null);
 			ValidatorOptions.Global.LanguageManager.Culture = null;
 
@@ -109,7 +109,7 @@
 		public void Disables_localization() {
 			using (new CultureScope("fr")) {
 				_languages.Enabled = false;
-				var msg = _languages.GetStringForValidator<NotNullValidator>();
+				var msg = _languages.GetString("NotNullValidator");
 				msg.ShouldEqual("'{PropertyName}' must not be empty.");
 			}
 		}
@@ -118,7 +118,7 @@
 		public void Can_replace_message() {
 			using (new CultureScope("fr-FR")) {
 				var custom = new CustomLanguageManager();
-				var msg = custom.GetStringForValidator<NotNullValidator>();
+				var msg = custom.GetString("NotNullValidator");
 				msg.ShouldEqual("foo");
 			}
 		}
@@ -128,13 +128,13 @@
 			using (new CultureScope("fr-FR")) {
 				var custom = new LanguageManager();
 				custom.AddTranslation("fr", "NotNullValidator", "foo");
-				var msg = custom.GetStringForValidator<NotNullValidator>();
+				var msg = custom.GetString("NotNullValidator");
 				msg.ShouldEqual("foo");
 
 				// Using a custom translation should only override the single message.
 				// Other messages in the language should be unaffected.
 				// Need to do this test as non-english, as english is always loaded.
-				msg = custom.GetStringForValidator<NotEmptyValidator>();
+				msg = custom.GetString("NotEmptyValidator");
 				msg.ShouldEqual("'{PropertyName}' ne doit pas être vide.");
 			}
 		}
@@ -145,30 +145,30 @@
 			// Remember to update this test if new validators are added.
 			string[] keys = {
 #pragma warning disable 618
-				nameof(EmailValidator),
+				"EmailValidator",
 #pragma warning restore 618
-				nameof(GreaterThanOrEqualValidator),
-				nameof(GreaterThanValidator),
-				nameof(LengthValidator),
-				nameof(MinimumLengthValidator),
-				nameof(MaximumLengthValidator),
-				nameof(LessThanOrEqualValidator),
-				nameof(LessThanValidator),
-				nameof(NotEmptyValidator),
-				nameof(NotEqualValidator),
-				nameof(NotNullValidator),
-				nameof(PredicateValidator),
-				nameof(AsyncPredicateValidator),
-				nameof(RegularExpressionValidator),
-				nameof(EqualValidator),
-				nameof(ExactLengthValidator),
-				nameof(InclusiveBetweenValidator),
-				nameof(ExclusiveBetweenValidator),
-				nameof(CreditCardValidator),
-				nameof(ScalePrecisionValidator),
-				nameof(EmptyValidator),
-				nameof(NullValidator),
-				nameof(EnumValidator),
+				"GreaterThanOrEqualValidator",
+				"GreaterThanValidator",
+				"LengthValidator",
+				"MinimumLengthValidator",
+				"MaximumLengthValidator",
+				"LessThanOrEqualValidator",
+				"LessThanValidator",
+				"NotEmptyValidator",
+				"NotEqualValidator",
+				"NotNullValidator",
+				"PredicateValidator",
+				"AsyncPredicateValidator",
+				"RegularExpressionValidator",
+				"EqualValidator",
+				"ExactLengthValidator",
+				"InclusiveBetweenValidator",
+				"ExclusiveBetweenValidator",
+				"CreditCardValidator",
+				"ScalePrecisionValidator",
+				"EmptyValidator",
+				"NullValidator",
+				"EnumValidator",
 				"Length_Simple",
 				"MinimumLength_Simple",
 				"MaximumLength_Simple",
@@ -212,7 +212,7 @@
 				where cultureField != null && cultureField.IsLiteral
 				select new { Name = cultureField.GetValue(null) as string, Type = type.Name };
 
-			string englishMessage = _languages.GetString(nameof(NotNullValidator), new CultureInfo("en"));
+			string englishMessage = _languages.GetString("NotNullValidator", new CultureInfo("en"));
 
 			foreach (var language in languages) {
 				// Skip english as we know it's always loaded and will match.
@@ -222,7 +222,7 @@
 
 				// Get the message from the language manager from the culture. If it's in English, then it's hit the
 				// fallback and means the culture hasn't been loaded.
-				string message = _languages.GetString(nameof(NotNullValidator), new CultureInfo(language.Name));
+				string message = _languages.GetString("NotNullValidator", new CultureInfo(language.Name));
 				(message != englishMessage).ShouldBeTrue($"Language '{language.Name}' ({language.Type}) is not loaded in the LanguageManager");
 			}
 		}
@@ -264,8 +264,8 @@
 			}
 		}
 
-		private class TestValidator : PropertyValidator {
-			protected override bool IsValid(PropertyValidatorContext context) {
+		private class TestValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+			protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 				return true;
 			}
 		}
