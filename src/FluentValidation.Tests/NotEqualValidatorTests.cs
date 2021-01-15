@@ -92,7 +92,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual(x => x.Surname));
 			var propertyValidator = validator.CreateDescriptor()
 				.GetValidatorsForMember("Forename")
-				.OfType<NotEqualValidator>()
+				.OfType<NotEqualValidator<Person,string>>()
 				.Single();
 
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
@@ -103,7 +103,7 @@ namespace FluentValidation.Tests {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Forename).NotEqual(x => x.Surname));
 			var propertyValidator = validator.CreateDescriptor()
 				.GetValidatorsForMember("Forename")
-				.OfType<NotEqualValidator>()
+				.OfType<NotEqualValidator<Person,string>>()
 				.Single();
 			propertyValidator.Comparison.ShouldEqual(Comparison.NotEqual);
 		}

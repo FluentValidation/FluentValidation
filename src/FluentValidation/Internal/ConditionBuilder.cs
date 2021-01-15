@@ -24,9 +24,9 @@ namespace FluentValidation.Internal {
 	using Validators;
 
 	internal class ConditionBuilder<T> {
-		private TrackingCollection<IValidationRule<T>> _rules;
+		private TrackingCollection<IExecutableValidationRule<T>> _rules;
 
-		public ConditionBuilder(TrackingCollection<IValidationRule<T>> rules) {
+		public ConditionBuilder(TrackingCollection<IExecutableValidationRule<T>> rules) {
 			_rules = rules;
 		}
 
@@ -85,9 +85,9 @@ namespace FluentValidation.Internal {
 	}
 
 	internal class AsyncConditionBuilder<T> {
-		private TrackingCollection<IValidationRule<T>> _rules;
+		private TrackingCollection<IExecutableValidationRule<T>> _rules;
 
-		public AsyncConditionBuilder(TrackingCollection<IValidationRule<T>> rules) {
+		public AsyncConditionBuilder(TrackingCollection<IExecutableValidationRule<T>> rules) {
 			_rules = rules;
 		}
 
@@ -144,10 +144,10 @@ namespace FluentValidation.Internal {
 	}
 
 	internal class ConditionOtherwiseBuilder<T> : IConditionBuilder {
-		private TrackingCollection<IValidationRule<T>> _rules;
+		private TrackingCollection<IExecutableValidationRule<T>> _rules;
 		private readonly Func<IValidationContext, bool> _condition;
 
-		public ConditionOtherwiseBuilder(TrackingCollection<IValidationRule<T>> rules, Func<IValidationContext, bool> condition) {
+		public ConditionOtherwiseBuilder(TrackingCollection<IExecutableValidationRule<T>> rules, Func<IValidationContext, bool> condition) {
 			_rules = rules;
 			_condition = condition;
 		}
@@ -168,10 +168,10 @@ namespace FluentValidation.Internal {
 	}
 
 	internal class AsyncConditionOtherwiseBuilder<T> : IConditionBuilder {
-		private TrackingCollection<IValidationRule<T>> _rules;
+		private TrackingCollection<IExecutableValidationRule<T>> _rules;
 		private readonly Func<IValidationContext, CancellationToken, Task<bool>> _condition;
 
-		public AsyncConditionOtherwiseBuilder(TrackingCollection<IValidationRule<T>> rules, Func<IValidationContext, CancellationToken, Task<bool>> condition) {
+		public AsyncConditionOtherwiseBuilder(TrackingCollection<IExecutableValidationRule<T>> rules, Func<IValidationContext, CancellationToken, Task<bool>> condition) {
 			_rules = rules;
 			_condition = condition;
 		}

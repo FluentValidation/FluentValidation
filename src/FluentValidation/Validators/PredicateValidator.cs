@@ -20,8 +20,8 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	public class PredicateValidator : PropertyValidator, IPredicateValidator {
-		public delegate bool Predicate(object instanceToValidate, object propertyValue, PropertyValidatorContext propertyValidatorContext);
+	public class PredicateValidator<T,TProperty> : PropertyValidator<T,TProperty>, IPredicateValidator {
+		public delegate bool Predicate(T instanceToValidate, TProperty propertyValue, PropertyValidatorContext<T,TProperty> propertyValidatorContext);
 
 		private readonly Predicate _predicate;
 
@@ -30,7 +30,7 @@ namespace FluentValidation.Validators {
 			this._predicate = predicate;
 		}
 
-		protected override bool IsValid(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			if (!_predicate(context.InstanceToValidate, context.PropertyValue, context)) {
 				return false;
 			}
@@ -39,7 +39,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(PredicateValidator));
+			return Localized("PredicateValidator");
 		}
 	}
 

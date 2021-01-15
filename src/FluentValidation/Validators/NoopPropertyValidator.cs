@@ -24,18 +24,18 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public abstract class NoopPropertyValidator : IPropertyValidator {
-		public abstract void Validate(PropertyValidatorContext context);
+	public abstract class NoopPropertyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+		public override void Validate(PropertyValidatorContext<T,TProperty> context) { }
 
-		public virtual Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+		public override Task ValidateAsync(PropertyValidatorContext<T,TProperty> context, CancellationToken cancellation) {
 			Validate(context);
 			return Task.CompletedTask;
 		}
 
-		public virtual bool ShouldValidateAsynchronously(IValidationContext context) {
-			return false;
-		}
+		protected sealed override bool IsValid(PropertyValidatorContext<T, TProperty> context)
+			=> throw new NotImplementedException();
 
-		public PropertyValidatorOptions Options { get; } = new PropertyValidatorOptions();
+		protected override Task<bool> IsValidAsync(PropertyValidatorContext<T, TProperty> context, CancellationToken cancellation)
+			=> throw new NotImplementedException();
 	}
 }

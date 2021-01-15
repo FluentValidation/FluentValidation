@@ -3,19 +3,19 @@
 	using Resources;
 	using Validators;
 
-	public class MessageBuilderContext {
-		private PropertyValidatorContext _innerContext;
+	public class MessageBuilderContext<T,TProperty> {
+		private PropertyValidatorContext<T,TProperty> _innerContext;
 
-		public MessageBuilderContext(PropertyValidatorContext innerContext, IPropertyValidator propertyValidator) {
+		public MessageBuilderContext(PropertyValidatorContext<T,TProperty> innerContext, PropertyValidator<T,TProperty> propertyValidator) {
 			_innerContext = innerContext;
 			PropertyValidator = propertyValidator;
 		}
 
-		public IPropertyValidator PropertyValidator { get; }
+		public PropertyValidator<T,TProperty> PropertyValidator { get; }
 
-		public IValidationContext ParentContext => _innerContext.ParentContext;
+		public ValidationContext<T> ParentContext => _innerContext.ParentContext;
 
-		public IValidationRule Rule => _innerContext.Rule;
+		public IValidationRule<T> Rule => _innerContext.Rule;
 
 		public string PropertyName => _innerContext.PropertyName;
 
@@ -27,9 +27,9 @@
 		public object PropertyValue => _innerContext.PropertyValue;
 
 		public string GetDefaultMessage() {
-			return PropertyValidator.Options.GetErrorMessage(_innerContext);
+			return PropertyValidator.GetErrorMessage(_innerContext);
 		}
-		public static implicit operator PropertyValidatorContext(MessageBuilderContext ctx) {
+		public static implicit operator PropertyValidatorContext<T,TProperty>(MessageBuilderContext<T,TProperty> ctx) {
 			return ctx._innerContext;
 		}
 	}

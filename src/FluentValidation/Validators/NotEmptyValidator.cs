@@ -24,24 +24,21 @@ namespace FluentValidation.Validators {
 	using System.Linq;
 	using Resources;
 
-	public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
-		private readonly object _defaultValueForType;
+	public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, INotEmptyValidator {
 
-		public NotEmptyValidator(object defaultValueForType) {
-			_defaultValueForType = defaultValueForType;
-		}
-
-		protected override bool IsValid(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			switch (context.PropertyValue) {
 				case null:
 				case string s when string.IsNullOrWhiteSpace(s):
-				case ICollection c when c.Count == 0:
-				case Array a when a.Length == 0:
+				case ICollection {Count: 0}:
+				case Array {Length: 0}c:
 				case IEnumerable e when !e.Cast<object>().Any():
 					return false;
 			}
 
-			if (Equals(context.PropertyValue, _defaultValueForType)) {
+			//TODO: Rewrite to avoid boxing
+			if (Equals(context.PropertyValue, default(TProperty))) {
+				// Note: Code analysis indicates "Expression is always false" but this is incorrect.
 				return false;
 			}
 
@@ -49,7 +46,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(NotEmptyValidator));
+			return Localized("NotEmptyValidator");
 		}
 	}
 

@@ -61,7 +61,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Comparison_type() {
-			new LessThanOrEqualValidator(value).Comparison.ShouldEqual(Comparison.LessThanOrEqual);
+			new LessThanOrEqualValidator<Person,int>(value).Comparison.ShouldEqual(Comparison.LessThanOrEqual);
 		}
 
 		[Fact]

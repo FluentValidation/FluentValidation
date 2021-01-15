@@ -24,24 +24,24 @@ namespace FluentValidation.Validators {
 	using System.Reflection;
 	using Resources;
 
-	public class EqualValidator : PropertyValidator, IComparisonValidator {
-		readonly Func<object, object> _func;
+	public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IComparisonValidator {
+		readonly Func<T, TProperty> _func;
 		private readonly string _memberDisplayName;
 		readonly IEqualityComparer _comparer;
 
-		public EqualValidator(object valueToCompare, IEqualityComparer comparer = null) {
+		public EqualValidator(TProperty valueToCompare, IEqualityComparer comparer = null) {
 			ValueToCompare = valueToCompare;
 			_comparer = comparer;
 		}
 
-		public EqualValidator(Func<object, object> comparisonProperty, MemberInfo member, string memberDisplayName, IEqualityComparer comparer = null) {
+		public EqualValidator(Func<T, TProperty> comparisonProperty, MemberInfo member, string memberDisplayName, IEqualityComparer comparer = null) {
 			_func = comparisonProperty;
 			_memberDisplayName = memberDisplayName;
 			MemberToCompare = member;
 			_comparer = comparer;
 		}
 
-		protected override bool IsValid(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			var comparisonValue = GetComparisonValue(context);
 			bool success = Compare(comparisonValue, context.PropertyValue);
 
@@ -55,7 +55,7 @@ namespace FluentValidation.Validators {
 			return true;
 		}
 
-		private object GetComparisonValue(PropertyValidatorContext context) {
+		private TProperty GetComparisonValue(PropertyValidatorContext<T,TProperty> context) {
 			if (_func != null) {
 				return _func(context.InstanceToValidate);
 			}
@@ -66,7 +66,9 @@ namespace FluentValidation.Validators {
 		public Comparison Comparison => Comparison.Equal;
 
 		public MemberInfo MemberToCompare { get; private set; }
-		public object ValueToCompare { get; private set; }
+		public TProperty ValueToCompare { get; private set; }
+
+		object IComparisonValidator.ValueToCompare => ValueToCompare;
 
 		protected bool Compare(object comparisonValue, object propertyValue) {
 			if (_comparer != null) {
@@ -77,7 +79,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(EqualValidator));
+			return Localized("EqualValidator");
 		}
 	}
 }

@@ -21,8 +21,8 @@ namespace FluentValidation.Validators {
 	using System.Text.RegularExpressions;
 	using Resources;
 
-	public class RegularExpressionValidator : PropertyValidator, IRegularExpressionValidator {
-		readonly Func<object, Regex> _regexFunc;
+	public class RegularExpressionValidator<T> : PropertyValidator<T,string>, IRegularExpressionValidator {
+		readonly Func<T, Regex> _regexFunc;
 
 		public RegularExpressionValidator(string expression) {
 			Expression = expression;
@@ -42,19 +42,19 @@ namespace FluentValidation.Validators {
 			_regexFunc = x => regex;
 		}
 
-		public RegularExpressionValidator(Func<object, string> expressionFunc) {
+		public RegularExpressionValidator(Func<T, string> expressionFunc) {
 			_regexFunc = x => CreateRegex(expressionFunc(x));
 		}
 
-		public RegularExpressionValidator(Func<object, Regex> regexFunc) {
+		public RegularExpressionValidator(Func<T, Regex> regexFunc) {
 			_regexFunc = regexFunc;
 		}
 
-		public RegularExpressionValidator(Func<object, string> expression, RegexOptions options) {
+		public RegularExpressionValidator(Func<T, string> expression, RegexOptions options) {
 			_regexFunc = x => CreateRegex(expression(x), options);
 		}
 
-		protected override bool IsValid(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext<T,string> context) {
 			var regex = _regexFunc(context.InstanceToValidate);
 
 			if (regex != null && context.PropertyValue != null && !regex.IsMatch((string) context.PropertyValue)) {
@@ -71,7 +71,7 @@ namespace FluentValidation.Validators {
 		public string Expression { get; }
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(RegularExpressionValidator));
+			return Localized("RegularExpressionValidator");
 		}
 	}
 

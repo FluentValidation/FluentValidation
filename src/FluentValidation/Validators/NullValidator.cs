@@ -19,9 +19,9 @@
 namespace FluentValidation.Validators {
 	using Resources;
 
-	public class NullValidator : PropertyValidator, INullValidator {
+	public class NullValidator<T,TProperty> : PropertyValidator<T,TProperty>, INullValidator {
 
-		protected override bool IsValid(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			if (context.PropertyValue != null) {
 				return false;
 			}
@@ -29,7 +29,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(NullValidator));
+			return Localized("NullValidator");
 		}
 	}
 

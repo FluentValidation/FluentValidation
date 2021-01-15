@@ -20,9 +20,9 @@ namespace FluentValidation.Validators {
 	using System;
 	using Resources;
 
-	public class NotNullValidator : PropertyValidator, INotNullValidator {
+	public class NotNullValidator<T,TProperty> : PropertyValidator<T,TProperty>, INotNullValidator {
 
-		protected override bool IsValid(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			if (context.PropertyValue == null) {
 				return false;
 			}
@@ -30,7 +30,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(NotNullValidator));
+			return Localized("NotNullValidator");
 		}
 	}
 

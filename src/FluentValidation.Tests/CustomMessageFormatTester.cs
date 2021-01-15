@@ -53,7 +53,7 @@ namespace FluentValidation.Tests {
 		public void Uses_custom_delegate_for_building_message_only_for_specific_validator() {
 			validator.RuleFor(x => x.Surname).NotNull().NotEmpty().Configure(cfg => {
 				cfg.MessageBuilder = context => {
-					if (context.PropertyValidator is NotNullValidator)
+					if (context.PropertyValidator is INotNullValidator)
 						return "Foo";
 					return context.GetDefaultMessage();
 				};
