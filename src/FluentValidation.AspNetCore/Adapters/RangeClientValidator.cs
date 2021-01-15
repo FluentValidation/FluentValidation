@@ -24,9 +24,7 @@ namespace FluentValidation.AspNetCore {
 	using Validators;
 
 	internal class RangeClientValidator : ClientValidatorBase {
-		InclusiveBetweenValidator RangeValidator {
-			get { return (InclusiveBetweenValidator)Validator; }
-		}
+		IBetweenValidator RangeValidator => (IBetweenValidator)Validator;
 
 		public RangeClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
 
@@ -52,7 +50,7 @@ namespace FluentValidation.AspNetCore {
 			string message;
 
 			try {
-				message = RangeValidator.Options.GetErrorMessage(null);
+				message = RangeValidator.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
 				message = cfg.LanguageManager.GetString("InclusiveBetween_Simple");

@@ -26,6 +26,8 @@ namespace FluentValidation.Validators {
 
 	public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, INotEmptyValidator {
 
+		public override string Name => "NotEmptyValidator";
+
 		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			switch (context.PropertyValue) {
 				case null:
@@ -46,7 +48,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("NotEmptyValidator");
+			return Localized(Name);
 		}
 	}
 

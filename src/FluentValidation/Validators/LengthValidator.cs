@@ -21,6 +21,8 @@ namespace FluentValidation.Validators {
 	using Resources;
 
 	public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator {
+		public override string Name => "LengthValidator";
+
 		public int Min { get; }
 		public int Max { get; }
 
@@ -67,11 +69,13 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("LengthValidator");
+			return Localized(Name);
 		}
 	}
 
 	public class ExactLengthValidator<T> : LengthValidator<T> {
+		public override string Name => "ExactLengthValidator";
+
 		public ExactLengthValidator(int length) : base(length,length) {
 
 		}
@@ -82,11 +86,13 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("ExactLengthValidator");
+			return Localized(Name);
 		}
 	}
 
 	public class MaximumLengthValidator<T> : LengthValidator<T> {
+		public override string Name => "MaximumLengthValidator";
+
 		public MaximumLengthValidator(int max)
 			: base(0, max) {
 
@@ -98,11 +104,13 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("MaximumLengthValidator");
+			return Localized(Name);
 		}
 	}
 
 	public class MinimumLengthValidator<T> : LengthValidator<T> {
+
+		public override string Name => "MinimumLengthValidator";
 
 		public MinimumLengthValidator(int min)
 			: base(min, -1) {
@@ -114,7 +122,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized("MinimumLengthValidator");
+			return Localized(Name);
 		}
 	}
 

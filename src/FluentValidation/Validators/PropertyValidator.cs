@@ -28,8 +28,8 @@ namespace FluentValidation.Validators {
 
 	public abstract class PropertyValidator<T, TProperty> : PropertyValidatorOptions<T,TProperty>, IPropertyValidator {
 
-		protected PropertyValidator() {
-		}
+		/// <inheritdoc />
+		public abstract string Name { get; }
 
 		/// <summary>
 		/// Retrieves a localized string from the LanguageManager.

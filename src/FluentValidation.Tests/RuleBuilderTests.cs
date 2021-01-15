@@ -216,6 +216,7 @@ namespace FluentValidation.Tests {
 		}
 
 		class TestPropertyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+			public override string Name => "TestPropertyValidator";
 
 			protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 				return true;

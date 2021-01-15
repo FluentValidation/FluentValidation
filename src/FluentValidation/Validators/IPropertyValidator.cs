@@ -37,6 +37,28 @@ namespace FluentValidation.Validators {
 		/// <param name="context"></param>
 		/// <returns></returns>
 		bool ShouldValidateAsynchronously(IValidationContext context);
+
+		/// <summary>
+		/// The name of the validator. This is usually the type name without any generic parameters.
+		/// This is used as the default Error Code for the validator.
+		/// </summary>
+		string Name { get; }
+
+		/// <summary>
+		/// Whether or not this validator has a condition associated with it.
+		/// </summary>
+		bool HasCondition { get; }
+
+		/// <summary>
+		/// Whether or not this validator has an async condition associated with it.
+		/// </summary>
+		bool HasAsyncCondition { get; }
+
+		/// <summary>
+		/// Gets the raw unformatted error message. Placeholders will not have been rewritten.
+		/// </summary>
+		/// <returns></returns>
+		string GetUnformattedErrorMessage();
 	}
 
 }
