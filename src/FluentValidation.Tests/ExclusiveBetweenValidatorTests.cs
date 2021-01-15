@@ -84,7 +84,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set() {
-			var propertyValidator = new ExclusiveBetweenValidator(1, 10);
+			var propertyValidator = new ExclusiveBetweenValidator<Person, int>(1, 10);
 			propertyValidator.From.ShouldEqual(1);
 			propertyValidator.To.ShouldEqual(10);
 		}
@@ -126,7 +126,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_strings() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new ExclusiveBetweenValidator("ccc", "aaa"));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new ExclusiveBetweenValidator<Person,string>("ccc", "aaa"));
 		}
 
 		[Fact]
@@ -138,14 +138,14 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_strings() {
-			var validator = new ExclusiveBetweenValidator("a", "c");
+			var validator = new ExclusiveBetweenValidator<Person,string>("a", "c");
 			validator.From.ShouldEqual("a");
 			validator.To.ShouldEqual("c");
 		}
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_dates() {
-			var validator = new ExclusiveBetweenValidator(fromDate, toDate);
+			var validator = new ExclusiveBetweenValidator<Person,string>(fromDate, toDate);
 			validator.From.ShouldEqual(fromDate);
 			validator.To.ShouldEqual(toDate);
 		}

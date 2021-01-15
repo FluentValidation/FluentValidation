@@ -53,32 +53,32 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Adding_a_validator_should_return_builder() {
-			var builderWithOptions = builder.SetValidator(new TestPropertyValidator());
+			var builderWithOptions = builder.SetValidator(new TestPropertyValidator<Person, string>());
 			builderWithOptions.ShouldBeTheSameAs(builder);
 		}
 
 		[Fact]
 		public void Adding_a_validator_should_store_validator() {
-			var validator = new TestPropertyValidator();
+			var validator = new TestPropertyValidator<Person, string>();
 			builder.SetValidator(validator);
 			_rule.CurrentValidator.ShouldBeTheSameAs(validator);
 		}
 
 		[Fact]
 		public void Should_set_custom_property_name() {
-			builder.SetValidator(new TestPropertyValidator()).WithName("Foo");
+			builder.SetValidator(new TestPropertyValidator<Person, string>()).WithName("Foo");
 			Assert.Equal(_rule.GetDisplayName(null), "Foo");
 		}
 
 		[Fact]
 		public void Should_set_custom_error() {
-			builder.SetValidator(new TestPropertyValidator()).WithMessage("Bar");
-			_rule.CurrentValidator.Options.GetErrorMessage(null).ShouldEqual("Bar");
+			builder.SetValidator(new TestPropertyValidator<Person, string>()).WithMessage("Bar");
+			_rule.CurrentValidator.GetErrorMessage(null).ShouldEqual("Bar");
 		}
 
 		[Fact]
 		public void Should_throw_if_validator_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((IPropertyValidator)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((PropertyValidator<Person, string>)null));
 		}
 
 		[Fact]
@@ -93,87 +93,43 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_if_message_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithMessage((string)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WithMessage((string)null));
 		}
 
 		[Fact]
 		public void Should_throw_if_property_name_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WithName((string)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WithName((string)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).When((Func<Person, bool>)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).When((Func<Person, bool>)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_context_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).When((Func<Person, ValidationContext<Person>, bool>)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).When((Func<Person, ValidationContext<Person>, bool>)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_async_predicate_is_null() {
-			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).WhenAsync((Func<Person, CancellationToken, Task<bool>>) null));
+			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WhenAsync((Func<Person, CancellationToken, Task<bool>>) null));
 		}
 
 		[Fact]
 		public void Should_throw_when_inverse_context_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).Unless((Func<Person, ValidationContext<Person>, bool>)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).Unless((Func<Person, ValidationContext<Person>, bool>)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_inverse_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).Unless((Func<Person, bool>)null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).Unless((Func<Person, bool>)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_async_inverse_predicate_is_null() {
-			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator()).UnlessAsync((Func<Person, CancellationToken, Task<bool>>) null));
+			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).UnlessAsync((Func<Person, CancellationToken, Task<bool>>) null));
 		}
-
-		[Fact]
-		public void Calling_validate_should_delegate_to_underlying_validator() {
-			var person = new Person {Surname = "Foo"};
-			var validator = new Mock<IPropertyValidator>();
-			validator.Setup(x => x.Options).Returns(new PropertyValidatorOptions());
-			builder.SetValidator(validator.Object);
-
-			var context = new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector());
-			_rule.Validate(context);
-
-			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
-
-		}
-		[Fact]
-		public async Task Calling_ValidateAsync_should_delegate_to_underlying_sync_validator() {
-			var person = new Person { Surname = "Foo" };
-			var validator = new Mock<IPropertyValidator>();
-			validator.Setup(x => x.Options).Returns(new PropertyValidatorOptions());
-			builder.SetValidator(validator.Object);
-
-			await _rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
-
-			validator.Verify(x => x.Validate(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo")));
-
-
-		}
-		[Fact]
-		public async Task Calling_ValidateAsync_should_delegate_to_underlying_async_validator() {
-			var person = new Person { Surname = "Foo" };
-			TaskCompletionSource<IEnumerable<ValidationFailure>> tcs = new TaskCompletionSource<IEnumerable<ValidationFailure>>();
-			tcs.SetResult(Enumerable.Empty<ValidationFailure>());
-
-			var validator = new Mock<PropertyValidator>(MockBehavior.Loose) {CallBase = true};
-			validator.Setup(x => x.ShouldValidateAsynchronously(It.IsAny<IValidationContext>())).Returns(true);
-			validator.Setup(v => v.ValidateAsync(It.IsAny<PropertyValidatorContext>(), It.IsAny<CancellationToken>())).Returns(tcs.Task);
-			builder.SetValidator(validator.Object);
-
-			await _rule.ValidateAsync(new ValidationContext<Person>(person, new PropertyChain(), new DefaultValidatorSelector()), new CancellationToken());
-
-			validator.Verify(x => x.ValidateAsync(It.Is<PropertyValidatorContext>(c => (string)c.PropertyValue == "Foo"), It.IsAny<CancellationToken>()));
-
-		}
-
 
 		[Fact]
 		public void PropertyDescription_should_return_property_name_split() {
@@ -195,8 +151,8 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Nullable_object_with_condition_should_not_throw() {
 			var builder = _validator.RuleFor(x => x.NullableInt.Value);
-			IValidationRule<Person, int> rule = null;
-			builder.Configure(r => rule = r);
+			IExecutableValidationRule<Person> rule = null;
+			builder.Configure(r => rule = (IExecutableValidationRule<Person>) r);
 
 			builder.GreaterThanOrEqualTo(3).When(x => x.NullableInt != null);
 			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
@@ -205,8 +161,8 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Nullable_object_with_async_condition_should_not_throw() {
 			var builder = _validator.RuleFor(x => x.NullableInt.Value);
-			IValidationRule<Person, int> rule = null;
-			builder.Configure(r => rule = r);
+			IExecutableValidationRule<Person> rule = null;
+			builder.Configure(r => rule = (IExecutableValidationRule<Person>) r);
 
 			builder.GreaterThanOrEqualTo(3).WhenAsync((x,c) => Task.FromResult(x.NullableInt != null));
 			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
@@ -239,8 +195,8 @@ namespace FluentValidation.Tests {
 		public void Result_should_use_custom_property_name_when_no_property_name_can_be_determined() {
 			var builder = _validator.RuleFor(x => x.CalculateSalary());
 			builder.GreaterThan(100).WithName("Foo");
-			IValidationRule<Person, int> rule = null;
-			builder.Configure(r => rule = r);
+			IExecutableValidationRule<Person> rule = null;
+			builder.Configure(r => rule = (IExecutableValidationRule<Person>) r);
 			var context = new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector());
 			rule.Validate(context);
 			context.Failures.Single().PropertyName.ShouldEqual("Foo");
@@ -259,14 +215,14 @@ namespace FluentValidation.Tests {
 		class NoopAddressValidator : AbstractValidator<Address> {
 		}
 
-		class TestPropertyValidator : PropertyValidator {
+		class TestPropertyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 
-			protected override bool IsValid(PropertyValidatorContext context) {
+			protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 				return true;
 			}
 
 			protected override string GetDefaultMessageTemplate() {
-				return Localized(nameof(NotNullValidator));
+				return Localized("NotNullValidator");
 			}
 		}
 	}

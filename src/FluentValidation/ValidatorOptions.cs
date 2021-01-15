@@ -31,7 +31,7 @@ namespace FluentValidation {
 		private Func<Type, MemberInfo, LambdaExpression, string> _propertyNameResolver = DefaultPropertyNameResolver;
 		private Func<Type, MemberInfo, LambdaExpression, string> _displayNameResolver = DefaultDisplayNameResolver;
 		private Func<MessageFormatter> _messageFormatterFactory = () => new MessageFormatter();
-		private Func<PropertyValidator, string> _errorCodeResolver = DefaultErrorCodeResolver;
+		private Func<IPropertyValidator, string> _errorCodeResolver = DefaultErrorCodeResolver;
 		private ILanguageManager _languageManager = new LanguageManager();
 
 		/// <summary>
@@ -89,7 +89,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Pluggable resolver for default error codes
 		/// </summary>
-		public Func<PropertyValidator, string> ErrorCodeResolver {
+		public Func<IPropertyValidator, string> ErrorCodeResolver {
 			get => _errorCodeResolver;
 			set => _errorCodeResolver = value ?? DefaultErrorCodeResolver;
 		}
@@ -105,8 +105,9 @@ namespace FluentValidation {
 
 		static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) => null;
 
-		static string DefaultErrorCodeResolver(PropertyValidator validator) {
-			return validator.GetType().Name;
+		static string DefaultErrorCodeResolver(IPropertyValidator validator) {
+			//TODO: Change this to use the Name property of the validator once this is introduced.
+			return validator.GetType().Name.Split('`')[0];
 		}
 	}
 

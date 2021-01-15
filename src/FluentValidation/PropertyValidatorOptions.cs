@@ -27,9 +27,9 @@ namespace FluentValidation {
 	/// <summary>
 	/// Validator options.
 	/// </summary>
-	public class PropertyValidatorOptions {
+	public class PropertyValidatorOptions<T,TProperty> {
 		private string _errorMessage;
-		private Func<PropertyValidatorContext, string> _errorMessageFactory;
+		private Func<PropertyValidatorContext<T,TProperty>, string> _errorMessageFactory;
 		private Func<IValidationContext, bool> _condition;
 		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 
@@ -90,12 +90,12 @@ namespace FluentValidation {
 		/// <summary>
 		/// Function used to retrieve custom state for the validator
 		/// </summary>
-		public Func<PropertyValidatorContext, object> CustomStateProvider { get; set; }
+		public Func<PropertyValidatorContext<T,TProperty>, object> CustomStateProvider { get; set; }
 
 		/// <summary>
 		/// Function used to retrieve the severity for the validator
 		/// </summary>
-		public Func<PropertyValidatorContext, Severity> SeverityProvider { get; set; }
+		public Func<PropertyValidatorContext<T,TProperty>, Severity> SeverityProvider { get; set; }
 
 		/// <summary>
 		/// Retrieves the error code.
@@ -114,7 +114,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context">The current property validator context.</param>
 		/// <returns>Either the formatted or unformatted error message.</returns>
-		public string GetErrorMessage(PropertyValidatorContext context) {
+		public string GetErrorMessage(PropertyValidatorContext<T,TProperty> context) {
 			string rawTemplate = _errorMessageFactory?.Invoke(context) ?? _errorMessage ?? GetDefaultMessageTemplate();
 
 			if (context == null) {
@@ -128,7 +128,7 @@ namespace FluentValidation {
 		/// Sets the overridden error message template for this validator.
 		/// </summary>
 		/// <param name="errorFactory">A function for retrieving the error message template.</param>
-		public void SetErrorMessage(Func<PropertyValidatorContext, string> errorFactory) {
+		public void SetErrorMessage(Func<PropertyValidatorContext<T,TProperty>, string> errorFactory) {
 			_errorMessageFactory = errorFactory;
 			_errorMessage = null;
 		}
@@ -142,7 +142,7 @@ namespace FluentValidation {
 			_errorMessageFactory = null;
 		}
 
-		internal Action<object, PropertyValidatorContext, string> OnFailure { get; set; }
+		internal Action<T, PropertyValidatorContext<T,TProperty>, string> OnFailure { get; set; }
 	}
 
 }

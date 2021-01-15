@@ -22,48 +22,38 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Results;
 
-	public class PropertyValidatorContext {
+	public class PropertyValidatorContext<T, TProperty> {
 		private MessageFormatter _messageFormatter;
-		private object _propertyValue;
-		private Lazy<object> _propertyValueAccessor;
-		private List<ValidationFailure> _failures;
+		private TProperty _propertyValue;
+		private Lazy<TProperty> _propertyValueAccessor;
 
-		public IValidationContext ParentContext { get; private set; }
-		public IValidationRule Rule { get; private set; }
-		public string PropertyName { get; private set; }
+		public ValidationContext<T> ParentContext { get; }
+
+		internal IValidationRule<T, TProperty> Rule { get; }
+		public string PropertyName { get; }
 
 		public string DisplayName => Rule.GetDisplayName(ParentContext);
 
-		public object InstanceToValidate => ParentContext.InstanceToValidate;
+		public T InstanceToValidate => ParentContext.InstanceToValidate;
 		public MessageFormatter MessageFormatter => _messageFormatter ??= ValidatorOptions.Global.MessageFormatterFactory();
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
-		public object PropertyValue
+		public TProperty PropertyValue
 			=> _propertyValueAccessor != null ? _propertyValueAccessor.Value : _propertyValue;
 
-		internal PropertyValidatorContext(IValidationContext parentContext, List<ValidationFailure> failures, IValidationRule rule, string propertyName, object propertyValue) {
+		public PropertyValidatorContext(ValidationContext<T> parentContext, IValidationRule<T, TProperty> rule, string propertyName, TProperty propertyValue) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
 			_propertyValue = propertyValue;
-			_failures = failures;
 		}
 
-		internal PropertyValidatorContext(IValidationContext parentContext, List<ValidationFailure> failures, IValidationRule rule, string propertyName, Lazy<object> propertyValueAccessor) {
+		public PropertyValidatorContext(ValidationContext<T> parentContext, IValidationRule<T, TProperty> rule, string propertyName, Lazy<TProperty> propertyValueAccessor) {
 			ParentContext = parentContext;
 			Rule = rule;
 			PropertyName = propertyName;
 			_propertyValueAccessor = propertyValueAccessor;
-			_failures = failures;
-		}
-
-		public static PropertyValidatorContext Create<T, TProperty>(ValidationContext<T> parentContext, IValidationRule<T, TProperty> rule, string propertyName, Lazy<object> propertyValueAccessor) {
-			return new PropertyValidatorContext(parentContext, parentContext.Failures, rule, propertyName, propertyValueAccessor);
-		}
-
-		public static PropertyValidatorContext Create<T, TProperty>(ValidationContext<T> parentContext, IValidationRule<T, TProperty> rule, string propertyName, object propertyValue) {
-			return new PropertyValidatorContext(parentContext, parentContext.Failures, rule, propertyName, propertyValue);
 		}
 
 		/// <summary>
@@ -73,7 +63,7 @@ namespace FluentValidation.Validators {
 		/// <exception cref="ArgumentNullException"></exception>
 		public void AddFailure(ValidationFailure failure) {
 			if (failure == null) throw new ArgumentNullException(nameof(failure), "A failure must be specified when calling AddFailure");
-			_failures.Add(failure);
+			ParentContext.Failures.Add(failure);
 		}
 
 		/// <summary>

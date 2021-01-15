@@ -24,15 +24,15 @@ namespace FluentValidation.Validators {
 	/// <summary>
 	/// Ensures that the property value is a valid credit card number.
 	/// </summary>
-	public class CreditCardValidator : PropertyValidator {
+	public class CreditCardValidator<T> : PropertyValidator<T,string> {
 		// This logic was taken from the CreditCardAttribute in the ASP.NET MVC3 source.
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(CreditCardValidator));
+			return Localized("CreditCardValidator");
 		}
 
-		protected override bool IsValid(PropertyValidatorContext context) {
-			var value = context.PropertyValue as string;
+		protected override bool IsValid(PropertyValidatorContext<T,string> context) {
+			var value = context.PropertyValue;
 
 			if (value == null) {
 				return true;

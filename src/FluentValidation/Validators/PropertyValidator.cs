@@ -26,12 +26,7 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
-	public abstract class PropertyValidator : PropertyValidatorOptions, IPropertyValidator {
-
-		/// <inheritdoc />
-		//TODO: For FV 10 make this an explicit implementation.
-		public PropertyValidatorOptions Options => this;
-
+	public abstract class PropertyValidator<T, TProperty> : PropertyValidatorOptions<T,TProperty>, IPropertyValidator {
 
 		protected PropertyValidator() {
 		}
@@ -59,8 +54,11 @@ namespace FluentValidation.Validators {
 		}
 
 
-		/// <inheritdoc />
-		public virtual void Validate(PropertyValidatorContext context) {
+		/// <summary>
+		/// Performs validation
+		/// </summary>
+		/// <param name="context"></param>
+		public virtual void Validate(PropertyValidatorContext<T,TProperty> context) {
 			if (IsValid(context)) return;
 
 			PrepareMessageFormatterForValidationError(context);
@@ -69,8 +67,12 @@ namespace FluentValidation.Validators {
 			context.AddFailure(failure);
 		}
 
-		/// <inheritdoc />
-		public virtual async Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+		/// <summary>
+		/// Performs validation asynchronously.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="cancellation"></param>
+		public virtual async Task ValidateAsync(PropertyValidatorContext<T,TProperty> context, CancellationToken cancellation) {
 			if (await IsValidAsync(context, cancellation)) return;
 
 			PrepareMessageFormatterForValidationError(context);
@@ -87,10 +89,10 @@ namespace FluentValidation.Validators {
 			return false;
 		}
 
-		protected abstract bool IsValid(PropertyValidatorContext context);
+		protected abstract bool IsValid(PropertyValidatorContext<T,TProperty> context);
 
 #pragma warning disable 1998
-		protected virtual async Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+		protected virtual async Task<bool> IsValidAsync(PropertyValidatorContext<T, TProperty> context, CancellationToken cancellation) {
 			return IsValid(context);
 		}
 #pragma warning restore 1998
@@ -99,7 +101,7 @@ namespace FluentValidation.Validators {
 		/// Prepares the <see cref="MessageFormatter"/> of <paramref name="context"/> for an upcoming <see cref="ValidationFailure"/>.
 		/// </summary>
 		/// <param name="context">The validator context</param>
-		protected virtual void PrepareMessageFormatterForValidationError(PropertyValidatorContext context) {
+		protected virtual void PrepareMessageFormatterForValidationError(PropertyValidatorContext<T, TProperty> context) {
 			context.MessageFormatter.AppendPropertyName(context.DisplayName);
 			context.MessageFormatter.AppendPropertyValue(context.PropertyValue);
 
@@ -121,8 +123,8 @@ namespace FluentValidation.Validators {
 		/// </summary>
 		/// <param name="context">The validator context</param>
 		/// <returns>Returns an error validation result.</returns>
-		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext context) {
-			var messageBuilderContext = new MessageBuilderContext(context, this);
+		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext<T,TProperty> context) {
+			var messageBuilderContext = new MessageBuilderContext<T,TProperty>(context, this);
 
 			var error = context.Rule.MessageBuilder != null
 				? context.Rule.MessageBuilder(messageBuilderContext)

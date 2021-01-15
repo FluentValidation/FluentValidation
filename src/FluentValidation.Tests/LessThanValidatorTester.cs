@@ -97,7 +97,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Extracts_property_from_expression() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Id).LessThan(x => x.AnotherInt));
-			var propertyValidator = validator.CreateDescriptor().GetValidatorsForMember("Id").OfType<LessThanValidator>().Single();
+			var propertyValidator = validator.CreateDescriptor().GetValidatorsForMember("Id").OfType<LessThanValidator<Person, int>>().Single();
 			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("AnotherInt"));
 		}
 
@@ -133,13 +133,13 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Extracts_property_from_constant_using_expression() {
-			IComparisonValidator validator = new LessThanValidator(2);
+			IComparisonValidator validator = new LessThanValidator<Person,int>(2);
 			validator.ValueToCompare.ShouldEqual(2);
 		}
 
 		[Fact]
 		public void Comparison_type() {
-			var validator = new LessThanValidator(1);
+			var validator = new LessThanValidator<Person,int>(1);
 			validator.Comparison.ShouldEqual(Comparison.LessThan);
 		}
 

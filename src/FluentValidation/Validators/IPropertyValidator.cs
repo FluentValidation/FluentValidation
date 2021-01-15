@@ -24,38 +24,19 @@ namespace FluentValidation.Validators {
 	using Resources;
 	using Results;
 
+
 	/// <summary>
 	/// A custom property validator.
 	/// This interface should not be implemented directly in your code as it is subject to change.
-	/// Please inherit from <see cref="PropertyValidator">PropertyValidator</see> instead.
+	/// Please inherit from <see cref="PropertyValidator{T,TProperty}">PropertyValidator</see> instead.
 	/// </summary>
 	public interface IPropertyValidator {
-		/// <summary>
-		/// Performs validation
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		void Validate(PropertyValidatorContext context);
-
-		/// <summary>
-		/// Performs validation asynchronously.
-		/// </summary>
-		/// <param name="context"></param>
-		/// <param name="cancellation"></param>
-		/// <returns></returns>
-		Task ValidateAsync(PropertyValidatorContext context, CancellationToken cancellation);
-
 		/// <summary>
 		/// Determines whether this validator should be run asynchronously or not.
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>
 		bool ShouldValidateAsynchronously(IValidationContext context);
-
-		/// <summary>
-		/// Additional options for configuring the property validator.
-		/// </summary>
-		PropertyValidatorOptions Options { get; }
 	}
 
 }

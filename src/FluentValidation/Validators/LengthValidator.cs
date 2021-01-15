@@ -20,12 +20,12 @@ namespace FluentValidation.Validators {
 	using System;
 	using Resources;
 
-	public class LengthValidator : PropertyValidator, ILengthValidator {
+	public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator {
 		public int Min { get; }
 		public int Max { get; }
 
-		public Func<object, int> MinFunc { get; set; }
-		public Func<object, int> MaxFunc { get; set; }
+		public Func<T, int> MinFunc { get; set; }
+		public Func<T, int> MaxFunc { get; set; }
 
 		public LengthValidator(int min, int max) {
 			Max = max;
@@ -36,12 +36,12 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		public LengthValidator(Func<object, int> min, Func<object, int> max) {
+		public LengthValidator(Func<T, int> min, Func<T, int> max) {
 			MaxFunc = max;
 			MinFunc = min;
 		}
 
-		protected override bool IsValid(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext<T,string> context) {
 			if (context.PropertyValue == null) return true;
 
 			var min = Min;
@@ -52,7 +52,7 @@ namespace FluentValidation.Validators {
 				min = MinFunc(context.InstanceToValidate);
 			}
 
-			int length = context.PropertyValue.ToString().Length;
+			int length = context.PropertyValue.Length;
 
 			if (length < min || (length > max && max != -1)) {
 				context.MessageFormatter
@@ -67,55 +67,54 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(LengthValidator));
+			return Localized("LengthValidator");
 		}
 	}
 
-	public class ExactLengthValidator : LengthValidator {
+	public class ExactLengthValidator<T> : LengthValidator<T> {
 		public ExactLengthValidator(int length) : base(length,length) {
 
 		}
 
-		public ExactLengthValidator(Func<object, int> length)
+		public ExactLengthValidator(Func<T, int> length)
 			: base(length, length) {
 
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(ExactLengthValidator));
+			return Localized("ExactLengthValidator");
 		}
 	}
 
-	public class MaximumLengthValidator : LengthValidator {
+	public class MaximumLengthValidator<T> : LengthValidator<T> {
 		public MaximumLengthValidator(int max)
 			: base(0, max) {
 
 		}
 
-		public MaximumLengthValidator(Func<object, int> max)
+		public MaximumLengthValidator(Func<T, int> max)
 			: base(obj => 0, max) {
 
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(MaximumLengthValidator));
+			return Localized("MaximumLengthValidator");
 		}
 	}
 
-	public class MinimumLengthValidator : LengthValidator {
+	public class MinimumLengthValidator<T> : LengthValidator<T> {
 
 		public MinimumLengthValidator(int min)
 			: base(min, -1) {
-
 		}
 
-		public MinimumLengthValidator(Func<object, int> min)
+		public MinimumLengthValidator(Func<T, int> min)
 			: base(min, obj => -1) {
 
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(MinimumLengthValidator));
+			return Localized("MinimumLengthValidator");
 		}
 	}
 

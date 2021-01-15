@@ -40,6 +40,14 @@ namespace FluentValidation {
 		public Func<T, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
 	}
 
+	public interface IExecutableValidationRule<T> : IValidationRule<T> {
+		void Validate(ValidationContext<T> context);
+
+		Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
+
+		void AddDependentRules(IEnumerable<IExecutableValidationRule<T>> rules);
+	}
+
 	public interface IValidationRule<T, TProperty> : IValidationRule<T> {
 		/// <summary>
 		/// Cascade mode for this rule.
@@ -62,13 +70,19 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="factory">The function for building the display name</param>
 		void SetDisplayName(Func<ValidationContext<T>, string> factory);
+
+		//TODO: Make generic
+		void AddValidator(PropertyValidator<T,TProperty> validator);
+
+		PropertyValidator<T,TProperty> CurrentValidator { get; }
+
+		/// <summary>
+		/// Allows custom creation of an error message
+		/// </summary>
+		public Func<MessageBuilderContext<T,TProperty>, string> MessageBuilder { get; set; }
 	}
 
 	public interface IValidationRule<T> : IValidationRule {
-		void Validate(ValidationContext<T> context);
-
-		Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
-
 		void ApplyCondition(Func<IValidationContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 
 		void ApplyAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
@@ -76,13 +90,6 @@ namespace FluentValidation {
 		void ApplySharedCondition(Func<ValidationContext<T>, bool> condition);
 
 		void ApplySharedAsyncCondition(Func<ValidationContext<T>, CancellationToken, Task<bool>> condition);
-
-		void AddDependentRules(IEnumerable<IValidationRule<T>> rules);
-
-		//TODO: Make generic
-		void AddValidator(IPropertyValidator validator);
-
-		IPropertyValidator CurrentValidator { get; }
 	}
 
 	/// <summary>
@@ -110,11 +117,6 @@ namespace FluentValidation {
 		/// Returns null if it is not a property being validated (eg a method call)
 		/// </summary>
 		public string PropertyName { get; set; }
-
-		/// <summary>
-		/// Allows custom creation of an error message
-		/// </summary>
-		public Func<MessageBuilderContext, string> MessageBuilder { get; set; }
 
 		/// <summary>
 		/// Property associated with this rule.

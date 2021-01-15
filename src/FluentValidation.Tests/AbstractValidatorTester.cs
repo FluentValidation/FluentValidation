@@ -79,7 +79,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Can_replace_default_errorcode_resolver() {
-			ValidatorOptions.Global.ErrorCodeResolver = x => x.GetType().Name + "_foo";
+			ValidatorOptions.Global.ErrorCodeResolver = x => x.GetType().Name.Split('`')[0] + "_foo";
 			validator.RuleFor(x => x.Forename).NotNull();
 			var result = validator.Validate(new Person());
 			ValidatorOptions.Global.ErrorCodeResolver = null;

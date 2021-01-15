@@ -114,7 +114,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public async Task Executes_rule_for_each_item_in_collection_async() {
 			var validator = new TestValidator {
-				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator())
+				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator<Person,string>())
 			};
 
 			var person = new Person {
@@ -128,7 +128,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public async Task Correctly_gets_collection_indices_async() {
 			var validator = new TestValidator {
-				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator())
+				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator<Person,string>())
 			};
 
 			var person = new Person {
@@ -144,7 +144,7 @@ namespace FluentValidation.Tests {
 			public Person person = null;
 		}
 
-		private class MyAsyncNotNullValidator : NotNullValidator {
+		private class MyAsyncNotNullValidator<T,TProperty> : NotNullValidator<T,TProperty> {
 			public override bool ShouldValidateAsynchronously(IValidationContext context) {
 				return context.IsAsync();
 			}
@@ -305,13 +305,13 @@ namespace FluentValidation.Tests {
 		public class AppropriatenessQuestionViewModelValidator : AbstractValidator<Question> {
 			public AppropriatenessQuestionViewModelValidator() {
 				RuleFor(m => m.SelectedAnswerID)
-					.SetValidator(new AppropriatenessAnswerViewModelRequiredValidator());
+					.SetValidator(new AppropriatenessAnswerViewModelRequiredValidator<Question, int>());
 				;
 			}
 		}
 
-		public class AppropriatenessAnswerViewModelRequiredValidator : PropertyValidator {
-			protected override bool IsValid(PropertyValidatorContext context) {
+		public class AppropriatenessAnswerViewModelRequiredValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+			protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 				return false;
 			}
 		}

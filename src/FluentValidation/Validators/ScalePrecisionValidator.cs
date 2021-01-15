@@ -36,7 +36,8 @@ namespace FluentValidation.Validators {
 	/// 123.4500 has an scale of 4 and a precision of 7, but an effective scale
 	/// and precision of 2 and 5 respectively.
 	/// </summary>
-	public class ScalePrecisionValidator : PropertyValidator {
+	public class ScalePrecisionValidator<T, TProperty> : PropertyValidator<T, TProperty> {
+		//TODO: Rewrite so the generic isn't open and can be constrained to either decimal or nullable<decimal>
 		public ScalePrecisionValidator(int scale, int precision) {
 			Init(scale, precision);
 		}
@@ -47,7 +48,7 @@ namespace FluentValidation.Validators {
 
 		public bool IgnoreTrailingZeros { get; set; }
 
-		protected override bool IsValid(PropertyValidatorContext context) {
+		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
 			var decimalValue = context.PropertyValue as decimal?;
 
 			if (decimalValue.HasValue) {
@@ -136,7 +137,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override string GetDefaultMessageTemplate() {
-			return Localized(nameof(ScalePrecisionValidator));
+			return Localized("ScalePrecisionValidator");
 		}
 	}
 }
