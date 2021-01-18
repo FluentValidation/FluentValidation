@@ -35,25 +35,25 @@ namespace FluentValidation.Internal {
 		public virtual bool CanExecute(IValidationRule rule, string propertyPath, IValidationContext context) {
 			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>());
 
-			if (rule.RuleSets.Length == 0 && _rulesetsToExecute.Length > 0) {
+			if ((rule.RuleSets == null || rule.RuleSets.Length == 0) && _rulesetsToExecute.Length > 0) {
 				if (IsIncludeRule(rule)) {
 					return true;
 				}
 			}
 
-			if (rule.RuleSets.Length == 0 && _rulesetsToExecute.Length == 0) {
+			if ((rule.RuleSets == null || rule.RuleSets.Length == 0) && _rulesetsToExecute.Length == 0) {
 				executed.Add(DefaultRuleSetName);
 				return true;
 			}
 
 			if (_rulesetsToExecute.Contains(DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)) {
-				if (rule.RuleSets.Length == 0 || rule.RuleSets.Contains(DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)) {
+				if (rule.RuleSets == null || rule.RuleSets.Length == 0 || rule.RuleSets.Contains(DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)) {
 					executed.Add(DefaultRuleSetName);
 					return true;
 				}
 			}
 
-			if (rule.RuleSets.Length > 0 && _rulesetsToExecute.Length > 0) {
+			if (rule.RuleSets != null && rule.RuleSets.Length > 0 && _rulesetsToExecute.Length > 0) {
 				var intersection = rule.RuleSets.Intersect(_rulesetsToExecute, StringComparer.OrdinalIgnoreCase).ToList();
 				if (intersection.Any()) {
 					intersection.ForEach(r => executed.Add(r));
