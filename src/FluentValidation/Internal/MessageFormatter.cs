@@ -93,5 +93,9 @@ namespace FluentValidation.Internal {
 		/// Additional placeholder values
 		/// </summary>
 		public Dictionary<string, object> PlaceholderValues => _placeholderValues;
+
+		internal void Reset() {
+			_placeholderValues.Clear();
+		}
 	}
 }
