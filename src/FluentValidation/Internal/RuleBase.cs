@@ -135,7 +135,6 @@ namespace FluentValidation.Internal {
 			TypeToValidate = typeToValidate;
 			_cascadeModeThunk = cascadeModeThunk;
 
-			DependentRules = new();
 			var containerType = typeof(T);
 			PropertyName = ValidatorOptions.Global.PropertyNameResolver(containerType, member, expression);
 			_displayNameFactory = context => ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression);
@@ -193,7 +192,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Dependent rules
 		/// </summary>
-		internal List<IExecutableValidationRule<T>> DependentRules { get; }
+		internal List<IExecutableValidationRule<T>> DependentRules { get; private protected set; }
 
 		string IValidationRule.GetDisplayName(IValidationContext context) =>
 			GetDisplayName(context != null ? ValidationContext<T>.GetFromNonGenericContext(context) : null);
@@ -216,8 +215,10 @@ namespace FluentValidation.Internal {
 					validator.ApplyCondition(predicate);
 				}
 
-				foreach (var dependentRule in DependentRules) {
-					dependentRule.ApplyCondition(predicate, applyConditionTo);
+				if (DependentRules != null) {
+					foreach (var dependentRule in DependentRules) {
+						dependentRule.ApplyCondition(predicate, applyConditionTo);
+					}
 				}
 			}
 			else {
@@ -237,8 +238,10 @@ namespace FluentValidation.Internal {
 					validator.ApplyAsyncCondition(predicate);
 				}
 
-				foreach (var dependentRule in DependentRules) {
-					dependentRule.ApplyAsyncCondition(predicate, applyConditionTo);
+				if (DependentRules != null) {
+					foreach (var dependentRule in DependentRules) {
+						dependentRule.ApplyAsyncCondition(predicate, applyConditionTo);
+					}
 				}
 			}
 			else {
