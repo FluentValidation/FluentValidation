@@ -145,7 +145,7 @@ namespace FluentValidation.Internal {
 				var failuresThisRound = context.Failures.Skip(totalFailures).ToList();
 				OnFailure?.Invoke(context.InstanceToValidate, failuresThisRound);
 			}
-			else {
+			else if(DependentRules != null) {
 				foreach (var dependentRule in DependentRules) {
 					dependentRule.Validate(context);
 				}
@@ -219,7 +219,7 @@ namespace FluentValidation.Internal {
 				var failuresThisRound = context.Failures.Skip(totalFailures).ToList();
 				OnFailure?.Invoke(context.InstanceToValidate, failuresThisRound);
 			}
-			else {
+			else if (DependentRules != null) {
 				foreach (var dependentRule in DependentRules) {
 					cancellation.ThrowIfCancellationRequested();
 					await dependentRule.ValidateAsync(context, cancellation);
@@ -241,6 +241,7 @@ namespace FluentValidation.Internal {
 		}
 
 		void IExecutableValidationRule<T>.AddDependentRules(IEnumerable<IExecutableValidationRule<T>> rules) {
+			if (DependentRules == null) DependentRules = new();
 			DependentRules.AddRange(rules);
 		}
 	}
