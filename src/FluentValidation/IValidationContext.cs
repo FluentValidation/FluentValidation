@@ -72,6 +72,7 @@ namespace FluentValidation {
 
 		List<ValidationFailure> IHasFailures.Failures => Failures;
 		internal List<ValidationFailure> Failures { get; }
+		internal MessageFormatter Formatter { get; }
 
 		/// <summary>
 		/// Creates a new validation context
@@ -88,14 +89,15 @@ namespace FluentValidation {
 		/// <param name="propertyChain"></param>
 		/// <param name="validatorSelector"></param>
 		public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector)
-			: this(instanceToValidate, propertyChain, validatorSelector, new List<ValidationFailure>()) {
+			: this(instanceToValidate, propertyChain, validatorSelector, new List<ValidationFailure>(), ValidatorOptions.Global.MessageFormatterFactory()) {
 		}
 
-		internal ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, List<ValidationFailure> failures) {
+		internal ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, List<ValidationFailure> failures, MessageFormatter formatter) {
 			PropertyChain = new PropertyChain(propertyChain);
 			InstanceToValidate = instanceToValidate;
 			Selector = validatorSelector;
 			Failures = failures;
+			Formatter = formatter;
 		}
 
 		/// <summary>
@@ -174,7 +176,7 @@ namespace FluentValidation {
 			if (context.InstanceToValidate is T instanceToValidate) {
 				var failures = (context is IHasFailures f) ? f.Failures : new List<ValidationFailure>();
 
-				return new ValidationContext<T>(instanceToValidate, context.PropertyChain, context.Selector, failures) {
+				return new ValidationContext<T>(instanceToValidate, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
 					_parentContext = context.ParentContext
@@ -184,7 +186,7 @@ namespace FluentValidation {
 			if (context.InstanceToValidate == null) {
 				var failures = (context is IHasFailures f) ? f.Failures : new List<ValidationFailure>();
 
-				return new ValidationContext<T>(default, context.PropertyChain, context.Selector, failures) {
+				return new ValidationContext<T>(default, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
 					_parentContext = context.ParentContext,
@@ -202,7 +204,7 @@ namespace FluentValidation {
 		/// <param name="selector"></param>
 		/// <returns></returns>
 		public ValidationContext<TChild> CloneForChildValidator<TChild>(TChild instanceToValidate, bool preserveParentContext = false, IValidatorSelector selector = null) {
-			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector, Failures) {
+			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector, Failures, Formatter) {
 				IsChildContext = true,
 				RootContextData = RootContextData,
 				_parentContext = preserveParentContext ? this : null
@@ -216,7 +218,7 @@ namespace FluentValidation {
 		/// <param name="preserveParentContext"></param>
 		/// <returns></returns>
 		public ValidationContext<TNew> CloneForChildCollectionValidator<TNew>(TNew instanceToValidate, bool preserveParentContext = false) {
-			return new ValidationContext<TNew>(instanceToValidate, null, Selector, Failures) {
+			return new ValidationContext<TNew>(instanceToValidate, null, Selector, Failures, Formatter) {
 				IsChildContext = true,
 				IsChildCollectionContext = true,
 				RootContextData = RootContextData,

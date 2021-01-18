@@ -23,7 +23,6 @@ namespace FluentValidation.Validators {
 	using Results;
 
 	public class PropertyValidatorContext<T, TProperty> {
-		private MessageFormatter _messageFormatter;
 		private TProperty _propertyValue;
 		private Lazy<TProperty> _propertyValueAccessor;
 
@@ -35,7 +34,7 @@ namespace FluentValidation.Validators {
 		public string DisplayName => Rule.GetDisplayName(ParentContext);
 
 		public T InstanceToValidate => ParentContext.InstanceToValidate;
-		public MessageFormatter MessageFormatter => _messageFormatter ??= ValidatorOptions.Global.MessageFormatterFactory();
+		public MessageFormatter MessageFormatter => ParentContext.Formatter;
 
 		//Lazily load the property value
 		//to allow the delegating validator to cancel validation before value is obtained
@@ -84,6 +83,5 @@ namespace FluentValidation.Validators {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
 			AddFailure(PropertyName, errorMessage);
 		}
-
 	}
 }

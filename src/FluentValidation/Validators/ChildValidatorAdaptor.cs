@@ -108,10 +108,9 @@ namespace FluentValidation.Validators {
 
 		protected virtual IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext<T,TProperty> context) {
 			var selector = GetSelector(context);
-			var parentContext = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext);
-			var newContext = parentContext.CloneForChildValidator(context.PropertyValue, PassThroughParentContext, selector);
+			var newContext = context.ParentContext.CloneForChildValidator(context.PropertyValue, PassThroughParentContext, selector);
 
-			if(!parentContext.IsChildCollectionContext)
+			if(!context.ParentContext.IsChildCollectionContext)
 				newContext.PropertyChain.Add(context.Rule.PropertyName);
 
 			return newContext;
