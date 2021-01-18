@@ -97,9 +97,9 @@ namespace FluentValidation.Internal {
 				action();
 			}
 
-			if (Rule.RuleSets.Length > 0) {
+			if (Rule.RuleSets != null && Rule.RuleSets.Length > 0) {
 				foreach (var dependentRule in dependencyContainer) {
-					if (dependentRule is PropertyRule<T, TProperty> propRule && propRule.RuleSets.Length == 0) {
+					if (dependentRule is PropertyRule<T, TProperty> propRule && propRule.RuleSets == null) {
 						propRule.RuleSets = Rule.RuleSets;
 					}
 				}
