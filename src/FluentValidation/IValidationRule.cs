@@ -40,7 +40,7 @@ namespace FluentValidation {
 		public Func<T, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
 	}
 
-	public interface IExecutableValidationRule<T> : IValidationRule<T> {
+	internal interface IExecutableValidationRule<T> : IValidationRule<T> {
 		void Validate(ValidationContext<T> context);
 
 		Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
