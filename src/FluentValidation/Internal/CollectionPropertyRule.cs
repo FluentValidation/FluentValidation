@@ -167,13 +167,16 @@ namespace FluentValidation.Internal {
 					var valueToValidate = element;
 					var propertyNameToValidate = newContext.PropertyChain.ToString();
 					var totalFailuresInner = context.Failures.Count;
+					var newPropertyContext = new PropertyValidatorContext<T, TElement>(newContext, this, propertyNameToValidate, valueToValidate);
 
 					foreach (var validator in filteredValidators) {
+						context.Formatter.Reset();
+
 						if (validator.ShouldValidateAsynchronously(context)) {
-							InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, default).GetAwaiter().GetResult();
+							InvokePropertyValidatorAsync(newPropertyContext, validator, index, default).GetAwaiter().GetResult();
 						}
 						else {
-							InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index);
+							InvokePropertyValidator(newPropertyContext, validator, index);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -277,13 +280,16 @@ namespace FluentValidation.Internal {
 					var valueToValidate = element;
 					var propertyNameToValidate = newContext.PropertyChain.ToString();
 					var totalFailuresInner = context.Failures.Count;
+					var newPropertyContext = new PropertyValidatorContext<T, TElement>(newContext, this, propertyNameToValidate, valueToValidate);
 
 					foreach (var validator in filteredValidators) {
+						context.Formatter.Reset();
+
 						if (validator.ShouldValidateAsynchronously(context)) {
-							await InvokePropertyValidatorAsync(newContext, validator, propertyNameToValidate, valueToValidate, index, cancellation);
+							await InvokePropertyValidatorAsync(newPropertyContext, validator, index, cancellation);
 						}
 						else {
-							InvokePropertyValidator(newContext, validator, propertyNameToValidate, valueToValidate, index);
+							InvokePropertyValidator(newPropertyContext, validator, index);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -372,16 +378,14 @@ namespace FluentValidation.Internal {
 			return validators;
 		}
 
-		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, PropertyValidator<T,TElement> validator, string propertyName, TElement value, int index, CancellationToken cancellation) {
-			var newPropertyContext = new PropertyValidatorContext<T, TElement>(context, this, propertyName, value);
-			newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
-			await validator.ValidateAsync(newPropertyContext, cancellation);
+		private async Task InvokePropertyValidatorAsync(PropertyValidatorContext<T, TElement> context, PropertyValidator<T,TElement> validator, int index, CancellationToken cancellation) {
+			context.MessageFormatter.AppendArgument("CollectionIndex", index);
+			await validator.ValidateAsync(context, cancellation);
 		}
 
-		private void InvokePropertyValidator(ValidationContext<T> context, PropertyValidator<T, TElement> validator, string propertyName, TElement value, int index) {
-			var newPropertyContext = new PropertyValidatorContext<T, TElement>(context, this, propertyName, value);
-			newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
-			validator.Validate(newPropertyContext);
+		private void InvokePropertyValidator(PropertyValidatorContext<T, TElement> context, PropertyValidator<T, TElement> validator, int index) {
+			context.MessageFormatter.AppendArgument("CollectionIndex", index);
+			validator.Validate(context);
 		}
 
 		private static string InferPropertyName(LambdaExpression expression) {
