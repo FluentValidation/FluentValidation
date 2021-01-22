@@ -36,31 +36,31 @@ namespace FluentValidation.AspNetCore {
 		private readonly IHttpContextAccessor _httpContextAccessor;
 		private readonly ValidatorDescriptorCache _descriptorCache = new ValidatorDescriptorCache();
 
-		public Dictionary<string, FluentValidationClientValidatorFactory> ClientValidatorFactories { get; } = new() {
-			{ "NotNullValidator", (context, rule, validator) => new RequiredClientValidator(rule, validator) },
-			{ "NotEmptyValidator", (context, rule, validator) => new RequiredClientValidator(rule, validator) },
-			{ "EmailValidator", (context, rule, validator) => new EmailClientValidator(rule, validator) },
-			{ "RegularExpressionValidator", (context, rule, validator) => new RegexClientValidator(rule, validator) },
-			{ "MaximumLengthValidator", (context, rule, validator) => new MaxLengthClientValidator(rule, validator) },
-			{ "MinimumLengthValidator", (context, rule, validator) => new MinLengthClientValidator(rule, validator) },
-			{ "LengthValidator", (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
-			{ "ExactLengthValidator", (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
-			{ "InclusiveBetweenValidator", (context, rule, validator) => new RangeClientValidator(rule, validator) },
-			{ "GreaterThanOrEqualValidator", (context, rule, validator) => new RangeMinClientValidator(rule, validator) },
-			{ "LessThanOrEqualValidator", (context, rule, validator) => new RangeMaxClientValidator(rule, validator) },
-			{ "EqualValidator", (context, rule, validator) => new EqualToClientValidator(rule, validator) },
-			{ "CreditCardValidator", (context, rule, validator) => new CreditCardClientValidator(rule, validator) },
+		public Dictionary<Type, FluentValidationClientValidatorFactory> ClientValidatorFactories { get; } = new() {
+			{ typeof(INotNullValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
+			{ typeof(INotEmptyValidator), (context, rule, validator) => new RequiredClientValidator(rule, validator) },
+			{ typeof(IEmailValidator), (context, rule, validator) => new EmailClientValidator(rule, validator) },
+			{ typeof(IRegularExpressionValidator), (context, rule, validator) => new RegexClientValidator(rule, validator) },
+			{ typeof(IMaximumLengthValidator), (context, rule, validator) => new MaxLengthClientValidator(rule, validator) },
+			{ typeof(IMinimumLengthValidator), (context, rule, validator) => new MinLengthClientValidator(rule, validator) },
+			{ typeof(IExactLengthValidator), (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
+			{ typeof(ILengthValidator), (context, rule, validator) => new StringLengthClientValidator(rule, validator)},
+			{ typeof(IInclusiveBetweenValidator), (context, rule, validator) => new RangeClientValidator(rule, validator) },
+			{ typeof(IGreaterThanOrEqualValidator), (context, rule, validator) => new RangeMinClientValidator(rule, validator) },
+			{ typeof(ILessThanOrEqualValidator), (context, rule, validator) => new RangeMaxClientValidator(rule, validator) },
+			{ typeof(IEqualValidator), (context, rule, validator) => new EqualToClientValidator(rule, validator) },
+			{ typeof(ICreditCardValidator), (context, rule, validator) => new CreditCardClientValidator(rule, validator) },
 		};
 
 		public FluentValidationClientModelValidatorProvider(IHttpContextAccessor httpContextAccessor) {
 			_httpContextAccessor = httpContextAccessor;
 		}
 
-		public void Add(string validatorName, FluentValidationClientValidatorFactory factory) {
-			if (validatorName == null) throw new ArgumentNullException(nameof(validatorName));
+		public void Add(Type validatorType, FluentValidationClientValidatorFactory factory) {
+			if (validatorType == null) throw new ArgumentNullException(nameof(validatorType));
 			if (factory == null) throw new ArgumentNullException(nameof(factory));
 
-			ClientValidatorFactories[validatorName] = factory;
+			ClientValidatorFactories[validatorType] = factory;
 		}
 
 		public void CreateValidators(ClientValidatorProviderContext context) {
@@ -120,7 +120,7 @@ namespace FluentValidation.AspNetCore {
 			var type = propertyValidator.GetType();
 
 			var factory = ClientValidatorFactories
-				.Where(x => x.Key == propertyValidator.Name)
+				.Where(x => x.Key.IsAssignableFrom(type))
 				.Select(x => x.Value)
 				.FirstOrDefault();
 

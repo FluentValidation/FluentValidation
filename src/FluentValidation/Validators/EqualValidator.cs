@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	using System.Reflection;
 	using Resources;
 
-	public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IComparisonValidator {
+	public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqualValidator {
 		readonly Func<T, TProperty> _func;
 		private readonly string _memberDisplayName;
 		readonly IEqualityComparer _comparer;
@@ -85,4 +85,6 @@ namespace FluentValidation.Validators {
 			return Localized(Name);
 		}
 	}
+
+	public interface IEqualValidator : IComparisonValidator { }
 }
