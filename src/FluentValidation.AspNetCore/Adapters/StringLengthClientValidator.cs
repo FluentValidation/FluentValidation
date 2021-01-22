@@ -50,7 +50,7 @@ namespace FluentValidation.AspNetCore {
 				message = lengthVal.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
-				if (lengthVal.Name == "ExactLengthValidator") {
+				if (lengthVal is IExactLengthValidator) {
 					message = cfg.LanguageManager.GetString("ExactLength_Simple");
 				}
 				else {
@@ -60,7 +60,7 @@ namespace FluentValidation.AspNetCore {
 
 
 			if (message.Contains("{TotalLength}")) {
-				if (lengthVal.Name == "ExactLengthValidator") {
+				if (lengthVal is IExactLengthValidator) {
 					message = cfg.LanguageManager.GetString("ExactLength_Simple");
 				}
 				else {

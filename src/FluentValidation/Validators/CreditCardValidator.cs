@@ -24,7 +24,7 @@ namespace FluentValidation.Validators {
 	/// <summary>
 	/// Ensures that the property value is a valid credit card number.
 	/// </summary>
-	public class CreditCardValidator<T> : PropertyValidator<T,string> {
+	public class CreditCardValidator<T> : PropertyValidator<T,string>, ICreditCardValidator {
 		// This logic was taken from the CreditCardAttribute in the ASP.NET MVC3 source.
 
 		public override string Name => "CreditCardValidator";
@@ -62,4 +62,6 @@ namespace FluentValidation.Validators {
 			return (checksum % 10) == 0;
 		}
 	}
+
+	public interface ICreditCardValidator { }
 }
