@@ -28,8 +28,8 @@ namespace FluentValidation.Validators {
 
 		public override string Name => "NotEmptyValidator";
 
-		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
-			switch (context.PropertyValue) {
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
+			switch (value) {
 				case null:
 				case string s when string.IsNullOrWhiteSpace(s):
 				case ICollection {Count: 0}:
@@ -39,7 +39,7 @@ namespace FluentValidation.Validators {
 			}
 
 			//TODO: Rewrite to avoid boxing
-			if (Equals(context.PropertyValue, default(TProperty))) {
+			if (Equals(value, default(TProperty))) {
 				// Note: Code analysis indicates "Expression is always false" but this is incorrect.
 				return false;
 			}

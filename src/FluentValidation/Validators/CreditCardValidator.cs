@@ -33,9 +33,7 @@ namespace FluentValidation.Validators {
 			return Localized(Name);
 		}
 
-		protected override bool IsValid(PropertyValidatorContext<T,string> context) {
-			var value = context.PropertyValue;
-
+		public override bool IsValid(ValidationContext<T> context, string value) {
 			if (value == null) {
 				return true;
 			}

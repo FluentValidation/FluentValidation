@@ -268,5 +268,55 @@ namespace FluentValidation.Internal {
 				_asyncCondition = async (ctx, ct) => await condition(ctx, ct) && await original(ctx, ct);
 			}
 		}
+
+		/// <summary>
+		/// Prepares the <see cref="MessageFormatter"/> of <paramref name="context"/> for an upcoming <see cref="ValidationFailure"/>.
+		/// </summary>
+		/// <param name="context">The validator context</param>
+		/// <param name="value">Property value.</param>
+		protected void PrepareMessageFormatterForValidationError(ValidationContext<T> context, TValue value) {
+			context.MessageFormatter.AppendPropertyName(context.DisplayName);
+			context.MessageFormatter.AppendPropertyValue(value);
+
+			// If there's a collection index cached in the root context data then add it
+			// to the message formatter. This happens when a child validator is executed
+			// as part of a call to RuleForEach. Usually parameters are not flowed through to
+			// child validators, but we make an exception for collection indices.
+			if (context.RootContextData.TryGetValue("__FV_CollectionIndex", out var index)) {
+				// If our property validator has explicitly added a placeholder for the collection index
+				// don't overwrite it with the cached version.
+				if (!context.MessageFormatter.PlaceholderValues.ContainsKey("CollectionIndex")) {
+					context.MessageFormatter.AppendArgument("CollectionIndex", index);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Creates an error validation result for this validator.
+		/// </summary>
+		/// <param name="context">The validator context</param>
+		/// <param name="value">The property value</param>
+		/// <param name="validator">The current property validator</param>
+		/// <returns>Returns an error validation result.</returns>
+		protected ValidationFailure CreateValidationError(ValidationContext<T> context, TValue value, PropertyValidator<T,TValue> validator) {
+			var error = MessageBuilder != null
+				? MessageBuilder(new MessageBuilderContext<T, TValue>(context, value, validator))
+				: validator.GetErrorMessage(context, value);
+
+			var failure = new ValidationFailure(context.PropertyName, error, value);
+			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
+			failure.ErrorCode = validator.ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(validator);
+
+			if (validator.CustomStateProvider != null) {
+				failure.CustomState = validator.CustomStateProvider(context, value);
+			}
+
+			if (validator.SeverityProvider != null) {
+				failure.Severity = validator.SeverityProvider(context, value);
+			}
+
+			return failure;
+		}
+
 	}
 }

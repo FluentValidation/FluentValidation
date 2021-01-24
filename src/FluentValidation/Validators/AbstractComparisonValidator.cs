@@ -52,9 +52,10 @@ namespace FluentValidation.Validators {
 		/// Performs the comparison
 		/// </summary>
 		/// <param name="context"></param>
+		/// <param name="propertyValue"></param>
 		/// <returns></returns>
-		protected sealed override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
-			if(context.PropertyValue == null) {
+		public sealed override bool IsValid(ValidationContext<T> context, TProperty propertyValue) {
+			if(propertyValue == null) {
 				// If we're working with a nullable type then this rule should not be applied.
 				// If you want to ensure that it's never null then a NotNull rule should also be applied.
 				return true;
@@ -62,7 +63,7 @@ namespace FluentValidation.Validators {
 
 			var value = GetComparisonValue(context);
 
-			if (!IsValid(context.PropertyValue as IComparable, value)) {
+			if (!IsValid(propertyValue as IComparable, value)) {
 				context.MessageFormatter.AppendArgument("ComparisonValue", value);
 				context.MessageFormatter.AppendArgument("ComparisonProperty", _comparisonMemberDisplayName ?? "");
 				return false;
@@ -71,7 +72,7 @@ namespace FluentValidation.Validators {
 			return true;
 		}
 
-		public IComparable GetComparisonValue(PropertyValidatorContext<T,TProperty> context) {
+		public IComparable GetComparisonValue(ValidationContext<T> context) {
 			if(_valueToCompareFunc != null) {
 				return _valueToCompareFunc(context.InstanceToValidate);
 			}

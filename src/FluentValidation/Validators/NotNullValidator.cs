@@ -24,11 +24,8 @@ namespace FluentValidation.Validators {
 
 		public override string Name => "NotNullValidator";
 
-		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
-			if (context.PropertyValue == null) {
-				return false;
-			}
-			return true;
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
+			return value != null;
 		}
 
 		protected override string GetDefaultMessageTemplate() {

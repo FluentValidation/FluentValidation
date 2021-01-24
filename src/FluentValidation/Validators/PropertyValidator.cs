@@ -17,14 +17,8 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Internal;
-	using Resources;
-	using Results;
 
 	public abstract class PropertyValidator<T, TProperty> : PropertyValidatorOptions<T,TProperty>, IPropertyValidator {
 
@@ -54,33 +48,6 @@ namespace FluentValidation.Validators {
 		}
 
 
-		/// <summary>
-		/// Performs validation
-		/// </summary>
-		/// <param name="context"></param>
-		public virtual void Validate(PropertyValidatorContext<T,TProperty> context) {
-			if (IsValid(context)) return;
-
-			PrepareMessageFormatterForValidationError(context);
-			var failure = CreateValidationError(context);
-			OnFailure?.Invoke(context.InstanceToValidate, context, failure.ErrorMessage);
-			context.AddFailure(failure);
-		}
-
-		/// <summary>
-		/// Performs validation asynchronously.
-		/// </summary>
-		/// <param name="context"></param>
-		/// <param name="cancellation"></param>
-		public virtual async Task ValidateAsync(PropertyValidatorContext<T,TProperty> context, CancellationToken cancellation) {
-			if (await IsValidAsync(context, cancellation)) return;
-
-			PrepareMessageFormatterForValidationError(context);
-			var failure = CreateValidationError(context);
-			OnFailure?.Invoke(context.InstanceToValidate, context, failure.ErrorMessage);
-			context.AddFailure(failure);
-		}
-
 		/// <inheritdoc />
 		public virtual bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If the user has applied an async condition, then always go through the async path
@@ -89,60 +56,23 @@ namespace FluentValidation.Validators {
 			return false;
 		}
 
-		protected abstract bool IsValid(PropertyValidatorContext<T,TProperty> context);
-
-#pragma warning disable 1998
-		protected virtual async Task<bool> IsValidAsync(PropertyValidatorContext<T, TProperty> context, CancellationToken cancellation) {
-			return IsValid(context);
-		}
-#pragma warning restore 1998
+		/// <summary>
+		/// Validates a specific property value.
+		/// </summary>
+		/// <param name="context">The validation context. The parent object can be obtained from here.</param>
+		/// <param name="value">The current property value to validate</param>
+		/// <returns>True if valid, otherwise false.</returns>
+		public abstract bool IsValid(ValidationContext<T> context, TProperty value);
 
 		/// <summary>
-		/// Prepares the <see cref="MessageFormatter"/> of <paramref name="context"/> for an upcoming <see cref="ValidationFailure"/>.
+		/// Validates a specific property value asynchronously.
 		/// </summary>
-		/// <param name="context">The validator context</param>
-		protected virtual void PrepareMessageFormatterForValidationError(PropertyValidatorContext<T, TProperty> context) {
-			context.MessageFormatter.AppendPropertyName(context.DisplayName);
-			context.MessageFormatter.AppendPropertyValue(context.PropertyValue);
-
-			// If there's a collection index cached in the root context data then add it
-			// to the message formatter. This happens when a child validator is executed
-			// as part of a call to RuleForEach. Usually parameters are not flowed through to
-			// child validators, but we make an exception for collection indices.
-			if (context.ParentContext.RootContextData.TryGetValue("__FV_CollectionIndex", out var index)) {
-				// If our property validator has explicitly added a placeholder for the collection index
-				// don't overwrite it with the cached version.
-				if (!context.MessageFormatter.PlaceholderValues.ContainsKey("CollectionIndex")) {
-					context.MessageFormatter.AppendArgument("CollectionIndex", index);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Creates an error validation result for this validator.
-		/// </summary>
-		/// <param name="context">The validator context</param>
-		/// <returns>Returns an error validation result.</returns>
-		protected virtual ValidationFailure CreateValidationError(PropertyValidatorContext<T,TProperty> context) {
-			var messageBuilderContext = new MessageBuilderContext<T,TProperty>(context, this);
-
-			var error = context.Rule.MessageBuilder != null
-				? context.Rule.MessageBuilder(messageBuilderContext)
-				: messageBuilderContext.GetDefaultMessage();
-
-			var failure = new ValidationFailure(context.PropertyName, error, context.PropertyValue);
-			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-			failure.ErrorCode = ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(this);
-
-			if (CustomStateProvider != null) {
-				failure.CustomState = CustomStateProvider(context);
-			}
-
-			if (SeverityProvider != null) {
-				failure.Severity = SeverityProvider(context);
-			}
-
-			return failure;
+		/// <param name="context">The validation context. The parent object can be obtained from here.</param>
+		/// <param name="value">The current property value to validate</param>
+		/// <param name="cancellation">Cancellation token</param>
+		/// <returns>True if valid, otherwise false.</returns>
+		public virtual Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+			return Task.FromResult(IsValid(context, value));
 		}
 	}
 }

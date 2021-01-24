@@ -38,12 +38,9 @@ namespace FluentValidation.Validators {
 			_caseSensitive = caseSensitive;
 		}
 
-		protected override bool IsValid(PropertyValidatorContext<T,string> context) {
-			if (context.PropertyValue == null) return true;
-
-			string value = context.PropertyValue.ToString();
+		public override bool IsValid(ValidationContext<T> context, string value) {
+			if (value == null) return true;
 			var comparison = _caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-
 			return Enum.GetNames(_enumType).Any(n => n.Equals(value, comparison));
 		}
 

@@ -29,7 +29,7 @@ namespace FluentValidation {
 	/// </summary>
 	public class PropertyValidatorOptions<T,TProperty> {
 		private string _errorMessage;
-		private Func<PropertyValidatorContext<T,TProperty>, string> _errorMessageFactory;
+		private Func<ValidationContext<T>, TProperty, string> _errorMessageFactory;
 		private Func<IValidationContext, bool> _condition;
 		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
 
@@ -90,12 +90,12 @@ namespace FluentValidation {
 		/// <summary>
 		/// Function used to retrieve custom state for the validator
 		/// </summary>
-		public Func<PropertyValidatorContext<T,TProperty>, object> CustomStateProvider { get; set; }
+		public Func<ValidationContext<T>, TProperty, object> CustomStateProvider { get; set; }
 
 		/// <summary>
 		/// Function used to retrieve the severity for the validator
 		/// </summary>
-		public Func<PropertyValidatorContext<T,TProperty>, Severity> SeverityProvider { get; set; }
+		public Func<ValidationContext<T>, TProperty, Severity> SeverityProvider { get; set; }
 
 		/// <summary>
 		/// Retrieves the error code.
@@ -112,10 +112,11 @@ namespace FluentValidation {
 		/// Gets the error message. If a context is supplied, it will be used to format the message if it has placeholders.
 		/// If no context is supplied, the raw unformatted message will be returned, containing placeholders.
 		/// </summary>
-		/// <param name="context">The current property validator context.</param>
+		/// <param name="context">The validation context.</param>
+		/// <param name="value">The current property value.</param>
 		/// <returns>Either the formatted or unformatted error message.</returns>
-		public string GetErrorMessage(PropertyValidatorContext<T,TProperty> context) {
-			string rawTemplate = _errorMessageFactory?.Invoke(context) ?? _errorMessage ?? GetDefaultMessageTemplate();
+		public string GetErrorMessage(ValidationContext<T> context, TProperty value) {
+			string rawTemplate = _errorMessageFactory?.Invoke(context, value) ?? _errorMessage ?? GetDefaultMessageTemplate();
 
 			if (context == null) {
 				return rawTemplate;
@@ -129,14 +130,14 @@ namespace FluentValidation {
 		/// </summary>
 		/// <returns></returns>
 		public string GetUnformattedErrorMessage() {
-			return _errorMessageFactory?.Invoke(null) ?? _errorMessage ?? GetDefaultMessageTemplate();
+			return _errorMessageFactory?.Invoke(null, default) ?? _errorMessage ?? GetDefaultMessageTemplate();
 		}
 
 		/// <summary>
 		/// Sets the overridden error message template for this validator.
 		/// </summary>
 		/// <param name="errorFactory">A function for retrieving the error message template.</param>
-		public void SetErrorMessage(Func<PropertyValidatorContext<T,TProperty>, string> errorFactory) {
+		public void SetErrorMessage(Func<ValidationContext<T>, TProperty, string> errorFactory) {
 			_errorMessageFactory = errorFactory;
 			_errorMessage = null;
 		}
@@ -150,7 +151,7 @@ namespace FluentValidation {
 			_errorMessageFactory = null;
 		}
 
-		internal Action<T, PropertyValidatorContext<T,TProperty>, string> OnFailure { get; set; }
+		internal Action<T, ValidationContext<T>, TProperty, string> OnFailure { get; set; }
 	}
 
 }

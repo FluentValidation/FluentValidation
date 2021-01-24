@@ -32,11 +32,11 @@ namespace FluentValidation.Validators {
 			return context.IsAsync() || HasAsyncCondition;
 		}
 
-		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
 			//TODO: For FV 9, throw an exception by default if async validator is being executed synchronously.
-			return Task.Run(() => IsValidAsync(context, new CancellationToken())).GetAwaiter().GetResult();
+			return Task.Run(() => IsValidAsync(context, value, new CancellationToken())).GetAwaiter().GetResult();
 		}
 
-		protected abstract override Task<bool> IsValidAsync(PropertyValidatorContext<T,TProperty> context, CancellationToken cancellation);
+		public abstract override Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
 	}
 }

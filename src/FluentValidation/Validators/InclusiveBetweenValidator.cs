@@ -38,8 +38,8 @@ namespace FluentValidation.Validators {
 		public IComparable From { get; }
 		public IComparable To { get; }
 
-		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
-			var propertyValue = context.PropertyValue as IComparable;
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
+			var propertyValue = value as IComparable;
 
 			// If the value is null then we abort and assume success.
 			// This should not be a failure condition - only a NotNull/NotEmpty should cause a null to fail.
@@ -50,7 +50,7 @@ namespace FluentValidation.Validators {
 				context.MessageFormatter
 					.AppendArgument("From", From)
 					.AppendArgument("To", To)
-					.AppendArgument("Value", context.PropertyValue);
+					.AppendArgument("Value", value);
 
 				return false;
 			}

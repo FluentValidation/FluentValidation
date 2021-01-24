@@ -141,7 +141,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 			return rule.Configure(config => {
-				config.CurrentValidator.SetErrorMessage(ctx => {
+				config.CurrentValidator.SetErrorMessage((ctx, val) => {
 					return messageProvider(ctx == null ? default : ctx.InstanceToValidate);
 				});
 			});
@@ -157,8 +157,8 @@ namespace FluentValidation {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 
 			return rule.Configure(config => {
-				config.CurrentValidator.SetErrorMessage(context => {
-					return messageProvider(context == null ? default : context.InstanceToValidate, context == null ? default : context.PropertyValue);
+				config.CurrentValidator.SetErrorMessage((context, value) => {
+					return messageProvider(context == null ? default : context.InstanceToValidate, value);
 				});
 			});
 		}
@@ -370,7 +370,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
-			var wrapper = new Func<PropertyValidatorContext<T,TProperty>, object>(ctx => stateProvider((T) ctx.InstanceToValidate));
+			var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, _) => stateProvider(ctx.InstanceToValidate));
 			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = wrapper);
 		}
 
@@ -385,8 +385,8 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
 
-			var wrapper = new Func<PropertyValidatorContext<T,TProperty>, object>(ctx => {
-				return stateProvider(ctx.InstanceToValidate, ctx.PropertyValue);
+			var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, val) => {
+				return stateProvider(ctx.InstanceToValidate, val);
 			});
 
 			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = wrapper);
@@ -401,7 +401,7 @@ namespace FluentValidation {
 		/// <param name="severity"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Severity severity) {
-			return rule.Configure(config => config.CurrentValidator.SeverityProvider = (x) => severity);
+			return rule.Configure(config => config.CurrentValidator.SeverityProvider = (_, _) => severity);
 		}
 
 		/// <summary>
@@ -415,7 +415,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, Severity> severityProvider) {
 			severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
 
-			Severity SeverityProvider(PropertyValidatorContext<T,TProperty> ctx) {
+			Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
 				return severityProvider(ctx.InstanceToValidate);
 			}
 
@@ -433,8 +433,8 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, Severity> severityProvider) {
 			severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
 
-			Severity SeverityProvider(PropertyValidatorContext<T,TProperty> ctx) {
-				return severityProvider(ctx.InstanceToValidate, ctx.PropertyValue);
+			Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
+				return severityProvider(ctx.InstanceToValidate, value);
 			}
 
 			return rule.Configure(config => config.CurrentValidator.SeverityProvider = SeverityProvider);
@@ -450,7 +450,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
 			return rule.Configure(config => {
-				config.CurrentValidator.OnFailure = (instance, _, _) => onFailure((T)instance);
+				config.CurrentValidator.OnFailure = (instance, _, _, _) => onFailure((T)instance);
 			});
 		}
 
@@ -462,9 +462,9 @@ namespace FluentValidation {
 		/// <param name="rule"></param>
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext<T,TProperty>> onFailure) {
+		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, ValidationContext<T>, TProperty> onFailure) {
 			return rule.Configure(config => {
-				config.CurrentValidator.OnFailure = (instance, context, _) => onFailure((T)instance, context);
+				config.CurrentValidator.OnFailure = (instance, context, val, _) => onFailure(instance, context, val);
 			});
 		}
 
@@ -476,9 +476,9 @@ namespace FluentValidation {
 		/// <param name="rule"></param>
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, PropertyValidatorContext<T,TProperty>, string> onFailure) {
+		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, ValidationContext<T>, TProperty, string> onFailure) {
 			return rule.Configure(config => {
-				config.CurrentValidator.OnFailure = (instance, context, msg) => onFailure((T)instance, context, msg);
+				config.CurrentValidator.OnFailure = (instance, context, val, msg) => onFailure(instance, context, val, msg);
 			});
 		}
 
