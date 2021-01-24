@@ -16,6 +16,9 @@
 				return true;
 
 			var valid = list.Count() <= _countLimit;
+			if (!valid)
+				context.MessageFormatter.AppendArgument("ValueToCompare", ValueToCompare);
+
 			return valid;
 		}
 

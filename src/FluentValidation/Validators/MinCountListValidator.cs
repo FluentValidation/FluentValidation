@@ -16,6 +16,9 @@
 				return true;
 
 			var valid = list.Count() >= _countMin;
+			if (!valid)
+				context.MessageFormatter.AppendArgument("ValueToCompare", ValueToCompare);
+
 			return valid;
 		}
 		protected override string GetDefaultMessageTemplate() {

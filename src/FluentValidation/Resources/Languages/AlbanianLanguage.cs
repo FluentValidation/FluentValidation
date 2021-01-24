@@ -49,7 +49,7 @@ namespace FluentValidation.Resources {
 			nameof(ScalePrecisionValidator) => "'{PropertyName}' nuk mund të jetë më shumë se {ExpectedPrecision} shifra në total, me hapësirë për {ExpectedScale} shifra dhjetore. {Digits} shifra dhe {ActualScale} shifra dhjetore u gjetën.",
 			nameof(EmptyValidator) => "'{PropertyName}' nuk duhet të jetë bosh.",
 			nameof(NullValidator) => "'{PropertyName}' duhet të jetë bosh.",
-			nameof(EnumValidator) => "'{PropertyName}' duhet të ketë të paktën '{ValueToCompare}' artikuj.",
+			nameof(EnumValidator) => "'{PropertyName}' ka një varg vlerash të cilat nuk përfshijnë '{PropertyValue}'.",
 			nameof(MinCountListValidator) => "'{PropertyName}' duhet të jetë bosh '{ValueToCompare}'.",
 			nameof(MaxCountListValidator) => "'{PropertyName}' duhet të ketë maksimumi artikujt '{ValueToCompare}'.",
 			// Additional fallback messages used by clientside validation integration.

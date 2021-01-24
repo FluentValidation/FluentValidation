@@ -1,10 +1,9 @@
 ﻿namespace FluentValidation.Tests {
-	using System;
+	using Resources;
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
 	using System.Reflection;
-	using Resources;
 	using Validators;
 	using Xunit;
 
@@ -171,6 +170,8 @@
 				nameof(EmptyValidator),
 				nameof(NullValidator),
 				nameof(EnumValidator),
+				nameof(MinCountListValidator),
+				nameof(MaxCountListValidator),
 				"Length_Simple",
 				"MinimumLength_Simple",
 				"MaximumLength_Simple",
@@ -180,10 +181,10 @@
 
 
 			var query = from type in typeof(LanguageManager).Assembly.GetTypes()
-				where type.Namespace == "FluentValidation.Resources" && !type.IsPublic
-				let cultureField = type.GetField("Culture", BindingFlags.Public | BindingFlags.Static)
-				where cultureField != null && cultureField.IsLiteral
-				select cultureField.GetValue(null);
+									where type.Namespace == "FluentValidation.Resources" && !type.IsPublic
+									let cultureField = type.GetField("Culture", BindingFlags.Public | BindingFlags.Static)
+									where cultureField != null && cultureField.IsLiteral
+									select cultureField.GetValue(null);
 
 			var languageNames = query.Cast<string>().ToList();
 
@@ -196,7 +197,7 @@
 				var referenceParameters = ExtractTemplateParameters(referenceMessage);
 				var translatedParameters = ExtractTemplateParameters(translatedMessage);
 				Assert.False(referenceParameters.Count() != translatedParameters.Count() ||
-				             referenceParameters.Except(translatedParameters).Any(),
+										 referenceParameters.Except(translatedParameters).Any(),
 					$"Translation for language {languageCode}, key {translationKey} has parameters {string.Join(",", translatedParameters)}, expected {string.Join(",", referenceParameters)}");
 			}
 
@@ -209,10 +210,10 @@
 		[Fact]
 		public void All_languages_should_be_loaded() {
 			var languages = from type in typeof(LanguageManager).Assembly.GetTypes()
-				where type.Namespace == "FluentValidation.Resources" && !type.IsPublic
-				let cultureField = type.GetField("Culture", BindingFlags.Public | BindingFlags.Static)
-				where cultureField != null && cultureField.IsLiteral
-				select new { Name = cultureField.GetValue(null) as string, Type = type.Name };
+											where type.Namespace == "FluentValidation.Resources" && !type.IsPublic
+											let cultureField = type.GetField("Culture", BindingFlags.Public | BindingFlags.Static)
+											where cultureField != null && cultureField.IsLiteral
+											select new { Name = cultureField.GetValue(null) as string, Type = type.Name };
 
 			string englishMessage = _languages.GetString(nameof(NotNullValidator), new CultureInfo("en"));
 
