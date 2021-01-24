@@ -276,6 +276,41 @@ namespace FluentValidation.Tests {
 			result.Errors[2].PropertyName.ShouldEqual("Children[1]");
 		}
 
+		[Fact]
+		public void Resets_state_correctly_between_rules() {
+			var v = new InlineValidator<Person>();
+			v.RuleForEach(x => x.NickNames).NotNull();
+			v.RuleFor(x => x.Forename).NotNull();
+
+			// The ValidationContext is reinitialized for each item in the collection
+			// Specifically, the PropertyChain is reset and modified.
+			// After the collection has been validated, the PropertyChain should be reset to its original value.
+			// We can test this by checking the final output of the property names for subsequent rules after the RuleForEach.
+			var result = v.Validate(new Person() {NickNames = new[] {null, "Foo", null}, Forename = null});
+			result.Errors.Count.ShouldEqual(3);
+			result.Errors[0].PropertyName.ShouldEqual("NickNames[0]");
+			result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
+			result.Errors[2].PropertyName.ShouldEqual("Forename");
+		}
+
+		[Fact]
+		public async Task Resets_state_correctly_between_rules_async() {
+			var v = new InlineValidator<Person>();
+			v.RuleForEach(x => x.NickNames).NotNull();
+			v.RuleFor(x => x.Forename).NotNull();
+
+			// The ValidationContext is reinitialized for each item in the collection
+			// Specifically, the PropertyChain is reset and modified.
+			// After the collection has been validated, the PropertyChain should be reset to its original value.
+			// We can test this by checking the final output of the property names for subsequent rules after the RuleForEach.
+			var result = await v.ValidateAsync(new Person() {NickNames = new[] {null, "Foo", null}, Forename = null});
+			result.Errors.Count.ShouldEqual(3);
+			result.Errors[0].PropertyName.ShouldEqual("NickNames[0]");
+			result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
+			result.Errors[2].PropertyName.ShouldEqual("Forename");
+		}
+
+		
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};
 		}
