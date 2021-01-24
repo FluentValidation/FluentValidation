@@ -171,6 +171,8 @@
 				nameof(EmptyValidator),
 				nameof(NullValidator),
 				nameof(EnumValidator),
+				nameof(MinCountListValidator),
+				nameof(MaxCountListValidator),
 				"Length_Simple",
 				"MinimumLength_Simple",
 				"MaximumLength_Simple",

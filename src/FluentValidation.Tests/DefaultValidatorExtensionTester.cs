@@ -213,18 +213,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void MinCount_should_value_min() {
-			validator.RuleFor(x => x.Children).MinCount(1);
-			AssertValidator<MinCountListValidator>();
-		}
-
-		[Fact]
-		public void MaxCount_should_value_max() {
-			validator.RuleFor(x => x.Children).MaxCount(1);
-			AssertValidator<MinCountListValidator>();
-		}
-
-		[Fact]
 		public void ScalePrecision_should_create_ScalePrecisionValidator() {
 			validator.RuleFor(x => x.Discount).ScalePrecision(2, 5);
 			AssertValidator<ScalePrecisionValidator>();
