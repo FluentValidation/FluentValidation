@@ -51,6 +51,7 @@ namespace FluentValidation.Resources {
 			nameof(NullValidator) => "'{PropertyName}' skal være tomt.",
 			nameof(EnumValidator) => "'{PropertyName}' har en rekke verdier men inneholder ikke '{PropertyValue}'.",
 			nameof(MinCountListValidator) => "'{PropertyName}' må ha minst '{ValueToCompare}'.",
+			nameof(MaxCountListValidator) => "'{PropertyName}' må ha '{ValueToCompare}' -elementer på det meste.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' skal være mellom {MinLength} og {MaxLength} tegn.",
 			"MinimumLength_Simple" => "'{PropertyName}' skal være større enn eller lik {MinLength} tegn.",

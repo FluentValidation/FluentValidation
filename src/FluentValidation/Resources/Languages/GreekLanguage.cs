@@ -51,6 +51,7 @@ namespace FluentValidation.Resources {
 			nameof(NullValidator) => "Το πεδίο '{PropertyName}' πρέπει να είναι κενό.",
 			nameof(EnumValidator) => "Το πεδίο '{PropertyName}' επιτρέπει συγκεκριμένο εύρος τιμών που δεν περιλαμβάνουν την τιμή '{PropertyValue}' που καταχωρίσατε.",
 			nameof(MinCountListValidator) => "Το '{PropertyName}' πρέπει να έχει τουλάχιστον στοιχεία '{ValueToCompare}'.",
+			nameof(MaxCountListValidator) => "Το '{PropertyName}' πρέπει να έχει στοιχεία '{ValueToCompare}' το πολύ.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "Το πεδίο '{PropertyName}' πρέπει να έχει μήκος μεταξύ {MinLength} και {MaxLength} χαρακτήρες.",
 			"MinimumLength_Simple" => "Το μήκος του πεδίου '{PropertyName}' πρέπει να είναι τουλάχιστον {MinLength} χαρακτήρες.",

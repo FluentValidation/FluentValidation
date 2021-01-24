@@ -51,6 +51,7 @@ namespace FluentValidation.Resources {
 			nameof(NullValidator) => "A(z) '{PropertyName}' üres kell, hogy legyen.",
 			nameof(EnumValidator) => "A(z) '{PropertyName}' csak olyan értékek közül választható, ami nem foglalja magába a(z) '{PropertyValue}' értéket.",
 			nameof(MinCountListValidator) => "A(z) '{PropertyName}' elemnek legalább '{ValueToCompare}' elemekkel kell rendelkeznie.",
+			nameof(MaxCountListValidator) => "A(z) '{PropertyName}' legfeljebb '{ValueToCompare}' elemet tartalmazhat.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "A(z) '{PropertyName}' {MinLength} és {MaxLength} karakter között kell, hogy legyen.",
 			"MinimumLength_Simple" => "A(z) '{PropertyName}' hossza legalább {MinLength} karakter kell, hogy legyen.",

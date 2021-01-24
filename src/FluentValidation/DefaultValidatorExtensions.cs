@@ -1054,6 +1054,18 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(new MinCountListValidator(countMin));
 		}
 
+		/// <summary>
+		/// Defines validation for maximum items in a list.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="countMax">The maximum value to compare</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, IList<TElement>> MaxCount<T, TElement>(this IRuleBuilder<T, IList<TElement>> ruleBuilder, int countMax) {
+			return ruleBuilder.SetValidator(new MaxCountListValidator(countMax));
+		}
+
 		private static string GetDisplayName<T, TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {
 			return ValidatorOptions.Global.DisplayNameResolver(typeof(T), member, expression) ?? member?.Name.SplitPascalCase();
 		}

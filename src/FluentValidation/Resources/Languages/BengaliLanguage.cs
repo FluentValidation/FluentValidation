@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(NullValidator) => "'{PropertyName}' অবশ্যই খালি হবে।",
 			nameof(EnumValidator) => "'{PropertyValue}' '{PropertyName}' এর সীমা লঙ্ঘন করে।",
 			nameof(MinCountListValidator) => "'{PropertyName}' এর অন্ততপক্ষে '{ValueToCompare}' আইটেম থাকা উচিত",
+			nameof(MaxCountListValidator) => "'{PropertiesName}' এর সর্বাধিক '{ValueToCompare}' আইটেম থাকা উচিত।",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' এর অক্ষর সংখ্যা অবশ্যই {MinLength} থেকে {MaxLength} এর মধ্যে হবে।",
 			"MinimumLength_Simple" => "'{PropertyName}' এর অক্ষর সংখ্যা কমপক্ষে {MinLength} অথবা এর চেয়ে বেশি হবে।",

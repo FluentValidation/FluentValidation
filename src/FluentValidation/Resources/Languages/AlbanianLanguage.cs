@@ -50,7 +50,8 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "'{PropertyName}' nuk duhet të jetë bosh.",
 			nameof(NullValidator) => "'{PropertyName}' duhet të jetë bosh.",
 			nameof(EnumValidator) => "'{PropertyName}' duhet të ketë të paktën '{ValueToCompare}' artikuj.",
-			nameof(MinCountListValidator) => "'{PropertyName}' duhet të jetë bosh.",
+			nameof(MinCountListValidator) => "'{PropertyName}' duhet të jetë bosh '{ValueToCompare}'.",
+			nameof(MaxCountListValidator) => "'{PropertyName}' duhet të ketë maksimumi artikujt '{ValueToCompare}'.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' duhet të jetë midis {MinLength} dhe {MaxLength} karakteresh.",
 			"MinimumLength_Simple" => "Gjatësia e '{PropertyName}' duhet të jetë të paktën {MinLength} karaktere.",

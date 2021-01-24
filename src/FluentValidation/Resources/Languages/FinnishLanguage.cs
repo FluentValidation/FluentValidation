@@ -51,6 +51,7 @@ namespace FluentValidation.Resources {
 			nameof(NullValidator) => "'{PropertyName}' pitäisi olla tyhjä.",
 			nameof(EnumValidator) => "'{PropertyName}' arvoista ei löydy '{PropertyValue}'.",
 			nameof(MinCountListValidator) => "'{PropertyName}' on oltava vähintään '{ValueToCompare}'.",
+			nameof(MaxCountListValidator) => "Kohteessa '{PropertyName}' saa olla enintään '{ValueToCompare}'.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' pitää olla {MinLength}-{MaxLength} merkkiä.",
 			"MinimumLength_Simple" => "'{PropertyName}' saa olla vähintään {MinLength} merkkiä.",

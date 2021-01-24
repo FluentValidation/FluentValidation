@@ -51,6 +51,7 @@ namespace FluentValidation.Resources {
 			nameof(NullValidator) => "'{PropertyName}' trebuie să fie goală.",
 			nameof(EnumValidator) => "'{PropertyName}' are o serie de valori care nu sunt incluse în '{PropertyValue}'.",
 			nameof(MinCountListValidator) => "'{PropertyName}' trebuie să aibă cel puțin elemente '{ValueToCompare}'.",
+			nameof(MaxCountListValidator) => "'{PropertyName}' trebuie să aibă cel mult elemente '{ValueToCompare}'.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' trebuie să fie între {MinLength} şi {MaxLength} caractere.",
 			"MinimumLength_Simple" => "'{PropertyName}' trebuie să fie mai mare sau egală cu caracterele {MinLength}.",

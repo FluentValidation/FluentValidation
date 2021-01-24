@@ -51,6 +51,7 @@ namespace FluentValidation.Resources {
 			nameof(NullValidator) => "'{PropertyName}' 必须为Null。",
 			nameof(EnumValidator) => "'{PropertyName}' 的值范围不包含 '{PropertyValue}'。",
 			nameof(MinCountListValidator) => "'{PropertyName}' 必须至少具有 '{ValueToCompare}'个项目。",
+			nameof(MaxCountListValidator) => "'{PropertyName}' 必须最多包含 '{ValueToCompare}' 个项目。",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' 的长度必须在 {MinLength} 到 {MaxLength} 字符。",
 			"MinimumLength_Simple" => "'{PropertyName}' 必须大于或等于{MinLength}个字符。",

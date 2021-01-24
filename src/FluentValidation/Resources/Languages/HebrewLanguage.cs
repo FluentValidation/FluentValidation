@@ -51,6 +51,7 @@ namespace FluentValidation.Resources {
 			nameof(NullValidator) => "'{PropertyName}' חייב להיות ריק.",
 			nameof(EnumValidator) => "'{PropertyName}' מכיל טווח ערכים שאינו כולל את '{PropertyValue}'.",
 			nameof(MinCountListValidator) => "'{PropertyName}' חייב לכלול פריטים '{ValueToCompare}' לפחות.",
+			nameof(MaxCountListValidator) => "'{PropertyName}' חייב לכלול פריטים '{ValueToCompare}' לכל היותר.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "אורך '{PropertyName}' חייב להיות בין {MinLength} ל- {MaxLength}.",
 			"MinimumLength_Simple" => "אורך '{PropertyName}' חייב להיות לפחות {MinLength} תווים.",
