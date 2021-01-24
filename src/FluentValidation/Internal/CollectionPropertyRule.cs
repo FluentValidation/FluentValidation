@@ -167,16 +167,15 @@ namespace FluentValidation.Internal {
 					var valueToValidate = element;
 					var propertyNameToValidate = newContext.PropertyChain.ToString();
 					var totalFailuresInner = context.Failures.Count;
-					var newPropertyContext = new PropertyValidatorContext<T, TElement>(newContext, this, propertyNameToValidate, valueToValidate);
+					newContext.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
 
 					foreach (var validator in filteredValidators) {
-						context.Formatter.Reset();
-
+						newContext.MessageFormatter.Reset();
 						if (validator.ShouldValidateAsynchronously(context)) {
-							InvokePropertyValidatorAsync(newPropertyContext, validator, index, default).GetAwaiter().GetResult();
+							InvokePropertyValidatorAsync(newContext, valueToValidate, propertyNameToValidate, validator, index, default).GetAwaiter().GetResult();
 						}
 						else {
-							InvokePropertyValidator(newPropertyContext, validator, index);
+							InvokePropertyValidator(newContext, valueToValidate, propertyNameToValidate, validator, index);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -280,16 +279,15 @@ namespace FluentValidation.Internal {
 					var valueToValidate = element;
 					var propertyNameToValidate = newContext.PropertyChain.ToString();
 					var totalFailuresInner = context.Failures.Count;
-					var newPropertyContext = new PropertyValidatorContext<T, TElement>(newContext, this, propertyNameToValidate, valueToValidate);
+					newContext.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
 
 					foreach (var validator in filteredValidators) {
-						context.Formatter.Reset();
-
+						context.MessageFormatter.Reset();
 						if (validator.ShouldValidateAsynchronously(context)) {
-							await InvokePropertyValidatorAsync(newPropertyContext, validator, index, cancellation);
+							await InvokePropertyValidatorAsync(newContext, valueToValidate, propertyNameToValidate, validator, index, cancellation);
 						}
 						else {
-							InvokePropertyValidator(newPropertyContext, validator, index);
+							InvokePropertyValidator(newContext, valueToValidate, propertyNameToValidate, validator, index);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -378,14 +376,28 @@ namespace FluentValidation.Internal {
 			return validators;
 		}
 
-		private async Task InvokePropertyValidatorAsync(PropertyValidatorContext<T, TElement> context, PropertyValidator<T,TElement> validator, int index, CancellationToken cancellation) {
+		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, TElement value, string propertyName, PropertyValidator<T,TElement> validator, int index, CancellationToken cancellation) {
 			context.MessageFormatter.AppendArgument("CollectionIndex", index);
-			await validator.ValidateAsync(context, cancellation);
+			bool valid = await validator.IsValidAsync(context, value, cancellation);
+
+			if (!valid) {
+				PrepareMessageFormatterForValidationError(context, value);
+				var failure = CreateValidationError(context, value, validator);
+				validator.OnFailure?.Invoke(context.InstanceToValidate, context, value, failure.ErrorMessage);
+				context.Failures.Add(failure);
+			}
 		}
 
-		private void InvokePropertyValidator(PropertyValidatorContext<T, TElement> context, PropertyValidator<T, TElement> validator, int index) {
+		private void InvokePropertyValidator(ValidationContext<T> context, TElement value, string propertyName, PropertyValidator<T, TElement> validator, int index) {
 			context.MessageFormatter.AppendArgument("CollectionIndex", index);
-			validator.Validate(context);
+			bool valid = validator.IsValid(context, value);
+
+			if (!valid) {
+				PrepareMessageFormatterForValidationError(context, value);
+				var failure = CreateValidationError(context, value, validator);
+				validator.OnFailure?.Invoke(context.InstanceToValidate, context, value, failure.ErrorMessage);
+				context.Failures.Add(failure);
+			}
 		}
 
 		private static string InferPropertyName(LambdaExpression expression) {

@@ -67,7 +67,7 @@ namespace FluentValidation.Internal {
 		public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TValidator> validatorProvider, params string[] ruleSets)
 			where TValidator : IValidator<TProperty> {
 			validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
-			this.SetValidator(new ChildValidatorAdaptor<T,TProperty>(context => validatorProvider((T) context.InstanceToValidate), typeof (TValidator)) {
+			this.SetValidator(new ChildValidatorAdaptor<T,TProperty>((context, _) => validatorProvider(context.InstanceToValidate), typeof (TValidator)) {
 				RuleSets = ruleSets
 			});
 			return this;
@@ -80,7 +80,7 @@ namespace FluentValidation.Internal {
 		/// <param name="ruleSets"></param>
 		public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TProperty, TValidator> validatorProvider, params string[] ruleSets) where TValidator : IValidator<TProperty> {
 			validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
-			this.SetValidator(new ChildValidatorAdaptor<T,TProperty>(context => validatorProvider((T) context.InstanceToValidate, (TProperty) context.PropertyValue), typeof (TValidator)) {
+			this.SetValidator(new ChildValidatorAdaptor<T,TProperty>((context, val) => validatorProvider(context.InstanceToValidate, val), typeof (TValidator)) {
 				RuleSets = ruleSets
 			});
 			return this;

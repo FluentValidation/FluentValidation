@@ -44,9 +44,9 @@ namespace FluentValidation.Validators {
 			_comparer = comparer;
 		}
 
-		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
 			var comparisonValue = GetComparisonValue(context);
-			bool success = Compare(comparisonValue, context.PropertyValue);
+			bool success = Compare(comparisonValue, value);
 
 			if (!success) {
 				context.MessageFormatter.AppendArgument("ComparisonValue", comparisonValue);
@@ -58,7 +58,7 @@ namespace FluentValidation.Validators {
 			return true;
 		}
 
-		private TProperty GetComparisonValue(PropertyValidatorContext<T,TProperty> context) {
+		private TProperty GetComparisonValue(ValidationContext<T> context) {
 			if (_func != null) {
 				return _func(context.InstanceToValidate);
 			}

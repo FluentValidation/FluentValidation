@@ -50,8 +50,8 @@ namespace FluentValidation.Validators {
 
 		public bool IgnoreTrailingZeros { get; set; }
 
-		protected override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
-			var decimalValue = context.PropertyValue as decimal?;
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
+			var decimalValue = value as decimal?;
 
 			if (decimalValue.HasValue) {
 				var scale = GetScale(decimalValue.Value);

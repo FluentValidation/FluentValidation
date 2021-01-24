@@ -21,16 +21,16 @@
 				invoked += 1;
 			});
 
-			_validator.RuleFor(person => person.Surname).NotEmpty().OnFailure((person, ctx) => {
+			_validator.RuleFor(person => person.Surname).NotEmpty().OnFailure((person, ctx, value) => {
 				Debug.WriteLine(ctx.PropertyName);
 				invoked += 1;
 			});
 
-			_validator.RuleFor(person => person.Forename).NotEqual("John").OnFailure((person, ctx) => {
+			_validator.RuleFor(person => person.Forename).NotEqual("John").OnFailure((person, ctx, value) => {
 				invoked += 1;
 			});
 
-			_validator.RuleFor(person => person.Age).GreaterThanOrEqualTo(18).OnFailure((person, ctx) => {
+			_validator.RuleFor(person => person.Age).GreaterThanOrEqualTo(18).OnFailure((person, ctx, value) => {
 				invoked += 1;
 			});
 
@@ -48,16 +48,16 @@
 				invoked += 1;
 			});
 
-			_validator.RuleFor(person => person.Surname).NotEmpty().OnFailure((person, ctx) => {
+			_validator.RuleFor(person => person.Surname).NotEmpty().OnFailure((person, ctx, value) => {
 				Debug.WriteLine(ctx.PropertyName);
 				invoked += 1;
 			});
 
-			_validator.RuleFor(person => person.Forename).NotEqual("John").OnFailure((person, ctx) => {
+			_validator.RuleFor(person => person.Forename).NotEqual("John").OnFailure((person, ctx, value) => {
 				invoked += 1;
 			});
 
-			_validator.RuleFor(person => person.Age).GreaterThanOrEqualTo(18).OnFailure((person, ctx) => {
+			_validator.RuleFor(person => person.Age).GreaterThanOrEqualTo(18).OnFailure((person, ctx, value) => {
 				invoked += 1;
 			});
 
@@ -71,7 +71,7 @@
 			_validator.CascadeMode = CascadeMode.Continue;
 
 			string errorMessage = string.Empty;
-			_validator.RuleFor(person => person.Surname).NotNull().WithMessage("You must specify Surname!").OnFailure((person,ctx, message) => {
+			_validator.RuleFor(person => person.Surname).NotNull().WithMessage("You must specify Surname!").OnFailure((person,ctx, value, message) => {
 				errorMessage = message;
 			});
 
@@ -83,7 +83,7 @@
 
 		[Fact]
 		public void ShouldHaveChildValidator_should_be_true() {
-			_validator.RuleFor(person => person.Address).SetValidator(new AddressValidatorWithOnFailure()).OnFailure((p,ctx)=> { Debug.WriteLine(p.Forename); });
+			_validator.RuleFor(person => person.Address).SetValidator(new AddressValidatorWithOnFailure()).OnFailure((p,ctx, value)=> { Debug.WriteLine(p.Forename); });
 			_validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidatorWithOnFailure));
 		}
 
@@ -96,7 +96,7 @@
 
 			_validator.RuleFor(person => person.Address)
 				.SetValidator(new AddressValidatorWithOnFailure())
-				.OnFailure((p, ctx) => { called = true; });
+				.OnFailure((p, ctx, value) => { called = true; });
 
 			_validator.Validate(new Person() {Address = new Address()});
 			called.ShouldBeTrue();
@@ -185,7 +185,7 @@
 
 	public class AddressValidatorWithOnFailure : AbstractValidator<Address> {
 		public AddressValidatorWithOnFailure() {
-			RuleFor(x => x.Postcode).NotNull().OnFailure((address, ctx) => {
+			RuleFor(x => x.Postcode).NotNull().OnFailure((address, ctx, value) => {
 				Debug.WriteLine(address.Line1);
 			});
 			RuleFor(x => x.Country).SetValidator(new CountryValidator());

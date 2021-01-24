@@ -13,8 +13,8 @@
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
 	public class CustomValidator<T, TProperty> : PropertyValidator<T,TProperty> {
-		private readonly Action<TProperty, PropertyValidatorContext<T,TProperty>> _action;
-		private Func<TProperty, PropertyValidatorContext<T,TProperty>, CancellationToken, Task> _asyncAction;
+		private readonly Action<TProperty, ValidationContext<T>> _action;
+		private Func<TProperty, ValidationContext<T>, CancellationToken, Task> _asyncAction;
 		private readonly bool _isAsync;
 
 		public override string Name => "CustomValidator";
@@ -23,7 +23,7 @@
 		/// Creates a new instance of the CustomValidator
 		/// </summary>
 		/// <param name="action"></param>
-		public CustomValidator(Action<TProperty, PropertyValidatorContext<T,TProperty>> action) {
+		public CustomValidator(Action<TProperty, ValidationContext<T>> action) {
 			_isAsync = false;
 			_action = action;
 
@@ -34,23 +34,21 @@
 		/// Creates a new instance of the CustomValidator.
 		/// </summary>
 		/// <param name="asyncAction"></param>
-		public CustomValidator(Func<TProperty, PropertyValidatorContext<T,TProperty>, CancellationToken, Task> asyncAction) {
+		public CustomValidator(Func<TProperty, ValidationContext<T>, CancellationToken, Task> asyncAction) {
 			_isAsync = true;
 			_asyncAction = asyncAction;
 			//TODO: For FV 9, throw an exception by default if async validator is being executed synchronously.
 			_action = (x, ctx) => Task.Run(() => _asyncAction(x, ctx, new CancellationToken())).GetAwaiter().GetResult();
 		}
 
-		public override void Validate(PropertyValidatorContext<T,TProperty> context) {
-			_action((TProperty) context.PropertyValue, context);
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
+			_action(value, context);
+			return true;
 		}
 
-		public override async Task ValidateAsync(PropertyValidatorContext<T,TProperty> context, CancellationToken cancellation) {
-			await _asyncAction((TProperty)context.PropertyValue, context, cancellation);
-		}
-
-		protected sealed override bool IsValid(PropertyValidatorContext<T,TProperty> context) {
-			throw new NotImplementedException();
+		public override async Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+			await _asyncAction(value, context, cancellation);
+			return true;
 		}
 
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {

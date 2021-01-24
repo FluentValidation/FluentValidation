@@ -43,8 +43,8 @@ namespace FluentValidation.Validators {
 			MinFunc = min;
 		}
 
-		protected override bool IsValid(PropertyValidatorContext<T,string> context) {
-			if (context.PropertyValue == null) return true;
+		public override bool IsValid(ValidationContext<T> context, string value) {
+			if (value == null) return true;
 
 			var min = Min;
 			var max = Max;
@@ -54,7 +54,7 @@ namespace FluentValidation.Validators {
 				min = MinFunc(context.InstanceToValidate);
 			}
 
-			int length = context.PropertyValue.Length;
+			int length = value.Length;
 
 			if (length < min || (length > max && max != -1)) {
 				context.MessageFormatter

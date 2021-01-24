@@ -18,7 +18,7 @@ namespace FluentValidation.Validators {
 	}
 
 	public class ChildValidatorAdaptor<T,TProperty> : NoopPropertyValidator<T,TProperty>, IChildValidatorAdaptor {
-		private readonly Func<PropertyValidatorContext<T, TProperty>, IValidator<TProperty>> _validatorProvider;
+		private readonly Func<ValidationContext<T>, TProperty, IValidator<TProperty>> _validatorProvider;
 		private readonly IValidator<TProperty> _validator;
 
 		public override string Name => "ChildValidatorAdaptor";
@@ -34,24 +34,24 @@ namespace FluentValidation.Validators {
 			ValidatorType = validatorType;
 		}
 
-		public ChildValidatorAdaptor(Func<PropertyValidatorContext<T, TProperty>, IValidator<TProperty>> validatorProvider, Type validatorType) {
+		public ChildValidatorAdaptor(Func<ValidationContext<T>, TProperty, IValidator<TProperty>> validatorProvider, Type validatorType) {
 			_validatorProvider = validatorProvider;
 			ValidatorType = validatorType;
 		}
 
-		public override void Validate(PropertyValidatorContext<T,TProperty> context) {
-			if (context.PropertyValue == null) {
-				return;
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
+			if (value == null) {
+				return true;
 			}
 
-			var validator = GetValidator(context);
+			var validator = GetValidator(context, value);
 
 			if (validator == null) {
-				return;
+				return true;
 			}
 
-			var newContext = CreateNewValidationContextForChildValidator(context);
-			var totalFailures = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext).Failures.Count;
+			var newContext = CreateNewValidationContextForChildValidator(context, value);
+			var totalFailures = context.Failures.Count;
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -66,23 +66,25 @@ namespace FluentValidation.Validators {
 			if (result.Errors.Count > totalFailures && OnFailure != null) {
 				// Errors collection will contain all the errors from the validation run, not just those for the child validator.
 				var firstError = result.Errors.Skip(totalFailures).First().ErrorMessage;
-				OnFailure(context.InstanceToValidate, context, firstError);
+				OnFailure(context.InstanceToValidate, context, value, firstError);
 			}
+
+			return true;
 		}
 
-		public override async Task ValidateAsync(PropertyValidatorContext<T,TProperty> context, CancellationToken cancellation) {
-			if (context.PropertyValue == null) {
-				return;
+		public override async Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+			if (value == null) {
+				return true;
 			}
 
-			var validator = GetValidator(context);
+			var validator = GetValidator(context, value);
 
 			if (validator == null) {
-				return;
+				return true;
 			}
 
-			var newContext = CreateNewValidationContextForChildValidator(context);
-			var totalFailures = ValidationContext<T>.GetFromNonGenericContext(context.ParentContext).Failures.Count;
+			var newContext = CreateNewValidationContextForChildValidator(context, value);
+			var totalFailures = context.Failures.Count;
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -96,27 +98,29 @@ namespace FluentValidation.Validators {
 			if (result.Errors.Count > totalFailures && OnFailure != null) {
 				// Errors collection will contain all the errors from the validation run, not just those for the child validator.
 				var firstError = result.Errors.Skip(totalFailures).First().ErrorMessage;
-				OnFailure(context.InstanceToValidate, context, firstError);
+				OnFailure(context.InstanceToValidate, context, value, firstError);
 			}
+
+			return true;
 		}
 
-		public virtual IValidator GetValidator(PropertyValidatorContext<T,TProperty> context) {
+		public virtual IValidator GetValidator(ValidationContext<T> context, TProperty value) {
 			context.Guard("Cannot pass a null context to GetValidator", nameof(context));
 
-			return _validatorProvider != null ? _validatorProvider(context) : _validator;
+			return _validatorProvider != null ? _validatorProvider(context, value) : _validator;
 		}
 
-		protected virtual IValidationContext CreateNewValidationContextForChildValidator(PropertyValidatorContext<T,TProperty> context) {
-			var selector = GetSelector(context);
-			var newContext = context.ParentContext.CloneForChildValidator(context.PropertyValue, PassThroughParentContext, selector);
+		protected virtual IValidationContext CreateNewValidationContextForChildValidator(ValidationContext<T> context, TProperty value) {
+			var selector = GetSelector(context, value);
+			var newContext = context.CloneForChildValidator(value, PassThroughParentContext, selector);
 
-			if(!context.ParentContext.IsChildCollectionContext)
-				newContext.PropertyChain.Add(context.Rule.PropertyName);
+			if(!context.IsChildCollectionContext)
+				newContext.PropertyChain.Add(context.RawPropertyName);
 
 			return newContext;
 		}
 
-		private protected virtual IValidatorSelector GetSelector(PropertyValidatorContext<T,TProperty> context) {
+		private protected virtual IValidatorSelector GetSelector(ValidationContext<T> context, TProperty value) {
 			return RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
 		}
 
@@ -124,22 +128,22 @@ namespace FluentValidation.Validators {
 			return context.IsAsync() || HasAsyncCondition;
 		}
 
-		private void HandleCollectionIndex(PropertyValidatorContext<T,TProperty> context, out object originalIndex, out object index) {
+		private void HandleCollectionIndex(ValidationContext<T> context, out object originalIndex, out object index) {
 			originalIndex = null;
 			if (context.MessageFormatter.PlaceholderValues.TryGetValue("CollectionIndex", out index)) {
-				context.ParentContext.RootContextData.TryGetValue("__FV_CollectionIndex", out originalIndex);
-				context.ParentContext.RootContextData["__FV_CollectionIndex"] = index;
+				context.RootContextData.TryGetValue("__FV_CollectionIndex", out originalIndex);
+				context.RootContextData["__FV_CollectionIndex"] = index;
 			}
 		}
 
-		private void ResetCollectionIndex(PropertyValidatorContext<T,TProperty> context, object originalIndex, object index) {
+		private void ResetCollectionIndex(ValidationContext<T> context, object originalIndex, object index) {
 			// Reset the collection index
 			if (index != null) {
 				if (originalIndex != null) {
-					context.ParentContext.RootContextData["__FV_CollectionIndex"] = originalIndex;
+					context.RootContextData["__FV_CollectionIndex"] = originalIndex;
 				}
 				else {
-					context.ParentContext.RootContextData.Remove("__FV_CollectionIndex");
+					context.RootContextData.Remove("__FV_CollectionIndex");
 				}
 			}
 		}
