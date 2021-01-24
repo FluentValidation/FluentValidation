@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "Rhaid i '{PropertyName}' fod yn wag.",
 			nameof(NullValidator) => "Rhaid i '{PropertyName}' fod yn wag.",
 			nameof(EnumValidator) => "Mae gan '{PropertyName}' ystod o werthoedd nad ydynt yn cynnwys '{PropertyValue}'.",
+			nameof(MinCountListValidator) => "Rhaid bod gan '{PropertyName}' eitemau '{ValueToCompare}' o leiaf.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "Rhaid i '{PropertyName}' fod rhwng {MinLength} a {MaxLength} o nodau.",
 			"MinimumLength_Simple" => "Rhaid i '{PropertyName}' fod o leiaf {MinLength} nod o hyd.",

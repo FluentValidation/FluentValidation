@@ -18,13 +18,13 @@
 #pragma warning disable 1998
 
 namespace FluentValidation.Tests {
+	using Internal;
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
-	using Internal;
-	using Xunit;
 	using Validators;
+	using Xunit;
 
 
 	public class DefaultValidatorExtensionTester {
@@ -213,6 +213,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void MinCount_should_value_min() {
+			validator.RuleFor(x => x.Children).MinCount(1);
+			AssertValidator<MinCountListValidator>();
+		}
+
+		[Fact]
 		public void ScalePrecision_should_create_ScalePrecisionValidator() {
 			validator.RuleFor(x => x.Discount).ScalePrecision(2, 5);
 			AssertValidator<ScalePrecisionValidator>();
@@ -226,8 +232,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task MustAsync_should_not_throw_InvalidCastException() {
-			var model = new Model
-			{
+			var model = new Model {
 				Ids = new Guid[0]
 			};
 			var validator = new AsyncModelTestValidator();
@@ -240,15 +245,12 @@ namespace FluentValidation.Tests {
 			rule.CurrentValidator.ShouldBe<TValidator>();
 		}
 
-		class Model
-		{
+		class Model {
 			public IEnumerable<Guid> Ids { get; set; }
 		}
 
-		class AsyncModelTestValidator : AbstractValidator<Model>
-		{
-			public AsyncModelTestValidator()
-			{
+		class AsyncModelTestValidator : AbstractValidator<Model> {
+			public AsyncModelTestValidator() {
 				RuleForEach(m => m.Ids)
 					.MustAsync((g, cancel) => Task.FromResult(true));
 			}

@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "'{PropertyName}'이 비어 있어야합니다.",
 			nameof(NullValidator) => "'{PropertyName}'이 비어 있어야합니다.",
 			nameof(EnumValidator) => "'{PropertyName}'에는 '{PropertyValue}'가 포함되지 않은 값 범위가 있습니다.",
+			nameof(MinCountListValidator) => "'{PropertyName}'에는 최소한 '{ValueToCompare}'항목이 있어야합니다.",
 			// Additional fallback messages used by clientside validation integration.
 			"ExactLength_Simple" => "'{PropertyName}'은(는) {MaxLength} 글자이하의 문자열이어야 합니다.",
 			"InclusiveBetween_Simple" => "'{PropertyName}'은(는) {From} 이상 {To} 이하여야 합니다.",

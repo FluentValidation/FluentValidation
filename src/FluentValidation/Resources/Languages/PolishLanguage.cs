@@ -49,7 +49,7 @@ namespace FluentValidation.Resources {
 			nameof(ScalePrecisionValidator) => "Wartość pola '{PropertyName}' nie może mieć więcej niż {ExpectedPrecision} cyfr z dopuszczalną dokładnością {ExpectedScale} cyfr po przecinku. Znaleziono {Digits} cyfr i {ActualScale} cyfr po przecinku.",
 			nameof(EmptyValidator) => "Pole '{PropertyName}' musi być puste.",
 			nameof(NullValidator) => "Pole '{PropertyName}' musi być puste.",
-			nameof(EnumValidator) => "Pole '{PropertyName}' ma zakres wartości, który nie obejmuje {PropertyValue}.",
+			nameof(MinCountListValidator) => "Pole '{PropertyName}' musi mieć co najmniej elementy '{ValueToCompare}'",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "Długość pola '{PropertyName}' musi się zawierać pomiędzy {MinLength} i {MaxLength} znaki(ów).",
 			"MinimumLength_Simple" => "Długość pola '{PropertyName}' musi być większa lub równa {MinLength} znaki(ów).",

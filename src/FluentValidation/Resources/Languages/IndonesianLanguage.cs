@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "'{PropertyName}' harus kosong.",
 			nameof(NullValidator) => "'{PropertyName}' harus kosong.",
 			nameof(EnumValidator) => "'{PropertyName}' memiliki rentang nilai yang tidak mengikutsertakan '{PropertyValue}'.",
+			nameof(MinCountListValidator) => "'{PropertyName}' setidaknya harus memiliki item '{ValueToCompare}'.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' harus di antara {MinLength} dan {MaxLength} karakter.",
 			"MinimumLength_Simple" => "Panjang dari '{PropertyName}' harus paling tidak {MinLength} karakter.",

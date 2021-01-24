@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "'{PropertyName}' უნდა იყოს ცარიელი.",
 			nameof(NullValidator) => "'{PropertyName}' უნდა იყოს ცარიელი.",
 			nameof(EnumValidator) => "'{PropertyValue}' არ შედის '{PropertyName}'-ის დასაშვებ მნიშვნელობებში.",
+			nameof(MinCountListValidator) => "'{PropertyName}' - ს უნდა ჰქონდეს მინიმუმ '{ValueTo შედარ}' ერთეული.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' უნდა იყოს {MinLength}-დან {MaxLength} სიმბოლომდე.",
 			"MinimumLength_Simple" => "'{PropertyName}'-ის სიგრძე უნდა აღემატებოდეს {MinLength} სიმბოლოს.",

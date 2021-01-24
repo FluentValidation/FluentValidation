@@ -1042,6 +1042,18 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(validator);
 		}
 
+		/// <summary>
+		/// Defines validation for minimum items in a list.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="countMin">The minimum value to compare</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, IList<TElement>> MinCount<T, TElement>(this IRuleBuilder<T, IList<TElement>> ruleBuilder, int countMin) {
+			return ruleBuilder.SetValidator(new MinCountListValidator(countMin));
+		}
+
 		private static string GetDisplayName<T, TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {
 			return ValidatorOptions.Global.DisplayNameResolver(typeof(T), member, expression) ?? member?.Name.SplitPascalCase();
 		}

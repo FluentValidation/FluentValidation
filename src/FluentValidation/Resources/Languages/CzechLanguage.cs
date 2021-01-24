@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "Pole '{PropertyName}' musí být prázdné.",
 			nameof(NullValidator) => "Pole '{PropertyName}' musí být prázdné.",
 			nameof(EnumValidator) => "Pole '{PropertyName}' má rozsah hodnot, které neobsahují '{PropertyValue}'.",
+			nameof(MinCountListValidator) => "Pole '{PropertyName}' musí obsahovat alespoň položky '{ValueToCompare}'.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "Délka pole '{PropertyName}' musí být v rozsahu {MinLength} až {MaxLength} znaků.",
 			"MinimumLength_Simple" => "Délka pole '{PropertyName}' musí být větší nebo rovna {MinLength} znakům.",

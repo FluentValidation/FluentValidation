@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "'{PropertyName}' は空でなければなりません。",
 			nameof(NullValidator) => "'{PropertyName}' は空でなければなりません。",
 			nameof(EnumValidator) => "'{PropertyName}' の範囲に '{PropertyValue}' は含まれていません。",
+			nameof(MinCountListValidator) => "'{PropertyName}'には少なくとも '{ValueToCompare}'アイテムが必要です。",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' は {MinLength} から {MaxLength} 文字の間で入力する必要があります。",
 			"MinimumLength_Simple" => "'{PropertyName}' は少なくとも {MinLength} 文字を入力しなければなりません。",

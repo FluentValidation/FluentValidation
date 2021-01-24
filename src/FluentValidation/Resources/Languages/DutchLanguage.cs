@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(InclusiveBetweenValidator) => "'{PropertyName}' moet tussen {From} en {To} liggen. Je hebt ingevuld {Value}.",
 			nameof(ScalePrecisionValidator) => "'{PropertyName}' mag in totaal niet meer dan {ExpectedPrecision} decimalen nauwkeurig zijn, met een grootte van {ExpectedScale} gehele getallen. Er zijn {Digits} decimalen en een grootte van {ActualScale} gehele getallen gevonden.",
 			nameof(NullValidator) => "'{PropertyName}' moet leeg zijn.",
+			nameof(MinCountListValidator) => "'{PropertyName}' moet minimaal '{ValueToCompare}' items bevatten.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "De lengte van '{PropertyName}' moet tussen {MinLength} en {MaxLength} karakters zijn.",
 			"MinimumLength_Simple" => "De lengte van '{PropertyName}' moet groter zijn dan of gelijk aan {MinLength} tekens.",

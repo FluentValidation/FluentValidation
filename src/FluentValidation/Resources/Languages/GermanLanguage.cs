@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "'{PropertyName}' sollte leer sein.",
 			nameof(NullValidator) => "'{PropertyName}' sollte leer sein.",
 			nameof(EnumValidator) => "'{PropertyName}' hat einen Wertebereich, der '{PropertyValue}' nicht enthält.",
+			nameof(MinCountListValidator) => "'{PropertyName}' muss mindestens '{ValueToCompare}' Elemente enthalten.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "Die Länge von '{PropertyName}' muss zwischen {MinLength} und {MaxLength} Zeichen liegen.",
 			"MinimumLength_Simple" => "Die Länge von '{PropertyName}' muss größer oder gleich {MinLength} sein.",

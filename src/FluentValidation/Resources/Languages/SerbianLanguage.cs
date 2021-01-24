@@ -50,6 +50,7 @@ namespace FluentValidation.Resources {
 			nameof(EmptyValidator) => "'{PropertyName}' mora biti prazno.",
 			nameof(NullValidator) => "'{PropertyName}' mora biti prazno.",
 			nameof(EnumValidator) => "'{PropertyName}' ima raspon vrijednosti koji ne uključuje '{PropertyValue}'.",
+			nameof(MinCountListValidator) => "'{ПропертиНаме}' мора да садржи најмање '{ВалуеТоЦомпаре}' ставке.",
 			// Additional fallback messages used by clientside validation integration.
 			"Length_Simple" => "'{PropertyName}' mora imati između {MinLength} i {MaxLength} karaktera.",
 			"MinimumLength_Simple" => "'{PropertyName}' mora imati najmanje {MinLength} karaktera.",
