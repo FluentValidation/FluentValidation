@@ -1046,7 +1046,7 @@ namespace FluentValidation {
 		/// Defines validation for minimum items in a list.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
-		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <typeparam name="TElement">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <param name="countMin">The minimum value to compare</param>
 		/// <returns></returns>
@@ -1058,7 +1058,7 @@ namespace FluentValidation {
 		/// Defines validation for maximum items in a list.
 		/// </summary>
 		/// <typeparam name="T">Type of object being validated</typeparam>
-		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <typeparam name="TElement">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <param name="countMax">The maximum value to compare</param>
 		/// <returns></returns>
