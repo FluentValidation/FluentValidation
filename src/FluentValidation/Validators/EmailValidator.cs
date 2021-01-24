@@ -46,10 +46,10 @@ namespace FluentValidation.Validators {
 
 		public override string Name => "EmailValidator";
 
-		protected override bool IsValid(PropertyValidatorContext<T,string> context) {
-			if (context.PropertyValue == null) return true;
+		public override bool IsValid(ValidationContext<T> context, string value) {
+			if (value == null) return true;
 
-			if (!_regex.IsMatch(context.PropertyValue)) {
+			if (!_regex.IsMatch(value)) {
 				return false;
 			}
 
@@ -72,9 +72,7 @@ namespace FluentValidation.Validators {
 
 		public override string Name => "EmailValidator";
 
-		protected override bool IsValid(PropertyValidatorContext<T,string> context) {
-			var value = context.PropertyValue;
-
+		public override bool IsValid(ValidationContext<T> context, string value) {
 			if (value == null) {
 				return true;
 			}

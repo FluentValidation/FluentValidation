@@ -72,7 +72,7 @@ namespace FluentValidation {
 
 		List<ValidationFailure> IHasFailures.Failures => Failures;
 		internal List<ValidationFailure> Failures { get; }
-		internal MessageFormatter Formatter { get; }
+		internal MessageFormatter MessageFormatter { get; }
 
 		/// <summary>
 		/// Creates a new validation context
@@ -92,12 +92,12 @@ namespace FluentValidation {
 			: this(instanceToValidate, propertyChain, validatorSelector, new List<ValidationFailure>(), ValidatorOptions.Global.MessageFormatterFactory()) {
 		}
 
-		internal ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, List<ValidationFailure> failures, MessageFormatter formatter) {
+		internal ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, List<ValidationFailure> failures, MessageFormatter messageFormatter) {
 			PropertyChain = new PropertyChain(propertyChain);
 			InstanceToValidate = instanceToValidate;
 			Selector = validatorSelector;
 			Failures = failures;
-			Formatter = formatter;
+			MessageFormatter = messageFormatter;
 		}
 
 		/// <summary>
@@ -204,7 +204,7 @@ namespace FluentValidation {
 		/// <param name="selector"></param>
 		/// <returns></returns>
 		public ValidationContext<TChild> CloneForChildValidator<TChild>(TChild instanceToValidate, bool preserveParentContext = false, IValidatorSelector selector = null) {
-			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector, Failures, Formatter) {
+			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector, Failures, MessageFormatter) {
 				IsChildContext = true,
 				RootContextData = RootContextData,
 				_parentContext = preserveParentContext ? this : null
@@ -218,12 +218,56 @@ namespace FluentValidation {
 		/// <param name="preserveParentContext"></param>
 		/// <returns></returns>
 		public ValidationContext<TNew> CloneForChildCollectionValidator<TNew>(TNew instanceToValidate, bool preserveParentContext = false) {
-			return new ValidationContext<TNew>(instanceToValidate, null, Selector, Failures, Formatter) {
+			return new ValidationContext<TNew>(instanceToValidate, null, Selector, Failures, MessageFormatter) {
 				IsChildContext = true,
 				IsChildCollectionContext = true,
 				RootContextData = RootContextData,
 				_parentContext = preserveParentContext ? this : null
 			};
+		}
+
+
+		/// <summary>
+		/// Adds a new validation failure.
+		/// </summary>
+		/// <param name="failure">The failure to add.</param>
+		/// <exception cref="ArgumentNullException"></exception>
+		public void AddFailure(ValidationFailure failure) {
+			if (failure == null) throw new ArgumentNullException(nameof(failure), "A failure must be specified when calling AddFailure");
+			Failures.Add(failure);
+		}
+
+		/// <summary>
+		/// Adds a new validation failure.
+		/// </summary>
+		/// <param name="propertyName">The property name</param>
+		/// <param name="errorMessage">The error message</param>
+		public void AddFailure(string propertyName, string errorMessage) {
+			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+			AddFailure(new ValidationFailure(propertyName ?? string.Empty, errorMessage));
+		}
+
+		/// <summary>
+		/// Adds a new validation failure (the property name is inferred)
+		/// </summary>
+		/// <param name="errorMessage">The error message</param>
+		public void AddFailure(string errorMessage) {
+			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+			AddFailure(PropertyName, errorMessage);
+		}
+
+		private Func<ValidationContext<T>, string> _displayNameFunc;
+
+		public string DisplayName => _displayNameFunc(this);
+
+		public string PropertyName { get; private set; }
+
+		internal string RawPropertyName { get; private set; }
+
+		internal void InitializeForPropertyValidator(string propertyName, Func<ValidationContext<T>, string> displayNameFunc, string rawPropertyName) {
+			PropertyName = propertyName;
+			_displayNameFunc = displayNameFunc;
+			RawPropertyName = rawPropertyName;
 		}
 	}
 }

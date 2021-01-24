@@ -4,18 +4,20 @@
 	using Validators;
 
 	public class MessageBuilderContext<T,TProperty> {
-		private PropertyValidatorContext<T,TProperty> _innerContext;
+		private ValidationContext<T> _innerContext;
+		private TProperty _value;
 
-		public MessageBuilderContext(PropertyValidatorContext<T,TProperty> innerContext, PropertyValidator<T,TProperty> propertyValidator) {
+		public MessageBuilderContext(ValidationContext<T> innerContext, TProperty value, PropertyValidator<T,TProperty> propertyValidator) {
 			_innerContext = innerContext;
+			_value = value;
 			PropertyValidator = propertyValidator;
 		}
 
 		public PropertyValidator<T,TProperty> PropertyValidator { get; }
 
-		public ValidationContext<T> ParentContext => _innerContext.ParentContext;
+		public ValidationContext<T> ParentContext => _innerContext;
 
-		public IValidationRule<T> Rule => _innerContext.Rule;
+		// public IValidationRule<T> Rule => _innerContext.Rule;
 
 		public string PropertyName => _innerContext.PropertyName;
 
@@ -23,14 +25,11 @@
 
 		public MessageFormatter MessageFormatter => _innerContext.MessageFormatter;
 
-		public object InstanceToValidate => _innerContext.InstanceToValidate;
-		public object PropertyValue => _innerContext.PropertyValue;
+		public T InstanceToValidate => _innerContext.InstanceToValidate;
+		public TProperty PropertyValue => _value;
 
 		public string GetDefaultMessage() {
-			return PropertyValidator.GetErrorMessage(_innerContext);
-		}
-		public static implicit operator PropertyValidatorContext<T,TProperty>(MessageBuilderContext<T,TProperty> ctx) {
-			return ctx._innerContext;
+			return PropertyValidator.GetErrorMessage(_innerContext, _value);
 		}
 	}
 }
