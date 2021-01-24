@@ -160,32 +160,34 @@ namespace FluentValidation.Internal {
 						useDefaultIndexFormat = false;
 					}
 
-					ValidationContext<T> newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
-					newContext.PropertyChain.Add(propertyName);
-					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
+					context.PrepareForChildCollectionValidator();
+					context.PropertyChain.Add(propertyName);
+					context.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
 					var valueToValidate = element;
-					var propertyNameToValidate = newContext.PropertyChain.ToString();
+					var propertyNameToValidate = context.PropertyChain.ToString();
 					var totalFailuresInner = context.Failures.Count;
-					newContext.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
+					context.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
 
 					foreach (var validator in filteredValidators) {
-						newContext.MessageFormatter.Reset();
+						context.MessageFormatter.Reset();
 						if (validator.ShouldValidateAsynchronously(context)) {
-							InvokePropertyValidatorAsync(newContext, valueToValidate, propertyNameToValidate, validator, index, default).GetAwaiter().GetResult();
+							InvokePropertyValidatorAsync(context, valueToValidate, propertyNameToValidate, validator, index, default).GetAwaiter().GetResult();
 						}
 						else {
-							InvokePropertyValidator(newContext, valueToValidate, propertyNameToValidate, validator, index);
+							InvokePropertyValidator(context, valueToValidate, propertyNameToValidate, validator, index);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 						// then don't continue to the next rule
 #pragma warning disable 618
 						if (context.Failures.Count > totalFailuresInner && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
+							context.RestoreState();
 							goto AfterValidate; // 🙃
 						}
 #pragma warning restore 618
 					}
+					context.RestoreState();
 				}
 			}
 
@@ -272,32 +274,35 @@ namespace FluentValidation.Internal {
 						useDefaultIndexFormat = false;
 					}
 
-					ValidationContext<T> newContext = context.CloneForChildCollectionValidator(context.InstanceToValidate, preserveParentContext: true);
-					newContext.PropertyChain.Add(propertyName);
-					newContext.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
+					context.PrepareForChildCollectionValidator();
+					context.PropertyChain.Add(propertyName);
+					context.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
 					var valueToValidate = element;
-					var propertyNameToValidate = newContext.PropertyChain.ToString();
+					var propertyNameToValidate = context.PropertyChain.ToString();
 					var totalFailuresInner = context.Failures.Count;
-					newContext.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
+					context.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
 
 					foreach (var validator in filteredValidators) {
 						context.MessageFormatter.Reset();
 						if (validator.ShouldValidateAsynchronously(context)) {
-							await InvokePropertyValidatorAsync(newContext, valueToValidate, propertyNameToValidate, validator, index, cancellation);
+							await InvokePropertyValidatorAsync(context, valueToValidate, propertyNameToValidate, validator, index, cancellation);
 						}
 						else {
-							InvokePropertyValidator(newContext, valueToValidate, propertyNameToValidate, validator, index);
+							InvokePropertyValidator(context, valueToValidate, propertyNameToValidate, validator, index);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
 						// then don't continue to the next rule
 #pragma warning disable 618
 						if (context.Failures.Count > totalFailuresInner && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
+							context.RestoreState();
 							goto AfterValidate; // 🙃
 						}
 #pragma warning restore 618
 					}
+
+					context.RestoreState();
 				}
 			}
 

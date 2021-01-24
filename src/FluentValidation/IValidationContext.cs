@@ -211,21 +211,24 @@ namespace FluentValidation {
 			};
 		}
 
-		/// <summary>
-		/// Creates a new validation context for use with a child collection validator
-		/// </summary>
-		/// <param name="instanceToValidate"></param>
-		/// <param name="preserveParentContext"></param>
-		/// <returns></returns>
-		public ValidationContext<TNew> CloneForChildCollectionValidator<TNew>(TNew instanceToValidate, bool preserveParentContext = false) {
-			return new ValidationContext<TNew>(instanceToValidate, null, Selector, Failures, MessageFormatter) {
-				IsChildContext = true,
-				IsChildCollectionContext = true,
-				RootContextData = RootContextData,
-				_parentContext = preserveParentContext ? this : null
-			};
+		internal void PrepareForChildCollectionValidator() {
+			_state ??= new();
+			_state.Push((IsChildContext, IsChildCollectionContext, _parentContext, PropertyChain));
+			IsChildContext = true;
+			IsChildCollectionContext = true;
+			PropertyChain = new PropertyChain();
 		}
 
+		internal void RestoreState() {
+			var state = _state.Pop();
+			IsChildContext = state.IsChildContext;
+			IsChildCollectionContext = state.IsChildCollectionContext;
+			_parentContext = state.ParentContext;
+			PropertyChain = state.Chain;
+		}
+
+
+		private Stack<(bool IsChildContext, bool IsChildCollectionContext, IValidationContext ParentContext, PropertyChain Chain)> _state;
 
 		/// <summary>
 		/// Adds a new validation failure.
