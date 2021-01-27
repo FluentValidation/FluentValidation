@@ -32,5 +32,5 @@ RuleFor(x => x.SomeStringProperty)
 
 ```eval_rst
 .. note::
-  FluentValidation 8.x supported a limited version of the Transform method that could only be used to perform transformations on the same type (eg if the property is a string, the result of the transformation must also be a string). FluentValidation 9.0 allows transformations to be performed that change the type.
+  FluentValidation 8.x supported a limited version of the Transform method that could only be used to perform transformations on the same type (e.g., if the property is a string, the result of the transformation must also be a string). FluentValidation 9.0 allows transformations to be performed that change the type.
 ```

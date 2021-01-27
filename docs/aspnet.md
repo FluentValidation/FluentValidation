@@ -121,7 +121,7 @@ public class PeopleController : Controller {
 </form>
 ```
 
-Now when you post the form, MVC's model-binding infrastructure will validate the `Person` object with the `PersonValidator`, and add the validation results to ModelState.
+Now when you post the form, MVC's model-binding infrastructure will validate the `Person` object with the `PersonValidator`, and add the validation results to `ModelState`.
 
 *Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contains an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically (by MVC), or manually.
 
@@ -132,7 +132,7 @@ Now when you post the form, MVC's model-binding infrastructure will validate the
 
 ### Compatibility with ASP.NET's built-in Validation
 
-By default, after FluentValidation is executed, any other validator providers will also have a chance to execute. This means you can mix FluentValidation with DataAnnotations attributes (or any other ASP.NET ModelValidatorProvider implementation).
+By default, after FluentValidation is executed, any other validator providers will also have a chance to execute. This means you can mix FluentValidation with [DataAnnotations attributes](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations) (or any other ASP.NET `ModelValidatorProvider` implementation).
 
 If you want to disable this behaviour so that FluentValidation is the only validation library that executes, you can set the `RunDefaultMvcValidationAfterFluentValidationExecutes` to false in your application startup routine:
 
@@ -142,7 +142,7 @@ services.AddMvc().AddFluentValidation(fv => {
 });
 ```
 
-*Note* If you do set `RunDefaultMvcValidationAfterFluentValidationExecutes` to false, then support for `IValidatableObject` will also be disabled.
+*Note* If you do set `RunDefaultMvcValidationAfterFluentValidationExecutes` to `false`, then support for `IValidatableObject` will also be disabled.
 
 ### Implicit vs Explicit Child Property Validation
 
@@ -174,7 +174,7 @@ services.AddMvc().AddFluentValidation(fv => {
 });
 ```
 
-Note that this setting is ignored when `ImplicitlyValidateChildProperties` is true.
+Note that this setting is ignored when `ImplicitlyValidateChildProperties` is `true`.
 
 ### Clientside Validation
 
@@ -192,7 +192,7 @@ Note that not all rules defined in FluentValidation will work with ASP.NET's cli
 * MinLength
 * Length
 
-Alternatively, instead of using client-side validation you could instead execute your full server-side rules via AJAX using a library such as [FormHelper](https://github.com/sinanbozkus/FormHelper). This allows you to use the full power of FluentValidation, while still having a responsive user experience. 
+Alternatively, instead of using client-side validation you could instead execute your full server-side rules via AJAX using a library such as [FormHelper](https://github.com/sinanbozkus/FormHelper). This allows you to use the full power of FluentValidation, while still having a responsive user experience.
 
 ### Manual validation
 
@@ -209,13 +209,13 @@ public ActionResult DoSomething() {
 }
 ```
 
-The `AddToModelState` method is implemented as an extension method, and requires a using statement for the `FluentValidation.AspNetCore` namespace. Note that the second parameter is an optional model name, which will cause property names in the ModelState to be prefixed (eg a call to `AddToModelState(ModelState, "Foo")` will generate property names of "Foo.Id" and "Foo.Name" etc rather than just "Id" or "Name")
+The `AddToModelState` method is implemented as an extension method, and requires a using statement for the `FluentValidation.AspNetCore` namespace. Note that the second parameter is an optional model name, which will cause property names in the `ModelState` to be prefixed (e.g., a call to `AddToModelState(ModelState, "Foo")` will generate property names of `Foo.Id` and `Foo.Name` etc. rather than just `Id` or `Name`)
 
 ### Validator customization
 
-The downside to using this automatic integration is that you don’t have access to the validator directly which means that you don’t have as much control over the validation processes compared to running the validator manually.
+The downside to using this automatic integration is that you don't have access to the validator directly which means that you don't have as much control over the validation processes compared to running the validator manually.
 
-You can use the CustomizeValidatorAttribute to configure how the validator will be run. For example, if you want the validator to only run for a particular ruleset then you can specify that ruleset name by attributing the parameter that is going to be validated:
+You can use the `CustomizeValidatorAttribute` to configure how the validator will be run. For example, if you want the validator to only run for a particular ruleset then you can specify that ruleset name by attributing the parameter that is going to be validated:
 
 ```csharp
 public ActionResult Save([CustomizeValidator(RuleSet="MyRuleset")] Customer cust) {
@@ -246,7 +246,7 @@ var customer = new Customer();
 var result = validator.Validate(customer, options => options.IncludeProperties("Surname", "Forename"));
 ```
 
-You can also use the CustomizeValidatorAttribute to skip validation for a particular type. This is useful for if you need to validate a type manually (for example, if you want to perform async validation then you'll need to instantiate the validator manually and call ValidateAsync as MVC's validation pipeline is not asynchronous).
+You can also use the `CustomizeValidatorAttribute` to skip validation for a particular type. This is useful for if you need to validate a type manually (for example, if you want to perform async validation then you'll need to instantiate the validator manually and call `ValidateAsync` as MVC's validation pipeline is not asynchronous).
 
 ```csharp
 public ActionResult Save([CustomizeValidator(Skip=true)] Customer cust) {
@@ -257,7 +257,7 @@ public ActionResult Save([CustomizeValidator(Skip=true)] Customer cust) {
 
 ### Validator Interceptors
 
-You can further customize this process by using an interceptor. An interceptor has to implement the IValidatorInterceptor interface from the FluentValidation.AspNetCore namespace:
+You can further customize this process by using an interceptor. An interceptor has to implement the `IValidatorInterceptor` interface from the `FluentValidation.AspNetCore` namespace:
 
 ```csharp
 public interface IValidatorInterceptor	{
@@ -267,13 +267,13 @@ public interface IValidatorInterceptor	{
 
 ```
 
-This interface has two methods – BeforeMvcValidation and AfterMvcValidation. If you implement this interface in your validator classes then these methods will be called as appropriate during the MVC validation pipeline.
+This interface has two methods – `BeforeMvcValidation` and `AfterMvcValidation`. If you implement this interface in your validator classes then these methods will be called as appropriate during the MVC validation pipeline.
 
-BeforeMvcValidation is invoked after the appropriate validator has been selected but before it is invoked. One of the arguments passed to this method is a ValidationContext that will eventually be passed to the validator. The context has several properties including a reference to the object being validated. If we want to change which rules are going to be invoked (for example, by using a custom ValidatorSelector) then we can create a new ValidationContext, set its Selector property, and return that from the BeforeMvcValidation method.
+`BeforeMvcValidation` is invoked after the appropriate validator has been selected but before it is invoked. One of the arguments passed to this method is a `ValidationContext` that will eventually be passed to the validator. The context has several properties including a reference to the object being validated. If we want to change which rules are going to be invoked (for example, by using a custom `ValidatorSelector`) then we can create a new `ValidationContext`, set its `Selector` property, and return that from the `BeforeMvcValidation` method.
 
-Likewise, AfterMvcValidation occurs after validation has occurs. This time, we also have a reference to the result of the validation. Here we can do some additional processing on the error messages before they’re added to modelstate.
+Likewise, `AfterMvcValidation` occurs after validation has occurs. This time, we also have a reference to the result of the validation. Here we can do some additional processing on the error messages before they're added to `ModelState`.
 
-As well as implementing this interface directly in a validator class, we can also implement it externally, and specify the interceptor by using a CustomizeValidatorAttribute on an action method parameter:
+As well as implementing this interface directly in a validator class, we can also implement it externally, and specify the interceptor by using a `CustomizeValidatorAttribute` on an action method parameter:
 
 ```csharp
 public ActionResult Save([CustomizeValidator(Interceptor=typeof(MyCustomerInterceptor))] Customer cust) {
@@ -281,7 +281,7 @@ public ActionResult Save([CustomizeValidator(Interceptor=typeof(MyCustomerInterc
 }
 ```
 
-In this case, the interceptor has to be a class that implements IValidatorInterceptor and has a public, parameterless constructor.
+In this case, the interceptor has to be a class that implements `IValidatorInterceptor` and has a public, parameterless constructor.
 
 Alternatively, you can register a default `IValidatorInterceptor` with the ASP.NET Service Provider. If you do this, then the interceptor will be used for all validators:
 
@@ -297,11 +297,11 @@ public void ConfigureServices(IServiceCollection services) {
 }
 ```
 
-Note that this is considered to be an advanced scenario. Most of the time you probably won’t need to use an interceptor, but the option is there if you want it.
+Note that this is considered to be an advanced scenario. Most of the time you probably won't need to use an interceptor, but the option is there if you want it.
 
 ### Specifying a RuleSet for client-side messages
 
-If you’re using rulesets alongside ASP.NET MVC, then you’ll notice that by default FluentValidation will only generate client-side error messages for rules not part of any ruleset. You can instead specify that FluentValidation should generate clientside rules from a particular ruleset by attributing your controller action with a RuleSetForClientSideMessagesAttribute:
+If you're using rulesets alongside ASP.NET MVC, then you'll notice that by default FluentValidation will only generate client-side error messages for rules not part of any ruleset. You can instead specify that FluentValidation should generate clientside rules from a particular ruleset by attributing your controller action with a `RuleSetForClientSideMessagesAttribute`:
 
 ```csharp
 [RuleSetForClientSideMessages("MyRuleset")]
@@ -358,8 +358,8 @@ Please be aware that `InjectValidator` can *only* be used when using automatic v
 Configuration for use with ASP.NET Razor Pages and PageModels is exactly the same as with MVC above, but there are several limitations:
 
 - You can't define a validator for the whole page-model, only for models exposed as properties on the page model.
-- The `[CustomizeValidator]` attribute is not supported on .net core 2.1 (only 3.1 and 5.0)
-- The `[RuleSetForClientSideMessages]` attribute is not supported on .net core 2.1 (only 3.1 and 5.0)
+- The `CustomizeValidatorAttribute` is not supported on .net core 2.1 (only 3.1 and 5.0)
+- The `RuleSetForClientSideMessagesAttribute` is not supported on .net core 2.1 (only 3.1 and 5.0)
 
 You can also use the `SetRulesetForClientsideMessages` extension method within your page handler:
 
