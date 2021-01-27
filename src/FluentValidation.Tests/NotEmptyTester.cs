@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +15,18 @@
 // limitations under the License.
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
+
 #endregion
 
 namespace FluentValidation.Tests {
-	using System;
 	using System.Collections.Generic;
-	using System.Globalization;
 	using System.Linq;
-	using System.Threading;
 	using Xunit;
-
 
 	public class NotEmptyTester {
 		public NotEmptyTester() {
-          CultureScope.SetDefaultCulture();
-        }
+			CultureScope.SetDefaultCulture();
+		}
 
 		[Fact]
 		public void When_there_is_a_value_then_the_validator_should_pass() {
@@ -36,7 +34,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { Surname = "Foo" });
+			var result = validator.Validate(new Person {Surname = "Foo"});
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -46,7 +44,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { Surname = null });
+			var result = validator.Validate(new Person {Surname = null});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -56,7 +54,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { Surname = "" });
+			var result = validator.Validate(new Person {Surname = ""});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -66,7 +64,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { Surname = "         " });
+			var result = validator.Validate(new Person {Surname = "         "});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -76,7 +74,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.DateOfBirth).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { DateOfBirth = default });
+			var result = validator.Validate(new Person {DateOfBirth = default});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -86,10 +84,10 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Id).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { Id = 0 });
+			var result = validator.Validate(new Person {Id = 0});
 			result.IsValid.ShouldBeFalse();
 
-			var result1 = validator.Validate(new Person{Id = 1});
+			var result1 = validator.Validate(new Person {Id = 1});
 			result1.IsValid.ShouldBeTrue();
 		}
 
@@ -99,7 +97,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Children).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { Children = new List<Person>() });
+			var result = validator.Validate(new Person {Children = new List<Person>()});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -109,19 +107,19 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).NotEmpty()
 			};
 
-			var result = validator.Validate(new Person { Surname = null });
+			var result = validator.Validate(new Person {Surname = null});
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
 		}
 
-	    [Fact]
-	    public void Fails_for_ienumerable_that_doesnt_implement_ICollection() {
-	        var validator = new InlineValidator<TestModel> {
-                v => v.RuleFor(x => x.Strings).NotEmpty()
-	        };
+		[Fact]
+		public void Fails_for_ienumerable_that_doesnt_implement_ICollection() {
+			var validator = new InlineValidator<TestModel> {
+				v => v.RuleFor(x => x.Strings).NotEmpty()
+			};
 
-	        var result = validator.Validate(new TestModel());
-            result.IsValid.ShouldBeFalse();
-	    }
+			var result = validator.Validate(new TestModel());
+			result.IsValid.ShouldBeFalse();
+		}
 
 		[Fact]
 		public void Fails_for_array() {
@@ -131,10 +129,10 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-        public class TestModel {
-            public IEnumerable<string> Strings {
-                get { yield break; }
-            }
-        }
+		public class TestModel {
+			public IEnumerable<string> Strings {
+				get { yield break; }
+			}
+		}
 	}
 }

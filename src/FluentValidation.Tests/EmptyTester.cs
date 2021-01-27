@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,19 +15,18 @@
 // limitations under the License.
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
+
 #endregion
 
 namespace FluentValidation.Tests {
-	using System;
 	using System.Collections.Generic;
 	using System.Linq;
 	using Xunit;
 
-
 	public class EmptyTester {
 		public EmptyTester() {
-          CultureScope.SetDefaultCulture();
-        }
+			CultureScope.SetDefaultCulture();
+		}
 
 		[Fact]
 		public void When_there_is_a_value_then_the_validator_should_fail() {
@@ -34,7 +34,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).Empty()
 			};
 
-			var result = validator.Validate(new Person { Surname = "Foo" });
+			var result = validator.Validate(new Person {Surname = "Foo"});
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -44,7 +44,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).Empty()
 			};
 
-			var result = validator.Validate(new Person { Surname = null });
+			var result = validator.Validate(new Person {Surname = null});
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -54,7 +54,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).Empty()
 			};
 
-			var result = validator.Validate(new Person { Surname = "" });
+			var result = validator.Validate(new Person {Surname = ""});
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -64,7 +64,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).Empty()
 			};
 
-			var result = validator.Validate(new Person { Surname = "         " });
+			var result = validator.Validate(new Person {Surname = "         "});
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -74,7 +74,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.DateOfBirth).Empty()
 			};
 
-			var result = validator.Validate(new Person { DateOfBirth = default });
+			var result = validator.Validate(new Person {DateOfBirth = default});
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -84,10 +84,10 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Id).Empty()
 			};
 
-			var result = validator.Validate(new Person { Id = 0 });
+			var result = validator.Validate(new Person {Id = 0});
 			result.IsValid.ShouldBeTrue();
 
-			var result1 = validator.Validate(new Person{Id = 1});
+			var result1 = validator.Validate(new Person {Id = 1});
 			result1.IsValid.ShouldBeFalse();
 		}
 
@@ -97,7 +97,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Children).Empty()
 			};
 
-			var result = validator.Validate(new Person { Children = new List<Person>() });
+			var result = validator.Validate(new Person {Children = new List<Person>()});
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -107,24 +107,24 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).Empty()
 			};
 
-			var result = validator.Validate(new Person { Surname = "Foo" });
+			var result = validator.Validate(new Person {Surname = "Foo"});
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be empty.");
 		}
 
-	    [Fact]
-	    public void Passes_for_ienumerable_that_doesnt_implement_ICollection() {
-	        var validator = new InlineValidator<TestModel> {
-                v => v.RuleFor(x => x.Strings).Empty()
-	        };
+		[Fact]
+		public void Passes_for_ienumerable_that_doesnt_implement_ICollection() {
+			var validator = new InlineValidator<TestModel> {
+				v => v.RuleFor(x => x.Strings).Empty()
+			};
 
-	        var result = validator.Validate(new TestModel());
-            result.IsValid.ShouldBeTrue();
-	    }
+			var result = validator.Validate(new TestModel());
+			result.IsValid.ShouldBeTrue();
+		}
 
-        public class TestModel {
-            public IEnumerable<string> Strings {
-                get { yield break; }
-            }
-        }
+		public class TestModel {
+			public IEnumerable<string> Strings {
+				get { yield break; }
+			}
+		}
 	}
 }
