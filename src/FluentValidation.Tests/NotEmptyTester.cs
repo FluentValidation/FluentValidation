@@ -129,6 +129,16 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
+#if !NET461
+		[Fact]
+		public void Fails_for_ImmutableArray() {
+			var validator = new InlineValidator<System.Collections.Immutable.ImmutableArray<byte>>();
+			validator.RuleFor(x => x).NotEmpty();
+			var result = validator.Validate(new System.Collections.Immutable.ImmutableArray<byte>());
+			result.IsValid.ShouldBeFalse();
+		}
+#endif
+
 		public class TestModel {
 			public IEnumerable<string> Strings {
 				get { yield break; }

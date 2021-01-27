@@ -21,6 +21,7 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections;
+	using System.Collections.Generic;
 	using System.Linq;
 	using Resources;
 
@@ -32,20 +33,28 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			switch (context.PropertyValue) {
+			return !IsEmpty(context.PropertyValue, _defaultValueForType);
+		}
+
+		internal static bool IsEmpty(object value, object defaultValueForType) {
+			// IStucturalComparable must come before ICollection.
+			// ImmutableArray<T> throws when checking its Count property if the array is uninitialized.
+			// Checking IStructuralComparable prevents this.
+			switch (value) {
 				case null:
 				case string s when string.IsNullOrWhiteSpace(s):
+				case IStructuralComparable sc when sc.CompareTo(defaultValueForType, Comparer.Default) == 0:
 				case ICollection c when c.Count == 0:
 				case Array a when a.Length == 0:
 				case IEnumerable e when !e.Cast<object>().Any():
-					return false;
+					return true;
 			}
 
-			if (Equals(context.PropertyValue, _defaultValueForType)) {
-				return false;
+			if (Equals(value, defaultValueForType)) {
+				return true;
 			}
 
-			return true;
+			return false;
 		}
 
 		protected override string GetDefaultMessageTemplate() {

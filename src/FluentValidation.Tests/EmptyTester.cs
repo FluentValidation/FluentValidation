@@ -121,6 +121,24 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
+		[Fact]
+		public void Passes_for_array() {
+			var validator = new InlineValidator<string[]>();
+			validator.RuleFor(x => x).Empty();
+			var result = validator.Validate(new string[0]);
+			result.IsValid.ShouldBeTrue();
+		}
+
+#if !NET461
+		[Fact]
+		public void Passes_for_ImmutableArray() {
+			var validator = new InlineValidator<System.Collections.Immutable.ImmutableArray<byte>>();
+			validator.RuleFor(x => x).Empty();
+			var result = validator.Validate(new System.Collections.Immutable.ImmutableArray<byte>());
+			result.IsValid.ShouldBeTrue();
+		}
+#endif
+
 		public class TestModel {
 			public IEnumerable<string> Strings {
 				get { yield break; }

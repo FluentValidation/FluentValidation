@@ -32,20 +32,7 @@ namespace FluentValidation.Validators {
 		}
 
 		protected override bool IsValid(PropertyValidatorContext context) {
-			switch (context.PropertyValue) {
-				case null:
-				case string s when string.IsNullOrWhiteSpace(s):
-				case ICollection c when c.Count == 0:
-				case Array a when a.Length == 0:
-				case IEnumerable e when !e.Cast<object>().Any():
-					return true;
-			}
-
-			if (Equals(context.PropertyValue, _defaultValueForType)) {
-				return true;
-			}
-
-			return false;
+			return NotEmptyValidator.IsEmpty(context.PropertyValue, _defaultValueForType);
 		}
 
 		protected override string GetDefaultMessageTemplate() {
