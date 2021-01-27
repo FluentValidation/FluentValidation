@@ -5,6 +5,9 @@
     <PackageReleaseNotes>
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
+Changes in 9.5.0:
+* NotEmpty/Empty now work with ImmutableArray.
+
 Changes in 9.4.0:
 * ChildRules now work as expected when inside a ruleset
 * Added ImplicitlyValidateRootCollectionElements option to MVC integration

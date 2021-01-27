@@ -1,3 +1,6 @@
+9.5.0 - 
+NotEmpty/Empty now work with ImmutableArray (#1625)
+
 9.4.0 - 14 January 2021
 ChildRules now work as expected when inside a ruleset (#1597)
 Added ImplicitlyValidateRootCollectionElements option to MVC integration (#1585)

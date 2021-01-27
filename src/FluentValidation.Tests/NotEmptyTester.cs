@@ -22,6 +22,9 @@ namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Linq;
 	using Xunit;
+#if !NET461
+	using System.Collections.Immutable;
+#endif
 
 	public class NotEmptyTester {
 		public NotEmptyTester() {
@@ -132,10 +135,23 @@ namespace FluentValidation.Tests {
 #if !NET461
 		[Fact]
 		public void Fails_for_ImmutableArray() {
-			var validator = new InlineValidator<System.Collections.Immutable.ImmutableArray<byte>>();
+			var validator = new InlineValidator<ImmutableArray<byte>>();
 			validator.RuleFor(x => x).NotEmpty();
-			var result = validator.Validate(new System.Collections.Immutable.ImmutableArray<byte>());
+
+			// Uninitialized.
+			var array = new ImmutableArray<byte>();
+			var result = validator.Validate(array);
 			result.IsValid.ShouldBeFalse();
+
+			// Initialized, but empty.
+			array = new byte[0].ToImmutableArray();
+			result = validator.Validate(array);
+			result.IsValid.ShouldBeFalse();
+
+			// Initialized, not empty.
+			array = new byte[1] {3}.ToImmutableArray();
+			result = validator.Validate(array);
+			result.IsValid.ShouldBeTrue();
 		}
 #endif
 
