@@ -35,7 +35,7 @@ public static class MyCustomValidators {
 }
 ```
 
-Here we create an extension method on `IRuleBuilder<T,TProperty>`, and we use a generic type constraint to ensure this method only appears in intellisense for List types. Inside the method, we call the Must method in the same way as before but this time we call it on the passed-in RuleBuilder instance. We also pass in the number of items for comparison as a parameter. Our rule definition can now be rewritten to use this method:
+Here we create an extension method on `IRuleBuilder<T,TProperty>`, and we use a generic type constraint to ensure this method only appears in intellisense for List types. Inside the method, we call the Must method in the same way as before but this time we call it on the passed-in `RuleBuilder` instance. We also pass in the number of items for comparison as a parameter. Our rule definition can now be rewritten to use this method:
 
 ```csharp
 RuleFor(x => x.Pets).ListMustContainFewerThan(10);
@@ -60,7 +60,7 @@ public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T
 
 Note that the overload of Must that we're using now accepts 3 parameters: the root (parent) object, the property value itself, and the context. We use the context to add a custom message replacement value of `MaxElements` and set its value to the number passed to the method. We can now use this placeholder as `{MaxElements}` within the call to `WithMessage`.
 
-The resulting message will now be  `'Pets' must contain fewer than 10 items.` We could even extend this further to include the number of elements that the list contains like this:
+The resulting message will now be `'Pets' must contain fewer than 10 items.` We could even extend this further to include the number of elements that the list contains like this:
 
 ```csharp
 public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T, TElement>(this IRuleBuilder<T, IList<TElement>> ruleBuilder, int num) {
@@ -93,7 +93,7 @@ public class PersonValidator : AbstractValidator<Person> {
 }
 ```
 
-The advantage of this approach is that it allows you to return multiple errors for the same rule (by calling the `context.AddFailure` method multiple times). In the above example, the property name in the generated error will be inferred as "Pets", although this could be overridden by calling a different overload of AddFailure:
+The advantage of this approach is that it allows you to return multiple errors for the same rule (by calling the `context.AddFailure` method multiple times). In the above example, the property name in the generated error will be inferred as "Pets", although this could be overridden by calling a different overload of `AddFailure`:
 
 ```csharp
 context.AddFailure("SomeOtherProperty", "The list must contain 10 items or fewer");
@@ -123,7 +123,7 @@ In some cases where your custom logic is very complex, you may wish to move the 
   This is an advanced technique that is usually unnecessary - the `Must` and `Custom` methods explained above are usually more appropriate.
 ```
 
-We can recreate the above example using a custom PropertyValidator implementation like this:
+We can recreate the above example using a custom `PropertyValidator` implementation like this:
 
 ```csharp
 using System.Collections.Generic;
@@ -159,7 +159,7 @@ The `PropertyValidatorContext` object passed into the Validate method contains s
 - `PropertyValue` - the value of the property being validated
 - `Member` - the MemberInfo describing the property being validated.
 
-Note that the error message to use is specified in the constructor. The simplest way to define your error message is to use the string (as in this example) but you can also used localized error messages by specifying either a resource type and resource name. For more details, please see [Localization](localization)
+Note that the error message to use is specified in the constructor. The simplest way to define your error message is to use the string (as in this example) but you can also used localized error messages by specifying either a resource type and resource name. For more details, please see [Localization](localization).
 
 To use the new custom validator you can call `SetValidator` when defining a validation rule.
 

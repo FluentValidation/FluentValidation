@@ -1,6 +1,6 @@
 # Conditions
 
-The `When` and `Unless` methods can be used to specify conditions that control when the rule should execute. For example, this rule on the CustomerDiscount property will only execute when IsPreferredCustomer is true:
+The `When` and `Unless` methods can be used to specify conditions that control when the rule should execute. For example, this rule on the `CustomerDiscount` property will only execute when `IsPreferredCustomer` is `true`:
 
 ```csharp
 RuleFor(customer => customer.CustomerDiscount).GreaterThan(0).When(customer => customer.IsPreferredCustomer);
@@ -8,7 +8,7 @@ RuleFor(customer => customer.CustomerDiscount).GreaterThan(0).When(customer => c
 
 The `Unless` method is simply the opposite of `When`.
 
-If you need to specify the same condition for multiple rules then you can call the top-level When method instead of chaining the When call at the end of the rule:
+If you need to specify the same condition for multiple rules then you can call the top-level `When` method instead of chaining the `When` call at the end of the rule:
 
 ```csharp
 When(customer => customer.IsPreferred, () => {
@@ -66,7 +66,7 @@ This will first check whether the Surname property is not null and then will che
 RuleFor(x => x.Surname).Cascade(CascadeMode.Stop).NotNull().NotEqual("foo");
 ```
 
-Now, if the `NotNull` validator fails then the NotEqual validator will not be executed. This is particularly useful if you have a complex chain where each validator depends on the previous validator to succeed.
+Now, if the `NotNull` validator fails then the `NotEqual` validator will not be executed. This is particularly useful if you have a complex chain where each validator depends on the previous validator to succeed.
 
 The two cascade modes are:
 - `Continue` (the default) - always invokes all validators in a rule definition
@@ -79,7 +79,7 @@ The two cascade modes are:
 
 As well as being set at the rule level, the cascade mode can also be set globally for all validators, or for all the rules in a particular validator class. This is the equivalent of setting the cascade mode on every rule within the validator. Not that this still only applies to validators *within the same rule chain* - separate calls to `RuleFor` are treated separately. If one rule fails, it will not prevent a separate rule from running, only validators within the same rule chain.
 
-To set the cascade mode globally, you can set the CascadeMode property on the static ValidatorOptions class during your application's startup routine:
+To set the cascade mode globally, you can set the `CascadeMode` property on the static `ValidatorOptions` class during your application's startup routine:
 
 ```csharp
 ValidatorOptions.CascadeMode = CascadeMode.Stop;
@@ -121,7 +121,7 @@ RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqu
 RuleFor(x => x.Forename).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqual("foo");
 ```
 
-That is, *both* of these rules will execute. If the `NotNull` fails on the first rule for `Surname`, the `NotEqual` will not be run. However, as the second rule for `Forename` is independent, it will also run with the same behaviour (if its `NotNull` fails, then its NotEqual will not run either), so so by setting the validator's cascade to `StopOnFirstFailure`, you will still receive 2 validation failures (one from each rule).
+That is, *both* of these rules will execute. If the `NotNull` fails on the first rule for `Surname`, the `NotEqual` will not be run. However, as the second rule for `Forename` is independent, it will also run with the same behaviour (if its `NotNull` fails, then its `NotEqual` will not run either), so so by setting the validator's cascade to `StopOnFirstFailure`, you will still receive 2 validation failures (one from each rule).
 
 This behaviour has caused a lot of confusion over the years, so the `Stop` option was introduced in FluentValidation 9.1. With `Stop`, only the first failure for *any rule* will be returned. This is a true "fail-fast" behaviour.
 
@@ -131,7 +131,7 @@ The `Stop` option was introduced rather than changing the behaviour of `StopOnFi
 
 By default, all rules in FluentValidation are separate and cannot influence one another. This is intentional and necessary for asynchronous validation to work. However, there may be some cases where you want to ensure that some rules are only executed after another has completed. You can use `DependentRules` to do this.
 
-To use DependentRules, call the `DependentRules` method at the end of the rule that you want others to depend on. This method accepts a lambda expression inside which you can define other rules that will be executed only if the first rule passes:
+To use dependent rules, call the `DependentRules` method at the end of the rule that you want others to depend on. This method accepts a lambda expression inside which you can define other rules that will be executed only if the first rule passes:
 
 ```csharp
 RuleFor(x => x.Surname).NotNull().DependentRules(() => {
@@ -141,4 +141,4 @@ RuleFor(x => x.Surname).NotNull().DependentRules(() => {
 
 Here the rule against Forename will only be run if the Surname rule passes.
 
-_Jeremy's note_: Personally I do not particularly like using DependentRules as I feel it's fairly hard to read, especially with a complex set of rules. In many cases, it can be simpler to use `When` conditions combined with `CascadeMode` to prevent rules from running in certain situations. Even though this can sometimes mean more duplication, it is often easier to read.
+_Jeremy's note_: Personally I do not particularly like using dependent rules as I feel it's fairly hard to read, especially with a complex set of rules. In many cases, it can be simpler to use `When` conditions combined with `CascadeMode` to prevent rules from running in certain situations. Even though this can sometimes mean more duplication, it is often easier to read.

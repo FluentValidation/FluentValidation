@@ -11,7 +11,7 @@ public class PersonValidator : AbstractValidator<Person> {
 }
 ```
 
-By default, if these rules fail they will have a severity of "Error". This can be changed by calling the `WithSeverity` method. For example, if we wanted a missing surname to be identified as a warning instead of an error then we could modify the above line to:
+By default, if these rules fail they will have a severity of `Error`. This can be changed by calling the `WithSeverity` method. For example, if we wanted a missing surname to be identified as a warning instead of an error then we could modify the above line to:
 
 ```
 RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Warning);

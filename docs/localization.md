@@ -1,11 +1,11 @@
 # Localization
 
-Out of the box, FluentValidation provides translations for the default validation messages in several languages. By default, the language specified in the .NET's framework's Current UI Culture will be used (`CultureInfo.CurrentUICulture`) when translating messages.
+Out of the box, FluentValidation provides translations for the default validation messages in several languages. By default, the language specified in the .NET's framework's current UI culture will be used (`CultureInfo.CurrentUICulture`) when translating messages.
 
 You can also use the `WithMessage` and `WithLocalizedMessage` methods to specify a localized error message for a single validation rule.
 
 ### WithMessage
-If you are using Visual Studio's built in support for resx files and their strongly-typed wrappers, then you can localize a message by calling the overload of `WithMessage` that accepts a lambda expression:
+If you are using Visual Studio's built in support for `.resx` files and their strongly-typed wrappers, then you can localize a message by calling the overload of `WithMessage` that accepts a lambda expression:
 
 ```
 RuleFor(x => x.Surname).NotNull().WithMessage(x => MyLocalizedMessages.SurnameRequired);
@@ -29,7 +29,7 @@ public class PersonValidator : AbstractValidator<Person> {
 ### Default Messages
 If you want to replace all (or some) of FluentValidation's default messages then you can do this by implementing a custom version of the `ILanguageManager` interface.
 
-For example, the default message for the `NotNull` validator is `'{PropertyName}' must not be empty.`. If you wanted to replace this message for all uses of the NotNull validator in your application, you could write a custom Language Manager:
+For example, the default message for the `NotNull` validator is `'{PropertyName}' must not be empty.`. If you wanted to replace this message for all uses of the `NotNull` validator in your application, you could write a custom Language Manager:
 
 ```csharp
 public class CustomLanguageManager : FluentValidation.Resources.LanguageManager {
@@ -57,7 +57,7 @@ If you'd like to contribute a translation of FluentValidation's default messages
 [The default English messages are stored here](https://github.com/JeremySkinner/FluentValidation/blob/master/src/FluentValidation/Resources/Languages/EnglishLanguage.cs)
 
 ### Disabling Localization
-You can completely disable FluentValidation's support for localization, which will force the default English messages to be used, regardless of the thread's CurrentUICulture. This can be done in your application's startup routine by calling into the static `ValidatorOptions` class:
+You can completely disable FluentValidation's support for localization, which will force the default English messages to be used, regardless of the thread's `CurrentUICulture`. This can be done in your application's startup routine by calling into the static `ValidatorOptions` class:
 
 ```csharp
 ValidatorOptions.Global.LanguageManager.Enabled = false;
