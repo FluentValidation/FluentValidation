@@ -37,7 +37,7 @@ namespace FluentValidation.Validators {
 		}
 
 		internal static bool IsEmpty(object value, object defaultValueForType) {
-			// IStucturalComparable must come before ICollection.
+			// IStructuralComparable must come before ICollection.
 			// ImmutableArray<T> throws when checking its Count property if the array is uninitialized.
 			// Checking IStructuralComparable prevents this.
 			switch (value) {
