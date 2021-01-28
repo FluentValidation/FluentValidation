@@ -19,10 +19,9 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using System.Collections;
-	using Resources;
-	using System.Linq;
+#if !NET461 && !NETSTANDARD2_0
+	using System.Collections.Immutable;
+#endif
 
 	public class EmptyValidator : PropertyValidator, IEmptyValidator {
 		readonly object _defaultValueForType;
@@ -39,6 +38,20 @@ namespace FluentValidation.Validators {
 			return Localized(nameof(EmptyValidator));
 		}
 	}
+
+	#if !NET461 && !NETSTANDARD2_0
+	internal class EmptyImmutableArrayValidator<TElement> : PropertyValidator, INotEmptyValidator {
+		protected override bool IsValid(PropertyValidatorContext context) {
+			if (context.PropertyValue == null) return true;
+			var value = (ImmutableArray<TElement>)context.PropertyValue;
+			return value.IsDefaultOrEmpty;
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(EmptyValidator));
+		}
+	}
+	#endif
 
 	public interface IEmptyValidator : IPropertyValidator {
 	}

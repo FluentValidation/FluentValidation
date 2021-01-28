@@ -20,15 +20,16 @@ namespace FluentValidation {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Text.RegularExpressions;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
-	using Results;
 	using Validators;
+#if !NET461 && !NETSTANDARD2_0
+	using System.Collections.Immutable;
+#endif
 
 	/// <summary>
 	/// Extension methods that provide the default set of validators.
@@ -70,6 +71,20 @@ namespace FluentValidation {
 			return ruleBuilder.SetValidator(new NotEmptyValidator(default(TProperty)));
 		}
 
+		#if !NET461 && !NETSTANDARD2_0
+		/// <summary>
+		/// Defines a 'not empty' validator on the current rule builder.
+		/// Validation will fail if the property is null, an empty string, whitespace, an empty collection or the default value for the type (for example, 0 for integers but null for nullable integers)
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TElement"></typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, ImmutableArray<TElement>> NotEmpty<T, TElement>(this IRuleBuilder<T, ImmutableArray<TElement>> ruleBuilder) {
+			return ruleBuilder.SetValidator(new NotEmptyImmutableArrayValidator<TElement>());
+		}
+		#endif
+
 		/// <summary>
 		/// Defines a 'empty' validator on the current rule builder.
 		/// Validation will fail if the property is not null, an empty or the default value for the type (for example, 0 for integers)
@@ -81,6 +96,20 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> Empty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 			return ruleBuilder.SetValidator(new EmptyValidator(default(TProperty)));
 		}
+
+		#if !NET461 && !NETSTANDARD2_0
+		/// <summary>
+		/// Defines a 'empty' validator on the current rule builder.
+		/// Validation will fail if the property is not null, an empty or the default value for the type (for example, 0 for integers)
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TElement"></typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, ImmutableArray<TElement>> Empty<T, TElement>(this IRuleBuilder<T, ImmutableArray<TElement>> ruleBuilder) {
+			return ruleBuilder.SetValidator(new EmptyImmutableArrayValidator<TElement>());
+		}
+		#endif
 
 		/// <summary>
 		/// Defines a length validator on the current rule builder, but only for string properties.

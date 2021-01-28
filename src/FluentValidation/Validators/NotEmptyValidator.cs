@@ -21,9 +21,10 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections;
-	using System.Collections.Generic;
 	using System.Linq;
-	using Resources;
+#if !NET461 && !NETSTANDARD2_0
+	using System.Collections.Immutable;
+#endif
 
 	public class NotEmptyValidator : PropertyValidator, INotEmptyValidator {
 		private readonly object _defaultValueForType;
@@ -37,13 +38,9 @@ namespace FluentValidation.Validators {
 		}
 
 		internal static bool IsEmpty(object value, object defaultValueForType) {
-			// IStructuralComparable must come before ICollection.
-			// ImmutableArray<T> throws when checking its Count property if the array is uninitialized.
-			// Checking IStructuralComparable prevents this.
 			switch (value) {
 				case null:
 				case string s when string.IsNullOrWhiteSpace(s):
-				case IStructuralComparable sc when sc.CompareTo(defaultValueForType, Comparer.Default) == 0:
 				case ICollection c when c.Count == 0:
 				case Array a when a.Length == 0:
 				case IEnumerable e when !e.Cast<object>().Any():
@@ -61,6 +58,20 @@ namespace FluentValidation.Validators {
 			return Localized(nameof(NotEmptyValidator));
 		}
 	}
+
+	#if !NET461 && !NETSTANDARD2_0
+	internal class NotEmptyImmutableArrayValidator<TElement> : PropertyValidator, INotEmptyValidator {
+		protected override bool IsValid(PropertyValidatorContext context) {
+			if (context.PropertyValue == null) return false;
+			var value = (ImmutableArray<TElement>)context.PropertyValue;
+			return !value.IsDefaultOrEmpty;
+		}
+
+		protected override string GetDefaultMessageTemplate() {
+			return Localized(nameof(NotEmptyValidator));
+		}
+	}
+	#endif
 
 	public interface INotEmptyValidator : IPropertyValidator {
 	}
