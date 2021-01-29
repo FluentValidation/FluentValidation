@@ -25,7 +25,7 @@ namespace FluentValidation.AspNetCore {
 
 	internal class EmailClientValidator : ClientValidatorBase {
 
-		public EmailClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public EmailClientValidator(IValidationRule rule, IRuleComponent component) : base(rule, component) {
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {
@@ -34,7 +34,7 @@ namespace FluentValidation.AspNetCore {
 
 			string messageTemplate;
 			try {
-				messageTemplate = Validator.GetUnformattedErrorMessage();
+				messageTemplate = Component.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
 				messageTemplate = cfg.LanguageManager.GetString("EmailValidator");

@@ -296,7 +296,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Can_use_custom_subclass_with_nongeneric_overload() {
 			var validator = new InlineValidator<Root>();
-			validator.RuleFor(x => x.Foo).SetValidator(new TypeUnsafePolymorphicValidator<Root, IFoo>());
+			validator.RuleFor(x => x.Foo).SetValidator((IAsyncPropertyValidator<Root, IFoo>) new TypeUnsafePolymorphicValidator<Root, IFoo>());
 			var result = validator.Validate(new Root {Foo = new FooImpl1()});
 			result.Errors.Single().PropertyName.ShouldEqual("Foo.Name");
 		}

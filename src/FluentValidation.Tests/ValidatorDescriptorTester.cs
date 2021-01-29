@@ -45,7 +45,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Forename).NotNull();
 			var descriptor = validator.CreateDescriptor();
 			var validators = descriptor.GetValidatorsForMember("Forename");
-			validators.Single().ShouldBe<NotNullValidator<Person,string>>();
+			validators.Single().Validator.ShouldBe<NotNullValidator<Person,string>>();
 		}
 
 		[Fact]

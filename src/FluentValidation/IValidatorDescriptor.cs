@@ -20,12 +20,19 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
+	using Internal;
 	using Validators;
 
 	/// <summary>
 	/// Provides metadata about a validator.
 	/// </summary>
 	public interface IValidatorDescriptor {
+
+		/// <summary>
+		/// All rules defined in the validator.
+		/// </summary>
+		IEnumerable<IValidationRule> Rules { get; }
+
 		/// <summary>
 		/// Gets the name display name for a property.
 		/// </summary>
@@ -34,12 +41,12 @@ namespace FluentValidation {
 		/// <summary>
 		/// Gets a collection of validators grouped by property.
 		/// </summary>
-		ILookup<string, IPropertyValidator> GetMembersWithValidators();
+		ILookup<string, (IPropertyValidator Validator, IRuleComponent Options)> GetMembersWithValidators();
 
 		/// <summary>
 		/// Gets validators for a particular property.
 		/// </summary>
-		IEnumerable<IPropertyValidator> GetValidatorsForMember(string name);
+		IEnumerable<(IPropertyValidator Validator, IRuleComponent Options)> GetValidatorsForMember(string name);
 
 		/// <summary>
 		/// Gets rules for a property.

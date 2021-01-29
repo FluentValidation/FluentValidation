@@ -113,8 +113,10 @@ namespace FluentValidation.TestHelper {
 			}
 
 			var matchingValidators =
-				expression.IsParameterExpression()	 ? GetModelLevelValidators<T>(descriptor) :
-				descriptor.GetValidatorsForMember(expressionMemberName).ToArray();
+				expression.IsParameterExpression() ? GetModelLevelValidators<T>(descriptor) :
+				descriptor.GetValidatorsForMember(expressionMemberName)
+					.Select(x => x.Validator)
+					.ToArray();
 
 
 			matchingValidators = matchingValidators.Concat(GetDependentRules(expressionMemberName, expression, descriptor)).ToArray();
@@ -129,15 +131,21 @@ namespace FluentValidation.TestHelper {
 
 		private static IEnumerable<IPropertyValidator> GetDependentRules<T, TProperty>(string expressionMemberName, Expression<Func<T, TProperty>> expression, IValidatorDescriptor descriptor) {
 			var member = expression.IsParameterExpression() ? null : expressionMemberName;
-			var rules = descriptor.GetRulesForMember(member).OfType<PropertyRule<T, TProperty>>().SelectMany(x => x.DependentRules ?? Enumerable.Empty<IExecutableValidationRule<T>>())
-				.SelectMany(x => x.Validators);
+
+			var rules = descriptor.GetRulesForMember(member)
+				.OfType<IExecutableValidationRule<T>>()
+				.SelectMany(x => x.DependentRules ?? Enumerable.Empty<IExecutableValidationRule<T>>())
+				.SelectMany(x => x.Components)
+				.Select(x => x.Validator);
 
 			return rules;
 		}
 
 		private static IPropertyValidator[] GetModelLevelValidators<T>(IValidatorDescriptor descriptor) {
 			var rules = descriptor.GetRulesForMember(null).OfType<IValidationRule<T>>();
-			return rules.Where(x => x.Expression == null || x.Expression.IsParameterExpression()).SelectMany(x => x.Validators)
+			return rules.Where(x => x.Expression == null || x.Expression.IsParameterExpression())
+				.SelectMany(x => x.Components)
+				.Select(x => x.Validator)
 				.ToArray();
 		}
 

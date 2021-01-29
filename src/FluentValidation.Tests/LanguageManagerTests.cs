@@ -4,6 +4,7 @@
 	using System.Globalization;
 	using System.Linq;
 	using System.Reflection;
+	using Internal;
 	using Resources;
 	using Validators;
 	using Xunit;
@@ -99,7 +100,8 @@
 		public void Always_use_specific_language_with_string_source() {
 			ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr-FR");
 			var validator = new NotNullValidator<Person,string>();
-			var msg = validator.GetErrorMessage(null, null);
+			var component = new RuleComponent<Person, string>(validator);
+			var msg = component.GetErrorMessage(null, null);
 			ValidatorOptions.Global.LanguageManager.Culture = null;
 
 			msg.ShouldEqual("'{PropertyName}' ne doit pas avoir la valeur null.");
@@ -226,23 +228,7 @@
 				(message != englishMessage).ShouldBeTrue($"Language '{language.Name}' ({language.Type}) is not loaded in the LanguageManager");
 			}
 		}
-
-		[Fact]
-		public void Uses_error_code_as_localization_key() {
-			var originalLanguageManager = ValidatorOptions.Global.LanguageManager;
-			ValidatorOptions.Global.LanguageManager = new CustomLanguageManager();
-
-			using (new CultureScope("fr-FR")) {
-				var validator = new InlineValidator<Person>();
-				validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("CustomKey");
-				var result = validator.Validate(new Person());
-
-				ValidatorOptions.Global.LanguageManager = originalLanguageManager;
-
-				result.Errors[0].ErrorMessage.ShouldEqual("bar");
-			}
-		}
-
+		
 		[Fact]
 		public void Falls_back_to_default_localization_key_when_error_code_key_not_found() {
 			var originalLanguageManager = ValidatorOptions.Global.LanguageManager;

@@ -20,10 +20,23 @@ namespace FluentValidation.Validators {
 	using System.Threading;
 	using System.Threading.Tasks;
 
-	public abstract class PropertyValidator<T, TProperty> : PropertyValidatorOptions<T,TProperty>, IPropertyValidator {
+	public abstract class AsyncPropertyValidator<T, TProperty> : IAsyncPropertyValidator<T, TProperty> {
+		string IPropertyValidator.GetDefaultMessageTemplate()
+			=> GetDefaultMessageTemplate();
 
 		/// <inheritdoc />
 		public abstract string Name { get; }
+
+		internal string ErrorCode { get; set; }
+
+		/// <summary>
+		/// Returns the default error message template for this validator, when not overridden.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual string GetDefaultMessageTemplate() => "No default error message has been specified";
+
+		/// <inheritdoc />
+		public abstract Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
 
 		/// <summary>
 		/// Retrieves a localized string from the LanguageManager.
@@ -34,22 +47,37 @@ namespace FluentValidation.Validators {
 		/// <param name="fallbackKey">The fallback key to use for translation, if no ErrorCode is available.</param>
 		/// <returns>The translated error message template.</returns>
 		protected string Localized(string fallbackKey) {
-			var errorCode = ErrorCode;
-
-			if (errorCode != null) {
-				string result = ValidatorOptions.Global.LanguageManager.GetString(errorCode);
-
-				if (!string.IsNullOrEmpty(result)) {
-					return result;
-				}
-			}
-
 			return ValidatorOptions.Global.LanguageManager.GetString(fallbackKey);
 		}
 
+	}
+
+	public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TProperty>, IPropertyValidator {
+
+		string IPropertyValidator.GetDefaultMessageTemplate()
+			=> GetDefaultMessageTemplate();
+
+		/// <summary>
+		/// Returns the default error message template for this validator, when not overridden.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual string GetDefaultMessageTemplate() => "No default error message has been specified";
+
 		/// <inheritdoc />
-		public virtual bool ShouldValidateAsynchronously(IValidationContext context) {
-			return false;
+		public abstract string Name { get; }
+
+		internal string ErrorCode { get; set; }
+
+		/// <summary>
+		/// Retrieves a localized string from the LanguageManager.
+		/// If an ErrorCode is defined for this validator, the error code is used as the key.
+		/// If no ErrorCode is defined (or the language manager doesn't have a translation for the error code)
+		/// then the fallback key is used instead.
+		/// </summary>
+		/// <param name="fallbackKey">The fallback key to use for translation, if no ErrorCode is available.</param>
+		/// <returns>The translated error message template.</returns>
+		protected string Localized(string fallbackKey) {
+			return ValidatorOptions.Global.LanguageManager.GetString(fallbackKey);
 		}
 
 		/// <summary>
@@ -59,16 +87,5 @@ namespace FluentValidation.Validators {
 		/// <param name="value">The current property value to validate</param>
 		/// <returns>True if valid, otherwise false.</returns>
 		public abstract bool IsValid(ValidationContext<T> context, TProperty value);
-
-		/// <summary>
-		/// Validates a specific property value asynchronously.
-		/// </summary>
-		/// <param name="context">The validation context. The parent object can be obtained from here.</param>
-		/// <param name="value">The current property value to validate</param>
-		/// <param name="cancellation">Cancellation token</param>
-		/// <returns>True if valid, otherwise false.</returns>
-		public virtual Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
-			return Task.FromResult(IsValid(context, value));
-		}
 	}
 }

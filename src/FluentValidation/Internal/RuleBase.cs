@@ -28,7 +28,7 @@ namespace FluentValidation.Internal {
 	using Validators;
 
 	internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TValue> {
-		private protected readonly List<PropertyValidator<T,TValue>> _validators = new();
+		private protected readonly List<RuleComponent<T,TValue>> _steps = new();
 		private Func<CascadeMode> _cascadeModeThunk;
 		private string _propertyDisplayName;
 		private string _propertyName;
@@ -94,7 +94,12 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// The current validator being configured by this rule.
 		/// </summary>
-		public PropertyValidator<T,TValue> CurrentValidator => _validators.LastOrDefault();
+		public RuleComponent<T,TValue> CurrentValidator => _steps.LastOrDefault();
+
+		/// <summary>
+		/// The current rule component.
+		/// </summary>
+		public RuleComponent<T, TValue> Current => _steps.LastOrDefault();
 
 		/// <summary>
 		/// Type of the property being validated
@@ -118,7 +123,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Validators associated with this rule.
 		/// </summary>
-		public IEnumerable<IPropertyValidator> Validators => _validators.Cast<IPropertyValidator>();
+		public IEnumerable<IRuleComponent> Components => _steps;
 
 		/// <summary>
 		/// Creates a new property rule.
@@ -143,33 +148,33 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Adds a validator to the rule.
 		/// </summary>
-		public void AddValidator(PropertyValidator<T,TValue> validator) {
-			_validators.Add(validator);
+		public void Add(RuleComponent<T,TValue> component) {
+			_steps.Add(component);
 		}
 
-		/// <summary>
-		/// Replaces a validator in this rule. Used to wrap validators.
-		/// </summary>
-		public void ReplaceValidator(PropertyValidator<T,TValue> original, PropertyValidator<T,TValue> newValidator) {
-			var index = _validators.IndexOf(original);
+		// /// <summary>
+		// /// Replaces a validator in this rule. Used to wrap validators.
+		// /// </summary>
+		// public void Replace(PropertyValidatorOptions<T,TValue> original, PropertyValidatorOptions<T,TValue> newValidator) {
+		// 	var index = _validators.IndexOf(original);
+		//
+		// 	if (index > -1) {
+		// 		_validators[index] = newValidator;
+		// 	}
+		// }
 
-			if (index > -1) {
-				_validators[index] = newValidator;
-			}
-		}
-
-		/// <summary>
-		/// Remove a validator in this rule.
-		/// </summary>
-		public void RemoveValidator(PropertyValidator<T,TValue> original) {
-			_validators.Remove(original);
-		}
+		// /// <summary>
+		// /// Remove a validator in this rule.
+		// /// </summary>
+		// public void Remove(PropertyValidatorOptions<T,TValue> original) {
+		// 	_validators.Remove(original);
+		// }
 
 		/// <summary>
 		/// Clear all validators from this rule.
 		/// </summary>
 		public void ClearValidators() {
-			_validators.Clear();
+			_steps.Clear();
 		}
 
 		/// <summary>
@@ -211,7 +216,7 @@ namespace FluentValidation.Internal {
 		public void ApplyCondition(Func<IValidationContext, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
-				foreach (var validator in _validators) {
+				foreach (var validator in _steps) {
 					validator.ApplyCondition(predicate);
 				}
 
@@ -234,7 +239,7 @@ namespace FluentValidation.Internal {
 		public void ApplyAsyncCondition(Func<IValidationContext, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
-				foreach (var validator in _validators) {
+				foreach (var validator in _steps) {
 					validator.ApplyAsyncCondition(predicate);
 				}
 
@@ -298,21 +303,21 @@ namespace FluentValidation.Internal {
 		/// <param name="value">The property value</param>
 		/// <param name="validator">The current property validator</param>
 		/// <returns>Returns an error validation result.</returns>
-		protected ValidationFailure CreateValidationError(ValidationContext<T> context, TValue value, PropertyValidator<T,TValue> validator) {
+		protected ValidationFailure CreateValidationError(ValidationContext<T> context, TValue value, RuleComponent<T,TValue> component) {
 			var error = MessageBuilder != null
-				? MessageBuilder(new MessageBuilderContext<T, TValue>(context, value, validator))
-				: validator.GetErrorMessage(context, value);
+				? MessageBuilder(new MessageBuilderContext<T, TValue>(context, value, component))
+				: component.GetErrorMessage(context, value);
 
 			var failure = new ValidationFailure(context.PropertyName, error, value);
 			failure.FormattedMessagePlaceholderValues = context.MessageFormatter.PlaceholderValues;
-			failure.ErrorCode = validator.ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(validator);
+			failure.ErrorCode = component.ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(component.PropertyValidator ?? (IPropertyValidator)component.AsyncPropertyValidator);
 
-			if (validator.CustomStateProvider != null) {
-				failure.CustomState = validator.CustomStateProvider(context, value);
+			if (component.CustomStateProvider != null) {
+				failure.CustomState = component.CustomStateProvider(context, value);
 			}
 
-			if (validator.SeverityProvider != null) {
-				failure.Severity = validator.SeverityProvider(context, value);
+			if (component.SeverityProvider != null) {
+				failure.Severity = component.SeverityProvider(context, value);
 			}
 
 			return failure;

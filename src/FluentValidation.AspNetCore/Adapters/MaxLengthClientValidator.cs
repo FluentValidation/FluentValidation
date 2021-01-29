@@ -44,7 +44,7 @@ namespace FluentValidation.AspNetCore {
 
 			string message;
 			try {
-				message = lengthVal.GetUnformattedErrorMessage();
+				message = Component.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
 				message = cfg.LanguageManager.GetString("MaximumLength_Simple");
@@ -58,7 +58,7 @@ namespace FluentValidation.AspNetCore {
 			return message;
 		}
 
-		public MaxLengthClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public MaxLengthClientValidator(IValidationRule rule, IRuleComponent component) : base(rule, component) {
 		}
 	}
 }
