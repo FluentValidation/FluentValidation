@@ -50,7 +50,7 @@ namespace FluentValidation.Validators {
 		}
 
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {
-			return context.IsAsync() || base.ShouldValidateAsynchronously(context);
+			return context.IsAsync();
 		}
 
 		protected override string GetDefaultMessageTemplate() {
