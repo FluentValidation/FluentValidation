@@ -29,66 +29,53 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Defines a rule associated with a property.
 	/// </summary>
-	internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, IExecutableValidationRule<T> {
+	internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, IExecutableValidationRule<T>, IRuleBuilderInitial<T, TProperty> {
 
-		public PropertyRule(MemberInfo member, Func<T, TProperty> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
-			: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
+		public PropertyRule(AbstractValidator<T> parentValidator, MemberInfo member, Func<T, TProperty> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+			: base(parentValidator, member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		public static PropertyRule<T, TProperty> Create(Expression<Func<T, TProperty>> expression) {
-			return Create(expression, () => ValidatorOptions.Global.CascadeMode);
-		}
-
-		/// <summary>
-		/// Creates a new property rule from a lambda expression.
-		/// </summary>
-		public static PropertyRule<T, TProperty> Create(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		public static PropertyRule<T, TProperty> Create(AbstractValidator<T> parentValidator, Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
-			return new PropertyRule<T, TProperty>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TProperty));
+			return new PropertyRule<T, TProperty>(parentValidator, member, x => compiled(x), expression, cascadeModeThunk, typeof(TProperty));
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		internal static PropertyRule<T, TProperty> Create<TOld>(Expression<Func<T, TOld>> expression, Func<TOld, TProperty> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		internal static PropertyRule<T, TProperty> Create<TOld>(AbstractValidator<T> parentValidator, Expression<Func<T, TOld>> expression, Func<TOld, TProperty> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
 
 			TProperty PropertyFunc(T instance)
 				=> transformer(compiled(instance));
 
-			return new PropertyRule<T, TProperty>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOld));
+			return new PropertyRule<T, TProperty>(parentValidator, member, PropertyFunc, expression, cascadeModeThunk, typeof(TOld));
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		internal static PropertyRule<T, TProperty> Create<TOld>(Expression<Func<T, TOld>> expression, Func<T, TOld, TProperty> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		internal static PropertyRule<T, TProperty> Create<TOld>(AbstractValidator<T> parentValidator, Expression<Func<T, TOld>> expression, Func<T, TOld, TProperty> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
 
 			TProperty PropertyFunc(T instance)
 				=> transformer(instance, compiled(instance));
 
-			return new PropertyRule<T, TProperty>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOld));
+			return new PropertyRule<T, TProperty>(parentValidator, member, PropertyFunc, expression, cascadeModeThunk, typeof(TOld));
 		}
-
-		void IExecutableValidationRule<T>.Validate(ValidationContext<T> context)
-			=> Validate(context);
-
-		Task IExecutableValidationRule<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation)
-			=> ValidateAsync(context, cancellation);
 
 		/// <summary>
 		/// Performs validation using a validation context and returns a collection of Validation Failures.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
-		internal virtual void Validate(ValidationContext<T> context) {
+		public virtual void Validate(ValidationContext<T> context) {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -161,7 +148,7 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
-		internal virtual async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
+		public virtual async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			if (!context.IsAsync()) {
 				context.RootContextData["__FV_IsAsyncExecution"] = true;
 			}

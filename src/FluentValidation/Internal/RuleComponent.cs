@@ -20,6 +20,8 @@
 
 namespace FluentValidation.Internal {
 	using System;
+	using System.Collections.Generic;
+	using System.Data;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
@@ -56,7 +58,8 @@ namespace FluentValidation.Internal {
 	/// In a rule definition such as RuleFor(x => x.Name).NotNull().NotEqual("Foo")
 	/// the NotNull and the NotEqual are both rule steps.
 	/// </summary>
-	public sealed class RuleComponent<T,TProperty> : IRuleComponent {
+	public sealed class RuleComponent<T,TProperty> : IRuleComponent, IRuleBuilderOptions<T,TProperty> {
+		private readonly IValidationRule<T, TProperty> _parentRule;
 		private string _errorMessage;
 		private Func<ValidationContext<T>, TProperty, string> _errorMessageFactory;
 		private Func<IValidationContext, bool> _condition;
@@ -65,13 +68,15 @@ namespace FluentValidation.Internal {
 		public IPropertyValidator<T,TProperty> PropertyValidator { get; }
 		public IAsyncPropertyValidator<T, TProperty> AsyncPropertyValidator { get; }
 
-		internal RuleComponent(IPropertyValidator<T, TProperty> propertyValidator) {
+		internal RuleComponent(IPropertyValidator<T, TProperty> propertyValidator, IValidationRule<T, TProperty> parentRule) {
 			PropertyValidator = propertyValidator;
+			_parentRule = parentRule;
 		}
 
-		internal RuleComponent(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator, IPropertyValidator<T, TProperty> propertyValidator) {
+		internal RuleComponent(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator, IPropertyValidator<T, TProperty> propertyValidator, IValidationRule<T, TProperty> parentRule) {
 			AsyncPropertyValidator = asyncPropertyValidator;
 			PropertyValidator = propertyValidator;
+			_parentRule = parentRule;
 		}
 
 		[Obsolete("The Options property will be removed in FluentValidation 11. All properties from Options should be accessed directly on this component instead.")]
@@ -240,6 +245,53 @@ namespace FluentValidation.Internal {
 		}
 
 		internal Action<T, ValidationContext<T>, TProperty, string> OnFailure { get; set; }
+
+		internal IValidationRule<T, TProperty> Rule => _parentRule;
+
+		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetValidator(IPropertyValidator<T, TProperty> validator) {
+			((IRuleBuilder<T, TProperty>) _parentRule).SetValidator(validator);
+			return this;
+		}
+
+		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetAsyncValidator(IAsyncPropertyValidator<T, TProperty> validator) {
+			((IRuleBuilder<T, TProperty>) _parentRule).SetAsyncValidator(validator);
+			return this;
+		}
+
+		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetValidator(IValidator<TProperty> validator, params string[] ruleSets) {
+			((IRuleBuilder<T, TProperty>) _parentRule).SetValidator(validator, ruleSets);
+			return this;
+		}
+
+		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetValidator<TValidator>(Func<T, TValidator> validatorProvider, params string[] ruleSets) {
+			((IRuleBuilder<T, TProperty>) _parentRule).SetValidator(validatorProvider, ruleSets);
+			return this;
+		}
+
+		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetValidator<TValidator>(Func<T, TProperty, TValidator> validatorProvider, params string[] ruleSets) {
+			((IRuleBuilder<T, TProperty>) _parentRule).SetValidator(validatorProvider, ruleSets);
+			return this;
+		}
+
+		IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.DependentRules(Action action) {
+			var dependencyContainer = new List<IExecutableValidationRule<T>>();
+			var internalRule = (IExecutableValidationRule<T>) _parentRule;
+			// Capture any rules added to the parent validator inside this delegate.
+			using (internalRule.ParentValidator.Rules.Capture(dependencyContainer.Add)) {
+				action();
+			}
+
+			if (_parentRule.RuleSets != null && _parentRule.RuleSets.Length > 0) {
+				foreach (var dependentRule in dependencyContainer) {
+					if (dependentRule is IValidationRule propRule && propRule.RuleSets == null) {
+						propRule.RuleSets = _parentRule.RuleSets;
+					}
+				}
+			}
+
+			internalRule.AddDependentRules(dependencyContainer);
+			return this;
+		}
 	}
 
 }

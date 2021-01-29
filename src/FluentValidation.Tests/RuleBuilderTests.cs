@@ -52,12 +52,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Adding_a_validator_should_return_builder() {
-			var builderWithOptions = builder.SetValidator(new TestPropertyValidator<Person, string>());
-			builderWithOptions.ShouldBeTheSameAs(builder);
-		}
-
-		[Fact]
 		public void Adding_a_validator_should_store_validator() {
 			var validator = new TestPropertyValidator<Person, string>();
 			builder.SetValidator(validator);

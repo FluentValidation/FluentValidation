@@ -95,8 +95,7 @@ namespace FluentValidation {
 			}, typeof(IValidator<TProperty>));
 
 			adaptor.RuleSets = ruleSets;
-
-			return ruleBuilder.SetValidator((IAsyncPropertyValidator<T, TProperty>) adaptor);
+			return ruleBuilder.SetAsyncValidator(adaptor);
 		}
 	}
 }
