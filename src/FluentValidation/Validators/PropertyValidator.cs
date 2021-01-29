@@ -52,7 +52,7 @@ namespace FluentValidation.Validators {
 
 	}
 
-	public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TProperty>, IPropertyValidator {
+	public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TProperty> {
 
 		string IPropertyValidator.GetDefaultMessageTemplate()
 			=> GetDefaultMessageTemplate();

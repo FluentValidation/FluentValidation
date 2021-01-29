@@ -52,13 +52,6 @@ namespace FluentValidation.Validators {
 	/// </summary>
 	public interface IPropertyValidator {
 		/// <summary>
-		/// Determines whether this validator should be run asynchronously or not.
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		// bool ShouldValidateAsynchronously(IValidationContext context);
-
-		/// <summary>
 		/// The name of the validator. This is usually the type name without any generic parameters.
 		/// This is used as the default Error Code for the validator.
 		/// </summary>
