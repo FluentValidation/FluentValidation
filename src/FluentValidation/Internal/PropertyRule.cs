@@ -247,6 +247,10 @@ namespace FluentValidation.Internal {
 
 		private protected void InvokePropertyValidator(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, PropertyValidator<T, TProperty> validator) {
 			if (!validator.InvokeCondition(context)) return;
+			if (validator.HasAsyncCondition && !validator.InvokeAsyncCondition(context, CancellationToken.None).GetAwaiter().GetResult()) {
+				return;
+			}
+
 			bool valid = validator.IsValid(context, accessor.Value);
 
 			if (!valid) {

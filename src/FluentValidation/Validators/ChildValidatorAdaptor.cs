@@ -125,7 +125,7 @@ namespace FluentValidation.Validators {
 		}
 
 		public override bool ShouldValidateAsynchronously(IValidationContext context) {
-			return context.IsAsync() || HasAsyncCondition;
+			return context.IsAsync();
 		}
 
 		private void HandleCollectionIndex(ValidationContext<T> context, out object originalIndex, out object index) {
