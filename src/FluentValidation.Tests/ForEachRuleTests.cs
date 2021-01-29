@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
 	using Validators;
@@ -144,10 +145,15 @@ namespace FluentValidation.Tests {
 			public Person person = null;
 		}
 
-		private class MyAsyncNotNullValidator<T,TProperty> : NotNullValidator<T,TProperty> {
-			public override bool ShouldValidateAsynchronously(IValidationContext context) {
-				return context.IsAsync();
+		private class MyAsyncNotNullValidator<T,TProperty> : IAsyncPropertyValidator<T,TProperty> {
+			private IPropertyValidator<T, TProperty> _inner = new NotNullValidator<T, TProperty>();
+
+			public Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+				return Task.FromResult(_inner.IsValid(context, value));
 			}
+
+			public string Name => _inner.Name;
+			public string GetDefaultMessageTemplate() => _inner.GetDefaultMessageTemplate();
 		}
 
 		[Fact]
@@ -310,7 +316,7 @@ namespace FluentValidation.Tests {
 			result.Errors[2].PropertyName.ShouldEqual("Forename");
 		}
 
-		
+
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};
 		}

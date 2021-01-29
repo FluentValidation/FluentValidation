@@ -124,14 +124,14 @@ namespace FluentValidation.Internal {
 			context.InitializeForPropertyValidator(propertyName, GetDisplayName, PropertyName);
 
 			// Invoke each validator and collect its results.
-			foreach (var validator in _validators) {
+			foreach (var step in _steps) {
 				context.MessageFormatter.Reset();
 
-				if (validator.ShouldValidateAsynchronously(context)) {
-					InvokePropertyValidatorAsync(context, accessor, propertyName, validator, default).GetAwaiter().GetResult();
+				if (step.ShouldValidateAsynchronously(context)) {
+					InvokePropertyValidatorAsync(context, accessor, propertyName, step, default).GetAwaiter().GetResult();
 				}
 				else {
-					InvokePropertyValidator(context, accessor, propertyName, validator);
+					InvokePropertyValidator(context, accessor, propertyName, step);
 				}
 
 				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
@@ -200,7 +200,7 @@ namespace FluentValidation.Internal {
 			context.InitializeForPropertyValidator(propertyName, GetDisplayName, PropertyName);
 
 			// Invoke each validator and collect its results.
-			foreach (var validator in _validators) {
+			foreach (var validator in _steps) {
 				cancellation.ThrowIfCancellationRequested();
 				context.MessageFormatter.Reset();
 
@@ -232,31 +232,31 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, PropertyValidator<T,TProperty> validator, CancellationToken cancellation) {
-			if (!validator.InvokeCondition(context)) return;
-			if (!await validator.InvokeAsyncCondition(context, cancellation)) return;
-			bool valid = await validator.IsValidAsync(context, accessor.Value, cancellation);
+		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, RuleComponent<T,TProperty> component, CancellationToken cancellation) {
+			if (!component.InvokeCondition(context)) return;
+			if (!await component.InvokeAsyncCondition(context, cancellation)) return;
+			bool valid = await component.AsyncPropertyValidator.IsValidAsync(context, accessor.Value, cancellation);
 
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, accessor.Value);
-				var failure = CreateValidationError(context, accessor.Value, validator);
-				validator.OnFailure?.Invoke(context.InstanceToValidate, context, accessor.Value, failure.ErrorMessage);
+				var failure = CreateValidationError(context, accessor.Value, component);
+				component.OnFailure?.Invoke(context.InstanceToValidate, context, accessor.Value, failure.ErrorMessage);
 				context.Failures.Add(failure);
 			}
 		}
 
-		private protected void InvokePropertyValidator(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, PropertyValidator<T, TProperty> validator) {
-			if (!validator.InvokeCondition(context)) return;
-			if (validator.HasAsyncCondition && !validator.InvokeAsyncCondition(context, CancellationToken.None).GetAwaiter().GetResult()) {
+		private protected void InvokePropertyValidator(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, RuleComponent<T, TProperty> component) {
+			if (!component.InvokeCondition(context)) return;
+			if (component.HasAsyncCondition && !component.InvokeAsyncCondition(context, CancellationToken.None).GetAwaiter().GetResult()) {
 				return;
 			}
 
-			bool valid = validator.IsValid(context, accessor.Value);
+			bool valid = component.PropertyValidator.IsValid(context, accessor.Value);
 
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, accessor.Value);
-				var failure = CreateValidationError(context, accessor.Value, validator);
-				validator.OnFailure?.Invoke(context.InstanceToValidate, context, accessor.Value, failure.ErrorMessage);
+				var failure = CreateValidationError(context, accessor.Value, component);
+				component.OnFailure?.Invoke(context.InstanceToValidate, context, accessor.Value, failure.ErrorMessage);
 				context.Failures.Add(failure);
 			}
 		}
@@ -265,5 +265,8 @@ namespace FluentValidation.Internal {
 			if (DependentRules == null) DependentRules = new();
 			DependentRules.AddRange(rules);
 		}
+
+		List<IExecutableValidationRule<T>> IExecutableValidationRule<T>.DependentRules
+			=> DependentRules;
 	}
 }

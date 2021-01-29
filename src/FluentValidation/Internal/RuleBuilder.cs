@@ -45,6 +45,18 @@ namespace FluentValidation.Internal {
 			ParentValidator = parent;
 		}
 
+		public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator<T, TProperty> validator) {
+			if (validator == null) throw new ArgumentNullException(nameof(validator));
+			Rule.Add(new RuleComponent<T, TProperty>(validator));
+			return this;
+		}
+
+		public IRuleBuilderOptions<T, TProperty> SetValidator(IAsyncPropertyValidator<T, TProperty> validator) {
+			if (validator == null) throw new ArgumentNullException(nameof(validator));
+			Rule.Add(new RuleComponent<T, TProperty>(validator));
+			return this;
+		}
+
 		/// <summary>
 		/// Sets the validator associated with the rule. Use with complex properties where an IValidator instance is already declared for the property type.
 		/// </summary>
@@ -55,7 +67,7 @@ namespace FluentValidation.Internal {
 			var adaptor = new ChildValidatorAdaptor<T,TProperty>(validator, validator.GetType()) {
 				RuleSets = ruleSets
 			};
-			this.SetValidator(adaptor);
+			SetValidator((IAsyncPropertyValidator<T, TProperty>) adaptor);
 			return this;
 		}
 
@@ -67,7 +79,7 @@ namespace FluentValidation.Internal {
 		public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TValidator> validatorProvider, params string[] ruleSets)
 			where TValidator : IValidator<TProperty> {
 			validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
-			this.SetValidator(new ChildValidatorAdaptor<T,TProperty>((context, _) => validatorProvider(context.InstanceToValidate), typeof (TValidator)) {
+			SetValidator((IAsyncPropertyValidator<T, TProperty>) new ChildValidatorAdaptor<T,TProperty>((context, _) => validatorProvider(context.InstanceToValidate), typeof (TValidator)) {
 				RuleSets = ruleSets
 			});
 			return this;
@@ -80,7 +92,7 @@ namespace FluentValidation.Internal {
 		/// <param name="ruleSets"></param>
 		public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TProperty, TValidator> validatorProvider, params string[] ruleSets) where TValidator : IValidator<TProperty> {
 			validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
-			this.SetValidator(new ChildValidatorAdaptor<T,TProperty>((context, val) => validatorProvider(context.InstanceToValidate, val), typeof (TValidator)) {
+			SetValidator((IAsyncPropertyValidator<T, TProperty>) new ChildValidatorAdaptor<T,TProperty>((context, val) => validatorProvider(context.InstanceToValidate, val), typeof (TValidator)) {
 				RuleSets = ruleSets
 			});
 			return this;

@@ -27,7 +27,7 @@ namespace FluentValidation.AspNetCore {
 	internal class EqualToClientValidator : ClientValidatorBase {
 		IComparisonValidator EqualValidator => (IComparisonValidator)Validator;
 
-		public EqualToClientValidator(IValidationRule rule, IPropertyValidator validator) : base(rule, validator) {
+		public EqualToClientValidator(IValidationRule rule, IRuleComponent component) : base(rule, component) {
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {
@@ -50,7 +50,7 @@ namespace FluentValidation.AspNetCore {
 
 				string messageTemplate;
 				try {
-					messageTemplate = EqualValidator.GetUnformattedErrorMessage();
+					messageTemplate = Component.GetUnformattedErrorMessage();
 				}
 				catch (NullReferenceException) {
 					messageTemplate = cfg.LanguageManager.GetString("EqualValidator");

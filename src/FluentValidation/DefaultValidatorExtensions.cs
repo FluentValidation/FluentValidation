@@ -20,32 +20,18 @@ namespace FluentValidation {
 	using System;
 	using System.Collections;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Text.RegularExpressions;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
-	using Results;
 	using Validators;
 
 	/// <summary>
 	/// Extension methods that provide the default set of validators.
 	/// </summary>
 	public static partial class DefaultValidatorExtensions {
-		/// <summary>
-		/// Associates a validator with this the property for this rule builder.
-		/// </summary>
-		/// <param name="ruleBuilder"></param>
-		/// <param name="validator">The validator to set</param>
-		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> SetValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, PropertyValidator<T, TProperty> validator) {
-			if (validator == null) throw new ArgumentNullException(nameof(validator));
-			var rb = (RuleBuilder<T, TProperty>) ruleBuilder;
-			rb.Rule.AddValidator(validator);
-			return rb;
-		}
 
 		/// <summary>
 		/// Defines a 'not null' validator on the current rule builder.
@@ -1006,7 +992,7 @@ namespace FluentValidation {
 		/// <param name="action"></param>
 		/// <returns></returns>
 		public static IRuleBuilderInitial<T, TProperty> CustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, ValidationContext<T>, CancellationToken, Task> action) {
-			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new CustomValidator<T,TProperty>(action));
+			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new AsyncCustomValidator<T,TProperty>(action));
 		}
 
 		/// <summary>
@@ -1064,7 +1050,7 @@ namespace FluentValidation {
 			if (validatorConfiguration == null) throw new ArgumentNullException(nameof(validatorConfiguration));
 			var validator = new PolymorphicValidator<T, TProperty>();
 			validatorConfiguration(validator);
-			return ruleBuilder.SetValidator(validator);
+			return ruleBuilder.SetValidator((IAsyncPropertyValidator<T, TProperty>) validator);
 		}
 
 		private static string GetDisplayName<T, TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {

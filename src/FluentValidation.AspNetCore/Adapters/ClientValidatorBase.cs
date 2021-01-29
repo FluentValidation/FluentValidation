@@ -18,6 +18,7 @@
 namespace FluentValidation.AspNetCore {
 	using System;
 	using System.Collections.Generic;
+	using System.ComponentModel;
 	using Internal;
 	using Validators;
 	using System.Linq;
@@ -26,9 +27,11 @@ namespace FluentValidation.AspNetCore {
 	public abstract class ClientValidatorBase : IClientModelValidator {
 		public IPropertyValidator Validator { get; }
 		public IValidationRule Rule { get; }
+		public IRuleComponent Component { get; }
 
-		public ClientValidatorBase(IValidationRule rule, IPropertyValidator validator) {
-			Validator = validator;
+		public ClientValidatorBase(IValidationRule rule, IRuleComponent component) {
+			Component = component;
+			Validator = component.Validator;
 			Rule = rule;
 		}
 
