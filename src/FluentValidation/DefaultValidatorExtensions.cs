@@ -419,7 +419,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, ValidationContext<T>, CancellationToken, Task<bool>> predicate) {
 			predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
-			return ruleBuilder.SetValidator(new AsyncPredicateValidator<T,TProperty>(predicate));
+			return ruleBuilder.SetAsyncValidator(new AsyncPredicateValidator<T,TProperty>(predicate));
 		}
 
 		/// <summary>
@@ -992,7 +992,7 @@ namespace FluentValidation {
 		/// <param name="action"></param>
 		/// <returns></returns>
 		public static IRuleBuilderInitial<T, TProperty> CustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, ValidationContext<T>, CancellationToken, Task> action) {
-			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetValidator(new AsyncCustomValidator<T,TProperty>(action));
+			return (IRuleBuilderInitial<T, TProperty>) ruleBuilder.SetAsyncValidator(new AsyncCustomValidator<T,TProperty>(action));
 		}
 
 		/// <summary>
@@ -1050,7 +1050,7 @@ namespace FluentValidation {
 			if (validatorConfiguration == null) throw new ArgumentNullException(nameof(validatorConfiguration));
 			var validator = new PolymorphicValidator<T, TProperty>();
 			validatorConfiguration(validator);
-			return ruleBuilder.SetValidator((IAsyncPropertyValidator<T, TProperty>) validator);
+			return ruleBuilder.SetAsyncValidator((IAsyncPropertyValidator<T, TProperty>) validator);
 		}
 
 		private static string GetDisplayName<T, TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression) {

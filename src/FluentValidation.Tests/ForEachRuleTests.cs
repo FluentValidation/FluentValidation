@@ -115,7 +115,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public async Task Executes_rule_for_each_item_in_collection_async() {
 			var validator = new TestValidator {
-				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator<Person,string>())
+				v => v.RuleForEach(x => x.NickNames).SetAsyncValidator(new MyAsyncNotNullValidator<Person,string>())
 			};
 
 			var person = new Person {
@@ -129,7 +129,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public async Task Correctly_gets_collection_indices_async() {
 			var validator = new TestValidator {
-				v => v.RuleForEach(x => x.NickNames).SetValidator(new MyAsyncNotNullValidator<Person,string>())
+				v => v.RuleForEach(x => x.NickNames).SetAsyncValidator(new MyAsyncNotNullValidator<Person,string>())
 			};
 
 			var person = new Person {

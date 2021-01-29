@@ -48,7 +48,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="validator">The validator to set</param>
 		/// <returns></returns>
-		IRuleBuilderOptions<T, TProperty> SetValidator(IAsyncPropertyValidator<T, TProperty> validator);
+		IRuleBuilderOptions<T, TProperty> SetAsyncValidator(IAsyncPropertyValidator<T, TProperty> validator);
 
 		/// <summary>
 		/// Associates an instance of IValidator with the current property rule.
@@ -81,9 +81,6 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
 	public interface IRuleBuilderOptions<T, out TProperty> : IRuleBuilder<T, TProperty> {
-
-
-
 		/// <summary>
 		/// Creates a scope for declaring dependent rules.
 		/// </summary>

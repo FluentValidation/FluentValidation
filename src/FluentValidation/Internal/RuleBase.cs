@@ -145,11 +145,12 @@ namespace FluentValidation.Internal {
 			_displayNameFactory = context => ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression);
 		}
 
-		/// <summary>
-		/// Adds a validator to the rule.
-		/// </summary>
-		public void Add(RuleComponent<T,TValue> component) {
-			_steps.Add(component);
+		public void AddValidator(IPropertyValidator<T,TValue> validator) {
+			_steps.Add(new RuleComponent<T, TValue>(validator));
+		}
+
+		public void AddAsyncValidator(IAsyncPropertyValidator<T, TValue> asyncValidator, IPropertyValidator<T,TValue> fallback = null) {
+			_steps.Add(new RuleComponent<T, TValue>(asyncValidator, fallback));
 		}
 
 		// /// <summary>
