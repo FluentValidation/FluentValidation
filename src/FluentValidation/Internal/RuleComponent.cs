@@ -69,14 +69,9 @@ namespace FluentValidation.Internal {
 			PropertyValidator = propertyValidator;
 		}
 
-		internal RuleComponent(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator) {
+		internal RuleComponent(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator, IPropertyValidator<T, TProperty> propertyValidator) {
 			AsyncPropertyValidator = asyncPropertyValidator;
-
-			// Async validators may support both sync and async execution.
-			// Check if we're in that situation.
-			if (asyncPropertyValidator is IPropertyValidator<T, TProperty> p) {
-				PropertyValidator = p;
-			}
+			PropertyValidator = propertyValidator;
 		}
 
 		[Obsolete("The Options property will be removed in FluentValidation 11. All properties from Options should be accessed directly on this component instead.")]
