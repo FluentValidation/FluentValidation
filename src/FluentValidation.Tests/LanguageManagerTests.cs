@@ -99,8 +99,10 @@
 		[Fact]
 		public void Always_use_specific_language_with_string_source() {
 			ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr-FR");
-			var validator = new NotNullValidator<Person,string>();
-			var component = new RuleComponent<Person, string>(validator);
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).NotNull();
+
+			var component = (RuleComponent<Person,string>)validator.First().Components.First();
 			var msg = component.GetErrorMessage(null, null);
 			ValidatorOptions.Global.LanguageManager.Culture = null;
 
@@ -228,7 +230,7 @@
 				(message != englishMessage).ShouldBeTrue($"Language '{language.Name}' ({language.Type}) is not loaded in the LanguageManager");
 			}
 		}
-		
+
 		[Fact]
 		public void Falls_back_to_default_localization_key_when_error_code_key_not_found() {
 			var originalLanguageManager = ValidatorOptions.Global.LanguageManager;

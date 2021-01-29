@@ -19,11 +19,8 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new IncludeRule
 		/// </summary>
-		/// <param name="validator"></param>
-		/// <param name="cascadeModeThunk"></param>
-		/// <param name="typeToValidate"></param>
-		public IncludeRule(IValidator<T> validator, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
-			: base(null, x => x, null, cascadeModeThunk, typeToValidate) {
+		public IncludeRule(AbstractValidator<T> parentValidator, IValidator<T> validator, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+			: base(parentValidator, null, x => x, null, cascadeModeThunk, typeToValidate) {
 
 			var adaptor = new ChildValidatorAdaptor<T, T>(validator, validator.GetType());
 			// Note: ChildValidatorAdaptor implements both IPropertyValidator and IAsyncPropertyValidator
@@ -34,12 +31,8 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new IncludeRule
 		/// </summary>
-		/// <param name="func"></param>
-		/// <param name="cascadeModeThunk"></param>
-		/// <param name="typeToValidate"></param>
-		/// <param name="validatorType"></param>
-		public IncludeRule(Func<ValidationContext<T>, T, IValidator<T>> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type validatorType)
-			: base(null, x => x, null, cascadeModeThunk, typeToValidate) {
+		public IncludeRule(AbstractValidator<T> parentValidator, Func<ValidationContext<T>, T, IValidator<T>> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type validatorType)
+			: base(parentValidator, null, x => x, null, cascadeModeThunk, typeToValidate) {
 			var adaptor = new ChildValidatorAdaptor<T,T>(func,  validatorType);
 			// Note: ChildValidatorAdaptor implements both IPropertyValidator and IAsyncPropertyValidator
 			// So calling AddAsyncValidator will actually register it as supporting both sync and async.
@@ -49,32 +42,25 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new include rule from an existing validator
 		/// </summary>
-		/// <param name="validator"></param>
-		/// <param name="cascadeModeThunk"></param>
-		/// <returns></returns>
-		public static IncludeRule<T> Create(IValidator<T> validator, Func<CascadeMode> cascadeModeThunk) {
-			return new IncludeRule<T>(validator, cascadeModeThunk, typeof(T));
+		public static IncludeRule<T> Create(AbstractValidator<T> parentValidator, IValidator<T> validator, Func<CascadeMode> cascadeModeThunk) {
+			return new IncludeRule<T>(parentValidator, validator, cascadeModeThunk, typeof(T));
 		}
 
 		/// <summary>
 		/// Creates a new include rule from an existing validator
 		/// </summary>
-		/// <param name="func"></param>
-		/// <param name="cascadeModeThunk"></param>
-		/// <typeparam name="TValidator"></typeparam>
-		/// <returns></returns>
-		public static IncludeRule<T> Create<TValidator>(Func<T, TValidator> func, Func<CascadeMode> cascadeModeThunk)
+		public static IncludeRule<T> Create<TValidator>(AbstractValidator<T> parentValidator, Func<T, TValidator> func, Func<CascadeMode> cascadeModeThunk)
 			where TValidator : IValidator<T> {
-			return new IncludeRule<T>((ctx, _) => func(ctx.InstanceToValidate), cascadeModeThunk, typeof(T), typeof(TValidator));
+			return new IncludeRule<T>(parentValidator, (ctx, _) => func(ctx.InstanceToValidate), cascadeModeThunk, typeof(T), typeof(TValidator));
 		}
 
-		internal override void Validate(ValidationContext<T> context) {
+		public override void Validate(ValidationContext<T> context) {
 			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
 			base.Validate(context);
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
 		}
 
-		internal override async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
+		public override async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
 			await base.ValidateAsync(context, cancellation);
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);

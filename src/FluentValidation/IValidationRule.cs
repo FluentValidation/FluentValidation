@@ -48,6 +48,8 @@ namespace FluentValidation {
 		void AddDependentRules(IEnumerable<IExecutableValidationRule<T>> rules);
 
 		List<IExecutableValidationRule<T>> DependentRules { get; }
+
+		AbstractValidator<T> ParentValidator { get; }
 	}
 
 	public interface IValidationRule<T, TProperty> : IValidationRule<T> {
@@ -76,14 +78,16 @@ namespace FluentValidation {
 		/// <summary>
 		/// Adds a validator to this rule.
 		/// </summary>
-		void AddValidator(IPropertyValidator<T,TProperty> validator);
+		/// <returns>A rule component for further configuration.</returns>
+		RuleComponent<T, TProperty> AddValidator(IPropertyValidator<T, TProperty> validator);
 
 		/// <summary>
 		/// Adds an async validator to this rule.
 		/// </summary>
 		/// <param name="asyncValidator">The async property validator to invoke</param>
 		/// <param name="fallback">A synchronous property validator to use as a fallback if executed synchronously. This parameter is optional. If omitted, the async validator will be called synchronously if needed.</param>
-		void AddAsyncValidator(IAsyncPropertyValidator<T, TProperty> asyncValidator, IPropertyValidator<T,TProperty> fallback = null);
+		/// <returns>A rule component for further configuration.</returns>
+		RuleComponent<T, TProperty> AddAsyncValidator(IAsyncPropertyValidator<T, TProperty> asyncValidator, IPropertyValidator<T, TProperty> fallback = null);
 
 		/// <summary>
 		/// The current rule component.
