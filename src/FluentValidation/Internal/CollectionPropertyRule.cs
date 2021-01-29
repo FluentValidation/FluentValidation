@@ -325,16 +325,16 @@ namespace FluentValidation.Internal {
 			DependentRules.AddRange(rules);
 		}
 
-		private List<PropertyValidator<T,TElement>> GetValidatorsToExecute(IValidationContext context) {
+		private List<RuleComponent<T,TElement>> GetValidatorsToExecute(IValidationContext context) {
 			// Loop over each validator and check if its condition allows it to run.
 			// This needs to be done prior to the main loop as within a collection rule
 			// validators' conditions still act upon the root object, not upon the collection property.
 			// This allows the property validators to cancel their execution prior to the collection
 			// being retrieved (thereby possibly avoiding NullReferenceExceptions).
 			// Must call ToList so we don't modify the original collection mid-loop.
-			var validators = _validators.ToList();
+			var validators = _steps.ToList();
 			int validatorIndex = 0;
-			foreach (var validator in _validators) {
+			foreach (var validator in _steps) {
 				if (validator.HasCondition) {
 					if (!validator.InvokeCondition(context)) {
 						validators.RemoveAt(validatorIndex);
@@ -353,16 +353,16 @@ namespace FluentValidation.Internal {
 			return validators;
 		}
 
-		private async Task<List<PropertyValidator<T,TElement>>> GetValidatorsToExecuteAsync(IValidationContext context, CancellationToken cancellation) {
+		private async Task<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(IValidationContext context, CancellationToken cancellation) {
 			// Loop over each validator and check if its condition allows it to run.
 			// This needs to be done prior to the main loop as within a collection rule
 			// validators' conditions still act upon the root object, not upon the collection property.
 			// This allows the property validators to cancel their execution prior to the collection
 			// being retrieved (thereby possibly avoiding NullReferenceExceptions).
 			// Must call ToList so we don't modify the original collection mid-loop.
-			var validators = _validators.ToList();
+			var validators = _steps.ToList();
 			int validatorIndex = 0;
-			foreach (var validator in _validators) {
+			foreach (var validator in _steps) {
 				if (validator.HasCondition) {
 					if (!validator.InvokeCondition(context)) {
 						validators.RemoveAt(validatorIndex);
@@ -381,26 +381,26 @@ namespace FluentValidation.Internal {
 			return validators;
 		}
 
-		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, TElement value, string propertyName, PropertyValidator<T,TElement> validator, int index, CancellationToken cancellation) {
+		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, TElement value, string propertyName, RuleComponent<T,TElement> component, int index, CancellationToken cancellation) {
 			context.MessageFormatter.AppendArgument("CollectionIndex", index);
-			bool valid = await validator.IsValidAsync(context, value, cancellation);
+			bool valid = await component.AsyncPropertyValidator.IsValidAsync(context, value, cancellation);
 
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, value);
-				var failure = CreateValidationError(context, value, validator);
-				validator.OnFailure?.Invoke(context.InstanceToValidate, context, value, failure.ErrorMessage);
+				var failure = CreateValidationError(context, value, component);
+				component.OnFailure?.Invoke(context.InstanceToValidate, context, value, failure.ErrorMessage);
 				context.Failures.Add(failure);
 			}
 		}
 
-		private void InvokePropertyValidator(ValidationContext<T> context, TElement value, string propertyName, PropertyValidator<T, TElement> validator, int index) {
+		private void InvokePropertyValidator(ValidationContext<T> context, TElement value, string propertyName, RuleComponent<T, TElement> component, int index) {
 			context.MessageFormatter.AppendArgument("CollectionIndex", index);
-			bool valid = validator.IsValid(context, value);
+			bool valid = component.PropertyValidator.IsValid(context, value);
 
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, value);
-				var failure = CreateValidationError(context, value, validator);
-				validator.OnFailure?.Invoke(context.InstanceToValidate, context, value, failure.ErrorMessage);
+				var failure = CreateValidationError(context, value, component);
+				component.OnFailure?.Invoke(context.InstanceToValidate, context, value, failure.ErrorMessage);
 				context.Failures.Add(failure);
 			}
 		}
@@ -414,5 +414,8 @@ namespace FluentValidation.Internal {
 
 			return paramExp.Name;
 		}
+
+		List<IExecutableValidationRule<T>> IExecutableValidationRule<T>.DependentRules
+			=> DependentRules;
 	}
 }

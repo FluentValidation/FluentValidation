@@ -35,6 +35,21 @@ namespace FluentValidation {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TProperty"></typeparam>
 	public interface IRuleBuilder<T, out TProperty> {
+
+		/// <summary>
+		/// Associates a validator with this the property for this rule builder.
+		/// </summary>
+		/// <param name="validator">The validator to set</param>
+		/// <returns></returns>
+		IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator<T, TProperty> validator);
+
+		/// <summary>
+		/// Associates an async validator with this the property for this rule builder.
+		/// </summary>
+		/// <param name="validator">The validator to set</param>
+		/// <returns></returns>
+		IRuleBuilderOptions<T, TProperty> SetValidator(IAsyncPropertyValidator<T, TProperty> validator);
+
 		/// <summary>
 		/// Associates an instance of IValidator with the current property rule.
 		/// </summary>
@@ -57,7 +72,6 @@ namespace FluentValidation {
 		/// <param name="ruleSets"></param>
 		IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TProperty, TValidator> validatorProvider, params string[] ruleSets)
 			where TValidator : IValidator<TProperty>;
-
 	}
 
 

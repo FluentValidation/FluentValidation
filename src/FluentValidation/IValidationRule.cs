@@ -46,6 +46,8 @@ namespace FluentValidation {
 		Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
 
 		void AddDependentRules(IEnumerable<IExecutableValidationRule<T>> rules);
+
+		List<IExecutableValidationRule<T>> DependentRules { get; }
 	}
 
 	public interface IValidationRule<T, TProperty> : IValidationRule<T> {
@@ -71,10 +73,18 @@ namespace FluentValidation {
 		/// <param name="factory">The function for building the display name</param>
 		void SetDisplayName(Func<ValidationContext<T>, string> factory);
 
-		//TODO: Make generic
-		void AddValidator(PropertyValidator<T,TProperty> validator);
+		/// <summary>
+		/// Adds a component to this rule.
+		/// </summary>
+		void Add(RuleComponent<T,TProperty> component);
 
-		PropertyValidator<T,TProperty> CurrentValidator { get; }
+		/// <summary>
+		/// The current rule component.
+		/// </summary>
+		RuleComponent<T,TProperty> Current { get; }
+
+		[Obsolete("The current validator is no longer directly exposed. Access the current component with rule.Current instead. This property will be removed in FluentValidation 11.")]
+		RuleComponent<T,TProperty> CurrentValidator { get; }
 
 		/// <summary>
 		/// Allows custom creation of an error message
@@ -97,9 +107,9 @@ namespace FluentValidation {
 	/// </summary>
 	public interface IValidationRule {
 		/// <summary>
-		/// The validators that are grouped under this rule.
+		/// The components in this rule.
 		/// </summary>
-		IEnumerable<IPropertyValidator> Validators { get; }
+		IEnumerable<IRuleComponent> Components { get; }
 		/// <summary>
 		/// Name of the rule-set to which this rule belongs.
 		/// </summary>

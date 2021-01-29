@@ -24,7 +24,9 @@ namespace FluentValidation.Internal {
 		/// <param name="typeToValidate"></param>
 		public IncludeRule(IValidator<T> validator, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
 			: base(null, x => x, null, cascadeModeThunk, typeToValidate) {
-			AddValidator(new ChildValidatorAdaptor<T,T>(validator, validator.GetType()));
+
+			var adaptor = new ChildValidatorAdaptor<T, T>(validator, validator.GetType());
+			Add(new RuleComponent<T, T>((IAsyncPropertyValidator<T, T>) adaptor));
 		}
 
 		/// <summary>
@@ -36,7 +38,8 @@ namespace FluentValidation.Internal {
 		/// <param name="validatorType"></param>
 		public IncludeRule(Func<ValidationContext<T>, T, IValidator<T>> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type validatorType)
 			: base(null, x => x, null, cascadeModeThunk, typeToValidate) {
-			AddValidator(new ChildValidatorAdaptor<T,T>(func,  validatorType));
+			var adaptor = new ChildValidatorAdaptor<T,T>(func,  validatorType);
+			Add(new RuleComponent<T, T>((IAsyncPropertyValidator<T, T>) adaptor));
 		}
 
 		/// <summary>

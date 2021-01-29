@@ -7,13 +7,16 @@
 		private ValidationContext<T> _innerContext;
 		private TProperty _value;
 
-		public MessageBuilderContext(ValidationContext<T> innerContext, TProperty value, PropertyValidator<T,TProperty> propertyValidator) {
+		public MessageBuilderContext(ValidationContext<T> innerContext, TProperty value, RuleComponent<T,TProperty> component) {
 			_innerContext = innerContext;
 			_value = value;
-			PropertyValidator = propertyValidator;
+			Component = component;
 		}
 
-		public PropertyValidator<T,TProperty> PropertyValidator { get; }
+		public RuleComponent<T,TProperty> Component { get; }
+
+		public IPropertyValidator PropertyValidator
+			=> (IPropertyValidator) Component.PropertyValidator ?? Component.AsyncPropertyValidator;
 
 		public ValidationContext<T> ParentContext => _innerContext;
 
@@ -29,7 +32,7 @@
 		public TProperty PropertyValue => _value;
 
 		public string GetDefaultMessage() {
-			return PropertyValidator.GetErrorMessage(_innerContext, _value);
+			return Component.GetErrorMessage(_innerContext, _value);
 		}
 	}
 }

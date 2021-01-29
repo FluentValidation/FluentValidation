@@ -61,7 +61,7 @@ namespace FluentValidation.Tests {
 		public void Adding_a_validator_should_store_validator() {
 			var validator = new TestPropertyValidator<Person, string>();
 			builder.SetValidator(validator);
-			_rule.CurrentValidator.ShouldBeTheSameAs(validator);
+			_rule.Current.PropertyValidator.ShouldBeTheSameAs(validator);
 		}
 
 		[Fact]
@@ -73,7 +73,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Should_set_custom_error() {
 			builder.SetValidator(new TestPropertyValidator<Person, string>()).WithMessage("Bar");
-			_rule.CurrentValidator.GetErrorMessage(null, default).ShouldEqual("Bar");
+			_rule.Current.GetErrorMessage(null, default).ShouldEqual("Bar");
 		}
 
 		[Fact]
@@ -209,7 +209,9 @@ namespace FluentValidation.Tests {
 			IValidationRule<Person, Address> rule = null;
 			builder.Configure(r => rule = r);
 
-			rule.Validators.OfType<IChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
+			rule.Components
+				.Select(x => x.Validator)
+				.OfType<IChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
 		}
 
 		class NoopAddressValidator : AbstractValidator<Address> {

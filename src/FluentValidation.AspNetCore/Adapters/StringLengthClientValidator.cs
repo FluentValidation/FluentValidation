@@ -24,8 +24,8 @@ namespace FluentValidation.AspNetCore {
 	using Validators;
 
 	internal class StringLengthClientValidator : ClientValidatorBase {
-		public StringLengthClientValidator(IValidationRule rule, IPropertyValidator validator)
-			: base(rule, validator) {
+		public StringLengthClientValidator(IValidationRule rule, IRuleComponent component)
+			: base(rule, component) {
 		}
 
 		public override void AddValidation(ClientModelValidationContext context) {
@@ -47,7 +47,7 @@ namespace FluentValidation.AspNetCore {
 
 			string message;
 			try {
-				message = lengthVal.GetUnformattedErrorMessage();
+				message = Component.GetUnformattedErrorMessage();
 			}
 			catch (NullReferenceException) {
 				if (lengthVal is IExactLengthValidator) {

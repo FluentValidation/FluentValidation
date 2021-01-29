@@ -128,7 +128,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage) {
 			errorMessage.Guard("A message must be specified when calling WithMessage.", nameof(errorMessage));
 			return rule.Configure(config => {
-				config.CurrentValidator.SetErrorMessage(errorMessage);
+				config.Current.SetErrorMessage(errorMessage);
 			});
 		}
 
@@ -141,7 +141,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 			return rule.Configure(config => {
-				config.CurrentValidator.SetErrorMessage((ctx, val) => {
+				config.Current.SetErrorMessage((ctx, val) => {
 					return messageProvider(ctx == null ? default : ctx.InstanceToValidate);
 				});
 			});
@@ -157,7 +157,7 @@ namespace FluentValidation {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
 
 			return rule.Configure(config => {
-				config.CurrentValidator.SetErrorMessage((context, value) => {
+				config.Current.SetErrorMessage((context, value) => {
 					return messageProvider(context == null ? default : context.InstanceToValidate, value);
 				});
 			});
@@ -173,7 +173,7 @@ namespace FluentValidation {
 			errorCode.Guard("A error code must be specified when calling WithErrorCode.", nameof(errorCode));
 
 			return rule.Configure(config => {
-				config.CurrentValidator.ErrorCode = errorCode;
+				config.Current.ErrorCode = errorCode;
 			});
 		}
 
@@ -371,7 +371,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
 			var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, _) => stateProvider(ctx.InstanceToValidate));
-			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = wrapper);
+			return rule.Configure(config => config.Current.CustomStateProvider = wrapper);
 		}
 
 		/// <summary>
@@ -389,7 +389,7 @@ namespace FluentValidation {
 				return stateProvider(ctx.InstanceToValidate, val);
 			});
 
-			return rule.Configure(config => config.CurrentValidator.CustomStateProvider = wrapper);
+			return rule.Configure(config => config.Current.CustomStateProvider = wrapper);
 		}
 
 		///<summary>
@@ -401,7 +401,7 @@ namespace FluentValidation {
 		/// <param name="severity"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Severity severity) {
-			return rule.Configure(config => config.CurrentValidator.SeverityProvider = (_, _) => severity);
+			return rule.Configure(config => config.Current.SeverityProvider = (_, _) => severity);
 		}
 
 		/// <summary>
@@ -419,7 +419,7 @@ namespace FluentValidation {
 				return severityProvider(ctx.InstanceToValidate);
 			}
 
-			return rule.Configure(config => config.CurrentValidator.SeverityProvider = SeverityProvider);
+			return rule.Configure(config => config.Current.SeverityProvider = SeverityProvider);
 		}
 
 		/// <summary>
@@ -437,7 +437,7 @@ namespace FluentValidation {
 				return severityProvider(ctx.InstanceToValidate, value);
 			}
 
-			return rule.Configure(config => config.CurrentValidator.SeverityProvider = SeverityProvider);
+			return rule.Configure(config => config.Current.SeverityProvider = SeverityProvider);
 		}
 
 		/// <summary>
@@ -450,7 +450,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
 			return rule.Configure(config => {
-				config.CurrentValidator.OnFailure = (instance, _, _, _) => onFailure((T)instance);
+				config.Current.OnFailure = (instance, _, _, _) => onFailure((T)instance);
 			});
 		}
 
@@ -464,7 +464,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, ValidationContext<T>, TProperty> onFailure) {
 			return rule.Configure(config => {
-				config.CurrentValidator.OnFailure = (instance, context, val, _) => onFailure(instance, context, val);
+				config.Current.OnFailure = (instance, context, val, _) => onFailure(instance, context, val);
 			});
 		}
 
@@ -478,7 +478,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, ValidationContext<T>, TProperty, string> onFailure) {
 			return rule.Configure(config => {
-				config.CurrentValidator.OnFailure = (instance, context, val, msg) => onFailure(instance, context, val, msg);
+				config.Current.OnFailure = (instance, context, val, msg) => onFailure(instance, context, val, msg);
 			});
 		}
 

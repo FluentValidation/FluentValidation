@@ -17,7 +17,7 @@ namespace FluentValidation.Validators {
 		Type ValidatorType { get; }
 	}
 
-	public class ChildValidatorAdaptor<T,TProperty> : NoopPropertyValidator<T,TProperty>, IChildValidatorAdaptor {
+	public class ChildValidatorAdaptor<T,TProperty> : NoopPropertyValidator<T,TProperty>, IAsyncPropertyValidator<T, TProperty>, IChildValidatorAdaptor {
 		private readonly Func<ValidationContext<T>, TProperty, IValidator<TProperty>> _validatorProvider;
 		private readonly IValidator<TProperty> _validator;
 
@@ -58,21 +58,14 @@ namespace FluentValidation.Validators {
 			// the child validator. PropertyValidator.PrepareMessageFormatterForValidationError handles extracting this.
 			HandleCollectionIndex(context, out object originalIndex, out object currentIndex);
 
-			var result = validator.Validate(newContext);
+			validator.Validate(newContext);
 
 			// Reset the collection index
 			ResetCollectionIndex(context, originalIndex, currentIndex);
-
-			if (result.Errors.Count > totalFailures && OnFailure != null) {
-				// Errors collection will contain all the errors from the validation run, not just those for the child validator.
-				var firstError = result.Errors.Skip(totalFailures).First().ErrorMessage;
-				OnFailure(context.InstanceToValidate, context, value, firstError);
-			}
-
 			return true;
 		}
 
-		public override async Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+		public virtual async Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
 			if (value == null) {
 				return true;
 			}
@@ -91,15 +84,9 @@ namespace FluentValidation.Validators {
 			// the child validator. PropertyValidator.PrepareMessageFormatterForValidationError handles extracting this.
 			HandleCollectionIndex(context, out object originalIndex, out object currentIndex);
 
-			var result = await validator.ValidateAsync(newContext, cancellation);
+			await validator.ValidateAsync(newContext, cancellation);
 
 			ResetCollectionIndex(context, originalIndex, currentIndex);
-
-			if (result.Errors.Count > totalFailures && OnFailure != null) {
-				// Errors collection will contain all the errors from the validation run, not just those for the child validator.
-				var firstError = result.Errors.Skip(totalFailures).First().ErrorMessage;
-				OnFailure(context.InstanceToValidate, context, value, firstError);
-			}
 
 			return true;
 		}
@@ -122,10 +109,6 @@ namespace FluentValidation.Validators {
 
 		private protected virtual IValidatorSelector GetSelector(ValidationContext<T> context, TProperty value) {
 			return RuleSets?.Length > 0 ? new RulesetValidatorSelector(RuleSets) : null;
-		}
-
-		public override bool ShouldValidateAsynchronously(IValidationContext context) {
-			return context.IsAsync();
 		}
 
 		private void HandleCollectionIndex(ValidationContext<T> context, out object originalIndex, out object index) {

@@ -26,7 +26,7 @@ namespace FluentValidation.Validators {
 	/// <summary>
 	/// Asynchronous custom validator
 	/// </summary>
-	public class AsyncPredicateValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+	public class AsyncPredicateValidator<T,TProperty> : AsyncPropertyValidator<T,TProperty> {
 		private readonly Func<T, TProperty, ValidationContext<T>, CancellationToken, Task<bool>> _predicate;
 
 		public override string Name => "AsyncPredicateValidator";
@@ -42,15 +42,6 @@ namespace FluentValidation.Validators {
 
 		public override Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
 			return _predicate(context.InstanceToValidate, value, context, cancellation);
-		}
-
-		public override bool IsValid(ValidationContext<T> context, TProperty value) {
-			//TODO: For FV 9, throw an exception by default if async validator is being executed synchronously.
-			return Task.Run(() => IsValidAsync(context, value, new CancellationToken())).GetAwaiter().GetResult();
-		}
-
-		public override bool ShouldValidateAsynchronously(IValidationContext context) {
-			return context.IsAsync();
 		}
 
 		protected override string GetDefaultMessageTemplate() {
