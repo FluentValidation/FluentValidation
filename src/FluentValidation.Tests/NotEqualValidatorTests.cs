@@ -30,8 +30,8 @@ namespace FluentValidation.Tests {
 
 	public class NotEqualValidatorTests {
 		public  NotEqualValidatorTests() {
-          CultureScope.SetDefaultCulture();
-        }
+			CultureScope.SetDefaultCulture();
+		}
 
 		[Fact]
 		public void When_the_objects_are_equal_then_the_validator_should_fail() {
@@ -141,30 +141,24 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
-		public class MyType
-		{
+		public class MyType {
 			public MyValueType Value { get; set; }
 		}
 
-		public class MyTypeValidator : AbstractValidator<MyType>
-		{
-			public MyTypeValidator()
-			{
+		public class MyTypeValidator : AbstractValidator<MyType> {
+			public MyTypeValidator() {
 				RuleFor(myType => myType.Value).NotEqual(MyValueType.None);
 			}
 		}
 
-		public struct MyValueType
-		{
+		public struct MyValueType {
 			public static readonly MyValueType None = default;
 
-			public MyValueType(int value)
-			{
+			public MyValueType(int value) {
 				_value = value;
 			}
 
-			public int Value
-			{
+			public int Value {
 				get { return _value ?? -1; }
 			}
 
@@ -178,8 +172,7 @@ namespace FluentValidation.Tests {
 				return _value == null ? null : _value.Value.ToString();
 			}
 
-			public override bool Equals(object obj)
-			{
+			public override bool Equals(object obj) {
 				if (obj == null || obj.GetType() != typeof(MyValueType))
 					return false;
 

@@ -257,11 +257,24 @@ namespace FluentValidation {
 		/// <param name="comparer">Equality comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-																			   TProperty toCompare, IEqualityComparer comparer = null) {
-			if (comparer == null && typeof(TProperty) == typeof(string)) {
-				comparer = StringComparer.Ordinal;
-			}
+																			   TProperty toCompare, IEqualityComparer<TProperty> comparer = null) {
 			return ruleBuilder.SetValidator(new NotEqualValidator<T, TProperty>(toCompare, comparer));
+		}
+
+		/// <summary>
+		/// Defines a 'not equal' validator on the current rule builder.
+		/// Validation will fail if the specified value is equal to the value of the property.
+		/// For strings, this performs an ordinal comparison unless you specify a different comparer.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="toCompare">The value to compare</param>
+		/// <param name="comparer">Equality comparer to use</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, string> NotEqual<T>(this IRuleBuilder<T, string> ruleBuilder,
+			string toCompare, IEqualityComparer<string> comparer = null) {
+			comparer ??= StringComparer.Ordinal;
+			return ruleBuilder.SetValidator(new NotEqualValidator<T, string>(toCompare, comparer));
 		}
 
 		/// <summary>
@@ -276,15 +289,31 @@ namespace FluentValidation {
 		/// <param name="comparer">Equality Comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-																			   Expression<Func<T, TProperty>> expression, IEqualityComparer comparer = null) {
-			if (comparer == null && typeof(TProperty) == typeof(string)) {
-				comparer = StringComparer.Ordinal;
-			}
-
+																			   Expression<Func<T, TProperty>> expression, IEqualityComparer<TProperty> comparer = null) {
 			var member = expression.GetMember();
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			string comparisonPropertyName = GetDisplayName(member, expression);
 			return ruleBuilder.SetValidator(new NotEqualValidator<T,TProperty>(func, member, comparisonPropertyName, comparer));
+		}
+
+		/// <summary>
+		/// Defines a 'not equal' validator on the current rule builder using a lambda to specify the value.
+		/// Validation will fail if the value returned by the lambda is equal to the value of the property.
+		/// For strings, this performs an ordinal comparison unless you specify a different comparer.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="expression">A lambda expression to provide the comparison value</param>
+		/// <param name="comparer">Equality Comparer to use</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, string> NotEqual<T>(this IRuleBuilder<T, string> ruleBuilder,
+			Expression<Func<T, string>> expression, IEqualityComparer<string> comparer = null) {
+			comparer ??= StringComparer.Ordinal;
+
+			var member = expression.GetMember();
+			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
+			string comparisonPropertyName = GetDisplayName(member, expression);
+			return ruleBuilder.SetValidator(new NotEqualValidator<T,string>(func, member, comparisonPropertyName, comparer));
 		}
 
 		/// <summary>
@@ -298,12 +327,25 @@ namespace FluentValidation {
 		/// <param name="toCompare">The value to compare</param>
 		/// <param name="comparer">Equality Comparer to use</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare, IEqualityComparer comparer = null) {
-			if (comparer == null && typeof(TProperty) == typeof(string)) {
-				comparer = StringComparer.Ordinal;
-			}
+		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare, IEqualityComparer<TProperty> comparer = null) {
 			return ruleBuilder.SetValidator(new EqualValidator<T,TProperty>(toCompare, comparer));
 		}
+
+		/// <summary>
+		/// Defines an 'equals' validator on the current rule builder.
+		/// Validation will fail if the specified value is not equal to the value of the property.
+		/// For strings, this performs an ordinal comparison unless you specify a different comparer.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="toCompare">The value to compare</param>
+		/// <param name="comparer">Equality Comparer to use</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, string> Equal<T>(this IRuleBuilder<T, string> ruleBuilder, string toCompare, IEqualityComparer<string> comparer = null) {
+			comparer ??= StringComparer.Ordinal;
+			return ruleBuilder.SetValidator(new EqualValidator<T,string>(toCompare, comparer));
+		}
+
 
 		/// <summary>
 		/// Defines an 'equals' validator on the current rule builder using a lambda to specify the comparison value.
@@ -316,15 +358,29 @@ namespace FluentValidation {
 		/// <param name="expression">A lambda expression to provide the comparison value</param>
 		/// <param name="comparer">Equality comparer to use</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression, IEqualityComparer comparer = null) {
-			if (comparer == null && typeof(TProperty) == typeof(string)) {
-				comparer = StringComparer.Ordinal;
-			}
-
+		public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression, IEqualityComparer<TProperty> comparer = null) {
 			var member = expression.GetMember();
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 			return ruleBuilder.SetValidator(new EqualValidator<T,TProperty>(func, member, name, comparer));
+		}
+
+		/// <summary>
+		/// Defines an 'equals' validator on the current rule builder using a lambda to specify the comparison value.
+		/// Validation will fail if the value returned by the lambda is not equal to the value of the property.
+		/// For strings, this performs an ordinal comparison unless you specify a different comparer.
+		/// </summary>
+		/// <typeparam name="T">The type of object being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="expression">A lambda expression to provide the comparison value</param>
+		/// <param name="comparer">Equality comparer to use</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, string> Equal<T>(this IRuleBuilder<T, string> ruleBuilder, Expression<Func<T, string>> expression, IEqualityComparer<string> comparer = null) {
+			comparer ??= StringComparer.Ordinal;
+			var member = expression.GetMember();
+			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
+			var name = GetDisplayName(member, expression);
+			return ruleBuilder.SetValidator(new EqualValidator<T,string>(func, member, name, comparer));
 		}
 
 		/// <summary>
@@ -955,7 +1011,7 @@ namespace FluentValidation {
 		/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, decimal> ScalePrecision<T>(this IRuleBuilder<T, decimal> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false) {
-			return ruleBuilder.SetValidator(new ScalePrecisionValidator<T,decimal>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
+			return ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
 		}
 
 		/// <summary>
@@ -968,7 +1024,7 @@ namespace FluentValidation {
 		/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, decimal?> ScalePrecision<T>(this IRuleBuilder<T, decimal?> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false) {
-			return ruleBuilder.SetValidator(new ScalePrecisionValidator<T,decimal?>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
+			return ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
 		}
 
 		/// <summary>
