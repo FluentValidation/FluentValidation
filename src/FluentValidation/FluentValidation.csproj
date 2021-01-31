@@ -5,6 +5,10 @@
     <PackageReleaseNotes>
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
+Changes in 9.5.1:
+* Fix incorrect wording in deprecation message for Transform (#1613)
+* Fix ScalePrecision validator being available in intellisense for non-decimal properties.
+
 Changes in 9.5.0:
 * Introduce new syntax for applying transformations and deprecate the old syntax
 
