@@ -35,7 +35,7 @@ namespace FluentValidation {
 		/// <typeparam name="TNew"></typeparam>
 		/// <param name="transformationFunc"></param>
 		/// <returns></returns>
-		[Obsolete("Use RuleFor(x => x.Property, transformer) instead. This method will be removed in FluentValidation 10.")]
+		[Obsolete("Use Transform(x => x.Property, transformer) at the root level instead. This method will be removed in FluentValidation 10.")]
 		IRuleBuilderInitial<T, TNew> Transform<TNew>(Func<TProperty, TNew> transformationFunc);
 	}
 
@@ -97,7 +97,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="transformationFunc"></param>
 		/// <returns></returns>
-		[Obsolete("Use RuleFor(x => x.Property, transformer) instead. This method will be removed in FluentValidation 10.")]
+		[Obsolete("Use TransformForEach(x => x.Property, transformer) at the root level instead. This method will be removed in FluentValidation 10.")]
 		IRuleBuilderInitial<T, TNew> Transform<TNew>(Func<TElement, TNew> transformationFunc);
 	}
 
