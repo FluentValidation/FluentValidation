@@ -188,6 +188,32 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		internal static PropertyRule Create<T, TProperty, TTransformed>(Expression<Func<T, TProperty>> expression, Func<TProperty, TTransformed> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+			var member = expression.GetMember();
+			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
+
+			object PropertyFunc(object instance)
+				=> transformer(compiled((T)instance));
+
+			return new PropertyRule(member, PropertyFunc, expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+		}
+
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		internal static PropertyRule Create<T, TProperty, TTransformed>(Expression<Func<T, TProperty>> expression, Func<T, TProperty, TTransformed> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+			var member = expression.GetMember();
+			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
+
+			object PropertyFunc(object instance)
+				=> transformer((T)instance, compiled((T)instance));
+
+			return new PropertyRule(member, PropertyFunc, expression, cascadeModeThunk, typeof(TProperty), typeof(T));
+		}
+
+		/// <summary>
 		/// Adds a validator to the rule.
 		/// </summary>
 		public void AddValidator(IPropertyValidator validator) {
@@ -241,6 +267,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public List<IValidationRule> DependentRules { get; }
 
+		[Obsolete("This property will be removed in FluentValidation 10")]
 		public Func<object, object> Transformer { get; set; }
 
 		/// <summary>
@@ -499,7 +526,9 @@ namespace FluentValidation.Internal {
 		/// <returns>The value to be validated</returns>
 		internal virtual object GetPropertyValue(object instanceToValidate) {
 			var value = PropertyFunc(instanceToValidate);
+#pragma warning disable 618
 			if (Transformer != null) value = Transformer(value);
+#pragma warning restore 618
 			return value;
 		}
 

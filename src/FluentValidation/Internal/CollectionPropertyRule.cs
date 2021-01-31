@@ -69,6 +69,34 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		internal static CollectionPropertyRule<T, TElement> CreateTransformed<TOriginal>(Expression<Func<T, IEnumerable<TOriginal>>> expression, Func<TOriginal, TElement> transformer, Func<CascadeMode> cascadeModeThunk) {
+			var member = expression.GetMember();
+			var compiled = expression.Compile();
+
+			object PropertyFunc(object instance) =>
+				compiled((T)instance).Select(transformer);
+
+			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TElement), typeof(T));
+		}
+
+		/// <summary>
+		/// Creates a new property rule from a lambda expression.
+		/// </summary>
+		internal static CollectionPropertyRule<T, TElement> CreateTransformed<TOriginal>(Expression<Func<T, IEnumerable<TOriginal>>> expression, Func<T, TOriginal, TElement> transformer, Func<CascadeMode> cascadeModeThunk) {
+			var member = expression.GetMember();
+			var compiled = expression.Compile();
+
+			object PropertyFunc(object instance) {
+				var actualInstance = (T) instance;
+				return compiled((T) instance).Select(element => transformer(actualInstance, element));
+			}
+
+			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOriginal), typeof(T));
+		}
+
+		/// <summary>
 		/// Invokes the validator asynchronously
 		/// </summary>
 		/// <param name="context"></param>
@@ -123,9 +151,11 @@ namespace FluentValidation.Internal {
 
 					object valueToValidate = element;
 
+#pragma warning disable 618
 					if (Transformer != null) {
 						valueToValidate = Transformer(element);
 					}
+#pragma warning restore 618
 
 					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), valueToValidate);
 					newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
@@ -216,9 +246,11 @@ namespace FluentValidation.Internal {
 
 					object valueToValidate = element;
 
+#pragma warning disable 618
 					if (Transformer != null) {
 						valueToValidate = Transformer(element);
 					}
+#pragma warning restore 618
 
 					var newPropertyContext = new PropertyValidatorContext(newContext, this, newContext.PropertyChain.ToString(), valueToValidate);
 					newPropertyContext.MessageFormatter.AppendArgument("CollectionIndex", index);
