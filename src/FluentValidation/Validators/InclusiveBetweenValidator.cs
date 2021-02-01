@@ -21,31 +21,31 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	public class InclusiveBetweenValidator<T, TProperty> : PropertyValidator<T, TProperty>, IInclusiveBetweenValidator {
+	public class InclusiveBetweenValidator<T, TProperty> : PropertyValidator<T, TProperty>, IInclusiveBetweenValidator where TProperty : IComparable<TProperty>, IComparable {
 
 		public override string Name => "InclusiveBetweenValidator";
 
-		public InclusiveBetweenValidator(IComparable from, IComparable to) {
+		public InclusiveBetweenValidator(TProperty from, TProperty to) {
 			To = to;
 			From = from;
 
 			if (to.CompareTo(from) == -1) {
 				throw new ArgumentOutOfRangeException(nameof(to), "To should be larger than from.");
 			}
-
 		}
 
-		public IComparable From { get; }
-		public IComparable To { get; }
+		public TProperty From { get; }
+		public TProperty To { get; }
+
+		IComparable IBetweenValidator.From => From;
+		IComparable IBetweenValidator.To => To;
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {
-			var propertyValue = value as IComparable;
-
 			// If the value is null then we abort and assume success.
 			// This should not be a failure condition - only a NotNull/NotEmpty should cause a null to fail.
-			if (propertyValue == null) return true;
+			if (value == null) return true;
 
-			if (propertyValue.CompareTo(From) < 0 || propertyValue.CompareTo(To) > 0) {
+			if (value.CompareTo(From) < 0 || value.CompareTo(To) > 0) {
 
 				context.MessageFormatter
 					.AppendArgument("From", From)

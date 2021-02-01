@@ -179,7 +179,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void LessThanOrEqual_should_create_LessThanOrEqualValidator_with_lambda_with_other_Nullable() {
 			validator.RuleFor(x => x.NullableInt).LessThanOrEqualTo(x => x.OtherNullableInt);
-			AssertValidator<LessThanOrEqualValidator<Person,int?>>();
+			AssertValidator<LessThanOrEqualValidator<Person,int>>();
 		}
 
 		[Fact]
@@ -209,7 +209,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void GreaterThanOrEqual_should_create_GreaterThanOrEqualValidator_with_lambda_with_other_Nullable() {
 			validator.RuleFor(x => x.NullableInt).GreaterThanOrEqualTo(x => x.OtherNullableInt);
-			AssertValidator<GreaterThanOrEqualValidator<Person,int?>>();
+			AssertValidator<GreaterThanOrEqualValidator<Person,int>>();
 		}
 
 		[Fact]

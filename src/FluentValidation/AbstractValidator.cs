@@ -179,9 +179,9 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor", nameof(expression));
-			var rule = PropertyRule<T, TProperty>.Create(this, expression, () => CascadeMode);
+			var rule = PropertyRule<T, TProperty>.Create(expression, () => CascadeMode);
 			Rules.Add(rule);
-			return rule;
+			return new RuleBuilder<T, TProperty>(rule, this);
 		}
 
 		/// <summary>
@@ -197,9 +197,9 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<TProperty, TTransformed> to) {
 			from.Guard("Cannot pass null to Transform", nameof(from));
-			var rule = PropertyRule<T, TTransformed>.Create(this, from, to, () => CascadeMode);
+			var rule = PropertyRule<T, TTransformed>.Create(from, to, () => CascadeMode);
 			Rules.Add(rule);
-			return rule;
+			return new RuleBuilder<T, TTransformed>(rule, this);
 		}
 
 		/// <summary>
@@ -215,9 +215,9 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
 			from.Guard("Cannot pass null to Transform", nameof(from));
-			var rule = PropertyRule<T, TTransformed>.Create(this, from, to, () => CascadeMode);
+			var rule = PropertyRule<T, TTransformed>.Create(from, to, () => CascadeMode);
 			Rules.Add(rule);
-			return rule;
+			return new RuleBuilder<T, TTransformed>(rule, this);
 		}
 
 
@@ -229,9 +229,9 @@ namespace FluentValidation {
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
-			var rule = CollectionPropertyRule<T, TElement>.Create(this, expression, () => CascadeMode);
+			var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => CascadeMode);
 			Rules.Add(rule);
-			return rule;
+			return new RuleBuilder<T, TElement>(rule, this);
 		}
 
 		/// <summary>
@@ -244,9 +244,9 @@ namespace FluentValidation {
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
-			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(this, expression, to, () => CascadeMode);
+			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(expression, to, () => CascadeMode);
 			Rules.Add(rule);
-			return rule;
+			return new RuleBuilder<T, TTransformed>(rule, this);
 		}
 
 		/// <summary>
@@ -259,9 +259,9 @@ namespace FluentValidation {
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
-			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(this, expression, to, () => CascadeMode);
+			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(expression, to, () => CascadeMode);
 			Rules.Add(rule);
-			return rule;
+			return new RuleBuilder<T, TTransformed>(rule, this);
 		}
 
 		/// <summary>

@@ -21,18 +21,22 @@ namespace FluentValidation.Validators {
 	using System.Reflection;
 	using Resources;
 
-	public class LessThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, ILessThanOrEqualValidator {
+	public class LessThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, ILessThanOrEqualValidator where TProperty : IComparable<TProperty>, IComparable {
 
 		public override string Name => "LessThanOrEqualValidator";
 
-		public LessThanOrEqualValidator(IComparable value) : base(value) {
+		public LessThanOrEqualValidator(TProperty value) : base(value) {
 		}
 
-		public LessThanOrEqualValidator(Func<T, IComparable> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+		public LessThanOrEqualValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
 			: base(valueToCompareFunc, member, memberDisplayName) {
 		}
 
-		public override bool IsValid(IComparable value, IComparable valueToCompare) {
+		public LessThanOrEqualValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+			: base(valueToCompareFunc, member, memberDisplayName) {
+		}
+
+		public override bool IsValid(TProperty value, TProperty valueToCompare) {
 			if (valueToCompare == null)
 				return false;
 

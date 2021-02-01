@@ -19,8 +19,8 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new IncludeRule
 		/// </summary>
-		public IncludeRule(AbstractValidator<T> parentValidator, IValidator<T> validator, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
-			: base(parentValidator, null, x => x, null, cascadeModeThunk, typeToValidate) {
+		public IncludeRule(IValidator<T> validator, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+			: base(null, x => x, null, cascadeModeThunk, typeToValidate) {
 
 			var adaptor = new ChildValidatorAdaptor<T, T>(validator, validator.GetType());
 			// Note: ChildValidatorAdaptor implements both IPropertyValidator and IAsyncPropertyValidator
@@ -31,8 +31,8 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new IncludeRule
 		/// </summary>
-		public IncludeRule(AbstractValidator<T> parentValidator, Func<ValidationContext<T>, T, IValidator<T>> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type validatorType)
-			: base(parentValidator, null, x => x, null, cascadeModeThunk, typeToValidate) {
+		public IncludeRule(Func<ValidationContext<T>, T, IValidator<T>> func,  Func<CascadeMode> cascadeModeThunk, Type typeToValidate, Type validatorType)
+			: base(null, x => x, null, cascadeModeThunk, typeToValidate) {
 			var adaptor = new ChildValidatorAdaptor<T,T>(func,  validatorType);
 			// Note: ChildValidatorAdaptor implements both IPropertyValidator and IAsyncPropertyValidator
 			// So calling AddAsyncValidator will actually register it as supporting both sync and async.
@@ -43,7 +43,7 @@ namespace FluentValidation.Internal {
 		/// Creates a new include rule from an existing validator
 		/// </summary>
 		public static IncludeRule<T> Create(AbstractValidator<T> parentValidator, IValidator<T> validator, Func<CascadeMode> cascadeModeThunk) {
-			return new IncludeRule<T>(parentValidator, validator, cascadeModeThunk, typeof(T));
+			return new IncludeRule<T>(validator, cascadeModeThunk, typeof(T));
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public static IncludeRule<T> Create<TValidator>(AbstractValidator<T> parentValidator, Func<T, TValidator> func, Func<CascadeMode> cascadeModeThunk)
 			where TValidator : IValidator<T> {
-			return new IncludeRule<T>(parentValidator, (ctx, _) => func(ctx.InstanceToValidate), cascadeModeThunk, typeof(T), typeof(TValidator));
+			return new IncludeRule<T>((ctx, _) => func(ctx.InstanceToValidate), cascadeModeThunk, typeof(T), typeof(TValidator));
 		}
 
 		public override void Validate(ValidationContext<T> context) {
