@@ -16,7 +16,7 @@
 		public RuleComponent<T,TProperty> Component { get; }
 
 		public IPropertyValidator PropertyValidator
-			=> (IPropertyValidator) Component.PropertyValidator ?? Component.AsyncPropertyValidator;
+			=> Component.Validator;
 
 		public ValidationContext<T> ParentContext => _innerContext;
 

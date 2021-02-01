@@ -53,53 +53,86 @@ namespace FluentValidation.Internal {
 		string GetUnformattedErrorMessage();
 	}
 
+	internal class RuleComponentForNullableStruct<T, TProperty> : RuleComponent<T, TProperty?> where TProperty : struct {
+		private IPropertyValidator<T, TProperty> _propertyValidator;
+		private IAsyncPropertyValidator<T, TProperty> _asyncPropertyValidator;
+
+		internal RuleComponentForNullableStruct(IPropertyValidator<T, TProperty> propertyValidator)
+			: base(null) {
+			_propertyValidator = propertyValidator;
+		}
+
+		internal RuleComponentForNullableStruct(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator, IPropertyValidator<T, TProperty> propertyValidator)
+			: base(null, null) {
+			_asyncPropertyValidator = asyncPropertyValidator;
+		}
+
+		public override IPropertyValidator Validator
+			=> (IPropertyValidator)_propertyValidator ?? _asyncPropertyValidator;
+
+		private protected override bool SupportsAsynchronousValidation
+			=> _asyncPropertyValidator != null;
+
+		private protected override bool SupportsSynchronousValidation
+			=> _propertyValidator != null;
+
+		internal override bool Validate(ValidationContext<T> context, TProperty? value) {
+			if (!value.HasValue) return true;
+			return _propertyValidator.IsValid(context, value.Value);
+		}
+
+		internal override async Task<bool> ValidateAsync(ValidationContext<T> context, TProperty? value, CancellationToken cancellation) {
+			if (!value.HasValue) return true;
+			return await _asyncPropertyValidator.IsValidAsync(context, value.Value, cancellation);
+		}
+	}
+
 	/// <summary>
 	/// An individual component within a rule.
 	/// In a rule definition such as RuleFor(x => x.Name).NotNull().NotEqual("Foo")
 	/// the NotNull and the NotEqual are both rule steps.
 	/// </summary>
-	public sealed class RuleComponent<T,TProperty> : IRuleComponent, IRuleBuilderOptions<T,TProperty> {
-		private readonly IValidationRule<T, TProperty> _parentRule;
+	public class RuleComponent<T,TProperty> : IRuleComponent {
 		private string _errorMessage;
 		private Func<ValidationContext<T>, TProperty, string> _errorMessageFactory;
 		private Func<IValidationContext, bool> _condition;
 		private Func<IValidationContext, CancellationToken, Task<bool>> _asyncCondition;
+		private readonly IPropertyValidator<T, TProperty> _propertyValidator;
+		private readonly IAsyncPropertyValidator<T, TProperty> _asyncPropertyValidator;
 
-		public IPropertyValidator<T,TProperty> PropertyValidator { get; }
-		public IAsyncPropertyValidator<T, TProperty> AsyncPropertyValidator { get; }
-
-		internal RuleComponent(IPropertyValidator<T, TProperty> propertyValidator, IValidationRule<T, TProperty> parentRule) {
-			PropertyValidator = propertyValidator;
-			_parentRule = parentRule;
+		internal RuleComponent(IPropertyValidator<T, TProperty> propertyValidator) {
+			_propertyValidator = propertyValidator;
 		}
 
-		internal RuleComponent(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator, IPropertyValidator<T, TProperty> propertyValidator, IValidationRule<T, TProperty> parentRule) {
-			AsyncPropertyValidator = asyncPropertyValidator;
-			PropertyValidator = propertyValidator;
-			_parentRule = parentRule;
+		internal RuleComponent(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator, IPropertyValidator<T, TProperty> propertyValidator) {
+			_asyncPropertyValidator = asyncPropertyValidator;
+			_propertyValidator = propertyValidator;
 		}
 
 		[Obsolete("The Options property will be removed in FluentValidation 11. All properties from Options should be accessed directly on this component instead.")]
-		private RuleComponent<T, TProperty> Options => this;
+		public RuleComponent<T, TProperty> Options => this;
 
-		/// <summary>
-		/// Whether or not this validator has a condition associated with it.
-		/// </summary>
+		/// <inheritdoc />
 		public bool HasCondition => _condition != null;
 
-		/// <summary>
-		/// Whether or not this validator has an async condition associated with it.
-		/// </summary>
+		/// <inheritdoc />
 		public bool HasAsyncCondition => _asyncCondition != null;
 
-		IPropertyValidator IRuleComponent.Validator
-			=> (IPropertyValidator) PropertyValidator ?? AsyncPropertyValidator;
+		/// <inheritdoc />
+		public virtual IPropertyValidator Validator
+			=> (IPropertyValidator) _propertyValidator ?? _asyncPropertyValidator;
+
+		private protected virtual bool SupportsAsynchronousValidation
+			=> _asyncPropertyValidator != null;
+
+		private protected virtual bool SupportsSynchronousValidation
+			=> _propertyValidator != null;
 
 		internal bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If ValidateAsync has been invoked on the root validator, then always prefer
 			// the asynchronous property validator (if available).
 			if (context.IsAsync()) {
-				if (AsyncPropertyValidator != null) {
+				if (SupportsAsynchronousValidation) {
 					return true;
 				}
 
@@ -109,13 +142,19 @@ namespace FluentValidation.Internal {
 
 			// If Validate has been invoked on the root validator, then always prefer
 			// the synchronous validator.
-			if (PropertyValidator != null) {
+			if (SupportsSynchronousValidation) {
 				return false;
 			}
 
 			// Fall back to sync-over-async if only an async validator is available.
 			return true;
 		}
+
+		internal virtual bool Validate(ValidationContext<T> context, TProperty value)
+			=> _propertyValidator.IsValid(context, value);
+
+		internal virtual Task<bool> ValidateAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation)
+			=> _asyncPropertyValidator.IsValidAsync(context, value, cancellation);
 
 		/// <summary>
 		/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
@@ -187,15 +226,10 @@ namespace FluentValidation.Internal {
 			// Use a custom message if one has been specified.
 			string rawTemplate = _errorMessageFactory?.Invoke(context, value) ?? _errorMessage;
 
-			// If no custom message has been supplied, use the default from the synchronous validator
-			// if available.
-			if (rawTemplate == null && PropertyValidator != null) {
-				rawTemplate = PropertyValidator.GetDefaultMessageTemplate();
-			}
 
-			// Otherwise try the asynchornous validator.
-			if (rawTemplate == null && AsyncPropertyValidator != null) {
-				rawTemplate = AsyncPropertyValidator.GetDefaultMessageTemplate();
+			// If no custom message has been supplied, use the default.
+			if (rawTemplate == null) {
+				rawTemplate = Validator.GetDefaultMessageTemplate();
 			}
 
 			if (context == null) {
@@ -212,15 +246,9 @@ namespace FluentValidation.Internal {
 		public string GetUnformattedErrorMessage() {
 			string message = _errorMessageFactory?.Invoke(null, default) ?? _errorMessage;
 
-			// If no custom message has been supplied, use the default from the synchronous validator
-			// if available.
-			if (message == null && PropertyValidator != null) {
-				message = PropertyValidator.GetDefaultMessageTemplate();
-			}
-
-			// Otherwise try the asynchronous validator.
-			if (message == null && AsyncPropertyValidator != null) {
-				message = AsyncPropertyValidator.GetDefaultMessageTemplate();
+			// If no custom message has been supplied, use the default.
+			if (message == null) {
+				message = Validator.GetDefaultMessageTemplate();
 			}
 
 			return message;
@@ -245,53 +273,6 @@ namespace FluentValidation.Internal {
 		}
 
 		internal Action<T, ValidationContext<T>, TProperty, string> OnFailure { get; set; }
-
-		internal IValidationRule<T, TProperty> Rule => _parentRule;
-
-		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetValidator(IPropertyValidator<T, TProperty> validator) {
-			((IRuleBuilder<T, TProperty>) _parentRule).SetValidator(validator);
-			return this;
-		}
-
-		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetAsyncValidator(IAsyncPropertyValidator<T, TProperty> validator) {
-			((IRuleBuilder<T, TProperty>) _parentRule).SetAsyncValidator(validator);
-			return this;
-		}
-
-		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetValidator(IValidator<TProperty> validator, params string[] ruleSets) {
-			((IRuleBuilder<T, TProperty>) _parentRule).SetValidator(validator, ruleSets);
-			return this;
-		}
-
-		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetValidator<TValidator>(Func<T, TValidator> validatorProvider, params string[] ruleSets) {
-			((IRuleBuilder<T, TProperty>) _parentRule).SetValidator(validatorProvider, ruleSets);
-			return this;
-		}
-
-		IRuleBuilderOptions<T, TProperty> IRuleBuilder<T, TProperty>.SetValidator<TValidator>(Func<T, TProperty, TValidator> validatorProvider, params string[] ruleSets) {
-			((IRuleBuilder<T, TProperty>) _parentRule).SetValidator(validatorProvider, ruleSets);
-			return this;
-		}
-
-		IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.DependentRules(Action action) {
-			var dependencyContainer = new List<IExecutableValidationRule<T>>();
-			var internalRule = (IExecutableValidationRule<T>) _parentRule;
-			// Capture any rules added to the parent validator inside this delegate.
-			using (internalRule.ParentValidator.Rules.Capture(dependencyContainer.Add)) {
-				action();
-			}
-
-			if (_parentRule.RuleSets != null && _parentRule.RuleSets.Length > 0) {
-				foreach (var dependentRule in dependencyContainer) {
-					if (dependentRule is IValidationRule propRule && propRule.RuleSets == null) {
-						propRule.RuleSets = _parentRule.RuleSets;
-					}
-				}
-			}
-
-			internalRule.AddDependentRules(dependencyContainer);
-			return this;
-		}
 	}
 
 }

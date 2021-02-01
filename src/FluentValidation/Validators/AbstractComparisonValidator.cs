@@ -25,14 +25,15 @@ namespace FluentValidation.Validators {
 	/// <summary>
 	/// Base class for all comparison validators
 	/// </summary>
-	public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValidator<T,TProperty>, IComparisonValidator {
-		readonly Func<T, IComparable> _valueToCompareFunc;
+	public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValidator<T,TProperty>, IComparisonValidator where TProperty : IComparable<TProperty>, IComparable {
+		readonly Func<T, (bool HasValue, TProperty Value)> _valueToCompareFuncForNullables;
+		private readonly Func<T, TProperty> _valueToCompareFunc;
 		private readonly string _comparisonMemberDisplayName;
 
 		/// <summary>
 		/// </summary>
 		/// <param name="value"></param>
-		protected AbstractComparisonValidator(IComparable value) {
+		protected AbstractComparisonValidator(TProperty value) {
 			value.Guard("value must not be null.", nameof(value));
 			ValueToCompare = value;
 		}
@@ -42,7 +43,18 @@ namespace FluentValidation.Validators {
 		/// <param name="valueToCompareFunc"></param>
 		/// <param name="member"></param>
 		/// <param name="memberDisplayName"></param>
-		protected AbstractComparisonValidator(Func<T, IComparable> valueToCompareFunc, MemberInfo member, string memberDisplayName) {
+		protected AbstractComparisonValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName) {
+			_valueToCompareFuncForNullables = valueToCompareFunc;
+			_comparisonMemberDisplayName = memberDisplayName;
+			MemberToCompare = member;
+		}
+
+		/// <summary>
+		/// </summary>
+		/// <param name="valueToCompareFunc"></param>
+		/// <param name="member"></param>
+		/// <param name="memberDisplayName"></param>
+		protected AbstractComparisonValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName) {
 			_valueToCompareFunc = valueToCompareFunc;
 			_comparisonMemberDisplayName = memberDisplayName;
 			MemberToCompare = member;
@@ -61,10 +73,10 @@ namespace FluentValidation.Validators {
 				return true;
 			}
 
-			var value = GetComparisonValue(context);
+			var valueToCompare = GetComparisonValue(context);
 
-			if (!IsValid(propertyValue as IComparable, value)) {
-				context.MessageFormatter.AppendArgument("ComparisonValue", value);
+			if (!valueToCompare.HasValue || !IsValid(propertyValue, valueToCompare.Value)) {
+				context.MessageFormatter.AppendArgument("ComparisonValue", valueToCompare.HasValue ? valueToCompare.Value : "");
 				context.MessageFormatter.AppendArgument("ComparisonProperty", _comparisonMemberDisplayName ?? "");
 				return false;
 			}
@@ -72,12 +84,16 @@ namespace FluentValidation.Validators {
 			return true;
 		}
 
-		public IComparable GetComparisonValue(ValidationContext<T> context) {
+		public (bool HasValue, TProperty Value) GetComparisonValue(ValidationContext<T> context) {
 			if(_valueToCompareFunc != null) {
-				return _valueToCompareFunc(context.InstanceToValidate);
+				var value = _valueToCompareFunc(context.InstanceToValidate);
+				return (value != null, value);
+			}
+			if (_valueToCompareFuncForNullables != null) {
+				return _valueToCompareFuncForNullables(context.InstanceToValidate);
 			}
 
-			return (IComparable)ValueToCompare;
+			return (ValueToCompare != null, ValueToCompare);
 		}
 
 		/// <summary>
@@ -86,7 +102,7 @@ namespace FluentValidation.Validators {
 		/// <param name="value"></param>
 		/// <param name="valueToCompare"></param>
 		/// <returns></returns>
-		public abstract bool IsValid(IComparable value, IComparable valueToCompare);
+		public abstract bool IsValid(TProperty value, TProperty valueToCompare);
 
 		/// <summary>
 		/// Metadata- the comparison type
@@ -96,10 +112,16 @@ namespace FluentValidation.Validators {
 		/// Metadata- the member being compared
 		/// </summary>
 		public MemberInfo MemberToCompare { get; private set; }
+
 		/// <summary>
-		/// Metadata- the value being compared
+		/// The value being compared
 		/// </summary>
-		public object ValueToCompare { get; private set; }
+		public TProperty ValueToCompare { get; }
+
+		/// <summary>
+		/// Comparison value as non-generic for metadata.
+		/// </summary>
+		object IComparisonValidator.ValueToCompare => ValueToCompare;
 	}
 
 	/// <summary>

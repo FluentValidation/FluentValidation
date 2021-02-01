@@ -145,7 +145,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_dates() {
-			var validator = new ExclusiveBetweenValidator<Person,string>(fromDate, toDate);
+			var validator = new ExclusiveBetweenValidator<Person,DateTime>(fromDate, toDate);
 			validator.From.ShouldEqual(fromDate);
 			validator.To.ShouldEqual(toDate);
 		}
