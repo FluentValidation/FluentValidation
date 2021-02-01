@@ -34,12 +34,12 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="TElement"></typeparam>
 	/// <typeparam name="T"></typeparam>
-	internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TElement>, TElement>, ICollectionRule<T, TElement>, IExecutableValidationRule<T>, IRuleBuilderInitialCollection<T,TElement> {
+	internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TElement>, TElement>, ICollectionRule<T, TElement>, IExecutableValidationRule<T> {
 		/// <summary>
 		/// Initializes new instance of the CollectionPropertyRule class
 		/// </summary>
-		public CollectionPropertyRule(AbstractValidator<T> parentValidator, MemberInfo member, Func<T, IEnumerable<TElement>> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
-			: base(parentValidator, member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
+		public CollectionPropertyRule(MemberInfo member, Func<T, IEnumerable<TElement>> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+			: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
 		}
 
 		/// <summary>
@@ -56,29 +56,29 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		public static CollectionPropertyRule<T, TElement> Create(AbstractValidator<T> parentValidator, Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache, "FV_RuleForEach");
-			return new CollectionPropertyRule<T, TElement>(parentValidator, member, x => compiled(x), expression, cascadeModeThunk, typeof(TElement));
+			return new CollectionPropertyRule<T, TElement>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TElement));
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		internal static CollectionPropertyRule<T, TElement> CreateTransformed<TOriginal>(AbstractValidator<T> parentValidator, Expression<Func<T, IEnumerable<TOriginal>>> expression, Func<TOriginal, TElement> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		internal static CollectionPropertyRule<T, TElement> CreateTransformed<TOriginal>(Expression<Func<T, IEnumerable<TOriginal>>> expression, Func<TOriginal, TElement> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache, "FV_RuleForEach");
 
 			IEnumerable<TElement> PropertyFunc(T instance) =>
 				compiled(instance).Select(transformer);
 
-			return new CollectionPropertyRule<T, TElement>(parentValidator, member, PropertyFunc, expression, cascadeModeThunk, typeof(TElement));
+			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TElement));
 		}
 
 		/// <summary>
 		/// Creates a new property rule from a lambda expression.
 		/// </summary>
-		internal static CollectionPropertyRule<T, TElement> CreateTransformed<TOriginal>(AbstractValidator<T> parentValidator, Expression<Func<T, IEnumerable<TOriginal>>> expression, Func<T, TOriginal, TElement> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+		internal static CollectionPropertyRule<T, TElement> CreateTransformed<TOriginal>(Expression<Func<T, IEnumerable<TOriginal>>> expression, Func<T, TOriginal, TElement> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 			var member = expression.GetMember();
 			var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache, "FV_RuleForEach");
 
@@ -86,7 +86,7 @@ namespace FluentValidation.Internal {
 				return compiled(instance).Select(element => transformer(instance, element));
 			}
 
-			return new CollectionPropertyRule<T, TElement>(parentValidator, member, PropertyFunc, expression, cascadeModeThunk, typeof(TOriginal));
+			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOriginal));
 		}
 
 		void IExecutableValidationRule<T>.Validate(ValidationContext<T> context) {
@@ -327,9 +327,9 @@ namespace FluentValidation.Internal {
 			// This allows the property validators to cancel their execution prior to the collection
 			// being retrieved (thereby possibly avoiding NullReferenceExceptions).
 			// Must call ToList so we don't modify the original collection mid-loop.
-			var validators = _steps.ToList();
+			var validators = Components.ToList();
 			int validatorIndex = 0;
-			foreach (var validator in _steps) {
+			foreach (var validator in Components) {
 				if (validator.HasCondition) {
 					if (!validator.InvokeCondition(context)) {
 						validators.RemoveAt(validatorIndex);
@@ -355,9 +355,9 @@ namespace FluentValidation.Internal {
 			// This allows the property validators to cancel their execution prior to the collection
 			// being retrieved (thereby possibly avoiding NullReferenceExceptions).
 			// Must call ToList so we don't modify the original collection mid-loop.
-			var validators = _steps.ToList();
+			var validators = Components.ToList();
 			int validatorIndex = 0;
-			foreach (var validator in _steps) {
+			foreach (var validator in Components) {
 				if (validator.HasCondition) {
 					if (!validator.InvokeCondition(context)) {
 						validators.RemoveAt(validatorIndex);
@@ -378,7 +378,7 @@ namespace FluentValidation.Internal {
 
 		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, TElement value, string propertyName, RuleComponent<T,TElement> component, int index, CancellationToken cancellation) {
 			context.MessageFormatter.AppendArgument("CollectionIndex", index);
-			bool valid = await component.AsyncPropertyValidator.IsValidAsync(context, value, cancellation);
+			bool valid = await component.ValidateAsync(context, value, cancellation);
 
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, value);
@@ -390,7 +390,7 @@ namespace FluentValidation.Internal {
 
 		private void InvokePropertyValidator(ValidationContext<T> context, TElement value, string propertyName, RuleComponent<T, TElement> component, int index) {
 			context.MessageFormatter.AppendArgument("CollectionIndex", index);
-			bool valid = component.PropertyValidator.IsValid(context, value);
+			bool valid = component.Validate(context, value);
 
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, value);

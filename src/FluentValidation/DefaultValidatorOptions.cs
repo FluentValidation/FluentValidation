@@ -38,7 +38,8 @@ namespace FluentValidation {
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
 		public static IRuleBuilderInitial<T, TProperty> Configure<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, Action<IValidationRule<T, TProperty>> configurator) {
-			configurator((IValidationRule<T, TProperty>) ruleBuilder);
+			var rb = (RuleBuilder<T, TProperty>) ruleBuilder;
+			configurator(rb.Rule);
 			return ruleBuilder;
 		}
 
@@ -49,7 +50,7 @@ namespace FluentValidation {
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Configure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> ruleBuilder, Action<IValidationRule<T, TProperty>> configurator) {
-			var rb = (RuleComponent<T, TProperty>) ruleBuilder;
+			var rb = (RuleBuilder<T, TProperty>) ruleBuilder;
 			configurator(rb.Rule);
 			return rb;
 		}
@@ -61,7 +62,8 @@ namespace FluentValidation {
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
 		public static IRuleBuilderInitialCollection<T, TElement> Configure<T, TElement>(this IRuleBuilderInitialCollection<T, TElement> ruleBuilder, Action<ICollectionRule<T, TElement>> configurator) {
-			configurator((CollectionPropertyRule<T, TElement>) ruleBuilder);
+			var rb = (RuleBuilder<T, TElement>) ruleBuilder;
+			configurator((ICollectionRule<T, TElement>) rb.Rule);
 			return ruleBuilder;
 		}
 

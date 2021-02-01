@@ -55,7 +55,7 @@ namespace FluentValidation.Tests {
 		public void Adding_a_validator_should_store_validator() {
 			var validator = new TestPropertyValidator<Person, string>();
 			builder.SetValidator(validator);
-			_rule.Current.PropertyValidator.ShouldBeTheSameAs(validator);
+			_rule.Current.Validator.ShouldBeTheSameAs(validator);
 		}
 
 		[Fact]

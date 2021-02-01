@@ -18,7 +18,6 @@
 
 namespace FluentValidation {
 	using System;
-	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Reflection;
@@ -32,6 +31,36 @@ namespace FluentValidation {
 	/// Extension methods that provide the default set of validators.
 	/// </summary>
 	public static partial class DefaultValidatorExtensions {
+		/// <summary>
+		/// Associates a validator with this the property for this rule builder.
+		/// This overload handles type conversion for nullable value types, allowing a validator for TProperty to be applied to a property of type Nullable&lt;TProperty&gt;
+		/// </summary>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="validator">The validator to set</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty?> SetValidator<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, IPropertyValidator<T, TProperty> validator)
+			where TProperty : struct {
+
+			var component = new RuleComponentForNullableStruct<T, TProperty>(validator);
+			var rb = (RuleBuilder<T, TProperty?>) ruleBuilder;
+			rb.AddComponent(component);
+			return rb;
+		}
+
+		/// <summary>
+		/// Associates an async validator with this the property for this rule builder.
+		/// This overload handles type conversion for nullable value types, allowing a validator for TProperty to be applied to a property of type Nullable&lt;TProperty&gt;
+		/// </summary>
+		/// <param name="ruleBuilder"></param>
+		/// <param name="validator">The validator to set</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty?> SetAsyncValidator<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, IAsyncPropertyValidator<T, TProperty> validator)
+			where TProperty : struct {
+			var component = new RuleComponentForNullableStruct<T, TProperty>(validator, validator as IPropertyValidator<T, TProperty>);
+			var rb = (RuleBuilder<T, TProperty?>) ruleBuilder;
+			rb.AddComponent(component);
+			return rb;
+		}
 
 		/// <summary>
 		/// Defines a 'not null' validator on the current rule builder.
@@ -507,7 +536,7 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
 																			   TProperty valueToCompare)
 			where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new LessThanValidator<T, TProperty?>(valueToCompare));
+			return ruleBuilder.SetValidator(new LessThanValidator<T, TProperty>(valueToCompare));
 		}
 
 		/// <summary>
@@ -537,7 +566,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty?> LessThanOrEqualTo<T, TProperty>(
 			this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty valueToCompare) where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T, TProperty?>(valueToCompare));
+			return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T, TProperty>(valueToCompare));
 		}
 
 		/// <summary>
@@ -567,7 +596,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty valueToCompare)
 			where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty?>(valueToCompare));
+			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(valueToCompare));
 		}
 
 		/// <summary>
@@ -597,7 +626,7 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty?> GreaterThanOrEqualTo<T, TProperty>(
 			this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty valueToCompare) where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty?>(valueToCompare));
+			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(valueToCompare));
 		}
 
 
@@ -619,7 +648,7 @@ namespace FluentValidation {
 			var member = expression.GetMember();
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
-			return ruleBuilder.SetValidator(new LessThanValidator<T,TProperty>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new LessThanValidator<T,TProperty>(func, member, name));
 		}
 
 		/// <summary>
@@ -641,7 +670,10 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new LessThanValidator<T,TProperty>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new LessThanValidator<T,TProperty>(instance => {
+				var nullable = func(instance);
+				return (nullable.HasValue, nullable ?? default);
+			}, member, name));
 		}
 
 		/// <summary>
@@ -663,7 +695,7 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new LessThanValidator<T,TProperty?>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new LessThanValidator<T,TProperty>(func, member, name));
 		}
 
 		/// <summary>
@@ -685,7 +717,10 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new LessThanValidator<T,TProperty?>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new LessThanValidator<T,TProperty>(instance => {
+				var nullable = func(instance);
+				return (nullable.HasValue, nullable ?? default);
+			}, member, name));
 		}
 
 		/// <summary>
@@ -725,7 +760,10 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T,TProperty>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T,TProperty>(instance => {
+				var nullable = func(instance);
+				return (nullable.HasValue, nullable ?? default);
+			}, member, name));
 		}
 
 		/// <summary>
@@ -745,7 +783,7 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T,TProperty?>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T,TProperty>(func, member, name));
 		}
 
 		/// <summary>
@@ -765,7 +803,10 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T,TProperty?>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T,TProperty>(instance => {
+				var nullable = func(instance);
+				return (nullable.HasValue, nullable ?? default);
+			}, member, name));
 		}
 
 		/// <summary>
@@ -785,7 +826,7 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(func, member, name));
 		}
 
 		/// <summary>
@@ -805,7 +846,10 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(instance => {
+				var nullable = func(instance);
+				return (nullable.HasValue, nullable ?? default);
+			}, member, name));
 		}
 
 		/// <summary>
@@ -825,7 +869,7 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty?>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(x => func(x), member, name));
 		}
 
 		/// <summary>
@@ -845,7 +889,10 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 			var name = GetDisplayName(member, expression);
 
-			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty?>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(instance => {
+				var nullable = func(instance);
+				return (nullable.HasValue, nullable ?? default);
+			}, member, name));
 		}
 
 		/// <summary>
@@ -865,7 +912,7 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
 			var name = GetDisplayName(member, valueToCompare);
 
-			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(func, member, name));
 		}
 
 		/// <summary>
@@ -885,7 +932,10 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
 			var name = GetDisplayName(member, valueToCompare);
 
-			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(instance => {
+				var nullable = func(instance);
+				return (nullable.HasValue, nullable ?? default);
+			}, member, name));
 		}
 
 		/// <summary>
@@ -904,7 +954,10 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
 			var name = GetDisplayName(member, valueToCompare);
 
-			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty?>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(instance => {
+				var nullable = func(instance);
+				return (nullable.HasValue, nullable ?? default);
+			}, member, name));
 		}
 
 		/// <summary>
@@ -924,7 +977,7 @@ namespace FluentValidation {
 			var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
 			var name = GetDisplayName(member, valueToCompare);
 
-			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty?>(x => func(x), member, name));
+			return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(func, member, name));
 		}
 
 		/// <summary>
@@ -952,7 +1005,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty?> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty from, TProperty to) where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new InclusiveBetweenValidator<T, TProperty?>(from, to));
+			return ruleBuilder.SetValidator(new InclusiveBetweenValidator<T, TProperty>(from, to));
 		}
 
 		/// <summary>
@@ -980,7 +1033,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty?> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty from, TProperty to) where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator<T,TProperty?>(from, to));
+			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator<T,TProperty>(from, to));
 		}
 
 		/// <summary>
