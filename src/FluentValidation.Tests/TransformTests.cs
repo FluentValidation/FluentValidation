@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests {
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Threading.Tasks;
 	using Xunit;
 
@@ -86,6 +87,26 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Transforms_property_value_with_propagated_original_object() {
+			var validator = new InlineValidator<Person>();
+			validator.Transform(x => x.Forename, (person, forename) => new {Nicks = person.NickNames, Name = forename})
+				.Must(context => context.Nicks.Any(nick => nick == context.Name.ToLower()));
+
+			var result = validator.Validate(new Person {NickNames = new[] {"good11", "peter"}, Forename = "Peter"});
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public async Task Transforms_property_value_with_propagated_original_object_async() {
+			var validator = new InlineValidator<Person>();
+			validator.Transform(x => x.Forename, (person, forename) => new {Nicks = person.NickNames, Name = forename})
+				.Must(context => context.Nicks.Any(nick => nick == context.Name.ToLower()));
+
+			var result = await validator.ValidateAsync(new Person {NickNames = new[] {"good11", "peter"}, Forename = "Peter"});
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
 		public void Transforms_collection_element() {
 			var validator = new InlineValidator<Person>();
 			validator.TransformForEach(x => x.Orders, to: order => order.Amount)
@@ -102,6 +123,30 @@ namespace FluentValidation.Tests {
 				.MustAsync((amt, token) => Task.FromResult(amt > 0));
 
 			var result = await validator.ValidateAsync(new Person() {Orders = new List<Order> {new Order()}});
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Fact]
+		public void Transforms_collection_element_with_propagated_original_object() {
+			var validator = new InlineValidator<Person>();
+			validator.TransformForEach(x => x.Children, (parent, children) => new {ParentName = parent.Surname, Children = children})
+				.Must(context => context.ParentName == context.Children.Surname);
+
+			var child = new Person {Surname = "Pupa"};
+			var result = validator.Validate(new Person() {Surname = "Lupa", Children = new List<Person> {child}});
+			result.IsValid.ShouldBeFalse();
+			result.Errors.Count.ShouldEqual(1);
+		}
+
+		[Fact]
+		public async Task Transforms_collection_element_with_propagated_original_object_async() {
+			var validator = new InlineValidator<Person>();
+			validator.TransformForEach(x => x.Children, (parent, children) => new {ParentName = parent.Surname, Children = children})
+				.Must(context => context.ParentName == context.Children.Surname);
+
+			var child = new Person {Surname = "Pupa"};
+			var result = await validator.ValidateAsync(new Person() {Surname = "Lupa", Children = new List<Person> {child}});
+			result.IsValid.ShouldBeFalse();
 			result.Errors.Count.ShouldEqual(1);
 		}
 
