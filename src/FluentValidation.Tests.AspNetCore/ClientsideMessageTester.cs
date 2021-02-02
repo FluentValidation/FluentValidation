@@ -122,13 +122,6 @@ namespace FluentValidation.Tests.AspNetCore {
 			msg.ShouldEqual("Must be between 1 and 5.");
 		}
 
-		//TODO: Is there an IClientValidatable equivalent?
-//		[Fact]
-//		public async Task Supports_custom_clientside_rules_with_IClientValidatable() {
-//			validator.RuleFor(x => x.Name).SetValidator(new TestPropertyValidator());
-//			msg.ShouldEqual("foo");
-//		}
-
 		[Fact]
 		public async Task CreditCard_creates_clientside_message() {
 			var msg = await _client.GetClientsideMessage("CreditCard", "data-val-creditcard");
