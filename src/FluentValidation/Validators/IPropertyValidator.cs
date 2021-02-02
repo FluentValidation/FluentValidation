@@ -61,8 +61,9 @@ namespace FluentValidation.Validators {
 		/// <summary>
 		/// Returns the default error message template for this validator, when not overridden.
 		/// </summary>
+		/// <param name="errorCode"></param>
 		/// <returns></returns>
-		string GetDefaultMessageTemplate();
+		string GetDefaultMessageTemplate(string errorCode);
 	}
 
 }

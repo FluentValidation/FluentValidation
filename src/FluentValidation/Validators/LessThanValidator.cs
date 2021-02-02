@@ -43,8 +43,8 @@ namespace FluentValidation.Validators {
 
 		public override Comparison Comparison => Comparison.LessThan;
 
-		protected override string GetDefaultMessageTemplate() {
-			return Localized(Name);
+		protected override string GetDefaultMessageTemplate(string errorCode) {
+			return Localized(errorCode, Name);
 		}
 	}
 }

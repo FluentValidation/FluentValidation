@@ -20,77 +20,15 @@
 
 namespace FluentValidation.Internal {
 	using System;
-	using System.Collections.Generic;
-	using System.Data;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
 	using Validators;
 
 	/// <summary>
-	/// Provides additional metadata about a property validator.
-	/// </summary>
-	public interface IRuleComponent {
-		/// <summary>
-		/// Whether or not this validator has a condition associated with it.
-		/// </summary>
-		bool HasCondition { get; }
-
-		/// <summary>
-		/// Whether or not this validator has an async condition associated with it.
-		/// </summary>
-		bool HasAsyncCondition { get; }
-
-		/// <summary>
-		/// The validator associated with this component.
-		/// </summary>
-		IPropertyValidator Validator { get; }
-
-		/// <summary>
-		/// Gets the raw unformatted error message. Placeholders will not have been rewritten.
-		/// </summary>
-		/// <returns></returns>
-		string GetUnformattedErrorMessage();
-	}
-
-	internal class RuleComponentForNullableStruct<T, TProperty> : RuleComponent<T, TProperty?> where TProperty : struct {
-		private IPropertyValidator<T, TProperty> _propertyValidator;
-		private IAsyncPropertyValidator<T, TProperty> _asyncPropertyValidator;
-
-		internal RuleComponentForNullableStruct(IPropertyValidator<T, TProperty> propertyValidator)
-			: base(null) {
-			_propertyValidator = propertyValidator;
-		}
-
-		internal RuleComponentForNullableStruct(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator, IPropertyValidator<T, TProperty> propertyValidator)
-			: base(null, null) {
-			_asyncPropertyValidator = asyncPropertyValidator;
-		}
-
-		public override IPropertyValidator Validator
-			=> (IPropertyValidator)_propertyValidator ?? _asyncPropertyValidator;
-
-		private protected override bool SupportsAsynchronousValidation
-			=> _asyncPropertyValidator != null;
-
-		private protected override bool SupportsSynchronousValidation
-			=> _propertyValidator != null;
-
-		internal override bool Validate(ValidationContext<T> context, TProperty? value) {
-			if (!value.HasValue) return true;
-			return _propertyValidator.IsValid(context, value.Value);
-		}
-
-		internal override async Task<bool> ValidateAsync(ValidationContext<T> context, TProperty? value, CancellationToken cancellation) {
-			if (!value.HasValue) return true;
-			return await _asyncPropertyValidator.IsValidAsync(context, value.Value, cancellation);
-		}
-	}
-
-	/// <summary>
 	/// An individual component within a rule.
 	/// In a rule definition such as RuleFor(x => x.Name).NotNull().NotEqual("Foo")
-	/// the NotNull and the NotEqual are both rule steps.
+	/// the NotNull and the NotEqual are both rule components.
 	/// </summary>
 	public class RuleComponent<T,TProperty> : IRuleComponent {
 		private string _errorMessage;
@@ -229,7 +167,7 @@ namespace FluentValidation.Internal {
 
 			// If no custom message has been supplied, use the default.
 			if (rawTemplate == null) {
-				rawTemplate = Validator.GetDefaultMessageTemplate();
+				rawTemplate = Validator.GetDefaultMessageTemplate(ErrorCode);
 			}
 
 			if (context == null) {
@@ -248,7 +186,7 @@ namespace FluentValidation.Internal {
 
 			// If no custom message has been supplied, use the default.
 			if (message == null) {
-				message = Validator.GetDefaultMessageTemplate();
+				message = Validator.GetDefaultMessageTemplate(ErrorCode);
 			}
 
 			return message;

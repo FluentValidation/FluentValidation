@@ -218,8 +218,8 @@ namespace FluentValidation.Tests {
 				return true;
 			}
 
-			protected override string GetDefaultMessageTemplate() {
-				return Localized("NotNullValidator");
+			protected override string GetDefaultMessageTemplate(string errorCode) {
+				return Localized(errorCode, "NotNullValidator");
 			}
 		}
 	}
