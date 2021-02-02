@@ -98,7 +98,6 @@ namespace FluentValidation.Internal {
 				}
 			}
 
-			// TODO: For FV 9, throw an exception by default if synchronous validator has async condition.
 			if (AsyncCondition != null) {
 				if (!AsyncCondition(context, default).GetAwaiter().GetResult()) {
 					return;
