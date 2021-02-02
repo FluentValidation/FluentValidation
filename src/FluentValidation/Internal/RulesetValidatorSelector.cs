@@ -9,20 +9,20 @@ namespace FluentValidation.Internal {
 	/// Selects validators that belong to the specified rulesets.
 	/// </summary>
 	public class RulesetValidatorSelector : IValidatorSelector {
-		readonly string[] _rulesetsToExecute;
+		readonly IEnumerable<string> _rulesetsToExecute;
     public const string DefaultRuleSetName = "default";
     public const string WildcardRuleSetName = "*";
 
     /// <summary>
     /// Rule sets
     /// </summary>
-    public string[] RuleSets => _rulesetsToExecute; //TODO: Convert to IEnumerable<string> for FV 10
+    public IEnumerable<string> RuleSets => _rulesetsToExecute;
 
 		/// <summary>
 		/// Creates a new instance of the RulesetValidatorSelector.
 		/// </summary>
-		public RulesetValidatorSelector(params string[] rulesetsToExecute) {
-			this._rulesetsToExecute = rulesetsToExecute;
+		public RulesetValidatorSelector(IEnumerable<string> rulesetsToExecute) {
+			_rulesetsToExecute = rulesetsToExecute;
 		}
 
 		/// <summary>
@@ -35,13 +35,13 @@ namespace FluentValidation.Internal {
 		public virtual bool CanExecute(IValidationRule rule, string propertyPath, IValidationContext context) {
 			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>());
 
-			if ((rule.RuleSets == null || rule.RuleSets.Length == 0) && _rulesetsToExecute.Length > 0) {
+			if ((rule.RuleSets == null || rule.RuleSets.Length == 0) && _rulesetsToExecute.Any()) {
 				if (IsIncludeRule(rule)) {
 					return true;
 				}
 			}
 
-			if ((rule.RuleSets == null || rule.RuleSets.Length == 0) && _rulesetsToExecute.Length == 0) {
+			if ((rule.RuleSets == null || rule.RuleSets.Length == 0) && !_rulesetsToExecute.Any()) {
 				executed.Add(DefaultRuleSetName);
 				return true;
 			}
@@ -53,7 +53,7 @@ namespace FluentValidation.Internal {
 				}
 			}
 
-			if (rule.RuleSets != null && rule.RuleSets.Length > 0 && _rulesetsToExecute.Length > 0) {
+			if (rule.RuleSets != null && rule.RuleSets.Length > 0 && _rulesetsToExecute.Any()) {
 				var intersection = rule.RuleSets.Intersect(_rulesetsToExecute, StringComparer.OrdinalIgnoreCase).ToList();
 				if (intersection.Any()) {
 					intersection.ForEach(r => executed.Add(r));
