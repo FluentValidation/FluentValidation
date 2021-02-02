@@ -32,6 +32,9 @@ namespace FluentValidation.TestHelper {
 
 	public static class ValidationTestExtension {
 		internal const string MatchAnyFailure = "__FV__ANY";
+#pragma warning disable 618
+
+		// TODO: Look at deprecating these methods in favour of TestValidate for FV 11.
 
 		public static IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, string ruleSet = null) where T : class, new() {
@@ -98,11 +101,10 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static async Task ShouldNotHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) where T : class {
-			var value = expression.Compile()(objectToTest);
 			var testValidationResult = await validator.TestValidateAsync(objectToTest, cancellationToken, ruleSet);
 			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
-
+#pragma warning restore 618
 
 		public static void ShouldHaveChildValidator<T, TProperty>(this IValidator<T> validator, Expression<Func<T, TProperty>> expression, Type childValidatorType) {
 			var descriptor = validator.CreateDescriptor();
@@ -149,8 +151,8 @@ namespace FluentValidation.TestHelper {
 				.ToArray();
 		}
 
-		// TODO: For FV10, remove the default null form the ruleset parameter, and mark this method as obsolete.
-		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet = null) where T : class {
+		[Obsolete("Use the overload that takes an Action<ValidationStrategy> instead, which allows the ruleset to be specified inside the delegate.")]
+		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, string ruleSet) where T : class {
 			return validator.TestValidate(objectToTest, options => {
 				if (ruleSet != null) {
 					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
@@ -158,8 +160,8 @@ namespace FluentValidation.TestHelper {
 			});
 		}
 
-		// TODO: For FV10, remove the default null form the ruleset parameter, and mark this method as obsolete.
-		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) where T : class {
+		[Obsolete("Use the overload that takes an Action<ValidationStrategy> instead, which allows the ruleset to be specified inside the delegate.")]
+		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, CancellationToken cancellationToken, string ruleSet) where T : class {
 			return await validator.TestValidateAsync(objectToTest, options => {
 				if (ruleSet != null) {
 					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
@@ -167,14 +169,18 @@ namespace FluentValidation.TestHelper {
 			}, cancellationToken);
 		}
 
-		// TODO: For FV10, Add a default of null to the options parameter.
-		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options) where T : class {
+		/// <summary>
+		/// Performs validation, returning a TestValidationResult which allows assertions to be performed.
+		/// </summary>
+		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null) where T : class {
 			var validationResult = validator.Validate(objectToTest, options);
 			return new TestValidationResult<T>(validationResult);
 		}
 
-		// TODO: For FV10, Add a default of null to the options parameter.
-		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options, CancellationToken cancellationToken = default) where T : class {
+		/// <summary>
+		/// Performs async validation, returning a TestValidationResult which allows assertions to be performed.
+		/// </summary>
+		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) where T : class {
 			var validationResult = await validator.ValidateAsync(objectToTest, options, cancellationToken);
 			return new TestValidationResult<T>(validationResult);
 		}
