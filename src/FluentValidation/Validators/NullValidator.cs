@@ -25,8 +25,8 @@ namespace FluentValidation.Validators {
 			return value == null;
 		}
 
-		protected override string GetDefaultMessageTemplate() {
-			return Localized(Name);
+		protected override string GetDefaultMessageTemplate(string errorCode) {
+			return Localized(errorCode, Name);
 		}
 	}
 

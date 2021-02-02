@@ -51,9 +51,9 @@ namespace FluentValidation.Validators {
 			}
 		}
 
-		protected override string GetDefaultMessageTemplate() {
+		protected override string GetDefaultMessageTemplate(string errorCode) {
 			// Intentionally the same message as EnumValidator.
-			return Localized("EnumValidator");
+			return Localized(errorCode, "EnumValidator");
 		}
 	}
 }

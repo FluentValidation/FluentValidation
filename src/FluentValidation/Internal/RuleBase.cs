@@ -325,9 +325,5 @@ namespace FluentValidation.Internal {
 
 			return failure;
 		}
-
-		public void AddComponent(RuleComponent<T, TValue> component) {
-			Components.Add(component);
-		}
 	}
 }

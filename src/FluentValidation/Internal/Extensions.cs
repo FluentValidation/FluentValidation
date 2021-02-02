@@ -22,6 +22,7 @@ namespace FluentValidation.Internal {
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Text;
+	using Resources;
 
 	/// <summary>
 	/// Useful extensions
@@ -163,5 +164,17 @@ namespace FluentValidation.Internal {
 			dict[key] = val;
 			return val;
 		}
+
+		internal static string ResolveErrorMessageUsingErrorCode(this ILanguageManager languageManager, string errorCode, string fallbackKey) {
+			if (errorCode != null) {
+				string result = languageManager.GetString(errorCode);
+
+				if (!string.IsNullOrEmpty(result)) {
+					return result;
+				}
+			}
+			return languageManager.GetString(fallbackKey);
+		}
+
 	}
 }

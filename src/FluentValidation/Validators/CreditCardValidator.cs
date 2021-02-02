@@ -29,8 +29,8 @@ namespace FluentValidation.Validators {
 
 		public override string Name => "CreditCardValidator";
 
-		protected override string GetDefaultMessageTemplate() {
-			return Localized(Name);
+		protected override string GetDefaultMessageTemplate(string errorCode) {
+			return Localized(errorCode, Name);
 		}
 
 		public override bool IsValid(ValidationContext<T> context, string value) {

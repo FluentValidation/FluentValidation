@@ -45,8 +45,8 @@ namespace FluentValidation.Validators {
 
 		public override Comparison Comparison => Validators.Comparison.GreaterThanOrEqual;
 
-		protected override string GetDefaultMessageTemplate() {
-			return Localized(Name);
+		protected override string GetDefaultMessageTemplate(string errorCode) {
+			return Localized(errorCode, Name);
 		}
 	}
 

@@ -153,7 +153,7 @@ namespace FluentValidation.Tests {
 			}
 
 			public string Name => _inner.Name;
-			public string GetDefaultMessageTemplate() => _inner.GetDefaultMessageTemplate();
+			public string GetDefaultMessageTemplate(string errorCode) => _inner.GetDefaultMessageTemplate(errorCode);
 		}
 
 		[Fact]
