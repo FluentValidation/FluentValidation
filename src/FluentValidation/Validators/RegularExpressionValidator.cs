@@ -72,8 +72,8 @@ namespace FluentValidation.Validators {
 
 		public string Expression { get; }
 
-		protected override string GetDefaultMessageTemplate() {
-			return Localized(Name);
+		protected override string GetDefaultMessageTemplate(string errorCode) {
+			return Localized(errorCode, Name);
 		}
 	}
 

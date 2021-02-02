@@ -232,6 +232,22 @@
 		}
 
 		[Fact]
+		public void Uses_error_code_as_localization_key() {
+			var originalLanguageManager = ValidatorOptions.Global.LanguageManager;
+			ValidatorOptions.Global.LanguageManager = new CustomLanguageManager();
+
+			using (new CultureScope("fr-FR")) {
+				var validator = new InlineValidator<Person>();
+				validator.RuleFor(x => x.Forename).NotNull().WithErrorCode("CustomKey");
+				var result = validator.Validate(new Person());
+
+				ValidatorOptions.Global.LanguageManager = originalLanguageManager;
+
+				result.Errors[0].ErrorMessage.ShouldEqual("bar");
+			}
+		}
+
+		[Fact]
 		public void Falls_back_to_default_localization_key_when_error_code_key_not_found() {
 			var originalLanguageManager = ValidatorOptions.Global.LanguageManager;
 			ValidatorOptions.Global.LanguageManager = new CustomLanguageManager();

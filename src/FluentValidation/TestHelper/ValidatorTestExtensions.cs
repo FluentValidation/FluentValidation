@@ -173,6 +173,7 @@ namespace FluentValidation.TestHelper {
 		/// Performs validation, returning a TestValidationResult which allows assertions to be performed.
 		/// </summary>
 		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null) where T : class {
+			options ??= _ => { };
 			var validationResult = validator.Validate(objectToTest, options);
 			return new TestValidationResult<T>(validationResult);
 		}
@@ -181,6 +182,7 @@ namespace FluentValidation.TestHelper {
 		/// Performs async validation, returning a TestValidationResult which allows assertions to be performed.
 		/// </summary>
 		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) where T : class {
+			options ??= _ => { };
 			var validationResult = await validator.ValidateAsync(objectToTest, options, cancellationToken);
 			return new TestValidationResult<T>(validationResult);
 		}

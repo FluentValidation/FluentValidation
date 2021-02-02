@@ -44,8 +44,8 @@ namespace FluentValidation.Validators {
 			return _predicate(context.InstanceToValidate, value, context, cancellation);
 		}
 
-		protected override string GetDefaultMessageTemplate() {
-			return Localized(Name);
+		protected override string GetDefaultMessageTemplate(string errorCode) {
+			return Localized(errorCode, Name);
 		}
 	}
 }

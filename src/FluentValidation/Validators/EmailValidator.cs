@@ -63,8 +63,8 @@ namespace FluentValidation.Validators {
 			return new Regex(_expression, options, TimeSpan.FromSeconds(2.0));
 		}
 
-		protected override string GetDefaultMessageTemplate() {
-			return Localized(Name);
+		protected override string GetDefaultMessageTemplate(string errorCode) {
+			return Localized(errorCode, Name);
 		}
 	}
 
@@ -87,8 +87,8 @@ namespace FluentValidation.Validators {
 				index == value.LastIndexOf('@');
 		}
 
-		protected override string GetDefaultMessageTemplate() {
-			return Localized(Name);
+		protected override string GetDefaultMessageTemplate(string errorCode) {
+			return Localized(errorCode, Name);
 		}
 	}
 
