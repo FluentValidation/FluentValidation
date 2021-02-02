@@ -32,7 +32,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Executes_rules_in_specified_ruleset() {
 			var validator = new TestValidator();
-			var result = validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new RulesetValidatorSelector("Names")));
+			var result = validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new RulesetValidatorSelector(new[] { "Names" })));
 
 			result.Errors.Count.ShouldEqual(2); // 2 rules in this ruleset
 			AssertExecuted(result, "Names");
@@ -64,7 +64,7 @@ namespace FluentValidation.Tests {
 			    Address = new Address()
 			};
 
-			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector("Test")));
+			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector(new[] { "Test" })));
 
 			result.Errors.Count.ShouldEqual(1);
 			AssertExecuted(result, "Test");
@@ -87,7 +87,7 @@ namespace FluentValidation.Tests {
 				Orders = { new Order(), new Order() }
 			};
 
-			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector("Test")));
+			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector(new[] { "Test" })));
 
 
 			result.Errors.Count.ShouldEqual(2); //one for each order
@@ -102,7 +102,7 @@ namespace FluentValidation.Tests {
 			});
 
 			var person = new Person();
-			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector("Names", "Id")));
+			var result = validator.Validate(new ValidationContext<Person>(person, new PropertyChain(), new RulesetValidatorSelector(new[] { "Names", "Id" })));
 
 			result.Errors.Count.ShouldEqual(3);
 			AssertExecuted(result, "Names", "Id");
