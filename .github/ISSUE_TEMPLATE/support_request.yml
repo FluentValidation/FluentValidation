@@ -1,0 +1,36 @@
+name: "\U0001F41B Support Request"
+about: "Report a reproducible bug in FluentValidation, or ask for support"
+issue_body: true
+inputs:
+- type: description
+  attributes:
+    value: Before filling out a new issue, please first check to see if your question has been answered in the project documentation documentation at [https://docs.fluentvalidation.net] 
+- type: description
+  attributes:
+    value: Please take the time to fill in this form as completely as possible. If you leave out sections there is a high likelihood your issue will be closed. 
+- type: input
+  attributes: 
+    label: FluentValidation version
+    required: true
+    description: Which version of FluentValidation are you using?
+- type: input
+  attributes: 
+    label: ASP.NET version
+    required: false
+    description: If you are using FluentValidation with ASP.NET, please provide the version of ASP.NET that you're using (eg .NET Core 3.1, .NET 5 etc). Leave this blank if you're not using ASP.NET.
+- type: textarea
+  attributes:
+    label: Summary
+    required: true
+    description: A clear and concise description of the issue that you're having.
+- type: textarea
+  attributes:
+    label: Reproducible demo or steps to reproduce
+    required: false
+    description: "When reporting a bug, include all the steps necessary to reproduce the issue. This includes any sample code to reproduce the issue, or a link to a *minimal* demo project. Please do not include screenshots of code."
+- type: description
+  attributes: 
+    value: Please make sure contributors can follow the steps you provided in order to reproduce the issue.
+- type: description
+  attributes: 
+    value: "**Please realise that it is up to you to debug your code thorougly. Be as certain as possible that the bug is with FluentValidation, and not with your own app, prior to opening an issue.**"
