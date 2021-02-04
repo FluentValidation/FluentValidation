@@ -42,14 +42,14 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new include rule from an existing validator
 		/// </summary>
-		public static IncludeRule<T> Create(AbstractValidator<T> parentValidator, IValidator<T> validator, Func<CascadeMode> cascadeModeThunk) {
+		public static IncludeRule<T> Create(IValidator<T> validator, Func<CascadeMode> cascadeModeThunk) {
 			return new IncludeRule<T>(validator, cascadeModeThunk, typeof(T));
 		}
 
 		/// <summary>
 		/// Creates a new include rule from an existing validator
 		/// </summary>
-		public static IncludeRule<T> Create<TValidator>(AbstractValidator<T> parentValidator, Func<T, TValidator> func, Func<CascadeMode> cascadeModeThunk)
+		public static IncludeRule<T> Create<TValidator>(Func<T, TValidator> func, Func<CascadeMode> cascadeModeThunk)
 			where TValidator : IValidator<T> {
 			return new IncludeRule<T>((ctx, _) => func(ctx.InstanceToValidate), cascadeModeThunk, typeof(T), typeof(TValidator));
 		}
