@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FluentValidation.Tests {
 	using Results;
 
-	public class TestValidatorWithPreValidate : AbstractValidator<Person> {
+	public class TestValidatorWithPreValidate : InlineValidator<Person> {
 		public TestValidatorWithPreValidate() {
 		}
 

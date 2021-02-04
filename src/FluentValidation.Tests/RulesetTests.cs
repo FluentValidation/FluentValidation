@@ -374,7 +374,7 @@ namespace FluentValidation.Tests {
 			result.RuleSetsExecuted.Intersect(names).Count().ShouldEqual(names.Length);
 		}
 
-		private class TestValidator : AbstractValidator<Person> {
+		private class TestValidator : InlineValidator<Person> {
 			public TestValidator() {
 				RuleSet("Names", () => {
 					RuleFor(x => x.Surname).NotNull();
