@@ -192,7 +192,7 @@ namespace FluentValidation.Tests {
 			}
 		}
 
-		public class PersonValidator : AbstractValidator<Person> {
+		public class PersonValidator : InlineValidator<Person> {
 			public PersonValidator() {
 				RuleFor(x => x.Forename).NotNull();
 				When(x => x.Address != null, () => {

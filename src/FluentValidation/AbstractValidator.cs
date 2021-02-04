@@ -177,7 +177,7 @@ namespace FluentValidation {
 		/// <typeparam name="TProperty">The type of property being validated</typeparam>
 		/// <param name="expression">The expression representing the property to validate</param>
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
+		protected IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor", nameof(expression));
 			var rule = PropertyRule<T, TProperty>.Create(expression, () => CascadeMode);
 			Rules.Add(rule);
@@ -195,7 +195,7 @@ namespace FluentValidation {
 		/// <param name="from">The expression representing the property to transform</param>
 		/// <param name="to">Function to transform the property value into a different type</param>
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-		public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<TProperty, TTransformed> to) {
+		protected IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<TProperty, TTransformed> to) {
 			from.Guard("Cannot pass null to Transform", nameof(from));
 			var rule = PropertyRule<T, TTransformed>.Create(from, to, () => CascadeMode);
 			Rules.Add(rule);
@@ -213,7 +213,7 @@ namespace FluentValidation {
 		/// <param name="from">The expression representing the property to transform</param>
 		/// <param name="to">Function to transform the property value into a different type</param>
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-		public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
+		protected IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
 			from.Guard("Cannot pass null to Transform", nameof(from));
 			var rule = PropertyRule<T, TTransformed>.Create(from, to, () => CascadeMode);
 			Rules.Add(rule);
@@ -227,7 +227,7 @@ namespace FluentValidation {
 		/// <typeparam name="TElement">Type of property</typeparam>
 		/// <param name="expression">Expression representing the collection to validate</param>
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
-		public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
+		protected IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 			var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => CascadeMode);
 			Rules.Add(rule);
@@ -242,7 +242,7 @@ namespace FluentValidation {
 		/// <param name="expression">Expression representing the collection to validate</param>
 		/// <param name="to">Function to transform the collection element into a different type</param>
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
-		public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
+		protected IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(expression, to, () => CascadeMode);
 			Rules.Add(rule);
@@ -257,7 +257,7 @@ namespace FluentValidation {
 		/// <param name="expression">Expression representing the collection to validate</param>
 		/// <param name="to">Function to transform the collection element into a different type</param>
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
-		public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
+		protected IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(expression, to, () => CascadeMode);
 			Rules.Add(rule);
@@ -269,7 +269,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="ruleSetName">The name of the ruleset.</param>
 		/// <param name="action">Action that encapsulates the rules in the ruleset.</param>
-		public void RuleSet(string ruleSetName, Action action) {
+		protected void RuleSet(string ruleSetName, Action action) {
 			ruleSetName.Guard("A name must be specified when calling RuleSet.", nameof(ruleSetName));
 			action.Guard("A ruleset definition must be specified when calling RuleSet.", nameof(action));
 
@@ -288,7 +288,7 @@ namespace FluentValidation {
 		/// <param name="predicate">The condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder When(Func<T, bool> predicate, Action action) {
+		protected IConditionBuilder When(Func<T, bool> predicate, Action action) {
 			return When((x, ctx) => predicate(x), action);
 		}
 
@@ -298,7 +298,7 @@ namespace FluentValidation {
 		/// <param name="predicate">The condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
+		protected IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
 			return new ConditionBuilder<T>(Rules).When(predicate, action);
 		}
 
@@ -307,7 +307,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder Unless(Func<T, bool> predicate, Action action) {
+		protected IConditionBuilder Unless(Func<T, bool> predicate, Action action) {
 			return Unless((x, ctx) => predicate(x), action);
 		}
 
@@ -316,7 +316,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder Unless(Func<T, ValidationContext<T>, bool> predicate, Action action) {
+		protected IConditionBuilder Unless(Func<T, ValidationContext<T>, bool> predicate, Action action) {
 			return new ConditionBuilder<T>(Rules).Unless(predicate, action);
 		}
 
@@ -326,7 +326,7 @@ namespace FluentValidation {
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		protected IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
 			return WhenAsync((x, ctx, cancel) => predicate(x, cancel), action);
 		}
 
@@ -336,7 +336,7 @@ namespace FluentValidation {
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		protected IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
 			return new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
 		}
 
@@ -345,7 +345,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		protected IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
 			return UnlessAsync((x, ctx, cancel) => predicate(x, cancel), action);
 		}
 
@@ -354,14 +354,14 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		protected IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
 			return new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
 		}
 
 		/// <summary>
 		/// Includes the rules from the specified validator
 		/// </summary>
-		public void Include(IValidator<T> rulesToInclude) {
+		protected void Include(IValidator<T> rulesToInclude) {
 			rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
 			var rule = IncludeRule<T>.Create(this, rulesToInclude, () => CascadeMode);
 			Rules.Add(rule);
@@ -370,7 +370,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Includes the rules from the specified validator
 		/// </summary>
-		public void Include<TValidator>(Func<T, TValidator> rulesToInclude) where TValidator : IValidator<T> {
+		protected void Include<TValidator>(Func<T, TValidator> rulesToInclude) where TValidator : IValidator<T> {
 			rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
 			var rule = IncludeRule<T>.Create(this, rulesToInclude, () => CascadeMode);
 			Rules.Add(rule);

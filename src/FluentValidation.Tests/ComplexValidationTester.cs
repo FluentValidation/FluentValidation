@@ -251,7 +251,7 @@ namespace FluentValidation.Tests {
 			return null;
 		}
 
-		public class PersonValidator : AbstractValidator<Person> {
+		public class PersonValidator : InlineValidator<Person> {
 			public PersonValidator() {
 				RuleFor(x => x.Forename).NotNull();
 				RuleFor(x => x.Address).SetValidator(new AddressValidator());
@@ -294,7 +294,7 @@ namespace FluentValidation.Tests {
 			}
 		}
 
-		public class TracksAsyncCallValidator<T> : AbstractValidator<T> {
+		public class TracksAsyncCallValidator<T> : InlineValidator<T> {
 			public bool? WasCalledAsync;
 
 			public override ValidationResult Validate(ValidationContext<T> context) {

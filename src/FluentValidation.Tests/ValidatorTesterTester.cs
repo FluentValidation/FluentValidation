@@ -778,7 +778,7 @@ namespace FluentValidation.Tests {
 			public string Street { get; set; }
 		}
 
-		public class Address2Validator : AbstractValidator<Address2> {
+		public class Address2Validator : InlineValidator<Address2> {
 			public static string RuleLocationNames = "LocationNames";
 
 			public Address2Validator() {
