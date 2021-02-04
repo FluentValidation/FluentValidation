@@ -19,6 +19,7 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Text.RegularExpressions;
+	using Features;
 	using Resources;
 
 	/// <summary>
@@ -92,6 +93,6 @@ namespace FluentValidation.Validators {
 		}
 	}
 
-	public interface IEmailValidator<T> : IPropertyValidator<T,string>, IEmailValidator { }
+	public interface IEmailValidator<T> : IPropertyValidator<T,string>, IEmailValidator, IStandardFeatures, ISupportsAsyncConditions { }
 	public interface IEmailValidator { }
 }
