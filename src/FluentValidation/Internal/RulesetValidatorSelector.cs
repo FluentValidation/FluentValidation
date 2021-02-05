@@ -66,7 +66,9 @@ namespace FluentValidation.Internal {
 					executed.Add(DefaultRuleSetName);
 				}
 				else {
-					rule.RuleSets.ForEach(r => executed.Add(r));
+					foreach (var r in rule.RuleSets) {
+						executed.Add(r);
+					}
 				}
 				return true;
 			}
