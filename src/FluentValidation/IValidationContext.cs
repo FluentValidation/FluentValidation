@@ -162,13 +162,8 @@ namespace FluentValidation {
 
 		/// <inheritdoc />
 		public bool IsAsync {
-			get {
-				//TODO: Remove dictionary usage.
-				if (RootContextData.ContainsKey("__FV_IsAsyncExecution")) {
-					return (RootContextData["__FV_IsAsyncExecution"] as bool?).GetValueOrDefault();
-				}
-				return false;
-			}
+			get;
+			internal set;
 		}
 
 		/// <summary>
@@ -227,7 +222,8 @@ namespace FluentValidation {
 			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector, Failures, MessageFormatter) {
 				IsChildContext = true,
 				RootContextData = RootContextData,
-				_parentContext = preserveParentContext ? this : null
+				_parentContext = preserveParentContext ? this : null,
+				IsAsync = IsAsync,
 			};
 		}
 

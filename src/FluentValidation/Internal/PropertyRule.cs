@@ -149,7 +149,7 @@ namespace FluentValidation.Internal {
 		/// <returns>A collection of validation failures</returns>
 		public virtual async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			if (!context.IsAsync) {
-				context.RootContextData["__FV_IsAsyncExecution"] = true;
+				context.IsAsync = true;
 			}
 
 			string displayName = GetDisplayName(context);

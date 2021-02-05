@@ -118,7 +118,7 @@ namespace FluentValidation {
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public async virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
-			context.RootContextData["__FV_IsAsyncExecution"] = true;
+			context.IsAsync = true;
 
 			var result = new ValidationResult(context.Failures);
 			bool shouldContinue = PreValidate(context, result);
