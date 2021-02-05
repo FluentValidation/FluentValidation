@@ -114,32 +114,6 @@ namespace FluentValidation.Internal {
 			return retVal.ToString().Trim();
 		}
 
-		internal static void ForEach<T>(this IEnumerable<T> source, Action<T> action) {
-			foreach (var item in source) {
-				action(item);
-			}
-		}
-
-		[Obsolete]
-		internal static Func<object, object> CoerceToNonGeneric<T, TProperty>(this Func<T, TProperty> func) {
-			return x => func((T)x);
-		}
-
-		[Obsolete]
-		internal static Func<object, int> CoerceToNonGeneric<T>(this Func<T, int> func) {
-			return x => func((T)x);
-		}
-
-		[Obsolete]
-		internal static Func<object, string> CoerceToNonGeneric<T>(this Func<T, string> func) {
-			return x => func((T)x);
-		}
-
-		[Obsolete]
-		internal static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func) {
-			return x => func((T)x);
-		}
-
 		internal static T GetOrAdd<T>(this IDictionary<string, object> dict, string key, Func<T> value) {
 			if (dict.TryGetValue(key, out var tmp)) {
 				if (tmp is T result) {
