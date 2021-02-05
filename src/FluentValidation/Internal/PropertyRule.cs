@@ -148,7 +148,7 @@ namespace FluentValidation.Internal {
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
 		public virtual async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
-			if (!context.IsAsync()) {
+			if (!context.IsAsync) {
 				context.RootContextData["__FV_IsAsyncExecution"] = true;
 			}
 
@@ -251,8 +251,5 @@ namespace FluentValidation.Internal {
 			if (DependentRules == null) DependentRules = new();
 			DependentRules.AddRange(rules);
 		}
-
-		List<IExecutableValidationRule<T>> IExecutableValidationRule<T>.DependentRules
-			=> DependentRules;
 	}
 }

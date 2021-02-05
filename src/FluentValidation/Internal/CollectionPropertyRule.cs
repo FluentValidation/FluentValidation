@@ -200,7 +200,7 @@ namespace FluentValidation.Internal {
 		}
 
 		async Task IExecutableValidationRule<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
-			if (!context.IsAsync()) {
+			if (!context.IsAsync) {
 				context.RootContextData["__FV_IsAsyncExecution"] = true;
 			}
 
@@ -409,8 +409,5 @@ namespace FluentValidation.Internal {
 
 			return paramExp.Name;
 		}
-
-		List<IExecutableValidationRule<T>> IExecutableValidationRule<T>.DependentRules
-			=> DependentRules;
 	}
 }

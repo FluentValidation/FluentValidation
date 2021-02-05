@@ -36,7 +36,7 @@ namespace FluentValidation.Tests {
 				.NotNull()
 				.NotEqual("foo");
 
-			validator.Cast<PropertyRule<Person, string>>().Single().Components.Count().ShouldEqual(2);
+			validator.Single().Components.Count().ShouldEqual(2);
 		}
 
 		[Fact]
