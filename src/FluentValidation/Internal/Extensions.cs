@@ -27,7 +27,7 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Useful extensions
 	/// </summary>
-	public static class Extensions {
+	internal static class Extensions {
 		internal static void Guard(this object obj, string message, string paramName) {
 			if (obj == null) {
 				throw new ArgumentNullException(paramName, message);
@@ -138,19 +138,6 @@ namespace FluentValidation.Internal {
 		[Obsolete]
 		internal static Func<object, System.Text.RegularExpressions.Regex> CoerceToNonGeneric<T>(this Func<T, System.Text.RegularExpressions.Regex> func) {
 			return x => func((T)x);
-		}
-
-		/// <summary>
-		/// Checks whether this is an asynchronous validation run.
-		/// </summary>
-		/// <param name="ctx"></param>
-		/// <returns></returns>
-		public static bool IsAsync(this IValidationContext ctx) {
-			if (ctx.RootContextData.ContainsKey("__FV_IsAsyncExecution")) {
-				return (ctx.RootContextData["__FV_IsAsyncExecution"] as bool?).GetValueOrDefault();
-			}
-
-			return false;
 		}
 
 		internal static T GetOrAdd<T>(this IDictionary<string, object> dict, string key, Func<T> value) {

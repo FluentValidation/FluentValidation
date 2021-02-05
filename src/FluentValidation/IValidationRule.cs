@@ -47,8 +47,6 @@ namespace FluentValidation {
 		Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
 
 		void AddDependentRules(IEnumerable<IExecutableValidationRule<T>> rules);
-
-		List<IExecutableValidationRule<T>> DependentRules { get; }
 	}
 
 	public interface IValidationRule<T, TProperty> : IValidationRule<T> {
@@ -159,6 +157,12 @@ namespace FluentValidation {
 		/// <summary>
 		/// Expression that was used to create the rule.
 		/// </summary>
-		public LambdaExpression Expression { get; }
+		LambdaExpression Expression { get; }
+
+		/// <summary>
+		/// Dependent rules.
+		/// </summary>
+		IEnumerable<IValidationRule> DependentRules { get; }
+
 	}
 }

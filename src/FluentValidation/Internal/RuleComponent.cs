@@ -69,7 +69,7 @@ namespace FluentValidation.Internal {
 		internal bool ShouldValidateAsynchronously(IValidationContext context) {
 			// If ValidateAsync has been invoked on the root validator, then always prefer
 			// the asynchronous property validator (if available).
-			if (context.IsAsync()) {
+			if (context.IsAsync) {
 				if (SupportsAsynchronousValidation) {
 					return true;
 				}
