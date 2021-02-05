@@ -46,12 +46,6 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Should_compile_expression() {
-			var person = new Person {Surname = "Foo"};
-			((PropertyRule<Person, string>)_rule).PropertyFunc(person).ShouldEqual("Foo");
-		}
-
-		[Fact]
 		public void Adding_a_validator_should_store_validator() {
 			var validator = new TestPropertyValidator<Person, string>();
 			builder.SetValidator(validator);
@@ -144,22 +138,16 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Nullable_object_with_condition_should_not_throw() {
-			var builder = _validator.RuleFor(x => x.NullableInt.Value);
-			IExecutableValidationRule<Person> rule = null;
-			builder.Configure(r => rule = (IExecutableValidationRule<Person>) r);
-
-			builder.GreaterThanOrEqualTo(3).When(x => x.NullableInt != null);
-			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
+			_validator.RuleFor(x => x.NullableInt.Value)
+				.GreaterThanOrEqualTo(3).When(x => x.NullableInt != null);
+			_validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
 		[Fact]
 		public void Nullable_object_with_async_condition_should_not_throw() {
-			var builder = _validator.RuleFor(x => x.NullableInt.Value);
-			IExecutableValidationRule<Person> rule = null;
-			builder.Configure(r => rule = (IExecutableValidationRule<Person>) r);
-
-			builder.GreaterThanOrEqualTo(3).WhenAsync((x,c) => Task.FromResult(x.NullableInt != null));
-			rule.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
+			_validator.RuleFor(x => x.NullableInt.Value)
+				.GreaterThanOrEqualTo(3).WhenAsync((x,c) => Task.FromResult(x.NullableInt != null));
+			_validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 
 		[Fact]
@@ -187,13 +175,11 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Result_should_use_custom_property_name_when_no_property_name_can_be_determined() {
-			var builder = _validator.RuleFor(x => x.CalculateSalary());
-			builder.GreaterThan(100).WithName("Foo");
-			IExecutableValidationRule<Person> rule = null;
-			builder.Configure(r => rule = (IExecutableValidationRule<Person>) r);
+			_validator.RuleFor(x => x.CalculateSalary())
+				.GreaterThan(100).WithName("Foo");
 			var context = new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector());
-			rule.Validate(context);
-			context.Failures.Single().PropertyName.ShouldEqual("Foo");
+			var result = _validator.Validate(context);
+			result.Errors.Single().PropertyName.ShouldEqual("Foo");
 		}
 
 		[Fact]

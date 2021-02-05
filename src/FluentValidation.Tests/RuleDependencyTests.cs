@@ -64,9 +64,9 @@ namespace FluentValidation.Tests {
 			var results = validator.Validate(new Person { Surname = "foo" });
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors.Single().PropertyName.ShouldEqual("Forename");
-			var rule = (PropertyRule<Person, string>) validator.Single();
-			rule.DependentRules.Count.ShouldEqual(1);
-			((PropertyRule<Person, string>) rule.DependentRules[0]).DependentRules.Count.ShouldEqual(1);
+			var rule = validator.Single();
+			rule.DependentRules.Count().ShouldEqual(1);
+			rule.DependentRules.First().DependentRules.Count().ShouldEqual(1);
 		}
 
 		[Fact]

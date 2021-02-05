@@ -57,6 +57,11 @@ namespace FluentValidation {
 		/// Parent validation context.
 		/// </summary>
 		IValidationContext ParentContext { get; }
+
+		/// <summary>
+		/// Whether this context is async.
+		/// </summary>
+		bool IsAsync { get; }
 	}
 
 	internal interface IHasFailures {
@@ -72,7 +77,11 @@ namespace FluentValidation {
 
 		List<ValidationFailure> IHasFailures.Failures => Failures;
 		internal List<ValidationFailure> Failures { get; }
-		internal MessageFormatter MessageFormatter { get; }
+
+		/// <summary>
+		/// The message formatter used to construct error messages.
+		/// </summary>
+		public MessageFormatter MessageFormatter { get; }
 
 		/// <summary>
 		/// Creates a new validation context
@@ -150,6 +159,17 @@ namespace FluentValidation {
 		// This is the root context so it doesn't have a parent.
 		// Explicit implementation so it's not exposed necessarily.
 		IValidationContext IValidationContext.ParentContext => _parentContext;
+
+		/// <inheritdoc />
+		public bool IsAsync {
+			get {
+				//TODO: Remove dictionary usage.
+				if (RootContextData.ContainsKey("__FV_IsAsyncExecution")) {
+					return (RootContextData["__FV_IsAsyncExecution"] as bool?).GetValueOrDefault();
+				}
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// Whether the root validator should throw an exception when validation fails.

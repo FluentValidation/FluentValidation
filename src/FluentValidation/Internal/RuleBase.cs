@@ -202,6 +202,8 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		internal List<IExecutableValidationRule<T>> DependentRules { get; private protected set; }
 
+		IEnumerable<IValidationRule> IValidationRule.DependentRules => DependentRules;
+
 		string IValidationRule.GetDisplayName(IValidationContext context) =>
 			GetDisplayName(context != null ? ValidationContext<T>.GetFromNonGenericContext(context) : null);
 
