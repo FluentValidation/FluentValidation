@@ -201,7 +201,7 @@ namespace FluentValidation.Internal {
 
 		async Task IExecutableValidationRule<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			if (!context.IsAsync) {
-				context.RootContextData["__FV_IsAsyncExecution"] = true;
+				context.IsAsync = true;
 			}
 
 			string displayName = GetDisplayName(context);
