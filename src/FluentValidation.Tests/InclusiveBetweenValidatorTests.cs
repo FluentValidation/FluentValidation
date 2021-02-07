@@ -23,7 +23,7 @@ namespace FluentValidation.Tests {
 	using System.Threading;
 	using Xunit;
 	using Validators;
-
+	using System.Collections;
 
 	public class InclusiveBetweenValidatorTests {
 		DateTime fromDate;
@@ -72,7 +72,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => 	new TestValidator(v => v.RuleFor(x => x.Id).InclusiveBetween(10, 1)));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new TestValidator(v => v.RuleFor(x => x.Id).InclusiveBetween(10, 1)));
 		}
 
 		[Fact]
@@ -132,7 +132,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void When_the_validator_fails_the_error_message_should_be_set_for_strings() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).InclusiveBetween("bbb", "zzz"));
-			var result = validator.Validate(new Person{Surname = "aaa"});
+			var result = validator.Validate(new Person { Surname = "aaa" });
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be between bbb and zzz. You entered aaa.");
 		}
 
@@ -154,6 +154,44 @@ namespace FluentValidation.Tests {
 		public void Validates_with_nullable_when_property_not_null() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).InclusiveBetween(1, 5));
 			var result = validator.Validate(new Person { NullableInt = 10 });
+			result.IsValid.ShouldBeFalse();
+		}
+
+		class PersonComparerByStreetNumber : IComparer {
+
+			bool TryParseStreetNumber(string s, out int streetNumber) {
+				var streetNumberStr = s.Substring(0, s.IndexOf(" "));
+				return int.TryParse(streetNumberStr, out streetNumber);
+			}
+
+			int GetValue(object o) {
+				return o is Address addr  && TryParseStreetNumber(addr.Line1, out var streetNumber)
+					? streetNumber
+					: throw new ArgumentException("Can't convert", nameof(o));
+			}
+			public int Compare(object x, object y) {
+				return GetValue(x).CompareTo(GetValue(y));
+			}
+		}
+
+		[Fact]
+		public void When_the_value_is_between_the_range_specified_by_icomparer_then_the_validator_should_pass() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).InclusiveBetween(new Address() { Line1 = "3 Main St." }, new Address() { Line1 = "10 Main St." }, new PersonComparerByStreetNumber()));
+			var result = validator.Validate(new Person { Address = new Address() { Line1 = "5 Main St." } });
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void When_the_value_is_smaller_than_the_range_by_icomparer_then_the_validator_should_fail() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).InclusiveBetween(new Address() { Line1 = "3 Main St." }, new Address() { Line1 = "10 Main St." }, new PersonComparerByStreetNumber()));
+			var result = validator.Validate(new Person { Address = new Address() { Line1 = "1 Main St." } });
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void When_the_value_is_larger_than_the_range_by_icomparer_then_the_validator_should_fail() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).InclusiveBetween(new Address() { Line1 = "3 Main St." }, new Address() { Line1 = "10 Main St." }, new PersonComparerByStreetNumber()));
+			var result = validator.Validate(new Person { Address = new Address() { Line1 = "11 Main St." } });
 			result.IsValid.ShouldBeFalse();
 		}
 	}
