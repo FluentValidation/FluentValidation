@@ -57,6 +57,7 @@ Example
   inheritance
   rulesets
   including-rules
+  upgrading-to-10
   upgrading-to-9
   upgrading-to-8
 
