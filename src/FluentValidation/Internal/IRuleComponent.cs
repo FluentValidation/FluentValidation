@@ -22,7 +22,7 @@ namespace FluentValidation.Internal {
 	using Validators;
 
 	/// <summary>
-	/// Provides additional metadata about a property validator.
+	/// An individual component within a rule with a validator attached.
 	/// </summary>
 	public interface IRuleComponent {
 		/// <summary>
