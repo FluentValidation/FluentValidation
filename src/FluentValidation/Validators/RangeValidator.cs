@@ -22,6 +22,8 @@ namespace FluentValidation.Validators {
 
 	public abstract class RangeValidator<T, TProperty> : PropertyValidator<T, TProperty>, IBetweenValidator {
 
+		readonly IComparer<TProperty> _explicitComparer = null;
+
 		public RangeValidator(TProperty from, TProperty to) {
 			To = to;
 			From = from;
@@ -34,14 +36,12 @@ namespace FluentValidation.Validators {
 			To = to;
 			From = from;
 
-			explicitComparer = comparer;
+			_explicitComparer = comparer;
 
 			if (comparer.Compare(to, from) == -1) {
 				throw new ArgumentOutOfRangeException(nameof(to), "To should be larger than from.");
 			}
 		}
-
-		readonly IComparer<TProperty> explicitComparer = null;
 
 		public TProperty From { get; }
 		public TProperty To { get; }
@@ -52,9 +52,9 @@ namespace FluentValidation.Validators {
 		protected int Compare(TProperty a, TProperty b) {
 
 			// Use explicitComparer first
-			if (explicitComparer != null)
-				return explicitComparer.Compare(a, b);
-			else if (a is IComparable comparableA)
+			if (_explicitComparer != null)
+				return _explicitComparer.Compare(a, b);
+			else if (a is IComparable<TProperty> comparableA)
 				return comparableA.CompareTo(b);
 			else
 				throw new NotSupportedException("Object should either implement IComparable or IComparer should be passed");
