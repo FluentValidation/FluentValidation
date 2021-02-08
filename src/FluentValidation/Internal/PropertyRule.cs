@@ -29,7 +29,7 @@ namespace FluentValidation.Internal {
 	/// <summary>
 	/// Defines a rule associated with a property.
 	/// </summary>
-	internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, IExecutableValidationRule<T> {
+	internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, IValidationRuleInternal<T> {
 
 		public PropertyRule(MemberInfo member, Func<T, TProperty> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
 			: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
@@ -247,7 +247,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		void IExecutableValidationRule<T>.AddDependentRules(IEnumerable<IExecutableValidationRule<T>> rules) {
+		void IValidationRuleInternal<T>.AddDependentRules(IEnumerable<IValidationRuleInternal<T>> rules) {
 			if (DependentRules == null) DependentRules = new();
 			DependentRules.AddRange(rules);
 		}

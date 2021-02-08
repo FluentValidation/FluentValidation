@@ -87,9 +87,7 @@ namespace FluentValidation.Tests {
 				});
 			});
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet: "foo");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeRuleSets("foo"));
 			result.Errors.Count.ShouldEqual(1);
 		}
 
@@ -111,9 +109,7 @@ namespace FluentValidation.Tests {
 				});
 			});
 
-#pragma warning disable 618
-			var result = await validator.ValidateAsync(new Person(), ruleSet: "foo");
-#pragma warning restore 618
+			var result = await validator.ValidateAsync(new Person(), v => v.IncludeRuleSets("foo"));
 			result.Errors.Count.ShouldEqual(1);
 		}
 

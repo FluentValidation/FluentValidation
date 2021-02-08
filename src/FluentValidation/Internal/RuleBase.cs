@@ -200,7 +200,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Dependent rules
 		/// </summary>
-		internal List<IExecutableValidationRule<T>> DependentRules { get; private protected set; }
+		internal List<IValidationRuleInternal<T>> DependentRules { get; private protected set; }
 
 		IEnumerable<IValidationRule> IValidationRule.DependentRules => DependentRules;
 

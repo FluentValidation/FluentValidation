@@ -80,9 +80,7 @@ namespace FluentValidation.Tests {
 					});
 			});
 
-#pragma warning disable 618
-			var results = validator.Validate(new Person { Surname = "foo" }, ruleSet: "MyRuleSet");
-#pragma warning restore 618
+			var results = validator.Validate(new Person { Surname = "foo" }, v => v.IncludeRuleSets("MyRuleSet") );
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
@@ -192,7 +190,7 @@ namespace FluentValidation.Tests {
 			});
 
 #pragma warning disable 618
-			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, ruleSet: "MyRuleSet");
+			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, v => v.IncludeRuleSets("MyRuleSet"));
 #pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors.Single().PropertyName.ShouldEqual("Address");
@@ -219,7 +217,7 @@ namespace FluentValidation.Tests {
 			});
 
 #pragma warning disable 618
-			var results = validator.Validate(new Person { Surname = null, Forename = "foo" }, ruleSet: "MyRuleSet");
+			var results = validator.Validate(new Person { Surname = null, Forename = "foo" }, v => v.IncludeRuleSets("MyRuleSet"));
 #pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors[0].PropertyName.ShouldEqual("Surname");
@@ -246,7 +244,7 @@ namespace FluentValidation.Tests {
 			});
 
 #pragma warning disable 618
-			var results = validator.Validate(new Person { Surname = "bar", Forename = null }, ruleSet: "MyRuleSet");
+			var results = validator.Validate(new Person { Surname = "bar", Forename = null }, v => v.IncludeRuleSets("MyRuleSet"));
 #pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors[0].PropertyName.ShouldEqual("Forename");
@@ -272,7 +270,7 @@ namespace FluentValidation.Tests {
 			});
 
 #pragma warning disable 618
-			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, ruleSet: "MyRuleSet");
+			var results = validator.Validate(new Person { Surname = "foo", Forename = "foo" }, v => v.IncludeRuleSets("MyRuleSet"));
 #pragma warning restore 618
 			results.Errors.Count.ShouldEqual(1);
 			results.Errors.Single().PropertyName.ShouldEqual("Address");
