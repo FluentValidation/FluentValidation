@@ -116,7 +116,7 @@ public static IRuleBuilderInitial<T, IList<TElement>> ListMustContainFewerThan<T
 
 ## Reusable Property Validators
 
-In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator` (this is how all of FluentValidation's built-in rules are defined).
+In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator` class (this is how all of FluentValidation's built-in rules are defined).
 
 ```eval_rst
 .. note::
@@ -153,13 +153,9 @@ public class ListCountValidator<T> : PropertyValidator {
 ```
 When you inherit from `PropertyValidator` you must override the `IsValid` method. This method takes a `PropertyValidatorContext` object and should return a boolean indicating whether validation succeeded.
 
-The `PropertyValidatorContext` object passed into the Validate method contains several properties:
-- `Instance` - the object being validated
-- `PropertyDescription` - the name of the property (or alternatively a custom name specifed by a call to WithName
-- `PropertyValue` - the value of the property being validated
-- `Member` - the MemberInfo describing the property being validated.
+The `PropertyValidatorContext` object passed into the Validate method contains several properties including the property value (`PropertyValue`) and the parent object being validated (`InstanceToValidate`). 
 
-Note that the error message to use is specified in the constructor. The simplest way to define your error message is to use the string (as in this example) but you can also used localized error messages by specifying either a resource type and resource name. For more details, please see [Localization](localization).
+Note that the error message to use is specified in the `GetDefaultMessageTemplate` method and makes use of a custom placeholder which is filled in inside the `IsValid` method.
 
 To use the new custom validator you can call `SetValidator` when defining a validation rule.
 
