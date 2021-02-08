@@ -37,7 +37,7 @@ namespace FluentValidation.Internal {
 		private string _displayName;
 		private Func<ValidationContext<T>, string> _displayNameFactory;
 
-		internal List<RuleComponent<T, TValue>> Components => _components;
+		public List<RuleComponent<T, TValue>> Components => _components;
 
 		/// <inheritdoc />
 		IEnumerable<IRuleComponent> IValidationRule.Components => _components;
