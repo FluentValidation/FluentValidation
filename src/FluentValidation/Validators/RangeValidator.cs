@@ -43,13 +43,13 @@ namespace FluentValidation.Validators {
 
 		readonly IComparer explicitComparer = null;
 
-		public object From { get; }
-		public object To { get; }
+		public TProperty From { get; }
+		public TProperty To { get; }
 
 		object IBetweenValidator.From => From;
 		object IBetweenValidator.To => To;
 
-		protected int Compare(object a, object b) {
+		protected int Compare(TProperty a, TProperty b) {
 
 			// Use explicitComparer first
 			if (explicitComparer != null)

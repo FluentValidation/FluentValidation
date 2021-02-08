@@ -19,7 +19,7 @@
 namespace FluentValidation.Validators {
 	using System.Collections;
 
-	public class ExclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IBetweenValidator {
+	public class ExclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty> {
 
 		public override string Name => "ExclusiveBetweenValidator";
 
