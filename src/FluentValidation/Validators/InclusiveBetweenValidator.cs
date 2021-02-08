@@ -19,15 +19,8 @@
 namespace FluentValidation.Validators {
 	using System;
 
-	public class InclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator where TProperty : IComparable, IComparable<TProperty> {
-
-		public override string Name => "InclusiveBetweenValidator";
-
-		public InclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
-		}
-
-		public override bool Validate(TProperty value) {
-			return Compare(value, From) < 0 || Compare(value, To) > 0;
+	public class InclusiveBetweenValidator<T, TProperty> : InclusiveBetweenValidatorWithComparer<T, TProperty> where TProperty : IComparable, IComparable<TProperty> {
+		public InclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to, new ComparableComparer<TProperty>()) {
 		}
 	}
 

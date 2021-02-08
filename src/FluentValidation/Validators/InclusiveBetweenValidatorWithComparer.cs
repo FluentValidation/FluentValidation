@@ -19,14 +19,14 @@
 namespace FluentValidation.Validators {
 	using System.Collections.Generic;
 
-	public class InclusiveBetweenValidatorWithComparer<T, TProperty> : RangeValidatorBase<T, TProperty>, IInclusiveBetweenValidator {
+	public class InclusiveBetweenValidatorWithComparer<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator {
 
 		public override string Name => "InclusiveBetweenValidator";
 
 		public InclusiveBetweenValidatorWithComparer(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
-		public override bool Validate(TProperty value) {
+		public override bool HasError(TProperty value) {
 			return Compare(value, From) < 0 || Compare(value, To) > 0;
 		}
 	}

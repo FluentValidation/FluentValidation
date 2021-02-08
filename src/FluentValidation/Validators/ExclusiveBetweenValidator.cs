@@ -19,15 +19,9 @@
 namespace FluentValidation.Validators {
 	using System;
 
-	public class ExclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty> where TProperty : IComparable, IComparable<TProperty> {
+	public class ExclusiveBetweenValidator<T, TProperty> : ExclusiveBetweenValidatorWithComparer<T, TProperty> where TProperty : IComparable, IComparable<TProperty> {
 
-		public override string Name => "ExclusiveBetweenValidator";
-
-		public ExclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
-		}
-
-		public override bool Validate(TProperty value) {
-			return Compare(value, From) <= 0 || Compare(value, To) >= 0;
+		public ExclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to, new ComparableComparer<TProperty>()) {
 		}
 	}
 }
