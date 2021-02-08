@@ -17,52 +17,15 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using System.Collections;
-	using Internal;
-	using Resources;
+		using System.Collections;
 
-	public class InclusiveBetweenValidator<T, TProperty> : PropertyValidator<T, TProperty>, IInclusiveBetweenValidator {
+		public class InclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator {
 
 		public override string Name => "InclusiveBetweenValidator";
 
-		public InclusiveBetweenValidator(TProperty from, TProperty to) {
-			To = to;
-			From = from;
-
-			if (Compare(to, from) == -1) {
-				throw new ArgumentOutOfRangeException(nameof(to), "To should be larger than from.");
-			}
+		public InclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
 		}
-		public InclusiveBetweenValidator(TProperty from, TProperty to, IComparer comparer) {
-			To = to;
-			From = from;
-
-			explicitComparer = comparer;
-
-			if (comparer.Compare(to, from) == -1) {
-				throw new ArgumentOutOfRangeException(nameof(to), "To should be larger than from.");
-			}
-		}
-
-		readonly IComparer explicitComparer = null;
-
-		public object From { get; }
-		public object To { get; }
-
-		object IBetweenValidator.From => From;
-		object IBetweenValidator.To => To;
-
-		int Compare(object a, object b) {
-
-			// Use explicitComparer first
-			if (explicitComparer != null)
-				return explicitComparer.Compare(a, b);
-			else if (a is IComparable comparableA)
-				return comparableA.CompareTo(b);
-			else
-				throw new NotSupportedException("Object should either implement IComparable or IComparer should be passed");
-
+		public InclusiveBetweenValidator(TProperty from, TProperty to, IComparer comparer) : base(from, to, comparer) {
 		}
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {

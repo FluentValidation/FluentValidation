@@ -17,50 +17,16 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
 	using System.Collections;
 
-	public class ExclusiveBetweenValidator<T, TProperty> : PropertyValidator<T, TProperty>, IBetweenValidator {
+	public class ExclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IBetweenValidator {
 
 		public override string Name => "ExclusiveBetweenValidator";
 
-		public ExclusiveBetweenValidator(TProperty from, TProperty to) {
-			To = to;
-			From = from;
-
-			if (Compare(to, from) == -1) {
-				throw new ArgumentOutOfRangeException(nameof(to), "To should be larger than from.");
-			}
-		}
-		public ExclusiveBetweenValidator(TProperty from, TProperty to, IComparer comparer) {
-			To = to;
-			From = from;
-
-			explicitComparer = comparer;
-
-			if (comparer.Compare(to, from) == -1) {
-				throw new ArgumentOutOfRangeException(nameof(to), "To should be larger than from.");
-			}
+		public ExclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
 		}
 
-		readonly IComparer explicitComparer = null;
-
-		public object From { get; }
-		public object To { get; }
-
-		object IBetweenValidator.From => From;
-		object IBetweenValidator.To => To;
-
-		int Compare(object a, object b) {
-
-			// Use explicitComparer first
-			if (explicitComparer != null)
-				return explicitComparer.Compare(a, b);
-			else if (a is IComparable comparableA)
-				return comparableA.CompareTo(b);
-			else
-				throw new NotSupportedException("Object should either implement IComparable or IComparer should be passed");
-
+		public ExclusiveBetweenValidator(TProperty from, TProperty to, IComparer comparer) : base(from, to, comparer) {
 		}
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {
