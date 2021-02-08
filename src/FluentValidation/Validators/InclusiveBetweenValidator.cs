@@ -17,7 +17,7 @@
 #endregion
 
 namespace FluentValidation.Validators {
-		using System.Collections;
+		using System.Collections.Generic;
 
 		public class InclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator {
 
@@ -25,7 +25,7 @@ namespace FluentValidation.Validators {
 
 		public InclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
 		}
-		public InclusiveBetweenValidator(TProperty from, TProperty to, IComparer comparer) : base(from, to, comparer) {
+		public InclusiveBetweenValidator(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {

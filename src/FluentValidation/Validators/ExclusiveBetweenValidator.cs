@@ -17,7 +17,7 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System.Collections;
+	using System.Collections.Generic;
 
 	public class ExclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty> {
 
@@ -26,7 +26,7 @@ namespace FluentValidation.Validators {
 		public ExclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
 		}
 
-		public ExclusiveBetweenValidator(TProperty from, TProperty to, IComparer comparer) : base(from, to, comparer) {
+		public ExclusiveBetweenValidator(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {

@@ -1017,7 +1017,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <param name="comparer">Comparer to use</param>
 		/// <returns></returns>
-		public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to, System.Collections.IComparer comparer) {
+		public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to, IComparer<TProperty> comparer) {
 			return ruleBuilder.SetValidator(new InclusiveBetweenValidator<T, TProperty>(from, to, comparer));
 		}
 		/// <summary>

@@ -23,7 +23,8 @@ namespace FluentValidation.Tests {
 	using System.Threading;
 	using Xunit;
 	using Validators;
-	using System.Collections;
+	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 
 	public class InclusiveBetweenValidatorTests {
 		DateTime fromDate;
@@ -84,7 +85,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set() {
-			var validator = new InclusiveBetweenValidator<Person,int>(1, 10);
+			var validator = new InclusiveBetweenValidator<Person, int>(1, 10);
 			validator.From.ShouldEqual(1);
 			validator.To.ShouldEqual(10);
 		}
@@ -126,7 +127,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_strings() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator<Person,string>("ccc", "aaa"));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator<Person, string>("ccc", "aaa"));
 		}
 
 		[Fact]
@@ -138,7 +139,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_strings() {
-			var validator = new InclusiveBetweenValidator<Person,string>("a", "c");
+			var validator = new InclusiveBetweenValidator<Person, string>("a", "c");
 			validator.From.ShouldEqual("a");
 			validator.To.ShouldEqual("c");
 		}
@@ -157,7 +158,7 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		class PersonComparerByStreetNumber : IComparer {
+		class PersonComparerByStreetNumber : IComparer<Address> {
 
 			bool TryParseStreetNumber(string s, out int streetNumber) {
 				var streetNumberStr = s.Substring(0, s.IndexOf(" "));
@@ -165,11 +166,15 @@ namespace FluentValidation.Tests {
 			}
 
 			int GetValue(object o) {
-				return o is Address addr  && TryParseStreetNumber(addr.Line1, out var streetNumber)
+				return o is Address addr && TryParseStreetNumber(addr.Line1, out var streetNumber)
 					? streetNumber
 					: throw new ArgumentException("Can't convert", nameof(o));
 			}
 			public int Compare(object x, object y) {
+				return GetValue(x).CompareTo(GetValue(y));
+			}
+
+			public int Compare([AllowNull] Address x, [AllowNull] Address y) {
 				return GetValue(x).CompareTo(GetValue(y));
 			}
 		}
