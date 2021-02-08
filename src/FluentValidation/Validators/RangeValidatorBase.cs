@@ -41,6 +41,25 @@ namespace FluentValidation.Validators {
 		object IBetweenValidator.From => From;
 		object IBetweenValidator.To => To;
 
+		public abstract bool Validate(TProperty value);
+
+		public override bool IsValid(ValidationContext<T> context, TProperty value) {
+			// If the value is null then we abort and assume success.
+			// This should not be a failure condition - only a NotNull/NotEmpty should cause a null to fail.
+			if (value == null) return true;
+
+			if (Validate(value)) {
+
+				context.MessageFormatter
+					.AppendArgument("From", From)
+					.AppendArgument("To", To)
+					.AppendArgument("Value", value);
+
+				return false;
+			}
+			return true;
+		}
+
 		protected int Compare(TProperty a, TProperty b) {
 			return _explicitComparer.Compare(a, b);
 		}

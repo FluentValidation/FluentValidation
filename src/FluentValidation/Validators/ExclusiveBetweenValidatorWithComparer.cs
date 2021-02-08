@@ -26,21 +26,8 @@ namespace FluentValidation.Validators {
 		public ExclusiveBetweenValidatorWithComparer(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
-		public override bool IsValid(ValidationContext<T> context, TProperty value) {
-			// If the value is null then we abort and assume success.
-			// This should not be a failure condition - only a NotNull/NotEmpty should cause a null to fail.
-			if (value == null) return true;
-
-			if (Compare(value, From) <= 0 || Compare(value, To) >= 0) {
-
-				context.MessageFormatter
-					.AppendArgument("From", From)
-					.AppendArgument("To", To)
-					.AppendArgument("Value", value);
-
-				return false;
-			}
-			return true;
+		public override bool Validate(TProperty value) {
+			return Compare(value, From) <= 0 || Compare(value, To) >= 0;
 		}
 	}
 }
