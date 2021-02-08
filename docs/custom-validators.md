@@ -45,7 +45,7 @@ RuleFor(x => x.Pets).ListMustContainFewerThan(10);
 
 We can extend the above example to include a more useful error message. At the moment, our custom validator always returns the message "The list contains too many items" if validation fails. Instead, let's change the message so it returns "'Pets' must contain fewer than 10 items." This can be done by using custom message placeholders. FluentValidation supports several message placeholders by default including `{PropertyName}` and `{PropertyValue}` ([see this list for more](built-in-validators)), but we can also add our own.
 
-We need to modify our extension method slightly to use a different overload of the `Must` method, one that accepts a `PropertyValidatorContext` instance. This context provides additional information and methods we can use when performing validation:
+We need to modify our extension method slightly to use a different overload of the `Must` method, one that accepts a `ValidationContext<T>` instance. This context provides additional information and methods we can use when performing validation:
 
 ```csharp
 public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T, TElement>(this IRuleBuilder<T, IList<TElement>> ruleBuilder, int num) {
@@ -116,7 +116,7 @@ public static IRuleBuilderInitial<T, IList<TElement>> ListMustContainFewerThan<T
 
 ## Reusable Property Validators
 
-In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator` class (this is how all of FluentValidation's built-in rules are defined).
+In some cases where your custom logic is very complex, you may wish to move the custom logic into a separate class. This can be done by writing a class that inherits from the abstract `PropertyValidator<T,TProperty>` class (this is how all of FluentValidation's built-in rules are defined).
 
 ```eval_rst
 .. note::
@@ -151,7 +151,7 @@ public class ListCountValidator<T, TCollectionElement> : PropertyValidator<T, IL
 		=> "{PropertyName} must contain fewer than {MaxElements} items.";
 }
 ```
-When you inherit from `PropertyValidator` you must override the `IsValid` method. This method receives two vaues - the `ValidationContext<T>` representing the current validation run, and the value of the property. The method should return a boolean indicating whether validation was successful.
+When you inherit from `PropertyValidator` you must override the `IsValid` method. This method receives two vaues - the `ValidationContext<T>` representing the current validation run, and the value of the property. The method should return a boolean indicating whether validation was successful. The generic type parameters on the base class represent the root instance being validated, and the type of the property that our custom validator can act upon. In this case we're constraining the custom validator to types that implement `IList<TCollectionElement>` although this can be left open if desired.
 
 Note that the error message to use is specified by overriding `GetDefaultMessageTemplate`.
 
@@ -182,6 +182,23 @@ public class PersonValidator : AbstractValidator<Person> {
        RuleFor(person => person.Pets).ListMustContainFewerThan(10);
     }
 }
+```
+
+As another simpler example, this is how FluentValidation's own `NotNull` validator is implemented:
+
+```csharp
+public class NotNullValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+
+  public override string Name => "NotNullValidator";
+
+  public override bool IsValid(ValidationContext<T> context, TProperty value) {
+    return value != null;
+  }
+
+  protected override string GetDefaultMessageTemplate(string errorCode)
+    => "'{PropertyName}' must not be empty.";
+}
+
 ```
 
 ```eval_rst
