@@ -22,7 +22,7 @@ namespace FluentValidation.Validators {
 	using Internal;
 	using Resources;
 
-	public class InclusiveBetweenValidator<T, TProperty> : PropertyValidator<T, TProperty> {
+	public class InclusiveBetweenValidator<T, TProperty> : PropertyValidator<T, TProperty>, IInclusiveBetweenValidator {
 
 		public override string Name => "InclusiveBetweenValidator";
 
@@ -50,6 +50,8 @@ namespace FluentValidation.Validators {
 		public object From { get; }
 		public object To { get; }
 
+		object IBetweenValidator.From => From;
+		object IBetweenValidator.To => To;
 
 		int Compare(object a, object b) {
 
@@ -86,8 +88,8 @@ namespace FluentValidation.Validators {
 	}
 
 	public interface IBetweenValidator : IPropertyValidator {
-		IComparable From { get; }
-		IComparable To { get; }
+		object From { get; }
+		object To { get; }
 	}
 
 	public interface IInclusiveBetweenValidator : IBetweenValidator { }
