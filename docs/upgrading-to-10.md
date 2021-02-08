@@ -204,6 +204,35 @@ The following methods and properties have been removed:
 - `MemberNameValidatorSelector.FromExpressions`
 - Various utility and extension methods that were previously used throughout the internal API, such as `CooerceToNonGeneric`
 
+Several extension methods that provided overloads of the `Validate` method that were previously deprecated have been removed. Replacements are available:
+
+```csharp
+// Validating only specific properties.
+// Before:
+validator.Validate(instance, x => x.SomeProperty, x => x.SomeOtherProperty);
+validator.Validate(instance, "SomeProperty", "SomeOtherProperty");
+
+// After:
+validator.Validate(instance, v => {
+  v.IncludeProperties(x => x.SomeProperty, x => x.SomeOtherProperty);
+});
+
+validator.Validate(instance, v => {
+  v.IncludeProperties("SomeProperty", "SomeOtherProperty");
+});
+
+// Validating by ruleset:
+// Before (comma-delmited string to separate multiple rulesets):
+validator.Validate(instance, ruleSet: "SomeRuleSet,AnotherRuleSet");
+
+// After:
+// Separate parameters for each ruleset.
+validator.Validate(instance, v => {
+  v.IncludeRuleSets("SomeRuleSet", "AnotherRuleSet")
+});
+
+```
+
 ### Other changes
 
 - `ChildValidatorAdaptor.GetValidator` is non-generic again (as it was in FV 8.x)
