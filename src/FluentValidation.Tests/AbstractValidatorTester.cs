@@ -146,34 +146,26 @@ namespace FluentValidation.Tests {
 		public void Should_validate_single_property() {
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleFor(x => x.Surname).NotNull();
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), x => x.Surname);
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeProperties(x => x.Surname));
 			result.Errors.Count.ShouldEqual(1);
 		}
 
 		[Fact]
 		public void Should_validate_single_Field() {
 			validator.RuleFor(x => x.NameField).NotNull();
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), x => x.NameField);
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeProperties(x => x.NameField));
 			result.Errors.Count.ShouldEqual(1);
 		}
 
 		[Fact]
 		public void Should_throw_for_non_member_expression_when_validating_single_property() {
-#pragma warning disable 618
-			typeof(ArgumentException).ShouldBeThrownBy(() => validator.Validate(new Person(), x => "foo"));
-#pragma warning restore 618
+			typeof(ArgumentException).ShouldBeThrownBy(() => validator.Validate(new Person(), v => v.IncludeProperties(x => "foo")));
 		}
 
 		[Fact]
 		public void Should_be_valid_when_there_are_no_failures_for_single_property() {
 			validator.RuleFor(x => x.Surname).NotNull();
-#pragma warning disable 618
-			var result = validator.Validate(new Person {Surname = "foo"}, x => x.Surname);
-#pragma warning restore 618
+			var result = validator.Validate(new Person {Surname = "foo"}, v => v.IncludeProperties(x => x.Surname));
 			result.IsValid.ShouldBeTrue();
 		}
 
@@ -181,9 +173,7 @@ namespace FluentValidation.Tests {
 		public void Should_validate_single_property_where_property_as_string() {
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleFor(x => x.Surname).NotNull();
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), "Surname");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeProperties("Surname"));
 			result.Errors.Count.ShouldEqual(1);
 		}
 
@@ -191,9 +181,7 @@ namespace FluentValidation.Tests {
 		public void Should_validate_single_property_where_invalid_property_as_string() {
 			validator.RuleFor(x => x.Forename).NotNull();
 			validator.RuleFor(x => x.Surname).NotNull();
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), "Surname1");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeProperties("Surname1"));
 			result.Errors.Count.ShouldEqual(0);
 		}
 
@@ -206,9 +194,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Address).SetValidator(addressValidator);
 			validator.RuleFor(x => x.Forename).NotNull();
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person { Address = new Address() }, properties: "Address.Line1");
-#pragma warning restore 618
+			var result = validator.Validate(new Person { Address = new Address() }, v => v.IncludeProperties("Address.Line1"));
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Address.Line1");
 		}
@@ -239,9 +225,7 @@ namespace FluentValidation.Tests {
 			});
 			validator.RuleFor(x => x.Id).NotEqual(0);
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet: "Names");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeRuleSets("Names"));
 			result.Errors.Count.ShouldEqual(2);
 		}
 

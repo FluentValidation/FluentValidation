@@ -135,8 +135,8 @@ namespace FluentValidation.TestHelper {
 			var member = expression.IsParameterExpression() ? null : expressionMemberName;
 
 			var rules = descriptor.GetRulesForMember(member)
-				.OfType<IExecutableValidationRule<T>>()
-				.SelectMany(x => x.DependentRules ?? Enumerable.Empty<IExecutableValidationRule<T>>())
+				.OfType<IValidationRuleInternal<T>>()
+				.SelectMany(x => x.DependentRules ?? Enumerable.Empty<IValidationRuleInternal<T>>())
 				.SelectMany(x => x.Components)
 				.Select(x => x.Validator);
 

@@ -2,6 +2,7 @@ namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Internal;
 	using Newtonsoft.Json;
 	using Results;
@@ -30,9 +31,9 @@ namespace FluentValidation.Tests {
 			const string ruleSetName = "blah";
 			validator.RuleSet(ruleSetName, () => { validator.RuleFor(x => x.Forename).NotNull(); });
 
-#pragma warning disable 618
-			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person(), ruleSetName));
-#pragma warning restore 618
+			Assert.Throws<ValidationException>(() => {
+				validator.Validate(new Person(), v => v.IncludeRuleSets(ruleSetName).ThrowOnFailures());
+			});
 		}
 
 		[Fact]
@@ -52,7 +53,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Throws_exception_with_a_ruleset_async() {
+		public async Task Throws_exception_with_a_ruleset_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
@@ -60,11 +61,9 @@ namespace FluentValidation.Tests {
 			const string ruleSetName = "blah";
 			validator.RuleSet(ruleSetName, () => { validator.RuleFor(x => x.Forename).NotNull(); });
 
-			typeof(ValidationException).ShouldBeThrownBy(() => {
+			await Assert.ThrowsAsync<ValidationException>(async () => {
 				try {
-#pragma warning disable 618
-					validator.ValidateAndThrowAsync(new Person(), ruleSetName).Wait();
-#pragma warning restore 618
+					await validator.ValidateAsync(new Person(), v => v.IncludeRuleSets(ruleSetName).ThrowOnFailures());
 				}
 				catch (AggregateException agrEx) {
 					throw agrEx.InnerException;
@@ -94,9 +93,7 @@ namespace FluentValidation.Tests {
 				Forename = "foo",
 				Surname = "foo"
 			};
-#pragma warning disable 618
-			validator.ValidateAndThrow(person, ruleSetName);
-#pragma warning restore 618
+			validator.Validate(person, v => v.IncludeRuleSets(ruleSetName).ThrowOnFailures());
 		}
 
 		[Fact]
@@ -109,7 +106,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Does_not_throw_when_valid_and_a_ruleset_async() {
+		public async Task Does_not_throw_when_valid_and_a_ruleset_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
@@ -121,9 +118,7 @@ namespace FluentValidation.Tests {
 				Forename = "foo",
 				Surname = "foo"
 			};
-#pragma warning disable 618
-			validator.ValidateAndThrowAsync(person, ruleSetName).Wait();
-#pragma warning restore 618
+			await validator.ValidateAsync(person, v => v.IncludeRuleSets(ruleSetName).ThrowOnFailures());
 		}
 
 		[Fact]

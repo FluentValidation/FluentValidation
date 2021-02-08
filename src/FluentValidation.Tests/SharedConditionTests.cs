@@ -281,7 +281,7 @@ namespace FluentValidation.Tests {
 			validator.RuleFor(x => x.Surname).NotNull();
 
 #pragma warning disable 618
-			var result = validator.Validate(new Person {Id = 5}, ruleSet : "foo");
+			var result = validator.Validate(new Person {Id = 5}, v => v.IncludeRuleSets("foo"));
 #pragma warning restore 618
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
@@ -297,9 +297,7 @@ namespace FluentValidation.Tests {
 			});
 			validator.RuleFor(x => x.Surname).NotNull();
 
-#pragma warning disable 618
-			var result = await validator.ValidateAsync(new Person {Id = 5}, ruleSet: "foo");
-#pragma warning restore 618
+			var result = await validator.ValidateAsync(new Person {Id = 5}, v => v.IncludeRuleSets("foo"));
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
@@ -312,9 +310,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).NotNull();
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person {Id = 5}, ruleSet : "foo");
-#pragma warning restore 618
+			var result = validator.Validate(new Person {Id = 5}, v => v.IncludeRuleSets("foo"));
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}
@@ -327,9 +323,7 @@ namespace FluentValidation.Tests {
 
 			validator.RuleFor(x => x.Surname).NotNull();
 
-#pragma warning disable 618
-			var result = await validator.ValidateAsync(new Person {Id = 5}, ruleSet: "foo");
-#pragma warning restore 618
+			var result = await validator.ValidateAsync(new Person {Id = 5}, v => v.IncludeRuleSets("foo"));
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors.Single().PropertyName.ShouldEqual("Forename");
 		}

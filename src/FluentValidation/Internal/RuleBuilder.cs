@@ -91,8 +91,8 @@ namespace FluentValidation.Internal {
 		}
 
 		IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.DependentRules(Action action) {
-			var dependencyContainer = new List<IExecutableValidationRule<T>>();
-			var internalRule = (IExecutableValidationRule<T>) Rule;
+			var dependencyContainer = new List<IValidationRuleInternal<T>>();
+			var internalRule = (IValidationRuleInternal<T>) Rule;
 			// Capture any rules added to the parent validator inside this delegate.
 			using (ParentValidator.Rules.Capture(dependencyContainer.Add)) {
 				action();

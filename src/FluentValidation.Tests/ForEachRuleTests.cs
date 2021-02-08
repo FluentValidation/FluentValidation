@@ -396,9 +396,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator())
 			};
 
-#pragma warning disable 618
-			var results = validator.Validate(_person, x => x.Orders);
-#pragma warning restore 618
+			var results = validator.Validate(_person, v => v.IncludeProperties(x => x.Orders));
 			results.Errors.Count.ShouldEqual(2);
 		}
 
@@ -409,9 +407,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator())
 			};
 
-#pragma warning disable 618
-			var results = validator.Validate(_person, "Orders");
-#pragma warning restore 618
+			var results = validator.Validate(_person, v => v.IncludeProperties("Orders"));
 			results.Errors.Count.ShouldEqual(2);
 		}
 
@@ -422,9 +418,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator())
 			};
 
-#pragma warning disable 618
-			var results = validator.Validate(_person, x => x.Forename);
-#pragma warning restore 618
+			var results = validator.Validate(_person, v => v.IncludeProperties(x => x.Forename));
 			results.Errors.Count.ShouldEqual(0);
 		}
 
