@@ -1018,7 +1018,7 @@ namespace FluentValidation {
 		/// <param name="comparer">Comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to, IComparer<TProperty> comparer) {
-			return ruleBuilder.SetValidator(new InclusiveBetweenValidator<T, TProperty>(from, to, comparer));
+			return ruleBuilder.SetValidator(new InclusiveBetweenValidatorWithComparer<T, TProperty>(from, to, comparer));
 		}
 		/// <summary>
 		/// Defines an 'inclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
@@ -1060,7 +1060,7 @@ namespace FluentValidation {
 		/// <param name="comparer">Comparer to use</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to, IComparer<TProperty> comparer) {
-			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator<T,TProperty>(from, to, comparer));
+			return ruleBuilder.SetValidator(new ExclusiveBetweenValidatorWithComparer<T,TProperty>(from, to, comparer));
 		}
 
 		/// <summary>

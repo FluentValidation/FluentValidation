@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,13 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
+	using System.Collections.Generic;
 
-	public class ExclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty> where TProperty : IComparable, IComparable<TProperty> {
+	public class InclusiveBetweenValidatorWithComparer<T, TProperty> : RangeValidatorBase<T, TProperty>, IInclusiveBetweenValidator {
 
-		public override string Name => "ExclusiveBetweenValidator";
+		public override string Name => "InclusiveBetweenValidator";
 
-		public ExclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
+		public InclusiveBetweenValidatorWithComparer(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {
@@ -31,7 +31,7 @@ namespace FluentValidation.Validators {
 			// This should not be a failure condition - only a NotNull/NotEmpty should cause a null to fail.
 			if (value == null) return true;
 
-			if (Compare(value, From) <= 0 || Compare(value, To) >= 0) {
+			if (Compare(value, From) < 0 || Compare(value, To) > 0) {
 
 				context.MessageFormatter
 					.AppendArgument("From", From)

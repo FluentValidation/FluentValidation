@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +17,13 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
+	using System.Collections.Generic;
 
-	public class ExclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty> where TProperty : IComparable, IComparable<TProperty> {
+	public class ExclusiveBetweenValidatorWithComparer<T, TProperty> : RangeValidatorBase<T, TProperty> {
 
 		public override string Name => "ExclusiveBetweenValidator";
 
-		public ExclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
+		public ExclusiveBetweenValidatorWithComparer(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {

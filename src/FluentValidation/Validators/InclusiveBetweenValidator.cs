@@ -17,15 +17,13 @@
 #endregion
 
 namespace FluentValidation.Validators {
-		using System.Collections.Generic;
+	using System;
 
-		public class InclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator {
+	public class InclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator where TProperty : IComparable, IComparable<TProperty> {
 
 		public override string Name => "InclusiveBetweenValidator";
 
 		public InclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to) {
-		}
-		public InclusiveBetweenValidator(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {
@@ -43,10 +41,6 @@ namespace FluentValidation.Validators {
 				return false;
 			}
 			return true;
-		}
-
-		protected override string GetDefaultMessageTemplate(string errorCode) {
-			return Localized(errorCode, Name);
 		}
 	}
 

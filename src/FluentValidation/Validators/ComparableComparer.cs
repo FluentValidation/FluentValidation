@@ -18,10 +18,11 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Collections.Generic;
 
-	public abstract class RangeValidator<T, TProperty> : RangeValidatorBase<T, TProperty>, IBetweenValidator where TProperty : IComparable, IComparable<TProperty> {
-
-		public RangeValidator(TProperty from, TProperty to) : base(from, to, new ComparableComparer<TProperty>()) {
+	internal class ComparableComparer<T> : IComparer<T> where T : IComparable<T> {
+		public int Compare(T x, T y) {
+			return x.CompareTo(y);
 		}
 	}
 }
