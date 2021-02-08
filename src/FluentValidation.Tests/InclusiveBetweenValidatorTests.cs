@@ -158,27 +158,6 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeFalse();
 		}
 
-		class PersonComparerByStreetNumber : IComparer<Address> {
-
-			bool TryParseStreetNumber(string s, out int streetNumber) {
-				var streetNumberStr = s.Substring(0, s.IndexOf(" "));
-				return int.TryParse(streetNumberStr, out streetNumber);
-			}
-
-			int GetValue(object o) {
-				return o is Address addr && TryParseStreetNumber(addr.Line1, out var streetNumber)
-					? streetNumber
-					: throw new ArgumentException("Can't convert", nameof(o));
-			}
-			public int Compare(object x, object y) {
-				return GetValue(x).CompareTo(GetValue(y));
-			}
-
-			public int Compare([AllowNull] Address x, [AllowNull] Address y) {
-				return GetValue(x).CompareTo(GetValue(y));
-			}
-		}
-
 		[Fact]
 		public void When_the_value_is_between_the_range_specified_by_icomparer_then_the_validator_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Address).InclusiveBetween(new Address() { Line1 = "3 Main St." }, new Address() { Line1 = "10 Main St." }, new PersonComparerByStreetNumber()));

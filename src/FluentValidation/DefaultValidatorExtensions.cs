@@ -1049,6 +1049,21 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// Defines an 'exclusive between' validator on the current rule builder.
+		/// Validation will fail if the value of the property is outside of the specified range. The range is exclusive.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="from">The lowest allowed value</param>
+		/// <param name="to">The highest allowed value</param>
+		/// <param name="comparer">Comparer to use</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to, IComparer<TProperty> comparer) {
+			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator<T,TProperty>(from, to, comparer));
+		}
+
+		/// <summary>
 		/// Defines an 'exclusive between' validator on the current rule builder, but only for properties of types that implement IComparable.
 		/// Validation will fail if the value of the property is outside of the specified range. The range is exclusive.
 		/// </summary>
@@ -1059,7 +1074,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty?> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty from, TProperty to) where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator<T,TProperty>(from, to));
+			return ruleBuilder.SetValidator(new ExclusiveBetweenValidator<T, TProperty>(from, to));
 		}
 
 		/// <summary>
