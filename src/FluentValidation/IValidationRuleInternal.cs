@@ -20,6 +20,7 @@ namespace FluentValidation {
 	using System.Collections.Generic;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using Internal;
 
 	internal interface IValidationRuleInternal<T> : IValidationRule<T> {
 		void Validate(ValidationContext<T> context);
@@ -27,5 +28,9 @@ namespace FluentValidation {
 		Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
 
 		void AddDependentRules(IEnumerable<IValidationRuleInternal<T>> rules);
+	}
+
+	internal interface IValidationRuleInternal<T, TProperty> : IValidationRule<T, TProperty>, IValidationRuleInternal<T> {
+		new List<RuleComponent<T,TProperty>> Components { get; }
 	}
 }

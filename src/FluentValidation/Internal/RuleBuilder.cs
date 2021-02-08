@@ -31,7 +31,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// The rule being created by this RuleBuilder.
 		/// </summary>
-		public IValidationRule<T, TProperty> Rule { get; }
+		public IValidationRuleInternal<T, TProperty> Rule { get; }
 
 		/// <summary>
 		/// Parent validator
@@ -41,7 +41,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Creates a new instance of the <see cref="RuleBuilder{T,TProperty}">RuleBuilder</see> class.
 		/// </summary>
-		public RuleBuilder(IValidationRule<T, TProperty> rule, AbstractValidator<T> parent) {
+		public RuleBuilder(IValidationRuleInternal<T, TProperty> rule, AbstractValidator<T> parent) {
 			Rule = rule;
 			ParentValidator = parent;
 		}
@@ -92,7 +92,6 @@ namespace FluentValidation.Internal {
 
 		IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.DependentRules(Action action) {
 			var dependencyContainer = new List<IValidationRuleInternal<T>>();
-			var internalRule = (IValidationRuleInternal<T>) Rule;
 			// Capture any rules added to the parent validator inside this delegate.
 			using (ParentValidator.Rules.Capture(dependencyContainer.Add)) {
 				action();
@@ -100,22 +99,18 @@ namespace FluentValidation.Internal {
 
 			if (Rule.RuleSets != null && Rule.RuleSets.Length > 0) {
 				foreach (var dependentRule in dependencyContainer) {
-					if (dependentRule is IValidationRule propRule && propRule.RuleSets == null) {
-						propRule.RuleSets = Rule.RuleSets;
+					if (dependentRule.RuleSets == null) {
+						dependentRule.RuleSets = Rule.RuleSets;
 					}
 				}
 			}
 
-			internalRule.AddDependentRules(dependencyContainer);
+			Rule.AddDependentRules(dependencyContainer);
 			return this;
 		}
 
 		public void AddComponent(RuleComponent<T,TProperty> component) {
-			// Components collection is not addable via the public rule interfaces.
-			// Cast the collection to its underlying type so we can add to it.
-			// Not nice but works for now.
-			var components = (List<RuleComponent<T,TProperty>>)Rule.Components;
-			components.Add(component);
+			Rule.Components.Add(component);
 		}
 	}
 }
