@@ -27,27 +27,6 @@ namespace FluentValidation {
 	using Results;
 	using Validators;
 
-	public interface ICollectionRule<T, TElement> : IValidationRule<T, TElement> {
-		/// <summary>
-		/// Filter that should include/exclude items in the collection.
-		/// </summary>
-		public Func<TElement, bool> Filter { get; set; }
-
-		/// <summary>
-		/// Constructs the indexer in the property name associated with the error message.
-		/// By default this is "[" + index + "]"
-		/// </summary>
-		public Func<T, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
-	}
-
-
-	internal interface IExecutableValidationRule<T> : IValidationRule<T> {
-		void Validate(ValidationContext<T> context);
-
-		Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
-
-		void AddDependentRules(IEnumerable<IExecutableValidationRule<T>> rules);
-	}
 
 	public interface IValidationRule<T, TProperty> : IValidationRule<T> {
 		/// <summary>

@@ -112,9 +112,7 @@ namespace FluentValidation.Tests {
 		public void Executes_all_rules() {
 			var validator = new TestValidator();
 			var person = new Person();
-#pragma warning disable 618
-			var result = validator.Validate(person, ruleSet: "*");
-#pragma warning restore 618
+			var result = validator.Validate(person, v => v.IncludeAllRuleSets());
 			result.Errors.Count.ShouldEqual(3);
 			AssertExecuted(result, "Names", "default");
 		}
@@ -126,9 +124,7 @@ namespace FluentValidation.Tests {
 				validator.RuleFor(x => x.Age).NotEqual(0);
 			});
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet : "default,Names");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeRulesNotInRuleSet().IncludeRuleSets("Names"));
 			result.Errors.Count.ShouldEqual(3);
 			AssertExecuted(result, "default", "Names");
 
@@ -137,9 +133,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void WithMessage_works_inside_rulesets() {
 			var validator = new TestValidator2();
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet: "Names");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeRuleSets("Names"));
 			Assert.Equal("foo", result.Errors[0].ErrorMessage);
 			AssertExecuted(result, "Names");
 		}
@@ -147,9 +141,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Ruleset_selection_should_not_cascade_downwards_when_set_on_property() {
 			var validator = new TestValidator4();
-#pragma warning disable 618
-			var result = validator.Validate(new PersonContainer() { Person = new Person() }, ruleSet: "Names");
-#pragma warning restore 618
+			var result = validator.Validate(new PersonContainer() { Person = new Person() }, v => v.IncludeRuleSets("Names"));
 			result.IsValid.ShouldBeTrue();
 			AssertExecuted(result);
 		}
@@ -157,9 +149,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Ruleset_selection_should_cascade_downwards_with_when_setting_child_validator_using_include_statement() {
 			var validator = new TestValidator3();
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet:"Names");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeRuleSets("Names"));
 			result.IsValid.ShouldBeFalse();
 			AssertExecuted(result, "Names");
 		}
@@ -168,9 +158,7 @@ namespace FluentValidation.Tests {
 		public void Ruleset_selection_should_cascade_downwards_with_when_setting_child_validator_using_include_statement_with_lambda() {
 			var validator = new InlineValidator<Person>();
 			validator.Include(x => new TestValidator2());
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet:"Names");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeRuleSets("Names"));
 			result.IsValid.ShouldBeFalse();
 		}
 
@@ -185,9 +173,7 @@ namespace FluentValidation.Tests {
 				validator.RuleFor(x => x.Surname).NotNull();
 			});
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet: "First, Second");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeRuleSets( "First", "Second"));
 			result.Errors.Count.ShouldEqual(2);
 			AssertExecuted(result, "First", "Second");
 		}
@@ -199,19 +185,17 @@ namespace FluentValidation.Tests {
 				validator.RuleFor(x => x.Forename).NotNull();
 			});
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet: "First");
+			var result = validator.Validate(new Person(), v => v.IncludeRuleSets("First"));
 			result.Errors.Count.ShouldEqual(1);
 			AssertExecuted(result, "First");
 
-			result = validator.Validate(new Person(), ruleSet: "Second");
+			result = validator.Validate(new Person(), v => v.IncludeRuleSets("Second"));
 			result.Errors.Count.ShouldEqual(1);
 			AssertExecuted(result, "Second");
 
-			result = validator.Validate(new Person(), ruleSet: "Third");
+			result = validator.Validate(new Person(), v => v.IncludeRuleSets("Third"));
 			result.Errors.Count.ShouldEqual(0);
 			AssertExecuted(result);
-#pragma warning restore 618
 
 			result = validator.Validate(new Person());
 			result.Errors.Count.ShouldEqual(0);
@@ -225,15 +209,13 @@ namespace FluentValidation.Tests {
 				validator.RuleFor(x => x.Forename).NotNull();
 			});
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet: "First");
+			var result = validator.Validate(new Person(), v => v.IncludeRuleSets("First"));
 			result.Errors.Count.ShouldEqual(1);
 			AssertExecuted(result, "First");
 
-			result = validator.Validate(new Person(), ruleSet: "Second");
+			result = validator.Validate(new Person(), v => v.IncludeRuleSets("Second"));
 			result.Errors.Count.ShouldEqual(0);
 			AssertExecuted(result);
-#pragma warning restore 618
 
 			result = validator.Validate(new Person());
 			result.Errors.Count.ShouldEqual(1);
@@ -248,9 +230,7 @@ namespace FluentValidation.Tests {
 			});
 			validator.RuleFor(x => x.Forename).NotNull();
 
-#pragma warning disable 618
-			var result = validator.Validate(new Person(), ruleSet: "default");
-#pragma warning restore 618
+			var result = validator.Validate(new Person(), v => v.IncludeRulesNotInRuleSet());
 			result.Errors.Count.ShouldEqual(2);
 			AssertExecuted(result, "default");
 		}
