@@ -14,6 +14,44 @@ If you need support for classic .NET Framework 4.x, .NET Core 2.1 or Netstandard
 
 ### Custom Property Validators
 
+Custom property validators are now generic, and inherit from either `PropertyValidator<T,TProperty>` or `AsyncPropertyValidator<T,TProperty>`. Property validators that inherit from the old non-generic `PropertyValidator` class will continue to work for now, but you will receive a deprecation warning. We recommend migrating to the new generic classes for better performance and support going forward. The non-generic version will be removed in FluentValidation 11.
+
+The following changes should be made in order to migrate:
+- The class should inherit from `PropertyValidator<T,TProperty>`
+- The method signature for `IsValid` should be updated
+- The method signature for `GetDefaultMessageTemplate` should be updated
+- The `Name` property should be overridden.
+
+The following example shows a custom property validator before and after migration.
+
+```csharp
+// Before:
+public class NotNullValidator : PropertyValidator
+{
+  protected override bool IsValid(PropertyValidatorContext context)
+  {
+    return context.PropertyValue != null;
+  }
+
+  protected override string GetDefaultMessageTemplate()
+    => "A value for {PropertyName} is required";
+}
+
+// After:
+public class NotNullValidator<T,TProperty> : PropertyValidator<T, TProperty>
+{
+  public override string Name => "NotNullValidator";
+
+  public override bool IsValid(ValidationContext<T> context, TProperty value)
+  {
+    return value != null;
+  }
+
+  protected override string GetDefaultMessageTemplate(string errorCode)
+    => "A value for {PropertyName} is required";
+}
+```
+
 ### Changes to property validator metadata
 
 In previous versions of FluentValidation, a property validator's configuration and the proprety validator itself were part of the same class (`PropertyValidator`). In FluentValidation 10, these are now separate. The validator itself that performs the work is either an `IPropertyValidator<T,TProperty>` or an `IAsyncPropertyValidator<T,TProperty>` and their configuration is exposed via a `RuleComponent`. Note there is still a non-generic `IPropertyValidator` interface available implemented by both `IPropertyValidator<T,TProperty>` and `IAsyncPropertyValidator<T,TProperty>` but it has fewer properties available.
