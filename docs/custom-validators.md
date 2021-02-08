@@ -129,16 +129,14 @@ We can recreate the above example using a custom `PropertyValidator` implementat
 using System.Collections.Generic;
 using FluentValidation.Validators;
 
-public class ListCountValidator<T> : PropertyValidator {
+public class ListCountValidator<T, TCollectionElement> : PropertyValidator<T, IList<TCollectionElement>> {
 	private int _max;
 
 	public ListCountValidator(int max) {
 		_max = max;
 	}
 
-	protected override bool IsValid(PropertyValidatorContext context) {
-		var list = context.PropertyValue as IList<T>;
-
+	public override bool IsValid(ValidationContext<T> context, IList<TCollectionElement> list) {
 		if(list != null && list.Count >= _max) {
 			context.MessageFormatter.AppendArgument("MaxElements", _max);
 			return false;
@@ -147,22 +145,22 @@ public class ListCountValidator<T> : PropertyValidator {
 		return true;
 	}
 
-	protected override string GetDefaultMessageTemplate()
+  public override string Name => "ListCountValidator";
+
+	protected override string GetDefaultMessageTemplate(string errorCode)
 		=> "{PropertyName} must contain fewer than {MaxElements} items.";
 }
 ```
-When you inherit from `PropertyValidator` you must override the `IsValid` method. This method takes a `PropertyValidatorContext` object and should return a boolean indicating whether validation succeeded.
+When you inherit from `PropertyValidator` you must override the `IsValid` method. This method receives two vaues - the `ValidationContext<T>` representing the current validation run, and the value of the property. The method should return a boolean indicating whether validation was successful.
 
-The `PropertyValidatorContext` object passed into the Validate method contains several properties including the property value (`PropertyValue`) and the parent object being validated (`InstanceToValidate`). 
-
-Note that the error message to use is specified in the `GetDefaultMessageTemplate` method and makes use of a custom placeholder which is filled in inside the `IsValid` method.
+Note that the error message to use is specified by overriding `GetDefaultMessageTemplate`.
 
 To use the new custom validator you can call `SetValidator` when defining a validation rule.
 
 ```csharp
 public class PersonValidator : AbstractValidator<Person> {
     public PersonValidator() {
-       RuleFor(person => person.Pets).SetValidator(new ListCountValidator<Pet>(10));
+       RuleFor(person => person.Pets).SetValidator(new ListCountValidator<Person, Pet>(10));
     }
 }
 ```
@@ -171,7 +169,7 @@ As with the first example, you can wrap this in an extension method to make the 
 ```csharp
 public static class MyValidatorExtensions {
    public static IRuleBuilderOptions<T, IList<TElement>> ListMustContainFewerThan<T, TElement>(this IRuleBuilder<T, IList<TElement>> ruleBuilder, int num) {
-      return ruleBuilder.SetValidator(new ListCountValidator<TElement>(num));
+      return ruleBuilder.SetValidator(new ListCountValidator<T, TElement>(num));
    }
 }
 ```
@@ -184,4 +182,9 @@ public class PersonValidator : AbstractValidator<Person> {
        RuleFor(person => person.Pets).ListMustContainFewerThan(10);
     }
 }
+```
+
+```eval_rst
+.. note::
+  Prior to FluentValidation 10.0, the PropertyValidator class did not have generic type parameters.
 ```
