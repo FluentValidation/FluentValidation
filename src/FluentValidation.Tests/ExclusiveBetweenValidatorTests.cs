@@ -166,21 +166,30 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_value_is_between_the_range_specified_by_icomparer_then_the_validator_should_pass() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Address).ExclusiveBetween(new Address() { Line1 = "3 Main St." }, new Address() { Line1 = "10 Main St." }, new PersonComparerByStreetNumber()));
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).ExclusiveBetween(
+				new Address() { Line1 = "3 Main St." },
+				new Address() { Line1 = "10 Main St." },
+				new StreetNumberComparer()));
 			var result = validator.Validate(new Person { Address = new Address() { Line1 = "5 Main St." } });
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Fact]
 		public void When_the_value_is_smaller_than_the_range_by_icomparer_then_the_validator_should_fail() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Address).ExclusiveBetween(new Address() { Line1 = "3 Main St." }, new Address() { Line1 = "10 Main St." }, new PersonComparerByStreetNumber()));
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).ExclusiveBetween(
+				new Address() { Line1 = "3 Main St." },
+				new Address() { Line1 = "10 Main St." },
+				new StreetNumberComparer()));
 			var result = validator.Validate(new Person { Address = new Address() { Line1 = "1 Main St." } });
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
 		public void When_the_value_is_larger_than_the_range_by_icomparer_then_the_validator_should_fail() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Address).ExclusiveBetween(new Address() { Line1 = "3 Main St." }, new Address() { Line1 = "10 Main St." }, new PersonComparerByStreetNumber()));
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).ExclusiveBetween(
+				new Address() { Line1 = "3 Main St." },
+				new Address() { Line1 = "10 Main St." },
+				new StreetNumberComparer()));
 			var result = validator.Validate(new Person { Address = new Address() { Line1 = "11 Main St." } });
 			result.IsValid.ShouldBeFalse();
 		}

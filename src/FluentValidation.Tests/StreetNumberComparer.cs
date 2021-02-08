@@ -17,11 +17,11 @@
 #endregion
 
 namespace FluentValidation.Tests {
-		using System;
-		using System.Collections.Generic;
-		using System.Diagnostics.CodeAnalysis;
+	using System;
+	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 
-		class PersonComparerByStreetNumber : IComparer<Address> {
+	class StreetNumberComparer : IComparer<Address> {
 
 		bool TryParseStreetNumber(string s, out int streetNumber) {
 			var streetNumberStr = s.Substring(0, s.IndexOf(" "));
@@ -33,11 +33,16 @@ namespace FluentValidation.Tests {
 				? streetNumber
 				: throw new ArgumentException("Can't convert", nameof(o));
 		}
-		public int Compare(object x, object y) {
-			return GetValue(x).CompareTo(GetValue(y));
-		}
-
 		public int Compare([AllowNull] Address x, [AllowNull] Address y) {
+			if (x == y) {
+				return 0;
+			}
+			if (x == null) {
+				return -1;
+			}
+			if (y == null) {
+				return 1;
+			}
 			return GetValue(x).CompareTo(GetValue(y));
 		}
 	}
