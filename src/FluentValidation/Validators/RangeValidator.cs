@@ -20,6 +20,9 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
 
+	/// <summary>
+	/// Base class for range validation.
+	/// </summary>
 	public abstract class RangeValidator<T, TProperty> : PropertyValidator<T, TProperty>, IBetweenValidator {
 
 		readonly IComparer<TProperty> _explicitComparer;
