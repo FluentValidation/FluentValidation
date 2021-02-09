@@ -26,7 +26,7 @@ namespace FluentValidation.Validators {
 		public InclusiveBetweenValidatorWithComparer(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
-		public override bool HasError(TProperty value) {
+		protected override bool HasError(TProperty value) {
 			return Compare(value, From) < 0 || Compare(value, To) > 0;
 		}
 	}

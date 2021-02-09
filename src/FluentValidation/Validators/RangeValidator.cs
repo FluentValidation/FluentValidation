@@ -41,7 +41,7 @@ namespace FluentValidation.Validators {
 		object IBetweenValidator.From => From;
 		object IBetweenValidator.To => To;
 
-		public abstract bool HasError(TProperty value);
+		protected abstract bool HasError(TProperty value);
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {
 			// If the value is null then we abort and assume success.
