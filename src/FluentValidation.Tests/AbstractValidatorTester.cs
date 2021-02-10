@@ -333,7 +333,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void PropertyName_Dispays_Correctly_In_Messages_For_Properties_With_Periods() {
+		public void PropertyName_With_Periods_Displays_Correctly_In_Messages() {
 			validator.RuleFor(x => x.Address.Line1).NotNull().WithMessage("{PropertyName}");
 
 			var validationResult = validator.Validate(new Person { Address = new Address() });
