@@ -1,4 +1,4 @@
-9.5.1 -
+9.5.1 - 11 February 2021
 Fix incorrect wording in deprecation message for Transform (#1613)
 Fix ScalePrecision validator being available in intellisense for non-decimal properties.
 Expose additional overload of Transform that receives the root object in the transformer.
