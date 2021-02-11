@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,25 +16,34 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Validators {
+namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 
-	/// <summary>
-	/// Performs range validation where the property value must be between the two specified values (inclusive).
-	/// </summary>
-	public class InclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator {
+	class StreetNumberComparer : IComparer<Address> {
 
-		public override string Name => "InclusiveBetweenValidator";
-
-		public InclusiveBetweenValidator(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
+		bool TryParseStreetNumber(string s, out int streetNumber) {
+			var streetNumberStr = s.Substring(0, s.IndexOf(" "));
+			return int.TryParse(streetNumberStr, out streetNumber);
 		}
 
-		protected override bool HasError(TProperty value) {
-			return Compare(value, From) < 0 || Compare(value, To) > 0;
+		int GetValue(object o) {
+			return o is Address addr && TryParseStreetNumber(addr.Line1, out var streetNumber)
+				? streetNumber
+				: throw new ArgumentException("Can't convert", nameof(o));
+		}
+		public int Compare([AllowNull] Address x, [AllowNull] Address y) {
+			if (x == y) {
+				return 0;
+			}
+			if (x == null) {
+				return -1;
+			}
+			if (y == null) {
+				return 1;
+			}
+			return GetValue(x).CompareTo(GetValue(y));
 		}
 	}
-
-
-	public interface IInclusiveBetweenValidator : IBetweenValidator { }
 }

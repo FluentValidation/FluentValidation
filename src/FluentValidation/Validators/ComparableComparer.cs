@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,22 +19,17 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Collections.Generic;
+	using System.Drawing;
 
-	/// <summary>
-	/// Performs range validation where the property value must be between the two specified values (inclusive).
-	/// </summary>
-	public class InclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator {
+	internal class ComparableComparer<T> : IComparer<T> where T : IComparable<T> {
+		internal static ComparableComparer<T> Instance { get; }
 
-		public override string Name => "InclusiveBetweenValidator";
-
-		public InclusiveBetweenValidator(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
+		static ComparableComparer() {
+			Instance = new ComparableComparer<T>();
 		}
 
-		protected override bool HasError(TProperty value) {
-			return Compare(value, From) < 0 || Compare(value, To) > 0;
+		public int Compare(T x, T y) {
+			return x.CompareTo(y);
 		}
 	}
-
-
-	public interface IInclusiveBetweenValidator : IBetweenValidator { }
 }

@@ -23,16 +23,17 @@ namespace FluentValidation.Tests {
 	using System.Threading;
 	using Xunit;
 	using Validators;
-
+	using System.Collections.Generic;
+	using System.Diagnostics.CodeAnalysis;
 
 	public class InclusiveBetweenValidatorTests {
-		DateTime fromDate;
-		DateTime toDate;
+		DateTime _fromDate;
+		DateTime _toDate;
 
 		public InclusiveBetweenValidatorTests() {
 			CultureScope.SetDefaultCulture();
-			fromDate = new DateTime(2009, 1, 1);
-			toDate = new DateTime(2009, 12, 31);
+			_fromDate = new DateTime(2009, 1, 1);
+			_toDate = new DateTime(2009, 12, 31);
 		}
 
 		[Fact]
@@ -72,7 +73,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => 	new TestValidator(v => v.RuleFor(x => x.Id).InclusiveBetween(10, 1)));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new TestValidator(v => v.RuleFor(x => x.Id).InclusiveBetween(10, 1)));
 		}
 
 		[Fact]
@@ -84,7 +85,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set() {
-			var validator = new InclusiveBetweenValidator<Person,int>(1, 10);
+			var validator = IBetweenValidator.CreateInclusiveBetween<Person ,int>(1, 10);
 			validator.From.ShouldEqual(1);
 			validator.To.ShouldEqual(10);
 		}
@@ -126,19 +127,19 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_strings() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new InclusiveBetweenValidator<Person,string>("ccc", "aaa"));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => IBetweenValidator.CreateInclusiveBetween<Person, string>("ccc", "aaa"));
 		}
 
 		[Fact]
 		public void When_the_validator_fails_the_error_message_should_be_set_for_strings() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).InclusiveBetween("bbb", "zzz"));
-			var result = validator.Validate(new Person{Surname = "aaa"});
+			var result = validator.Validate(new Person { Surname = "aaa" });
 			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be between bbb and zzz. You entered aaa.");
 		}
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_strings() {
-			var validator = new InclusiveBetweenValidator<Person,string>("a", "c");
+			var validator = IBetweenValidator.CreateInclusiveBetween<Person, string>("a", "c");
 			validator.From.ShouldEqual("a");
 			validator.To.ShouldEqual("c");
 		}
@@ -154,6 +155,37 @@ namespace FluentValidation.Tests {
 		public void Validates_with_nullable_when_property_not_null() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).InclusiveBetween(1, 5));
 			var result = validator.Validate(new Person { NullableInt = 10 });
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void When_the_value_is_between_the_range_specified_by_icomparer_then_the_validator_should_pass() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).InclusiveBetween(
+				new Address() { Line1 = "3 Main St." },
+				new Address() { Line1 = "10 Main St." },
+				new StreetNumberComparer
+				()));
+			var result = validator.Validate(new Person { Address = new Address() { Line1 = "5 Main St." } });
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public void When_the_value_is_smaller_than_the_range_by_icomparer_then_the_validator_should_fail() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).InclusiveBetween(
+				new Address() { Line1 = "3 Main St." },
+				new Address() { Line1 = "10 Main St." },
+				new StreetNumberComparer()));
+			var result = validator.Validate(new Person { Address = new Address() { Line1 = "1 Main St." } });
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void When_the_value_is_larger_than_the_range_by_icomparer_then_the_validator_should_fail() {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Address).InclusiveBetween(
+				new Address() { Line1 = "3 Main St." },
+				new Address() { Line1 = "10 Main St." },
+				new StreetNumberComparer()));
+			var result = validator.Validate(new Person { Address = new Address() { Line1 = "11 Main St." } });
 			result.IsValid.ShouldBeFalse();
 		}
 	}

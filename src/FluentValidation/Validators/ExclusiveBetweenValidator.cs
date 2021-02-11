@@ -18,46 +18,34 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Collections.Generic;
 
-	public class ExclusiveBetweenValidator<T,TProperty> : PropertyValidator<T,TProperty>, IBetweenValidator where TProperty : IComparable<TProperty>, IComparable {
+	/// <summary>
+	/// Performs range validation where the property value must be between the two specified values (exclusive).
+	/// </summary>
+	public class ExclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty> {
 
 		public override string Name => "ExclusiveBetweenValidator";
 
-		public ExclusiveBetweenValidator(TProperty from, TProperty to) {
-			To = to;
-			From = from;
-
-			if (to.CompareTo(from) == -1) {
-				throw new ArgumentOutOfRangeException(nameof(to), "To should be larger than from.");
-			}
+		public ExclusiveBetweenValidator(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
 		}
 
-
-		public TProperty From { get; }
-		public TProperty To { get; }
-
-		IComparable IBetweenValidator.From => From;
-		IComparable IBetweenValidator.To => To;
-
-		public override bool IsValid(ValidationContext<T> context, TProperty value) {
-			// If the value is null then we abort and assume success.
-			// This should not be a failure condition - only a NotNull/NotEmpty should cause a null to fail.
-			if (value == null) return true;
-
-			if (value.CompareTo(From) <= 0 || value.CompareTo(To) >= 0) {
-
-				context.MessageFormatter
-					.AppendArgument("From", From)
-					.AppendArgument("To", To)
-					.AppendArgument("Value", value);
-
-				return false;
-			}
-			return true;
+		protected override bool HasError(TProperty value) {
+			return Compare(value, From) <= 0 || Compare(value, To) >= 0;
 		}
+	}
 
-		protected override string GetDefaultMessageTemplate(string errorCode) {
-			return Localized(errorCode, Name);
+	public interface IBetweenValidator : IPropertyValidator {
+		object From { get; }
+		object To { get; }
+
+		public static ExclusiveBetweenValidator<T, TProperty> CreateExclusiveBetween<T,TProperty>(TProperty from, TProperty to)
+			where TProperty : IComparable<TProperty>, IComparable =>
+			new ExclusiveBetweenValidator<T, TProperty>(from, to, ComparableComparer<TProperty>.Instance);
+
+		public static InclusiveBetweenValidator<T, TProperty> CreateInclusiveBetween<T,TProperty>(TProperty from, TProperty to)
+			where TProperty : IComparable<TProperty>, IComparable {
+			return new InclusiveBetweenValidator<T, TProperty>(from, to, ComparableComparer<TProperty>.Instance);
 		}
 	}
 }
