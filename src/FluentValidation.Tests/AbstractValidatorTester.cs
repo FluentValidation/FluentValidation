@@ -332,6 +332,15 @@ namespace FluentValidation.Tests {
 			Assert.Contains(testMessage, result.Errors.Select(failure => failure.ErrorMessage));
 		}
 
+		[Fact]
+		public void PropertyName_With_Periods_Displays_Correctly_In_Messages() {
+			validator.RuleFor(x => x.Address.Line1).NotNull().WithMessage("{PropertyName}");
+
+			var validationResult = validator.Validate(new Person { Address = new Address() });
+
+			validationResult.Errors.First().ErrorMessage.ShouldEqual("Address Line1");
+		}
+
 		public static TheoryData<ValidationResult> PreValidationReturnValueTheoryData = new TheoryData<ValidationResult> {
 			new ValidationResult(),
 			new ValidationResult(new List<ValidationFailure> {new ValidationFailure(nameof(Person.AnotherInt), $"{nameof(Person.AnotherInt)} Test Message")})
