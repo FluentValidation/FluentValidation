@@ -39,11 +39,11 @@ namespace FluentValidation.Validators {
 		object From { get; }
 		object To { get; }
 
-		public static ExclusiveBetweenValidator<T, TProperty> CreateExclusiveBetweenValidatorForComparable<T,TProperty>(TProperty from, TProperty to)
+		public static ExclusiveBetweenValidator<T, TProperty> CreateExclusiveBetween<T,TProperty>(TProperty from, TProperty to)
 			where TProperty : IComparable<TProperty>, IComparable =>
 			new ExclusiveBetweenValidator<T, TProperty>(from, to, ComparableComparer<TProperty>.Instance);
 
-		public static InclusiveBetweenValidator<T, TProperty> CreateInclusiveBetweenValidatorForComparable<T,TProperty>(TProperty from, TProperty to)
+		public static InclusiveBetweenValidator<T, TProperty> CreateInclusiveBetween<T,TProperty>(TProperty from, TProperty to)
 			where TProperty : IComparable<TProperty>, IComparable {
 			return new InclusiveBetweenValidator<T, TProperty>(from, to, ComparableComparer<TProperty>.Instance);
 		}

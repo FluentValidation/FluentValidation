@@ -24,15 +24,14 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Validators;
 
-
 	public class ExclusiveBetweenValidatorTests {
-		DateTime fromDate;
-        DateTime toDate;
+		DateTime _fromDate;
+		DateTime _toDate;
 
-        public ExclusiveBetweenValidatorTests() {
+		public ExclusiveBetweenValidatorTests() {
 			CultureScope.SetDefaultCulture();
-			fromDate = new DateTime(2009, 1, 1);
-			toDate = new DateTime(2009, 12, 31);
+			_fromDate = new DateTime(2009, 1, 1);
+			_toDate = new DateTime(2009, 12, 31);
 		}
 
 		[Fact]
@@ -84,7 +83,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set() {
-			var propertyValidator = new ExclusiveBetweenValidator<Person, int>(1, 10);
+			var propertyValidator = IBetweenValidator.CreateExclusiveBetween<Person, int>(1, 10);
 			propertyValidator.From.ShouldEqual(1);
 			propertyValidator.To.ShouldEqual(10);
 		}
@@ -126,7 +125,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_strings() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new ExclusiveBetweenValidator<Person,string>("ccc", "aaa"));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => IBetweenValidator.CreateExclusiveBetween<Person, string>("ccc", "aaa"));
 		}
 
 		[Fact]
@@ -138,16 +137,16 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_strings() {
-			var validator = new ExclusiveBetweenValidator<Person,string>("a", "c");
+			var validator = IBetweenValidator.CreateExclusiveBetween<Person,string>("a", "c");
 			validator.From.ShouldEqual("a");
 			validator.To.ShouldEqual("c");
 		}
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_dates() {
-			var validator = new ExclusiveBetweenValidator<Person,DateTime>(fromDate, toDate);
-			validator.From.ShouldEqual(fromDate);
-			validator.To.ShouldEqual(toDate);
+			var validator = IBetweenValidator.CreateExclusiveBetween<Person, DateTime>(_fromDate, _toDate);
+			validator.From.ShouldEqual(_fromDate);
+			validator.To.ShouldEqual(_toDate);
 		}
 
 		[Fact]
