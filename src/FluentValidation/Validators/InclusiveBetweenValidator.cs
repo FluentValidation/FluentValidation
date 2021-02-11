@@ -18,16 +18,23 @@
 
 namespace FluentValidation.Validators {
 	using System;
+	using System.Collections.Generic;
 
-	public class InclusiveBetweenValidator<T, TProperty> : InclusiveBetweenValidatorWithComparer<T, TProperty> where TProperty : IComparable, IComparable<TProperty> {
-		public InclusiveBetweenValidator(TProperty from, TProperty to) : base(from, to, new ComparableComparer<TProperty>()) {
+	/// <summary>
+	/// Performs range validation where the property value must be between the two specified values (inclusive).
+	/// </summary>
+	public class InclusiveBetweenValidator<T, TProperty> : RangeValidator<T, TProperty>, IInclusiveBetweenValidator {
+
+		public override string Name => "InclusiveBetweenValidator";
+
+		public InclusiveBetweenValidator(TProperty from, TProperty to, IComparer<TProperty> comparer) : base(from, to, comparer) {
+		}
+
+		protected override bool HasError(TProperty value) {
+			return Compare(value, From) < 0 || Compare(value, To) > 0;
 		}
 	}
 
-	public interface IBetweenValidator : IPropertyValidator {
-		object From { get; }
-		object To { get; }
-	}
 
 	public interface IInclusiveBetweenValidator : IBetweenValidator { }
 }
