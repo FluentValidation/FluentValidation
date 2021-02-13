@@ -92,11 +92,11 @@ namespace FluentValidation.Internal {
 		}
 
 		/// <summary>
-		/// Splits pascal case, so "FooBar" would become "Foo Bar".  
+		/// Splits pascal case, so "FooBar" would become "Foo Bar".
 		/// </summary>
 		/// <remarks>
-		/// Pascal case strings with periods delimiting the upper case letters, 
-		/// such as "Address.Line1", will have the periods removed.  
+		/// Pascal case strings with periods delimiting the upper case letters,
+		/// such as "Address.Line1", will have the periods removed.
 		/// </remarks>
 		internal static string SplitPascalCase(this string input) {
 			if (string.IsNullOrEmpty(input))
@@ -144,6 +144,6 @@ namespace FluentValidation.Internal {
 			}
 			return languageManager.GetString(fallbackKey);
 		}
-
 	}
+
 }

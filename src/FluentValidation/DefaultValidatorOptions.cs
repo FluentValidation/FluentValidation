@@ -38,8 +38,7 @@ namespace FluentValidation {
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
 		public static IRuleBuilderInitial<T, TProperty> Configure<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, Action<IValidationRule<T, TProperty>> configurator) {
-			var rb = (RuleBuilder<T, TProperty>) ruleBuilder;
-			configurator(rb.Rule);
+			configurator(Configurable(ruleBuilder));
 			return ruleBuilder;
 		}
 
@@ -50,9 +49,8 @@ namespace FluentValidation {
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Configure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> ruleBuilder, Action<IValidationRule<T, TProperty>> configurator) {
-			var rb = (RuleBuilder<T, TProperty>) ruleBuilder;
-			configurator(rb.Rule);
-			return rb;
+			configurator(Configurable(ruleBuilder));
+			return ruleBuilder;
 		}
 
 		/// <summary>
@@ -62,9 +60,26 @@ namespace FluentValidation {
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
 		public static IRuleBuilderInitialCollection<T, TElement> Configure<T, TElement>(this IRuleBuilderInitialCollection<T, TElement> ruleBuilder, Action<ICollectionRule<T, TElement>> configurator) {
-			var rb = (RuleBuilder<T, TElement>) ruleBuilder;
-			configurator((ICollectionRule<T, TElement>) rb.Rule);
+			configurator(Configurable(ruleBuilder));
 			return ruleBuilder;
+		}
+
+		/// <summary>
+		/// Gets the configurable rule instance from a rule builder.
+		/// </summary>
+		/// <param name="ruleBuilder">The rule builder.</param>
+		/// <returns>A configurable IValidationRule instance.</returns>
+		public static IValidationRule<T, TProperty> Configurable<T, TProperty>(IRuleBuilder<T, TProperty> ruleBuilder) {
+			return ((RuleBuilder<T, TProperty>) ruleBuilder).Rule;
+		}
+
+		/// <summary>
+		/// Gets the configurable rule instance from a rule builder.
+		/// </summary>
+		/// <param name="ruleBuilder">The rule builder.</param>
+		/// <returns>A configurable IValidationRule instance.</returns>
+		public static ICollectionRule<T, TCollectionElement> Configurable<T, TCollectionElement>(IRuleBuilderInitialCollection<T, TCollectionElement> ruleBuilder) {
+			return (ICollectionRule<T, TCollectionElement>) ((RuleBuilder<T, TCollectionElement>) ruleBuilder).Rule;
 		}
 
 		/// <summary>
@@ -73,9 +88,8 @@ namespace FluentValidation {
 		/// If set to 'Continue' then all validators in the chain will execute regardless of failures.
 		/// </summary>
 		public static IRuleBuilderInitial<T, TProperty> Cascade<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, CascadeMode cascadeMode) {
-			return ruleBuilder.Configure(cfg => {
-				cfg.CascadeMode = cascadeMode;
-			});
+			Configurable(ruleBuilder).CascadeMode = cascadeMode;
+			return ruleBuilder;
 		}
 
 		/// <summary>
@@ -84,9 +98,8 @@ namespace FluentValidation {
 		/// If set to 'Continue' then all validators in the chain will execute regardless of failures.
 		/// </summary>
 		public static IRuleBuilderInitialCollection<T, TProperty> Cascade<T, TProperty>(this IRuleBuilderInitialCollection<T, TProperty> ruleBuilder, CascadeMode cascadeMode) {
-			return ruleBuilder.Configure(cfg => {
-				cfg.CascadeMode = cascadeMode;
-			});
+			Configurable(ruleBuilder).CascadeMode = cascadeMode;
+			return ruleBuilder;
 		}
 
 		/// <summary>
@@ -99,9 +112,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
 			if (onFailure == null) throw new ArgumentNullException(nameof(onFailure));
-			return rule.Configure(config => {
-				config.OnFailure = (x, failures) => onFailure((T)x);
-			});
+			Configurable(rule).OnFailure = (x, _) => onFailure(x);
+			return rule;
 		}
 
 		/// <summary>
@@ -114,9 +126,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, IEnumerable<ValidationFailure>> onFailure) {
 			if (onFailure == null) throw new ArgumentNullException(nameof(onFailure));
-			return rule.Configure(config => {
-				config.OnFailure = (x, failures) => onFailure((T)x, failures);
-			});
+			Configurable(rule).OnFailure = onFailure;
+			return rule;
 		}
 
 		/// <summary>
@@ -127,9 +138,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage) {
 			errorMessage.Guard("A message must be specified when calling WithMessage.", nameof(errorMessage));
-			return rule.Configure(config => {
-				config.Current.SetErrorMessage(errorMessage);
-			});
+			Configurable(rule).Current.SetErrorMessage(errorMessage);
+			return rule;
 		}
 
 		/// <summary>
@@ -140,11 +150,10 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
-			return rule.Configure(config => {
-				config.Current.SetErrorMessage((ctx, val) => {
-					return messageProvider(ctx == null ? default : ctx.InstanceToValidate);
-				});
+			Configurable(rule).Current.SetErrorMessage((ctx, val) => {
+				return messageProvider(ctx == null ? default : ctx.InstanceToValidate);
 			});
+			return rule;
 		}
 
 		/// <summary>
@@ -155,12 +164,10 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, string> messageProvider) {
 			messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
-
-			return rule.Configure(config => {
-				config.Current.SetErrorMessage((context, value) => {
-					return messageProvider(context == null ? default : context.InstanceToValidate, value);
-				});
+			Configurable(rule).Current.SetErrorMessage((context, value) => {
+				return messageProvider(context == null ? default : context.InstanceToValidate, value);
 			});
+			return rule;
 		}
 
 		/// <summary>
@@ -171,10 +178,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithErrorCode<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorCode) {
 			errorCode.Guard("A error code must be specified when calling WithErrorCode.", nameof(errorCode));
-
-			return rule.Configure(config => {
-				config.Current.ErrorCode = errorCode;
-			});
+			Configurable(rule).Current.ErrorCode = errorCode;
+			return rule;
 		}
 
 		/// <summary>
@@ -201,9 +206,8 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> When<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-			return rule.Configure(config => {
-				config.ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx)), applyConditionTo);
-			});
+			Configurable(rule).ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx)), applyConditionTo);
+			return rule;
 		}
 
 		/// <summary>
@@ -256,9 +260,8 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			predicate.Guard("A predicate must be specified when calling WhenAsync.", nameof(predicate));
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-			return rule.Configure(config => {
-				config.ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
-			});
+			Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
+			return rule;
 		}
 
 		/// <summary>
@@ -296,9 +299,8 @@ namespace FluentValidation {
 		public static IRuleBuilderInitialCollection<T, TCollectionElement> Where<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<TCollectionElement, bool> predicate) {
 			// This overload supports RuleFor().SetCollectionValidator() (which returns IRuleBuilderOptions<T, IEnumerable<TElement>>)
 			predicate.Guard("Cannot pass null to Where.", nameof(predicate));
-			return rule.Configure(cfg => {
-				cfg.Filter = predicate;
-			});
+			Configurable(rule).Filter = predicate;
+			return rule;
 		}
 
 		/// <summary>
@@ -309,9 +311,8 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string overridePropertyName) {
 			overridePropertyName.Guard("A property name must be specified when calling WithName.", nameof(overridePropertyName));
-			return rule.Configure(config => {
-				config.SetDisplayName(overridePropertyName);
-			});
+			Configurable(rule).SetDisplayName(overridePropertyName);
+			return rule;
 		}
 
 		/// <summary>
@@ -322,15 +323,14 @@ namespace FluentValidation {
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> nameProvider) {
 			nameProvider.Guard("A nameProvider WithName.", nameof(nameProvider));
-			return rule.Configure(config => {
-				// Must use null propagation here.
-				// The MVC clientside validation will try and retrieve the name, but won't
-				// be able to to so if we've used this overload of WithName.
-				config.SetDisplayName((context => {
-					T instance = context == null ? default : context.InstanceToValidate;
-					return nameProvider(instance);
-				}));
-			});
+			// Must use null propagation here.
+			// The MVC clientside validation will try and retrieve the name, but won't
+			// be able to to so if we've used this overload of WithName.
+			Configurable(rule).SetDisplayName((context => {
+				T instance = context == null ? default : context.InstanceToValidate;
+				return nameProvider(instance);
+			}));
+			return rule;
 		}
 
 		/// <summary>
@@ -343,7 +343,8 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string propertyName) {
 			// Allow string.Empty as this could be a model-level rule.
 			if (propertyName == null) throw new ArgumentNullException(nameof(propertyName), "A property name must be specified when calling OverridePropertyName.");
-			return rule.Configure(config => config.PropertyName = propertyName);
+			Configurable(rule).PropertyName = propertyName;
+			return rule;
 		}
 
 		/// <summary>
@@ -371,7 +372,8 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 			stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
 			var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, _) => stateProvider(ctx.InstanceToValidate));
-			return rule.Configure(config => config.Current.CustomStateProvider = wrapper);
+			Configurable(rule).Current.CustomStateProvider = wrapper;
+			return rule;
 		}
 
 		/// <summary>
@@ -389,7 +391,8 @@ namespace FluentValidation {
 				return stateProvider(ctx.InstanceToValidate, val);
 			});
 
-			return rule.Configure(config => config.Current.CustomStateProvider = wrapper);
+			Configurable(rule).Current.CustomStateProvider = wrapper;
+			return rule;
 		}
 
 		///<summary>
@@ -401,7 +404,8 @@ namespace FluentValidation {
 		/// <param name="severity"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Severity severity) {
-			return rule.Configure(config => config.Current.SeverityProvider = (_, _) => severity);
+			Configurable(rule).Current.SeverityProvider = (_, _) => severity;
+			return rule;
 		}
 
 		/// <summary>
@@ -419,7 +423,8 @@ namespace FluentValidation {
 				return severityProvider(ctx.InstanceToValidate);
 			}
 
-			return rule.Configure(config => config.Current.SeverityProvider = SeverityProvider);
+			Configurable(rule).Current.SeverityProvider = SeverityProvider;
+			return rule;
 		}
 
 		/// <summary>
@@ -437,7 +442,8 @@ namespace FluentValidation {
 				return severityProvider(ctx.InstanceToValidate, value);
 			}
 
-			return rule.Configure(config => config.Current.SeverityProvider = SeverityProvider);
+			Configurable(rule).Current.SeverityProvider = SeverityProvider;
+			return rule;
 		}
 
 		/// <summary>
@@ -449,9 +455,8 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
-			return rule.Configure(config => {
-				config.Current.OnFailure = (instance, _, _, _) => onFailure((T)instance);
-			});
+			Configurable(rule).Current.OnFailure = (instance, _, _, _) => onFailure(instance);
+			return rule;
 		}
 
 		/// <summary>
@@ -463,9 +468,8 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, ValidationContext<T>, TProperty> onFailure) {
-			return rule.Configure(config => {
-				config.Current.OnFailure = (instance, context, val, _) => onFailure(instance, context, val);
-			});
+			Configurable(rule).Current.OnFailure = (instance, context, val, _) => onFailure(instance, context, val);
+			return rule;
 		}
 
 		/// <summary>
@@ -477,9 +481,8 @@ namespace FluentValidation {
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, ValidationContext<T>, TProperty, string> onFailure) {
-			return rule.Configure(config => {
-				config.Current.OnFailure = (instance, context, val, msg) => onFailure(instance, context, val, msg);
-			});
+			Configurable(rule).Current.OnFailure = onFailure;
+			return rule;
 		}
 
 		/// <summary>
@@ -491,9 +494,8 @@ namespace FluentValidation {
 		public static IRuleBuilderInitialCollection<T, TCollectionElement> OverrideIndexer<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<T, IEnumerable<TCollectionElement>, TCollectionElement, int, string> callback) {
 			// This overload supports RuleFor().SetCollectionValidator() (which returns IRuleBuilderOptions<T, IEnumerable<TElement>>)
 			callback.Guard("Cannot pass null to OverrideIndexer.", nameof(callback));
-			return rule.Configure(cfg => {
-				cfg.IndexBuilder = (x, collection, element, index) => callback((T)x, (IEnumerable<TCollectionElement>)collection, (TCollectionElement)element, index);
-			});
+			Configurable(rule).IndexBuilder = callback;
+			return rule;
 		}
 	}
 }
