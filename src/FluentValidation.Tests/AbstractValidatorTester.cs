@@ -341,6 +341,17 @@ namespace FluentValidation.Tests {
 			validationResult.Errors.First().ErrorMessage.ShouldEqual("Address Line1");
 		}
 
+		[Fact]
+		public void Message_arguments_should_be_updated_on_failure_instances() {
+			validator.RuleFor(x => x.Surname).NotEmpty();
+			validator.RuleFor(x => x.Forename).NotEmpty();
+
+			// Failure instances should have different placeholders
+			var result = validator.Validate(new Person());
+			result.Errors[0].FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Surname");
+			result.Errors[1].FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Forename");
+		}
+
 		public static TheoryData<ValidationResult> PreValidationReturnValueTheoryData = new TheoryData<ValidationResult> {
 			new ValidationResult(),
 			new ValidationResult(new List<ValidationFailure> {new ValidationFailure(nameof(Person.AnotherInt), $"{nameof(Person.AnotherInt)} Test Message")})
