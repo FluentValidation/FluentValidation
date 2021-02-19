@@ -56,7 +56,7 @@ namespace FluentValidation.AspNetCore {
 				message = cfg.LanguageManager.GetString("InclusiveBetween_Simple");
 			}
 
-			if (message.Contains("{Value}")) {
+			if (message.Contains("{PropertyValue}")) {
 				message = cfg.LanguageManager.GetString("InclusiveBetween_Simple");
 			}
 			message = formatter.BuildMessage(message);
