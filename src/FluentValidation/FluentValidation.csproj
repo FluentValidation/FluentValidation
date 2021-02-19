@@ -3,90 +3,10 @@
     <TargetFrameworks>netstandard2.1;net5.0</TargetFrameworks>
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
     <PackageReleaseNotes>
-FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
+      FluentValidation 10 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-10.html
 
-Changes in 9.5.1:
-* Fix incorrect wording in deprecation message for Transform
-* Fix ScalePrecision validator being available in intellisense for non-decimal properties.
-* Expose additional overload of Transform that receives the root object in the transformer.
-
-Changes in 9.5.0:
-* Introduce new syntax for applying transformations and deprecate the old syntax
-
-Changes in 9.4.0:
-* ChildRules now work as expected when inside a ruleset
-* Added ImplicitlyValidateRootCollectionElements option to MVC integration
-
-Changes in 9.3.0:
-* Improvements to LanguageManager's lazy loading of resources.
-* Deprecate IStringSource and its implementors. Use delegates instead.
-* CustomizeValidatorAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)
-* RuleSetForClientSideMessagesAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)
-* Fixes to Spanish language translations.
-
-Changes in 9.2.2:
-* Fix one of the inheritance validator overloads not working correctly.
-
-Changes in 9.2.1:
-* Add non-generic Add method to inheritance validator.
-* Updates to Persian translations.
-* Added Bengali translations.
-
-Changes in 9.2.0:
-* Add inheritance validator
-* Performance improvements
-
-Changes in 9.1.3:
-* Fix an issue with IncludeRulesNotInRuleSet not working correctly
-
-Changes in 9.1.2:
-* Make the ValidationContext.ThrowOnFailures getter public.
-
-Changes in 9.1.1:
-* Fix an incorrect deprecation message.
-
-Changes in 9.1:
-* Make ruleset separator character splitting consistent
-* Transform now works with RuleForEach
-* Introduce constants for rulesets
-* Resolve issue when attempting to use asynchronous conditions in a synchornous validaiton run
-* Added asynchronous versions of the TestHelper methods.
-* Introduce CascadeMode.Stop and deprecate CascadeMode.StopOnFirstFailure to resolve confusion/abiguity about setting the cascade mode at validator-level (#1437)
-* RaiseValidationException can be overridden to customize the exception throwing process
-* Add new Validate extension methods that allow options to be configured using a strategy
-
-Changes in 9.0.0:
-* Removed support for netstandard1.1 and netstandard1.6
-* Removed support for end-of-life .NET Core versions (2.2 and 3.0). LTS versions are supported (2.1 and 3.1)
-* Default email validation mode now uses the same logic as ASP.NET Core. Previous regex behaviour is opt-in.
-* TestHelper advanced mode now has more features (see https://docs.fluentvalidation.net/en/latest/testing.html#advanced-test-extensions)
-* Equal/NotEqual now perform ordinal comparison when used with string properties
-* Severity can now be set dynamically with a callback
-* Removed WithLocalizedMessage (WithMessage that takes a callback is the replacement)
-* Removed ResourceName from ValidationFailure
-* Removed ResourceName and ResourceType from IStringSource.
-* Removed SetCollectionValidator which was deprecated in 8.0
-* Additional overload of OnAnyFailure that can receive a collection of validation failures
-* Remove DisplayAttribute integration and reference to DataAnnotations.
-* ComparisonProperty placeholder is now formatted like PropertyName
-* Translations of default error messages into other languages are now lazily-loaded
-* Added Slovenian translations of default error messages.
-* Added Icelandic translations of default error messages.
-* Added WithMessageArgument to the test helpers.
-* Add additional overload of SetValidator that takes a Func that receives the current property value.
-* ASP.NET Core: FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
-* Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
-* SourceLink integration.
-* {CollectionIndex} placeholder can now be accessed in child validators.
-* Additional ValidationException constructor that allows using both the default message and a custom one together.
-* ScalePrecisionValidator algorithm now matches SQL Server.
-* Additional overload of the When methods that contain the validation context.
-* Automatically scanned types can be excluded when calling RegisterValidatorsFromAssemblyContaining in ASP.NET Core projects.
-* New AutomaticValidationEnabled property for use in ASP.NET Core projects (defaults to true).
-
-Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
-		</PackageReleaseNotes>
-    <!-- Signing is only performed as part of the release build -->
+      Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
+    </PackageReleaseNotes>
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.xml</DocumentationFile>

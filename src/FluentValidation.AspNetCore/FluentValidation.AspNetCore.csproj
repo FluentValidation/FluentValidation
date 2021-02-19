@@ -6,71 +6,10 @@
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
     <PackageReleaseNotes>
-Changes in 9.4.0:
-* Added ImplicitlyValidateRootCollectionElements option to MVC integration
+      FluentValidation 10 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-10.html
 
-Changes in 9.3.0:
-* Support for .net 5
-* CustomizeValidatorAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)
-* RuleSetForClientSideMessagesAttribute now works in Razor pages (netcore 3.1 and net 5.0 only)
-
-Changes in 9.0.0:
-* Compatibility with FluentValidation 9.0
-* FluentValidationModelValidatorProvider and FluentValidationModelValidator are now public.
-* Work around a bug in ASP.NET Core's integration testing components that can cause ConfigureServices to run multiple times.
-* Automatically scanned types can be excluded when calling RegisterValidatorsFromAssemblyContaining in ASP.NET Core projects.
-* New AutomaticValidationEnabled property for use in ASP.NET Core projects (defaults to true).
-* SourceLink integration
-* Dropped support for end-of-life .NET Core versions (2.2 and 3.0). LTS versions are supported (2.1 and 3.1)
-
-Changes in 8.6.0:
-* Add support for ASP.NET Core 3.1
-* AddToModelState no longer includes a dot if PropertyName is null
-
-Changes in 8.5.1:
-* Ensure lazily loaded calls to WithMessage can be used for client-side validation, provided they don't attempt to access model properties from inside the delegate (eg when using IStringLocalizer).
-
-Changes in 8.5.0:
-* Compatibility with ASP.NET Core 3.
-
-Changes in 8.4.0:
-* Added simplified version of several messages across all translations to aid with ASP.NET Clientside validation.
-
-Changes in 8.3.0:
-* Fix issue in ASP.NET Core integration with GetServiceProvider not working correctly when invoked against a CustomContext/MessageBuilderContext.
-
-Changes in 8.2.1:
-* Resolved issue using InjectValidator with RuleForEach.
-* Add support for a default IValidatorInterceptor to be registered with the Service Provider.
-
-Changes in 8.2.0:
-* Add extensions for injecting child validators using the ASP.NET Core Service Provider.
-
-Changes in 8.1.3:
-* Resolved issue where clientside validation was incorrectly generating metadata for rules with shared conditions.
-
-Changes in 7.6.103:
-* Support for validating controller and Razor properties annotated [BindProperty].
-
-Changes in 7.6:
-* Updates to support ASP.NET Core 2.1
-
-Changes in 7.5:
-* Better handling of clientside messages when using custom overriden language resources
-* Added flag in the ValidationContext's RootDataContext when a validator is invoked by the automatic MVC/WebApi integration
-
-Changes in 7.4:
-* Added SetRulesetForClientsideMessages method as an alternative to using the RulesetForClientSideMessagesAttribute
-* Updated MVC dependency to version 2.0.2
-
-Changes in 7.3:
-* Added support for validating collections when using the automatic MVC integration
-* Added support for implicat validation of child properties when using the automatic MVC integration
-* Added Skip property to the CustomizeValidatorAttribute to opt-out of validating certain properties
-
-Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
+      Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
     </PackageReleaseNotes>
-    <!-- Signing is only performed as part of the release build -->
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.AspNetCore.xml</DocumentationFile>
