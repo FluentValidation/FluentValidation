@@ -46,8 +46,8 @@ namespace FluentValidation.Resources {
 			"EnumValidator" => "'{PropertyValue}' komt niet voor in het bereik van '{PropertyName}'.",
 			"CreditCardValidator" => "'{PropertyName}' is geen geldig credit card nummer.",
 			"EmptyValidator" => "'{PropertyName}' hoort leeg te zijn.",
-			"ExclusiveBetweenValidator" => "'{PropertyName}' moet na {From} komen en voor {To} liggen. Je hebt ingevuld {Value}.",
-			"InclusiveBetweenValidator" => "'{PropertyName}' moet tussen {From} en {To} liggen. Je hebt ingevuld {Value}.",
+			"ExclusiveBetweenValidator" => "'{PropertyName}' moet na {From} komen en voor {To} liggen. Je hebt ingevuld {PropertyValue}.",
+			"InclusiveBetweenValidator" => "'{PropertyName}' moet tussen {From} en {To} liggen. Je hebt ingevuld {PropertyValue}.",
 			"ScalePrecisionValidator" => "'{PropertyName}' mag in totaal niet meer dan {ExpectedPrecision} decimalen nauwkeurig zijn, met een grootte van {ExpectedScale} gehele getallen. Er zijn {Digits} decimalen en een grootte van {ActualScale} gehele getallen gevonden.",
 			"NullValidator" => "'{PropertyName}' moet leeg zijn.",
 			// Additional fallback messages used by clientside validation integration.

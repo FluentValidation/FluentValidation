@@ -55,8 +55,7 @@ namespace FluentValidation.Validators {
 
 				context.MessageFormatter
 					.AppendArgument("From", From)
-					.AppendArgument("To", To)
-					.AppendArgument("Value", value);
+					.AppendArgument("To", To);
 
 				return false;
 			}
