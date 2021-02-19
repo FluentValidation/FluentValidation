@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>9.5.1</VersionPrefix>
+    <VersionPrefix>10.0.0-preview1</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <!-- Use CI build number as version suffix (if defined) -->
     <!--<VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)'!=''">ci-$(GITHUB_RUN_NUMBER)</VersionSuffix>-->
