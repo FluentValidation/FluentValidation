@@ -1,12 +1,16 @@
 10.0.0 -
+Please review the upgrade guide for 10.0: https://docs.fluentvalidation.net/en/latest/upgrading-to-10.html
 Performance improvements.
 Collection rules now only iterate the collection once.
 Property validators are now generic.
 Internal API now uses generics.
 Deprecated non-generic PropertyValidator.
+Various property validator options have been seperated into RuleComponents.
 Various parts of the internal API are now internal (PropertyRule, CollectionPropertyRule etc).
+ValidatorDescriptor now returns rule components in various places.
 Default service lifetime is now Scoped rather than Transient.
 Combine IActionContextValidatorInterceptor and IValidatorInterceptor.
+Changes to the ASP.NET Client Validator Adaptor interfaces. These now receive the rule component.
 Removed deprecated IStringSource and its inheritors.
 Removed deprecated FormattedMessageArguments from ValidationFailure.
 Removed other deprecated code.
