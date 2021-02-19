@@ -15,7 +15,7 @@
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
-namespace FluentValidation.AspNetCore {
+namespace FluentValidation {
 	using System;
 
 	/// <summary>
