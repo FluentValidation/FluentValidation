@@ -8,9 +8,9 @@ The main goals for this release were to improve performance and type safety. To 
 
 ### Supported Platforms.
 
-FluentValidation supports .NET Core 3.1, .NET 5 and Netstandard 2.1
+FluentValidation 10 supports .NET Core 3.1, .NET 5 and .NET Standard 2.1
 
-If you need support for classic .NET Framework 4.x, .NET Core 2.1 or Netstandard 2.0 you should not use FluentValidation 10, and should continue to use a 9.x release.
+If you need support for classic .NET Framework 4.x, .NET Core 2.1 or .NET Standard 2.0 you should not upgrade to FluentValidation 10, and should continue to use a 9.x release.
 
 ### Custom Property Validators
 
