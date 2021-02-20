@@ -41,11 +41,8 @@ jobs:
       env:
         DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
 
-    - name: Create test report
-      if: failure()
-      uses: dorny/test-reporter@v1
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
       with:
-        name: Test results (${{ matrix.os }})
+        name: test-results-${{ matrix.os }}
         path: src/**/TestResults/*.trx
-        reporter: dotnet-trx
-        list-tests: failed
