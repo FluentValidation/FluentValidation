@@ -59,7 +59,7 @@ RuleFor(customer => customer.Surname).NotEqual("Foo", StringComparer.OrdinalIgno
 If you are using FluentValidation 8.x (or older), you can force an ordinal comparison by using
 
 ```csharp
-RuleFor(customer => customre.Surname).NotEqual("Foo", StringComparer.Ordinal);
+RuleFor(customer => customer.Surname).NotEqual("Foo", StringComparer.Ordinal);
 ```
 If you are using FluentValidation 9 (or newer), ordinal will be the default behaviour. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.
 
@@ -92,7 +92,7 @@ RuleFor(customer => customer.Surname).Equal("Foo", StringComparer.OrdinalIgnoreC
 If you are using FluentValidation 8.x (or older), you can force an ordinal comparison by using
 
 ```csharp
-RuleFor(customer => customre.Surname).Equal("Foo", StringComparer.Ordinal);
+RuleFor(customer => customer.Surname).Equal("Foo", StringComparer.Ordinal);
 ```
 
 If you are using FluentValidation 9 (or newer), ordinal will be the default behaviour. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.

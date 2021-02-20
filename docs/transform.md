@@ -26,7 +26,7 @@ This syntax is available in FluentValidation 9.5 and newer.
 There is also a `TransformForEach` method available, which performs the transformation against each item in a collection.
 
 
-# Transforming Values (9.0 - 9.4)
+## Transforming Values (9.0 - 9.4)
 
 Prior to FluentValidation 9.5, you can use the `Transform` method after a call to `RuleFor` to achieve the same result.
 
