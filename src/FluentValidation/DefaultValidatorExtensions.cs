@@ -1004,7 +1004,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(IBetweenValidator.CreateInclusiveBetween<T,TProperty>(from, to));
+			return ruleBuilder.SetValidator(RangeValidatorFactory.CreateInclusiveBetween<T,TProperty>(from, to));
 		}
 		/// <summary>
 		/// Defines an 'inclusive between' validator on the current rule builder.
@@ -1031,7 +1031,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty?> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty from, TProperty to) where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(IBetweenValidator.CreateInclusiveBetween<T, TProperty>(from, to));
+			return ruleBuilder.SetValidator(RangeValidatorFactory.CreateInclusiveBetween<T, TProperty>(from, to));
 		}
 
 		/// <summary>
@@ -1045,7 +1045,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(IBetweenValidator.CreateExclusiveBetween<T,TProperty>(from, to));
+			return ruleBuilder.SetValidator(RangeValidatorFactory.CreateExclusiveBetween<T,TProperty>(from, to));
 		}
 
 		/// <summary>
@@ -1074,7 +1074,7 @@ namespace FluentValidation {
 		/// <param name="to">The highest allowed value</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty?> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty from, TProperty to) where TProperty : struct, IComparable<TProperty>, IComparable {
-			return ruleBuilder.SetValidator(IBetweenValidator.CreateExclusiveBetween<T, TProperty>(from, to));
+			return ruleBuilder.SetValidator(RangeValidatorFactory.CreateExclusiveBetween<T, TProperty>(from, to));
 		}
 
 		/// <summary>

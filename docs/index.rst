@@ -12,11 +12,9 @@ FluentValidation 10 supports the following platforms:
 
 * .NET Core 3.1
 * .NET 5
-* `.NET Standard 2.1 <https://docs.microsoft.com/en-us/dotnet/standard/net-standard>`_
+* `.NET Standard 2.0 <https://docs.microsoft.com/en-us/dotnet/standard/net-standard>`_
 
 For automatic validation with ASP.NET, FluentValidation supports ASP.NET running on .NET Core 3.1 or .NET 5
-
-If you need to run on older platforms (.NET 4.x, .NET Core 2.1 or .NET Standard 2.0) then you should use the older FluentValidation 9.x releases.
 
 If you're new to using FluentValidation, check out the :doc:`start` page.
 

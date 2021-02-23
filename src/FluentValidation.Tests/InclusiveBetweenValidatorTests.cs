@@ -85,7 +85,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set() {
-			var validator = IBetweenValidator.CreateInclusiveBetween<Person ,int>(1, 10);
+			var validator = RangeValidatorFactory.CreateInclusiveBetween<Person ,int>(1, 10);
 			validator.From.ShouldEqual(1);
 			validator.To.ShouldEqual(10);
 		}
@@ -127,7 +127,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_strings() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => IBetweenValidator.CreateInclusiveBetween<Person, string>("ccc", "aaa"));
+			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => RangeValidatorFactory.CreateInclusiveBetween<Person, string>("ccc", "aaa"));
 		}
 
 		[Fact]
@@ -139,7 +139,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void To_and_from_properties_should_be_set_for_strings() {
-			var validator = IBetweenValidator.CreateInclusiveBetween<Person, string>("a", "c");
+			var validator = RangeValidatorFactory.CreateInclusiveBetween<Person, string>("a", "c");
 			validator.From.ShouldEqual("a");
 			validator.To.ShouldEqual("c");
 		}

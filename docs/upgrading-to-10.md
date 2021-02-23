@@ -6,12 +6,6 @@ FluentValidation 10.0 is a major release that included several breaking changes.
 
 The main goals for this release were to improve performance and type safety. To achieve this we have introduced generics throughout FluentValidation's internal model. If you have written custom property validators, or made use of the internal API then you will need to update your code. Users of the public-facing API and fluent interface will be largely unaffected.
 
-### Supported Platforms.
-
-FluentValidation 10 supports .NET Core 3.1, .NET 5 and .NET Standard 2.1
-
-If you need support for classic .NET Framework 4.x, .NET Core 2.1 or .NET Standard 2.0 you should not upgrade to FluentValidation 10, and should continue to use a 9.x release.
-
 ### Custom Property Validators
 
 Custom property validators are now generic, and inherit from either `PropertyValidator<T,TProperty>` or `AsyncPropertyValidator<T,TProperty>`. Property validators that inherit from the old non-generic `PropertyValidator` class will continue to work for now, but you will receive a deprecation warning. We recommend migrating to the new generic classes for better performance and support going forward. The non-generic version will be removed in FluentValidation 11.

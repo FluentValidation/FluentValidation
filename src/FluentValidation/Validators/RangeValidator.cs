@@ -70,4 +70,15 @@ namespace FluentValidation.Validators {
 			return Localized(errorCode, Name);
 		}
 	}
+
+	public static class RangeValidatorFactory {
+		public static ExclusiveBetweenValidator<T, TProperty> CreateExclusiveBetween<T,TProperty>(TProperty from, TProperty to)
+			where TProperty : IComparable<TProperty>, IComparable =>
+			new ExclusiveBetweenValidator<T, TProperty>(from, to, ComparableComparer<TProperty>.Instance);
+
+		public static InclusiveBetweenValidator<T, TProperty> CreateInclusiveBetween<T,TProperty>(TProperty from, TProperty to)
+			where TProperty : IComparable<TProperty>, IComparable {
+			return new InclusiveBetweenValidator<T, TProperty>(from, to, ComparableComparer<TProperty>.Instance);
+		}
+	}
 }
