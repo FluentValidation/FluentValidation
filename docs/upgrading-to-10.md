@@ -90,7 +90,7 @@ The `RuleFor`, `RuleForEach`, `Transform`, and `TransformForEach` methods as wel
 
 ### Transform syntax changes
 
-The old `Transform` syntax has been removed. See [https://docs.fluentvalidation.net/en/latest/transform.html]
+The old `Transform` syntax has been removed. See [https://docs.fluentvalidation.net/en/latest/transform.html](transform)
 
 ### DI changes
 
