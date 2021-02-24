@@ -8,10 +8,10 @@ The main goals for this release were to improve performance and type safety. To 
 
 ### Custom Property Validators
 
-Custom property validators are now generic, and inherit from either `PropertyValidator<T,TProperty>` or `AsyncPropertyValidator<T,TProperty>`. Property validators that inherit from the old non-generic `PropertyValidator` class will continue to work for now, but you will receive a deprecation warning. We recommend migrating to the new generic classes for better performance and support going forward. The non-generic version will be removed in FluentValidation 11.
+Custom property validators are now generic, and inherit from either `PropertyValidator<T,TProperty>` or `AsyncPropertyValidator<T,TProperty>`. Property validators that inherit from the old non-generic `PropertyValidator` class will continue to work for now, but you will receive a deprecation warning. We recommend migrating to the new generic classes for better performance and support going forward. The non-generic version will be removed in FluentValidation 11. If you currently inherit from `AsyncValidatorBase` then you'll need to migrate as part of upgrading to 10.0
 
 The following changes should be made in order to migrate:
-- The class should inherit from `PropertyValidator<T,TProperty>`
+- The class should inherit from `PropertyValidator<T,TProperty>` (or `AsyncPropertyValidator<T,TProperty>`)
 - The method signature for `IsValid` should be updated
 - The method signature for `GetDefaultMessageTemplate` should be updated
 - The `Name` property should be overridden.
@@ -66,8 +66,8 @@ foreach (IPropertyValidator propertyValidator in rule.Validators) {
 
 // After:
 IValidationRule rule = ...;
-foreach (IRuleComponent component in rule.Validators) {
-  IPropertyValiator propertyValidator
+foreach (IRuleComponent component in rule.Componetnts) {
+  IPropertyValiator propertyValidator = component.Validator;
 }
 ```
 
