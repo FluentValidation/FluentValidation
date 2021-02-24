@@ -100,8 +100,6 @@ Example
   :caption: ASP.NET Integration
 
   aspnet
-  mvc5
-  webapi
   blazor
 
 .. _advanced-docs:
