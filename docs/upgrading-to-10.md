@@ -48,7 +48,7 @@ public class NotNullValidator<T,TProperty> : PropertyValidator<T, TProperty>
 
 ### Changes to property validator metadata
 
-In previous versions of FluentValidation, a property validator's configuration and the proprety validator itself were part of the same class (`PropertyValidator`). In FluentValidation 10, these are now separate. The validator itself that performs the work is either an `IPropertyValidator<T,TProperty>` or an `IAsyncPropertyValidator<T,TProperty>` and their configuration is exposed via a `RuleComponent`. Note there is still a non-generic `IPropertyValidator` interface available implemented by both `IPropertyValidator<T,TProperty>` and `IAsyncPropertyValidator<T,TProperty>` but it has fewer properties available.
+In previous versions of FluentValidation, a property validator's configuration and the property validator itself were part of the same class (`PropertyValidator`). In FluentValidation 10, these are now separate. The validator itself that performs the work is either an `IPropertyValidator<T,TProperty>` or an `IAsyncPropertyValidator<T,TProperty>` and their configuration is exposed via a `RuleComponent`. Note there is still a non-generic `IPropertyValidator` interface available implemented by both `IPropertyValidator<T,TProperty>` and `IAsyncPropertyValidator<T,TProperty>` but it has fewer properties available.
 
 Various methods and properties that previously returned an `IPropertyValidator` now return a tuple of `(IPropertyValidator Validator, IRuleComponent Options)` where previously they returned an `IPropertyValidator`:
 
