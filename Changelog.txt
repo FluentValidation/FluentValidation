@@ -15,6 +15,10 @@ Removed deprecated IStringSource and its inheritors.
 Removed deprecated FormattedMessageArguments from ValidationFailure.
 Removed other deprecated code.
 
+9.5.2 - 
+Fix Dutch translation of some errors (#1653)
+Fix string equality comparison in WithCustomState extension (#1658)
+
 9.5.1 - 11 February 2021
 Fix incorrect wording in deprecation message for Transform (#1613)
 Fix ScalePrecision validator being available in intellisense for non-decimal properties.
