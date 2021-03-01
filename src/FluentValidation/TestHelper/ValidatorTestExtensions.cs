@@ -19,6 +19,7 @@
 #pragma warning disable 1591
 namespace FluentValidation.TestHelper {
 	using System;
+	using System.Collections;
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Linq.Expressions;
@@ -278,8 +279,8 @@ namespace FluentValidation.TestHelper {
 			return failures.When(failure => failure.Severity == expectedSeverity, string.Format("Expected a severity of '{0}'. Actual severity was '{{Severity}}'", expectedSeverity));
 		}
 
-		public static IEnumerable<ValidationFailure> WithCustomState(this IEnumerable<ValidationFailure> failures, object expectedCustomState) {
-			return failures.When(failure => failure.CustomState == expectedCustomState, string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
+		public static IEnumerable<ValidationFailure> WithCustomState(this IEnumerable<ValidationFailure> failures, object expectedCustomState, IEqualityComparer comparer = null) {
+			return failures.When(failure => comparer?.Equals(failure.CustomState, expectedCustomState) ?? Equals(failure.CustomState, expectedCustomState), string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
 		}
 
     public static IEnumerable<ValidationFailure> WithMessageArgument<T>(this IEnumerable<ValidationFailure> failures, string argumentKey, T argumentValue) {

@@ -435,6 +435,40 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Test_custom_state_with_concatenated_string() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).NotNull().WithState(x => "Test" + 123);
+			var result = validator.TestValidate(new Person());
+
+			// String concatenated with integer means a different string reference is created:
+			/*
+				object s1 = "Test" + 123.ToString();
+				object s2 = "Test123";
+				bool check1 = s1 == s2; // False
+			 */
+			// Test to ensure that this scenario is handled properly.
+			result.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithCustomState("Test123");
+		}
+
+		[Fact]
+		public void Custom_state_comparer_check() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).NotNull().WithState(x => "Test" + 123);
+			var result = validator.TestValidate(new Person());
+
+			// Throws without comparer.
+			Assert.Throws<ValidationTestException>(() => {
+				result.ShouldHaveValidationErrorFor(x => x.Surname)
+					.WithCustomState("test123");
+			});
+
+			// Doesn't throw with comparer.
+			result.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithCustomState("test123", StringComparer.OrdinalIgnoreCase);
+		}
+
+		[Fact]
 		public void Expected_error_code_check() {
 			bool exceptionCaught = false;
 

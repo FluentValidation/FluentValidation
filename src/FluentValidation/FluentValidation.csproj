@@ -5,6 +5,10 @@
     <PackageReleaseNotes>
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
+Changes in 9.5.2:
+* Fix Dutch translation of some errors (#1653)
+* Fix string equality comparison in WithCustomState extension (#1658)
+
 Changes in 9.5.1:
 * Fix incorrect wording in deprecation message for Transform
 * Fix ScalePrecision validator being available in intellisense for non-decimal properties.
