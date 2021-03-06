@@ -41,6 +41,23 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().ErrorMessage.ShouldEqual("A value is required for Forename.");
 		}
 
+		[Fact]
+		public void Gets_validator_from_metadata() {
+			var validator = new InlineValidator<Person>();
+			var legacyPropertyValidator = new LegacyNotNullValidator();
+			validator.RuleFor(x => x.Forename).SetValidator(legacyPropertyValidator);
+			validator.Single().Components.Single().Validator.ShouldBeTheSameAs(legacyPropertyValidator);
+		}
+
+		[Fact]
+		public void Gets_validator_from_metadata_nullable_struct() {
+			var validator = new InlineValidator<Person>();
+			var legacyPropertyValidator = new LegacyNotNullValidator();
+			validator.RuleFor(x => x.NullableInt).SetValidator(legacyPropertyValidator);
+			validator.Single().Components.Single().Validator.ShouldBeTheSameAs(legacyPropertyValidator);
+		}
+
+
 		public class LegacyNotNullValidator : PropertyValidator {
 
 			protected override bool IsValid(PropertyValidatorContext context) {

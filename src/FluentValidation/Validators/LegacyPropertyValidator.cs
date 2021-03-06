@@ -26,7 +26,12 @@ namespace FluentValidation.Validators {
 	using Internal;
 
 #pragma warning disable 618
-	internal class LegacyValidatorAdaptor<T, TProperty> : IPropertyValidator<T, TProperty>, IAsyncPropertyValidator<T, TProperty> {
+
+	internal interface ILegacyValidatorAdaptor {
+		IPropertyValidator UnderlyingValidator { get; }
+	}
+
+	internal class LegacyValidatorAdaptor<T, TProperty> : IPropertyValidator<T, TProperty>, IAsyncPropertyValidator<T, TProperty>, ILegacyValidatorAdaptor {
 
 		private PropertyValidator _inner;
 
@@ -48,6 +53,8 @@ namespace FluentValidation.Validators {
 
 		public string GetDefaultMessageTemplate(string errorCode)
 			=> ((IPropertyValidator) _inner).GetDefaultMessageTemplate(errorCode);
+
+		public IPropertyValidator UnderlyingValidator => _inner;
 	}
 
 	[Obsolete("The PropertyValidator class is deprecated and will be removed in FluentValidation 11. Please migrate to the generic PropertyValidator<T,TProperty> class.")]

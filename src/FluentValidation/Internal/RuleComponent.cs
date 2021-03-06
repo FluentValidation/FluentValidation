@@ -57,8 +57,14 @@ namespace FluentValidation.Internal {
 		public bool HasAsyncCondition => _asyncCondition != null;
 
 		/// <inheritdoc />
-		public virtual IPropertyValidator Validator
-			=> (IPropertyValidator) _propertyValidator ?? _asyncPropertyValidator;
+		public virtual IPropertyValidator Validator {
+			get {
+				if (_propertyValidator is ILegacyValidatorAdaptor l) {
+					return l.UnderlyingValidator;
+				}
+				return (IPropertyValidator) _propertyValidator ?? _asyncPropertyValidator;
+			}
+		}
 
 		private protected virtual bool SupportsAsynchronousValidation
 			=> _asyncPropertyValidator != null;
