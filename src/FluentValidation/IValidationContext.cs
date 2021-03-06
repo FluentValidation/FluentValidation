@@ -263,7 +263,7 @@ namespace FluentValidation {
 		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string propertyName, string errorMessage) {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
-			AddFailure(new ValidationFailure(propertyName ?? string.Empty, errorMessage));
+			AddFailure(new ValidationFailure(PropertyChain.BuildPropertyName(propertyName ?? string.Empty), errorMessage));
 		}
 
 		/// <summary>
@@ -272,13 +272,20 @@ namespace FluentValidation {
 		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string errorMessage) {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
-			AddFailure(PropertyName, errorMessage);
+			AddFailure(new ValidationFailure(PropertyName, errorMessage));
 		}
 
 		private Func<ValidationContext<T>, string> _displayNameFunc;
 
+		/// <summary>
+		/// Gets the display name for the current property being validated.
+		/// </summary>
 		public string DisplayName => _displayNameFunc(this);
 
+		/// <summary>
+		/// The full name of the current property being validated.
+		/// If accessed inside a child validator, this will include the parent's path too.
+		/// </summary>
 		public string PropertyName { get; private set; }
 
 		internal string RawPropertyName { get; private set; }
