@@ -88,6 +88,14 @@ namespace FluentValidation {
 	}
 
 	/// <summary>
+	/// Rule builder (for validators that only support conditions, but no other options)
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
+	public interface IRuleBuilderOptionsConditions<T, out TProperty> : IRuleBuilder<T, TProperty> {
+	}
+
+	/// <summary>
 	/// Rule builder that starts the chain for a child collection
 	/// </summary>
 	/// <typeparam name="T"></typeparam>

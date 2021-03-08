@@ -257,21 +257,24 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Adds a new validation failure.
+		/// Adds a new validation failure for the specified property.
 		/// </summary>
 		/// <param name="propertyName">The property name</param>
 		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string propertyName, string errorMessage) {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+			errorMessage = MessageFormatter.BuildMessage(errorMessage);
 			AddFailure(new ValidationFailure(PropertyChain.BuildPropertyName(propertyName ?? string.Empty), errorMessage));
 		}
 
 		/// <summary>
-		/// Adds a new validation failure (the property name is inferred)
+		/// Adds a new validation failure for the specified message.
+		/// The failure will be associated with the current property being validated.
 		/// </summary>
 		/// <param name="errorMessage">The error message</param>
 		public void AddFailure(string errorMessage) {
 			errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+			errorMessage = MessageFormatter.BuildMessage(errorMessage);
 			AddFailure(new ValidationFailure(PropertyName, errorMessage));
 		}
 
