@@ -15,7 +15,7 @@ Removed deprecated IStringSource and its inheritors.
 Removed deprecated FormattedMessageArguments from ValidationFailure.
 Removed other deprecated code.
 
-9.5.2 - 
+9.5.2 - 8 March 2021
 Fix Dutch translation of some errors (#1653)
 Fix string equality comparison in WithCustomState extension (#1658)
 
