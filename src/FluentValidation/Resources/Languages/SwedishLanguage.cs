@@ -45,7 +45,7 @@ namespace FluentValidation.Resources {
 			nameof(ExactLengthValidator) => "\"{PropertyName}\" måste vara {MaxLength} tecken långt. Du angav {TotalLength} tecken.",
 			nameof(InclusiveBetweenValidator) => "\"{PropertyName}\" måste vara mellan {From} och {To}. Du angav {Value}.",
 			nameof(ExclusiveBetweenValidator) => "\"{PropertyName}\" måste vara mellan {From} och {To} (gränsvärdena exkluderade). Du angav {Value}.",
-			nameof(CreditCardValidator) => "\"{PropertyName}\" no es un número de tarjeta de crédito válido.",
+			nameof(CreditCardValidator) => "\"{PropertyName}\" är inte ett giltigt kreditkortsnummer.",
 			nameof(ScalePrecisionValidator) => "\"{PropertyName}\" får inte vara mer än {ExpectedPrecision} siffror totalt, med förbehåll för {ExpectedScale} decimaler. {Digits} siffror och {ActualScale} decimaler hittades.",
 			nameof(EmptyValidator) => "\"{PropertyName}\" ska vara tomt.",
 			nameof(NullValidator) => "\"{PropertyName}\" ska vara tomt.",
