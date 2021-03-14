@@ -36,7 +36,7 @@ namespace FluentValidation.Validators {
 	/// 123.4500 has an scale of 4 and a precision of 7, but an effective scale
 	/// and precision of 2 and 5 respectively.
 	/// </summary>
-	public class ScalePrecisionValidator<T> : PropertyValidator<T, decimal?>, IPropertyValidator<T, decimal> {
+	public class ScalePrecisionValidator<T> : PropertyValidator<T, decimal> {
 		public ScalePrecisionValidator(int scale, int precision) {
 			Init(scale, precision);
 		}
@@ -49,28 +49,21 @@ namespace FluentValidation.Validators {
 
 		public bool IgnoreTrailingZeros { get; set; }
 
-		public override bool IsValid(ValidationContext<T> context, decimal? decimalValue) {
-			if (decimalValue.HasValue) {
-				var scale = GetScale(decimalValue.Value);
-				var precision = GetPrecision(decimalValue.Value);
-				var actualIntegerDigits = precision - scale;
-				var expectedIntegerDigits = Precision - Scale;
-				if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
-					context.MessageFormatter
-						.AppendArgument("ExpectedPrecision", Precision)
-						.AppendArgument("ExpectedScale", Scale)
-						.AppendArgument("Digits", actualIntegerDigits)
-						.AppendArgument("ActualScale", scale);
+		public override bool IsValid(ValidationContext<T> context, decimal decimalValue) {
+			var scale = GetScale(decimalValue);
+			var precision = GetPrecision(decimalValue);
+			var actualIntegerDigits = precision - scale;
+			var expectedIntegerDigits = Precision - Scale;
+			if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
+				context.MessageFormatter
+					.AppendArgument("ExpectedPrecision", Precision)
+					.AppendArgument("ExpectedScale", Scale)
+					.AppendArgument("Digits", actualIntegerDigits)
+					.AppendArgument("ActualScale", scale);
 
-					return false;
-				}
+				return false;
 			}
-
 			return true;
-		}
-
-		bool IPropertyValidator<T, decimal>.IsValid(ValidationContext<T> context, decimal value) {
-			return IsValid(context, value);
 		}
 
 		private void Init(int scale, int precision) {
