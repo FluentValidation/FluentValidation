@@ -5,6 +5,9 @@
     <PackageReleaseNotes>
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
+Changes in 9.5.3:
+* Fix Swedish translation of credit card validation error.
+
 Changes in 9.5.2:
 * Fix Dutch translation of some errors
 * Fix string equality comparison in WithCustomState extension
@@ -88,7 +91,7 @@ Changes in 9.0.0:
 * Automatically scanned types can be excluded when calling RegisterValidatorsFromAssemblyContaining in ASP.NET Core projects.
 * New AutomaticValidationEnabled property for use in ASP.NET Core projects (defaults to true).
 
-Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
+Full release notes can be found at https://github.com/FluentValidation/FluentValidation/releases
 		</PackageReleaseNotes>
     <!-- Signing is only performed as part of the release build -->
     <SignAssembly>True</SignAssembly>
