@@ -8,7 +8,7 @@
     <PackageReleaseNotes>
 FluentValidation 10 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-10.html
 
-Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
+Full release notes can be found at https://github.com/FluentValidation/FluentValidation/releases
     </PackageReleaseNotes>
     <SignAssembly>True</SignAssembly>
     <DelaySign>False</DelaySign>

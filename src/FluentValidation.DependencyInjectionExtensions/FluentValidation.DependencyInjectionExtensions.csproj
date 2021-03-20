@@ -6,7 +6,7 @@
         <Product>FluentValidation.DependencyInjectionExtensions</Product>
         <Description>Dependency injection extensions for FluentValidation</Description>
         <PackageReleaseNotes>
-            Full release notes can be found at https://github.com/FluentValidation/FluentValidation/blob/master/Changelog.txt
+            Full release notes can be found at https://github.com/FluentValidation/FluentValidation/releases
         </PackageReleaseNotes>
         <SignAssembly>True</SignAssembly>
         <DelaySign>False</DelaySign>
