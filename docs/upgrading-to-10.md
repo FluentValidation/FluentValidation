@@ -84,10 +84,6 @@ RuleComponent<T, TProperty> component = rule.Current;
 IPropertyValidator currentValidator = component.CurrentValidator;
 ```
 
-### Changes to methods on AbstractValidator
-
-The `RuleFor`, `RuleForEach`, `Transform`, and `TransformForEach` methods as well as the `CascadeMode` property are now protected instead of public. These remain public on the `InlineValidator` class only.
-
 ### Transform syntax changes
 
 The old `Transform` syntax has been removed. See [https://docs.fluentvalidation.net/en/latest/transform.html](transform)

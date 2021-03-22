@@ -8,7 +8,7 @@ namespace FluentValidation.Internal {
 	/// Member accessor cache.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	internal static class AccessorCache<T> {
+	public static class AccessorCache<T> {
 		private static readonly ConcurrentDictionary<Key, Delegate> _cache = new ConcurrentDictionary<Key, Delegate>();
 
 		/// <summary>

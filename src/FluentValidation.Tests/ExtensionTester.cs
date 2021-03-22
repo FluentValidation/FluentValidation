@@ -67,7 +67,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void SplitPascalCase_should_return_null_when_input_is_null() {
-			Extensions.SplitPascalCase(null).ShouldBeNull();
+			ExtensionsInternal.SplitPascalCase(null).ShouldBeNull();
 		}
 	}
 }

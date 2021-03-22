@@ -32,11 +32,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>TestMessages.resx</DependentUpon>
     </Compile>
-    <Compile Include="..\FluentValidation\Internal\AccessorCache.cs">
-      <Link>AccessorCache.cs</Link>
-    </Compile>
-    <Compile Include="..\FluentValidation\Internal\Extensions.cs">
-      <Link>Extensions.cs</Link>
+    <Compile Include="..\FluentValidation\Internal\ExtensionsInternal.cs">
+      <Link>ExtensionsInternal.cs</Link>
     </Compile>
     <Compile Include="..\FluentValidation\Internal\TrackingCollection.cs">
       <Link>TrackingCollection.cs</Link>
