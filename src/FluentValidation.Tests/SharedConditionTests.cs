@@ -587,6 +587,26 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Nested_when_inside_otherwise() {
+			var validator = new InlineValidator<Person>();
+			validator.When(x => x.Id == 1, () => {
+				validator.RuleFor(x => x.Forename).NotNull();
+			}).Otherwise(() => {
+				validator.When(x => x.Age > 18, () => {
+					validator.RuleFor(x => x.Email).NotNull();
+				});
+			});
+
+			var result = validator.Validate(new Person() {Id = 1});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Forename");
+
+			result = validator.Validate(new Person() {Id = 2, Age = 20});
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Email");
+		}
+
+		[Fact]
 		public void When_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
 			var person = new Person {
 				Children = new List<Person> {
