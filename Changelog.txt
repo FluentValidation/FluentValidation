@@ -1,3 +1,7 @@
+9.5.4 - 5 April 2021
+Fix Serbian translation of error messages (#1683)
+Add Vietnamese translations of error messages (#1677)
+
 9.5.3 - 15 March 2021
 Fix Swedish translation for CreditCardValidator (#1664)
 

@@ -5,6 +5,10 @@
     <PackageReleaseNotes>
 FluentValidation 9 is a major release. Please read the upgrade notes at https://docs.fluentvalidation.net/en/latest/upgrading-to-9.html
 
+Changes in 9.5.4:
+* Fix Serbian translation of error messages
+* Add Vietnamese translations of error messages
+
 Changes in 9.5.3:
 * Fix Swedish translation of credit card validation error.
 
