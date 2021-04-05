@@ -21,11 +21,8 @@
 #pragma warning disable 618
 
 namespace FluentValidation.Resources {
-	using Validators;
-
 	internal class VietnameseLanguage {
 		public const string Culture = "vi";
-		public const string VietnameseCulture = "vi-VN";
 
 		public static string GetTranslation(string key) => key switch {
 			"EmailValidator" => "'{PropertyName}' không phải là một email hợp lệ.",
