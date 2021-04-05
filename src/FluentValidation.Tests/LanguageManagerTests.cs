@@ -34,7 +34,7 @@
 		public void Gets_translation_for_serbian_culture(string cultureName) {
 			using (new CultureScope(cultureName)) {
 				var msg = _languages.GetString("NotNullValidator");
-				msg.ShouldEqual("'{PropertyName}' ne smije biti prazan.");
+				msg.ShouldEqual("'{PropertyName}' ne sme biti prazan.");
 			}
 		}
 
