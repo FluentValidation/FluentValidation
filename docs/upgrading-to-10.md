@@ -63,6 +63,10 @@ public class NotNullValidator<T,TProperty> : PropertyValidator<T, TProperty>
 }
 ```
 
+### ValidationResult.Errors type change 
+
+The `Errors` property on the `ValidationResult` class has been changed from `IList<ValidationFailure>` to `List<ValidationFailure>`. 
+
 ### Changes to property validator metadata
 
 In previous versions of FluentValidation, a property validator's configuration and the property validator itself were part of the same class (`PropertyValidator`). In FluentValidation 10, these are now separate. The validator itself that performs the work is either an `IPropertyValidator<T,TProperty>` or an `IAsyncPropertyValidator<T,TProperty>` and their configuration is exposed via a `RuleComponent`. Note there is still a non-generic `IPropertyValidator` interface available implemented by both `IPropertyValidator<T,TProperty>` and `IAsyncPropertyValidator<T,TProperty>` but it has fewer properties available.
