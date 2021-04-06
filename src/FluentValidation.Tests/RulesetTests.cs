@@ -30,6 +30,17 @@ namespace FluentValidation.Tests {
 
 
 		[Fact]
+		public void ValidationFailure_displays_failing_ruleset() {
+			var validator = new TestValidator();
+			var person = new Person();
+			const string rulesetName = "Names";
+
+			var result = validator.Validate(person, options => options.IncludeRuleSets(rulesetName));
+
+			AssertFailed(result, rulesetName);
+		}
+
+		[Fact]
 		public void Executes_rules_in_specified_ruleset() {
 			var validator = new TestValidator();
 			var result = validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new RulesetValidatorSelector(new[] { "Names" })));
@@ -352,6 +363,11 @@ namespace FluentValidation.Tests {
 		private void AssertExecuted(ValidationResult result, params string[] names) {
 			result.RuleSetsExecuted.Length.ShouldEqual(names.Length);
 			result.RuleSetsExecuted.Intersect(names).Count().ShouldEqual(names.Length);
+		}
+
+		private void AssertFailed(ValidationResult result, params string[] names) {
+			result.Errors.SelectMany(x => x.RuleSetsFailed).Distinct().Count().ShouldEqual(names.Length);
+			result.Errors.SelectMany(x => x.RuleSetsFailed).Distinct().Intersect(names).Count().ShouldEqual(names.Length);
 		}
 
 		private class TestValidator : InlineValidator<Person> {

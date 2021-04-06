@@ -242,6 +242,7 @@ namespace FluentValidation.Internal {
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, accessor.Value);
 				var failure = CreateValidationError(context, accessor.Value, component);
+				failure.RuleSetsFailed = RuleSets;
 				component.OnFailure?.Invoke(context.InstanceToValidate, context, accessor.Value, failure.ErrorMessage);
 				context.Failures.Add(failure);
 			}

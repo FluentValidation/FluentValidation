@@ -79,6 +79,8 @@ namespace FluentValidation.Results {
 		/// </summary>
 		public Dictionary<string, object> FormattedMessagePlaceholderValues { get; set; }
 
+		public string[] RuleSetsFailed { get; set; }
+
 		/// <summary>
 		/// Creates a textual representation of the failure.
 		/// </summary>
