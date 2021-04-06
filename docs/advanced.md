@@ -65,7 +65,7 @@ The RootContextData can then be accessed inside any custom property validators, 
 
 ```csharp
 RuleFor(x => x.Surname).Custom((x, context) => {
-  if(context.ParentContext.RootContextData.ContainsKey("MyCustomData")) {
+  if(context.RootContextData.ContainsKey("MyCustomData")) {
     context.AddFailure("My error message");
   }
 });
