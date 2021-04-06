@@ -8,6 +8,7 @@ Deprecated non-generic PropertyValidator.
 Various property validator options have been seperated into RuleComponents.
 Various parts of the internal API are now internal (PropertyRule, CollectionPropertyRule etc).
 ValidatorDescriptor now returns rule components in various places.
+Changed type of ValidationResult.Errors from IList<ValidationFailure> to List<ValidationFailure>
 Default service lifetime is now Scoped rather than Transient.
 Combine IActionContextValidatorInterceptor and IValidatorInterceptor.
 Changes to the ASP.NET Client Validator Adaptor interfaces. These now receive the rule component.
