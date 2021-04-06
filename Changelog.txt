@@ -1,4 +1,4 @@
-10.0.0 -
+10.0.0 - 6 April 2021
 Please review the upgrade guide for 10.0: https://docs.fluentvalidation.net/en/latest/upgrading-to-10.html
 Performance improvements.
 Collection rules now only iterate the collection once.
