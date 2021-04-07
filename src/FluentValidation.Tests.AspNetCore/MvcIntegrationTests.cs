@@ -49,7 +49,7 @@ namespace FluentValidation.Tests.AspNetCore {
 
 
 		[Fact]
-		public async Task Should_add_all_erorrs_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
+		public async Task Should_add_all_errors_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
 			var form = new FormData {
 				{"SomeBool", "False"},
 				{"Id", "0"}
