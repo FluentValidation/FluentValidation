@@ -1,6 +1,6 @@
 # Custom State
 
-There may be an occasion where you'd like to return contextual information about the state of your validation rule when it was run. The `WithCustomState` method allows you to associate any custom data with the validation results.
+There may be an occasion where you'd like to return contextual information about the state of your validation rule when it was run. The `WithState` method allows you to associate any custom data with the validation results.
 
 We could assign a custom state by modifying a line to read:
 
