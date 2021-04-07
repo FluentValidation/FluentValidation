@@ -77,7 +77,7 @@ public class CustomerValidator : AbstractValidator<Customer> {
     <div class="item-inner" style="height: 256px;">
       <div class="icon-holder"> <span aria-hidden="true" class="icon icon_globe"></span> </div>
       <h3 class="title">ASP.NET Integration</h3>
-      <p class="intro">Integration with ASP.NET Core, ASP.NET MVC 5 and ASP.NET WebApi 2 </p> <a class="link"
+      <p class="intro">Integration with ASP.NET Core</p> <a class="link"
         href="https://docs.fluentvalidation.net/en/latest/aspnet.html"><span></span></a>
     </div>
   </div>
