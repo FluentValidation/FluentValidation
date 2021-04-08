@@ -18,6 +18,7 @@
 #pragma warning disable 1998
 
 namespace FluentValidation.Tests {
+	using System.Collections.Generic;
 	using System.Threading.Tasks;
 	using Xunit;
 
@@ -180,6 +181,33 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
+		[Fact]
+		public void Can_access_property_value_in_custom_condition() {
+			var validator = new TestValidator();
+			validator.RuleFor(x => x.Surname).Must(v => false).Configure(cfg => {
+				cfg.ApplyCondition(context => cfg.GetPropertyValue(context.InstanceToValidate) != null);
+			});
+
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+
+			result = validator.Validate(new Person {Surname = "foo"});
+			result.IsValid.ShouldBeFalse();
+		}
+
+		[Fact]
+		public void Can_access_property_value_in_custom_condition_foreach() {
+			var validator = new TestValidator();
+			validator.RuleForEach(x => x.Orders).Must(v => false).Configure(cfg => {
+				cfg.ApplyCondition(context => cfg.GetPropertyValue(context.InstanceToValidate) != null);
+			});
+
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+
+			result = validator.Validate(new Person { Orders = new List<Order> { new Order() }});
+			result.IsValid.ShouldBeFalse();
+		}
 
 		private class TestConditionValidator : AbstractValidator<Person> {
 			public TestConditionValidator() {
@@ -205,4 +233,5 @@ namespace FluentValidation.Tests {
 			}
 		}
 	}
+
 }

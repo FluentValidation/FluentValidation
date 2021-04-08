@@ -1,3 +1,7 @@
+10.0.1 - 8 April 2021
+Add GetPropertyValue method to IValidationRule<T>
+Fix context parameter types on IValidationRule.ApplyCondition and ApplyAsyncCondition.
+
 10.0.0 - 6 April 2021
 Please review the upgrade guide for 10.0: https://docs.fluentvalidation.net/en/latest/upgrading-to-10.html
 Performance improvements.

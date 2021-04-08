@@ -320,7 +320,7 @@ namespace FluentValidation.Internal {
 			DependentRules.AddRange(rules);
 		}
 
-		private List<RuleComponent<T,TElement>> GetValidatorsToExecute(IValidationContext context) {
+		private List<RuleComponent<T,TElement>> GetValidatorsToExecute(ValidationContext<T> context) {
 			// Loop over each validator and check if its condition allows it to run.
 			// This needs to be done prior to the main loop as within a collection rule
 			// validators' conditions still act upon the root object, not upon the collection property.
@@ -348,7 +348,7 @@ namespace FluentValidation.Internal {
 			return validators;
 		}
 
-		private async Task<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(IValidationContext context, CancellationToken cancellation) {
+		private async Task<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			// Loop over each validator and check if its condition allows it to run.
 			// This needs to be done prior to the main loop as within a collection rule
 			// validators' conditions still act upon the root object, not upon the collection property.
