@@ -1,7 +1,6 @@
 name: "\U0001F41B Bug Report"
 description: "Report a reproducible bug in FluentValidation. Also use this template if you're having trouble upgrading from version 9.x 
 to 10.x"
-issue_body: true
 body:
 - type: markdown
   attributes:
@@ -25,12 +24,10 @@ body:
     description: A clear and concise description of the issue that you're having.
   validations:
     required: true
-- type: markdown
+- type: textarea
   attributes:
-    value: "### Steps to Reproduce"
-- type: markdown
-  attributes:
-    value: "Please include all the steps necessary to reproduce the issue, including any sample code (preferably in the form of a runnable unit test). Alternatively, please provide a link to a *minimal* sample project. Please do not include screenshots of code."
+    label: Steps to Reproduce
+    description: "Please include all the steps necessary to reproduce the issue, including any sample code (preferably in the form of a runnable unit test). Alternatively, please provide a link to a *minimal* sample project. Please do not include screenshots of code."  
 - type: markdown
   attributes:
     value: "Please ensure that any code samples are readable and [properly formatted as code blocks](https://docs.github.com/en/github/writing-on-github/creating-and-highlighting-code-blocks)."
