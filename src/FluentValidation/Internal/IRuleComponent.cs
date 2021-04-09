@@ -45,5 +45,10 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <returns></returns>
 		string GetUnformattedErrorMessage();
+
+		/// <summary>
+		/// The error code associated with this rule component.
+		/// </summary>
+		string ErrorCode { get; }
 	}
 }
