@@ -1,3 +1,6 @@
+10.0.2 - 9 April 2021
+Expose ErrorCode property on IRuleComponent.
+
 10.0.1 - 8 April 2021
 Add GetPropertyValue method to IValidationRule<T>
 Fix context parameter types on IValidationRule.ApplyCondition and ApplyAsyncCondition.
