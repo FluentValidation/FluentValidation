@@ -11,7 +11,7 @@ body:
 - type: input
   attributes:
     label: FluentValidation version
-    description: Which version of FluentValidation are you using?
+    description: Which version of FluentValidation are you using? Please note that only FluentValidation versions 9.x and 10.x are supported. Issues related to older versions will be closed. 
   validations:
     required: true
 - type: input
