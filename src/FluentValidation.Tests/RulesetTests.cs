@@ -41,6 +41,39 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public async Task ValidationFailure_async_displays_failing_ruleset() {
+			var validator = new TestValidator();
+			var person = new Person();
+			const string rulesetName = "Names";
+
+			var result = await validator.ValidateAsync(person, options => options.IncludeRuleSets(rulesetName));
+
+			AssertFailed(result, rulesetName);
+		}
+
+		[Fact]
+		public void CustomValidationFailure_displays_failing_ruleset() {
+			var validator = new TestValidator5();
+			var person = new Person();
+			const string rulesetName = "Names";
+
+			var result = validator.Validate(person, options => options.IncludeRuleSets(rulesetName));
+
+			AssertFailed(result, rulesetName);
+		}
+
+		[Fact]
+		public async Task CustomValidationFailure_async_displays_failing_ruleset() {
+			var validator = new TestValidator5();
+			var person = new Person();
+			const string rulesetName = "Names";
+
+			var result = await validator.ValidateAsync(person, options => options.IncludeRuleSets(rulesetName));
+
+			AssertFailed(result, rulesetName);
+		}
+
+		[Fact]
 		public void Executes_rules_in_specified_ruleset() {
 			var validator = new TestValidator();
 			var result = validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new RulesetValidatorSelector(new[] { "Names" })));
@@ -410,6 +443,18 @@ namespace FluentValidation.Tests {
 			public TestValidator4()
 			{
 				RuleFor(x => x.Person).SetValidator(new TestValidator2());
+			}
+		}
+
+		private class TestValidator5 : AbstractValidator<Person> {
+			public TestValidator5() {
+				RuleSet("Names", () => {
+					RuleFor(x => x.Surname).Custom((surname, context) => {
+						if (string.IsNullOrWhiteSpace(surname)) {
+							context.AddFailure("Surname can't be empty");
+						}
+					});
+				});
 			}
 		}
 	}

@@ -314,7 +314,7 @@ namespace FluentValidation.Internal {
 				: component.GetErrorMessage(context, value);
 
 			var failure = new ValidationFailure(context.PropertyName, error, value);
-			
+
 			failure.FormattedMessagePlaceholderValues = new Dictionary<string, object>(context.MessageFormatter.PlaceholderValues);
 			failure.ErrorCode = component.ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(component.Validator);
 

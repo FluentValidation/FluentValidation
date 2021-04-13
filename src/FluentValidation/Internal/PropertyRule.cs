@@ -237,7 +237,15 @@ namespace FluentValidation.Internal {
 				return;
 			}
 
+			var failuresBefore = context.Failures.Count;
+
 			bool valid = component.Validate(context, accessor.Value);
+
+			var newFailures = context.Failures.Skip(failuresBefore);
+
+			foreach (var failure in newFailures) {
+				failure.RuleSetsFailed = RuleSets;
+			}
 
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, accessor.Value);
