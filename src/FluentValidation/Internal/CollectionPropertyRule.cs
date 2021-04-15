@@ -328,21 +328,19 @@ namespace FluentValidation.Internal {
 			// being retrieved (thereby possibly avoiding NullReferenceExceptions).
 			// Must call ToList so we don't modify the original collection mid-loop.
 			var validators = Components.ToList();
-			int validatorIndex = 0;
-			foreach (var validator in Components) {
-				if (validator.HasCondition) {
-					if (!validator.InvokeCondition(context)) {
-						validators.RemoveAt(validatorIndex);
+
+			foreach (var component in Components) {
+				if (component.HasCondition) {
+					if (!component.InvokeCondition(context)) {
+						validators.Remove(component);
 					}
 				}
 
-				if (validator.HasAsyncCondition) {
-					if (!validator.InvokeAsyncCondition(context, default).GetAwaiter().GetResult()) {
-						validators.RemoveAt(validatorIndex);
+				if (component.HasAsyncCondition) {
+					if (!component.InvokeAsyncCondition(context, default).GetAwaiter().GetResult()) {
+						validators.Remove(component);
 					}
 				}
-
-				validatorIndex++;
 			}
 
 			return validators;
@@ -356,21 +354,19 @@ namespace FluentValidation.Internal {
 			// being retrieved (thereby possibly avoiding NullReferenceExceptions).
 			// Must call ToList so we don't modify the original collection mid-loop.
 			var validators = Components.ToList();
-			int validatorIndex = 0;
-			foreach (var validator in Components) {
-				if (validator.HasCondition) {
-					if (!validator.InvokeCondition(context)) {
-						validators.RemoveAt(validatorIndex);
+
+			foreach (var component in Components) {
+				if (component.HasCondition) {
+					if (!component.InvokeCondition(context)) {
+						validators.Remove(component);
 					}
 				}
 
-				if (validator.HasAsyncCondition) {
-					if (!await validator.InvokeAsyncCondition(context, cancellation)) {
-						validators.RemoveAt(validatorIndex);
+				if (component.HasAsyncCondition) {
+					if (!await component.InvokeAsyncCondition(context, cancellation)) {
+						validators.Remove(component);
 					}
 				}
-
-				validatorIndex++;
 			}
 
 			return validators;

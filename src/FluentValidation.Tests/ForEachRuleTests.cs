@@ -635,6 +635,35 @@ namespace FluentValidation.Tests {
 			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
 		}
 
+		[Fact]
+		public void Failing_condition_should_prevent_multiple_components_running_and_not_throw() {
+			// https://github.com/FluentValidation/FluentValidation/issues/1698
+			var validator = new InlineValidator<Person>();
+
+			validator.RuleForEach(x => x.Orders)
+				.NotNull()
+				.NotNull()
+				.When(x => x.Orders.Count > 0);
+
+			var result = validator.Validate(new Person());
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
+		public async Task Failing_condition_should_prevent_multiple_components_running_and_not_throw_async() {
+			// https://github.com/FluentValidation/FluentValidation/issues/1698
+			var validator = new InlineValidator<Person>();
+
+			validator.RuleForEach(x => x.Orders)
+				.MustAsync((o, ct) => Task.FromResult(o != null))
+				.MustAsync((o, ct) => Task.FromResult(o != null))
+				.When(x => x.Orders.Count > 0);
+
+			var result = await validator.ValidateAsync(new Person());
+			result.IsValid.ShouldBeTrue();
+		}
+
+
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {
 				RuleFor(x => x.ProductName).NotEmpty();

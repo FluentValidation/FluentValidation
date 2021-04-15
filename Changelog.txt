@@ -1,3 +1,6 @@
+10.0.3 - 15 April 2021
+Fix ArgumentOutOfRangeException when condition returns false for RuleForEach containing multiple components (#1698)
+
 10.0.2 - 9 April 2021
 Expose ErrorCode property on IRuleComponent.
 
