@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/JeremySkinner/FluentValidation/gh-pages/assets/images/logo/fluent-validation-logo.png" alt="FluentValidation" width="250px" />
+<img src="https://raw.githubusercontent.com/FluentValidation/FluentValidation/gh-pages/assets/images/logo/fluent-validation-logo.png" alt="FluentValidation" width="250px" />
 
 [Full Documentation](https://fluentvalidation.net)
 
