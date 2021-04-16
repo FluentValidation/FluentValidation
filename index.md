@@ -16,7 +16,7 @@ tagline: |
 </div>
 
 [NUGET]: https://nuget.org/packages/FluentValidation
-[GITHUB]: https://github.com/JeremySkinner/FluentValidation
+[GITHUB]: https://github.com/FluentValidation/FluentValidation
 
 ```csharp
 public class CustomerValidator : AbstractValidator<Customer> {
