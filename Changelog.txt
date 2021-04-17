@@ -1,5 +1,6 @@
 11.0.0 -
 Ensure property covariance is properly handled throughout the internal model (#1713)
+Throw exceptions when async validator is invoked synchronously (#1705)
 
 10.3.1 - 
 Fix scale precision error message when digits is calculated as negative (#1790)
