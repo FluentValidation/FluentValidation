@@ -1,3 +1,6 @@
+10.0.4 - 17 April 2021
+Fix a bug where async conditions were sometimes run synchronously.
+
 10.0.3 - 15 April 2021
 Fix ArgumentOutOfRangeException when condition returns false for RuleForEach containing multiple components (#1698)
 

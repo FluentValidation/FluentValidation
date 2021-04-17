@@ -113,6 +113,14 @@ namespace FluentValidation.Internal {
 			foreach (var step in Components) {
 				context.MessageFormatter.Reset();
 
+				if (!step.InvokeCondition(context)) {
+					continue;
+				}
+
+				if (step.HasAsyncCondition && !step.InvokeAsyncCondition(context, CancellationToken.None).GetAwaiter().GetResult()) {
+					continue;
+				}
+
 				if (step.ShouldValidateAsynchronously(context)) {
 					InvokePropertyValidatorAsync(context, accessor, propertyName, step, default).GetAwaiter().GetResult();
 				}
@@ -190,6 +198,14 @@ namespace FluentValidation.Internal {
 				cancellation.ThrowIfCancellationRequested();
 				context.MessageFormatter.Reset();
 
+				if (!validator.InvokeCondition(context)) {
+					continue;
+				}
+
+				if (!await validator.InvokeAsyncCondition(context, cancellation)) {
+					continue;
+				};
+
 				if (validator.ShouldValidateAsynchronously(context)) {
 					await InvokePropertyValidatorAsync(context, accessor, propertyName, validator, cancellation);
 				}
@@ -219,8 +235,6 @@ namespace FluentValidation.Internal {
 		}
 
 		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, RuleComponent<T,TProperty> component, CancellationToken cancellation) {
-			if (!component.InvokeCondition(context)) return;
-			if (!await component.InvokeAsyncCondition(context, cancellation)) return;
 			bool valid = await component.ValidateAsync(context, accessor.Value, cancellation);
 
 			if (!valid) {
@@ -232,11 +246,6 @@ namespace FluentValidation.Internal {
 		}
 
 		private protected void InvokePropertyValidator(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, RuleComponent<T, TProperty> component) {
-			if (!component.InvokeCondition(context)) return;
-			if (component.HasAsyncCondition && !component.InvokeAsyncCondition(context, CancellationToken.None).GetAwaiter().GetResult()) {
-				return;
-			}
-
 			bool valid = component.Validate(context, accessor.Value);
 
 			if (!valid) {
