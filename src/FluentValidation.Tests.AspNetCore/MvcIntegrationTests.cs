@@ -579,7 +579,6 @@ namespace FluentValidation.Tests.AspNetCore {
 			result.Count.ShouldEqual(1);
 		}
 
-
 		[Fact]
 		public async void When_skipping_children_does_not_leave_validation_state_unvalidated() {
 			var client = _webApp.WithImplicitValidationEnabled(false).CreateClient();
@@ -592,6 +591,18 @@ namespace FluentValidation.Tests.AspNetCore {
 			var response = await responseMessage.Content.ReadAsStringAsync();
 			response.ShouldEqual("0");
 		}
+
+		[Fact]
+		public async Task Validation_invoked_with_ApiController() {
+			string json = @"{ Name: null }";
+			var response = await _client.PostAsync("/ApiTest", new StringContent(json, Encoding.UTF8, "application/json"));
+			var responseJson = await response.Content.ReadAsStringAsync();
+
+			string expected = @"{""errors"":{""Name"":[""Validation Failed""]}";
+			Assert.Equal(400, (int)response.StatusCode);
+			Assert.StartsWith(expected, responseJson);
+		}
+
 
 	}
 }
