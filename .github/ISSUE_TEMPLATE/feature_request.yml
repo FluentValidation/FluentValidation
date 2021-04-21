@@ -1,5 +1,5 @@
 name: "\U0001F64B Feature Request"
-about: 'Want us to add something to FluentValidation?'
+description: 'Want us to add something to FluentValidation?'
 body:
   - type: markdown
     attributes:
