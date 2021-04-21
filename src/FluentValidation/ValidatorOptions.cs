@@ -41,6 +41,11 @@ namespace FluentValidation {
 		public CascadeMode CascadeMode { get; set; } = CascadeMode.Continue;
 
 		/// <summary>
+		/// Default severity level
+		/// </summary>
+		public Severity Severity { get; set; } = Severity.Error;
+
+		/// <summary>
 		/// Default property chain separator
 		/// </summary>
 		public string PropertyChainSeparator { get; set; } = ".";
@@ -127,7 +132,7 @@ namespace FluentValidation {
 	public class ValidatorSelectorOptions {
 		private static readonly IValidatorSelector DefaultSelector = new DefaultValidatorSelector();
 
-		private Func<IValidatorSelector>  _defaultValidatorSelector = () => DefaultSelector;
+		private Func<IValidatorSelector> _defaultValidatorSelector = () => DefaultSelector;
 		private Func<IEnumerable<string>, IValidatorSelector> _memberNameValidatorSelector = properties => new MemberNameValidatorSelector(properties);
 		private Func<IEnumerable<string>, IValidatorSelector> _rulesetValidatorSelector = ruleSets => new RulesetValidatorSelector(ruleSets);
 
