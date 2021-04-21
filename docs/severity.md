@@ -41,3 +41,11 @@ Property: Forename Severity: Error
 ```
 
 By default, the severity level of every validation rule is `Error`. Available options are `Error`, `Warning`, or `Info`.
+
+To set the severity level globally, you can set the `Severity` property on the static `ValidatorOptions` class during your application's startup routine:
+
+```csharp
+ValidatorOptions.Global.Severity = Severity.Info;
+```
+
+This can then be overridden by individual rules.
