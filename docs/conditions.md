@@ -82,7 +82,7 @@ As well as being set at the rule level, the cascade mode can also be set globall
 To set the cascade mode globally, you can set the `CascadeMode` property on the static `ValidatorOptions` class during your application's startup routine:
 
 ```csharp
-ValidatorOptions.CascadeMode = CascadeMode.Stop;
+ValidatorOptions.Global.CascadeMode = CascadeMode.Stop;
 ```
 
 This can then be overridden by individual validator classes or by individual rules.

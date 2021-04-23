@@ -22,12 +22,16 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;
 
-	public class UserSeverityTester {
+	public class UserSeverityTester : IDisposable {
 		TestValidator validator;
 
-		public UserSeverityTester()
-		{
+		public UserSeverityTester() {
+			ValidatorOptions.Global.Severity = Severity.Error;
 			validator = new TestValidator();
+		}
+
+		public void Dispose() {
+			ValidatorOptions.Global.Severity = Severity.Error;
 		}
 
 		[Fact]
@@ -39,14 +43,26 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Defaults_user_severity_to_error() {
-		    validator.RuleFor( x => x.Surname ).NotNull();
-		    var result = validator.Validate( new Person() );
-		    result.Errors.Single().Severity.ShouldEqual( Severity.Error );
+			validator.RuleFor(x => x.Surname).NotNull();
+			var result = validator.Validate(new Person());
+			result.Errors.Single().Severity.ShouldEqual(Severity.Error);
+		}
+
+		[Theory]
+		[InlineData(Severity.Error)]
+		[InlineData(Severity.Info)]
+		[InlineData(Severity.Warning)]
+		public void Defaults_user_severity_can_be_overridden_by_global_options(Severity severity) {
+			ValidatorOptions.Global.Severity = severity;
+
+			validator.RuleFor(x => x.Surname).NotNull();
+			var result = validator.Validate(new Person());
+			result.Errors.Single().Severity.ShouldEqual(severity);
 		}
 
 		[Fact]
 		public void Throws_when_provider_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.RuleFor(x => x.Surname).NotNull().WithSeverity((Func<Person, Severity>) null));
+			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.RuleFor(x => x.Surname).NotNull().WithSeverity((Func<Person, Severity>)null));
 		}
 
 		[Fact]
@@ -67,7 +83,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Can_Provide_severity_for_item_in_collection() {
 			validator.RuleForEach(x => x.Children).NotNull().WithSeverity((person, child) => Severity.Warning);
-			var result = validator.Validate(new Person {Children = new List<Person> {null}});
+			var result = validator.Validate(new Person { Children = new List<Person> { null } });
 			result.Errors[0].Severity.ShouldEqual(Severity.Warning);
 		}
 

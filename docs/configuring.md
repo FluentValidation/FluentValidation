@@ -74,7 +74,7 @@ There is also an overload of `WithName` that accepts a lambda expression in a si
 Property name resolution is also pluggable. By default, the name of the property extracted from the `MemberExpression` passed to `RuleFor`. If you want change this logic, you can set the `DisplayNameResolver` property on the `ValidatorOptions` class:
 
 ```csharp
-ValidatorOptions.DisplayNameResolver = (type, member, expression) => {
+ValidatorOptions.Global.DisplayNameResolver = (type, member, expression) => {
   if(member != null) {
      return member.Name + "Foo";
   }

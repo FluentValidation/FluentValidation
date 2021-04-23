@@ -28,7 +28,7 @@ namespace FluentValidation.Internal {
 	using Validators;
 
 	internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TValue> {
-		private readonly List<RuleComponent<T,TValue>> _components = new();
+		private readonly List<RuleComponent<T, TValue>> _components = new();
 		private Func<CascadeMode> _cascadeModeThunk;
 		private string _propertyDisplayName;
 		private string _propertyName;
@@ -99,7 +99,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// The current validator being configured by this rule.
 		/// </summary>
-		public RuleComponent<T,TValue> CurrentValidator => _components.LastOrDefault();
+		public RuleComponent<T, TValue> CurrentValidator => _components.LastOrDefault();
 
 		/// <summary>
 		/// The current rule component.
@@ -195,7 +195,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Allows custom creation of an error message
 		/// </summary>
-		public Func<MessageBuilderContext<T,TValue>, string> MessageBuilder { get; set; }
+		public Func<MessageBuilderContext<T, TValue>, string> MessageBuilder { get; set; }
 
 		/// <summary>
 		/// Dependent rules
@@ -310,7 +310,7 @@ namespace FluentValidation.Internal {
 		/// <param name="value">The property value</param>
 		/// <param name="component">The current rule component.</param>
 		/// <returns>Returns an error validation result.</returns>
-		protected ValidationFailure CreateValidationError(ValidationContext<T> context, TValue value, RuleComponent<T,TValue> component) {
+		protected ValidationFailure CreateValidationError(ValidationContext<T> context, TValue value, RuleComponent<T, TValue> component) {
 			var error = MessageBuilder != null
 				? MessageBuilder(new MessageBuilderContext<T, TValue>(context, value, component))
 				: component.GetErrorMessage(context, value);
@@ -320,12 +320,12 @@ namespace FluentValidation.Internal {
 			failure.FormattedMessagePlaceholderValues = new Dictionary<string, object>(context.MessageFormatter.PlaceholderValues);
 			failure.ErrorCode = component.ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(component.Validator);
 
+			failure.Severity = component.SeverityProvider != null
+				? component.SeverityProvider(context, value)
+				: ValidatorOptions.Global.Severity;
+
 			if (component.CustomStateProvider != null) {
 				failure.CustomState = component.CustomStateProvider(context, value);
-			}
-
-			if (component.SeverityProvider != null) {
-				failure.Severity = component.SeverityProvider(context, value);
 			}
 
 			return failure;
