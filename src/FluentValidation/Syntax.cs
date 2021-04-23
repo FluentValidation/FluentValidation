@@ -114,4 +114,8 @@ namespace FluentValidation {
 		void Otherwise(Action action);
 	}
 
+	internal interface IRuleBuilderInternal<T, out TProperty> {
+		IValidationRuleConfigurable<T, TProperty> GetConfigurableRule();
+	}
+
 }

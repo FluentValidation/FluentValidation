@@ -316,6 +316,28 @@ namespace FluentValidation.Tests {
 			result.Errors[2].PropertyName.ShouldEqual("Forename");
 		}
 
+		[Fact]
+		public void Shouldnt_throw_exception_when_configuring_rule_after_ForEach() {
+			var validator = new InlineValidator<Person>();
+
+			validator.RuleFor(x => x.Orders)
+				.ForEach(o => {
+					o.Must(v => true);
+				})
+				.Must((val) => true)
+				.WithMessage("what");
+
+			// The RuleBuilder is RuleBuilder<Person, IList<Order>>
+			// after the ForEach, it's returned as an IRuleBuilderOptions<Person, IEnumerable<Order>>
+			// This shouldn't cause an InvalidCastException when attempting to configure the rule
+			// by using WithMessage or any other standard option.
+
+			var result = validator.Validate(new Person() {
+				Orders = new List<Order>() { new Order()}
+			});
+
+			result.IsValid.ShouldBeTrue();
+		}
 
 		public class ApplicationViewModel {
 			public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};

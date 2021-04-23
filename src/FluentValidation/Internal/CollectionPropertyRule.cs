@@ -26,8 +26,6 @@ namespace FluentValidation.Internal {
 	using System.Reflection;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Results;
-	using Validators;
 
 	/// <summary>
 	/// Rule definition for collection properties

@@ -26,12 +26,15 @@ namespace FluentValidation.Internal {
 	/// </summary>
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
-	internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty>, IRuleBuilderInitialCollection<T,TProperty>, IRuleBuilderOptionsConditions<T, TProperty> {
+	internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IRuleBuilderInitial<T, TProperty>, IRuleBuilderInitialCollection<T,TProperty>, IRuleBuilderOptionsConditions<T, TProperty>, IRuleBuilderInternal<T,TProperty> {
 
 		/// <summary>
 		/// The rule being created by this RuleBuilder.
 		/// </summary>
 		public IValidationRuleInternal<T, TProperty> Rule { get; }
+
+		//TODO: Remove in FV11 once IValidationRule<T,TProperty> and IValidationRuleConfigurable<T,TProperty> have been combined.
+		private IValidationRuleConfigurable<T, TProperty> ConfigurableRule => Rule;
 
 		/// <summary>
 		/// Parent validator
@@ -48,7 +51,7 @@ namespace FluentValidation.Internal {
 
 		public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator<T, TProperty> validator) {
 			if (validator == null) throw new ArgumentNullException(nameof(validator));
-			Rule.AddValidator(validator);
+			ConfigurableRule.AddValidator(validator);
 			return this;
 		}
 
@@ -56,7 +59,7 @@ namespace FluentValidation.Internal {
 			if (validator == null) throw new ArgumentNullException(nameof(validator));
 			// See if the async validator supports synchronous execution too.
 			IPropertyValidator<T, TProperty> fallback = validator as IPropertyValidator<T, TProperty>;
-			Rule.AddAsyncValidator(validator, fallback);
+			ConfigurableRule.AddAsyncValidator(validator, fallback);
 			return this;
 		}
 
@@ -66,7 +69,7 @@ namespace FluentValidation.Internal {
 				RuleSets = ruleSets
 			};
 			// ChildValidatorAdaptor supports both sync and async execution.
-			Rule.AddAsyncValidator(adaptor, adaptor);
+			ConfigurableRule.AddAsyncValidator(adaptor, adaptor);
 			return this;
 		}
 
@@ -76,7 +79,7 @@ namespace FluentValidation.Internal {
 				RuleSets = ruleSets
 			};
 			// ChildValidatorAdaptor supports both sync and async execution.
-			Rule.AddAsyncValidator(adaptor, adaptor);
+			ConfigurableRule.AddAsyncValidator(adaptor, adaptor);
 			return this;
 		}
 
@@ -86,7 +89,7 @@ namespace FluentValidation.Internal {
 				RuleSets = ruleSets
 			};
 			// ChildValidatorAdaptor supports both sync and async execution.
-			Rule.AddAsyncValidator(adaptor, adaptor);
+			ConfigurableRule.AddAsyncValidator(adaptor, adaptor);
 			return this;
 		}
 
@@ -112,5 +115,7 @@ namespace FluentValidation.Internal {
 		public void AddComponent(RuleComponent<T,TProperty> component) {
 			Rule.Components.Add(component);
 		}
+
+		IValidationRuleConfigurable<T, TProperty> IRuleBuilderInternal<T, TProperty>.GetConfigurableRule() => Rule;
 	}
 }

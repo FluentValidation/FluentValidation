@@ -30,7 +30,7 @@ namespace FluentValidation.Internal {
 	/// In a rule definition such as RuleFor(x => x.Name).NotNull().NotEqual("Foo")
 	/// the NotNull and the NotEqual are both rule components.
 	/// </summary>
-	public class RuleComponent<T,TProperty> : IRuleComponent {
+	public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
 		private string _errorMessage;
 		private Func<ValidationContext<T>, TProperty, string> _errorMessageFactory;
 		private Func<ValidationContext<T>, bool> _condition;
@@ -216,7 +216,7 @@ namespace FluentValidation.Internal {
 			_errorMessageFactory = null;
 		}
 
-		internal Action<T, ValidationContext<T>, TProperty, string> OnFailure { get; set; }
+		public Action<T, ValidationContext<T>, TProperty, string> OnFailure { get; set; }
 	}
 
 }

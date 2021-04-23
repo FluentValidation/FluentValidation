@@ -38,7 +38,7 @@ namespace FluentValidation {
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
 		public static IRuleBuilderInitial<T, TProperty> Configure<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, Action<IValidationRule<T, TProperty>> configurator) {
-			configurator(Configurable(ruleBuilder));
+			configurator((IValidationRule<T, TProperty>) Configurable(ruleBuilder));
 			return ruleBuilder;
 		}
 
@@ -49,7 +49,7 @@ namespace FluentValidation {
 		/// <param name="configurator">Action to configure the object.</param>
 		/// <returns></returns>
 		public static IRuleBuilderOptions<T, TProperty> Configure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> ruleBuilder, Action<IValidationRule<T, TProperty>> configurator) {
-			configurator(Configurable(ruleBuilder));
+			configurator((IValidationRule<T, TProperty>) Configurable(ruleBuilder));
 			return ruleBuilder;
 		}
 
@@ -69,8 +69,8 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="ruleBuilder">The rule builder.</param>
 		/// <returns>A configurable IValidationRule instance.</returns>
-		public static IValidationRule<T, TProperty> Configurable<T, TProperty>(IRuleBuilder<T, TProperty> ruleBuilder) {
-			return ((RuleBuilder<T, TProperty>) ruleBuilder).Rule;
+		public static IValidationRuleConfigurable<T, TProperty> Configurable<T, TProperty>(IRuleBuilder<T, TProperty> ruleBuilder) {
+			return ((IRuleBuilderInternal<T, TProperty>) ruleBuilder).GetConfigurableRule();
 		}
 
 		/// <summary>
@@ -79,7 +79,7 @@ namespace FluentValidation {
 		/// <param name="ruleBuilder">The rule builder.</param>
 		/// <returns>A configurable IValidationRule instance.</returns>
 		public static ICollectionRule<T, TCollectionElement> Configurable<T, TCollectionElement>(IRuleBuilderInitialCollection<T, TCollectionElement> ruleBuilder) {
-			return (ICollectionRule<T, TCollectionElement>) ((RuleBuilder<T, TCollectionElement>) ruleBuilder).Rule;
+			return (ICollectionRule<T, TCollectionElement>) ((IRuleBuilderInternal<T, TCollectionElement>) ruleBuilder).GetConfigurableRule();
 		}
 
 		/// <summary>

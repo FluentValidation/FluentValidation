@@ -3,7 +3,19 @@
 	using Resources;
 	using Validators;
 
-	public class MessageBuilderContext<T,TProperty> {
+	public interface IMessageBuilderContext<T, out TProperty> {
+		IRuleComponent<T, TProperty> Component { get; }
+		IPropertyValidator PropertyValidator { get; }
+		ValidationContext<T> ParentContext { get; }
+		string PropertyName { get; }
+		string DisplayName { get; }
+		MessageFormatter MessageFormatter { get; }
+		T InstanceToValidate { get; }
+		TProperty PropertyValue { get; }
+		string GetDefaultMessage();
+	}
+
+	public class MessageBuilderContext<T,TProperty> : IMessageBuilderContext<T,TProperty> {
 		private ValidationContext<T> _innerContext;
 		private TProperty _value;
 
@@ -14,6 +26,8 @@
 		}
 
 		public RuleComponent<T,TProperty> Component { get; }
+
+		IRuleComponent<T, TProperty> IMessageBuilderContext<T, TProperty>.Component => Component;
 
 		public IPropertyValidator PropertyValidator
 			=> Component.Validator;

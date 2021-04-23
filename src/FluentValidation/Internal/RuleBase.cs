@@ -27,7 +27,7 @@ namespace FluentValidation.Internal {
 	using Results;
 	using Validators;
 
-	internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TValue> {
+	internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TValue>, IValidationRuleConfigurable<T,TValue> {
 		private readonly List<RuleComponent<T, TValue>> _components = new();
 		private Func<CascadeMode> _cascadeModeThunk;
 		private string _propertyDisplayName;
@@ -155,6 +155,8 @@ namespace FluentValidation.Internal {
 			_components.Add(component);
 		}
 
+		IRuleComponent<T, TValue> IValidationRuleConfigurable<T, TValue>.Current => Current;
+
 		// /// <summary>
 		// /// Replaces a validator in this rule. Used to wrap validators.
 		// /// </summary>
@@ -196,6 +198,11 @@ namespace FluentValidation.Internal {
 		/// Allows custom creation of an error message
 		/// </summary>
 		public Func<MessageBuilderContext<T, TValue>, string> MessageBuilder { get; set; }
+
+		//TODO: Make this the default version of MessageBuilder for FV 11.
+		Func<IMessageBuilderContext<T, TValue>, string> IValidationRuleConfigurable<T, TValue>.MessageBuilder {
+			set => MessageBuilder = value;
+		}
 
 		/// <summary>
 		/// Dependent rules
