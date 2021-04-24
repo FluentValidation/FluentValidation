@@ -6,7 +6,7 @@
 FluentValidation
 ================
 
-FluentValidation is a A .NET library for building strongly-typed validation rules.
+FluentValidation is a .NET library for building strongly-typed validation rules.
 
 FluentValidation 10 supports the following platforms:
 
