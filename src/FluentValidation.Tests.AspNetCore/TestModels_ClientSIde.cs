@@ -1,4 +1,5 @@
 ﻿namespace FluentValidation.Tests.AspNetCore {
+	using System;
 	using Controllers;
 	using Microsoft.Extensions.Localization;
 
@@ -17,8 +18,11 @@
 		public string ExactLength { get; set; }
 		public int GreaterThan { get; set; }
 		public int GreaterThanOrEqual { get; set; }
+		public DateTime GreaterThanOrEqualProperty { get; set; }
 		public int LessThan { get; set; }
 		public int LessThanOrEqual { get; set; }
+		public DateTime LessThanOrEqualProperty { get; set; }
+		public DateTime DateTimeComparison { get; set; }
 		public string LengthWithMessage { get; set; }
 		public string CustomPlaceholder { get; set; }
 		public string LengthCustomPlaceholders { get; set; }
@@ -75,6 +79,8 @@
 			RuleFor(x => x.LessThanOrEqual).LessThanOrEqualTo(10);
 			RuleFor(x => x.GreaterThan).GreaterThan(1);
 			RuleFor(x => x.GreaterThanOrEqual).GreaterThanOrEqualTo(1);
+			RuleFor(x => x.LessThanOrEqualProperty).LessThanOrEqualTo(x => x.DateTimeComparison);
+			RuleFor(x => x.GreaterThanOrEqualProperty).GreaterThanOrEqualTo(x => x.DateTimeComparison);
 
 			RuleFor(x => x.LengthWithMessage).Length(1, 10).WithMessage("Foo");
 			RuleFor(x => x.CustomPlaceholder).NotNull().WithMessage("{PropertyName} is null.");
@@ -85,6 +91,7 @@
 			RuleFor(x => x.CustomNameValueType).NotNull().WithName("Foo");
 			RuleFor(x => x.MessageWithContext).NotNull().WithMessage(x => $"Foo {x.Required}");
 			RuleFor(x => x.LocalizedMessage).NotNull().WithMessage(x => localizer["from localizer"]);
+
 
 			TimesInstantiated++;
 

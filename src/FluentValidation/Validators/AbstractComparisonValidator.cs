@@ -121,7 +121,12 @@ namespace FluentValidation.Validators {
 		/// <summary>
 		/// Comparison value as non-generic for metadata.
 		/// </summary>
-		object IComparisonValidator.ValueToCompare => ValueToCompare;
+		object IComparisonValidator.ValueToCompare =>
+			// For clientside validation to work, we must return null if MemberToCompare is set.
+			// We can't rely on ValueToCompare being null itself as it's generic, and will be initialized
+			// as default(TProperty) which for non-nullable value types will emit the
+			// default value for the type rather than null. See https://github.com/FluentValidation/FluentValidation/issues/1721
+			MemberToCompare != null ? null : ValueToCompare;
 	}
 
 	/// <summary>

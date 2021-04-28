@@ -19,6 +19,7 @@
 #endregion
 
 namespace FluentValidation.Tests.AspNetCore {
+	using System.Linq;
 	using System.Net.Http;
 	using System.Threading.Tasks;
 	using Xunit;
@@ -203,6 +204,22 @@ namespace FluentValidation.Tests.AspNetCore {
 			ClientsideModelValidator.TimesInstantiated = 0;
 			var results = await _client.GetClientsideMessages();
 			ClientsideModelValidator.TimesInstantiated.ShouldEqual(1);
+		}
+
+		[Fact]
+		public async Task Shouldnt_generate_clientside_message_for_LessThanOrEqual_GreaterThanOrEqual_cross_property() {
+			// https://github.com/FluentValidation/FluentValidation/issues/1721
+			// A call to LessThanOrEqual(x => x.SomeOtherProperty) shouldn't generate clientside metadata.
+			var document = await _client.GetClientsideMessages();
+
+			var lessThan = document.Root.Elements("input")
+				.SingleOrDefault(x => x.Attribute("name").Value == "LessThanOrEqualProperty");
+
+			var greaterThan = document.Root.Elements("input")
+				.SingleOrDefault(x => x.Attribute("name").Value == "GreaterThanOrEqualProperty");
+
+			lessThan.Attribute("data-val-range").ShouldBeNull();
+			greaterThan.Attribute("data-val-range").ShouldBeNull();
 		}
 	}
 

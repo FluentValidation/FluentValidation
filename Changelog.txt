@@ -1,3 +1,8 @@
+10.1.0 - 28 April 2021
+Allow default severity level to be set globally (#1715)
+Extend use of variance into the internal API to resolve invalid cast exceptions in some scenarios (#1711)
+Fix clientside metadata being incorrectly generated for cross-property LessThanOrEqual/GreaterThanOrEqual (#1721)
+
 10.0.4 - 17 April 2021
 Fix a bug where async conditions were sometimes run synchronously.
 
