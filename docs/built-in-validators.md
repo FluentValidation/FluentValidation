@@ -44,6 +44,7 @@ Example error: *'Surname' should not be equal to 'Foo'*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{ComparisonValue}` – Value that the property should not equal
+* `{PropertyValue}` – Current value of the property
 
 Optionally, a comparer can be provided to ensure a specific type of comparison is performed:
 
