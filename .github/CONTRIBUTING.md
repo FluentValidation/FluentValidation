@@ -5,13 +5,15 @@ Please check the documentation at https://fluentvalidation.net and old issues fi
 
 If not, then please provide the exact version of FluentValidation that you're using along with a detailed explanation of the issue and complete steps to reproduce the problem. Issues that don't provide enough information to reproduce will be closed.
 
-Please ensure all sample code is properly formatted and readable (GitHub supports [markdown](https://github.github.com/github-flavored-markdown/))
+Please ensure all sample code is properly formatted and readable (GitHub supports [markdown](https://github.github.com/github-flavored-markdown/)). Issues that don't include steps to reproduce will be closed. 
+
+We do our best to respond to all bug reports and feature requests, but FluentValidation is maintained on a voluntary basis and we cannot guarantee how quickly these will be looked at. 
+
+## General support, feedback, and discussions
+We don't provide discussions or support for general usage questions due to time constraints and the effort required to moderate these. The FluentValidation issue tracker should *only* be used for bug reports in the core FluentValidation library, or feature requests. Requests for general help or support will be closed. 
 
 ## Contributing Code
 Please open an issue to discuss new feature requests before submitting a Pull Request. This allows the maintainers to discuss whether your feature is a suitible fit for the project before any code is written.
-
-## General feedback and discussions
-We don't currently provide discussions or support for general usage questions due to time constraints and the effort required to moderate these. This may change in the future.
 
 ## Building the code
 Run `Build.cmd` (windows) or build.sh (Linux/mac) from the command line. This builds the project and and runs tests. Building requires the following software to be installed:
