@@ -1,19 +1,19 @@
-## Filing issues and feature requests
+## General support, feedback, and discussions
+We don't provide discussions or support for general usage questions due to time constraints and the effort required to moderate these. The FluentValidation issue tracker should *only* be used for bug reports in the core FluentValidation library, or feature requests. Requests for general help or support will be closed.
+
+## Filing bug reports and feature requests
 The best way to get your bug fixed is to be as detailed as you can be about the problem.
 
-Please check the documentation at https://fluentvalidation.net and old issues first to see if your question has already been answered.
+Please check both the documentation at https://fluentvalidation.net and old issues first to see if your question has already been answered.
 
 If not, then please provide the exact version of FluentValidation that you're using along with a detailed explanation of the issue and complete steps to reproduce the problem. Issues that don't provide enough information to reproduce will be closed.
 
-Please ensure all sample code is properly formatted and readable (GitHub supports [markdown](https://github.github.com/github-flavored-markdown/)). Issues that don't include steps to reproduce will be closed. 
+Please ensure all sample code is properly formatted and readable (GitHub supports [markdown](https://github.github.com/github-flavored-markdown/)). Issues that don't include all necessary code (or a sample project) to reproduce will be closed.
 
-We do our best to respond to all bug reports and feature requests, but FluentValidation is maintained on a voluntary basis and we cannot guarantee how quickly these will be looked at. 
-
-## General support, feedback, and discussions
-We don't provide discussions or support for general usage questions due to time constraints and the effort required to moderate these. The FluentValidation issue tracker should *only* be used for bug reports in the core FluentValidation library, or feature requests. Requests for general help or support will be closed. 
+We do our best to respond to all bug reports and feature requests, but FluentValidation is maintained on a voluntary basis and we cannot guarantee how quickly these will be looked at.
 
 ## Contributing Code
-Please open an issue to discuss new feature requests before submitting a Pull Request. This allows the maintainers to discuss whether your feature is a suitible fit for the project before any code is written.
+Please open an issue to discuss new feature requests before submitting a Pull Request. This allows the maintainers to discuss whether your feature is a suitible fit for the project before any code is written. Please don't open a pull request without first discussing whether the feature fits with the project roadmap.
 
 ## Building the code
 Run `Build.cmd` (windows) or build.sh (Linux/mac) from the command line. This builds the project and and runs tests. Building requires the following software to be installed:

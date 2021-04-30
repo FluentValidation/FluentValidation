@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links: 
+  - name: General Support and Usage questions
+    url: "https://github.com/FluentValidation/FluentValidation/blob/main/.github/CONTRIBUTING.md"
+    about: We are unable to provide general support for usage of the library
