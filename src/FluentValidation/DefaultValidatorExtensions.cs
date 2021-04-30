@@ -1164,7 +1164,21 @@ namespace FluentValidation {
 		public static IRuleBuilderOptions<T, IEnumerable<TElement>> ForEach<T, TElement>(this IRuleBuilder<T, IEnumerable<TElement>> ruleBuilder,
 			Action<IRuleBuilderInitialCollection<IEnumerable<TElement>, TElement>> action) {
 			var innerValidator = new InlineValidator<IEnumerable<TElement>>();
-			action(innerValidator.RuleForEach(x => x));
+
+			// https://github.com/FluentValidation/FluentValidation/issues/1231
+			// We need to explicitly set a display name override on the nested validator
+			// so that it matches what would happen if the user had called RuleForEach initially.
+			var originalRule = DefaultValidatorOptions.Configurable(ruleBuilder);
+			var collectionRuleBuilder = innerValidator.RuleForEach(x => x);
+			var collectionRule = DefaultValidatorOptions.Configurable(collectionRuleBuilder);
+
+			collectionRule.PropertyName = string.Empty;
+
+			collectionRule.SetDisplayName(context => {
+				return originalRule.GetDisplayName(((IValidationContext) context).ParentContext);
+			});
+
+			action(collectionRuleBuilder);
 			return ruleBuilder.SetValidator(innerValidator);
 		}
 

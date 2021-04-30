@@ -685,6 +685,29 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
+		[Fact]
+		public void Rule_ForEach_display_name_should_match_RuleForEach_display_name() {
+			var validator = new InlineValidator<Person>();
+
+			// These 2 rule definitions should produce the same error message and property name.
+			// https://github.com/FluentValidation/FluentValidation/issues/1231
+
+			validator
+				.RuleForEach(x => x.NickNames)
+				.Must(x => false)
+				.WithMessage("{PropertyName}");
+
+			validator
+				.RuleFor(x => x.NickNames)
+				.ForEach(n => n.Must(x => false).WithMessage("{PropertyName}"));
+
+			var result = validator.Validate(new Person() {NickNames = new[] {"foo"}});
+			result.Errors[0].PropertyName.ShouldEqual("NickNames[0]");
+			result.Errors[0].ErrorMessage.ShouldEqual("Nick Names");
+
+			result.Errors[1].PropertyName.ShouldEqual("NickNames[0]");
+			result.Errors[1].ErrorMessage.ShouldEqual("Nick Names");
+		}
 
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {
