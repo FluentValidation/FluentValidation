@@ -57,6 +57,13 @@ namespace FluentValidation.AspNetCore {
 			return mvcBuilder;
 		}
 
+		/// <summary>
+		///     Adds Fluent Validation services to the specified
+		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+		/// </summary>
+		/// <returns>
+		///     A reference to this instance after the operation has completed.
+		/// </returns>
 		public static IServiceCollection AddFluentValidation(this IServiceCollection services, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
 			configurationExpression?.Invoke(config);
