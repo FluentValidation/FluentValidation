@@ -34,6 +34,11 @@ namespace FluentValidation.Tests.AspNetCore {
 		public static void AddFluentValidationForTesting(this IServiceCollection services, Action<FluentValidationMvcConfiguration> configurator) {
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(configurator);
 		}
+
+		public static void AddFluentValidationPriorToAddMvcForTesting(this IServiceCollection services, Action<FluentValidationMvcConfiguration> configurator) {
+			services.AddFluentValidation(configurator);
+			services.AddMvc().AddNewtonsoftJson();
+		}
 	}
 
 }

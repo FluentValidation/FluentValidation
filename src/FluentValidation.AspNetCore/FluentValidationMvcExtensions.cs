@@ -18,18 +18,15 @@
 
 namespace FluentValidation.AspNetCore {
 	using System;
-	using System.Reflection;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Microsoft.Extensions.DependencyInjection;
 	using Microsoft.Extensions.Options;
 	using FluentValidation;
-	using System.Collections.Generic;
 	using System.Linq;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.Extensions.DependencyInjection.Extensions;
-	using Microsoft.Extensions.Logging;
 
 	public static class FluentValidationMvcExtensions {
 		/// <summary>
@@ -41,27 +38,7 @@ namespace FluentValidation.AspNetCore {
 		///     MVC services.
 		/// </returns>
 		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
-			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
-			configurationExpression?.Invoke(config);
-
-			RegisterServices(mvcBuilder.Services, config);
-
-			mvcBuilder.AddMvcOptions(options => {
-				// Check if the providers have already been added.
-				// We shouldn't have to do this, but there's a bug in the ASP.NET Core integration
-				// testing components that can cause Configureservices to be called multple times
-				// meaning we end up with duplicates.
-
-				if (!options.ModelMetadataDetailsProviders.Any(x => x is FluentValidationBindingMetadataProvider)) {
-					options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
-				}
-
-				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
-					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(
-						config.ImplicitlyValidateChildProperties,
-						config.ImplicitlyValidateRootCollectionElements));
-				}
-			});
+			mvcBuilder.Services.AddFluentValidation(configurationExpression);
 
 			return mvcBuilder;
 		}
@@ -75,31 +52,22 @@ namespace FluentValidation.AspNetCore {
 		///     MVC services.
 		/// </returns>
 		public static IMvcBuilder AddFluentValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
-			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
-			configurationExpression?.Invoke(config);
-
-			RegisterServices(mvcBuilder.Services, config);
-
-			mvcBuilder.AddMvcOptions(options => {
-				// Check if the providers have already been added.
-				// We shouldn't have to do this, but there's a bug in the ASP.NET Core integration
-				// testing components that can cause Configureservices to be called multple times
-				// meaning we end up with duplicates.
-				if (!options.ModelMetadataDetailsProviders.Any(x => x is FluentValidationBindingMetadataProvider)) {
-					options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
-				}
-
-				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
-					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(
-						config.ImplicitlyValidateChildProperties,
-						config.ImplicitlyValidateRootCollectionElements));
-				}
-			});
+			mvcBuilder.Services.AddFluentValidation(configurationExpression);
 
 			return mvcBuilder;
 		}
 
-		private static void RegisterServices(IServiceCollection services, FluentValidationMvcConfiguration config) {
+		/// <summary>
+		///     Adds Fluent Validation services to the specified
+		///     <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection" />.
+		/// </summary>
+		/// <returns>
+		///     A reference to this instance after the operation has completed.
+		/// </returns>
+		public static IServiceCollection AddFluentValidation(this IServiceCollection services, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
+			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
+			configurationExpression?.Invoke(config);
+
 			services.AddValidatorsFromAssemblies(config.AssembliesToRegister, config.ServiceLifetime, config.TypeFilter);
 			services.AddSingleton(config.ValidatorOptions);
 
@@ -130,6 +98,25 @@ namespace FluentValidation.AspNetCore {
 					return new FluentValidationViewOptionsSetup(config.ClientsideConfig, s.GetService<IHttpContextAccessor>());
 				}));
 			}
+
+			services.Configure<MvcOptions>(options => {
+				// Check if the providers have already been added.
+				// We shouldn't have to do this, but there's a bug in the ASP.NET Core integration
+				// testing components that can cause Configureservices to be called multple times
+				// meaning we end up with duplicates.
+
+				if (!options.ModelMetadataDetailsProviders.Any(x => x is FluentValidationBindingMetadataProvider)) {
+					options.ModelMetadataDetailsProviders.Add(new FluentValidationBindingMetadataProvider());
+				}
+
+				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
+					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(
+						config.ImplicitlyValidateChildProperties,
+						config.ImplicitlyValidateRootCollectionElements));
+				}
+			});
+
+			return services;
 		}
 	}
 

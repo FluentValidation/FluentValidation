@@ -604,5 +604,30 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 
+		[Fact]
+		public async Task When_calling_AddFluentValidation_prior_AddMvc_doesnot_break() {
+			var form = new FormData {
+				{"Email", "foo"},
+				{"Surname", "foo"},
+				{"Forename", "foo"},
+			};
+			var client = _webApp
+				.WithFluentValidationAddedPriorAddMvc(fv => {
+					fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);
+					fv.ImplicitlyValidateChildProperties = true;
+				})
+				.WithWebHostBuilder(builder => builder.ConfigureServices(
+						services => services.AddSingleton<IValidatorInterceptor, SimpleActionContextPropertyInterceptor>())
+				)
+				.CreateClient();
+			var response = await client.PostResponse($"/RulesetTest", form);
+			var result = JsonConvert.DeserializeObject<List<SimpleError>>(response);
+
+			result.IsValidField("Forename").ShouldBeFalse();
+			result.IsValidField("Surname").ShouldBeFalse();
+			result.IsValidField("Email").ShouldBeTrue();
+		}
+
+
 	}
 }
