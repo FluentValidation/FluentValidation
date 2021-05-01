@@ -69,5 +69,13 @@
 				});
 			});
 		}
+
+		public WebApplicationFactory<Startup> WithFluentValidationAddedPriorAddMvc(Action<FluentValidationMvcConfiguration> config) {
+			return WithWebHostBuilder(cfg => {
+				cfg.ConfigureServices(services => {
+					services.AddFluentValidationPriorToAddMvcForTesting(config);
+				});
+			});
+		}
 	}
 }
