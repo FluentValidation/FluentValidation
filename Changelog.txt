@@ -1,5 +1,6 @@
 10.2.0 - 
 Display name generation should be consistent between RuleForEach and RuleFor.ForEach (#1231)
+Allow AddFluentValidation to be called directly on IServiceCollection (#1726)
 
 10.1.0 - 28 April 2021
 Allow default severity level to be set globally (#1715)
