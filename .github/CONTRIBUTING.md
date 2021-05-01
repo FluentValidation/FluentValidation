@@ -1,5 +1,5 @@
 ## General support, feedback, and discussions
-We don't provide discussions or support for general usage questions due to time constraints and the effort required to moderate these. The FluentValidation issue tracker should *only* be used for bug reports in the core FluentValidation library, or feature requests. Requests for general help or support will be closed.
+FluentValidation is maintained on a voluntary basis, and as such we are unable to provide general support or answer questions on usage due to the time and effort required to moderate these. The FluentValidation issue tracker should *only* be used for bug reports in the core FluentValidation library, or feature requests where appropriate. Requests for general support or questions on usage will be closed.
 
 ## Filing bug reports and feature requests
 The best way to get your bug fixed is to be as detailed as you can be about the problem.
