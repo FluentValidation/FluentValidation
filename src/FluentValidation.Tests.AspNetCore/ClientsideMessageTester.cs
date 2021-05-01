@@ -22,13 +22,24 @@ namespace FluentValidation.Tests.AspNetCore {
 	using System.Linq;
 	using System.Net.Http;
 	using System.Threading.Tasks;
+	using Controllers;
+	using FluentValidation.AspNetCore;
+	using Microsoft.AspNetCore.Http;
+	using Microsoft.Extensions.DependencyInjection;
 	using Xunit;
 
 	public class ClientsideMessageTester : IClassFixture<WebAppFixture> {
 		private readonly HttpClient _client;
 
 		public ClientsideMessageTester(WebAppFixture webApp) {
-			_client = webApp.WithContainer(enableLocalization:true).CreateClient();
+			_client = webApp.CreateClientWithServices(services => {
+				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+				});
+				services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+				services.AddScoped<ClientsideScopedDependency>();
+				services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
+			});
 			CultureScope.SetDefaultCulture();
 		}
 
@@ -228,7 +239,15 @@ namespace FluentValidation.Tests.AspNetCore {
 		private readonly HttpClient _client;
 
 		public RazorPagesClientsideMessageTester(WebAppFixture webApp) {
-			_client = webApp.WithContainer(enableLocalization: true).CreateClient();
+			_client = webApp.CreateClientWithServices(services => {
+				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+				});
+				services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+				services.AddScoped<ClientsideScopedDependency>();
+				services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
+			});;
+
 			CultureScope.SetDefaultCulture();
 		}
 

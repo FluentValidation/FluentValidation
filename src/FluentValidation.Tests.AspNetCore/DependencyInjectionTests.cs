@@ -3,6 +3,7 @@ namespace FluentValidation.Tests {
 	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
+	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.Extensions.DependencyInjection;
 	using Xunit;
@@ -18,7 +19,7 @@ namespace FluentValidation.Tests {
 			_output = output;
 			_client = webApp.WithWebHostBuilder(webHostBuilder => {
 					webHostBuilder.ConfigureServices(services => {
-						services.AddFluentValidationForTesting(fv => {
+						services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 							fv.ImplicitlyValidateChildProperties = false;
 						});
 						services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

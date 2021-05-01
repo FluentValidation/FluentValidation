@@ -21,6 +21,7 @@ namespace FluentValidation.Tests {
 	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
+	using FluentValidation.AspNetCore;
 	using Microsoft.Extensions.DependencyInjection;
 	using Xunit;
 	using Xunit.Abstractions;
@@ -34,10 +35,11 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Finds_and_executes_validator() {
-			var client = _webApp.WithFluentValidation(fv => {
-				fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-			}).CreateClient();
-
+			var client = _webApp.CreateClientWithServices(services => {
+				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+				});
+			});
 			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
 
 			// Validator was found and executed so field shouldn't be valid.
@@ -47,11 +49,13 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Filters_types() {
-			var client = _webApp.WithFluentValidation(fv => {
-				fv.RegisterValidatorsFromAssemblyContaining<TestController>(scanResult => {
-					return scanResult.ValidatorType != typeof(InjectsExplicitChildValidator);
+			var client = _webApp.CreateClientWithServices(services => {
+				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+					fv.RegisterValidatorsFromAssemblyContaining<TestController>(scanResult => {
+						return scanResult.ValidatorType != typeof(InjectsExplicitChildValidator);
+					});
 				});
-			}).CreateClient();
+			});
 
 			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
 
@@ -61,10 +65,12 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public async Task Disables_automatic_validation() {
-			var client = _webApp.WithFluentValidation(fv => {
-				fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-				fv.AutomaticValidationEnabled = false;
-			}).CreateClient();
+			var client = _webApp.CreateClientWithServices(services => {
+				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+					fv.AutomaticValidationEnabled = false;
+				});
+			});
 
 			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
 

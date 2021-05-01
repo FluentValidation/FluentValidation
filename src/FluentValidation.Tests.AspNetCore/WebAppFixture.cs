@@ -1,8 +1,7 @@
 ﻿namespace FluentValidation.Tests {
 	using System;
+	using System.Net.Http;
 	using AspNetCore;
-	using AspNetCore.Controllers;
-	using Attributes;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Hosting;
 	using Microsoft.AspNetCore.Http;
@@ -20,62 +19,8 @@
 				.UseStartup<Startup>();
 		}
 
-		public WebApplicationFactory<Startup> WithContainer(bool registerContextAccessor = true, bool enableLocalization = false) {
-			return WithWebHostBuilder(cfg => {
-				cfg.ConfigureServices(services => {
-
-					if (enableLocalization) {
-						services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
-					}
-
-					services.AddFluentValidationForTesting(fv => {
-						fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-					});
-					if (registerContextAccessor) {
-						services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-					}
-
-					services.AddScoped<ClientsideScopedDependency>();
-				});
-			});
-		}
-
-		public WebApplicationFactory<Startup> WithDataAnnotationsDisabled() {
-			return WithFluentValidation(fv => {
-				fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);
-				fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
-			});
-		}
-
-		public WebApplicationFactory<Startup> WithImplicitValidationEnabled(bool enabled) {
-			return WithFluentValidation(fv => {
-				fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);
-				fv.ImplicitlyValidateChildProperties = enabled;
-			});
-		}
-
-		public WebApplicationFactory<Startup> WithImplicitCollectionValidationEnabled(bool enabled) {
-			return WithFluentValidation(fv => {
-				fv.ValidatorFactoryType = typeof(AttributedValidatorFactory);
-				fv.ImplicitlyValidateChildProperties = false;
-				fv.ImplicitlyValidateRootCollectionElements = enabled;
-			});
-		}
-
-		public WebApplicationFactory<Startup> WithFluentValidation(Action<FluentValidationMvcConfiguration> config) {
-			return WithWebHostBuilder(cfg => {
-				cfg.ConfigureServices(services => {
-					services.AddFluentValidationForTesting(config);
-				});
-			});
-		}
-
-		public WebApplicationFactory<Startup> WithFluentValidationAddedPriorAddMvc(Action<FluentValidationMvcConfiguration> config) {
-			return WithWebHostBuilder(cfg => {
-				cfg.ConfigureServices(services => {
-					services.AddFluentValidationPriorToAddMvcForTesting(config);
-				});
-			});
+		public HttpClient CreateClientWithServices(Action<IServiceCollection> configurator) {
+			return WithWebHostBuilder(builder => builder.ConfigureServices(configurator)).CreateClient();
 		}
 	}
 }

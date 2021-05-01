@@ -4,14 +4,11 @@ namespace FluentValidation.Tests.AspNetCore {
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
 	using FluentValidation;
-	using FluentValidation.Attributes;
 	using FluentValidation.AspNetCore;
 	using FluentValidation.Results;
-	using Internal;
 	using Microsoft.AspNetCore.Mvc;
 	using ValidationResult = Results.ValidationResult;
 
-	[Validator(typeof(TestModel5Validator))]
 	public class TestModel5 {
 		public int Id { get; set; }
 		public bool SomeBool { get; set; }
@@ -38,19 +35,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	public class SimpleActionContextPropertyInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
-		readonly string[] properties = new[] {"Surname", "Forename"};
-
-		public IValidationContext BeforeAspNetValidation(ActionContext cc, IValidationContext context) {
-			var newContext = new ValidationContext<object>(context.InstanceToValidate, context.PropertyChain, new FluentValidation.Internal.MemberNameValidatorSelector(properties));
-			return newContext;
-		}
-
-		public ValidationResult AfterAspNetValidation(ActionContext cc, IValidationContext context, ValidationResult result) {
-			return result;
-		}
-	}
-
 	public class ClearErrorsInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
 		public IValidationContext BeforeAspNetValidation(ActionContext cc, IValidationContext context) {
 			return null;
@@ -61,7 +45,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(PropertiesValidator2))]
 	public class PropertiesTestModel2 {
 		public string Email { get; set; }
 		public string Surname { get; set; }
@@ -85,7 +68,6 @@ namespace FluentValidation.Tests.AspNetCore {
 	}
 
 
-	[Validator(typeof(PropertiesValidator))]
 	public class PropertiesTestModel {
 		public string Email { get; set; }
 		public string Surname { get; set; }
@@ -101,7 +83,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(RulesetTestValidator))]
 	public class RulesetTestModel {
 		public string Email { get; set; }
 		public string Surname { get; set; }
@@ -119,12 +100,10 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(TestModelWithOverridenMessageValueTypeValidator))]
 	public class TestModelWithOverridenMessageValueType {
 		public int Id { get; set; }
 	}
 
-	[Validator(typeof(TestModelWithOverridenPropertyNameValidator))]
 	public class TestModelWithOverridenPropertyNameValueType {
 		public int Id { get; set; }
 	}
@@ -145,7 +124,6 @@ namespace FluentValidation.Tests.AspNetCore {
 	public class TestModel2 {
 	}
 
-	[Validator(typeof(TestModelValidator))]
 	public class TestModel {
 		public string Name { get; set; }
 	}
@@ -156,7 +134,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(TestModelValidator3))]
 	public class TestModel3 {
 		public int Id { get; set; }
 	}
@@ -171,7 +148,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		public int Id { get; set; }
 	}
 
-	[Validator(typeof(TestModel4Validator))]
 	public class TestModel4 {
 		public string Surname { get; set; }
 		public string Forename { get; set; }
@@ -192,7 +168,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(TestModel6Validator))]
 	public class TestModel6 {
 		public int Id { get; set; }
 	}
@@ -213,7 +188,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(CollectionTestModelValidator))]
 	public class CollectionTestModel {
 		public string Name { get; set; }
 	}
@@ -224,7 +198,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(MultipleErrorsModelValidator))]
 	public class MultipleErrorsModel {
 		public string Name { get; set; }
 	}
@@ -268,7 +241,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		public string Name { get; set; }
 	}
 
-	[Validator(typeof(MultiValidationValidator))]
 	public class MultiValidationModel {
 		[Required]
 		public string Name { get; set; }
@@ -283,7 +255,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(MultiValidationValidator2))]
 	public class MultiValidationModel2 {
 		[Required]
 		public string Name { get; set; }
@@ -296,7 +267,6 @@ namespace FluentValidation.Tests.AspNetCore {
 	}
 
 
-	[Validator(typeof(MultiValidationValidator3))]
 	public class MultiValidationModel3 {
 		public string Name { get; set; }
 		public ChildModel5 Child { get; set; } = new ChildModel5();
@@ -323,12 +293,10 @@ namespace FluentValidation.Tests.AspNetCore {
 		public string Name { get; set; }
 	}
 
-	[Validator(typeof(ParentModelValidator))]
 	public class ParentModel {
 		public ChildModel Child { get; set; } = new ChildModel();
 	}
 
-	[Validator(typeof(ChildModelValidator))]
 	public class ChildModel {
 		public string Name { get; set; }
 	}
@@ -342,7 +310,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(ImplementsIValidatableObjectValidator))]
 	public class ImplementsIValidatableObjectModel : IValidatableObject {
 		public string Name { get; set; }
 		public string Name2 { get; set; }
@@ -359,13 +326,11 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(ParentModel2Validator))]
 	public class ParentModel2 {
 		public ChildModel2 Child { get; set; } = new ChildModel2();
 		public string Name { get; set; }
 	}
 
-	[Validator(typeof(ChildModel2Validator))]
 	public class ChildModel2 : IValidatableObject {
 		public string Name { get; set; }
 		public string Name2 { get; set; }
@@ -389,12 +354,10 @@ namespace FluentValidation.Tests.AspNetCore {
 	}
 
 
-	[Validator(typeof(ParentModelValidator3))]
 	public class ParentModel3 {
 		public ChildModel3 Child { get; set; } = new ChildModel3();
 	}
 
-	[Validator(typeof(ChildModelValidator3))]
 	public class ChildModel3 {
 		public string Name { get; set; }
 
@@ -411,12 +374,10 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(ParentModel4Validator))]
 	public class ParentModel4 {
 		public ChildModel4 Child { get; set; } = new ChildModel4();
 	}
 
-	[Validator(typeof(ChildModel4Validator))]
 	public class ChildModel4 {
 		public string Name { get; set; }
 	}
@@ -433,7 +394,6 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	[Validator(typeof(ParentModel5Validator))]
 	public class ParentModel5 {
 		public ChildModel Child { get; set; }
 	}
@@ -442,7 +402,6 @@ namespace FluentValidation.Tests.AspNetCore {
 	}
 
 
-	[Validator(typeof(ParentModel6Validator))]
 	public class ParentModel6 {
 		public List<ChildModel> Children { get; set; } = new List<ChildModel>();
 	}

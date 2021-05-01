@@ -39,7 +39,6 @@ namespace FluentValidation.AspNetCore {
 		/// </returns>
 		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			mvcBuilder.Services.AddFluentValidation(configurationExpression);
-
 			return mvcBuilder;
 		}
 
@@ -53,7 +52,6 @@ namespace FluentValidation.AspNetCore {
 		/// </returns>
 		public static IMvcBuilder AddFluentValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			mvcBuilder.Services.AddFluentValidation(configurationExpression);
-
 			return mvcBuilder;
 		}
 

@@ -1,18 +1,10 @@
 ﻿namespace FluentValidation.Tests {
-	using System;
 	using System.Collections.Generic;
 	using System.Net.Http;
-	using System.Text.RegularExpressions;
-	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
-	using Attributes;
-	using Microsoft.AspNetCore.Mvc;
-	using Microsoft.AspNetCore.Mvc.Abstractions;
-	using Microsoft.AspNetCore.Mvc.ModelBinding;
-	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using Microsoft.Extensions.Logging;
-	using Microsoft.Extensions.Options;
+	using FluentValidation.AspNetCore;
+	using Microsoft.Extensions.DependencyInjection;
 	using Newtonsoft.Json;
 	using Xunit;
 	using Xunit.Abstractions;
@@ -25,7 +17,12 @@
 			CultureScope.SetDefaultCulture();
 
 			_output = output;
-			_client = webApp.WithImplicitValidationEnabled(false).CreateClient();
+			_client = webApp.CreateClientWithServices(services => {
+				services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+				services.AddScoped<IValidator<TestModel>, TestModelValidator>();
+				services.AddScoped<IValidator<RulesetTestModel>, RulesetTestValidator>();
+				services.AddScoped<IValidator<ClientsideRulesetModel>, ClientsideRulesetValidator>();
+			});
 		}
 
 		[Fact]
@@ -79,11 +76,18 @@
 			CultureScope.SetDefaultCulture();
 
 			_output = output;
-			_client = webApp.WithImplicitValidationEnabled(true).CreateClient();
+			_client = _client = webApp.CreateClientWithServices(services => {
+				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+					fv.ImplicitlyValidateChildProperties = true;
+				});
+				services.AddScoped<IValidator<TestModel>, TestModelValidator>();
+				services.AddScoped<IValidator<RulesetTestModel>, RulesetTestValidator>();
+				services.AddScoped<IValidator<ClientsideRulesetModel>, ClientsideRulesetValidator>();
+			});
 		}
 
 		[Fact]
-		public async void Validates_with_BindProperty_attribute_when_implicit_validation_disabled() {
+		public async void Validates_with_BindProperty_attribute_when_implicit_validation_enabled() {
 			var form = new FormData {
 				{"Name", null},
 			};
