@@ -35,6 +35,8 @@ For example, the default message for the `NotNull` validator is `'{PropertyName}
 public class CustomLanguageManager : FluentValidation.Resources.LanguageManager {
   public CustomLanguageManager() {
     AddTranslation("en", "NotNullValidator", "'{PropertyName}' is required.");
+    AddTranslation("en-US", "NotNullValidator", "'{PropertyName}' is required.");
+    AddTranslation("en-GB", "NotNullValidator", "'{PropertyName}' is required.");
   }
 }
 ```
@@ -46,6 +48,8 @@ Once this is done, we can replace the default LanguageManager by setting the Lan
 ```csharp
 ValidatorOptions.Global.LanguageManager = new CustomLanguageManager();
 ```
+
+Note that if you replace messages in the `en` culture, you should consider also replacing the messages for `en-US` and `en-GB` too, as these will take precedence for users from these locales.    
 
 This is a simple example that only replaces one validator's message in English only, but could be extended to replace the messages for all languages. Instead of inheriting from the default LanguageManager, you could also implement the `ILanguageManager` interface directly if you want to load the messages from a completely different location other than the FluentValidation default (for example, if you wanted to store FluentValidation's default messages in a database).
 
