@@ -70,7 +70,7 @@ namespace FluentValidation {
 		}
 
 		private static string BuildErrorMessage(IEnumerable<ValidationFailure> errors) {
-			var arr = errors.Select(x => $"{Environment.NewLine} -- {x.PropertyName}: {x.ErrorMessage}");
+			var arr = errors.Select(x => $"{Environment.NewLine} -- {x.PropertyName}: {x.ErrorMessage} Severity: {x.Severity.ToString()}");
 			return "Validation failed: " + string.Join(string.Empty, arr);
 		}
 
