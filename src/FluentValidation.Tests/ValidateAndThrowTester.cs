@@ -194,5 +194,29 @@ namespace FluentValidation.Tests {
 
 			thrown.ShouldBeTrue();
 		}
+
+		[Fact]
+		public void Throws_exception_when_preValidate_fails_and_continueValidation_true() {
+			var validator = new TestValidatorWithPreValidate {
+				PreValidateMethod = (context, result) => {
+					result.Errors.Add(new ValidationFailure("test", "test"));
+					return true;
+				}
+			};
+
+			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+		}
+
+		[Fact]
+		public void Throws_exception_when_preValidate_fails_and_continueValidation_false() {
+			var validator = new TestValidatorWithPreValidate {
+				PreValidateMethod = (context, result) => {
+					result.Errors.Add(new ValidationFailure("test", "test"));
+					return false;
+				}
+			};
+
+			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+		}
 	}
 }
