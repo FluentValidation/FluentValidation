@@ -139,7 +139,7 @@ namespace FluentValidation.Tests {
 			};
 
 			var ex = typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
-			string expected = "FluentValidation.ValidationException: Validation failed: " + Environment.NewLine + " -- Surname: 'Surname' must not be empty." + Environment.NewLine + " -- Forename: 'Forename' must not be empty.";
+			string expected = "FluentValidation.ValidationException: Validation failed: " + Environment.NewLine + " -- Surname: 'Surname' must not be empty. Severity: Error" + Environment.NewLine + " -- Forename: 'Forename' must not be empty.";
 			Assert.True(ex.ToString().StartsWith(expected));
 		}
 
