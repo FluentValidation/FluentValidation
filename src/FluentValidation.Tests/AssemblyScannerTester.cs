@@ -45,12 +45,21 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void FindValidatorsInAssembly_Should_Find_Internal_Types() {
-			var scanner = AssemblyScanner.FindValidatorsInAssembly(GetType().Assembly);
+		public void FindValidatorsInAssembly_When_Instructed_Should_Find_Internal_Types() {
+			var scanner = AssemblyScanner.FindValidatorsInAssembly(GetType().Assembly, true);
 			var results = new List<AssemblyScanner.AssemblyScanResult>();
 
 			scanner.ForEach(x => results.Add(x));
 			Assert.Contains(results, o=> o.ValidatorType == typeof(Model1InternalValidator));
+		}
+
+		[Fact]
+		public void FindValidatorsInAssembly_By_Default_Should_Not_Find_Internal_Types() {
+			var scanner = AssemblyScanner.FindValidatorsInAssembly(GetType().Assembly);
+			var results = new List<AssemblyScanner.AssemblyScanResult>();
+
+			scanner.ForEach(x => results.Add(x));
+			Assert.DoesNotContain(results, o=> o.ValidatorType == typeof(Model1InternalValidator));
 		}
 
 		public class Model1 {
