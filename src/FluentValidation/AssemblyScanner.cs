@@ -42,15 +42,15 @@ namespace FluentValidation {
 		/// <summary>
 		/// Finds all the validators in the specified assembly.
 		/// </summary>
-		public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly) {
-			return new AssemblyScanner(assembly.GetExportedTypes());
+		public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly, bool includeInternalTypes = false) {
+			return new AssemblyScanner(includeInternalTypes ? assembly.GetTypes() : assembly.GetExportedTypes());
 		}
 
 		/// <summary>
 		/// Finds all the validators in the specified assemblies
 		/// </summary>
-		public static AssemblyScanner FindValidatorsInAssemblies(IEnumerable<Assembly> assemblies) {
-			var types = assemblies.SelectMany(x => x.GetExportedTypes().Distinct());
+		public static AssemblyScanner FindValidatorsInAssemblies(IEnumerable<Assembly> assemblies, bool includeInternalTypes = false) {
+			var types = assemblies.SelectMany(x => includeInternalTypes ? x.GetTypes() : x.GetExportedTypes()).Distinct();
 			return new AssemblyScanner(types);
 		}
 
@@ -72,12 +72,12 @@ namespace FluentValidation {
 			var openGenericType = typeof(IValidator<>);
 
 			var query = from type in _types
-						where !type.IsAbstract && !type.IsGenericTypeDefinition
-						let interfaces = type.GetInterfaces()
-						let genericInterfaces = interfaces.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
-						let matchingInterface = genericInterfaces.FirstOrDefault()
-						where matchingInterface != null
-						select new AssemblyScanResult(matchingInterface, type);
+									where !type.IsAbstract && !type.IsGenericTypeDefinition
+									let interfaces = type.GetInterfaces()
+									let genericInterfaces = interfaces.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == openGenericType)
+									let matchingInterface = genericInterfaces.FirstOrDefault()
+									where matchingInterface != null
+									select new AssemblyScanResult(matchingInterface, type);
 
 			return query;
 		}
