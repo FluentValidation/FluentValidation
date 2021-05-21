@@ -84,7 +84,7 @@ namespace FluentValidation {
 			bool shouldContinue = PreValidate(context, result);
 
 			if (!shouldContinue) {
-				if (context.ThrowOnFailures) {
+				if (!result.IsValid && context.ThrowOnFailures) {
 					RaiseValidationException(context, result);
 				}
 

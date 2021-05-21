@@ -218,5 +218,14 @@ namespace FluentValidation.Tests {
 
 			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
 		}
+
+		[Fact]
+		public void Does_not_throws_exception_when_preValidate_end_with_continueValidation_false() {
+			var validator = new TestValidatorWithPreValidate {
+				PreValidateMethod = (context, result) => false
+			};
+
+			validator.ValidateAndThrow(new Person());
+		}
 	}
 }
