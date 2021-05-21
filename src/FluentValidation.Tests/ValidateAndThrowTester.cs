@@ -3,7 +3,6 @@ namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Threading.Tasks;
-	using Internal;
 	using Newtonsoft.Json;
 	using Results;
 	using Xunit;
@@ -220,12 +219,59 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Does_not_throws_exception_when_preValidate_end_with_continueValidation_false() {
+		public void Does_not_throws_exception_when_preValidate_ends_with_continueValidation_false() {
 			var validator = new TestValidatorWithPreValidate {
 				PreValidateMethod = (context, result) => false
 			};
 
 			validator.ValidateAndThrow(new Person());
+		}
+
+		[Fact]
+		public void Throws_exception_when_preValidate_fails_and_continueValidation_true_async() {
+			var validator = new TestValidatorWithPreValidate {
+				PreValidateMethod = (context, result) => {
+					result.Errors.Add(new ValidationFailure("test", "test"));
+					return true;
+				}
+			};
+
+			typeof(ValidationException).ShouldBeThrownBy(() => {
+				try {
+					validator.ValidateAndThrowAsync(new Person()).Wait();
+				}
+				catch (AggregateException agrEx) {
+					throw agrEx.InnerException;
+				}
+			});
+		}
+
+		[Fact]
+		public void Throws_exception_when_preValidate_fails_and_continueValidation_false_async() {
+			var validator = new TestValidatorWithPreValidate {
+				PreValidateMethod = (context, result) => {
+					result.Errors.Add(new ValidationFailure("test", "test"));
+					return false;
+				}
+			};
+
+			typeof(ValidationException).ShouldBeThrownBy(() => {
+				try {
+					validator.ValidateAndThrowAsync(new Person()).Wait();
+				}
+				catch (AggregateException agrEx) {
+					throw agrEx.InnerException;
+				}
+			});
+		}
+
+		[Fact]
+		public void Does_not_throws_exception_when_preValidate_ends_with_continueValidation_false_async() {
+			var validator = new TestValidatorWithPreValidate {
+				PreValidateMethod = (context, result) => false
+			};
+
+			validator.ValidateAndThrowAsync(new Person()).Wait();
 		}
 	}
 }
