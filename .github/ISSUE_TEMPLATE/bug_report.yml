@@ -4,10 +4,12 @@ to 10.x"
 body:
 - type: markdown
   attributes:
-    value: Thanks for taking the time to file a bug report! Before filling out a new issue, please first check to see if your question has been answered in an existing issue, or in the project documentation at [https://docs.fluentvalidation.net](https://docs.fluentvalidation.net)
-- type: markdown
-  attributes:
-    value: Please take the time to fill in this form as completely as possible. If you leave out sections there is a high likelihood your issue will be closed.
+    value: | 
+      Thanks for taking the time to file a bug report! Before filling out a new issue, please first check to see if your question has been answered in an existing issue, or in the project documentation at [https://docs.fluentvalidation.net](https://docs.fluentvalidation.net)
+      
+      **Please note** FluentValidation is supported for free on a voluntary basis. If you use FluentValidation please [sponsor the project](https://github.com/sponsors/JeremySkinner) so that its development can continue. Bug reports from sponsors will be prioritised.
+      
+      Please take the time to fill in this form as completely as possible. If you leave out sections there is a high likelihood your issue will be closed.
 - type: input
   attributes:
     label: FluentValidation version
@@ -28,9 +30,11 @@ body:
   attributes:
     label: Steps to Reproduce
     description: "Please include all the steps necessary to reproduce the issue, including any sample code (preferably in the form of a runnable unit test). Alternatively, please provide a link to a *minimal* sample project. Please do not include screenshots of code."  
+  validations:
+    required: true
 - type: markdown
   attributes:
-    value: "Please ensure that any code samples are readable and [properly formatted as code blocks](https://docs.github.com/en/github/writing-on-github/creating-and-highlighting-code-blocks)."
-- type: markdown
-  attributes:
-    value: "**Please realise that it is up to you to debug your code thorougly. Be as certain as possible that the bug is with FluentValidation, and not with your own code, prior to opening an issue.**"
+    value: |
+      Please ensure that any code samples are readable and [properly formatted as code blocks](https://docs.github.com/en/github/writing-on-github/creating-and-highlighting-code-blocks).
+      
+      **Please realise that it is up to you to debug your code thorougly. Be as certain as possible that the bug is with FluentValidation, and not with your own code, prior to opening an issue.**

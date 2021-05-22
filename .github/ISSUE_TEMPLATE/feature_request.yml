@@ -3,7 +3,10 @@ description: 'Want us to add something to FluentValidation?'
 body:
   - type: markdown
     attributes:
-      value: Thanks for helping us make FluentValidation even better! Please fill out this form as thoroughly as possible.
+      value: |
+        Thanks for helping us make FluentValidation even better! Please fill out this form as thoroughly as possible.
+        
+        **Please note** FluentValidation is supported for free on a voluntary basis. If you use FluentValidation please [sponsor the project](https://github.com/sponsors/JeremySkinner) so that its development can continue. Feature requests from sponsors will be prioritised.
   - type: textarea
     attributes:
       label: Is your feature request related to a problem? Please describe.
