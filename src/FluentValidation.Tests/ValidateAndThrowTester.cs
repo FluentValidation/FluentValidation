@@ -218,7 +218,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Throws_exception_when_preValidate_fails_and_continueValidation_true_async() {
+		public async Task Throws_exception_when_preValidate_fails_and_continueValidation_true_async() {
 			var validator = new TestValidatorWithPreValidate {
 				PreValidateMethod = (context, result) => {
 					result.Errors.Add(new ValidationFailure("test", "test"));
@@ -226,13 +226,8 @@ namespace FluentValidation.Tests {
 				}
 			};
 
-			Assert.Throws<ValidationException>(() => {
-				try {
-					validator.ValidateAndThrowAsync(new Person()).Wait();
-				}
-				catch (AggregateException agrEx) {
-					throw agrEx.InnerException;
-				}
+			await Assert.ThrowsAsync<ValidationException>(async () => {
+				await validator.ValidateAndThrowAsync(new Person());
 			});
 		}
 
