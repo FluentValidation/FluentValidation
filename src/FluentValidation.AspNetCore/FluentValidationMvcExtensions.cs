@@ -82,7 +82,7 @@ namespace FluentValidation.AspNetCore {
 				services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
 					var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
 					var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
-					return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, config.RunDefaultMvcValidationAfterFluentValidationExecutes);
+					return new FluentValidationObjectModelValidator(metadataProvider, options.ModelValidatorProviders, !config.DisableDataAnnotationsValidation);
 				}));
 			}
 

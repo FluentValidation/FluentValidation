@@ -16,7 +16,7 @@ namespace FluentValidation.Tests {
 		public async Task Disables_data_annotations() {
 			var client = _app.CreateClientWithServices(services => {
 				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-					fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+					fv.DisableDataAnnotationsValidation = true;
 				});
 				services.AddScoped<IValidator<MultiValidationModel>, MultiValidationValidator>();
 			});
