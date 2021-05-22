@@ -18,7 +18,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
 
-			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+			Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(new Person()));
 		}
 
 		[Fact]
@@ -36,18 +36,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Throws_exception_async() {
+		public async Task Throws_exception_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
 
-			typeof(ValidationException).ShouldBeThrownBy(() => {
-				try {
-					validator.ValidateAndThrowAsync(new Person()).Wait();
-				}
-				catch (AggregateException agrEx) {
-					throw agrEx.InnerException;
-				}
+			await Assert.ThrowsAsync<ValidationException>(async () => {
+				await validator.ValidateAndThrowAsync(new Person());
 			});
 		}
 
@@ -61,12 +56,7 @@ namespace FluentValidation.Tests {
 			validator.RuleSet(ruleSetName, () => { validator.RuleFor(x => x.Forename).NotNull(); });
 
 			await Assert.ThrowsAsync<ValidationException>(async () => {
-				try {
-					await validator.ValidateAsync(new Person(), v => v.IncludeRuleSets(ruleSetName).ThrowOnFailures());
-				}
-				catch (AggregateException agrEx) {
-					throw agrEx.InnerException;
-				}
+				await validator.ValidateAsync(new Person(), v => v.IncludeRuleSets(ruleSetName).ThrowOnFailures());
 			});
 		}
 
@@ -96,12 +86,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Does_not_throw_when_valid_async() {
+		public async Task Does_not_throw_when_valid_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
 
-			validator.ValidateAndThrowAsync(new Person {Surname = "foo"}).Wait();
+			await validator.ValidateAndThrowAsync(new Person {Surname = "foo"});
 		}
 
 		[Fact]
@@ -126,7 +116,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
 
-			var ex = (ValidationException) typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+			var ex = (ValidationException) Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(new Person()));
 			ex.Errors.Count().ShouldEqual(1);
 		}
 
@@ -137,7 +127,7 @@ namespace FluentValidation.Tests {
 				v => v.RuleFor(x => x.Forename).NotNull()
 			};
 
-			var ex = typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+			var ex = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(new Person()));
 			string expected = "FluentValidation.ValidationException: Validation failed: " + Environment.NewLine + " -- Surname: 'Surname' must not be empty. Severity: Error" + Environment.NewLine + " -- Forename: 'Forename' must not be empty.";
 			Assert.True(ex.ToString().StartsWith(expected));
 		}
@@ -203,7 +193,7 @@ namespace FluentValidation.Tests {
 				}
 			};
 
-			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+			Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(new Person()));
 		}
 
 		[Fact]
@@ -215,7 +205,7 @@ namespace FluentValidation.Tests {
 				}
 			};
 
-			typeof(ValidationException).ShouldBeThrownBy(() => validator.ValidateAndThrow(new Person()));
+			Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(new Person()));
 		}
 
 		[Fact]
@@ -236,7 +226,7 @@ namespace FluentValidation.Tests {
 				}
 			};
 
-			typeof(ValidationException).ShouldBeThrownBy(() => {
+			Assert.Throws<ValidationException>(() => {
 				try {
 					validator.ValidateAndThrowAsync(new Person()).Wait();
 				}
@@ -247,7 +237,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Throws_exception_when_preValidate_fails_and_continueValidation_false_async() {
+		public async Task Throws_exception_when_preValidate_fails_and_continueValidation_false_async() {
 			var validator = new TestValidatorWithPreValidate {
 				PreValidateMethod = (context, result) => {
 					result.Errors.Add(new ValidationFailure("test", "test"));
@@ -255,23 +245,18 @@ namespace FluentValidation.Tests {
 				}
 			};
 
-			typeof(ValidationException).ShouldBeThrownBy(() => {
-				try {
-					validator.ValidateAndThrowAsync(new Person()).Wait();
-				}
-				catch (AggregateException agrEx) {
-					throw agrEx.InnerException;
-				}
+			await Assert.ThrowsAsync<ValidationException>(async () => {
+				await validator.ValidateAndThrowAsync(new Person());
 			});
 		}
 
 		[Fact]
-		public void Does_not_throws_exception_when_preValidate_ends_with_continueValidation_false_async() {
+		public async Task Does_not_throws_exception_when_preValidate_ends_with_continueValidation_false_async() {
 			var validator = new TestValidatorWithPreValidate {
 				PreValidateMethod = (context, result) => false
 			};
 
-			validator.ValidateAndThrowAsync(new Person()).Wait();
+			await validator.ValidateAndThrowAsync(new Person());
 		}
 	}
 }
