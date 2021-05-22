@@ -131,7 +131,7 @@ namespace FluentValidation.Tests {
 				}
 
 			});
-			result.Errors.IsValid().ShouldBeTrue();
+			result.IsValid.ShouldBeTrue();
 		}
 
 		[Fact]

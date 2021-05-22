@@ -237,7 +237,7 @@ namespace FluentValidation.Tests {
 
 		private void AssertValidator<TValidator>() {
 			var rule = (IValidationRule<Person>)validator.First();
-			rule.Components.LastOrDefault()?.Validator.ShouldBe<TValidator>();
+			Assert.IsType<TValidator>(rule.Components.LastOrDefault()?.Validator);
 		}
 
 		class Model {

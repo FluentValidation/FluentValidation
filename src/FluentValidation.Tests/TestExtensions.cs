@@ -54,14 +54,5 @@ namespace FluentValidation.Tests {
 		public static void ShouldBeFalse(this bool b) {
 			Assert.False(b);
 		}
-		
-		public static T ShouldBe<T>(this object actual) {
-			Assert.IsType<T>(actual);
-			return (T)actual;
-		}
-
-		public static bool IsValid(this IEnumerable<ValidationFailure> errors) {
-			return errors.Count() == 0;
-		}
 	}
 }
