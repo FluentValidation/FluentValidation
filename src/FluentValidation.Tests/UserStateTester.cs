@@ -40,7 +40,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Throws_when_provider_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.RuleFor(x => x.Surname).NotNull().WithState((Func<Person, object>) null));
+			Assert.Throws<ArgumentNullException>(() => validator.RuleFor(x => x.Surname).NotNull().WithState((Func<Person, object>) null));
 		}
 
 		[Fact]

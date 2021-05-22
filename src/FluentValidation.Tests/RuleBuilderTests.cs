@@ -63,57 +63,57 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_if_validator_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((PropertyValidator<Person, string>)null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator((PropertyValidator<Person, string>)null));
 		}
 
 		[Fact]
 		public void Should_throw_if_overriding_validator_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((IValidator<string>)null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator((IValidator<string>)null));
 		}
 
 		[Fact]
 		public void Should_throw_if_overriding_validator_provider_is_null() {
-			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator((Func<Person, IValidator<string>>) null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator((Func<Person, IValidator<string>>) null));
 		}
 
 		[Fact]
 		public void Should_throw_if_message_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WithMessage((string)null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WithMessage((string)null));
 		}
 
 		[Fact]
 		public void Should_throw_if_property_name_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WithName((string)null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WithName((string)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).When((Func<Person, bool>)null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).When((Func<Person, bool>)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_context_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).When((Func<Person, ValidationContext<Person>, bool>)null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).When((Func<Person, ValidationContext<Person>, bool>)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_async_predicate_is_null() {
-			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WhenAsync((Func<Person, CancellationToken, Task<bool>>) null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WhenAsync((Func<Person, CancellationToken, Task<bool>>) null));
 		}
 
 		[Fact]
 		public void Should_throw_when_inverse_context_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).Unless((Func<Person, ValidationContext<Person>, bool>)null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).Unless((Func<Person, ValidationContext<Person>, bool>)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_inverse_predicate_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).Unless((Func<Person, bool>)null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).Unless((Func<Person, bool>)null));
 		}
 
 		[Fact]
 		public void Should_throw_when_async_inverse_predicate_is_null() {
-			typeof (ArgumentNullException).ShouldBeThrownBy(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).UnlessAsync((Func<Person, CancellationToken, Task<bool>>) null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).UnlessAsync((Func<Person, CancellationToken, Task<bool>>) null));
 		}
 
 		[Fact]

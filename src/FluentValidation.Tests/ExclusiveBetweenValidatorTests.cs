@@ -71,7 +71,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => new TestValidator{v => v.RuleFor(x => x.Id).ExclusiveBetween(10, 1)});
+			Assert.Throws<ArgumentOutOfRangeException>(() => new TestValidator{v => v.RuleFor(x => x.Id).ExclusiveBetween(10, 1)});
 		}
 
 		[Fact]
@@ -125,7 +125,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_strings() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() => RangeValidatorFactory.CreateExclusiveBetween<Person, string>("ccc", "aaa"));
+			Assert.Throws<ArgumentOutOfRangeException>(() => RangeValidatorFactory.CreateExclusiveBetween<Person, string>("ccc", "aaa"));
 		}
 
 		[Fact]

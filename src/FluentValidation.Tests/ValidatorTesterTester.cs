@@ -98,7 +98,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldHaveValidationError_Should_throw_when_there_are_no_validation_errors() {
-			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldHaveValidationErrorFor(x => x.Forename, "test"));
+			Assert.Throws<ValidationTestException>(() => validator.ShouldHaveValidationErrorFor(x => x.Forename, "test"));
 		}
 
 		[Fact]
@@ -108,7 +108,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldNotHaveValidationError_should_throw_when_there_are_errors() {
-			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldNotHaveValidationErrorFor(x => x.Forename, (string) null));
+			Assert.Throws<ValidationTestException>(() => validator.ShouldNotHaveValidationErrorFor(x => x.Forename, (string) null));
 		}
 
 		[Fact]
@@ -118,7 +118,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldHaveValidationError_should_throw_when_there_are_no_validation_errors_with_preconstructed_object() {
-			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldHaveValidationErrorFor(x => x.Forename, new Person {Forename = "test"}));
+			Assert.Throws<ValidationTestException>(() => validator.ShouldHaveValidationErrorFor(x => x.Forename, new Person {Forename = "test"}));
 		}
 
 		[Fact]
@@ -128,13 +128,13 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldNotHaveValidationError_should_throw_when_there_are_errors_with_preconstructed_object() {
-			typeof(ValidationTestException).ShouldBeThrownBy(() => validator.ShouldNotHaveValidationErrorFor(x => x.Forename, new Person {Forename = null}));
+			Assert.Throws<ValidationTestException>(() => validator.ShouldNotHaveValidationErrorFor(x => x.Forename, new Person {Forename = null}));
 		}
 
 
 		[Fact]
 		public void ShouldHaveChildValidator_throws_when_property_does_not_have_child_validator() {
-			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
+			var ex = Assert.Throws<ValidationTestException>(() =>
 				validator.ShouldHaveChildValidator(x => x.Address, typeof(AddressValidator))
 			);
 
@@ -156,7 +156,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void ShouldHaveChildvalidator_throws_when_collection_property_Does_not_have_child_validator() {
-			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
+			var ex = Assert.Throws<ValidationTestException>(() =>
 				validator.ShouldHaveChildValidator(x => x.Orders, typeof(OrderValidator))
 			);
 
@@ -166,7 +166,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void ShouldHaveChildValidator_should_throw_when_property_has_a_different_child_validator() {
 			validator.RuleFor(x => x.Address).SetValidator(new AddressValidator());
-			var ex = typeof(ValidationTestException).ShouldBeThrownBy(() =>
+			var ex = Assert.Throws<ValidationTestException>(() =>
 				validator.ShouldHaveChildValidator(x => x.Address, typeof(OrderValidator))
 			);
 

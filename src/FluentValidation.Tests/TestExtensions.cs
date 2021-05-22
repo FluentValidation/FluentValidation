@@ -54,14 +54,7 @@ namespace FluentValidation.Tests {
 		public static void ShouldBeFalse(this bool b) {
 			Assert.False(b);
 		}
-
-		public static Exception ShouldBeThrownBy(this Type exceptionType,
-			Action code
-			)
-		{
-			return Assert.Throws(exceptionType, code);
-		}
-
+		
 		public static T ShouldBe<T>(this object actual) {
 			Assert.IsType<T>(actual);
 			return (T)actual;

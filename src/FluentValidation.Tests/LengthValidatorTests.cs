@@ -107,7 +107,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void When_the_max_is_smaller_than_the_min_then_the_validator_should_throw() {
-			typeof(ArgumentOutOfRangeException).ShouldBeThrownBy(() =>
+			Assert.Throws<ArgumentOutOfRangeException>(() =>
 				new TestValidator(v => v.RuleFor(x => x.Surname).Length(10,1))
 
 				);

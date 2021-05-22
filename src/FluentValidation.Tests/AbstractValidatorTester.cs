@@ -139,7 +139,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_when_rule_is_null() {
-			typeof(ArgumentNullException).ShouldBeThrownBy(() => validator.RuleFor<string>(null));
+			Assert.Throws<ArgumentNullException>(() => validator.RuleFor<string>(null));
 		}
 
 		[Fact]
@@ -159,7 +159,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_for_non_member_expression_when_validating_single_property() {
-			typeof(ArgumentException).ShouldBeThrownBy(() => validator.Validate(new Person(), v => v.IncludeProperties(x => "foo")));
+			Assert.Throws<ArgumentException>(() => validator.Validate(new Person(), v => v.IncludeProperties(x => "foo")));
 		}
 
 		[Fact]
@@ -233,7 +233,7 @@ namespace FluentValidation.Tests {
 		public void Validates_type_when_using_non_generic_validate_overload() {
 			IValidator nonGenericValidator = validator;
 
-			typeof(InvalidOperationException).ShouldBeThrownBy(() =>
+			Assert.Throws<InvalidOperationException>(() =>
 				nonGenericValidator.Validate(new ValidationContext<string>("foo")));
 		}
 

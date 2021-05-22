@@ -53,7 +53,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void AddIndexer_throws_when_nothing_added() {
-			typeof(InvalidOperationException).ShouldBeThrownBy(() => chain.AddIndexer(0));
+			Assert.Throws<InvalidOperationException>(() => chain.AddIndexer(0));
 		}
 
 		[Fact]
