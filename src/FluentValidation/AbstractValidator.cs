@@ -84,6 +84,10 @@ namespace FluentValidation {
 			bool shouldContinue = PreValidate(context, result);
 
 			if (!shouldContinue) {
+				if (!result.IsValid && context.ThrowOnFailures) {
+					RaiseValidationException(context, result);
+				}
+
 				return result;
 			}
 
@@ -116,7 +120,7 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		public async virtual Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+		public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			context.IsAsync = true;
 
@@ -124,6 +128,10 @@ namespace FluentValidation {
 			bool shouldContinue = PreValidate(context, result);
 
 			if (!shouldContinue) {
+				if (!result.IsValid && context.ThrowOnFailures) {
+					RaiseValidationException(context, result);
+				}
+
 				return result;
 			}
 
