@@ -49,7 +49,17 @@ namespace FluentValidation.AspNetCore {
 		/// <summary>
 		/// Whether to run MVC's default validation process (including DataAnnotations) after FluentValidation is executed. True by default.
 		/// </summary>
-		public bool RunDefaultMvcValidationAfterFluentValidationExecutes { get; set; } = true;
+		[Obsolete("Use the DisableAnnotations property instead. Note that this is the inverse of this property (if you were previously setting RunDefaultMvcValidationAfterFluentValidationExecutes to false, now you should set DisableDataAnnotations to true)")]
+		public bool RunDefaultMvcValidationAfterFluentValidationExecutes {
+			get => !DisableDataAnnotationsValidation;
+			set => DisableDataAnnotationsValidation = !value;
+		}
+
+		/// <summary>
+		/// By default Data Annotations validation will also run as well as FluentValidation.
+		/// Setting this to false will disable DataAnnotations and only run FluentValidation.
+		/// </summary>
+		public bool DisableDataAnnotationsValidation { get; set; }
 
 		/// <summary>
 		/// Enables or disables localization support within FluentValidation

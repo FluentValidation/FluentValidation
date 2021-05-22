@@ -4,6 +4,7 @@ Allow AddFluentValidation to be called directly on IServiceCollection (#1726)
 Throw exception on ValidateAndThrow even if PreValidate prevents further Validation (#1736)
 ValidationException now includes rule severity (#1733)
 Optionally support internal types when scanning assemblies for validators (#1742)
+Deprecate RunDefaultMvcValidationAfterFluentValidationExecutes in MVC configuration. Use DisableDataAnnotationsValidation instead.
 
 10.1.0 - 28 April 2021
 Allow default severity level to be set globally (#1715)

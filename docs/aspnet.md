@@ -136,11 +136,11 @@ Now when you post the form, MVC's model-binding infrastructure will validate the
 
 By default, after FluentValidation is executed, any other validator providers will also have a chance to execute. This means you can mix FluentValidation with [DataAnnotations attributes](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations) (or any other ASP.NET `ModelValidatorProvider` implementation).
 
-If you want to disable this behaviour so that FluentValidation is the only validation library that executes, you can set the `RunDefaultMvcValidationAfterFluentValidationExecutes` to false in your application startup routine:
+If you want to disable this behaviour so that FluentValidation is the only validation library that executes, you can set the `DisableDataAnnotationsValidation` to `true` in your application startup routine:
 
 ```csharp
 services.AddMvc().AddFluentValidation(fv => {
- fv.RunDefaultMvcValidationAfterFluentValidationExecutes = false;
+ fv.DisableDataAnnotationsValidation = true;
 });
 ```
 
