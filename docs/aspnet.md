@@ -144,7 +144,7 @@ services.AddMvc().AddFluentValidation(fv => {
 });
 ```
 
-*Note* If you do set `RunDefaultMvcValidationAfterFluentValidationExecutes` to `false`, then support for `IValidatableObject` will also be disabled.
+*Note* If you do set `DisableDataAnnotationsValidation` then support for `IValidatableObject` will also be disabled.
 
 ### Implicit vs Explicit Child Property Validation
 
