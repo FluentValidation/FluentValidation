@@ -1,4 +1,4 @@
-10.2.0 - 
+10.2.0 - 28 May 2021
 Display name generation should be consistent between RuleForEach and RuleFor.ForEach (#1231)
 Allow AddFluentValidation to be called directly on IServiceCollection (#1726)
 Throw exception on ValidateAndThrow even if PreValidate prevents further Validation (#1736)
