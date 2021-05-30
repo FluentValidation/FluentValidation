@@ -149,16 +149,9 @@ namespace FluentValidation.Internal {
 				return propertyName;
 			}
 
-			return WithPropertyName(propertyName).ToString();
-		}
-
-		/// <summary>
-		/// Creates a new property chain with the specified property name appended to the end of the chain.
-		/// </summary>
-		public PropertyChain WithPropertyName(string propertyName) {
 			var chain = new PropertyChain(this);
 			chain.Add(propertyName);
-			return chain;
+			return chain.ToString();
 		}
 
 		/// <summary>
