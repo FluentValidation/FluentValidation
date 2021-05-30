@@ -1,3 +1,6 @@
+10.2.1 - 30 May 2021
+Optional internal type registration should work with MVC registration (#1748)
+
 10.2.0 - 28 May 2021
 Display name generation should be consistent between RuleForEach and RuleFor.ForEach (#1231)
 Allow AddFluentValidation to be called directly on IServiceCollection (#1726)
