@@ -47,7 +47,7 @@ services.AddMvc()
 
 Validators that are registered automatically using `RegisterValidationsFromAssemblyContaining` are registered as `Scoped` with the container rather than as `Singleton`. This is done to avoid lifecycle scoping issues where a developer may inadvertantly cause a singleton-scoped validator from depending on a Transient or Request-scoped service (for example, a DB context). If you are aware of these kind of issues and understand how to avoid them, then you may choose to register the validators as singletons instead, which will give a performance boost by passing in a second argument: `fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>(lifetime: ServiceLifetime.Singleton)` (note that this optional parameter is only available in FluentValidation 9.0 or later).
 
-By default, only public validators will be registered. To include internal validators you can set the `includeInternalTypes` optional parameter to `true` (e.g., `fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>(includeInternalTypes: true)`).
+By default, only public validators will be registered. To include internal validators, set the `IncludeInternalValidatorTypes` parameter to `true` (e.g., `fv.IncludeInternalValidatorTypes = true`).
 
 You can also optionally prevent certain types from being automatically registered when using this approach by passing a filter to `RegisterValidationsFromAssemblyContaining`. For example, if there is a specific validator type that you don't want to be registered, you can use a filter callback to exclude it:
 
