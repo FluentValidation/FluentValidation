@@ -22,11 +22,6 @@ namespace FluentValidation.AspNetCore {
 	using System.Reflection;
 	using Microsoft.Extensions.DependencyInjection;
 
-	internal class AssemblyRegistration {
-		public Assembly Assembly { get; }
-		public bool Include
-	}
-
 	/// <summary>
 	/// FluentValidation asp.net core configuration
 	/// </summary>
