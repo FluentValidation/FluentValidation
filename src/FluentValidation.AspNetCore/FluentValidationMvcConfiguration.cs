@@ -62,6 +62,12 @@ namespace FluentValidation.AspNetCore {
 		public bool DisableDataAnnotationsValidation { get; set; }
 
 		/// <summary>
+		/// By default, only public validators will be registered.
+		/// Setting this to true will register internal validators in addition to public validators.
+		/// </summary>
+		public bool IncludeInternalValidatorTypes { get; set; }
+
+		/// <summary>
 		/// Enables or disables localization support within FluentValidation
 		/// </summary>
 		public bool LocalizationEnabled {
