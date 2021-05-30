@@ -22,6 +22,11 @@ namespace FluentValidation.AspNetCore {
 	using System.Reflection;
 	using Microsoft.Extensions.DependencyInjection;
 
+	internal class AssemblyRegistration {
+		public Assembly Assembly { get; }
+		public bool Include
+	}
+
 	/// <summary>
 	/// FluentValidation asp.net core configuration
 	/// </summary>
@@ -62,12 +67,6 @@ namespace FluentValidation.AspNetCore {
 		public bool DisableDataAnnotationsValidation { get; set; }
 
 		/// <summary>
-		/// By default, only public validators will be registered.
-		/// Setting this to true will register internal validators in addition to public validators.
-		/// </summary>
-		public bool IncludeInternalValidatorTypes { get; set; }
-
-		/// <summary>
 		/// Enables or disables localization support within FluentValidation
 		/// </summary>
 		public bool LocalizationEnabled {
@@ -93,6 +92,7 @@ namespace FluentValidation.AspNetCore {
 		internal List<Assembly> AssembliesToRegister { get; } = new List<Assembly>();
 		internal Func<AssemblyScanner.AssemblyScanResult, bool> TypeFilter { get; set; }
 		internal ServiceLifetime ServiceLifetime { get; set; } = ServiceLifetime.Scoped;
+		internal bool IncludeInternalValidatorTypes { get; set; }
 
 		/// <summary>
 		/// Whether automatic server-side validation should be enabled (default true).
@@ -104,8 +104,9 @@ namespace FluentValidation.AspNetCore {
 		/// </summary>
 		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
-		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>(Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped) {
-			return RegisterValidatorsFromAssemblyContaining(typeof(T), filter, lifetime);
+		/// <param name="includeInternalValidatorTypes">Include internal validators. The default is false.</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>(Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped, bool includeInternalValidatorTypes = false) {
+			return RegisterValidatorsFromAssemblyContaining(typeof(T), filter, lifetime, includeInternalValidatorTypes);
 		}
 
 		/// <summary>
@@ -114,8 +115,9 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="type">The type that indicates which assembly that should be scanned</param>
 		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
-		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped) {
-			return RegisterValidatorsFromAssembly(type.Assembly, filter, lifetime);
+		/// <param name="includeInternalValidatorTypes">Include internal validators. The default is false.</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped, bool includeInternalValidatorTypes = false) {
+			return RegisterValidatorsFromAssembly(type.Assembly, filter, lifetime, includeInternalValidatorTypes);
 		}
 
 		/// <summary>
@@ -124,11 +126,13 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="assembly">The assembly to scan</param>
 		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
-		public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped) {
+		/// <param name="includeInternalValidatorTypes">Include internal validators. The default is false.</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped, bool includeInternalValidatorTypes = false) {
 			ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
 			AssembliesToRegister.Add(assembly);
 			TypeFilter = filter;
 			ServiceLifetime = lifetime;
+			IncludeInternalValidatorTypes = includeInternalValidatorTypes;
 			return this;
 		}
 
@@ -138,11 +142,13 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="assemblies">The assemblies to scan</param>
 		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
 		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
-		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblies(IEnumerable<Assembly> assemblies, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped) {
+		/// <param name="includeInternalValidatorTypes">Include internal validators. The default is false.</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblies(IEnumerable<Assembly> assemblies, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped, bool includeInternalValidatorTypes = false) {
 			ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
 			AssembliesToRegister.AddRange(assemblies);
 			TypeFilter = filter;
 			ServiceLifetime = lifetime;
+			IncludeInternalValidatorTypes = includeInternalValidatorTypes;
 			return this;
 		}
 
