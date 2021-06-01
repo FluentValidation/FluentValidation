@@ -1,3 +1,6 @@
+10.2.1 - 1 Jun 2021
+Add backwards compatibility overloads for validator registration methods.
+
 10.2.1 - 30 May 2021
 Optional internal type registration should work with MVC registration (#1748)
 

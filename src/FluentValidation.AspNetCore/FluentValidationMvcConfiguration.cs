@@ -161,5 +161,44 @@ namespace FluentValidation.AspNetCore {
 			return this;
 		}
 
+		#region Backwards compatibility overloads
+		//TODO: Remove in 11.0
+		/// <summary>
+		/// Registers all validators derived from AbstractValidator within the assembly containing the specified type
+		/// </summary>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining<T>(Func<AssemblyScanner.AssemblyScanResult, bool> filter, ServiceLifetime lifetime)
+			=> RegisterValidatorsFromAssemblyContaining<T>(filter, lifetime, false);
+
+		/// <summary>
+		/// Registers all validators derived from AbstractValidator within the assembly containing the specified type
+		/// </summary>
+		/// <param name="type">The type that indicates the assembly to scan</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblyContaining(Type type, Func<AssemblyScanner.AssemblyScanResult, bool> filter, ServiceLifetime lifetime)
+			=> RegisterValidatorsFromAssemblyContaining(type, filter, lifetime, false);
+
+		///	<summary>
+		/// Registers all validators derived from AbstractValidator within the specified assembly
+		/// </summary>
+		/// <param name="assembly">The assembly to scan</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly, Func<AssemblyScanner.AssemblyScanResult, bool> filter, ServiceLifetime lifetime)
+			=> RegisterValidatorsFromAssembly(assembly, filter, lifetime, false);
+
+		/// <summary>
+		/// Registers all validators derived from AbstractValidator within the specified assemblies
+		/// </summary>
+		/// <param name="assemblies">The assemblies to scan</param>
+		/// <param name="filter">Optional filter that allows certain types to be skipped from registration.</param>
+		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
+		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblies(IEnumerable<Assembly> assemblies, Func<AssemblyScanner.AssemblyScanResult, bool> filter, ServiceLifetime lifetime)
+			=> RegisterValidatorsFromAssemblies(assemblies, filter, lifetime, false);
+
+		#endregion
+
 	}
 }
