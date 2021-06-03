@@ -301,6 +301,31 @@ namespace FluentValidation.Tests {
 			result.Errors.Single().PropertyName.ShouldEqual("Foo.Name");
 		}
 
+		[Fact]
+		public void Rulesets_cascade_properly_with_polymorphic_validators() {
+			var fooValidator = new InlineValidator<FooImpl1>();
+			fooValidator.RuleSet("test", () => {
+				fooValidator.RuleFor(x => x.Name).NotNull();
+			});
+
+			var validator = new InlineValidator<Root>();
+			validator.RuleSet("test", () => {
+				validator.RuleFor(x => x.Foo).SetInheritanceValidator(v => {
+					v.Add<FooImpl1>(fooValidator);
+				});
+			});
+
+			var model = new Root {
+				Foo = new FooImpl1()
+			};
+
+			var result = validator.Validate(model, options => {
+				options.IncludeRuleSets("test").IncludeRulesNotInRuleSet();
+			});
+
+			result.IsValid.ShouldBeFalse();
+		}
+
 		private class TypeUnsafePolymorphicValidator<T, TProperty> : PolymorphicValidator<T, TProperty> {
 			public TypeUnsafePolymorphicValidator() {
 				var impl1Validator = new InlineValidator<FooImpl1>();

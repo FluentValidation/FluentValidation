@@ -107,7 +107,7 @@ namespace FluentValidation.Validators {
 		}
 
 		private protected override IValidatorSelector GetSelector(ValidationContext<T> context, TProperty value) {
-			if (_derivedValidators.TryGetValue(value.GetType(), out var derivedValidatorFactory) && derivedValidatorFactory.RuleSets != null) {
+			if (_derivedValidators.TryGetValue(value.GetType(), out var derivedValidatorFactory) && derivedValidatorFactory.RuleSets is {Length: > 0}) {
 				return new RulesetValidatorSelector(derivedValidatorFactory.RuleSets);
 			}
 			return null;

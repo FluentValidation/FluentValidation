@@ -1,4 +1,7 @@
-10.2.1 - 1 Jun 2021
+10.2.3 - 3 Jun 2021
+Resolve issue with rulesets not cascading correctly to Inheritance Validators (#1754)
+
+10.2.2 - 1 Jun 2021
 Add backwards compatibility overloads for validator registration methods.
 
 10.2.1 - 30 May 2021
