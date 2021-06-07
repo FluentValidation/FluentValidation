@@ -57,7 +57,7 @@ namespace FluentValidation.AspNetCore {
 
 		/// <summary>
 		/// By default Data Annotations validation will also run as well as FluentValidation.
-		/// Setting this to false will disable DataAnnotations and only run FluentValidation.
+		/// Setting this to true will disable DataAnnotations and only run FluentValidation.
 		/// </summary>
 		public bool DisableDataAnnotationsValidation { get; set; }
 
