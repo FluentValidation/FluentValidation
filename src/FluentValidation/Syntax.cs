@@ -18,7 +18,6 @@
 
 namespace FluentValidation {
 	using System;
-	using Internal;
 	using Validators;
 
 	/// <summary>

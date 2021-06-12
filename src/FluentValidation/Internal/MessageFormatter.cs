@@ -16,7 +16,6 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 namespace FluentValidation.Internal {
-	using System;
 	using System.Collections.Generic;
 	using System.Text.RegularExpressions;
 

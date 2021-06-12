@@ -19,8 +19,6 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Reflection;
-	using Internal;
-	using Resources;
 
 	public class GreaterThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty>, IComparable {
 

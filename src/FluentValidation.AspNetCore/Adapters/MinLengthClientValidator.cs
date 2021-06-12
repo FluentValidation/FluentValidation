@@ -22,7 +22,6 @@ namespace FluentValidation.AspNetCore {
 	using System;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using Resources;
 	using Validators;
 
 	internal class MinLengthClientValidator : ClientValidatorBase {

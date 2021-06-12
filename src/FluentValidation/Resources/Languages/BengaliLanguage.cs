@@ -21,7 +21,6 @@
 #pragma warning disable 618
 
 namespace FluentValidation.Resources {
-	using Validators;
 	internal class BengaliLanguage {
 		public const string Culture = "bn";
 

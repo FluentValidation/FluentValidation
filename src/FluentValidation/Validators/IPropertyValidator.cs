@@ -17,12 +17,8 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using System.Collections.Generic;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Resources;
-	using Results;
 
 	public interface IAsyncPropertyValidator<T, in TProperty> : IPropertyValidator {
 		/// <summary>

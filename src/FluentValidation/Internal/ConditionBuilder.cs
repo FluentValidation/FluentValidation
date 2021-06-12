@@ -21,7 +21,6 @@ namespace FluentValidation.Internal {
 	using System.Collections.Generic;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Validators;
 
 	internal class ConditionBuilder<T> {
 		private readonly TrackingCollection<IValidationRuleInternal<T>> _rules;

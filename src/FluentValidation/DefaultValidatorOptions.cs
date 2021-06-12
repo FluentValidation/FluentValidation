@@ -23,9 +23,7 @@ namespace FluentValidation {
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
-	using Resources;
 	using Results;
-	using Validators;
 
 	/// <summary>
 	/// Default options that can be used to configure a validator.

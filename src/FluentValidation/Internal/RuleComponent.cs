@@ -22,7 +22,6 @@ namespace FluentValidation.Internal {
 	using System;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Internal;
 	using Validators;
 
 	/// <summary>

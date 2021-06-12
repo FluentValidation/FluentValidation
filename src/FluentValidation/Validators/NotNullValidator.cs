@@ -17,9 +17,6 @@
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using Resources;
-
 	public class NotNullValidator<T,TProperty> : PropertyValidator<T,TProperty>, INotNullValidator {
 
 		public override string Name => "NotNullValidator";

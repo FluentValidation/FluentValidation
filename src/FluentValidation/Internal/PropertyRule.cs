@@ -24,7 +24,6 @@ namespace FluentValidation.Internal {
 	using System.Reflection;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Validators;
 
 	/// <summary>
 	/// Defines a rule associated with a property.

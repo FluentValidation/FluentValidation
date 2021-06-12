@@ -1,6 +1,4 @@
 ﻿namespace FluentValidation.Internal {
-	using System;
-	using Resources;
 	using Validators;
 
 	public interface IMessageBuilderContext<T, out TProperty> {

@@ -19,7 +19,6 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Text.RegularExpressions;
-	using Resources;
 
 	/// <summary>
 	/// Defines which mode should be used for email validation.

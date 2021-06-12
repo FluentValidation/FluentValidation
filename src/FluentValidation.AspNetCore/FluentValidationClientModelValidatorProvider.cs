@@ -18,12 +18,10 @@
 namespace FluentValidation.AspNetCore {
 	using System;
 	using System.Collections.Generic;
-	using System.ComponentModel.DataAnnotations;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using System.Linq;
-	using System.Reflection;
-	using FluentValidation.Internal;
-	using FluentValidation.Validators;
+	using Internal;
+	using Validators;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc.DataAnnotations;
 

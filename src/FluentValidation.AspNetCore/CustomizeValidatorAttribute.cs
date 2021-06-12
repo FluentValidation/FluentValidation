@@ -18,8 +18,7 @@
 
 namespace FluentValidation.AspNetCore {
 	using System;
-	using FluentValidation.Internal;
-	using System.Reflection;
+	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 	using Microsoft.Extensions.DependencyInjection;
 	using System.Linq;

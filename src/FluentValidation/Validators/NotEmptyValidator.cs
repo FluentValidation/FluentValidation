@@ -22,7 +22,6 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections;
 	using System.Linq;
-	using Resources;
 
 	public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, INotEmptyValidator {
 

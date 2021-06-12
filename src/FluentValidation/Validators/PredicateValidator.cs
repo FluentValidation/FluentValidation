@@ -18,7 +18,6 @@
 
 namespace FluentValidation.Validators {
 	using Internal;
-	using Resources;
 
 	public class PredicateValidator<T,TProperty> : PropertyValidator<T,TProperty>, IPredicateValidator {
 		public delegate bool Predicate(T instanceToValidate, TProperty propertyValue, ValidationContext<T> propertyValidatorContext);

@@ -19,8 +19,8 @@
 #endregion
 
 namespace FluentValidation.AspNetCore {
-	using FluentValidation.Internal;
-	using FluentValidation.Results;
+	using Internal;
+	using Results;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;

@@ -20,7 +20,6 @@
 
 namespace FluentValidation.Validators {
 	using System;
-	using Resources;
 
 	// Attribution: This class was contributed to FluentValidation using code posted on StackOverflow by Jon Skeet
 	// The original code can be found at https://stackoverflow.com/a/764102

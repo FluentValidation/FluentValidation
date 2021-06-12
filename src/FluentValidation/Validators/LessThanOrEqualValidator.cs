@@ -19,7 +19,6 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Reflection;
-	using Resources;
 
 	public class LessThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, ILessThanOrEqualValidator where TProperty : IComparable<TProperty>, IComparable {
 

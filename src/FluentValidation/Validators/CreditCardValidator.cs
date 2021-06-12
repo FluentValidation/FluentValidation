@@ -18,7 +18,6 @@
 
 namespace FluentValidation.Validators {
 	using System.Linq;
-	using Resources;
 
 
 	/// <summary>

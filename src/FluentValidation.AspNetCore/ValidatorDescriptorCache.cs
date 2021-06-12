@@ -19,7 +19,6 @@
 namespace FluentValidation.AspNetCore {
 	using System;
 	using System.Collections.Generic;
-	using Microsoft.AspNetCore.DataProtection.KeyManagement.Internal;
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 

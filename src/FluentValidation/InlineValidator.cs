@@ -18,10 +18,6 @@
 
 namespace FluentValidation {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
-	using System.Threading;
-	using System.Threading.Tasks;
 
 	/// <summary>
 	/// Validator implementation that allows rules to be defined without inheriting from AbstractValidator.

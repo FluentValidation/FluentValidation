@@ -1,11 +1,8 @@
 namespace FluentValidation.Validators {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
-	using Results;
 
 	/// <summary>
 	/// Indicates that this validator wraps another validator.

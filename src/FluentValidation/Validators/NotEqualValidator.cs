@@ -18,10 +18,8 @@
 
 namespace FluentValidation.Validators {
 	using System;
-	using System.Collections;
 	using System.Collections.Generic;
 	using System.Reflection;
-	using Resources;
 
 	public class NotEqualValidator<T,TProperty> : PropertyValidator<T,TProperty>, IComparisonValidator {
 		private readonly IEqualityComparer<TProperty> _comparer;

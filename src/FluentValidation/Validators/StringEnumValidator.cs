@@ -19,9 +19,6 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Linq;
-	using System.Reflection;
-	using FluentValidation.Internal;
-	using Resources;
 
 	public class StringEnumValidator<T> : PropertyValidator<T, string> {
 		private readonly Type _enumType;

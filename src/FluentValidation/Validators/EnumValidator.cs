@@ -21,8 +21,6 @@
 namespace FluentValidation.Validators {
 	using System;
 	using System.Reflection;
-	using FluentValidation.Internal;
-	using Resources;
 
 	public class EnumValidator<T, TProperty> : PropertyValidator<T,TProperty> {
 		private readonly Type _enumType = typeof(TProperty);

@@ -17,7 +17,7 @@
 #endregion
 namespace FluentValidation.AspNetCore
 {
-	using FluentValidation.Results;
+	using Results;
 	using Microsoft.AspNetCore.Mvc;
 	using FluentValidation;
 

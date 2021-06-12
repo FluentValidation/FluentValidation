@@ -20,7 +20,7 @@
 namespace FluentValidation.TestHelper {
 	using System;
 	using System.Collections.Generic;
-	using FluentValidation.Results;
+	using Results;
 
 	public class ValidationTestException : Exception {
 		public List<ValidationFailure> Errors { get; }

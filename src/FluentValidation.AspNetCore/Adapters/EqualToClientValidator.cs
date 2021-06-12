@@ -17,11 +17,9 @@
 #endregion
 namespace FluentValidation.AspNetCore {
 	using System;
-	using System.Collections.Generic;
 	using System.Reflection;
 	using Internal;
 	using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-	using Resources;
 	using Validators;
 
 	internal class EqualToClientValidator : ClientValidatorBase {

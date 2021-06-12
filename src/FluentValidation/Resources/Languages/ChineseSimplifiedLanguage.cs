@@ -21,8 +21,6 @@
 #pragma warning disable 618
 
 namespace FluentValidation.Resources {
-	using Validators;
-
 	internal class ChineseSimplifiedLanguage {
 		public const string Culture = "zh-CN";
 
