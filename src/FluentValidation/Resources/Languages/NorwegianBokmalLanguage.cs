@@ -27,7 +27,7 @@ namespace FluentValidation.Resources {
 		public const string Culture = "nb";
 
 		public static string GetTranslation(string key) => key switch {
-			"EmailValidator" => "'{PropertyName}' er ikke en gyldig e-postadresse.",
+			"EmailValidator" => "'{PropertyValue}' er ikke en gyldig e-postadresse.",
 			"GreaterThanOrEqualValidator" => "'{PropertyName}' skal være større enn eller lik '{ComparisonValue}'.",
 			"GreaterThanValidator" => "'{PropertyName}' skal være større enn '{ComparisonValue}'.",
 			"LengthValidator" => "'{PropertyName}' skal være mellom {MinLength} og {MaxLength} tegn. Du har tastet inn {TotalLength} tegn.",
