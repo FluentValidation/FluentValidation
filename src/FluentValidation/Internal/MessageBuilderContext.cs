@@ -16,8 +16,8 @@
 	}
 
 	public class MessageBuilderContext<T,TProperty> : IMessageBuilderContext<T,TProperty> {
-		private ValidationContext<T> _innerContext;
-		private TProperty _value;
+		private readonly ValidationContext<T> _innerContext;
+		private readonly TProperty _value;
 
 		public MessageBuilderContext(ValidationContext<T> innerContext, TProperty value, RuleComponent<T,TProperty> component) {
 			_innerContext = innerContext;

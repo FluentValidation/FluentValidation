@@ -24,8 +24,8 @@ namespace FluentValidation.Internal {
 	using Validators;
 
 	internal class RuleComponentForNullableStruct<T, TProperty> : RuleComponent<T, TProperty?> where TProperty : struct {
-		private IPropertyValidator<T, TProperty> _propertyValidator;
-		private IAsyncPropertyValidator<T, TProperty> _asyncPropertyValidator;
+		private readonly IPropertyValidator<T, TProperty> _propertyValidator;
+		private readonly IAsyncPropertyValidator<T, TProperty> _asyncPropertyValidator;
 
 		internal RuleComponentForNullableStruct(IPropertyValidator<T, TProperty> propertyValidator)
 			: base(null) {

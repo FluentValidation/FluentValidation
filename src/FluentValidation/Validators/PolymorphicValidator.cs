@@ -114,7 +114,7 @@ namespace FluentValidation.Validators {
 		}
 
 		private class DerivedValidatorFactory {
-			private IValidator _innerValidator;
+			private readonly IValidator _innerValidator;
 			private readonly Func<ValidationContext<T>, TProperty, IValidator> _factory;
 			public string[] RuleSets { get; }
 

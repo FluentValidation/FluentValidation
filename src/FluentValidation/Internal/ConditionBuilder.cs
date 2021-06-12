@@ -24,7 +24,7 @@ namespace FluentValidation.Internal {
 	using Validators;
 
 	internal class ConditionBuilder<T> {
-		private TrackingCollection<IValidationRuleInternal<T>> _rules;
+		private readonly TrackingCollection<IValidationRuleInternal<T>> _rules;
 
 		public ConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
 			_rules = rules;
@@ -85,7 +85,7 @@ namespace FluentValidation.Internal {
 	}
 
 	internal class AsyncConditionBuilder<T> {
-		private TrackingCollection<IValidationRuleInternal<T>> _rules;
+		private readonly TrackingCollection<IValidationRuleInternal<T>> _rules;
 
 		public AsyncConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
 			_rules = rules;
@@ -144,7 +144,7 @@ namespace FluentValidation.Internal {
 	}
 
 	internal class ConditionOtherwiseBuilder<T> : IConditionBuilder {
-		private TrackingCollection<IValidationRuleInternal<T>> _rules;
+		private readonly TrackingCollection<IValidationRuleInternal<T>> _rules;
 		private readonly Func<IValidationContext, bool> _condition;
 
 		public ConditionOtherwiseBuilder(TrackingCollection<IValidationRuleInternal<T>> rules, Func<IValidationContext, bool> condition) {
@@ -168,7 +168,7 @@ namespace FluentValidation.Internal {
 	}
 
 	internal class AsyncConditionOtherwiseBuilder<T> : IConditionBuilder {
-		private TrackingCollection<IValidationRuleInternal<T>> _rules;
+		private readonly TrackingCollection<IValidationRuleInternal<T>> _rules;
 		private readonly Func<IValidationContext, CancellationToken, Task<bool>> _condition;
 
 		public AsyncConditionOtherwiseBuilder(TrackingCollection<IValidationRuleInternal<T>> rules, Func<IValidationContext, CancellationToken, Task<bool>> condition) {

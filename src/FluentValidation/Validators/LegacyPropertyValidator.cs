@@ -33,7 +33,7 @@ namespace FluentValidation.Validators {
 
 	internal class LegacyValidatorAdaptor<T, TProperty> : IPropertyValidator<T, TProperty>, IAsyncPropertyValidator<T, TProperty>, ILegacyValidatorAdaptor {
 
-		private PropertyValidator _inner;
+		private readonly PropertyValidator _inner;
 
 		public LegacyValidatorAdaptor(PropertyValidator inner) {
 			_inner = inner;
