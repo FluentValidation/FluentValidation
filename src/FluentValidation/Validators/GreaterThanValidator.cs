@@ -42,7 +42,7 @@ namespace FluentValidation.Validators {
 			return value.CompareTo(valueToCompare) > 0;
 		}
 
-		public override Comparison Comparison => Validators.Comparison.GreaterThan;
+		public override Comparison Comparison => Comparison.GreaterThan;
 
 		protected override string GetDefaultMessageTemplate(string errorCode) {
 			return Localized(errorCode, Name);

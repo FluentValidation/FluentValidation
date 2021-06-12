@@ -17,16 +17,16 @@ namespace FluentValidation.Tests.AspNetCore {
 	public class TestModel5Validator : AbstractValidator<TestModel5> {
 		public TestModel5Validator() {
 			//force a complex rule
-			RuleFor(x => x.SomeBool).Must(x => x == true);
+			RuleFor(x => x.SomeBool).Must(x => x);
 			RuleFor(x => x.Id).NotEmpty();
 		}
 	}
 
-	public class SimplePropertyInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
+	public class SimplePropertyInterceptor : IValidatorInterceptor {
 		readonly string[] properties = new[] {"Surname", "Forename"};
 
 		public IValidationContext BeforeAspNetValidation(ActionContext cc, IValidationContext context) {
-			var newContext = new ValidationContext<object>(context.InstanceToValidate, context.PropertyChain, new FluentValidation.Internal.MemberNameValidatorSelector(properties));
+			var newContext = new ValidationContext<object>(context.InstanceToValidate, context.PropertyChain, new Internal.MemberNameValidatorSelector(properties));
 			return newContext;
 		}
 
@@ -35,7 +35,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 	}
 
-	public class ClearErrorsInterceptor : FluentValidation.AspNetCore.IValidatorInterceptor {
+	public class ClearErrorsInterceptor : IValidatorInterceptor {
 		public IValidationContext BeforeAspNetValidation(ActionContext cc, IValidationContext context) {
 			return null;
 		}
@@ -314,7 +314,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		public string Name { get; set; }
 		public string Name2 { get; set; }
 
-		public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext) {
+		public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(ValidationContext validationContext) {
 			yield return new System.ComponentModel.DataAnnotations.ValidationResult("Fail", new[] {"Name2"});
 		}
 	}
@@ -335,7 +335,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		public string Name { get; set; }
 		public string Name2 { get; set; }
 
-		public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(System.ComponentModel.DataAnnotations.ValidationContext validationContext) {
+		public IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> Validate(ValidationContext validationContext) {
 			yield return new System.ComponentModel.DataAnnotations.ValidationResult("Fail", new[] {"Name2"});
 		}
 	}

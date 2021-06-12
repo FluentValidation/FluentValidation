@@ -70,7 +70,7 @@ namespace FluentValidation.Internal {
 						retVal.Append(' ');
 				}
 
-				if(!char.Equals('.', currentChar)
+				if(!Equals('.', currentChar)
 				   || i + 1 == input.Length
 				   || !char.IsUpper(input[i + 1])) {
 					retVal.Append(currentChar);

@@ -22,7 +22,7 @@ namespace FluentValidation.Tests.AspNetCore {
 	using Xunit;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
-	using FluentValidation.Results;
+	using Results;
 
 	public class ValidationResultExtensionTests {
 		private ValidationResult result;
