@@ -204,7 +204,7 @@ namespace FluentValidation.Internal {
 
 				if (!await validator.InvokeAsyncCondition(context, cancellation)) {
 					continue;
-				};
+				}
 
 				if (validator.ShouldValidateAsynchronously(context)) {
 					await InvokePropertyValidatorAsync(context, accessor, propertyName, validator, cancellation);

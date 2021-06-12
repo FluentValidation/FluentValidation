@@ -246,7 +246,7 @@ namespace FluentValidation.Tests.AspNetCore {
 				services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 				services.AddScoped<ClientsideScopedDependency>();
 				services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
-			});;
+			});
 
 			CultureScope.SetDefaultCulture();
 		}

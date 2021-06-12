@@ -33,7 +33,7 @@ namespace FluentValidation.Validators {
 				case null:
 				case string s when string.IsNullOrWhiteSpace(s):
 				case ICollection {Count: 0}:
-				case Array {Length: 0}c:
+				case Array {Length: 0}:
 				case IEnumerable e when !e.Cast<object>().Any():
 					return false;
 			}
