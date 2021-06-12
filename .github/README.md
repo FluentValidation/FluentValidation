@@ -61,7 +61,7 @@ IList<ValidationFailure> failures = results.Errors;
 
 ### License, Copyright etc
 
-FluentValidation has adopted the code of conduct defined by the Contributor Covenant to clarify expected behavior in our community.
+FluentValidation has adopted the [Code of Conduct](https://github.com/FluentValidation/FluentValidation/blob/main/.github/CODE_OF_CONDUCT.md) defined by the Contributor Covenant to clarify expected behavior in our community.
 For more information see the [.NET Foundation Code of Conduct](https://dotnetfoundation.org/code-of-conduct). 
 
 FluentValidation is copyright &copy; 2008-2021 .NET Foundation, [Jeremy Skinner](https://jeremyskinner.co.uk) and other contributors and is licensed under the [Apache2 license](https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt). 
