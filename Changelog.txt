@@ -1,6 +1,7 @@
 10.3.0 -
 Update Russian translations (#1761)
 Add Thai translations (#1768)
+Add Azerbaijanese translations (#1770)
 
 10.2.3 - 3 Jun 2021
 Resolve issue with rulesets not cascading correctly to Inheritance Validators (#1754)
