@@ -42,6 +42,7 @@ namespace FluentValidation.Resources {
 				EnglishLanguage.Culture => EnglishLanguage.GetTranslation(key),
 				AlbanianLanguage.Culture => AlbanianLanguage.GetTranslation(key),
 				ArabicLanguage.Culture => ArabicLanguage.GetTranslation(key),
+				AzerbaijaneseLanguage.Culture => AzerbaijaneseLanguage.GetTranslation(key),
 				BengaliLanguage.Culture => BengaliLanguage.GetTranslation(key),
 				BosnianLanguage.Culture => BosnianLanguage.GetTranslation(key),
 				ChineseSimplifiedLanguage.Culture => ChineseSimplifiedLanguage.GetTranslation(key),
