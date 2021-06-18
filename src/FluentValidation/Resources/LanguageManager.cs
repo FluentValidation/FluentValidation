@@ -41,6 +41,7 @@ namespace FluentValidation.Resources {
 				EnglishLanguage.BritishCulture => EnglishLanguage.GetTranslation(key),
 				EnglishLanguage.Culture => EnglishLanguage.GetTranslation(key),
 				AlbanianLanguage.Culture => AlbanianLanguage.GetTranslation(key),
+				AzerbaijaneseLanguage.Culture => AzerbaijaneseLanguage.GetTranslation(key),
 				ArabicLanguage.Culture => ArabicLanguage.GetTranslation(key),
 				BengaliLanguage.Culture => BengaliLanguage.GetTranslation(key),
 				BosnianLanguage.Culture => BosnianLanguage.GetTranslation(key),
@@ -81,7 +82,6 @@ namespace FluentValidation.Resources {
 				UkrainianLanguage.Culture => UkrainianLanguage.GetTranslation(key),
 				VietnameseLanguage.Culture => VietnameseLanguage.GetTranslation(key),
 				WelshLanguage.Culture => WelshLanguage.GetTranslation(key),
-				AzerbaijaneseLanguage.Culture => AzerbaijaneseLanguage.GetTranslation(key),
 				_ => null,
 			};
 		}
