@@ -107,6 +107,7 @@ Example
   :maxdepth: 1
   :caption: Advanced
 
+  di
   async
   transform
   advanced
