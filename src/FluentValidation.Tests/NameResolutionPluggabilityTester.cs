@@ -35,7 +35,7 @@ namespace FluentValidation.Tests {
 				var validator = new TestValidator() {
 					v => v.RuleFor(x => x.Surname).NotNull()
 				};
-				validator.ShouldHaveValidationErrorFor(x => x.Surname, (string) null);
+				validator.TestValidate(new Person()).ShouldHaveValidationErrorFor(x => x.Surname);
 			}
 			finally {
 				ValidatorOptions.Global.PropertyNameResolver = null;
