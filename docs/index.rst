@@ -57,6 +57,7 @@ Example
   inheritance
   rulesets
   including-rules
+  di
   upgrading-to-10
   upgrading-to-9
   upgrading-to-8
@@ -107,7 +108,6 @@ Example
   :maxdepth: 1
   :caption: Advanced
 
-  di
   async
   transform
   advanced
