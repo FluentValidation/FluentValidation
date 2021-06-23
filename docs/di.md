@@ -37,8 +37,6 @@ public class Startup
       // ...
     }
 }
-
-builder.Services.AddTransient<IValidator<User>, UserValidator>();
 ```
 
 You can then inject the validator as you would with any other dependency:
