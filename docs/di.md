@@ -90,7 +90,7 @@ If you aren't familiar with the difference between Singleton, Scoped and Transie
 
 ```eval_rst
 .. warning::
-   If you register a validator as Singleton, you should ensure that you don't inject anything that's transient or request-scoped into the validator. We typically don't recommend registering validators as Singleton unless you are experienced with using Dependency Injection and know how to troubleshoot issues related to singleton-scoped objects having on non-singleton dependencies. Registering validator as Transient is the simplest and safest option.
+   If you register a validator as Singleton, you should ensure that you don't inject anything that's transient or request-scoped into the validator. We typically don't recommend registering validators as Singleton unless you are experienced with using Dependency Injection and know how to troubleshoot issues related to singleton-scoped objects having on non-singleton dependencies. Registering validators as Transient is the simplest and safest option.
 ```
 
 When using FluentValidation in an ASP.NET project with auto-validation, the same scanning logic can be performed as part of the call to `AddFluentValidation`. [See the documentation on ASP.NET integration for details](aspnet).
