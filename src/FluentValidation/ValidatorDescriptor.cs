@@ -105,19 +105,6 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
-		/// Gets validators for a member
-		/// </summary>
-		/// <typeparam name="TValue"></typeparam>
-		/// <param name="accessor"></param>
-		/// <returns></returns>
-		public IEnumerable<(IPropertyValidator Validator, IRuleComponent Options)> GetValidatorsForMember<TValue>(MemberAccessor<T, TValue> accessor) {
-			return from rule in Rules
-				where Equals(rule.Member, accessor.Member)
-				from component in rule.Components
-				select (component.Validator, component);
-		}
-
-		/// <summary>
 		/// Gets rules grouped by ruleset
 		/// </summary>
 		/// <returns></returns>
