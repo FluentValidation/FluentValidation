@@ -4,7 +4,7 @@
 	using Xunit;
 	using static ComplexValidationTester;
 	using TestHelper;
-
+#pragma warning disable 618
 	public class OnFailureTests {
 		private TestValidator _validator;
 

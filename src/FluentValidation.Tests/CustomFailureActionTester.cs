@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using Xunit;
 
+	#pragma warning disable 618
 
 	public class CustomFailureActionTester {
 		TestValidator validator;

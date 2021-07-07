@@ -2,27 +2,6 @@
 
 These features are not normally used in day-to-day use, but provide some additional extensibility points that may be useful in some circumstances.
 
-## Callbacks
-
-You can make use of the `OnAnyFailure` and `OnFailure` (as of 8.0) callbacks to run a method if validation fails.
-
-`OnAnyFailure` will be invoked if there are any failures within a rule chain:
-
-```csharp
-RuleFor(x => x.Surname).NotNull().Must(surname => surname != null && surname.Length <= 200)
-  .OnAnyFailure(x => {
-    Console.WriteLine("At least one validator in this rule failed");
-  })
-```
-
-`OnFailure` will be invoked for each validator that fails:
-
-```csharp
-RuleFor(x => x.Surname).NotNull().OnFailure(x => Console.WriteLine("Nonull failed"))
-  .Must(surname => surname != null && surname.Length <= 200)
-  .OnFailure(x => Console.WriteLine("Must failed"));
-```
-
 ## PreValidate
 
 If you need to run specific code every time a validator is invoked, you can do this by overriding the `PreValidate` method. This method takes a `ValidationContext` as well as a `ValidationResult`, which you can use to customise the validation process.

@@ -110,6 +110,7 @@ namespace FluentValidation {
 		/// <param name="rule"></param>
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
+		[Obsolete("OnAnyFailure callbacks are deprecated and will be removed in FluentValidation 11. Please use a custom validator instead.")]
 		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
 			if (onFailure == null) throw new ArgumentNullException(nameof(onFailure));
 			Configurable(rule).OnFailure = (x, _) => onFailure(x);
@@ -124,6 +125,7 @@ namespace FluentValidation {
 		/// <param name="rule"></param>
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
+		[Obsolete("OnAnyFailure callbacks are deprecated and will be removed in FluentValidation 11. Please use a custom validator instead.")]
 		public static IRuleBuilderOptions<T, TProperty> OnAnyFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, IEnumerable<ValidationFailure>> onFailure) {
 			if (onFailure == null) throw new ArgumentNullException(nameof(onFailure));
 			Configurable(rule).OnFailure = onFailure;
@@ -563,6 +565,7 @@ namespace FluentValidation {
 		/// <param name="rule"></param>
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
+		[Obsolete("OnFailure callbacks are deprecated and will be removed in FluentValidation 11. Please use a custom validator instead.")]
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T> onFailure) {
 			Configurable(rule).Current.OnFailure = (instance, _, _, _) => onFailure(instance);
 			return rule;
@@ -576,6 +579,7 @@ namespace FluentValidation {
 		/// <param name="rule"></param>
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
+		[Obsolete("OnFailure callbacks are deprecated and will be removed in FluentValidation 11. Please use a custom validator instead.")]
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, ValidationContext<T>, TProperty> onFailure) {
 			Configurable(rule).Current.OnFailure = (instance, context, val, _) => onFailure(instance, context, val);
 			return rule;
@@ -589,6 +593,7 @@ namespace FluentValidation {
 		/// <param name="rule"></param>
 		/// <param name="onFailure"></param>
 		/// <returns></returns>
+		[Obsolete("OnFailure callbacks are deprecated and will be removed in FluentValidation 11. Please use a custom validator instead.")]
 		public static IRuleBuilderOptions<T, TProperty> OnFailure<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Action<T, ValidationContext<T>, TProperty, string> onFailure) {
 			Configurable(rule).Current.OnFailure = onFailure;
 			return rule;

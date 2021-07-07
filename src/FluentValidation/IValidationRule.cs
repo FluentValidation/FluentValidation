@@ -38,6 +38,7 @@ namespace FluentValidation {
 		/// <summary>
 		/// Function that will be invoked if any of the validators associated with this rule fail.
 		/// </summary>
+		[Obsolete("OnFailure callbacks are deprecated and will be removed in FluentValidation 11. Please use a custom validator instead.")]
 		public Action<T, IEnumerable<ValidationFailure>> OnFailure { get; set; }
 
 		/// <summary>
