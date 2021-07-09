@@ -1,4 +1,4 @@
-10.3.0 -
+10.3.0 - 9 July 2021
 Update Russian translations (#1761)
 Add Thai translations (#1768)
 Add Azerbaijani translations (#1770)
