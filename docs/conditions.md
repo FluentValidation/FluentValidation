@@ -77,7 +77,7 @@ The two cascade modes are:
   The Stop option is only available in FluentValidation 9.1 and newer. In older versions, you can use StopOnFirstFailure instead (see below).
 ```
 
-As well as being set at the rule level, the cascade mode can also be set globally for all validators, or for all the rules in a particular validator class. This is the equivalent of setting the cascade mode on every rule within the validator. Not that this still only applies to validators *within the same rule chain* - separate calls to `RuleFor` are treated separately. If one rule fails, it will not prevent a separate rule from running, only validators within the same rule chain.
+As well as being set at the rule level, the cascade mode can also be set globally for all validators, or for all the rules in a particular validator class. When set to Stop, this will ensure that the entire validator will stop executing when the first rule fails. When set to the legacy StopOnFirstFailure, this is the equivalent of setting the cascade mode on every rule within the validator (see the difference between Stop and StopOnFirstFailure below).
 
 To set the cascade mode globally, you can set the `CascadeMode` property on the static `ValidatorOptions` class during your application's startup routine:
 
