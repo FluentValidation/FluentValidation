@@ -51,4 +51,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>
+
+  <!-- Work around .net6 sdk bug -->
+  <Target Name="RemoveLoggingAnalyzer" BeforeTargets="CoreCompile">
+    <ItemGroup>
+      <Analyzer Remove="@(Analyzer)" Condition="%(FileName) == 'Microsoft.Extensions.Logging.Generators' Or %(FileName) == 'System.Text.Json.SourceGeneration'" />
+    </ItemGroup>
+  </Target>
 </Project>

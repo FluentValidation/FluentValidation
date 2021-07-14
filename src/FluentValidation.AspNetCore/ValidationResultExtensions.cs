@@ -24,9 +24,7 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.AspNetCore.Http;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.ModelBinding;
-#if NETCOREAPP3_1 || NET5_0
 	using Microsoft.AspNetCore.Mvc.RazorPages;
-#endif
 
 	public static class ValidationResultExtension {
 
@@ -81,13 +79,11 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="ruleSets">Array of ruleset names</param>
 		public static void SetRulesetForClientsideMessages(this ControllerContext context, params string[] ruleSets) => context.HttpContext.SetRulesetForClientsideMessages(ruleSets);
 
-#if NETCOREAPP3_1 || NET5_0
 		/// <summary>
 		/// Indicates which Rule Sets should be used when generating clientside messages.
 		/// </summary>
 		/// <param name="context">Page context</param>
 		/// <param name="ruleSets">Array of ruleset names</param>
 		public static void SetRulesetForClientsideMessages(this PageContext context, params string[] ruleSets) => context.HttpContext.SetRulesetForClientsideMessages(ruleSets);
-#endif
 	}
 }
