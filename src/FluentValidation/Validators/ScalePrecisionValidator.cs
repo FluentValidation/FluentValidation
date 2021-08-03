@@ -52,6 +52,9 @@ namespace FluentValidation.Validators {
 		public override bool IsValid(ValidationContext<T> context, decimal decimalValue) {
 			var scale = GetScale(decimalValue);
 			var precision = GetPrecision(decimalValue);
+			if (scale >= precision) {
+				precision = scale;
+			}
 			var actualIntegerDigits = precision - scale;
 			var expectedIntegerDigits = Precision - Scale;
 			if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
@@ -85,7 +88,7 @@ namespace FluentValidation.Validators {
 		private static UInt32[] GetBits(decimal Decimal) {
 			// We want the integer parts as uint
 			// C# doesn't permit int[] to uint[] conversion, but .NET does. This is somewhat evil...
-			return (uint[]) (object) decimal.GetBits(Decimal);
+			return (uint[])(object)decimal.GetBits(Decimal);
 		}
 
 		private static decimal GetMantissa(decimal Decimal) {
@@ -102,10 +105,10 @@ namespace FluentValidation.Validators {
 		private int GetScale(decimal Decimal) {
 			uint scale = GetUnsignedScale(Decimal);
 			if (IgnoreTrailingZeros) {
-				return (int) (scale - NumTrailingZeros(Decimal));
+				return (int)(scale - NumTrailingZeros(Decimal));
 			}
 
-			return (int) scale;
+			return (int)scale;
 		}
 
 		private static uint NumTrailingZeros(decimal Decimal) {
@@ -126,10 +129,10 @@ namespace FluentValidation.Validators {
 			}
 
 			if (IgnoreTrailingZeros) {
-				return (int) (precision - NumTrailingZeros(Decimal));
+				return (int)(precision - NumTrailingZeros(Decimal));
 			}
 
-			return (int) precision;
+			return (int)precision;
 		}
 
 		protected override string GetDefaultMessageTemplate(string errorCode) {
