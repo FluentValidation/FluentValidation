@@ -51,16 +51,13 @@ namespace FluentValidation.Validators {
 		public override bool IsValid(ValidationContext<T> context, decimal decimalValue) {
 			var scale = GetScale(decimalValue);
 			var precision = GetPrecision(decimalValue);
-			if (scale >= precision) {
-				precision = scale;
-			}
 			var actualIntegerDigits = precision - scale;
 			var expectedIntegerDigits = Precision - Scale;
 			if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
 				context.MessageFormatter
 					.AppendArgument("ExpectedPrecision", Precision)
 					.AppendArgument("ExpectedScale", Scale)
-					.AppendArgument("Digits", actualIntegerDigits)
+					.AppendArgument("Digits", actualIntegerDigits < 0 ? 0 : actualIntegerDigits)
 					.AppendArgument("ActualScale", scale);
 
 				return false;
