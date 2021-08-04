@@ -151,7 +151,7 @@ namespace FluentValidation.AspNetCore {
 		/// Configures clientside validation support
 		/// </summary>
 		/// <param name="clientsideConfig"></param>
-		/// <param name="enabled">Whether clientisde validation integration is enabled</param>
+		/// <param name="enabled">Whether clientside validation integration is enabled</param>
 		/// <returns></returns>
 		public FluentValidationMvcConfiguration ConfigureClientsideValidation(Action<FluentValidationClientModelValidatorProvider> clientsideConfig=null, bool enabled=true) {
 			if (clientsideConfig != null) {

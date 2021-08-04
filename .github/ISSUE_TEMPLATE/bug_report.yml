@@ -37,4 +37,4 @@ body:
     value: |
       Please ensure that any code samples are readable and [properly formatted as code blocks](https://docs.github.com/en/github/writing-on-github/creating-and-highlighting-code-blocks).
       
-      **Please realise that it is up to you to debug your code thorougly. Be as certain as possible that the bug is with FluentValidation, and not with your own code, prior to opening an issue.**
+      **Please realise that it is up to you to debug your code thoroughly. Be as certain as possible that the bug is with FluentValidation, and not with your own code, prior to opening an issue.**

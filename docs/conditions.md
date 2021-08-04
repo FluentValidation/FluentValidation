@@ -103,7 +103,7 @@ public class PersonValidator : AbstractValidator<Person> {
 
 ## Stop vs StopOnFirstFailure
 
-In FluentValidation 9.0 and older, the `CascadeMode.StopOnFirstFailure` option provided control over the cascade at the rule-level, but did not behave in an intutive way when set at the validator-level. To illustrate the difference, examine the following example:
+In FluentValidation 9.0 and older, the `CascadeMode.StopOnFirstFailure` option provided control over the cascade at the rule-level, but did not behave in an intuitive way when set at the validator-level. To illustrate the difference, examine the following example:
 
 ```csharp
 public PersonValidator() {
@@ -121,7 +121,7 @@ RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqu
 RuleFor(x => x.Forename).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqual("foo");
 ```
 
-That is, *both* of these rules will execute. If the `NotNull` fails on the first rule for `Surname`, the `NotEqual` will not be run. However, as the second rule for `Forename` is independent, it will also run with the same behaviour (if its `NotNull` fails, then its `NotEqual` will not run either), so so by setting the validator's cascade to `StopOnFirstFailure`, you will still receive 2 validation failures (one from each rule).
+That is, *both* of these rules will execute. If the `NotNull` fails on the first rule for `Surname`, the `NotEqual` will not be run. However, as the second rule for `Forename` is independent, it will also run with the same behaviour (if its `NotNull` fails, then its `NotEqual` will not run either), so by setting the validator's cascade to `StopOnFirstFailure`, you will still receive 2 validation failures (one from each rule).
 
 This behaviour has caused a lot of confusion over the years, so the `Stop` option was introduced in FluentValidation 9.1. With `Stop`, only the first failure for *any rule* will be returned. This is a true "fail-fast" behaviour.
 

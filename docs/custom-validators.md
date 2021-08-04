@@ -151,7 +151,7 @@ public class ListCountValidator<T, TCollectionElement> : PropertyValidator<T, IL
 		=> "{PropertyName} must contain fewer than {MaxElements} items.";
 }
 ```
-When you inherit from `PropertyValidator` you must override the `IsValid` method. This method receives two vaues - the `ValidationContext<T>` representing the current validation run, and the value of the property. The method should return a boolean indicating whether validation was successful. The generic type parameters on the base class represent the root instance being validated, and the type of the property that our custom validator can act upon. In this case we're constraining the custom validator to types that implement `IList<TCollectionElement>` although this can be left open if desired.
+When you inherit from `PropertyValidator` you must override the `IsValid` method. This method receives two values - the `ValidationContext<T>` representing the current validation run, and the value of the property. The method should return a boolean indicating whether validation was successful. The generic type parameters on the base class represent the root instance being validated, and the type of the property that our custom validator can act upon. In this case we're constraining the custom validator to types that implement `IList<TCollectionElement>` although this can be left open if desired.
 
 Note that the error message to use is specified by overriding `GetDefaultMessageTemplate`.
 

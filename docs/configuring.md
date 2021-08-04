@@ -31,7 +31,7 @@ Used only in the Length validator:
 * `{MaxLength}` – Maximum length
 * `{TotalLength}` – Number of characters entered
 
-For a complete list of error message placeholders see the the [Built in Validators page](built-in-validators). Each built in validator has its own supported placeholders.
+For a complete list of error message placeholders see the [Built in Validators page](built-in-validators). Each built in validator has its own supported placeholders.
 
 It is also possible to use your own custom arguments in the validation message. These can either be static values or references to other properties on the object being validated. This can be done by using the overload of `WithMessage` that takes a lambda expression, and then passing the values to `string.Format` or by using string interpolation.
 

@@ -79,7 +79,7 @@ result.ShouldHaveValidationErrorFor(person => person.Name)
   .WithErrorCode("NotNullValidator");
 ```
 
-There are also inverse methods avaialble (`WithoutMessage`, `WithoutErrorCode`, `WithoutSeverity`, `WithoutCustomState`)
+There are also inverse methods available (`WithoutMessage`, `WithoutErrorCode`, `WithoutSeverity`, `WithoutCustomState`)
 
 ## Asynchronous TestValidate
 

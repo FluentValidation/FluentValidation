@@ -8,7 +8,7 @@ Transform(from: x => x.SomeStringProperty, to: value => int.TryParse(value, out 
     .GreaterThan(10);
 ```
 
-This rule transforms the value from a `string` to an nullable `int` (returning `null` if the value couldn't be converted). A greater-than check is then performed on the resulting value.
+This rule transforms the value from a `string` to a nullable `int` (returning `null` if the value couldn't be converted). A greater-than check is then performed on the resulting value.
 
 Syntactically this is not particularly nice to read, so the logic for the transformation can optionally be moved into a separate method:
 
