@@ -50,7 +50,7 @@ ValidationResult result = validator.Validate(customer);
 
 The `Validate` method returns a ValidationResult object. This contains two properties:
 
-- `IsValid` - a boolean that says whether the validation suceeded.
+- `IsValid` - a boolean that says whether the validation succeeded.
 - `Errors` - a collection of ValidationFailure objects containing details about any validation failures.
 
 The following code would write any validation failures to the console:

@@ -27,7 +27,7 @@ var result = validator.Validate(person, options => options.IncludeRuleSets("Name
 
 ```eval_rst
 .. note::
-  Many of the methods in FluentValidation are extension methods such as "Validate" above and require the FluentValidation namespace to be imported via an using statement, e.g. "using FluentValidation;". 
+  Many of the methods in FluentValidation are extension methods such as "Validate" above and require the FluentValidation namespace to be imported via a using statement, e.g. "using FluentValidation;".
 ```
 
 This allows you to break down a complex validator definition into smaller segments that can be executed in isolation. If you call `Validate` without passing a ruleset then only rules not in a RuleSet will be executed.

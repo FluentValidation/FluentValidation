@@ -1,5 +1,5 @@
 ## General support, feedback, and discussions
-FluentValidation is maintained on a voluntary basis, and unfortunately this means we are unable to provide general support or answer questions on usage due to the time and effort required to moderate these. The issue tracker should only be used for bug reports in the core FluentValidation library, or feature requests where appropriate. Requests for general support or questions on usage will be closed. We appreciate that this may appear strict, but is necessary to protect the free time and mental health of the project's maintainers. Thank you for understanding. 
+FluentValidation is maintained on a voluntary basis, and unfortunately this means we are unable to provide general support or answer questions on usage due to the time and effort required to moderate these. The issue tracker should only be used for bug reports in the core FluentValidation library, or feature requests where appropriate. Requests for general support or questions on usage will be closed. We appreciate that this may appear strict, but is necessary to protect the free time and mental health of the project's maintainers. Thank you for understanding.
 
 ## Filing bug reports and feature requests
 The best way to get your bug fixed is to be as detailed as you can be about the problem.
@@ -13,10 +13,10 @@ Please ensure all sample code is properly formatted and readable (GitHub support
 We do our best to respond to all bug reports and feature requests, but FluentValidation is maintained on a voluntary basis and we cannot guarantee how quickly these will be looked at.
 
 ## Contributing Code
-Please open an issue to discuss new feature requests before submitting a Pull Request. This allows the maintainers to discuss whether your feature is a suitible fit for the project before any code is written. Please don't open a pull request without first discussing whether the feature fits with the project roadmap.
+Please open an issue to discuss new feature requests before submitting a Pull Request. This allows the maintainers to discuss whether your feature is a suitable fit for the project before any code is written. Please don't open a pull request without first discussing whether the feature fits with the project roadmap.
 
 ## Building the code
-Run `Build.cmd` (windows) or build.sh (Linux/mac) from the command line. This builds the project and and runs tests. Building requires the following software to be installed:
+Run `Build.cmd` (windows) or build.sh (Linux/mac) from the command line. This builds the project and runs tests. Building requires the following software to be installed:
 
 * Windows Powershell or Powershell Core
 * .NET Core 3.1 SDK
@@ -35,7 +35,7 @@ Tests must be provided for all pull requests that add or change functionality.
 Please ensure that you follow the existing code-style when adding new code to the project. This may seem pedantic, but it makes it much easier to review pull requests when contributed code matches the existing project style. Specifically:
 - Please ensure that your editor is configured to use tabs for indentation, not spaces
 - Please ensure that the project copyright notice is included in the header for all files.
-- Please ensure `using` statements are inside the namespace delcaration
+- Please ensure `using` statements are inside the namespace declaration
 - Please ensure that all opening braces are on the end of line:
 
 ```csharp

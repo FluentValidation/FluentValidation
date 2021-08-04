@@ -1,13 +1,13 @@
 # Dependency Injection
 
-Validators can be used with any dependency injection library, such `Microsoft.Extensions.DependencyInjection`. To inject a validator for a specific model, you should register the validator with the service provider as `IValidator<T>`, where `T` is the type of object being validated. 
+Validators can be used with any dependency injection library, such as `Microsoft.Extensions.DependencyInjection`. To inject a validator for a specific model, you should register the validator with the service provider as `IValidator<T>`, where `T` is the type of object being validated.
 
 For example, imagine you have the following validator defined in your project:
 
 ```csharp
 public class UserValidator : AbstractValidator<User>
 {
-  public UserValidator() 
+  public UserValidator()
   {
     RuleFor(x => x.Name).NotNull();
   }
@@ -65,14 +65,14 @@ You can also make use of the `FluentValidation.DependencyInjectionExtensions` pa
 ```csharp
 using FluentValidation.DependencyInjectionExtensions;
 
-public class Startup 
+public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<UserValidator>();
         // ...
     }
-    
+
     // ...
 }
 ```
