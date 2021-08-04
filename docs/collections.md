@@ -101,3 +101,8 @@ RuleFor(x => x.Orders)
 ```
 
 I personally think that using 2 rules is clearer and easier to read, but the option of combining them is available with the `ForEach` method.
+
+```eval_rst
+.. note::
+  Automatic Registration for validators will only work for `AbstractValidators` implementing a concrete type like `List` or `Array`. Implementations with interface types like `IEnumerable` or `IList` may be used, but the validator will need to be specifically registered as a scoped service in your app's Startup class. This is due to the ASP.NET's Model-Binding of collection types where interfaces like `IEnumerable` will be converted to a `List` implementation and a `List` is the type MVC passes to FluentValidation.
+```

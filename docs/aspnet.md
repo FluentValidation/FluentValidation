@@ -56,6 +56,11 @@ services.AddMvc()
   .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>(discoveredType => discoveredType.ValidatorType != typeof(SomeValidatorToExclude)));
 ```
 
+```eval_rst
+.. note::
+  Automatic Registration for validators will only work for `AbstractValidators` implementing a concrete type like `List` or `Array`. Implementations with interface types like `IEnumerable` or `IList` may be used, but the validator will need to be specifically registered as a scoped service in your app's Startup class. This is due to the ASP.NET's Model-Binding of collection types where interfaces like `IEnumerable` will be converted to a `List` implementation and a `List` is the type MVC passes to FluentValidation.
+```
+
 ### Using the validator in a controller
 
 This next example assumes that the `PersonValidator` is defined to validate a class called `Person`. Once you've configured FluentValidation, ASP.NET will then automatically validate incoming requests using the validator mappings configured in your startup routine.
