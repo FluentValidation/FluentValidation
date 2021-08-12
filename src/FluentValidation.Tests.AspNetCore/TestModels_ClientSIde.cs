@@ -70,7 +70,7 @@
 			RuleFor(x => x.Range).InclusiveBetween(1, 5);
 			RuleFor(x => x.RegEx).Matches("[0-9]");
 			RuleFor(x => x.Required).NotEmpty();
-			RuleFor(x => x.Required2).NotEmpty();
+			RuleFor(x => x.Required2).NotNull();
 			RuleFor(x => x.RequiredInsidePartial).NotEmpty();
 
 			RuleFor(x => x.Length).Length(1, 4);
