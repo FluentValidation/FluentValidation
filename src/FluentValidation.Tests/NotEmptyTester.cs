@@ -24,6 +24,7 @@ namespace FluentValidation.Tests {
 	using System.Threading;
 	using Xunit;
 
+#pragma warning disable 618
 
 	public class NotEmptyTester {
 		public NotEmptyTester() {

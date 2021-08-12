@@ -120,6 +120,7 @@ namespace FluentValidation {
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
+		[Obsolete("NotEmpty is deprecated. In many cases it can be replaced with a call to Required. Please see https://github.com/FluentValidation/FluentValidation/issues/1804 for details.")]
 		public static IRuleBuilderOptions<T, TProperty> NotEmpty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 			return ruleBuilder.SetValidator(new NotEmptyValidator<T,TProperty>());
 		}
