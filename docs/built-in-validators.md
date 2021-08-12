@@ -2,30 +2,26 @@
 
 FluentValidation ships with several built-in validators. The error message for each validator can contain special placeholders that will be filled in when the error message is constructed.
 
-## NotNull Validator
-Ensures that the specified property is not null.
+## Required Validator
+Ensures that the specified property is not null or an empty string.
 
 Example:
 ```csharp
-RuleFor(customer => customer.Surname).NotNull();
+RuleFor(customer => customer.Surname).Required();
 ```
-Example error: *'Surname' must not be empty.*
+Example error: *'Surname' is required.*
 
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
 
-## NotEmpty Validator
-Ensures that the specified property is not null, an empty string or whitespace (or the default value for value types, e.g., 0 for `int`)
+You can optionally allow empty strings and only check for nulls by passing in a parameter:
 
-Example:
 ```csharp
-RuleFor(customer => customer.Surname).NotEmpty();
+RuleFor(customer => customer.Surname).Required(allowEmptyStrings: true);
 ```
-Example error: *'Surname' should not be empty.*
-String format args:
-* `{PropertyName}` – Name of the property being validated
-* `{PropertyValue}` – Current value of the property
+
+*Note* Prior to FluentValidation 10.4 this validator was called `NotEmpty`. 
 
 ## NotEqual Validator
 
@@ -336,19 +332,9 @@ String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
 
-## Empty Validator
-Opposite of the `NotEmpty` validator. Checks if a property value is null, or is the default value for the type.
-```csharp
-RuleFor(x => x.Surname).Empty();
-```
-Example error: *'Surname' must be empty.*
-
-String format args:
-* `{PropertyName}` – Name of the property being validated
-* `{PropertyValue}` – Current value of the property
-
 ## Null Validator
-Opposite of the `NotNull` validator. Checks if a property value is null.
+
+Checks if a property value is null.
 ```csharp
 RuleFor(x => x.Surname).Null();
 ```
