@@ -1,5 +1,7 @@
-10.3.1 - 
+10.4.0 - 
 Fix scale precision error message when digits is calculated as negative (#1790)
+Introduce Required to supercede NotEmpty.
+Derecate NotEmpty, Empty and Null.
 
 10.3.0 - 9 July 2021
 Update Russian translations (#1761)
