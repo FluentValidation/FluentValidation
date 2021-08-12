@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using Validators;
 	using Xunit;
 
+#pragma warning disable 618
 
 	public class CustomMessageFormatTester {
 		private TestValidator validator;

@@ -40,8 +40,8 @@ namespace FluentValidation.Tests {
 				// predicate is true.
 				//
 				When(x => x.Id > 0, () => {
-					RuleFor(x => x.Forename).NotEmpty();
-					RuleFor(x => x.Surname).NotEmpty().Equal("Smith");
+					RuleFor(x => x.Forename).Required();
+					RuleFor(x => x.Surname).Required().Equal("Smith");
 				});
 			}
 		}
@@ -60,8 +60,8 @@ namespace FluentValidation.Tests {
 				//
 				WhenAsync(async (x,c) => x.Id > 0,
 					() => {
-						RuleFor(x => x.Forename).NotEmpty();
-						RuleFor(x => x.Surname).NotEmpty().Equal("Smith");
+						RuleFor(x => x.Forename).Required();
+						RuleFor(x => x.Surname).Required().Equal("Smith");
 					}
 				);
 			}

@@ -70,10 +70,14 @@
 			RuleFor(x => x.MinLength).MinimumLength(1);
 			RuleFor(x => x.Range).InclusiveBetween(1, 5);
 			RuleFor(x => x.RegEx).Matches("[0-9]");
+#pragma warning disable 618
 			RuleFor(x => x.Required).NotEmpty();
+#pragma warning restore 618
 			RuleFor(x => x.Required2).NotNull();
 			RuleFor(x => x.Required3).Required();
+#pragma warning disable 618
 			RuleFor(x => x.RequiredInsidePartial).NotEmpty();
+#pragma warning restore 618
 
 			RuleFor(x => x.Length).Length(1, 4);
 			RuleFor(x => x.ExactLength).Length(4);

@@ -228,8 +228,11 @@ namespace FluentValidation.Tests {
 
 		public class TestObjectValidator : AbstractValidator<TestObject> {
 			public TestObjectValidator() {
+#pragma warning disable 618
 				RuleFor(x => x.Foo1.Surname).NotEmpty().When(x => x.Foo1 != null);
 				RuleFor(x => x.Foo2.Surname).NotEmpty();
+#pragma warning restore 618
+
 			}
 		}
 

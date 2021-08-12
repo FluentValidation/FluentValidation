@@ -21,6 +21,7 @@
 namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using Xunit;
+#pragma warning disable 618
 
 	public class ChildRulesTests {
 

@@ -731,7 +731,7 @@ namespace FluentValidation.Tests {
 		public void Can_use_indexer_in_string_message_inverse() {
 			var validator = new InlineValidator<Person>();
 			var orderValidator = new InlineValidator<Order>();
-			orderValidator.RuleFor(x => x.ProductName).Null();
+			orderValidator.RuleFor(x => x.ProductName).Must(n => n == null);
 			validator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
 
 			var model = new Person { Orders = new List<Order> { new Order() }};

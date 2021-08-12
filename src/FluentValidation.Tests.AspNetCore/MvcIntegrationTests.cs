@@ -182,7 +182,7 @@ namespace FluentValidation.Tests.AspNetCore {
 				{"Id", ""}
 			};
 			var errors = await _client.GetErrors("TestModelWithOverridenPropertyNameValueType", form);
-			errors.GetError("Id").ShouldEqual("'Foo' must not be empty.");
+			errors.GetError("Id").ShouldEqual("'Foo' must not be equal to '0'.");
 		}
 
 		[Fact]

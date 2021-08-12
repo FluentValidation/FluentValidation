@@ -26,7 +26,6 @@ namespace FluentValidation.Tests {
 	using Xunit;
 	using Validators;
 
-
 	public class DefaultValidatorExtensionTester {
 		private InlineValidator<Person> validator;
 
@@ -42,13 +41,17 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void NotEmpty_should_create_NotEmptyValidator() {
+#pragma warning disable 618
 			validator.RuleFor(x => x.Surname).NotEmpty();
+#pragma warning restore 618
 			AssertValidator<NotEmptyValidator<Person,string>>();
 		}
 
 		[Fact]
 		public void Empty_should_create_EmptyValidator() {
+#pragma warning disable 618
 			validator.RuleFor(x => x.Surname).Empty();
+#pragma warning restore 618
 			AssertValidator<EmptyValidator<Person,string>>();
 		}
 

@@ -18,7 +18,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		public TestModel5Validator() {
 			//force a complex rule
 			RuleFor(x => x.SomeBool).Must(x => x == true);
-			RuleFor(x => x.Id).NotEmpty();
+			RuleFor(x => x.Id).NotEqual(0);
 		}
 	}
 
@@ -110,13 +110,13 @@ namespace FluentValidation.Tests.AspNetCore {
 
 	public class TestModelWithOverridenMessageValueTypeValidator : AbstractValidator<TestModelWithOverridenMessageValueType> {
 		public TestModelWithOverridenMessageValueTypeValidator() {
-			RuleFor(x => x.Id).NotEmpty().WithMessage("Foo");
+			RuleFor(x => x.Id).NotEqual(0).WithMessage("Foo");
 		}
 	}
 
 	public class TestModelWithOverridenPropertyNameValidator : AbstractValidator<TestModelWithOverridenPropertyNameValueType> {
 		public TestModelWithOverridenPropertyNameValidator() {
-			RuleFor(x => x.Id).NotEmpty().WithName("Foo");
+			RuleFor(x => x.Id).NotEqual(0).WithName("Foo");
 		}
 	}
 
@@ -140,7 +140,7 @@ namespace FluentValidation.Tests.AspNetCore {
 
 	public class TestModelValidator3 : AbstractValidator<TestModel3> {
 		public TestModelValidator3() {
-			RuleFor(x => x.Id).NotEmpty().WithMessage("Validation failed");
+			RuleFor(x => x.Id).NotEqual(0).WithMessage("Validation failed");
 		}
 	}
 
@@ -164,7 +164,7 @@ namespace FluentValidation.Tests.AspNetCore {
 			RuleFor(x => x.Email)
 				.EmailAddress();
 
-			RuleFor(x => x.Address1).NotEmpty();
+			RuleFor(x => x.Address1).Required();
 		}
 	}
 

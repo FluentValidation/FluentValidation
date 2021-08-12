@@ -343,8 +343,8 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Message_arguments_should_be_updated_on_failure_instances() {
-			validator.RuleFor(x => x.Surname).NotEmpty();
-			validator.RuleFor(x => x.Forename).NotEmpty();
+			validator.RuleFor(x => x.Surname).Required();
+			validator.RuleFor(x => x.Forename).Required();
 
 			// Failure instances should have different placeholders
 			var result = validator.Validate(new Person());

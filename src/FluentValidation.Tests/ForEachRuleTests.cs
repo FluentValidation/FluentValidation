@@ -599,13 +599,13 @@ namespace FluentValidation.Tests {
 			var orderValidator = new InlineValidator<Order>();
 
 			orderValidator.RuleFor(order => order.ProductName)
-				.NotEmpty()
-				.WithMessage("{CollectionIndex} must not be empty");
+				.Required()
+				.WithMessage("{CollectionIndex} is required");
 
 			// Two rules - one for each collection syntax.
 
 			personValidator.RuleFor(x => x.Orders)
-				.NotEmpty()
+				.Required()
 				.ForEach(order => {
 					order.SetValidator(orderValidator);
 				});
@@ -621,8 +621,8 @@ namespace FluentValidation.Tests {
 			});
 
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
-			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
+			result.Errors[0].ErrorMessage.ShouldEqual("1 is required");
+			result.Errors[1].ErrorMessage.ShouldEqual("1 is required");
 		}
 
 		[Fact]
@@ -631,13 +631,13 @@ namespace FluentValidation.Tests {
 			var orderValidator = new InlineValidator<Order>();
 
 			orderValidator.RuleFor(order => order.ProductName)
-				.NotEmpty()
-				.WithMessage("{CollectionIndex} must not be empty");
+				.Required()
+				.WithMessage("{CollectionIndex} is required");
 
 			// Two rules - one for each collection syntax.
 
 			personValidator.RuleFor(x => x.Orders)
-				.NotEmpty()
+				.Required()
 				.ForEach(order => {
 					order.SetValidator(orderValidator);
 				});
@@ -653,8 +653,8 @@ namespace FluentValidation.Tests {
 			});
 
 			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
-			result.Errors[0].ErrorMessage.ShouldEqual("1 must not be empty");
+			result.Errors[0].ErrorMessage.ShouldEqual("1 is required");
+			result.Errors[1].ErrorMessage.ShouldEqual("1 is required");
 		}
 
 		[Fact]
@@ -711,7 +711,7 @@ namespace FluentValidation.Tests {
 
 		public class OrderValidator : AbstractValidator<Order> {
 			public OrderValidator() {
-				RuleFor(x => x.ProductName).NotEmpty();
+				RuleFor(x => x.ProductName).Required();
 				RuleFor(x => x.Amount).NotEqual(0);
 			}
 		}

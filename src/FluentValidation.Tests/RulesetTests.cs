@@ -361,7 +361,7 @@ namespace FluentValidation.Tests {
 					RuleFor(x => x.Forename).NotNull();
 				});
 
-				RuleFor(x => x.Id).NotEmpty();
+				RuleFor(x => x.Id).NotEqual(0);
 			}
 		}
 
