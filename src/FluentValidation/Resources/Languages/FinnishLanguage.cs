@@ -38,6 +38,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' ei voi olla tyhjä.",
 			"NotEqualValidator" => "'{PropertyName}' ei voi olla yhtä suuri kuin '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' ei voi olla tyhjä.",
+			"RequiredValidator" => "'{PropertyName}' ei voi olla tyhjä.",
 			"PredicateValidator" => "'{PropertyName}' määritetty ehto ei toteutunut.",
 			"AsyncPredicateValidator" => "'{PropertyName}' määritetty ehto ei toteutunut.",
 			"RegularExpressionValidator" => "'{PropertyName}' ei ole oikeassa muodossa.",

@@ -37,6 +37,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' খালি হতে পারবে না।",
 			"NotEqualValidator" => "'{PropertyName}' '{ComparisonValue}' হতে পারবেনা।",
 			"NotNullValidator" => "'{PropertyName}' খালি হতে পারবে না।",
+			"RequiredValidator" => "'{PropertyName}' খালি হতে পারবে না।",
 			"PredicateValidator" => "নির্ধারিত শর্তটি '{PropertyName}' এর জন্য মেটেনি।",
 			"AsyncPredicateValidator" => "নির্ধারিত শর্তটি '{PropertyName}' এর জন্য মেটেনি।",
 			"RegularExpressionValidator" => "'{PropertyName}' সঠিক বিন্যাসে নেই।",

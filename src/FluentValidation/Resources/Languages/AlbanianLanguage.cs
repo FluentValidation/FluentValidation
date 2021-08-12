@@ -38,6 +38,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' nuk duhet të jetë bosh.",
 			"NotEqualValidator" => "'{PropertyName}' nuk duhet të jetë e barabartë me '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' nuk duhet të jetë bosh.",
+			"RequiredValidator" => "'{PropertyName}' nuk duhet të jetë bosh.",
 			"PredicateValidator" => "Kushti i specifikuar nuk u arrit për '{PropertyName}'.",
 			"AsyncPredicateValidator" => "Kushti i specifikuar nuk u arrit për '{PropertyName}'.",
 			"RegularExpressionValidator" => "'{PropertyName}' nuk është në formatin e duhur.",

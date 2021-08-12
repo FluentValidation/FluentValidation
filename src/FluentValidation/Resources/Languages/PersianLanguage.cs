@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "'{PropertyName}' باید کمتر یا مساوی '{ComparisonValue}' باشد.",
 			"LessThanValidator" => "'{PropertyName}' باید کمتر از '{ComparisonValue}' باشد.",
 			"NotEmptyValidator" => "وارد کردن '{PropertyName}' ضروری است.",
+			"RequiredValidator" => "وارد کردن '{PropertyName}' ضروری است.",
 			"NotEqualValidator" => "'{PropertyName}' نباید برابر با '{ComparisonValue}' باشد.",
 			"NotNullValidator" => "وارد کردن '{PropertyName}' ضروری است.",
 			"PredicateValidator" => "شرط تعیین شده برای '{PropertyName}' برقرار نیست.",

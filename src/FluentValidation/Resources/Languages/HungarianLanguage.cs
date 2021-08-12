@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "A(z) '{PropertyName}' kisebb vagy egyenlő kell, hogy legyen, mint '{ComparisonValue}'.",
 			"LessThanValidator" => "A(z) '{PropertyName}' kisebb kell, hogy legyen, mint '{ComparisonValue}'.",
 			"NotEmptyValidator" => "A(z) '{PropertyName}' nem lehet üres.",
+			"RequiredValidator" => "A(z) '{PropertyName}' nem lehet üres.",
 			"NotEqualValidator" => "A(z) '{PropertyName}' nem lehet egyenlő ezzel: '{ComparisonValue}'.",
 			"NotNullValidator" => "A(z) '{PropertyName}' nem lehet üres.",
 			"PredicateValidator" => "A megadott feltétel nem teljesült a(z) '{PropertyName}' mezőre.",

@@ -50,6 +50,12 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
+		public async Task Required_uses_simplified_message_for_clientside_validation() {
+			var msg = await _client.GetClientsideMessage("Required3", "data-val-required");
+			msg.ShouldEqual("'Required3' is required.");
+		}
+
+		[Fact]
 		public async Task NotNull_uses_simplified_message_for_clientside_validation() {
 			var msg = await _client.GetClientsideMessage("Required2", "data-val-required");
 			msg.ShouldEqual("'Required2' must not be empty.");

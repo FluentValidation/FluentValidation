@@ -18,6 +18,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "'{PropertyName}'ต้องมีค่าน้อยกว่าหรือเท่ากับ'{ComparisonValue}'.",
 			"LessThanValidator" => "'{PropertyName}'ต้องมีค่าน้อยกว่า'{ComparisonValue}'",
 			"NotEmptyValidator" => "'{PropertyName}'ต้องไม่มีค่าว่างเปล่า",
+			"RequiredValidator" => "'{PropertyName}'ต้องไม่มีค่าว่างเปล่า",
 			"NotEqualValidator" => "'{PropertyName}'ต้องไม่เท่ากับ'{ComparisonValue}'",
 			"NotNullValidator" => "'{PropertyName}'ต้องมีค่า",
 			"PredicateValidator" => "ข้อมูลของ'{PropertyName}'ผิดกฎเกณฑ์ที่กำหนดไว้",

@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μικρότερη ή ίση με '{ComparisonValue}'.",
 			"LessThanValidator" => "Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μικρότερη από '{ComparisonValue}'.",
 			"NotEmptyValidator" => "Το πεδίο '{PropertyName}' δεν πρέπει να είναι κενό.",
+			"RequiredValidator" => "Το πεδίο '{PropertyName}' δεν πρέπει να είναι κενό.",
 			"NotEqualValidator" => "Το πεδίο '{PropertyName}' δεν πρέπει να έχει τιμή ίση με '{ComparisonValue}'.",
 			"NotNullValidator" => "Το πεδίο '{PropertyName}' δεν πρέπει να είναι κενό.",
 			"PredicateValidator" => "Η ορισμένη συνθήκη δεν ικανοποιήθηκε για το πεδίο '{PropertyName}'.",

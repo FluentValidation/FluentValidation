@@ -39,6 +39,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' mag niet leeg zijn.",
 			"NotEqualValidator" => "'{PropertyName}' moet anders zijn dan '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' mag niet leeg zijn.",
+			"RequiredValidator" => "'{PropertyName}' mag niet leeg zijn.",
 			"PredicateValidator" => "'{PropertyName}' voldoet niet aan de vereisten.",
 			"AsyncPredicateValidator" => "'{PropertyName}' voldoet niet aan de vereisten.",
 			"RegularExpressionValidator" => "'{PropertyName}' voldoet niet aan het verwachte formaat.",

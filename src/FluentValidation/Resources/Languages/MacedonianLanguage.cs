@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "Вредноста на '{PropertyName}' мора да биде помала или еднаква на '{ComparisonValue}'.",
 			"LessThanValidator" => "Вредноста на '{PropertyName}' мора да биде помала од '{ComparisonValue}'.",
 			"NotEmptyValidator" => "Вредноста на '{PropertyName}' не треба да биде празна.",
+			"RequiredValidator" => "Вредноста на '{PropertyName}' не треба да биде празна.",
 			"NotEqualValidator" => "Вредноста на '{PropertyName}' би требало да биде еднаква на '{ComparisonValue}'.",
 			"NotNullValidator" => "Вредноста на '{PropertyName}' не треба да биде празна.",
 			"PredicateValidator" => "Специфичната состојба не беше најдена за  '{PropertyName}'.",

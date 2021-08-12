@@ -14,6 +14,7 @@
 		public string Required { get; set; }
 		public string Length { get; set; }
 		public string Required2 { get; set; }
+		public string Required3 { get; set; }
 		public string RequiredInsidePartial { get; set; }
 		public string ExactLength { get; set; }
 		public int GreaterThan { get; set; }
@@ -71,6 +72,7 @@
 			RuleFor(x => x.RegEx).Matches("[0-9]");
 			RuleFor(x => x.Required).NotEmpty();
 			RuleFor(x => x.Required2).NotNull();
+			RuleFor(x => x.Required3).Required();
 			RuleFor(x => x.RequiredInsidePartial).NotEmpty();
 
 			RuleFor(x => x.Length).Length(1, 4);

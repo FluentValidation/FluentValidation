@@ -38,6 +38,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' لا يجب أن يكون فارغاً.",
 			"NotEqualValidator" => "'{PropertyName}' يجب ألا يساوي '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' لا يجب أن يكون فارغاً.",
+			"RequiredValidator" => "'{PropertyName}' لا يجب أن يكون فارغاً.",
 			"PredicateValidator" => "الشرط المحدد لا يتفق مع '{PropertyName}'.",
 			"AsyncPredicateValidator" => "الشرط المحدد لا يتفق مع '{PropertyName}'.",
 			"RegularExpressionValidator" => "'{PropertyName}' ليس بالتنسيق الصحيح.",

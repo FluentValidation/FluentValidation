@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "'{PropertyName}' trebuie să fie mai mică sau egală cu '{ComparisonValue}'.",
 			"LessThanValidator" => "'{PropertyName}' trebuie să fie mai mică decât '{ComparisonValue}'.",
 			"NotEmptyValidator" => "'{PropertyName}' nu ar trebui să fie goală.",
+			"RequiredValidator" => "'{PropertyName}' nu ar trebui să fie goală.",
 			"NotEqualValidator" => "'{PropertyName}' nu ar trebui să fie egală cu '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' nu trebui să fie goală.",
 			"PredicateValidator" => "Condiția specificată nu a fost îndeplinită de '{PropertyName}'.",

@@ -1,5 +1,4 @@
 #region License
-
 // Copyright (c) .NET Foundation and contributors.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,36 +14,28 @@
 // limitations under the License.
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
-
 #endregion
 
 namespace FluentValidation.Validators {
-	using System;
-	using System.Collections;
-	using System.Linq;
-	using Resources;
+	internal class RequiredValidator<T,TProperty> : PropertyValidator<T,TProperty>, IRequiredValidator, INotNullValidator {
 
-	public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, INotEmptyValidator, IRequiredValidator {
+		public RequiredValidator(bool allowEmptyStrings) {
+			AllowEmptyStrings = allowEmptyStrings;
+		}
 
-		public override string Name => "NotEmptyValidator";
+		/// <summary>
+		/// Whether empty strings should be considered valid. Defaults to false.
+		/// </summary>
+		public bool AllowEmptyStrings { get; }
+
+		public override string Name => "RequiredValidator";
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {
-			switch (value) {
-				case null:
-				case string s when string.IsNullOrWhiteSpace(s):
-				case ICollection {Count: 0}:
-				case Array {Length: 0}c:
-				case IEnumerable e when !e.Cast<object>().Any():
-					return false;
-			}
-
-			//TODO: Rewrite to avoid boxing
-			if (Equals(value, default(TProperty))) {
-				// Note: Code analysis indicates "Expression is always false" but this is incorrect.
+			if (value == null) {
 				return false;
 			}
 
-			return true;
+			return AllowEmptyStrings || value is not string stringValue || !string.IsNullOrWhiteSpace(stringValue);
 		}
 
 		protected override string GetDefaultMessageTemplate(string errorCode) {
@@ -52,6 +43,6 @@ namespace FluentValidation.Validators {
 		}
 	}
 
-	public interface INotEmptyValidator : IPropertyValidator {
+	public interface IRequiredValidator : IPropertyValidator {
 	}
 }

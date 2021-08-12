@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "Hodnota poľa '{PropertyName}' musí byť menšia alebo sa rovnať '{ComparisonValue}'.",
 			"LessThanValidator" => "Hodnota poľa '{PropertyName}' musí byť menšia ako '{ComparisonValue}'.",
 			"NotEmptyValidator" => "Pole '{PropertyName}' nesmie byť prázdne.",
+			"RequiredValidator" => "Pole '{PropertyName}' nesmie byť prázdne.",
 			"NotEqualValidator" => "Pole '{PropertyName}' sa nesmie rovnať '{ComparisonValue}'.",
 			"NotNullValidator" => "Pole '{PropertyName}' nesmie byť prázdne.",
 			"PredicateValidator" => "Nebola splnená podmienka pre pole '{PropertyName}'.",

@@ -38,6 +38,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' 不能為空。",
 			"NotEqualValidator" => "'{PropertyName}' 不能和 '{ComparisonValue}' 相等。",
 			"NotNullValidator" => "'{PropertyName}' 不能為Null。",
+			"RequiredValidator" => "'{PropertyName}' 不能為空。",
 			"PredicateValidator" => "'{PropertyName}' 不符合指定的條件。",
 			"AsyncPredicateValidator" => "'{PropertyName}' 不符合指定的條件。",
 			"RegularExpressionValidator" => "'{PropertyName}' 的格式不正確。",

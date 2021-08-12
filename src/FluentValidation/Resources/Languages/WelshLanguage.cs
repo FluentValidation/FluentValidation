@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "Rhaid i '{PropertyName}' fod yn llai na '{ComparisonValue}', neu'n gyfartal ag o.",
 			"LessThanValidator" => "Rhaid i '{PropertyName}' fod yn llai na '{ComparisonValue}'.",
 			"NotEmptyValidator" => "Ni ddylai '{PropertyName}' fod yn wag.",
+			"RequiredValidator" => "Ni ddylai '{PropertyName}' fod yn wag.",
 			"NotEqualValidator" => "Ni ddylai '{PropertyName}' fod yn gyfartal â '{ComparisonValue}'.",
 			"NotNullValidator" => "Ni ddylai '{PropertyName}' fod yn wag.",
 			"PredicateValidator" => "Ni chyflawnwyd y gofyniad penodol ar gyfer '{PropertyName}'.",

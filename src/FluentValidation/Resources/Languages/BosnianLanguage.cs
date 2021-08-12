@@ -38,6 +38,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' ne smije biti prazan.",
 			"NotEqualValidator" => "'{PropertyName}' ne smije biti jednak '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' ne smije biti prazan.",
+			"RequiredValidator" => "'{PropertyName}' ne smije biti prazan.",
 			"PredicateValidator" => "Zadan uslov nije ispunjen za '{PropertyName}'.",
 			"AsyncPredicateValidator" => "Zadan uslov nije ispunjen za '{PropertyName}'.",
 			"RegularExpressionValidator" => "'{PropertyName}' nije u odgovarajućem formatu.",

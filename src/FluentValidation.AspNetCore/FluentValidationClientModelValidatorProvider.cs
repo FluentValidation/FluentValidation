@@ -38,6 +38,7 @@ namespace FluentValidation.AspNetCore {
 
 		public Dictionary<Type, FluentValidationClientValidatorFactory> ClientValidatorFactories { get; } = new() {
 			{ typeof(INotNullValidator), (context, rule, component) => new RequiredClientValidator(rule, component) },
+			{ typeof(IRequiredValidator), (context, rule, component) => new RequiredClientValidator(rule, component) },
 			{ typeof(INotEmptyValidator), (context, rule, component) => new RequiredClientValidator(rule, component) },
 			{ typeof(IEmailValidator), (context, rule, component) => new EmailClientValidator(rule, component) },
 			{ typeof(IRegularExpressionValidator), (context, rule, component) => new RegexClientValidator(rule, component) },

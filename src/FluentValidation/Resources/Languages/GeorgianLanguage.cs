@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე ნაკლები ან ტოლი.",
 			"LessThanValidator" => "'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე ნაკლები.",
 			"NotEmptyValidator" => "'{PropertyName}' არ უნდა იყოს ცარიელი.",
+			"RequiredValidator" => "'{PropertyName}' არ უნდა იყოს ცარიელი.",
 			"NotEqualValidator" => "'{PropertyName}' არ უნდა უდრიდეს '{ComparisonValue}'-ს.",
 			"NotNullValidator" => "'{PropertyName}' არ უნდა იყოს ცარიელი.",
 			"PredicateValidator" => "'{PropertyName}'-ისთვის განსაზღვრული პირობა არ დაკმაყოფილდა.",

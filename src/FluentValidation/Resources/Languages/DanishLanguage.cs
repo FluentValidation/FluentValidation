@@ -38,6 +38,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' bør ikke være tom.",
 			"NotEqualValidator" => "'{PropertyName}' bør ikke være lig med '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' må ikke være tomme.",
+			"RequiredValidator" => "'{PropertyName}' må ikke være tomme.",
 			"PredicateValidator" => "Den angivne betingelse var ikke opfyldt for '{PropertyName}'.",
 			"AsyncPredicateValidator" => "Den angivne betingelse var ikke opfyldt for '{PropertyName}'.",
 			"RegularExpressionValidator" => "'{PropertyName}' er ikke i det rigtige format.",

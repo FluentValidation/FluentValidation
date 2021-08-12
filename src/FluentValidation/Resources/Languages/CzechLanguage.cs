@@ -38,6 +38,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "Pole '{PropertyName}' nesmí být prázdné.",
 			"NotEqualValidator" => "Pole '{PropertyName}' nesmí být rovno '{ComparisonValue}'.",
 			"NotNullValidator" => "Pole '{PropertyName}' nesmí být prázdné.",
+			"RequiredValidator" => "Pole '{PropertyName}' nesmí být prázdné.",
 			"PredicateValidator" => "Nebyla splněna podmínka pro pole '{PropertyName}'.",
 			"AsyncPredicateValidator" => "Nebyla splněna podmínka pro pole '{PropertyName}'.",
 			"RegularExpressionValidator" => "Pole '{PropertyName}' nemá správný formát.",

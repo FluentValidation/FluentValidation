@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "'{PropertyName}' debe ser menor o igual que '{ComparisonValue}'.",
 			"LessThanValidator" => "'{PropertyName}' debe ser menor que '{ComparisonValue}'.",
 			"NotEmptyValidator" => "'{PropertyName}' no debería estar vacío.",
+			"RequiredValidator" => "'{PropertyName}' no debería estar vacío.",
 			"NotEqualValidator" => "'{PropertyName}' no debería ser igual a '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' no debe estar vacío.",
 			"PredicateValidator" => "'{PropertyName}' no cumple con la condición especificada.",

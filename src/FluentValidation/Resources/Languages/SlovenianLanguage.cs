@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "'{PropertyName}' mora biti manjši ali enak '{ComparisonValue}'.",
 			"LessThanValidator" => "'{PropertyName}' mora biti manjši od '{ComparisonValue}'.",
 			"NotEmptyValidator" => "'{PropertyName}' ne sme biti prazen.",
+			"RequiredValidator" => "'{PropertyName}' ne sme biti prazen.",
 			"NotEqualValidator" => "'{PropertyName}' ne sme biti enak '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' ne sme biti prazen.",
 			"PredicateValidator" => "Določen pogoj ni bil izpolnjen za '{PropertyName}'.",

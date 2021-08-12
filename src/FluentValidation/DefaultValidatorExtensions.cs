@@ -76,6 +76,19 @@ namespace FluentValidation {
 #pragma warning restore 618
 
 		/// <summary>
+		/// Defines a 'required' validator on the current rule builder.
+		/// Validation will fail if the property is null, or an empty string, or whitespace.
+		/// </summary>
+		/// <typeparam name="T">Type of object being validated</typeparam>
+		/// <typeparam name="TProperty">Type of property being validated</typeparam>
+		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+		/// <param name="allowEmptyStrings">If set to true then empty strings or whitespace will be considered valid. The default is false.</param>
+		/// <returns></returns>
+		public static IRuleBuilderOptions<T, TProperty> Required<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, bool allowEmptyStrings = false) {
+			return ruleBuilder.SetValidator(new RequiredValidator<T, TProperty>(allowEmptyStrings));
+		}
+
+		/// <summary>
 		/// Defines a 'not null' validator on the current rule builder.
 		/// Validation will fail if the property is null.
 		/// </summary>

@@ -39,6 +39,7 @@ namespace FluentValidation.Resources {
 			"NotEmptyValidator" => "'{PropertyName}' must not be empty.",
 			"NotEqualValidator" => "'{PropertyName}' must not be equal to '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' must not be empty.",
+			"RequiredValidator" => "'{PropertyName}' is required.",
 			"PredicateValidator" => "The specified condition was not met for '{PropertyName}'.",
 			"AsyncPredicateValidator" => "The specified condition was not met for '{PropertyName}'.",
 			"RegularExpressionValidator" => "'{PropertyName}' is not in the correct format.",

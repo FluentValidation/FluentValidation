@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "'{PropertyName}' חייב להיות קטן או שווה ל- '{ComparisonValue}'.",
 			"LessThanValidator" => "'{PropertyName}' חייב להיות קטן מ- '{ComparisonValue}'.",
 			"NotEmptyValidator" => "'{PropertyName}' לא אמור להיות ריק.",
+			"RequiredValidator" => "'{PropertyName}' לא אמור להיות ריק.",
 			"NotEqualValidator" => "'{PropertyName}' לא יכול להיות שווה ל- '{ComparisonValue}'.",
 			"NotNullValidator" => "'{PropertyName}' לא יכול להיות ריק.",
 			"PredicateValidator" => "התנאי שצוין לא התקיים עבור '{PropertyName}'.",

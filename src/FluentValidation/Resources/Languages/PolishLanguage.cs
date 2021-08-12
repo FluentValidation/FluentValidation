@@ -36,6 +36,7 @@ namespace FluentValidation.Resources {
 			"LessThanOrEqualValidator" => "Wartość pola '{PropertyName}' musi być równa lub mniejsza niż '{ComparisonValue}'.",
 			"LessThanValidator" => "Wartość pola '{PropertyName}' musi być mniejsza niż '{ComparisonValue}'.",
 			"NotEmptyValidator" => "Pole '{PropertyName}' nie może być puste.",
+			"RequiredValidator" => "Pole '{PropertyName}' nie może być puste.",
 			"NotEqualValidator" => "Pole '{PropertyName}' nie może być równe '{ComparisonValue}'.",
 			"NotNullValidator" => "Pole '{PropertyName}' nie może być puste.",
 			"PredicateValidator" => "Określony warunek nie został spełniony dla pola '{PropertyName}'.",
