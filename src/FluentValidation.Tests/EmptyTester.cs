@@ -22,6 +22,7 @@ namespace FluentValidation.Tests {
 	using System.Linq;
 	using Xunit;
 
+#pragma warning disable 618
 
 	public class EmptyTester {
 		public EmptyTester() {

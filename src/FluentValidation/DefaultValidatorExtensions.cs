@@ -108,6 +108,7 @@ namespace FluentValidation {
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
+		[Obsolete("Null is deprecated. Use Check(value => value == null) instead.")]
 		public static IRuleBuilderOptions<T, TProperty> Null<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 			return ruleBuilder.SetValidator(new NullValidator<T,TProperty>());
 		}
@@ -133,6 +134,7 @@ namespace FluentValidation {
 		/// <typeparam name="TProperty">Type of property being validated</typeparam>
 		/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 		/// <returns></returns>
+		[Obsolete("Empty has been deprecated. Please use a custom validator check instead. See https://github.com/FluentValidation/FluentValidation/issues/1805 for details.")]
 		public static IRuleBuilderOptions<T, TProperty> Empty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 			return ruleBuilder.SetValidator(new EmptyValidator<T,TProperty>());
 		}

@@ -332,18 +332,6 @@ String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
 
-## Null Validator
-
-Checks if a property value is null.
-```csharp
-RuleFor(x => x.Surname).Null();
-```
-Example error: *'Surname' must be empty.*
-
-String format args:
-* `{PropertyName}` – Name of the property being validated
-* `{PropertyValue}` – Current value of the property
-
 ## ExclusiveBetween Validator
 Checks whether the property value is in a range between the two specified numbers (exclusive).
 
