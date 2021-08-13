@@ -75,7 +75,7 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		/// <summary>
-		/// Sets the rulests used when generating clientside messages.
+		/// Sets the rulesets used when generating clientside messages.
 		/// </summary>
 		/// <param name="context">Controller context</param>
 		/// <param name="ruleSets">Array of ruleset names</param>
@@ -83,7 +83,7 @@ namespace FluentValidation.AspNetCore {
 
 #if NETCOREAPP3_1 || NET5_0
 		/// <summary>
-		/// Sets the rulests used when generating clientside messages.
+		/// Sets the rulesets used when generating clientside messages.
 		/// </summary>
 		/// <param name="context">Page context</param>
 		/// <param name="ruleSets">Array of ruleset names</param>
