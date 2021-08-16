@@ -52,14 +52,14 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		/// <summary>
-		/// Sets the rulesets used when generating clientside messages.
+		/// Indicates which Rule Sets should be used when generating clientside messages.
 		/// </summary>
 		/// <param name="context">Http context</param>
 		/// <param name="ruleSets">Array of ruleset names</param>
 		public static void SetRulesetForClientsideMessages(this HttpContext context, params string[] ruleSets) => context.Items[_rulesetKey] = ruleSets;
 
 		/// <summary>
-		/// Gets the rulesets used to generate clientside validation metadata.
+		/// Gets the Rule Sets used to generate clientside validation metadata.
 		/// </summary>
 		/// <param name="context">Http context</param>
 		/// <returns>Array of ruleset names</returns>
@@ -75,7 +75,7 @@ namespace FluentValidation.AspNetCore {
 		}
 
 		/// <summary>
-		/// Sets the rulests used when generating clientside messages.
+		/// Indicates which Rule Sets should be used when generating clientside messages.
 		/// </summary>
 		/// <param name="context">Controller context</param>
 		/// <param name="ruleSets">Array of ruleset names</param>
@@ -83,7 +83,7 @@ namespace FluentValidation.AspNetCore {
 
 #if NETCOREAPP3_1 || NET5_0
 		/// <summary>
-		/// Sets the rulests used when generating clientside messages.
+		/// Indicates which Rule Sets should be used when generating clientside messages.
 		/// </summary>
 		/// <param name="context">Page context</param>
 		/// <param name="ruleSets">Array of ruleset names</param>
