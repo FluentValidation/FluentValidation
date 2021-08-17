@@ -172,6 +172,21 @@ namespace FluentValidation {
 		/// </summary>
 		public bool ThrowOnFailures { get; internal set; }
 
+
+		private Dictionary<string, Dictionary<T, bool>> _sharedConditionResults;
+
+		/// <summary>
+		/// Shared condition results cache.
+		/// The key of the outer dictionary is the ID of the condition, and its value is the cache for that condition.
+		/// The key of the inner dictionary is the instance being validated, and the value is the condition result.
+		/// </summary>
+		internal Dictionary<string, Dictionary<T, bool>> SharedConditionResults {
+			get {
+				_sharedConditionResults ??= new();
+				return _sharedConditionResults;
+			}
+		}
+
 		/// <summary>
 		/// Gets or creates generic validation context from non-generic validation context.
 		/// </summary>

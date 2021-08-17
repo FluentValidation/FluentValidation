@@ -47,21 +47,26 @@ namespace FluentValidation.Internal {
 			var id = "_FV_Condition_" + Guid.NewGuid();
 
 			bool Condition(IValidationContext context) {
-				string cacheId = null;
+				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
 
-				if (context.InstanceToValidate != null) {
-					cacheId = id + context.InstanceToValidate.GetHashCode();
-
-					if (context.RootContextData.TryGetValue(cacheId, out var value)) {
-						if (value is bool result) {
+				if (actualContext.InstanceToValidate != null) {
+					if (actualContext.SharedConditionResults.TryGetValue(id, out var cachedResults)) {
+						if (cachedResults.TryGetValue(actualContext.InstanceToValidate, out bool result)) {
 							return result;
 						}
 					}
 				}
 
-				var executionResult = predicate((T)context.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(context));
-				if (context.InstanceToValidate != null) {
-					context.RootContextData[cacheId] = executionResult;
+				var executionResult = predicate(actualContext.InstanceToValidate, actualContext);
+				if (actualContext.InstanceToValidate != null) {
+					if (actualContext.SharedConditionResults.TryGetValue(id, out var cachedResults)) {
+						cachedResults.Add(actualContext.InstanceToValidate, executionResult);
+					}
+					else {
+						actualContext.SharedConditionResults.Add(id, new Dictionary<T, bool> {
+							{ actualContext.InstanceToValidate, executionResult }
+						});
+					}
 				}
 				return executionResult;
 			}
@@ -108,20 +113,26 @@ namespace FluentValidation.Internal {
 			var id = "_FV_AsyncCondition_" + Guid.NewGuid();
 
 			async Task<bool> Condition(IValidationContext context, CancellationToken ct) {
-				string cacheId = null;
-				if (context.InstanceToValidate != null) {
-					cacheId = id + context.InstanceToValidate.GetHashCode();
+				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
 
-					if (context.RootContextData.TryGetValue(cacheId, out var value)) {
-						if (value is bool result) {
+				if (actualContext.InstanceToValidate != null) {
+					if (actualContext.SharedConditionResults.TryGetValue(id, out var cachedResults)) {
+						if (cachedResults.TryGetValue(actualContext.InstanceToValidate, out bool result)) {
 							return result;
 						}
 					}
 				}
 
 				var executionResult = await predicate((T)context.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(context), ct);
-				if (context.InstanceToValidate != null) {
-					context.RootContextData[cacheId] = executionResult;
+				if (actualContext.InstanceToValidate != null) {
+					if (actualContext.SharedConditionResults.TryGetValue(id, out var cachedResults)) {
+						cachedResults.Add(actualContext.InstanceToValidate, executionResult);
+					}
+					else {
+						actualContext.SharedConditionResults.Add(id, new Dictionary<T, bool> {
+							{ actualContext.InstanceToValidate, executionResult }
+						});
+					}
 				}
 				return executionResult;
 			}
