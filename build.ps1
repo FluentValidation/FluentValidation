@@ -18,7 +18,6 @@ if (! (Test-Path (Join-Path $build_dir "Posh-Build.ps1"))) {
 $packages_dir = Join-Path $build_dir "packages"
 $output_dir = Join-Path $build_dir $configuration
 $solution_file = Join-Path $path "FluentValidation.sln"
-$nuget_key = Resolve-Path "~/Dropbox/nuget-access-key.txt" -ErrorAction Ignore
 
 target default -depends compile, test, deploy
 
@@ -38,21 +37,8 @@ target deploy {
 }
 
 target publish {
-  $interactive = $true
   $key = $Env:NUGET_API_KEY
-
-  if ($key) {
-    $interactive = $false
-  }
-  elseif (test-path "$nuget_key") {
-    $key = get-content $nuget_key
-    $interactive = $true
-  }
-  else {
-    throw "NUGET_API_KEY or local key not set"
-  }
-
-  Nuget-Push -directory $packages_dir -key $key -prompt $interactive
+  Nuget-Push -directory $packages_dir -key $key -prompt $true
 }
 
 Start-Build $targets
