@@ -173,17 +173,17 @@ namespace FluentValidation {
 		public bool ThrowOnFailures { get; internal set; }
 
 
-		private Dictionary<string, Dictionary<T, bool>> _sharedConditionResults;
+		private Dictionary<string, Dictionary<T, bool>> _sharedConditionCache;
 
 		/// <summary>
 		/// Shared condition results cache.
 		/// The key of the outer dictionary is the ID of the condition, and its value is the cache for that condition.
 		/// The key of the inner dictionary is the instance being validated, and the value is the condition result.
 		/// </summary>
-		internal Dictionary<string, Dictionary<T, bool>> SharedConditionResults {
+		internal Dictionary<string, Dictionary<T, bool>> SharedConditionCache {
 			get {
-				_sharedConditionResults ??= new();
-				return _sharedConditionResults;
+				_sharedConditionCache ??= new();
+				return _sharedConditionCache;
 			}
 		}
 
@@ -244,7 +244,7 @@ namespace FluentValidation {
 
 		internal void PrepareForChildCollectionValidator() {
 			_state ??= new();
-			_state.Push((IsChildContext, IsChildCollectionContext, _parentContext, PropertyChain));
+			_state.Push((IsChildContext, IsChildCollectionContext, _parentContext, PropertyChain, _sharedConditionCache));
 			IsChildContext = true;
 			IsChildCollectionContext = true;
 			PropertyChain = new PropertyChain();
@@ -256,10 +256,11 @@ namespace FluentValidation {
 			IsChildCollectionContext = state.IsChildCollectionContext;
 			_parentContext = state.ParentContext;
 			PropertyChain = state.Chain;
+			_sharedConditionCache = state.SharedConditionCache;
 		}
 
 
-		private Stack<(bool IsChildContext, bool IsChildCollectionContext, IValidationContext ParentContext, PropertyChain Chain)> _state;
+		private Stack<(bool IsChildContext, bool IsChildCollectionContext, IValidationContext ParentContext, PropertyChain Chain, Dictionary<string, Dictionary<T, bool>> SharedConditionCache)> _state;
 
 		/// <summary>
 		/// Adds a new validation failure.

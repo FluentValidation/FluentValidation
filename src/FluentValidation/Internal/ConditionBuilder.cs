@@ -50,7 +50,7 @@ namespace FluentValidation.Internal {
 				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
 
 				if (actualContext.InstanceToValidate != null) {
-					if (actualContext.SharedConditionResults.TryGetValue(id, out var cachedResults)) {
+					if (actualContext.SharedConditionCache.TryGetValue(id, out var cachedResults)) {
 						if (cachedResults.TryGetValue(actualContext.InstanceToValidate, out bool result)) {
 							return result;
 						}
@@ -59,11 +59,11 @@ namespace FluentValidation.Internal {
 
 				var executionResult = predicate(actualContext.InstanceToValidate, actualContext);
 				if (actualContext.InstanceToValidate != null) {
-					if (actualContext.SharedConditionResults.TryGetValue(id, out var cachedResults)) {
+					if (actualContext.SharedConditionCache.TryGetValue(id, out var cachedResults)) {
 						cachedResults.Add(actualContext.InstanceToValidate, executionResult);
 					}
 					else {
-						actualContext.SharedConditionResults.Add(id, new Dictionary<T, bool> {
+						actualContext.SharedConditionCache.Add(id, new Dictionary<T, bool> {
 							{ actualContext.InstanceToValidate, executionResult }
 						});
 					}
@@ -116,7 +116,7 @@ namespace FluentValidation.Internal {
 				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
 
 				if (actualContext.InstanceToValidate != null) {
-					if (actualContext.SharedConditionResults.TryGetValue(id, out var cachedResults)) {
+					if (actualContext.SharedConditionCache.TryGetValue(id, out var cachedResults)) {
 						if (cachedResults.TryGetValue(actualContext.InstanceToValidate, out bool result)) {
 							return result;
 						}
@@ -125,11 +125,11 @@ namespace FluentValidation.Internal {
 
 				var executionResult = await predicate((T)context.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(context), ct);
 				if (actualContext.InstanceToValidate != null) {
-					if (actualContext.SharedConditionResults.TryGetValue(id, out var cachedResults)) {
+					if (actualContext.SharedConditionCache.TryGetValue(id, out var cachedResults)) {
 						cachedResults.Add(actualContext.InstanceToValidate, executionResult);
 					}
 					else {
-						actualContext.SharedConditionResults.Add(id, new Dictionary<T, bool> {
+						actualContext.SharedConditionCache.Add(id, new Dictionary<T, bool> {
 							{ actualContext.InstanceToValidate, executionResult }
 						});
 					}
