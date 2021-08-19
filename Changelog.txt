@@ -1,4 +1,4 @@
-10.3.1 - 
+10.3.1 - 19 Aug 2021
 Fix scale precision error message when digits is calculated as negative (#1790)
 Shared conditions shouldn't rely on object hashcode for unique ID (#1810)
 
