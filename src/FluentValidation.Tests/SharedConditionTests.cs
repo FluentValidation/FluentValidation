@@ -672,6 +672,63 @@ namespace FluentValidation.Tests {
 			result.IsValid.ShouldBeTrue();
 		}
 
+		[Fact]
+		public void Shouldnt_break_with_hashcode_collision() {
+			var v1 = new InlineValidator<Collision1>();
+			var v2 = new InlineValidator<Collision2>();
+
+
+			var v = new InlineValidator<CollisionBase>();
+			v.When(x => x is Collision1, () => {
+				v.RuleFor(x => ((Collision1)x).Name).NotNull();
+			});
+			v.When(x => x is Collision2, () => {
+				v.RuleFor(x => ((Collision2)x).Name).NotNull();
+			});
+
+			// shouldn't throw an InvalidCastException.
+			var containerValidator = new InlineValidator<List<CollisionBase>>();
+			containerValidator.RuleForEach(x => x).SetValidator(v);
+			containerValidator.Validate(new List<CollisionBase> {
+				new Collision1(), new Collision2()
+			});
+		}
+
+		[Fact]
+		public async Task Shouldnt_break_with_hashcode_collision_async() {
+			var v1 = new InlineValidator<Collision1>();
+			var v2 = new InlineValidator<Collision2>();
+
+			var v = new InlineValidator<CollisionBase>();
+			v.WhenAsync((x, ct) => Task.FromResult(x is Collision1), () => {
+				v.RuleFor(x => ((Collision1)x).Name).NotNull();
+			});
+			v.WhenAsync((x, ct) => Task.FromResult(x is Collision2), () => {
+				v.RuleFor(x => ((Collision2)x).Name).NotNull();
+			});
+
+			var containerValidator = new InlineValidator<List<CollisionBase>>();
+			containerValidator.RuleForEach(x => x).SetValidator(v);
+
+			// shouldn't throw an InvalidCastException.
+			await containerValidator.ValidateAsync(new List<CollisionBase> {
+				new Collision1(), new Collision2()
+			});
+		}
+
+
+		class CollisionBase { }
+
+		class Collision1 : CollisionBase {
+
+			public string Name { get; set; }
+			public override int GetHashCode() => 1;
+		}
+
+		class Collision2 : CollisionBase {
+			public string Name { get; set; }
+			public override int GetHashCode() => 1;
+		}
 	}
 }
 
