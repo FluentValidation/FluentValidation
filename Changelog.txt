@@ -1,4 +1,4 @@
-10.3.2 - 24 Aug 2021
+10.3.3 - 24 Aug 2021
 Remove reference type constraint for TestValidate (#1815)
 
 10.3.1 - 19 Aug 2021
