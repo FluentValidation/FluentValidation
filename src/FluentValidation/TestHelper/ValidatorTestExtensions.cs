@@ -181,7 +181,7 @@ namespace FluentValidation.TestHelper {
 		/// <summary>
 		/// Performs validation, returning a TestValidationResult which allows assertions to be performed.
 		/// </summary>
-		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null) where T : class {
+		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null) {
 			options ??= _ => { };
 			var validationResult = validator.Validate(objectToTest, options);
 			return new TestValidationResult<T>(validationResult);

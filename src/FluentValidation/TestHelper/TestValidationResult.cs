@@ -25,7 +25,7 @@ namespace FluentValidation.TestHelper {
 	using Internal;
 	using Results;
 
-	public class TestValidationResult<T> : ValidationResult where T : class {
+	public class TestValidationResult<T> : ValidationResult {
 
 		public TestValidationResult(ValidationResult validationResult) : base(validationResult.Errors){
 			RuleSetsExecuted = validationResult.RuleSetsExecuted;
