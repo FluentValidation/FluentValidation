@@ -232,6 +232,21 @@ namespace FluentValidation.Tests.AspNetCore {
 			lessThan.Attribute("data-val-range").ShouldBeNull();
 			greaterThan.Attribute("data-val-range").ShouldBeNull();
 		}
+
+		[Fact]
+		public async Task Shouldnt_generate_clientside_message_for_LessThanOrEqual_GreaterThanOrEqual_func() {
+			// A call to LessThanOrEqual(x => DateTime.Now) shouldn't generate clientside metadata.
+			var document = await _client.GetClientsideMessages();
+
+			var lessThan = document.Root.Elements("input")
+				.SingleOrDefault(x => x.Attribute("name").Value == "LessThanOrEqualFunc");
+
+			var greaterThan = document.Root.Elements("input")
+				.SingleOrDefault(x => x.Attribute("name").Value == "GreaterThanOrEqualFunc");
+
+			lessThan.Attribute("data-val-range").ShouldBeNull();
+			greaterThan.Attribute("data-val-range").ShouldBeNull();
+		}
 	}
 
 
