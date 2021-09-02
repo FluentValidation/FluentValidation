@@ -835,6 +835,138 @@ namespace FluentValidation.Tests {
 			});
 		}
 
+		[Fact]
+		public void ShouldHaveValidationErrorFor_Only() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).Must((x, ct) => false);
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.Only();
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_Only_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).Must((x, ct) => false);
+			validator.RuleFor(x => x.Age).Must((x, ct) => false);
+			Assert.Throws<ValidationTestException>(() =>
+				validator.TestValidate(new Person())
+					.ShouldHaveValidationErrorFor(x => x.Surname)
+					.Only()
+			).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: The specified condition was not met for 'Age'.\n");
+		}
+
+		[Fact]
+		public async Task ShouldHaveValidationErrorFor_Only_async() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(false));
+			(await validator.TestValidateAsync(new Person()))
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.Only();
+		}
+
+		[Fact]
+		public async Task ShouldHaveValidationErrorFor_Only_async_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname).MustAsync((x, ct) => Task.FromResult(false));
+			validator.RuleFor(x => x.Age).MustAsync((x, ct) => Task.FromResult(false));
+			(await Assert.ThrowsAsync<ValidationTestException>(async () => {
+				(await validator.TestValidateAsync(new Person()))
+					.ShouldHaveValidationErrorFor(x => x.Surname)
+					.Only();
+			})).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: The specified condition was not met for 'Age'.\n");
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithMultipleRules_Only() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname)
+				.Must((x, ct) => false)
+				.NotEmpty();
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.Only();
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithMessage_Only_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname)
+				.Must((x, ct) => false)
+				.NotEmpty();
+			Assert.Throws<ValidationTestException>(() =>
+				validator.TestValidate(new Person())
+					.ShouldHaveValidationErrorFor(x => x.Surname)
+					.WithErrorMessage("The specified condition was not met for 'Surname'.")
+					.Only()
+			).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Surname' must not be empty.\n");
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithMessage_Only() {
+			var validator = new InlineValidator<Person>();
+			var message = "Something's wrong but I won't tell you what";
+			validator.RuleFor(x => x.Surname)
+				.Must((x, ct) => false).WithMessage(message)
+				.NotEmpty().WithMessage(message);
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithErrorMessage(message)
+				.Only();
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithSeverity_Only() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname)
+				.Must((x, ct) => false).WithSeverity(Severity.Warning)
+				.NotEmpty().WithSeverity(Severity.Warning);
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithSeverity(Severity.Warning)
+				.Only();
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithSeverity_Only_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname)
+				.Must((x, ct) => false).WithSeverity(Severity.Warning)
+				.NotEmpty();
+			Assert.Throws<ValidationTestException>(() =>
+				validator.TestValidate(new Person())
+					.ShouldHaveValidationErrorFor(x => x.Surname)
+					.WithSeverity(Severity.Warning)
+					.Only()
+			).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Surname' must not be empty.\n");
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithErrorCode_Only() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname)
+				.Must((x, ct) => false).WithErrorCode("100")
+				.NotEmpty().WithErrorCode("100");
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithErrorCode("100")
+				.Only();
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithErrorCode_Only_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => x.Surname)
+				.Must((x, ct) => false).WithErrorCode("100")
+				.NotEmpty().WithErrorCode("200");
+			Assert.Throws<ValidationTestException>(() =>
+				validator.TestValidate(new Person())
+					.ShouldHaveValidationErrorFor(x => x.Surname)
+					.WithErrorCode("100")
+					.Only()
+			).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Surname' must not be empty.\n");
+		}
+
 		private class AddressValidator : AbstractValidator<Address> {
 		}
 

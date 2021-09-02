@@ -105,11 +105,11 @@ namespace FluentValidation.TestHelper {
 			return new TestValidationResult<T>(validationResult);
 		}
 
-		public static IEnumerable<ValidationFailure> ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) where T : class {
+		public static ITestValidationContinuation ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) where T : class {
 			if (!testValidationResult.Errors.Any())
 				throw new ValidationTestException($"Expected at least one validation error, but none were found.");
 
-			return testValidationResult.Errors;
+			return TestValidationContinuation.Create(testValidationResult.Errors);
 		}
 
 		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) where T : class {
@@ -134,15 +134,14 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
-    internal static IEnumerable<ValidationFailure> ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
+    internal static ITestValidationContinuation ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
+	    var result = TestValidationContinuation.Create(errors);
+	    result.ApplyPredicate(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+	                               || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+	                               || propertyName == MatchAnyFailure);
 
-      var failures = errors.Where(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
-                                       || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
-                                       || propertyName == MatchAnyFailure
-                                       ).ToArray();
-
-      if (failures.Any()) {
-        return failures;
+      if (result.Any()) {
+        return result;
       }
 
       // We expected an error but failed to match it.
@@ -184,65 +183,86 @@ namespace FluentValidation.TestHelper {
 			}
 		}
 
-		public static IEnumerable<ValidationFailure> When(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null){
-			bool anyMatched = failures.Any(failurePredicate);
+		public static ITestValidationContinuation When(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
+			var result = TestValidationContinuation.Create(failures);
+			result.ApplyPredicate(failurePredicate);
 
+			var anyMatched = result.Any();
 			if (!anyMatched) {
-				var failure = failures.FirstOrDefault();
+				var failure = result.UnmatchedFailures.FirstOrDefault();
 				string message = BuildErrorMessage(failure, exceptionMessage, "Expected validation error was not found");
 				throw new ValidationTestException(message);
 			}
 
-			return failures;
+			return result;
 		}
 
-		public static IEnumerable<ValidationFailure> WhenAll(this IEnumerable<ValidationFailure> failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-			bool allMatched = failures.All(failurePredicate);
+		public static ITestValidationContinuation WhenAll(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
+			var result = TestValidationContinuation.Create(failures);
+			result.ApplyPredicate(failurePredicate);
+
+			bool allMatched = !result.UnmatchedFailures.Any();
 
 			if (!allMatched) {
-				var failure = failures.First(fail => !(failurePredicate(fail)));
+				var failure = result.UnmatchedFailures.First();
 				string message = BuildErrorMessage(failure, exceptionMessage, "Found an unexpected validation error");
 				throw new ValidationTestException(message);
 			}
 
-			return failures;
+			return result;
 		}
 
-		public static IEnumerable<ValidationFailure> WithSeverity(this IEnumerable<ValidationFailure> failures, Severity expectedSeverity) {
+		public static ITestValidationContinuation WithSeverity(this ITestValidationContinuation failures, Severity expectedSeverity) {
 			return failures.When(failure => failure.Severity == expectedSeverity, string.Format("Expected a severity of '{0}'. Actual severity was '{{Severity}}'", expectedSeverity));
 		}
 
-		public static IEnumerable<ValidationFailure> WithCustomState(this IEnumerable<ValidationFailure> failures, object expectedCustomState, IEqualityComparer comparer = null) {
+		public static ITestValidationContinuation WithCustomState(this ITestValidationContinuation failures, object expectedCustomState, IEqualityComparer comparer = null) {
 			return failures.When(failure => comparer?.Equals(failure.CustomState, expectedCustomState) ?? Equals(failure.CustomState, expectedCustomState), string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
 		}
 
-    public static IEnumerable<ValidationFailure> WithMessageArgument<T>(this IEnumerable<ValidationFailure> failures, string argumentKey, T argumentValue) {
+    public static ITestValidationContinuation WithMessageArgument<T>(this ITestValidationContinuation failures, string argumentKey, T argumentValue) {
       return failures.When(failure => failure.FormattedMessagePlaceholderValues.ContainsKey(argumentKey) && ((T)failure.FormattedMessagePlaceholderValues[argumentKey]).Equals(argumentValue),
         string.Format("Expected message argument '{0}' with value '{1}'. Actual value was '{{MessageArgument:{0}}}'", argumentKey, argumentValue.ToString()));
     }
 
-		public static IEnumerable<ValidationFailure> WithErrorMessage(this IEnumerable<ValidationFailure> failures, string expectedErrorMessage) {
+		public static ITestValidationContinuation WithErrorMessage(this ITestValidationContinuation failures, string expectedErrorMessage) {
 			return failures.When(failure => failure.ErrorMessage == expectedErrorMessage, string.Format("Expected an error message of '{0}'. Actual message was '{{Message}}'", expectedErrorMessage));
 		}
 
-		public static IEnumerable<ValidationFailure> WithErrorCode(this IEnumerable<ValidationFailure> failures, string expectedErrorCode) {
+		public static ITestValidationContinuation WithErrorCode(this ITestValidationContinuation failures, string expectedErrorCode) {
 			return failures.When(failure => failure.ErrorCode == expectedErrorCode, string.Format("Expected an error code of '{0}'. Actual error code was '{{Code}}'", expectedErrorCode));
 		}
 
-		public static IEnumerable<ValidationFailure> WithoutSeverity(this IEnumerable<ValidationFailure> failures, Severity unexpectedSeverity) {
+		public static ITestValidationContinuation WithoutSeverity(this ITestValidationContinuation failures, Severity unexpectedSeverity) {
 			return failures.WhenAll(failure => failure.Severity != unexpectedSeverity, string.Format("Found an unexpected severity of '{0}'", unexpectedSeverity));
 		}
 
-		public static IEnumerable<ValidationFailure> WithoutCustomState(this IEnumerable<ValidationFailure> failures, object unexpectedCustomState) {
+		public static ITestValidationContinuation WithoutCustomState(this ITestValidationContinuation failures, object unexpectedCustomState) {
 			return failures.WhenAll(failure => failure.CustomState != unexpectedCustomState, string.Format("Found an unexpected custom state of '{0}'", unexpectedCustomState));
 		}
 
-		public static IEnumerable<ValidationFailure> WithoutErrorMessage(this IEnumerable<ValidationFailure> failures, string unexpectedErrorMessage) {
+		public static ITestValidationContinuation WithoutErrorMessage(this ITestValidationContinuation failures, string unexpectedErrorMessage) {
 			return failures.WhenAll(failure => failure.ErrorMessage != unexpectedErrorMessage, string.Format("Found an unexpected error message of '{0}'", unexpectedErrorMessage));
 		}
 
-		public static IEnumerable<ValidationFailure> WithoutErrorCode(this IEnumerable<ValidationFailure> failures, string unexpectedErrorCode) {
+		public static ITestValidationContinuation WithoutErrorCode(this ITestValidationContinuation failures, string unexpectedErrorCode) {
 			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Found an unexpected error code of '{0}'", unexpectedErrorCode));
+		}
+
+		public static ITestValidationContinuation Only(this ITestValidationContinuation failures) {
+			if (failures.UnmatchedFailures.Any()) {
+
+				var errorMessageBanner = "Expected to have errors only matching specified conditions";
+				string errorMessageDetails = "";
+				var unmatchedFailures = failures.UnmatchedFailures.ToList();
+				for (int i = 0; i < unmatchedFailures.Count; i++) {
+					errorMessageDetails += $"[{i}]: {unmatchedFailures[i].ErrorMessage}\n";
+				}
+				var errorMessage = $"{errorMessageBanner}\n----\nUnexpected Errors:\n{errorMessageDetails}";
+
+				throw new ValidationTestException(errorMessage);
+			}
+			return failures;
 		}
 
 		private static string NormalizePropertyName(string propertyName) {
