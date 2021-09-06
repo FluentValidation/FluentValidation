@@ -875,6 +875,31 @@ namespace FluentValidation.Tests {
 			).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Surname' must not be empty.\n");
 		}
 
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithPropertyName_Only() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => DateTime.Now)
+				.Must((x, ct) => false);
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor("Now")
+				.WithErrorMessage("The specified condition was not met for 'Now'.")
+				.Only();
+		}
+
+		[Fact]
+		public void ShouldHaveValidationErrorFor_WithPropertyName_Only_throws() {
+			var validator = new InlineValidator<Person>();
+			validator.RuleFor(x => DateTime.Now)
+				.Must((x, ct) => false)
+				.LessThan(new DateTime(1900, 1, 1));
+			Assert.Throws<ValidationTestException>(() =>
+				validator.TestValidate(new Person())
+					.ShouldHaveValidationErrorFor("Now")
+					.WithErrorMessage("The specified condition was not met for 'Now'.")
+					.Only()
+			).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Now' must be less than '1/1/1900 12:00:00 AM'.\n");
+		}
+
 		private class AddressValidator : AbstractValidator<Address> {
 		}
 
