@@ -353,15 +353,7 @@ namespace FluentValidation.Tests {
 			ex.Message.ShouldEqual("Expected an error message of 'foo'. Actual message was 'bar'");
 		}
 
-		/// <summary>
-		/// Full test (for WhenAll)
-		/// </summary>
-		/// <param name="withoutErrMsg"></param>
-		/// <param name="errMessages"></param>
-		/// <param name="shouldBe"></param>
 		[Theory]
-		[InlineData("bar", new string[] { })]
-		[InlineData("bar", new string[] { "foo", })]
 		[InlineData("bar", new string[] { "foo", "bar" })]
 		[InlineData("bar", new string[] { "bar", })]
 		public void Unexpected_message_check(string withoutErrMsg, string[] errMessages) {
@@ -371,7 +363,7 @@ namespace FluentValidation.Tests {
 			}
 
 			var ex = Assert.Throws<ValidationTestException>(() =>
-				validator.TestValidate(new Person { }).Errors.WithoutErrorMessage(withoutErrMsg));
+				validator.TestValidate(new Person { }).ShouldHaveAnyValidationError().WithoutErrorMessage(withoutErrMsg));
 			ex.Message.ShouldEqual($"Found an unexpected error message of '{withoutErrMsg}'");
 		}
 
