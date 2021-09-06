@@ -5,11 +5,14 @@ namespace FluentValidation.TestHelper {
 	using System.Linq;
 	using Results;
 
+	public interface ITestValidationWith : ITestValidationContinuation {
+	}
+
 	public interface ITestValidationContinuation : IEnumerable<ValidationFailure> {
 		IEnumerable<ValidationFailure> UnmatchedFailures { get; }
 	}
 
-	internal class TestValidationContinuation : ITestValidationContinuation {
+	internal class TestValidationContinuation : ITestValidationContinuation, ITestValidationWith {
 		private readonly IEnumerable<ValidationFailure> _allFailures;
 		private readonly List<Func<ValidationFailure,bool>> _predicates;
 

@@ -134,7 +134,7 @@ namespace FluentValidation.TestHelper {
 			return defaultMessage;
 		}
 
-    internal static ITestValidationContinuation ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
+    internal static ITestValidationWith ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
 	    var result = TestValidationContinuation.Create(errors);
 	    result.ApplyPredicate(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
 	                               || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
@@ -183,7 +183,7 @@ namespace FluentValidation.TestHelper {
 			}
 		}
 
-		public static ITestValidationContinuation When(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
+		public static ITestValidationWith When(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
 			var result = TestValidationContinuation.Create(failures);
 			result.ApplyPredicate(failurePredicate);
 
@@ -212,24 +212,24 @@ namespace FluentValidation.TestHelper {
 			return result;
 		}
 
-		public static ITestValidationContinuation WithSeverity(this ITestValidationContinuation failures, Severity expectedSeverity) {
+		public static ITestValidationWith WithSeverity(this ITestValidationContinuation failures, Severity expectedSeverity) {
 			return failures.When(failure => failure.Severity == expectedSeverity, string.Format("Expected a severity of '{0}'. Actual severity was '{{Severity}}'", expectedSeverity));
 		}
 
-		public static ITestValidationContinuation WithCustomState(this ITestValidationContinuation failures, object expectedCustomState, IEqualityComparer comparer = null) {
+		public static ITestValidationWith WithCustomState(this ITestValidationContinuation failures, object expectedCustomState, IEqualityComparer comparer = null) {
 			return failures.When(failure => comparer?.Equals(failure.CustomState, expectedCustomState) ?? Equals(failure.CustomState, expectedCustomState), string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
 		}
 
-    public static ITestValidationContinuation WithMessageArgument<T>(this ITestValidationContinuation failures, string argumentKey, T argumentValue) {
+    public static ITestValidationWith WithMessageArgument<T>(this ITestValidationContinuation failures, string argumentKey, T argumentValue) {
       return failures.When(failure => failure.FormattedMessagePlaceholderValues.ContainsKey(argumentKey) && ((T)failure.FormattedMessagePlaceholderValues[argumentKey]).Equals(argumentValue),
         string.Format("Expected message argument '{0}' with value '{1}'. Actual value was '{{MessageArgument:{0}}}'", argumentKey, argumentValue.ToString()));
     }
 
-		public static ITestValidationContinuation WithErrorMessage(this ITestValidationContinuation failures, string expectedErrorMessage) {
+		public static ITestValidationWith WithErrorMessage(this ITestValidationContinuation failures, string expectedErrorMessage) {
 			return failures.When(failure => failure.ErrorMessage == expectedErrorMessage, string.Format("Expected an error message of '{0}'. Actual message was '{{Message}}'", expectedErrorMessage));
 		}
 
-		public static ITestValidationContinuation WithErrorCode(this ITestValidationContinuation failures, string expectedErrorCode) {
+		public static ITestValidationWith WithErrorCode(this ITestValidationContinuation failures, string expectedErrorCode) {
 			return failures.When(failure => failure.ErrorCode == expectedErrorCode, string.Format("Expected an error code of '{0}'. Actual error code was '{{Code}}'", expectedErrorCode));
 		}
 
@@ -249,7 +249,7 @@ namespace FluentValidation.TestHelper {
 			return failures.WhenAll(failure => failure.ErrorCode != unexpectedErrorCode, string.Format("Found an unexpected error code of '{0}'", unexpectedErrorCode));
 		}
 
-		public static ITestValidationContinuation Only(this ITestValidationContinuation failures) {
+		public static ITestValidationWith Only(this ITestValidationWith failures) {
 			if (failures.UnmatchedFailures.Any()) {
 
 				var errorMessageBanner = "Expected to have errors only matching specified conditions";
