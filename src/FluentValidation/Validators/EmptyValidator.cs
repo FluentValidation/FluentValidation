@@ -22,7 +22,6 @@ namespace FluentValidation.Validators {
 	using System;
 	using System.Collections;
 	using Resources;
-	using System.Linq;
 
 	public class EmptyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 
@@ -34,7 +33,7 @@ namespace FluentValidation.Validators {
 				case string s when string.IsNullOrWhiteSpace(s):
 				case ICollection {Count: 0}:
 				case Array {Length: 0}:
-				case IEnumerable e when !e.Cast<object>().Any():
+				case IEnumerable e when !e.GetEnumerator().MoveNext():
 					return true;
 			}
 
