@@ -19,6 +19,7 @@
 namespace FluentValidation.Tests {
 	using System;
 	using System.Collections.Generic;
+	using System.Globalization;
 	using Internal;
 	using Xunit;
 
@@ -59,35 +60,45 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Understands_numeric_formats() {
-			string result = formatter
-				.AppendArgument("d", 123)
-				.AppendArgument("e", 1052.0329112756)
-				.AppendArgument("c", -123.456789)
-				.AppendArgument("f", 1234.567)
-				.AppendArgument("p", 0.912)
-				.BuildMessage("{c:c3} {c:c4} {f:f} {p:p} {d:d} {e:e} {e:e2} {d:0000}");
+			string result;
+			using (new CultureScope(CultureInfo.InvariantCulture)) {
+				result = formatter
+					.AppendArgument("d", 123)
+					.AppendArgument("e", 1052.0329112756)
+					.AppendArgument("c", -1234.56789)
+					.AppendArgument("f", 1234.567)
+					.AppendArgument("p", 0.912)
+					.AppendArgument("i", 1234.567)
+					.BuildMessage("{c:c3} {c:c4} {f:f} {p:p} {d:d} {e:e} {e:e2} {d:0000} {i}");
+			}
 
-			result.ShouldEqual($"{-123.456789:c3} {-123.456789:c4} {1234.567:f} {0.912:p} {123:d} {1052.0329112756:e} {1052.0329112756:e2} {123:0000}");
+			result.ShouldEqual("(¤1,234.568) (¤1,234.5679) 1234.57 91.20 % 123 1.052033e+003 1.05e+003 0123 1234.567");
 		}
 
 		[Fact]
 		public void Understands_date_formats() {
-			var now = DateTime.Now;
-			string result = formatter
-				.AppendArgument("now", now)
-				.BuildMessage("{now:g} {now:MM-dd-yy} {now:f}");
+			string result;
+			var now = new DateTimeOffset(2015, 5, 16, 5, 50, 06, 719, TimeSpan.FromHours(-4));
+			using (new CultureScope(CultureInfo.InvariantCulture)) {
+				result = formatter
+					.AppendArgument("now", now)
+					.BuildMessage("{now:g} {now:MM-dd-yy} {now:f} {now}");
+			}
 
-			result.ShouldEqual($"{now:g} {now:MM-dd-yy} {now:f}");
+			result.ShouldEqual("05/16/2015 05:50 05-16-15 Saturday, 16 May 2015 05:50 05/16/2015 05:50:06 -04:00");
 		}
 
 		[Fact]
 		public void Should_ignore_unknown_parameters() {
-			var now = DateTime.Now;
-			string result = formatter
-				.AppendArgument("foo", now)
-				.BuildMessage("{foo:g} {unknown} {unknown:format}");
+			string result;
+			var now = new DateTimeOffset(2015, 5, 16, 5, 50, 06, 719, TimeSpan.FromHours(-4));
+			using (new CultureScope(CultureInfo.InvariantCulture)) {
+				result = formatter
+					.AppendArgument("foo", now)
+					.BuildMessage("{foo:g} {unknown} {unknown:format}");
+			}
 
-			result.ShouldEqual($"{(now.ToString("g"))} {{unknown}} {{unknown:format}}");
+			result.ShouldEqual("05/16/2015 05:50 {unknown} {unknown:format}");
 		}
 
 		[Fact]
