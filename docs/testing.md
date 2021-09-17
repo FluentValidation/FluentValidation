@@ -79,7 +79,21 @@ result.ShouldHaveValidationErrorFor(person => person.Name)
   .WithErrorCode("NotNullValidator");
 ```
 
-There are also inverse methods available (`WithoutMessage`, `WithoutErrorCode`, `WithoutSeverity`, `WithoutCustomState`)
+If you want to make sure no other validation failures occured, except specified by conditions, use method `Only` after the conditions:
+
+```csharp
+var result = validator.TestValidate(person);
+
+// Assert that failures only happened for Name property.
+result.ShouldHaveValidationErrorFor(person => person.Name).Only();
+
+// Assert that failures only happened for Name property and all have the specified message
+result.ShouldHaveValidationErrorFor(person => person.Name)
+  .WithErrorMessage("'Name' must not be empty.")
+  .Only();
+```
+
+There are also inverse methods available (`WithoutMessage`, `WithoutErrorCode`, `WithoutSeverity`, `WithoutCustomState`).
 
 ## Asynchronous TestValidate
 

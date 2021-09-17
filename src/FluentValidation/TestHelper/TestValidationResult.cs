@@ -20,7 +20,6 @@
 
 namespace FluentValidation.TestHelper {
 	using System;
-	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using Internal;
 	using Results;
@@ -31,7 +30,7 @@ namespace FluentValidation.TestHelper {
 			RuleSetsExecuted = validationResult.RuleSetsExecuted;
 		}
 
-		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
+		public ITestValidationWith ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 			string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
 			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, true);
 		}
@@ -41,7 +40,7 @@ namespace FluentValidation.TestHelper {
 			ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, true);
 		}
 
-		public IEnumerable<ValidationFailure> ShouldHaveValidationErrorFor(string propertyName) {
+		public ITestValidationWith ShouldHaveValidationErrorFor(string propertyName) {
 			return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, false);
 		}
 

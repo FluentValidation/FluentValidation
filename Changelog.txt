@@ -6,6 +6,7 @@ Remove deprecated RunDefaultMvcValidationAfterFluentValidationExecutes option fr
 Remove deprecated Options property from RuleComponent.
 Remove deprecated TestHelper methods.
 Remove PropertyValidator backwards compatibility layer.
+Add method Only() asserting that no other validation errors were raised.
 
 10.3.1 - 
 Fix scale precision error message when digits is calculated as negative (#1790)
