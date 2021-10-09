@@ -4,6 +4,7 @@
 
 FluentValidation supports integration with ASP.NET Core 3.1 or ASP.NET Core running on .NET 5. Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure.
 
+Note that Minimal APIs that are part of .NET 6 don't support automatic validation.
 
 To enable MVC integration, you'll need to add a reference to the `FluentValidation.AspNetCore` assembly in your web project by installing the appropriate NuGet package. From the command line, you can install the package by typing:
 
@@ -359,6 +360,21 @@ public class PersonValidator : AbstractValidator<Person> {
 ```
 
 Please be aware that `InjectValidator` can *only* be used when using automatic validation. It can't be used if you directly invoke the `Validate` method.
+
+### Disabling automatic validation
+
+ In some cases it may be desirable to disable automatic validation, and perform all validation manually. In that case disable automatic validation as follows:
+
+```csharp
+services.AddFluentValidation(config => {
+  config.AutomaticValidationEnabled = false;
+});
+```
+
+When disabled, ASP.NET won't attempt to use FluentValidation to validate objects during model binding.
+
+Note that if you do not need integration with client-side validation, an alternative is to use the `FluentValidation` library instead of `FluentValidation.AspNetCore`, in which case you do not need to use this property at all.
+
 
 ### Use with Page Models
 
