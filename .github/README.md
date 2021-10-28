@@ -5,6 +5,12 @@
 A small validation library for .NET that uses a fluent interface
 and lambda expressions for building validation rules.
 
+---
+### Supporting the project
+If you use FluentValidation in a commercial project, please sponsor the project financially. FluentValidation is developed and supported by [@JeremySkinner](https://github.com/JeremySkinner) for free in his spare time and financial sponsorship helps keep the project going. You can sponsor the project via either [GitHub sponsors](https://github.com/sponsors/JeremySkinner) or [OpenCollective](https://opencollective.com/FluentValidation).
+
+---
+
 ### Get Started
 FluentValidation can be installed using the Nuget package manager or the `dotnet` CLI.
 
@@ -17,10 +23,7 @@ For ASP.NET Core integration:
 dotnet add package FluentValidation.AspNetCore
 ```
 ---
-### Supporting the project
-FluentValidation is developed and supported by [@JeremySkinner](https://github.com/JeremySkinner) for free in his spare time. If you find FluentValidation useful, please consider financially supporting the project via [GitHub sponsors](https://github.com/sponsors/JeremySkinner) or [OpenCollective](https://opencollective.com/FluentValidation)  which will help keep the project going 🙏.
 
----
 [![Build Status](https://github.com/FluentValidation/FluentValidation/workflows/CI/badge.svg)](https://github.com/FluentValidation/FluentValidation/actions?query=workflow%3ACI)
 
 |         |       |       |
