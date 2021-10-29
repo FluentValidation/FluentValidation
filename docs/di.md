@@ -92,3 +92,28 @@ If you aren't familiar with the difference between Singleton, Scoped and Transie
 ```
 
 When using FluentValidation in an ASP.NET project with auto-validation, the same scanning logic can be performed as part of the call to `AddFluentValidation`. [See the documentation on ASP.NET integration for details](aspnet).
+
+Alternative method overloads that take a type instance and an assembly reference exist too:
+
+```csharp
+// Load using a type refernce rather than the generic.
+services.AddValidatorsFromAssemblyContaining(typeof(UserValidator));
+
+// Load an assembly reference rather than using a marker type.
+services.AddValidatorsFromAssembly(Assembly.Load("SomeAssembly"));
+```
+
+### Filtering results
+
+You can provide an optional filter function that cna be used to exclude some validators from automatic registration. For example, to register all validators *except* the `CustomerValidator` you could write the following:
+
+```csharp
+services.AddValidatorsFromAssemblyContaining<MyValidato>(ServiceLifetime.Scoped, 
+    filter => filter.ValidatorType != typeof(CustomerValidator));
+```
+
+The `CustomerValidator` will not be added to the service provider (but all other validators will)
+
+## Injecting child validators
+
+The `FluentValidation.DependencyInjectionExtensions` package also provides some helper methods for injecting child validators when working with ASP.NET Core. See [this page](aspnet.html#injecting-child-validators).

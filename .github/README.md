@@ -2,8 +2,8 @@
 
 [Full Documentation](https://fluentvalidation.net)
 
-A small validation library for .NET that uses a fluent interface
-and lambda expressions for building validation rules.
+A validation library for .NET that uses a fluent interface
+and lambda expressions for building strongly-typed validation rules.
 
 ---
 ### Supporting the project
@@ -52,10 +52,13 @@ public class CustomerValidator: AbstractValidator<Customer> {
 
 var customer = new Customer();
 var validator = new CustomerValidator();
+
+// Execute the validator
 ValidationResult results = validator.Validate(customer);
 
+// Inspect any validation failures.
 bool success = results.IsValid;
-IList<ValidationFailure> failures = results.Errors;
+List<ValidationFailure> failures = results.Errors;
 ```
 
 ### Documentation
