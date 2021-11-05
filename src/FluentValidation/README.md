@@ -1,14 +1,13 @@
 FluentValidation is validation library for .NET that uses a fluent interface
 and lambda expressions for building strongly-typed validation rules.
 
----
 ### Supporting the project
+
 If you use FluentValidation in a commercial project,
 please sponsor the project financially.
 FluentValidation is developed and supported by [@JeremySkinner](https://github.com/JeremySkinner)
 for free in his spare time and financial sponsorship helps keep the project going.
 You can sponsor the project via either [GitHub sponsors](https://github.com/sponsors/JeremySkinner) or [OpenCollective](https://opencollective.com/FluentValidation).
----
 
 ### Example
 

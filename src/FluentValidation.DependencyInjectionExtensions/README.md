@@ -6,14 +6,12 @@ to provide integration with Microsoft Dependency Injection (`IServiceProvider`).
 
 More details about the methods provided in this package can be found [in the documentation](https://docs.fluentvalidation.net/en/latest/di.html)
 
----
 ### Supporting the project
 If you use FluentValidation in a commercial project,
 please sponsor the project financially.
 FluentValidation is developed and supported by [@JeremySkinner](https://github.com/JeremySkinner)
 for free in his spare time and financial sponsorship helps keep the project going.
 You can sponsor the project via either [GitHub sponsors](https://github.com/sponsors/JeremySkinner) or [OpenCollective](https://opencollective.com/FluentValidation).
----
 
 ### Full Documentation
 
