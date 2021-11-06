@@ -13,12 +13,14 @@ The `PropertyValidatorContext` class has been deprecated, and various places tha
 
 ```csharp
 // Before:
-RuleFor(x => x.Foo).Must((instance, value, context) => {
+RuleFor(x => x.Foo).Must((instance, value, context) => 
+{
   return context.ParentContext.RootContextData.ContainsKey("Something");
 });
 
 // After:
-RuleFor(x => x.Foo).Must((instance, value, context) => {
+RuleFor(x => x.Foo).Must((instance, value, context) => 
+{
   return context.RootContextData.ContainsKey("Something");
 });
 ```
@@ -81,13 +83,15 @@ When accessing property validators via a rule instance, you must now go via a co
 ```csharp
 // Before:
 IValidationRule rule = ...;
-foreach (IPropertyValidator propertyValidator in rule.Validators) {
+foreach (IPropertyValidator propertyValidator in rule.Validators) 
+{
   // ...
 }
 
 // After:
 IValidationRule rule = ...;
-foreach (IRuleComponent component in rule.Componetnts) {
+foreach (IRuleComponent component in rule.Componetnts) 
+{
   IPropertyValiator propertyValidator = component.Validator;
 }
 ```
@@ -224,11 +228,13 @@ validator.Validate(instance, x => x.SomeProperty, x => x.SomeOtherProperty);
 validator.Validate(instance, "SomeProperty", "SomeOtherProperty");
 
 // After:
-validator.Validate(instance, v => {
+validator.Validate(instance, v =>
+{
   v.IncludeProperties(x => x.SomeProperty, x => x.SomeOtherProperty);
 });
 
-validator.Validate(instance, v => {
+validator.Validate(instance, v =>
+{
   v.IncludeProperties("SomeProperty", "SomeOtherProperty");
 });
 
@@ -238,7 +244,8 @@ validator.Validate(instance, ruleSet: "SomeRuleSet,AnotherRuleSet");
 
 // After:
 // Separate parameters for each ruleset.
-validator.Validate(instance, v => {
+validator.Validate(instance, v => 
+{
   v.IncludeRuleSets("SomeRuleSet", "AnotherRuleSet")
 });
 

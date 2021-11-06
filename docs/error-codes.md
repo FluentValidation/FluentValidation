@@ -3,8 +3,10 @@
 A custom error code can also be associated with validation rules by calling the `WithErrorCode` method:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
+public class PersonValidator : AbstractValidator<Person> 
+{
+  public PersonValidator() 
+  {
     RuleFor(person => person.Surname).NotNull().WithErrorCode("ERR1234");        
     RuleFor(person => person.Forename).NotNull();
   }
@@ -16,7 +18,8 @@ The resulting error code can be obtained from the `ErrorCode` property on the `V
 ```csharp
 var validator = new PersonValidator();
 var result = validator.Validate(new Person());
-foreach (var failure in result.Errors) {
+foreach (var failure in result.Errors)
+{
   Console.WriteLine($"Property: {failure.PropertyName} Error Code: {failure.ErrorCode}");
 }
 ```

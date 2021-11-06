@@ -5,9 +5,12 @@ RuleSets allow you to group validation rules together which can be executed toge
 For example, let's imagine we have 3 properties on a Person object (Id, Surname and Forename) and have a validation rule for each. We could group the Surname and Forename rules together in a “Names” RuleSet:
 
 ```csharp
- public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
-     RuleSet("Names", () => {
+ public class PersonValidator : AbstractValidator<Person> 
+ {
+  public PersonValidator() 
+  {
+     RuleSet("Names", () => 
+     {
         RuleFor(x => x.Surname).NotNull();
         RuleFor(x => x.Forename).NotNull();
      });
@@ -35,7 +38,8 @@ This allows you to break down a complex validator definition into smaller segmen
 You can execute multiple rulesets by passing multiple ruleset names to `IncludeRuleSets`:
 
 ```csharp
-var result = validator.Validate(person, options => {
+var result = validator.Validate(person, options => 
+{
   options.IncludeRuleSets("Names", "MyRuleSet", "SomeOtherRuleSet");
 });
 ```
@@ -43,7 +47,8 @@ var result = validator.Validate(person, options => {
 You can also include all the rules not part of a ruleset by using calling `IncludeRulesNotInRuleSet`, or by using the special name "default" (case insensitive):
 
 ```csharp
-validator.Validate(person, options => {
+validator.Validate(person, options => 
+{
   // Option 1: IncludeRulesNotInRuleSet is the equivalent of using the special ruleset name "default"
   options.IncludeRuleSets("Names").IncludeRulesNotInRuleSet();
   // Option 2: This does the same thing.
@@ -56,7 +61,8 @@ This would execute rules in the MyRuleSet set, and those rules not in any rulese
 You can force all rules to be executed regardless of whether or not they're in a ruleset by calling `IncludeAllRuleSets` (this is the equivalent of using `IncludeRuleSets("*")` )
 
 ```csharp
-validator.Validate(person, options => {
+validator.Validate(person, options => 
+{
   options.IncludeAllRuleSets();
 });
 ```

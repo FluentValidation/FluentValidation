@@ -5,7 +5,8 @@ To define a set of validation rules for a particular object, you will need to cr
 For example, imagine that you have a Customer class:
 
 ```csharp
-public class Customer {
+public class Customer 
+{
   public int Id { get; set; }
   public string Surname { get; set; }
   public string Forename { get; set; }
@@ -19,7 +20,8 @@ You would define a set of validation rules for this class by inheriting from `Ab
 ```csharp
 using FluentValidation;
 
-public class CustomerValidator : AbstractValidator<Customer> {
+public class CustomerValidator : AbstractValidator<Customer> 
+{
 }
 ```
 
@@ -32,8 +34,10 @@ the validator class would look like this:
 ```csharp
 using FluentValidation;
 
-public class CustomerValidator : AbstractValidator<Customer> {
-  public CustomerValidator() {
+public class CustomerValidator : AbstractValidator<Customer>
+{
+  public CustomerValidator()
+  {
     RuleFor(customer => customer.Surname).NotNull();
   }
 }
@@ -61,8 +65,10 @@ CustomerValidator validator = new CustomerValidator();
 
 ValidationResult results = validator.Validate(customer);
 
-if(! results.IsValid) {
-  foreach(var failure in results.Errors) {
+if(! results.IsValid) 
+{
+  foreach(var failure in results.Errors)
+  {
     Console.WriteLine("Property " + failure.PropertyName + " failed validation. Error was: " + failure.ErrorMessage);
   }
 }
@@ -84,8 +90,10 @@ You can chain multiple validators together for the same property:
 ```csharp
 using FluentValidation;
 
-public class CustomerValidator : AbstractValidator<Customer> {
+public class CustomerValidator : AbstractValidator<Customer>
+{
   public CustomerValidator()
+  {
     RuleFor(customer => customer.Surname).NotNull().NotEqual("foo");
   }
 }
@@ -121,7 +129,8 @@ validator.Validate(customer, options => options.ThrowOnFailures());
 If you need to combine throwing an exception with [Rule Sets](rulesets), or validating individual properties, you can combine both options using this syntax:
 
 ```csharp
-validator.Validate(customer, options => {
+validator.Validate(customer, options => 
+{
   options.ThrowOnFailures();
   options.IncludeRuleSets("MyRuleSets");
   options.IncludeProperties(x => x.Name);
@@ -134,12 +143,14 @@ validator.Validate(customer, options => {
 Validators can be re-used for complex properties. For example, imagine you have two classes, Customer and Address:
 
 ```csharp
-public class Customer {
+public class Customer 
+{
   public string Name { get; set; }
   public Address Address { get; set; }
 }
 
-public class Address {
+public class Address 
+{
   public string Line1 { get; set; }
   public string Line2 { get; set; }
   public string Town { get; set; }
@@ -151,8 +162,10 @@ public class Address {
 ... and you define an AddressValidator:
 
 ```csharp
-public class AddressValidator : AbstractValidator<Address> {
-  public AddressValidator() {
+public class AddressValidator : AbstractValidator<Address> 
+{
+  public AddressValidator()
+  {
     RuleFor(address => address.Postcode).NotNull();
     //etc
   }
@@ -162,8 +175,10 @@ public class AddressValidator : AbstractValidator<Address> {
 ... you can then re-use the AddressValidator in the CustomerValidator definition:
 
 ```csharp
-public class CustomerValidator : AbstractValidator<Customer> {
-  public CustomerValidator() {
+public class CustomerValidator : AbstractValidator<Customer> 
+{
+  public CustomerValidator()
+  {
     RuleFor(customer => customer.Name).NotNull();
     RuleFor(customer => customer.Address).SetValidator(new AddressValidator());
   }

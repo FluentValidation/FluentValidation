@@ -19,8 +19,10 @@ The above 2 examples assume you're using a strongly-typed wrapper around a resou
 If you are using `IStringLocalizer` to handle localization then all you need to do is inject your localizer into your validator, and use it within a `WithMessage` callback, for example:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator(IStringLocalizer<Person> localizer) {
+public class PersonValidator : AbstractValidator<Person> 
+{
+  public PersonValidator(IStringLocalizer<Person> localizer)
+   {
     RuleFor(x => x.Surname).NotNull().WithMessage(x => localizer["Surname is required"]);
   }
 }
@@ -32,8 +34,10 @@ If you want to replace all (or some) of FluentValidation's default messages then
 For example, the default message for the `NotNull` validator is `'{PropertyName}' must not be empty.`. If you wanted to replace this message for all uses of the `NotNull` validator in your application, you could write a custom Language Manager:
 
 ```csharp
-public class CustomLanguageManager : FluentValidation.Resources.LanguageManager {
-  public CustomLanguageManager() {
+public class CustomLanguageManager : FluentValidation.Resources.LanguageManager
+{
+  public CustomLanguageManager() 
+  {
     AddTranslation("en", "NotNullValidator", "'{PropertyName}' is required.");
     AddTranslation("en-US", "NotNullValidator", "'{PropertyName}' is required.");
     AddTranslation("en-GB", "NotNullValidator", "'{PropertyName}' is required.");
