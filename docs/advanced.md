@@ -11,13 +11,17 @@ The method should return `true` if validation should continue, or `false` to imm
 Note that this method is called before FluentValidation performs its standard null-check against the model being validated, so you can use this to generate an error if the whole model is null, rather than relying on FluentValidation's standard behaviour in this case (which is to throw an exception):
 
 ```csharp
-public class MyValidator : AbstractValidator<Person> {
-  public MyValidator() {
+public class MyValidator : AbstractValidator<Person> 
+{
+  public MyValidator() 
+  {
     RuleFor(x => x.Name).NotNull();
   }
 
-  protected override bool PreValidate(ValidationContext<Person> context, ValidationResult result) {
-    if (context.InstanceToValidate == null) {
+  protected override bool PreValidate(ValidationContext<Person> context, ValidationResult result) 
+  {
+    if (context.InstanceToValidate == null) 
+    {
       result.Errors.Add(new ValidationFailure("", "Please ensure a model was supplied."));
       return false;
     }
@@ -43,8 +47,10 @@ validator.Validate(context);
 The RootContextData can then be accessed inside any custom property validators, as well as calls to `Custom`:
 
 ```csharp
-RuleFor(x => x.Surname).Custom((x, context) => {
-  if(context.RootContextData.ContainsKey("MyCustomData")) {
+RuleFor(x => x.Surname).Custom((x, context) => 
+{
+  if(context.RootContextData.ContainsKey("MyCustomData")) 
+  {
     context.AddFailure("My error message");
   }
 });

@@ -5,8 +5,10 @@ There may be an occasion where you'd like to return contextual information about
 We could assign a custom state by modifying a line to read:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
+public class PersonValidator : AbstractValidator<Person> 
+{
+  public PersonValidator() 
+  {
     RuleFor(person => person.Surname).NotNull();
     RuleFor(person => person.Forename).NotNull().WithState(person => 1234);  
   }
@@ -18,7 +20,8 @@ This state is then available within the `CustomState` property of the `Validatio
 ```csharp
 var validator = new PersonValidator();
 var result = validator.Validate(new Person());
-foreach (var failure in result.Errors) {
+foreach (var failure in result.Errors) 
+{
   Console.WriteLine($"Property: {failure.PropertyName} State: {failure.CustomState}");
 }
 ```

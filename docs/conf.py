@@ -55,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'FluentValidation'
-copyright = '2009-2020, Jeremy Skinner'
+copyright = '2009-2021, Jeremy Skinner'
 author = 'Jeremy Skinner'
 
 # The version info for the project you're documenting, acts as replacement for

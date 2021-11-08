@@ -11,8 +11,10 @@ You can use the `TestValidate` extension method to invoke a validator for testin
 For example, imagine the following validator is defined:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-   public PersonValidator() {
+public class PersonValidator : AbstractValidator<Person> 
+{
+   public PersonValidator() 
+   {
       RuleFor(person => person.Name).NotNull();
    }
 }
@@ -26,23 +28,27 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 
 [TestFixture]
-public class PersonValidatorTester {
+public class PersonValidatorTester 
+{
     private PersonValidator validator;
 
     [SetUp]
-    public void Setup() {
+    public void Setup()
+    {
        validator = new PersonValidator();
     }
 
     [Test]
-    public void Should_have_error_when_Name_is_null() {
+    public void Should_have_error_when_Name_is_null() 
+    {
       var model = new Person { Name = null };
       var result = validator.TestValidate(model);
       result.ShouldHaveValidationErrorFor(person => person.Name);
     }
 
     [Test]
-    public void Should_not_have_error_when_name_is_specified() {
+    public void Should_not_have_error_when_name_is_specified() 
+    {
       var model = new Person { Name = "Jeremy" };
       var result = validator.TestValidate(model);
       result.ShouldNotHaveValidationErrorFor(person => person.Name);

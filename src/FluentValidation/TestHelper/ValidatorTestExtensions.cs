@@ -83,7 +83,7 @@ namespace FluentValidation.TestHelper {
 		/// <summary>
 		/// Performs validation, returning a TestValidationResult which allows assertions to be performed.
 		/// </summary>
-		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null) where T : class {
+		public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null) {
 			options ??= _ => { };
 			ValidationResult validationResult;
 			try {
@@ -99,20 +99,20 @@ namespace FluentValidation.TestHelper {
 		/// <summary>
 		/// Performs async validation, returning a TestValidationResult which allows assertions to be performed.
 		/// </summary>
-		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) where T : class {
+		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) {
 			options ??= _ => { };
 			var validationResult = await validator.ValidateAsync(objectToTest, options, cancellationToken);
 			return new TestValidationResult<T>(validationResult);
 		}
 
-		public static ITestValidationContinuation ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) where T : class {
+		public static ITestValidationContinuation ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) {
 			if (!testValidationResult.Errors.Any())
 				throw new ValidationTestException($"Expected at least one validation error, but none were found.");
 
 			return TestValidationContinuation.Create(testValidationResult.Errors);
 		}
 
-		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) where T : class {
+		public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) {
 			ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure, true);
 		}
 

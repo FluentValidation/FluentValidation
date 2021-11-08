@@ -2,8 +2,14 @@
 
 [Full Documentation](https://fluentvalidation.net)
 
-A small validation library for .NET that uses a fluent interface
-and lambda expressions for building validation rules.
+A validation library for .NET that uses a fluent interface
+and lambda expressions for building strongly-typed validation rules.
+
+---
+### Supporting the project
+If you use FluentValidation in a commercial project, please sponsor the project financially. FluentValidation is developed and supported by [@JeremySkinner](https://github.com/JeremySkinner) for free in his spare time and financial sponsorship helps keep the project going. You can sponsor the project via either [GitHub sponsors](https://github.com/sponsors/JeremySkinner) or [OpenCollective](https://opencollective.com/FluentValidation).
+
+---
 
 ### Get Started
 FluentValidation can be installed using the Nuget package manager or the `dotnet` CLI.
@@ -17,10 +23,7 @@ For ASP.NET Core integration:
 dotnet add package FluentValidation.AspNetCore
 ```
 ---
-### Supporting the project
-FluentValidation is developed and supported by [@JeremySkinner](https://github.com/JeremySkinner) for free in his spare time. If you find FluentValidation useful, please consider financially supporting the project via [GitHub sponsors](https://github.com/sponsors/JeremySkinner) or [OpenCollective](https://opencollective.com/FluentValidation)  which will help keep the project going 🙏.
 
----
 [![Build Status](https://github.com/FluentValidation/FluentValidation/workflows/CI/badge.svg)](https://github.com/FluentValidation/FluentValidation/actions?query=workflow%3ACI)
 
 |         |       |       |
@@ -49,10 +52,13 @@ public class CustomerValidator: AbstractValidator<Customer> {
 
 var customer = new Customer();
 var validator = new CustomerValidator();
+
+// Execute the validator
 ValidationResult results = validator.Validate(customer);
 
+// Inspect any validation failures.
 bool success = results.IsValid;
-IList<ValidationFailure> failures = results.Errors;
+List<ValidationFailure> failures = results.Errors;
 ```
 
 ### Documentation
@@ -66,10 +72,13 @@ For more information see the [.NET Foundation Code of Conduct](https://dotnetfou
 
 FluentValidation is copyright &copy; 2008-2021 .NET Foundation, [Jeremy Skinner](https://jeremyskinner.co.uk) and other contributors and is licensed under the [Apache2 license](https://github.com/JeremySkinner/FluentValidation/blob/master/License.txt). 
 
+### Sponsors
+
+This project is sponsored by the following organisations whose support help keep this project going:
+
+- [JetBrains](https://www.jetbrains.com/?from=FluentValidation) who both provide financial sponsorship as well as access to their developer tools free of charge.
+- [Dotnetos](https://github.com/dotnetos)
+
 ### .NET Foundation
 
-This project is supported by the [.NET Foundation](https://dotnetfoundation.org).
-
-### JetBrains 
-
-This project is supported by [JetBrains](https://www.jetbrains.com/?from=FluentValidation), who kindly provide licenses for their software, free of charge, to help with the development of this project. 
+This project is part of the [.NET Foundation](https://dotnetfoundation.org).

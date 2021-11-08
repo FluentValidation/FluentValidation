@@ -12,27 +12,29 @@ FluentValidation 10 supports the following platforms:
 
 * .NET Core 3.1
 * .NET 5
+* .NET 6
 * `.NET Standard 2.0 <https://docs.microsoft.com/en-us/dotnet/standard/net-standard>`_
 
-For automatic validation with ASP.NET, FluentValidation supports ASP.NET running on .NET Core 3.1 or .NET 5
+For automatic validation with ASP.NET, FluentValidation supports ASP.NET running on .NET Core 3.1, .NET 5 or .NET 6.
 
 If you're new to using FluentValidation, check out the :doc:`start` page.
 
 .. note::
-  FluentValidation is developed and supported by `@JeremySkinner <https://github.com/JeremySkinner>`_
-  in his spare time. If you find FluentValidation useful, or if you use FluentValidation in a commercial environment, then
-  please consider financially supporting the project on one of the following platforms, which will help keep the project going.
-
-  * `GitHub sponsors <https://github.com/sponsors/JeremySkinner>`_
-  * `OpenCollective <https://opencollective.com/FluentValidation>`_
+  If you use FluentValidation in a commercial project, please
+  `sponsor the project financially <https://github.com/sponsors/JeremySkinner>`_. 
+  FluentValidation is developed for free by `@JeremySkinner <https://github.com/JeremySkinner>`_
+  in his spare time and financial sponsorship helps keep the project going. Please sponsor the project 
+  via either `GitHub sponsors <https://github.com/sponsors/JeremySkinner>`_ or `OpenCollective <https://opencollective.com/FluentValidation>`_.
 
 Example
 =======
 
 .. code-block:: c#
 
-   public class CustomerValidator : AbstractValidator<Customer> {
-     public CustomerValidator() {
+   public class CustomerValidator : AbstractValidator<Customer> 
+   {
+     public CustomerValidator()
+     {
        RuleFor(x => x.Surname).NotEmpty();
        RuleFor(x => x.Forename).NotEmpty().WithMessage("Please specify a first name");
        RuleFor(x => x.Discount).NotEqual(0).When(x => x.HasDiscount);
@@ -40,7 +42,8 @@ Example
        RuleFor(x => x.Postcode).Must(BeAValidPostcode).WithMessage("Please specify a valid postcode");
      }
 
-     private bool BeAValidPostcode(string postcode) {
+     private bool BeAValidPostcode(string postcode) 
+     {
        // custom postcode validating logic goes here
      }
    }

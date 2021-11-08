@@ -1,5 +1,6 @@
 ﻿namespace FluentValidation.Tests {
 	using System;
+	using System.IO;
 	using System.Net.Http;
 	using AspNetCore;
 	using FluentValidation.AspNetCore;

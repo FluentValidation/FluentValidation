@@ -8,8 +8,16 @@ Remove deprecated TestHelper methods.
 Remove PropertyValidator backwards compatibility layer.
 Add method Only() asserting that no other validation errors were raised.
 
-10.3.1 - 
+10.3.4 - 22 Oct 2021
+Clientside messages shouldn't be generated for the lazy version of LessThanOrEqual/GreaterThanOrEqual (#1818)
+Remove enumable boxing in Empty/NotEmpty validators (#1823)
+
+10.3.3 - 24 Aug 2021
+Remove reference type constraint for TestValidate (#1815)
+
+10.3.1 - 19 Aug 2021
 Fix scale precision error message when digits is calculated as negative (#1790)
+Shared conditions shouldn't rely on object hashcode for unique ID (#1810)
 
 10.3.0 - 9 July 2021
 Update Russian translations (#1761)

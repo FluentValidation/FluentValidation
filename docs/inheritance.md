@@ -7,13 +7,15 @@ For example, imagine the following example:
 ```csharp
 // We have an interface that represents a 'contact',
 // for example in a CRM system. All contacts must have a name and email.
-public interface IContact {
+public interface IContact 
+{
   string Name { get; set; }
   string Email { get; set; }
 }
 
 // A Person is a type of contact, with a name and a DOB.
-public class Person : IContact {
+public class Person : IContact 
+{
   public string Name { get; set; }
   public string Email { get; set; }
 
@@ -31,7 +33,8 @@ public class Organisation : IContact {
 
 // Our model class that we'll be validating.
 // This might be a request to send a message to a contact.
-public class ContactRequest {
+public class ContactRequest 
+{
   public IContact Contact { get; set; }
 
   public string MessageToSend { get; set; }
@@ -41,16 +44,20 @@ public class ContactRequest {
 Next we create validators for Person and Organisation:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
+public class PersonValidator : AbstractValidator<Person> 
+{
+  public PersonValidator() 
+  {
     RuleFor(x => x.Name).NotNull();
     RuleFor(x => x.Email).NotNull();
     RuleFor(x => x.DateOfBirth).GreaterThan(DateTime.MinValue);
   }
 }
 
-public class OrganisationValidator : AbstractValidator<Organisation> {
-  public OrganisationValidator() {
+public class OrganisationValidator : AbstractValidator<Organisation> 
+{
+  public OrganisationValidator() 
+  {
     RuleFor(x => x.Name).NotNull();
     RuleFor(x => x.Email).NotNull();
     RuleFor(x => x.HeadQuarters).SetValidator(new AddressValidator());
@@ -61,10 +68,13 @@ public class OrganisationValidator : AbstractValidator<Organisation> {
 Now we create a validator for our `ContactRequest`. We can define specific validators for the `Contact` property, depending on its runtime type. This is done by calling `SetInheritanceValidator`, passing in a function that can be used to define specific child validators:
 
 ```csharp
-public class ContactRequestValidator : AbstractValidator<ContactRequest> {
-  public ContactRequestValidator() {
+public class ContactRequestValidator : AbstractValidator<ContactRequest>
+{
+  public ContactRequestValidator()
+  {
 
-    RuleFor(x => x.Contact).SetInheritanceValidator(v => {
+    RuleFor(x => x.Contact).SetInheritanceValidator(v => 
+    {
       v.Add<Organisation>(new OrganisationValidator());
       v.Add<Person>(new PersonValidator());
     });

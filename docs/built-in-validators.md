@@ -16,7 +16,8 @@ String format args:
 * `{PropertyValue}` – Current value of the property
 
 ## NotEmpty Validator
-Ensures that the specified property is not null, an empty string or whitespace (or the default value for value types, e.g., 0 for `int`)
+Ensures that the specified property is not null, an empty string or whitespace (or the default value for value types, e.g., 0 for `int`).
+When used on an IEnumerable (such as arrays, collections, lists, etc.), the validator ensures that the IEnumerable is not empty.
 
 Example:
 ```csharp
@@ -295,13 +296,15 @@ String format args:
 Checks whether a numeric value is valid to be in that enum. This is used to prevent numeric values from being cast to an enum type when the resulting value would be invalid. For example, the following is possible:
 
 ```csharp
-public enum ErrorLevel {
+public enum ErrorLevel 
+{
   Error = 1,
   Warning = 2,
   Notice = 3
 }
 
-public class Model {
+public class Model
+{
   public ErrorLevel ErrorLevel { get; set; }
 }
 
@@ -338,6 +341,8 @@ String format args:
 
 ## Empty Validator
 Opposite of the `NotEmpty` validator. Checks if a property value is null, or is the default value for the type.
+When used on an IEnumerable (such as arrays, collections, lists, etc.), the validator ensures that the IEnumerable is empty.
+
 ```csharp
 RuleFor(x => x.Surname).Empty();
 ```

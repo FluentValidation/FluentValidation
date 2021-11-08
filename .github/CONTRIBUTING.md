@@ -1,6 +1,10 @@
 ## General support, feedback, and discussions
 FluentValidation is maintained on a voluntary basis, and unfortunately this means we are unable to provide general support or answer questions on usage due to the time and effort required to moderate these. The issue tracker should only be used for bug reports in the core FluentValidation library, or feature requests where appropriate. Requests for general support or questions on usage will be closed. We appreciate that this may appear strict, but is necessary to protect the free time and mental health of the project's maintainers. Thank you for understanding.
 
+## Supporting the project
+If you use FluentValidation in a commercial project, please sponsor the project financially. FluentValidation is developed and supported by [@JeremySkinner](https://github.com/JeremySkinner) for free in his spare time and financial sponsorship helps keep the project going. You can sponsor the project via either [GitHub sponsors](https://github.com/sponsors/JeremySkinner) or [OpenCollective](https://opencollective.com/FluentValidation).
+
+
 ## Filing bug reports and feature requests
 The best way to get your bug fixed is to be as detailed as you can be about the problem.
 

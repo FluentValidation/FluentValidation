@@ -4,6 +4,7 @@
 
 FluentValidation supports integration with ASP.NET Core 3.1 or ASP.NET Core running on .NET 5. Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure.
 
+Note that Minimal APIs that are part of .NET 6 don't support automatic validation.
 
 To enable MVC integration, you'll need to add a reference to the `FluentValidation.AspNetCore` assembly in your web project by installing the appropriate NuGet package. From the command line, you can install the package by typing:
 
@@ -15,8 +16,10 @@ Once installed, you'll need to configure FluentValidation in your app's Startup 
 
 
 ```csharp
-public void ConfigureServices(IServiceCollection services) {
-    services.AddMvc(setup => {
+public void ConfigureServices(IServiceCollection services) 
+{
+    services.AddMvc(setup => 
+    {
       //...mvc setup...
     }).AddFluentValidation();
 }
@@ -26,8 +29,10 @@ In order for ASP.NET to discover your validators, they must be registered with t
 
 
 ```csharp
-public void ConfigureServices(IServiceCollection services) {
-    services.AddMvc(setup => {
+public void ConfigureServices(IServiceCollection services) 
+{
+    services.AddMvc(setup => 
+    {
       //...mvc setup...
     }).AddFluentValidation();
 
@@ -66,15 +71,18 @@ services.AddMvc()
 This next example assumes that the `PersonValidator` is defined to validate a class called `Person`. Once you've configured FluentValidation, ASP.NET will then automatically validate incoming requests using the validator mappings configured in your startup routine.
 
 ```csharp
-public class Person {
+public class Person 
+{
 	public int Id { get; set; }
 	public string Name { get; set; }
 	public string Email { get; set; }
 	public int Age { get; set; }
 }
 
-public class PersonValidator : AbstractValidator<Person> {
-	public PersonValidator() {
+public class PersonValidator : AbstractValidator<Person> 
+{
+	public PersonValidator() 
+  {
 		RuleFor(x => x.Id).NotNull();
 		RuleFor(x => x.Name).Length(0, 10);
 		RuleFor(x => x.Email).EmailAddress();
@@ -86,15 +94,20 @@ public class PersonValidator : AbstractValidator<Person> {
 We can use the Person class within our controller and associated view:
 
 ```csharp
-public class PeopleController : Controller {
-	public ActionResult Create() {
+public class PeopleController : Controller 
+{
+	public ActionResult Create() 
+  {
 		return View();
 	}
 
 	[HttpPost]
-	public IActionResult Create(Person person) {
+	public IActionResult Create(Person person) 
+  {
 
-		if(! ModelState.IsValid) { // re-render the view when validation failed.
+		if(! ModelState.IsValid) 
+    { 
+      // re-render the view when validation failed.
 			return View("Create", person);
 		}
 
@@ -158,7 +171,8 @@ When validating complex object graphs, by default, you must explicitly specify a
 When running an ASP.NET MVC application, you can also optionally enable implicit validation for child properties. When this is enabled, instead of having to specify child validators using `SetValidator`, MVC's validation infrastructure will recursively attempt to automatically find validators for each property. This can be done by setting `ImplicitlyValidateChildProperties` to true:
 
 ```csharp
-services.AddMvc().AddFluentValidation(fv => {
+services.AddMvc().AddFluentValidation(fv => 
+{
  fv.ImplicitlyValidateChildProperties = true;
 });
 ```
@@ -176,7 +190,8 @@ public ActionResult DoSomething(List<Person> people) => Ok();
 With implicit child property validation enabled (see above), you don't have to explicitly create a collection validator class as each person element in the collection will be validated automatically. However, any child properties on the `Person` object will be automatically validated too meaning you can no longer use `SetValidator`. If you don't want this behaviour, you can also optionally enable implicit validation for root collection elements only. For example, if you want each `Person` element in the collection to be validated automatically, but not its child properties you can set `ImplicitlyValidateRootCollectionElements` to true:
 
 ```csharp
-services.AddMvc().AddFluentValidation(fv => {
+services.AddMvc().AddFluentValidation(fv => 
+{
  fv.ImplicitlyValidateRootCollectionElements = true;
 });
 ```
@@ -206,7 +221,8 @@ Alternatively, instead of using client-side validation you could instead execute
 Sometimes you may want to manually validate an object in a MVC project. In this case, the validation results can be copied to MVC's modelstate dictionary:
 
 ```csharp
-public ActionResult DoSomething() {
+public ActionResult DoSomething() 
+{
   var customer = new Customer();
   var validator = new CustomerValidator();
   var results = validator.Validate(customer);
@@ -225,7 +241,8 @@ The downside to using this automatic integration is that you don't have access t
 You can use the `CustomizeValidatorAttribute` to configure how the validator will be run. For example, if you want the validator to only run for a particular ruleset then you can specify that ruleset name by attributing the parameter that is going to be validated:
 
 ```csharp
-public ActionResult Save([CustomizeValidator(RuleSet="MyRuleset")] Customer cust) {
+public ActionResult Save([CustomizeValidator(RuleSet="MyRuleset")] Customer cust) 
+{
   // ...
 }
 ```
@@ -241,7 +258,8 @@ var result = validator.Validate(customer, options => options.IncludeRuleSet("MyR
 The attribute can also be used to invoke validation for individual properties:
 
 ```csharp
-public ActionResult Save([CustomizeValidator(Properties="Surname,Forename")] Customer cust) {
+public ActionResult Save([CustomizeValidator(Properties="Surname,Forename")] Customer cust) 
+{
   // ...
 }
 ```
@@ -256,7 +274,8 @@ var result = validator.Validate(customer, options => options.IncludeProperties("
 You can also use the `CustomizeValidatorAttribute` to skip validation for a particular type. This is useful for if you need to validate a type manually (for example, if you want to perform async validation then you'll need to instantiate the validator manually and call `ValidateAsync` as MVC's validation pipeline is not asynchronous).
 
 ```csharp
-public ActionResult Save([CustomizeValidator(Skip=true)] Customer cust) {
+public ActionResult Save([CustomizeValidator(Skip=true)] Customer cust) 
+{
   // ...
 }
 ```
@@ -267,7 +286,8 @@ public ActionResult Save([CustomizeValidator(Skip=true)] Customer cust) {
 You can further customize this process by using an interceptor. An interceptor has to implement the `IValidatorInterceptor` interface from the `FluentValidation.AspNetCore` namespace:
 
 ```csharp
-public interface IValidatorInterceptor	{
+public interface IValidatorInterceptor	
+{
   IValidationContext BeforeAspNetValidation(ActionContext actionContext, IValidationContext validationContext);
   ValidationResult AfterAspNetValidation(ActionContext actionContext, IValidationContext validationContext, ValidationResult result);
 }
@@ -283,7 +303,8 @@ Likewise, `AfterAspNetValidation` occurs after validation has occurs. This time,
 As well as implementing this interface directly in a validator class, we can also implement it externally, and specify the interceptor by using a `CustomizeValidatorAttribute` on an action method parameter:
 
 ```csharp
-public ActionResult Save([CustomizeValidator(Interceptor=typeof(MyCustomerInterceptor))] Customer cust) {
+public ActionResult Save([CustomizeValidator(Interceptor=typeof(MyCustomerInterceptor))] Customer cust) 
+{
  //...
 }
 ```
@@ -293,7 +314,8 @@ In this case, the interceptor has to be a class that implements `IValidatorInter
 Alternatively, you can register a default `IValidatorInterceptor` with the ASP.NET Service Provider. If you do this, then the interceptor will be used for all validators:
 
 ```csharp
-public void ConfigureServices(IServiceCollection services) {
+public void ConfigureServices(IServiceCollection services) 
+{
     services
       .AddMvc()
       .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>());
@@ -312,7 +334,8 @@ If you're using rulesets alongside ASP.NET MVC, then you'll notice that by defau
 
 ```csharp
 [RuleSetForClientSideMessages("MyRuleset")]
-public ActionResult Index() {
+public ActionResult Index() 
+{
    return View(new PersonViewModel());
 }
 ```
@@ -320,7 +343,8 @@ public ActionResult Index() {
 You can also use the `SetRulesetForClientsideMessages` extension method within your controller action:
 
 ```csharp
-public ActionResult Index() {
+public ActionResult Index() 
+{
    ControllerContext.SetRulesetForClientsideMessages("MyRuleset");
    return View(new PersonViewModel());
 }
@@ -331,8 +355,10 @@ public ActionResult Index() {
 As an alternative to directly instantiating child validators, with the ASP.NET Core integration you can choose to inject them instead. This can be done via the validator's constructor:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator(IValidator<Address> addressValidator) {
+public class PersonValidator : AbstractValidator<Person> 
+{
+  public PersonValidator(IValidator<Address> addressValidator) 
+  {
     RuleFor(x => x.Address).SetValidator(addressValidator);
   }
 }
@@ -341,8 +367,10 @@ public class PersonValidator : AbstractValidator<Person> {
 Alternatively, as of version 8.2 you can call `InjectValidator` without having to use constructor injection:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
+public class PersonValidator : AbstractValidator<Person> 
+{
+  public PersonValidator() 
+  {
     RuleFor(x => x.Address).InjectValidator();
   }
 }
@@ -360,6 +388,22 @@ public class PersonValidator : AbstractValidator<Person> {
 
 Please be aware that `InjectValidator` can *only* be used when using automatic validation. It can't be used if you directly invoke the `Validate` method.
 
+### Disabling automatic validation
+
+ In some cases it may be desirable to disable automatic validation, and perform all validation manually. In that case disable automatic validation as follows:
+
+```csharp
+services.AddFluentValidation(config => 
+{
+  config.AutomaticValidationEnabled = false;
+});
+```
+
+When disabled, ASP.NET won't attempt to use FluentValidation to validate objects during model binding.
+
+Note that if you do not need integration with client-side validation, an alternative is to use the `FluentValidation` library instead of `FluentValidation.AspNetCore`, in which case you do not need to use this property at all.
+
+
 ### Use with Page Models
 
 Configuration for use with ASP.NET Razor Pages and PageModels is exactly the same as with MVC above, but with the limitation that you can't define a validator for the whole page-model, only for models exposed as properties on the page model.
@@ -367,7 +411,8 @@ Configuration for use with ASP.NET Razor Pages and PageModels is exactly the sam
 You can also use the `SetRulesetForClientsideMessages` extension method within your page handler:
 
 ```csharp
-public IActionResult OnGet() {
+public IActionResult OnGet() 
+{
    PageContext.SetRulesetForClientsideMessages("MyRuleset");
    return Page();
 }

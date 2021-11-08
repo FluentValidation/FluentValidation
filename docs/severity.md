@@ -3,8 +3,10 @@
 Given the following example that validates a `Person` object:
 
 ```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
+public class PersonValidator : AbstractValidator<Person>
+{
+  public PersonValidator()
+  {
     RuleFor(person => person.Surname).NotNull();
     RuleFor(person => person.Forename).NotNull();
   }
@@ -28,7 +30,8 @@ In this case, the `ValidationResult` would still have an `IsValid` result of `fa
 ```csharp
 var validator = new PersonValidator();
 var result = validator.Validate(new Person());
-foreach (var failure in result.Errors) {
+foreach (var failure in result.Errors) 
+{
   Console.WriteLine($"Property: {failure.PropertyName} Severity: {failure.Severity}");
 }
 ```
