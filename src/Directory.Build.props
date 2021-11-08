@@ -5,7 +5,7 @@
     <!-- Use CI build number as version suffix (if defined) -->
     <!--<VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)'!=''">ci-$(GITHUB_RUN_NUMBER)</VersionSuffix>-->
     <Authors>Jeremy Skinner</Authors>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>10</LangVersion>
     <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>

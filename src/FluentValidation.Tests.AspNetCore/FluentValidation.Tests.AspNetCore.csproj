@@ -6,7 +6,6 @@
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <LangVersion>9</LangVersion>
     <AddRazorSupportForMvc>True</AddRazorSupportForMvc>
   </PropertyGroup>
   <ItemGroup>
