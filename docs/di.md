@@ -105,7 +105,7 @@ services.AddValidatorsFromAssembly(Assembly.Load("SomeAssembly"));
 
 ### Filtering results
 
-You can provide an optional filter function that cna be used to exclude some validators from automatic registration. For example, to register all validators *except* the `CustomerValidator` you could write the following:
+You can provide an optional filter function that can be used to exclude some validators from automatic registration. For example, to register all validators *except* the `CustomerValidator` you could write the following:
 
 ```csharp
 services.AddValidatorsFromAssemblyContaining<MyValidato>(ServiceLifetime.Scoped, 
