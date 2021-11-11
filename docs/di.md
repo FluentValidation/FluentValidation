@@ -108,7 +108,7 @@ services.AddValidatorsFromAssembly(Assembly.Load("SomeAssembly"));
 You can provide an optional filter function that can be used to exclude some validators from automatic registration. For example, to register all validators *except* the `CustomerValidator` you could write the following:
 
 ```csharp
-services.AddValidatorsFromAssemblyContaining<MyValidato>(ServiceLifetime.Scoped, 
+services.AddValidatorsFromAssemblyContaining<MyValidator>(ServiceLifetime.Scoped, 
     filter => filter.ValidatorType != typeof(CustomerValidator));
 ```
 
