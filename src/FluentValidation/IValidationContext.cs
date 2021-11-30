@@ -68,11 +68,16 @@ namespace FluentValidation {
 		List<ValidationFailure> Failures { get; }
 	}
 
+	//TODO: Temporary interface to avoid introducing a breaking change. Consolidate with IValidationContext in 11.0
+	internal interface IThrowOnFailures {
+		bool ThrowOnFailures { get; }
+	}
+
 	/// <summary>
 	/// Validation context
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class ValidationContext<T> : IValidationContext, IHasFailures {
+	public class ValidationContext<T> : IValidationContext, IHasFailures, IThrowOnFailures {
 		private IValidationContext _parentContext;
 
 		List<ValidationFailure> IHasFailures.Failures => Failures;
@@ -209,6 +214,7 @@ namespace FluentValidation {
 				return new ValidationContext<T>(instanceToValidate, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
+					ThrowOnFailures = context is IThrowOnFailures { ThrowOnFailures: true },
 					_parentContext = context.ParentContext
 				};
 			}
@@ -219,6 +225,7 @@ namespace FluentValidation {
 				return new ValidationContext<T>(default, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
+					ThrowOnFailures = context is IThrowOnFailures { ThrowOnFailures: true },
 					_parentContext = context.ParentContext,
 				};
 			}
