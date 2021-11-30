@@ -62,22 +62,23 @@ namespace FluentValidation {
 		/// Whether this context is async.
 		/// </summary>
 		bool IsAsync { get; }
+
+		/// <summary>
+		/// Whether the validator should throw an exception if validation fails.
+		/// The default is false.
+		/// </summary>
+		bool ThrowOnFailures { get; }
 	}
 
 	internal interface IHasFailures {
 		List<ValidationFailure> Failures { get; }
 	}
 
-	//TODO: Temporary interface to avoid introducing a breaking change. Consolidate with IValidationContext in 11.0
-	internal interface IThrowOnFailures {
-		bool ThrowOnFailures { get; }
-	}
-
 	/// <summary>
 	/// Validation context
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class ValidationContext<T> : IValidationContext, IHasFailures, IThrowOnFailures {
+	public class ValidationContext<T> : IValidationContext, IHasFailures {
 		private IValidationContext _parentContext;
 
 		List<ValidationFailure> IHasFailures.Failures => Failures;
@@ -214,7 +215,7 @@ namespace FluentValidation {
 				return new ValidationContext<T>(instanceToValidate, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
-					ThrowOnFailures = context is IThrowOnFailures { ThrowOnFailures: true },
+					ThrowOnFailures = context.ThrowOnFailures,
 					_parentContext = context.ParentContext
 				};
 			}
@@ -225,7 +226,7 @@ namespace FluentValidation {
 				return new ValidationContext<T>(default, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
-					ThrowOnFailures = context is IThrowOnFailures { ThrowOnFailures: true },
+					ThrowOnFailures = context.ThrowOnFailures,
 					_parentContext = context.ParentContext,
 				};
 			}
