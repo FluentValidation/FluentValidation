@@ -253,5 +253,28 @@ namespace FluentValidation.Tests {
 
 			await validator.ValidateAndThrowAsync(new Person());
 		}
+
+		[Fact]
+		public void Throws_when_calling_validator_as_interface() {
+			IValidator<TestType> validator = new InterfaceValidator();
+			var test = new TestType {
+				TestInt = 0
+			};
+			Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(test));
+		}
+
+		public class InterfaceValidator : AbstractValidator<ITestType> {
+			public InterfaceValidator() {
+				RuleFor(t => t.TestInt).GreaterThanOrEqualTo(1);
+			}
+		}
+
+		public class TestType : ITestType {
+			public int TestInt { get; set; }
+		}
+
+		public interface ITestType {
+			int TestInt { get; set; }
+		}
 	}
 }

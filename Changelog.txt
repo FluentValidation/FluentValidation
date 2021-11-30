@@ -8,9 +8,12 @@ Remove deprecated TestHelper methods.
 Remove PropertyValidator backwards compatibility layer.
 Add method Only() asserting that no other validation errors were raised.
 
+10.3.5 - 30 Nov 2021
+Fixed ThrowOnFailures not being passed through if context creation requires type conversion (#1863).
+
 10.3.4 - 22 Oct 2021
 Clientside messages shouldn't be generated for the lazy version of LessThanOrEqual/GreaterThanOrEqual (#1818)
-Remove enumable boxing in Empty/NotEmpty validators (#1823)
+Remove enumerable boxing in Empty/NotEmpty validators (#1823)
 
 10.3.3 - 24 Aug 2021
 Remove reference type constraint for TestValidate (#1815)

@@ -71,7 +71,7 @@ If you want to completely rename the property, you can use the `OverrideProperty
 
 There is also an overload of `WithName` that accepts a lambda expression in a similar way to `WithMessage` in the previous section.
 
-Property name resolution is also pluggable. By default, the name of the property extracted from the `MemberExpression` passed to `RuleFor`. If you want change this logic, you can set the `DisplayNameResolver` property on the `ValidatorOptions` class:
+Property name resolution is also pluggable. By default, the name of the property extracted from the `MemberExpression` passed to `RuleFor`. If you want to change this logic, you can set the `DisplayNameResolver` property on the `ValidatorOptions` class:
 
 ```csharp
 ValidatorOptions.Global.DisplayNameResolver = (type, member, expression) => 
