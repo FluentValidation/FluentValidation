@@ -16,50 +16,33 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System.Net.Http;
+namespace FluentValidation.Tests.AspNetCore {
 	using System.Threading.Tasks;
-	using AspNetCore;
-	using AspNetCore.Controllers;
 	using FluentValidation.AspNetCore;
+	using Controllers;
 	using Microsoft.Extensions.DependencyInjection;
 	using Xunit;
 	using Xunit.Abstractions;
 
-	public class TypeFilterTests : IClassFixture<WebAppFixture> {
+	public class DisableAutoValidationTests : IClassFixture<WebAppFixture> {
 		private WebAppFixture _webApp;
 
-		public TypeFilterTests(ITestOutputHelper output, WebAppFixture webApp) {
+		public DisableAutoValidationTests(ITestOutputHelper output, WebAppFixture webApp) {
 			_webApp = webApp;
 		}
 
 		[Fact]
-		public async Task Finds_and_executes_validator() {
+		public async Task Disables_automatic_validation() {
 			var client = _webApp.CreateClientWithServices(services => {
 				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-				});
-			});
-			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
-
-			// Validator was found and executed so field shouldn't be valid.
-			result.IsValidField("Child.Name").ShouldBeFalse();
-
-		}
-
-		[Fact]
-		public async Task Filters_types() {
-			var client = _webApp.CreateClientWithServices(services => {
-				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-					fv.RegisterValidatorsFromAssemblyContaining<TestController>(scanResult => {
-						return scanResult.ValidatorType != typeof(InjectsExplicitChildValidator);
-					});
+					fv.AutomaticValidationEnabled = false;
 				});
 			});
 
 			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
 
-			// Should be valid as the validator was skipped.
+			// Should be valid as automatic validation is completely disabled..
 			result.IsValidField("Child.Name").ShouldBeTrue();
 		}
 	}
