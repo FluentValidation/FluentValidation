@@ -45,5 +45,21 @@ namespace FluentValidation.Tests.AspNetCore {
 			// Should be valid as automatic validation is completely disabled..
 			result.IsValidField("Child.Name").ShouldBeTrue();
 		}
+
+		[Fact]
+		public async Task Disables_automatic_validation_for_implicit_validation() {
+			var client = _webApp.CreateClientWithServices(services => {
+				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+					fv.ImplicitlyValidateChildProperties = true;
+					// Disabling auto validation supersedes enabling implicit validation.
+					fv.AutomaticValidationEnabled = false;
+				});
+			});
+
+			var result = await client.GetErrors("ImplicitChildValidator", new FormData());
+			// Validation is disabled; no errors.
+			result.Count.ShouldEqual(0);
+		}
 	}
 }
