@@ -12,6 +12,7 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
     <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.xml</DocumentationFile>
     <DebugType>embedded</DebugType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <EnablePackageValidation>true</EnablePackageValidation>
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1591</NoWarn>

@@ -13,6 +13,7 @@
         <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.DependencyInjectionExtensions.xml</DocumentationFile>
         <DebugType>embedded</DebugType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+        <EnablePackageValidation>true</EnablePackageValidation>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
