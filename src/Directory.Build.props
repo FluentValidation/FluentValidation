@@ -17,6 +17,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)/../FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
     <PackageOutputPath>$(MSBuildProjectDirectory)/../../.build/packages</PackageOutputPath>
+    <PackageValidationBaselineVersion>10.0.2</PackageValidationBaselineVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\logo\fluent-validation-icon.png" Pack="true" PackagePath="" />

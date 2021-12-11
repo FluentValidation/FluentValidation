@@ -42,15 +42,37 @@ namespace FluentValidation {
 		/// <summary>
 		/// Finds all the validators in the specified assembly.
 		/// </summary>
+		/// <param name="assembly">The assembly to scan</param>
+		/// <param name="includeInternalTypes">Whether to include internal validators in the search as well as public validators. The default is false.</param>
 		public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly, bool includeInternalTypes = false) {
 			return new AssemblyScanner(includeInternalTypes ? assembly.GetTypes() : assembly.GetExportedTypes());
 		}
 
+		//TODO: Backwards compat. overload. Remove in 11.0.
 		/// <summary>
-		/// Finds all the validators in the specified assemblies
+		/// Finds all public validators in the specified assembly.
 		/// </summary>
+		public static AssemblyScanner FindValidatorsInAssembly(Assembly assembly) {
+			return new AssemblyScanner(assembly.GetExportedTypes());
+		}
+
+		/// <summary>
+		/// Finds all the validators in the specified assemblies.
+		/// </summary>
+		/// <param name="assemblies">The assemblies to scan</param>
+		/// <param name="includeInternalTypes">Whether to include internal validators as well as public validators. The default is false.</param>
 		public static AssemblyScanner FindValidatorsInAssemblies(IEnumerable<Assembly> assemblies, bool includeInternalTypes = false) {
 			var types = assemblies.SelectMany(x => includeInternalTypes ? x.GetTypes() : x.GetExportedTypes()).Distinct();
+			return new AssemblyScanner(types);
+		}
+
+		//TODO: Backwards compat. overload. Remove in 11.0.
+		/// <summary>
+		/// Finds all public validators in the specified assemblies
+		/// </summary>
+		/// <param name="assemblies">The assemblies to scan</param>
+		public static AssemblyScanner FindValidatorsInAssemblies(IEnumerable<Assembly> assemblies) {
+			var types = assemblies.SelectMany(x => x.GetExportedTypes()).Distinct();
 			return new AssemblyScanner(types);
 		}
 

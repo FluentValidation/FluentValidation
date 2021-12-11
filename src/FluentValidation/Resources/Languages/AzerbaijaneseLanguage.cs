@@ -24,7 +24,7 @@ namespace FluentValidation.Resources {
 	using Validators;
 
 	internal class AzerbaijaneseLanguage {
-		public const string Culture = "az-Latn-AZ";
+		public const string Culture = "az-AZ";
 
 		public static string GetTranslation(string key) => key switch {
 			"EmailValidator" => "'{PropertyName}'  keçərli bir e-poçt ünvanı deyil.",

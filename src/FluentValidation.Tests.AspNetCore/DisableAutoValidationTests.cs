@@ -16,51 +16,50 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System.Net.Http;
+namespace FluentValidation.Tests.AspNetCore {
 	using System.Threading.Tasks;
-	using AspNetCore;
-	using AspNetCore.Controllers;
 	using FluentValidation.AspNetCore;
+	using Controllers;
 	using Microsoft.Extensions.DependencyInjection;
 	using Xunit;
 	using Xunit.Abstractions;
 
-	public class TypeFilterTests : IClassFixture<WebAppFixture> {
+	public class DisableAutoValidationTests : IClassFixture<WebAppFixture> {
 		private WebAppFixture _webApp;
 
-		public TypeFilterTests(ITestOutputHelper output, WebAppFixture webApp) {
+		public DisableAutoValidationTests(ITestOutputHelper output, WebAppFixture webApp) {
 			_webApp = webApp;
 		}
 
 		[Fact]
-		public async Task Finds_and_executes_validator() {
+		public async Task Disables_automatic_validation() {
 			var client = _webApp.CreateClientWithServices(services => {
 				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+					fv.AutomaticValidationEnabled = false;
 				});
 			});
+
 			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
 
-			// Validator was found and executed so field shouldn't be valid.
-			result.IsValidField("Child.Name").ShouldBeFalse();
-
+			// Should be valid as automatic validation is completely disabled..
+			result.IsValidField("Child.Name").ShouldBeTrue();
 		}
 
 		[Fact]
-		public async Task Filters_types() {
+		public async Task Disables_automatic_validation_for_implicit_validation() {
 			var client = _webApp.CreateClientWithServices(services => {
 				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-					fv.RegisterValidatorsFromAssemblyContaining<TestController>(scanResult => {
-						return scanResult.ValidatorType != typeof(InjectsExplicitChildValidator);
-					});
+					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+					fv.ImplicitlyValidateChildProperties = true;
+					// Disabling auto validation supersedes enabling implicit validation.
+					fv.AutomaticValidationEnabled = false;
 				});
 			});
 
-			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
-
-			// Should be valid as the validator was skipped.
-			result.IsValidField("Child.Name").ShouldBeTrue();
+			var result = await client.GetErrors("ImplicitChildValidator", new FormData());
+			// Validation is disabled; no errors.
+			result.Count.ShouldEqual(0);
 		}
 	}
 }
