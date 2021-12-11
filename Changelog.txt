@@ -1,5 +1,6 @@
 10.3.6 - 
 Setting DisableAutomaticValidation to true should prevent implicit validation running (#1868)
+Enable package validation (#1860)
 
 10.3.5 - 30 Nov 2021
 Fixed ThrowOnFailures not being passed through if context creation requires type conversion (#1863).
