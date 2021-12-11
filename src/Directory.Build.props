@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>10.3.5</VersionPrefix>
+    <VersionPrefix>11.0.0</VersionPrefix>
     <VersionSuffix></VersionSuffix>
     <!-- Use CI build number as version suffix (if defined) -->
     <!--<VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)'!=''">ci-$(GITHUB_RUN_NUMBER)</VersionSuffix>-->
@@ -17,7 +17,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)/../FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
     <PackageOutputPath>$(MSBuildProjectDirectory)/../../.build/packages</PackageOutputPath>
-    <PackageValidationBaselineVersion>10.0.2</PackageValidationBaselineVersion>
+    <PackageValidationBaselineVersion>11.0.0</PackageValidationBaselineVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\logo\fluent-validation-icon.png" Pack="true" PackagePath="" />
