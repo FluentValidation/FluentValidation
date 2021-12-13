@@ -1,4 +1,5 @@
-10.3.6 - 
+10.3.6 - 13 Dec 2021
+Fix Azerbaijani language code (#1865)
 Setting DisableAutomaticValidation to true should prevent implicit validation running (#1868)
 Enable package validation (#1860)
 
