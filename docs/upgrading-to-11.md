@@ -12,7 +12,8 @@ Below is a summary of all the changes in this release:
 
 ### Changes in supported platforms
 
-Support for .NET Core 2.1 has been removed, as Microsoft support has ended for this release.
+- Support for .NET Core 2.1 has been removed, as Microsoft support has ended for this release.
+- Support for the `netstandard2.0` platform has been removed removed from the core library. `netstandard2.1` is now the minimum supported version. This implicitly means that FluentValidation 11.x can't be used on legacy .NET Framework 4.x. If you need to run on .NET 4.x or another netstandard2 platform, you must use FluentValidation 10.x instead.
 
 ### Sync-over-async now throws an exception
 
@@ -30,9 +31,7 @@ This affects rules that contain any of the following:
 
 The deprecated methods `OnFailure` and `OnAnyFailure` have been removed.
 
-These were callbacks that could be used to define an action that would be called when a particular rule fails. These methods were deprecated as they 
-
-TODO
+These were callbacks that could be used to define an action that would be called when a particular rule fails. These methods were deprecated in 10.x as they allowed the standard FluentValidation workflow to be bypassed, and additionally they have caused various maintenance issues since they were introduced. 
 
 ### Test Helper changes
 
