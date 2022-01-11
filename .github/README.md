@@ -76,8 +76,9 @@ FluentValidation is copyright &copy; 2008-2022 .NET Foundation, [Jeremy Skinner]
 
 This project is sponsored by the following organisations whose support help keep this project going:
 
-- [JetBrains](https://www.jetbrains.com/?from=FluentValidation) who both provide financial sponsorship as well as access to their developer tools free of charge.
-- [Dotnetos](https://github.com/dotnetos)
+- [Dotnetos](https://github.com/dotnetos) for their financial sponsorship
+- [JetBrains](https://www.jetbrains.com/?from=FluentValidation) for providing licenses to their developer tools
+
 
 ### .NET Foundation
 
