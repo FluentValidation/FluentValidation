@@ -23,9 +23,6 @@ namespace FluentValidation {
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
-	using Resources;
-	using Results;
-	using Validators;
 
 	/// <summary>
 	/// Default options that can be used to configure a validator.
@@ -83,9 +80,18 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// <para>
 		/// Specifies the cascade mode for failures.
-		/// If set to 'Stop' then execution of the rule will stop once the first validator in the chain fails.
-		/// If set to 'Continue' then all validators in the chain will execute regardless of failures.
+		/// </para>
+		/// <para>
+		/// If set to <see cref="CascadeMode.Stop"/> then execution of the rule will stop once the first validator in the chain fails.
+		/// </para>
+		/// <para>
+		/// If set to <see cref="CascadeMode.Continue"/> then all validators in the chain will execute regardless of failures.
+		/// </para>
+		/// <para>
+		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>, behavior is as with <see cref="CascadeMode.Stop"/>.
+		/// </para>
 		/// </summary>
 		public static IRuleBuilderInitial<T, TProperty> Cascade<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, CascadeMode cascadeMode) {
 			Configurable(ruleBuilder).CascadeMode = cascadeMode;
@@ -93,9 +99,18 @@ namespace FluentValidation {
 		}
 
 		/// <summary>
+		/// <para>
 		/// Specifies the cascade mode for failures.
-		/// If set to 'Stop' then execution of the rule will stop once the first validator in the chain fails.
-		/// If set to 'Continue' then all validators in the chain will execute regardless of failures.
+		/// </para>
+		/// <para>
+		/// If set to <see cref="CascadeMode.Stop"/> then execution of the rule will stop once the first validator in the chain fails.
+		/// </para>
+		/// <para>
+		/// If set to <see cref="CascadeMode.Continue"/> then all validators in the chain will execute regardless of failures.
+		/// </para>
+		/// <para>
+		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>, behaviour is as with <see cref="CascadeMode.Stop"/>.
+		/// </para>
 		/// </summary>
 		public static IRuleBuilderInitialCollection<T, TProperty> Cascade<T, TProperty>(this IRuleBuilderInitialCollection<T, TProperty> ruleBuilder, CascadeMode cascadeMode) {
 			Configurable(ruleBuilder).CascadeMode = cascadeMode;

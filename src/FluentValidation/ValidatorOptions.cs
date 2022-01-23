@@ -29,16 +29,125 @@ namespace FluentValidation {
 	/// Configuration options for validators.
 	/// </summary>
 	public class ValidatorConfiguration {
+#pragma warning disable 618
+		private const string _stopOnFirstFailureArgumentMessage = $"{nameof(CascadeMode.StopOnFirstFailure)} is deprecated " +
+			$"and will be removed in a future release; it is not an appropriate value for this property.";
+#pragma warning restore 618
+
 		private Func<Type, MemberInfo, LambdaExpression, string> _propertyNameResolver = DefaultPropertyNameResolver;
 		private Func<Type, MemberInfo, LambdaExpression, string> _displayNameResolver = DefaultDisplayNameResolver;
 		private Func<MessageFormatter> _messageFormatterFactory = () => new MessageFormatter();
 		private Func<IPropertyValidator, string> _errorCodeResolver = DefaultErrorCodeResolver;
 		private ILanguageManager _languageManager = new LanguageManager();
 
+		private CascadeMode _defaultClassLevelCascadeMode = CascadeMode.Continue;
+		private CascadeMode _defaultRuleLevelCascadeMode = CascadeMode.Continue;
+
 		/// <summary>
-		/// Default cascade mode
+		/// <para>
+		/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
+		/// <see cref="AbstractValidator.ClassLevelCascadeMode"/>
+		/// and <see cref="AbstractValidator.RuleLevelCascadeMode"/>., based on the same logic as used when setting
+		/// this property as described below. 
+		/// </para>
+		/// <para>
+		/// Sets the default values of <see cref="AbstractValidator.ClassLevelCascadeMode"/>
+		/// and <see cref="AbstractValidator.RuleLevelCascadeMode"/>. 
+		/// </para>
+		/// <para>
+		/// If set to <see cref="CascadeMode.Continue"/> or <see cref="CascadeMode.Stop"/>, then both properties are set
+		/// to that value by default.
+		/// </para>
+		/// <para>
+		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>, then <see cref="AbstractValidator.ClassLevelCascadeMode"/>
+		/// is set to <see cref="CascadeMode.Continue"/> by default, and <see cref="AbstractValidator.RuleLevelCascadeMode"/>
+		/// is set to <see cref="CascadeMode.Stop"/> by default.
+		/// This results in the same behaviour as before this property was deprecated.
+		/// </para>
+		/// <para>
+		/// Note that cascade mode behaviour <i>within</i> individual rules is controlled by <see cref="RuleLevelCascadeMode"/>.
+		/// </para>
 		/// </summary>
-		public CascadeMode CascadeMode { get; set; } = CascadeMode.Continue;
+		[Obsolete($"Use {nameof(DefaultClassLevelCascadeMode)} and/or {nameof(DefaultRuleLevelCascadeMode)} instead. " +
+			"CascadeMode will be removed in a future release. " +
+			"For more details, see https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode")]
+		public CascadeMode CascadeMode
+		{
+#pragma warning disable 618
+			get {
+				if (_defaultClassLevelCascadeMode == _defaultRuleLevelCascadeMode) {
+					return _defaultClassLevelCascadeMode;
+				}
+				else if (_defaultClassLevelCascadeMode == CascadeMode.Continue && _defaultRuleLevelCascadeMode == CascadeMode.Stop) {
+					return CascadeMode.StopOnFirstFailure;
+				}
+				else {
+					throw new Exception(
+						$"There is no conversion to a single {nameof(CascadeMode)} value from the current combination of " +
+							$"{nameof(DefaultClassLevelCascadeMode)} and {nameof(DefaultRuleLevelCascadeMode)}. " +
+							$"Please use these properties instead of the deprecated {nameof(CascadeMode)} going forward.");
+				}
+			}
+
+			set {
+				DefaultClassLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+					? CascadeMode.Continue
+					: value;
+
+				DefaultRuleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+					? CascadeMode.Stop
+					: value;
+#pragma warning restore 618
+			}
+		}
+
+		/// <summary>
+		/// <para>
+		/// Sets the default value for <see cref="AbstractValidator.ClassLevelCascadeMode"/>.
+		/// Defaults to <see cref="CascadeMode.Continue"/> if not set.
+		/// </para>
+		/// <para>
+		/// Do not set this to <see cref="CascadeMode.StopOnFirstFailure"/>.
+		/// <see cref="CascadeMode.StopOnFirstFailure"/> will be removed in a future release
+		/// and will throw an exception if used here.
+		/// </para>
+		/// </summary>
+		public CascadeMode DefaultClassLevelCascadeMode {
+			get => _defaultClassLevelCascadeMode;
+			set {
+#pragma warning disable 618
+				if (value == CascadeMode.StopOnFirstFailure) {
+#pragma warning restore 618
+					throw new ArgumentException(_stopOnFirstFailureArgumentMessage);
+				}
+
+				_defaultClassLevelCascadeMode = value;
+			}
+		}
+
+		/// <summary>
+		/// <para>
+		/// Sets the default value for <see cref="AbstractValidator.RuleLevelCascadeMode"/>
+		/// Defaults to <see cref="CascadeMode.Continue"/> if not set.
+		/// </para>
+		/// <para>
+		/// Do not set this to <see cref="CascadeMode.StopOnFirstFailure"/>.
+		/// <see cref="CascadeMode.StopOnFirstFailure"/> will be removed in a future release
+		/// and will throw an exception if used here.
+		/// </para>
+		/// </summary>
+		public CascadeMode DefaultRuleLevelCascadeMode {
+			get => _defaultRuleLevelCascadeMode;
+			set {
+#pragma warning disable 618
+				if (value == CascadeMode.StopOnFirstFailure) {
+#pragma warning restore 618
+					throw new ArgumentException(_stopOnFirstFailureArgumentMessage);
+				}
+
+				_defaultRuleLevelCascadeMode = value;
+			}
+		}
 
 		/// <summary>
 		/// Default severity level

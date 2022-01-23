@@ -1,10 +1,7 @@
 namespace FluentValidation.Internal {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Results;
 	using Validators;
 
 	/// <summary>
