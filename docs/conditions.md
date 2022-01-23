@@ -1,4 +1,3 @@
-
 # Setting the Cascade mode
 You can set the cascade mode to customise how FluentValidation executes rules and validators when a particular rule in the validator class, or validator in the rule fails.
 

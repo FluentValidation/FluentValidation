@@ -1,3 +1,4 @@
+
 # 11.0 Upgrade Guide
 
 ### Introduction
@@ -92,7 +93,7 @@ If you are currently setting it to `StopOnFirstFailure`, replace it with
 ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue; // Not actually needed as this is the default. Just here for completeness.
 ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 ```
-Similarly, if you are currently setting `AbstractValidator.CascadeMode` to `Continue` or `Stop`, you can simply replace this with
+Similarly, if you are currently setting `AbstractValidator.CascadeMode` to `Continue` or `Stop`, replace this with
 ```csharp
 ClassLevelCascadeMode = CascadeMode.<YourCurrentValue>;
 RuleLevelCascadeMode = CascadeMode.<YourCurrentValue>;
@@ -103,11 +104,11 @@ ClassLevelCascadeMode = CascadeMode.Continue;
 RuleLevelCascadeMode = CascadeMode.Stop;
 ```
 
-If you are calling `.Cascade(CascadeMode.StopOnFirstFailure)` in a rule chain, replace `StopOnFirstFailure` with `Stop` (this has always had the same behavior at this level since `Stop` was introduced anyway).
+If you are calling `.Cascade(CascadeMode.StopOnFirstFailure)` in a rule chain, replace `StopOnFirstFailure` with `Stop` (this has always had the same behavior at rule-level since `Stop` was introduced anyway).
 
 All of the changes described above are exactly what the code does now anyway - e.g. if you set `AbstractValidator.CascadeMode` to `Stop`, it sets `AbstractValidator.DefaultRuleLevelCascadeMode` and `AbstractValidator.DefaultClassLevelCascadeMode` to `Stop`, and doesn't use `AbstractValidator.CascadeMode` in any logic internally.
 
-You may also be able to remove some now-unneeded calls to `.Cascade` at rule-level. For example, if you have the cascade mode at validator class-level set to `Continue`, and are repeating `.Cascade(CascadeMode.Stop)` for each rule, you can now replace this with
+You may also be able to remove some now-unneeded calls to `.Cascade` at rule-level. For example, if you have the cascade mode at validator class-level set to `Continue`, and are repeating `.Cascade(CascadeMode.Stop[/StopOnFirstFailure])` for each rule, you can now replace this with
 ```csharp
 ClassLevelCascadeMode = CascadeMode.Continue;
 RuleLevelCascadeMode = CascadeMode.Stop;
