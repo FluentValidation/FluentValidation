@@ -78,7 +78,6 @@ namespace FluentValidation.Tests {
 			results.Errors.Count.ShouldEqual(2);
 		}
 
-
 		[Fact]
 		public void Validation_stops_on_first_Failure_when_set_to_Continue_globally_and_overriden_at_rule_level() {
 			ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;

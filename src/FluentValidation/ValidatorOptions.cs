@@ -71,8 +71,7 @@ namespace FluentValidation {
 		[Obsolete($"Use {nameof(DefaultClassLevelCascadeMode)} and/or {nameof(DefaultRuleLevelCascadeMode)} instead. " +
 			"CascadeMode will be removed in a future release. " +
 			"For more details, see https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode")]
-		public CascadeMode CascadeMode
-		{
+		public CascadeMode CascadeMode {
 #pragma warning disable 618
 			get {
 				if (_defaultClassLevelCascadeMode == _defaultRuleLevelCascadeMode) {

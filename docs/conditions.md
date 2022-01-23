@@ -1,3 +1,4 @@
+
 # Setting the Cascade mode
 You can set the cascade mode to customise how FluentValidation executes rules and validators when a particular rule in the validator class, or validator in the rule fails.
 
@@ -57,7 +58,7 @@ See "Global Default Cascade Modes" for setting the default value of this propert
 To set the default cascade modes at rule-level and/or validator class-level globally, set `ValidatorOptions.Global.DefaultRuleLevelCascadeMode` and/or `ValidatorOptions.Global.DefaultClassLevelCascadeMode` during your application's startup routine. Both of these default to `Continue`.
 ```eval_rst
 .. warning::
-The RuleLevelCascadeMode, ClassLevelCascadeMode, and their global defaults are only available in FluentValidation 11 and newer. 
+The RuleLevelCascadeMode, ClassLevelCascadeMode, and their global defaults are only available in FluentValidation 11 and newer. See below.
 ```
 ## Introduction of RuleLevelCascadeMode and ClassLevelCascadeMode (and deprecation of CascadeMode)
 The `AbstractValidator.RuleLevelCascadeMode`, `AbstractValidator.ClassLevelCascadeMode`, and their global defaults were introduced in FluentValidation 11
@@ -67,7 +68,7 @@ In older versions, there was only one property controlling cascade modes: `Abstr
 The new properties enable finer control of the cascade mode at the different levels, with less repetition.
 
 ```eval_rst
-.. info::
+.. warning::
 In FluentValidation11, there are _no_ breaking changes to cascade modes. The `AbstractValidator.CascadeMode` property (and its global default property) are still present, and they function exactly the same as they did before, but they do so by setting / returning the values of `RuleLevelCascadeMode` and `ClassLevelCascadeMode`, as opposed to being used by the code directly.
 
 However, `AbstractValidator.CascadeMode` and its global default are deprecated, and will be removed in a future version. To convert to the new properties, see <TODO link to 11 update docs>.

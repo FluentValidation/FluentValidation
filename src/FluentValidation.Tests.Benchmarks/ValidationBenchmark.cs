@@ -35,8 +35,7 @@ namespace FluentValidation.Tests.Benchmarks {
 		[GlobalSetup]
 		public void GlobalSetup() {
 			_validator = new FullModelValidator();
-			_failFastValidator = new FullModelValidator
-			{
+			_failFastValidator = new FullModelValidator {
 				ClassLevelCascadeMode = CascadeMode.Stop,
 				RuleLevelCascadeMode = CascadeMode.Stop,
 			};
