@@ -112,9 +112,9 @@ namespace FluentValidation {
 		/// </summary>
 		public CascadeMode ClassLevelCascadeMode {
 			get => _classLevelCascadeMode();
-			set => _classLevelCascadeMode = () => value == CascadeMode.StopOnFirstFailure
-				? CascadeMode.Stop
-				: value;
+			set => _classLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+				? () => CascadeMode.Stop
+				: () => value;
 		}
 
 		/// <summary>
@@ -140,9 +140,9 @@ namespace FluentValidation {
 		/// </summary>
 		public CascadeMode RuleLevelCascadeMode {
 			get => _ruleLevelCascadeMode();
-			set => _ruleLevelCascadeMode = () => value == CascadeMode.StopOnFirstFailure
-				? CascadeMode.Stop
-				: value;
+			set => _ruleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+				? () => CascadeMode.Stop
+				: () => value;
 		}
 
 #pragma warning restore 618

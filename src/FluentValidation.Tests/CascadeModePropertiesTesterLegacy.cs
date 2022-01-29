@@ -85,27 +85,31 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Setting_global_DefaultRuleLevelCascadeMode_to_StopOnFirstFailure_throws_exception() {
-			Assert.ThrowsAny<Exception>(
-				() => ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.StopOnFirstFailure);
+		public void Setting_global_DefaultRuleLevelCascadeMode_to_StopOnFirstFailure_sets_Stop() {
+			ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.StopOnFirstFailure;
+
+			Assert.Equal(CascadeMode.Stop, ValidatorOptions.Global.DefaultRuleLevelCascadeMode);
 		}
 
 		[Fact]
-		public void Setting_global_DefaultClassLevelCascadeMode_to_StopOnFirstFailure_throws_exception() {
-			Assert.ThrowsAny<Exception>(
-				() => ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.StopOnFirstFailure);
+		public void Setting_global_DefaultClassLevelCascadeMode_to_StopOnFirstFailure_sets_Stop() {
+			ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.StopOnFirstFailure;
+
+			Assert.Equal(CascadeMode.Stop, ValidatorOptions.Global.DefaultClassLevelCascadeMode);
 		}
 
 		[Fact]
-		public void Setting_class_RuleLevelCascadeMode_to_StopOnFirstFailure_throws_exception() {
-			Assert.ThrowsAny<Exception>(
-				() => _validator.RuleLevelCascadeMode = CascadeMode.StopOnFirstFailure);
+		public void Setting_class_RuleLevelCascadeMode_to_StopOnFirstFailure_sets_Stop() {
+			_validator.RuleLevelCascadeMode = CascadeMode.StopOnFirstFailure;
+
+			Assert.Equal(CascadeMode.Stop, _validator.RuleLevelCascadeMode);
 		}
 
 		[Fact]
-		public void Setting_class_ClassLevelCascadeMode_to_StopOnFirstFailure_throws_exception() {
-			Assert.ThrowsAny<Exception>(
-				() => _validator.ClassLevelCascadeMode = CascadeMode.StopOnFirstFailure);
+		public void Setting_class_ClassLevelCascadeMode_to_StopOnFirstFailure_sets_Stop() {
+			_validator.ClassLevelCascadeMode = CascadeMode.StopOnFirstFailure;
+
+			Assert.Equal(CascadeMode.Stop, _validator.ClassLevelCascadeMode);
 		}
 
 		[Fact]
