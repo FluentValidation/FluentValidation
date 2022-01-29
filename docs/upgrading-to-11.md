@@ -117,4 +117,4 @@ or their global default equivalents.
 
 See the  [the documentation](https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode ) for more details.
 
-As `StopOnFirstFailure` is deprecated and scheduled for removal, it cannot be assigned to either of the two new properties (it still can to the also-deprecated `AbstractValidator.CascadeMode`) and it will throw an exception if attempted.
+As `StopOnFirstFailure` is deprecated and scheduled for removal, it cannot be assigned to either of the two new `AbstractValidator` properties or their global equivalents (it still can be assigned to the also-deprecated `AbstractValidator.CascadeMode`). Attempting to set the new properties to `StopOnFirstFailure` will simply result in `Stop` being used instead.

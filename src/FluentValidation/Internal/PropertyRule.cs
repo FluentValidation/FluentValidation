@@ -100,6 +100,7 @@ namespace FluentValidation.Internal {
 				throw new AsyncValidatorInvokedSynchronouslyException();
 			}
 
+			var cascade = CascadeMode;
 			var accessor = new Lazy<TProperty>(() => PropertyFunc(context.InstanceToValidate), LazyThreadSafetyMode.None);
 			var totalFailures = context.Failures.Count;
 			context.InitializeForPropertyValidator(propertyName, GetDisplayName, PropertyName);
@@ -125,7 +126,7 @@ namespace FluentValidation.Internal {
 
 				// If there has been at least one failure, and our CascadeMode has been set to Stop
 				// then don't continue to the next rule
-				if (context.Failures.Count > totalFailures && CascadeMode == CascadeMode.Stop) {
+				if (context.Failures.Count > totalFailures && cascade == CascadeMode.Stop) {
 					break;
 				}
 			}
@@ -176,6 +177,7 @@ namespace FluentValidation.Internal {
 				}
 			}
 
+			var cascade = CascadeMode;
 			var accessor = new Lazy<TProperty>(() => PropertyFunc(context.InstanceToValidate), LazyThreadSafetyMode.None);
 			var totalFailures = context.Failures.Count;
 			context.InitializeForPropertyValidator(propertyName, GetDisplayName, PropertyName);
@@ -202,7 +204,7 @@ namespace FluentValidation.Internal {
 
 				// If there has been at least one failure, and our CascadeMode has been set to Stop
 				// then don't continue to the next rule
-				if (context.Failures.Count > totalFailures && CascadeMode == CascadeMode.Stop) {
+				if (context.Failures.Count > totalFailures && cascade == CascadeMode.Stop) {
 					break;
 				}
 			}

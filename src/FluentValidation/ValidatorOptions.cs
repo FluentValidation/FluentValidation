@@ -29,11 +29,6 @@ namespace FluentValidation {
 	/// Configuration options for validators.
 	/// </summary>
 	public class ValidatorConfiguration {
-#pragma warning disable 618
-		private const string _stopOnFirstFailureArgumentMessage = $"{nameof(CascadeMode.StopOnFirstFailure)} is deprecated " +
-			$"and will be removed in a future release; it is not an appropriate value for this property.";
-#pragma warning restore 618
-
 		private Func<Type, MemberInfo, LambdaExpression, string> _propertyNameResolver = DefaultPropertyNameResolver;
 		private Func<Type, MemberInfo, LambdaExpression, string> _displayNameResolver = DefaultDisplayNameResolver;
 		private Func<MessageFormatter> _messageFormatterFactory = () => new MessageFormatter();
@@ -106,22 +101,18 @@ namespace FluentValidation {
 		/// Defaults to <see cref="CascadeMode.Continue"/> if not set.
 		/// </para>
 		/// <para>
-		/// Do not set this to <see cref="CascadeMode.StopOnFirstFailure"/>.
-		/// <see cref="CascadeMode.StopOnFirstFailure"/> will be removed in a future release
-		/// and will throw an exception if used here.
+		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
+		/// <see cref="CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
+		/// result in <see cref="CascadeMode.Stop"/> being used.
 		/// </para>
 		/// </summary>
 		public CascadeMode DefaultClassLevelCascadeMode {
 			get => _defaultClassLevelCascadeMode;
-			set {
 #pragma warning disable 618
-				if (value == CascadeMode.StopOnFirstFailure) {
+			set => _defaultClassLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+				? CascadeMode.Stop
+				: value;
 #pragma warning restore 618
-					throw new ArgumentException(_stopOnFirstFailureArgumentMessage);
-				}
-
-				_defaultClassLevelCascadeMode = value;
-			}
 		}
 
 		/// <summary>
@@ -130,22 +121,18 @@ namespace FluentValidation {
 		/// Defaults to <see cref="CascadeMode.Continue"/> if not set.
 		/// </para>
 		/// <para>
-		/// Do not set this to <see cref="CascadeMode.StopOnFirstFailure"/>.
-		/// <see cref="CascadeMode.StopOnFirstFailure"/> will be removed in a future release
-		/// and will throw an exception if used here.
+		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
+		/// <see cref="CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
+		/// result in <see cref="CascadeMode.Stop"/> being used.
 		/// </para>
 		/// </summary>
 		public CascadeMode DefaultRuleLevelCascadeMode {
 			get => _defaultRuleLevelCascadeMode;
-			set {
 #pragma warning disable 618
-				if (value == CascadeMode.StopOnFirstFailure) {
+			set => _defaultRuleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+				? CascadeMode.Stop
+				: value;
 #pragma warning restore 618
-					throw new ArgumentException(_stopOnFirstFailureArgumentMessage);
-				}
-
-				_defaultRuleLevelCascadeMode = value;
-			}
 		}
 
 		/// <summary>

@@ -125,6 +125,7 @@ namespace FluentValidation.Internal {
 				return;
 			}
 
+			var cascade = CascadeMode;
 			var collection = PropertyFunc(context.InstanceToValidate) as IEnumerable<TElement>;
 
 			int count = 0;
@@ -170,7 +171,7 @@ namespace FluentValidation.Internal {
 
 						// If there has been at least one failure, and our CascadeMode has been set to Stop
 						// then don't continue to the next rule
-						if (context.Failures.Count > totalFailuresInner && CascadeMode == CascadeMode.Stop) {
+						if (context.Failures.Count > totalFailuresInner && cascade == CascadeMode.Stop) {
 							context.RestoreState();
 							goto AfterValidate; // 🙃
 						}
@@ -230,6 +231,7 @@ namespace FluentValidation.Internal {
 				return;
 			}
 
+			var cascade = CascadeMode;
 			var collection = PropertyFunc(context.InstanceToValidate) as IEnumerable<TElement>;
 
 			int count = 0;
@@ -275,7 +277,7 @@ namespace FluentValidation.Internal {
 
 						// If there has been at least one failure, and our CascadeMode has been set to Stop
 						// then don't continue to the next rule
-						if (context.Failures.Count > totalFailuresInner && CascadeMode == CascadeMode.Stop) {
+						if (context.Failures.Count > totalFailuresInner && cascade == CascadeMode.Stop) {
 							context.RestoreState();
 							goto AfterValidate; // 🙃
 						}
