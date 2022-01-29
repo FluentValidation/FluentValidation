@@ -40,12 +40,12 @@ namespace FluentValidation {
 		/// <summary>
 		/// <para>
 		/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
-		/// <see cref="ClassLevelCascadeMode"/>
+		/// <see cref="AbstractValidator.ClassLevelCascadeMode"/>
 		/// and <see cref="RuleLevelCascadeMode"/>., based on the same logic as used when setting
 		/// this property as described below. 
 		/// </para>
 		/// <para>
-		/// Sets the values of <see cref="ClassLevelCascadeMode"/> and <see cref="RuleLevelCascadeMode"/>. 
+		/// Sets the values of <see cref="AbstractValidator.ClassLevelCascadeMode"/> and <see cref="RuleLevelCascadeMode"/>. 
 		/// </para>
 		/// <para>
 		/// If set to <see cref="CascadeMode.Continue"/> or <see cref="CascadeMode.Stop"/>, then both properties are set
@@ -125,11 +125,12 @@ namespace FluentValidation {
 		/// This overrides the default value set in <see cref="ValidatorConfiguration.DefaultRuleLevelCascadeMode"/>.
 		/// </para>
 		/// <para>
-		/// It can be further overridden for specific rules by calling <see cref="DefaultValidatorOptions.Cascade"/>.
+		/// It can be further overridden for specific rules by calling
+		/// <see cref="DefaultValidatorOptions.Cascade{T, TProperty}(IRuleBuilderInitial{T, TProperty}, CascadeMode)"/>.
 		/// <seealso cref="RuleBase{T, TProperty, TValue}.CascadeMode"/>.
 		/// </para>
 		/// <para>
-		/// Note that cascade behaviour <i>between</i> rules is controlled by <see cref="ClassLevelCascadeMode"/>.
+		/// Note that cascade behaviour <i>between</i> rules is controlled by <see cref="AbstractValidator.ClassLevelCascadeMode"/>.
 		/// </para>
 		/// <para>
 		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
