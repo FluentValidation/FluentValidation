@@ -41,26 +41,28 @@ namespace FluentValidation {
 		/// <summary>
 		/// <para>
 		/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
-		/// <see cref="AbstractValidator.ClassLevelCascadeMode"/>
-		/// and <see cref="AbstractValidator.RuleLevelCascadeMode"/>., based on the same logic as used when setting
+		/// <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>., based on the same logic as used when setting
 		/// this property as described below. 
 		/// </para>
 		/// <para>
-		/// Sets the default values of <see cref="AbstractValidator.ClassLevelCascadeMode"/>
-		/// and <see cref="AbstractValidator.RuleLevelCascadeMode"/>. 
+		/// Sets the default values of <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>. 
 		/// </para>
 		/// <para>
 		/// If set to <see cref="CascadeMode.Continue"/> or <see cref="CascadeMode.Stop"/>, then both properties are set
 		/// to that value by default.
 		/// </para>
 		/// <para>
-		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>, then <see cref="AbstractValidator.ClassLevelCascadeMode"/>
-		/// is set to <see cref="CascadeMode.Continue"/> by default, and <see cref="AbstractValidator.RuleLevelCascadeMode"/>
+		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>,
+		/// then <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// is set to <see cref="CascadeMode.Continue"/> by default, and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
 		/// is set to <see cref="CascadeMode.Stop"/> by default.
 		/// This results in the same behaviour as before this property was deprecated.
 		/// </para>
 		/// <para>
-		/// Note that cascade mode behaviour <i>within</i> individual rules is controlled by <see cref="RuleLevelCascadeMode"/>.
+		/// Note that cascade mode behaviour <i>within</i> individual rules is controlled by
+		/// <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
 		/// </para>
 		/// </summary>
 		[Obsolete($"Use {nameof(DefaultClassLevelCascadeMode)} and/or {nameof(DefaultRuleLevelCascadeMode)} instead. " +
@@ -97,7 +99,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// <para>
-		/// Sets the default value for <see cref="AbstractValidator.ClassLevelCascadeMode"/>.
+		/// Sets the default value for <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>.
 		/// Defaults to <see cref="CascadeMode.Continue"/> if not set.
 		/// </para>
 		/// <para>
@@ -117,7 +119,7 @@ namespace FluentValidation {
 
 		/// <summary>
 		/// <para>
-		/// Sets the default value for <see cref="AbstractValidator.RuleLevelCascadeMode"/>
+		/// Sets the default value for <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
 		/// Defaults to <see cref="CascadeMode.Continue"/> if not set.
 		/// </para>
 		/// <para>

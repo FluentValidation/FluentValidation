@@ -31,29 +31,31 @@ namespace FluentValidation {
 	/// Base class for object validators.
 	/// </summary>
 	/// <typeparam name="T">The type of the object being validated</typeparam>
-#pragma warning disable 618
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
 		internal TrackingCollection<IValidationRuleInternal<T>> Rules { get; } = new();
 		private Func<CascadeMode> _classLevelCascadeMode = () => ValidatorOptions.Global.DefaultClassLevelCascadeMode;
 		private Func<CascadeMode> _ruleLevelCascadeMode = () => ValidatorOptions.Global.DefaultRuleLevelCascadeMode;
 
+#pragma warning disable 618
 		/// <summary>
 		/// <para>
 		/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
-		/// <see cref="AbstractValidator.ClassLevelCascadeMode"/>
-		/// and <see cref="RuleLevelCascadeMode"/>., based on the same logic as used when setting
+		/// <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>., based on the same logic as used when setting
 		/// this property as described below. 
 		/// </para>
 		/// <para>
-		/// Sets the values of <see cref="AbstractValidator.ClassLevelCascadeMode"/> and <see cref="RuleLevelCascadeMode"/>. 
+		/// Sets the values of <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>. 
 		/// </para>
 		/// <para>
 		/// If set to <see cref="CascadeMode.Continue"/> or <see cref="CascadeMode.Stop"/>, then both properties are set
 		/// to that value.
 		/// </para>
 		/// <para>
-		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>, then <see cref="AbstractValidator.ClassLevelCascadeMode"/>
-		/// is set to <see cref="CascadeMode.Continue"/>, and <see cref="AbstractValidator.RuleLevelCascadeMode"/>
+		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>,
+		/// then <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// is set to <see cref="CascadeMode.Continue"/>, and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
 		/// is set to <see cref="CascadeMode.Stop"/>.
 		/// This results in the same behaviour as before this property was deprecated.
 		/// </para>
@@ -86,7 +88,6 @@ namespace FluentValidation {
 					: value;
 			}
 		}
-#pragma warning restore 618
 
 		/// <summary>
 		/// <para>
@@ -100,7 +101,8 @@ namespace FluentValidation {
 		/// If set to <see cref="CascadeMode.Stop"/> then execution of the validator will stop after any rule fails.
 		/// </para>
 		/// <para>
-		/// Note that cascade behaviour <i>within</i> individual rules is controlled by <see cref="RuleLevelCascadeMode"/>.
+		/// Note that cascade behaviour <i>within</i> individual rules is controlled by
+		/// <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
 		/// </para>
 		/// <para>
 		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
@@ -110,11 +112,9 @@ namespace FluentValidation {
 		/// </summary>
 		public CascadeMode ClassLevelCascadeMode {
 			get => _classLevelCascadeMode();
-#pragma warning disable 618
 			set => _classLevelCascadeMode = () => value == CascadeMode.StopOnFirstFailure
 				? CascadeMode.Stop
 				: value;
-#pragma warning restore 618
 		}
 
 		/// <summary>
@@ -130,7 +130,7 @@ namespace FluentValidation {
 		/// <seealso cref="RuleBase{T, TProperty, TValue}.CascadeMode"/>.
 		/// </para>
 		/// <para>
-		/// Note that cascade behaviour <i>between</i> rules is controlled by <see cref="AbstractValidator.ClassLevelCascadeMode"/>.
+		/// Note that cascade behaviour <i>between</i> rules is controlled by <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>.
 		/// </para>
 		/// <para>
 		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
@@ -140,13 +140,12 @@ namespace FluentValidation {
 		/// </summary>
 		public CascadeMode RuleLevelCascadeMode {
 			get => _ruleLevelCascadeMode();
-#pragma warning disable 618
 			set => _ruleLevelCascadeMode = () => value == CascadeMode.StopOnFirstFailure
 				? CascadeMode.Stop
 				: value;
-#pragma warning restore 618
 		}
 
+#pragma warning restore 618
 		ValidationResult IValidator.Validate(IValidationContext context) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			return Validate(ValidationContext<T>.GetFromNonGenericContext(context));
