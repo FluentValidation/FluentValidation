@@ -32,3 +32,5 @@ services
 			configuration.DisableDataAnnotationsValidation = true
 		});
 ```
+
+### Source from which I got this knowledge: https://lfppfaria.github.io/c%23/2020/06/14/fluent-validation.html
