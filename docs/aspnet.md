@@ -75,21 +75,21 @@ This next example assumes that the `PersonValidator` is defined to validate a cl
 ```csharp
 public class Person 
 {
-	public int Id { get; set; }
-	public string Name { get; set; }
-	public string Email { get; set; }
-	public int Age { get; set; }
+  public int Id { get; set; }
+  public string Name { get; set; }
+  public string Email { get; set; }
+  public int Age { get; set; }
 }
 
 public class PersonValidator : AbstractValidator<Person> 
 {
-	public PersonValidator() 
+  public PersonValidator() 
   {
-		RuleFor(x => x.Id).NotNull();
-		RuleFor(x => x.Name).Length(0, 10);
-		RuleFor(x => x.Email).EmailAddress();
-		RuleFor(x => x.Age).InclusiveBetween(18, 60);
-	}
+    RuleFor(x => x.Id).NotNull();
+    RuleFor(x => x.Name).Length(0, 10);
+    RuleFor(x => x.Email).EmailAddress();
+    RuleFor(x => x.Age).InclusiveBetween(18, 60);
+  }
 }
 ```
 
@@ -98,27 +98,25 @@ We can use the Person class within our controller and associated view:
 ```csharp
 public class PeopleController : Controller 
 {
-	public ActionResult Create() 
+  public ActionResult Create() 
   {
-		return View();
-	}
+    return View();
+  }
 
-	[HttpPost]
-	public IActionResult Create(Person person) 
+  [HttpPost]
+  public IActionResult Create(Person person) 
   {
-
-		if(! ModelState.IsValid) 
+    if(! ModelState.IsValid) 
     { 
       // re-render the view when validation failed.
-			return View("Create", person);
-		}
+      return View("Create", person);
+    }
 
-		Save(person); //Save the person to the database, or some other logic
+    Save(person); //Save the person to the database, or some other logic
 
-		TempData["notice"] = "Person successfully created";
-		return RedirectToAction("Index");
-
-	}
+    TempData["notice"] = "Person successfully created";
+    return RedirectToAction("Index");
+  }
 }
 ```
 
