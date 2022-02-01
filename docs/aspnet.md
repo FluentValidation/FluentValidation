@@ -41,6 +41,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+Alternatively you can call `AddFluentValidation()` after a call to `AddControllers` in projects where you aren't using the full MVC stack (for example, in Web API projects). 
+
 ### Automatic Registration
 
 You can also use the `AddFromAssemblyContaining` method to automatically register all validators within a particular assembly. This will automatically find any public, non-abstract types that inherit from `AbstractValidator` and register them with the container (open generics are not supported).
