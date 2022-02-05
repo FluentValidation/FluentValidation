@@ -1,3 +1,54 @@
+# Conditions
+
+The `When` and `Unless` methods can be used to specify conditions that control when the rule should execute. For example, this rule on the `CustomerDiscount` property will only execute when `IsPreferredCustomer` is `true`:
+
+```csharp
+RuleFor(customer => customer.CustomerDiscount).GreaterThan(0).When(customer => customer.IsPreferredCustomer);
+```
+
+The `Unless` method is simply the opposite of `When`.
+
+If you need to specify the same condition for multiple rules then you can call the top-level `When` method instead of chaining the `When` call at the end of the rule:
+
+```csharp
+When(customer => customer.IsPreferred, () => {
+   RuleFor(customer => customer.CustomerDiscount).GreaterThan(0);
+   RuleFor(customer => customer.CreditCardNumber).NotNull();
+});
+```
+
+This time, the condition will be applied to both rules. You can also chain a call to `Otherwise` which will invoke rules that don't match the condition:
+
+```csharp
+When(customer => customer.IsPreferred, () => {
+   RuleFor(customer => customer.CustomerDiscount).GreaterThan(0);
+   RuleFor(customer => customer.CreditCardNumber).NotNull();
+}).Otherwise(() => {
+  RuleFor(customer => customer.CustomerDiscount).Equal(0);
+});
+```
+
+By default FluentValidation will apply the condition to all preceding validators in the same call to `RuleFor`. If you only want the condition to apply to the validator that immediately precedes the condition, you must explicitly specify this:
+
+```csharp
+RuleFor(customer => customer.CustomerDiscount)
+    .GreaterThan(0).When(customer => customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator)
+    .EqualTo(0).When(customer => ! customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator);
+```
+
+If the second parameter is not specified, then it defaults to `ApplyConditionTo.AllValidators`, meaning that the condition will apply to all preceding validators in the same chain.
+
+If you need this behaviour, be aware that you must specify `ApplyConditionTo.CurrentValidator` as part of *every* condition. In the following example the first call to `When` applies to only the call to `Matches`, but not the call to `NotEmpty`. The second call to `When` applies only to the call to `Empty`.
+
+```csharp
+RuleFor(customer => customer.Photo)
+    .NotEmpty()
+    .Matches("https://wwww.photos.io/\d+\.png")
+    .When(customer => customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator)
+    .Empty()
+    .When(customer => ! customer.IsPreferredCustomer, ApplyConditionTo.CurrentValidator);
+```
+
 # Setting the Cascade mode
 You can set the cascade mode to customise how FluentValidation executes rules and validators when a particular rule in the validator class, or validator in the rule fails.
 
@@ -98,3 +149,19 @@ This behaviour caused a lot of confusion over the years, so the `Stop` option wa
 The `Stop` option was introduced rather than changing the behaviour of `StopOnFirstFailure` as this would've been a very subtle breaking change, so we thought it was best to maintain the existing behaviour while adding a new option. `StopOnFirstFailure` was marked as Obsolete in FluentValidation 9.1, and generated compiler warnings.
 
 See also the FluentValidation 11 changes described above, that further change how the above code would be written. `StopOnFirstFailure` is still available as of version 11 and has no breaking changes to how it functions. However, in a future version, it _will_ be removed, now that it's possible to replicate its behavior using the new properties `AbstractValidator.RuleLevelCascadeMode` and `AbstractValidator.ClassLevelCascadeMode`.
+
+# Dependent Rules
+
+By default, all rules in FluentValidation are separate and cannot influence one another. This is intentional and necessary for asynchronous validation to work. However, there may be some cases where you want to ensure that some rules are only executed after another has completed. You can use `DependentRules` to do this.
+
+To use dependent rules, call the `DependentRules` method at the end of the rule that you want others to depend on. This method accepts a lambda expression inside which you can define other rules that will be executed only if the first rule passes:
+
+```csharp
+RuleFor(x => x.Surname).NotNull().DependentRules(() => {
+  RuleFor(x => x.Forename).NotNull();
+});
+```
+
+Here the rule against Forename will only be run if the Surname rule passes.
+
+_Author's note_: Personally I do not particularly like using dependent rules as I feel it's fairly hard to read, especially with a complex set of rules. In many cases, it can be simpler to use `When` conditions combined with `CascadeMode` to prevent rules from running in certain situations. Even though this can sometimes mean more duplication, it is often easier to read.
