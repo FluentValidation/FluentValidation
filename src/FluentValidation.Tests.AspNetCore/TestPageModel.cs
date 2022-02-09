@@ -13,8 +13,8 @@ namespace FluentValidation.Tests {
 		[BindProperty]
 		public TestModel Test { get; set; }
 
-		public Task<IActionResult> OnPostAsync() {
-			return Task.FromResult(TestResult());
+		public ValueTask<IActionResult> OnPostAsync() {
+			return new ValueTask<IActionResult>(Task.FromResult(TestResult()));
 		}
 
 		private IActionResult TestResult() {
@@ -37,8 +37,8 @@ namespace FluentValidation.Tests {
 		[CustomizeValidator(RuleSet = "Names")]
 		public RulesetTestModel Test { get; set; }
 
-		public Task<IActionResult> OnPostAsync() {
-			return Task.FromResult(TestResult());
+		public ValueTask<IActionResult> OnPostAsync() {
+			return new ValueTask<IActionResult>(Task.FromResult(TestResult()));
 		}
 
 		private IActionResult TestResult() {
@@ -60,8 +60,8 @@ namespace FluentValidation.Tests {
 		[BindProperty(Name = "Test")]
 		public TestModel Test { get; set; }
 
-		public Task<IActionResult> OnPostAsync() {
-			return Task.FromResult(TestResult());
+		public ValueTask<IActionResult> OnPostAsync() {
+			return new ValueTask<IActionResult>(Task.FromResult(TestResult()));
 		}
 
 		private IActionResult TestResult() {

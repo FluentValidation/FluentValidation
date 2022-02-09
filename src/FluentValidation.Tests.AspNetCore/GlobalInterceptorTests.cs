@@ -16,7 +16,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task When_global_action_context_interceptor_specified_Intercepts_validation_for_razor_pages() {
+		public async ValueTask When_global_action_context_interceptor_specified_Intercepts_validation_for_razor_pages() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},

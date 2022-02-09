@@ -102,7 +102,7 @@ namespace FluentValidation.Internal {
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, ValueTask<bool>> predicate, Action action) {
 			var propertyRules = new List<IValidationRuleInternal<T>>();
 
 			using (_rules.OnItemAdded(propertyRules.Add)) {
@@ -112,7 +112,7 @@ namespace FluentValidation.Internal {
 			// Generate unique ID for this shared condition.
 			var id = "_FV_AsyncCondition_" + Guid.NewGuid();
 
-			async Task<bool> Condition(IValidationContext context, CancellationToken ct) {
+			async ValueTask<bool> Condition(IValidationContext context, CancellationToken ct) {
 				var actualContext = ValidationContext<T>.GetFromNonGenericContext(context);
 
 				if (actualContext.InstanceToValidate != null) {
@@ -149,7 +149,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, ValueTask<bool>> predicate, Action action) {
 			return WhenAsync(async (x, context, ct) => !await predicate(x, context, ct), action);
 		}
 	}
@@ -180,9 +180,9 @@ namespace FluentValidation.Internal {
 
 	internal class AsyncConditionOtherwiseBuilder<T> : IConditionBuilder {
 		private TrackingCollection<IValidationRuleInternal<T>> _rules;
-		private readonly Func<IValidationContext, CancellationToken, Task<bool>> _condition;
+		private readonly Func<IValidationContext, CancellationToken, ValueTask<bool>> _condition;
 
-		public AsyncConditionOtherwiseBuilder(TrackingCollection<IValidationRuleInternal<T>> rules, Func<IValidationContext, CancellationToken, Task<bool>> condition) {
+		public AsyncConditionOtherwiseBuilder(TrackingCollection<IValidationRuleInternal<T>> rules, Func<IValidationContext, CancellationToken, ValueTask<bool>> condition) {
 			_rules = rules;
 			_condition = condition;
 		}

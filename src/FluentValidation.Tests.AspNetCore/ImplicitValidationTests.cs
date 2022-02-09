@@ -40,14 +40,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Does_not_implicitly_run_child_validator() {
+		public async ValueTask Does_not_implicitly_run_child_validator() {
 			var client = CreateClient(false);
 			var result = await client.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(0);
 		}
 
 		[Fact]
-		public async void Implicitly_run_child_validator() {
+		public async ValueTask Implicitly_run_child_validator() {
 			var client = CreateClient(true);
 			var result = await client.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
@@ -55,21 +55,21 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Ignores_null_child() {
+		public async ValueTask Ignores_null_child() {
 			var client = CreateClient(true);
 			var result = await client.GetErrors("ImplicitChildValidatorWithNullChild", new FormData());
 			result.Count.ShouldEqual(0);
 		}
 
 		[Fact]
-		public async void Executes_implicit_child_validator_and_mixes_with_IValidatableObject() {
+		public async ValueTask Executes_implicit_child_validator_and_mixes_with_IValidatableObject() {
 			var client = CreateClient(true);
 			var result = await client.GetErrors("ImplicitChildImplementsIValidatableObject", new FormData());
 			result.Count.ShouldEqual(3);
 		}
 
 		[Fact]
-		public async void Executes_implicit_child_validator_when_enabled_does_not_execute_multiple_times() {
+		public async ValueTask Executes_implicit_child_validator_when_enabled_does_not_execute_multiple_times() {
 			var client = CreateClient(true);
 			var result = await client.GetErrors("ImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
@@ -79,14 +79,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void ImplicitValidation_enabled_but_validator_explicitly_only_includes_error_message_once() {
+		public async ValueTask ImplicitValidation_enabled_but_validator_explicitly_only_includes_error_message_once() {
 			var client = CreateClient(true);
 			var result = await client.GetErrors("ImplicitAndExplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(1);
 		}
 
 		[Fact]
-		public async void Executes_implicit_child_validator_and_mixes_with_DataAnnotations() {
+		public async ValueTask Executes_implicit_child_validator_and_mixes_with_DataAnnotations() {
 			var client = CreateClient(true);
 			var result = await client.GetErrors("ImplicitChildWithDataAnnotations", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result));
@@ -94,7 +94,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Can_validate_dictionary() {
+		public async ValueTask Can_validate_dictionary() {
 			var client = CreateClient(true);
 			var dictionary = new Dictionary<int, TestModel5>() {
 				{123, new TestModel5() {SomeBool = true, Id = 1}},
@@ -107,7 +107,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Validates_dictionary_with_prefix() {
+		public async ValueTask Validates_dictionary_with_prefix() {
 			var form = new FormData {
 				{"model[0].Key", "0"},
 				{"model[0].Value.Name", null},
@@ -126,7 +126,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Validates_dictionary_without_prefix() {
+		public async ValueTask Validates_dictionary_without_prefix() {
 			var form = new FormData {
 				{"[0].Name", null},
 				{"[1].Name", null},
@@ -140,7 +140,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Can_validate_enumerable() {
+		public async ValueTask Can_validate_enumerable() {
 			var list = new List<TestModel5>() {
 				new TestModel5() {SomeBool = true, Id = 1},
 				new TestModel5(),
@@ -157,7 +157,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_collection() {
+		public async ValueTask Validates_collection() {
 			var form = new FormData {
 				{"model[0].Name", "foo"},
 				{"model[1].Name", "foo"},
@@ -171,7 +171,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_collection_without_prefix() {
+		public async ValueTask Validates_collection_without_prefix() {
 			var form = new FormData {
 				{"[0].Name", "foo"},
 				{"[1].Name", "foo"},
@@ -185,7 +185,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Skips_implicit_child_validation() {
+		public async ValueTask Skips_implicit_child_validation() {
 			var result = await CreateClient(true).GetErrors("SkipsImplicitChildValidator", new FormData());
 			result.Count.ShouldEqual(0);
 		}

@@ -48,7 +48,7 @@ namespace FluentValidation {
 			return Validate(ValidationContext<T>.GetFromNonGenericContext(context));
 		}
 
-		Task<ValidationResult> IValidator.ValidateAsync(IValidationContext context, CancellationToken cancellation) {
+		ValueTask<ValidationResult> IValidator.ValidateAsync(IValidationContext context, CancellationToken cancellation) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			return ValidateAsync(ValidationContext<T>.GetFromNonGenericContext(context), cancellation);
 		}
@@ -68,7 +68,7 @@ namespace FluentValidation {
 		/// <param name="instance">The object to validate</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures</returns>
-		public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new CancellationToken()) {
+		public ValueTask<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new CancellationToken()) {
 			return ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 		}
 
@@ -120,7 +120,7 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
-		public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+		public virtual async ValueTask<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			context.IsAsync = true;
 
@@ -334,7 +334,7 @@ namespace FluentValidation {
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		public IConditionBuilder WhenAsync(Func<T, CancellationToken, ValueTask<bool>> predicate, Action action) {
 			return WhenAsync((x, ctx, cancel) => predicate(x, cancel), action);
 		}
 
@@ -344,7 +344,7 @@ namespace FluentValidation {
 		/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules.</param>
 		/// <returns></returns>
-		public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, ValueTask<bool>> predicate, Action action) {
 			return new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
 		}
 
@@ -353,7 +353,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		public IConditionBuilder UnlessAsync(Func<T, CancellationToken, ValueTask<bool>> predicate, Action action) {
 			return UnlessAsync((x, ctx, cancel) => predicate(x, cancel), action);
 		}
 
@@ -362,7 +362,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 		/// <param name="action">Action that encapsulates the rules</param>
-		public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, ValueTask<bool>> predicate, Action action) {
 			return new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
 		}
 

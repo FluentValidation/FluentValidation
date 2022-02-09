@@ -135,7 +135,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Executes_correct_rule_when_using_property_with_include_async() {
+		public async ValueTask Executes_correct_rule_when_using_property_with_include_async() {
 			var validator = new TestValidator();
 			var validator2 = new TestValidator();
 			validator2.RuleFor(x => x.Forename).NotNull();

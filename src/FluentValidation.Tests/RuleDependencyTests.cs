@@ -102,13 +102,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task TestAsyncWithDependentRules_SyncEntry() {
+		public async ValueTask TestAsyncWithDependentRules_SyncEntry() {
 			var validator = new TestValidator();
 			validator.RuleFor(o => o.Forename)
 				.NotNull()
 				.DependentRules(() => {
 					validator.RuleFor(o => o.Address).NotNull();
-					validator.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
+					validator.RuleFor(o => o.Age).MustAsync((p, token) => new ValueTask<bool>(Task.FromResult(p > 10)));
 				});
 
 			var result = await validator.ValidateAsync(new Person());
@@ -122,13 +122,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task TestAsyncWithDependentRules_AsyncEntry() {
+		public async ValueTask TestAsyncWithDependentRules_AsyncEntry() {
 			var validator = new TestValidator();
 			validator.RuleFor(o => o)
 				.MustAsync(async (p, ct) => await Task.FromResult(p.Forename != null))
 				.DependentRules(() => {
 					validator.RuleFor(o => o.Address).NotNull();
-					validator.RuleFor(o => o.Age).MustAsync(async (p, token) => await Task.FromResult(p > 10));
+					validator.RuleFor(o => o.Age).MustAsync((p, token) => new ValueTask<bool>(Task.FromResult(p > 10)));
 				});
 
 			var result = await validator.ValidateAsync(new Person());
@@ -142,14 +142,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Async_inside_dependent_rules() {
+		public async ValueTask Async_inside_dependent_rules() {
 			var validator = new AsyncValidator();
 			var result = await validator.ValidateAsync(0);
 			result.IsValid.ShouldBeFalse();
 		}
 
 		[Fact]
-		public async Task Async_inside_dependent_rules_when_parent_rule_not_async() {
+		public async ValueTask Async_inside_dependent_rules_when_parent_rule_not_async() {
 			var validator = new AsyncValidator2();
 			var result = await validator.ValidateAsync(0);
 			result.IsValid.ShouldBeFalse();

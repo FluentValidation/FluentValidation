@@ -23,7 +23,7 @@
 		}
 
 		[Fact]
-		public async Task Gets_validators_from_service_provider() {
+		public async ValueTask Gets_validators_from_service_provider() {
 			var form = new FormData {
 				{ "test.Name", null }
 			};
@@ -35,7 +35,7 @@
 		}
 
 		[Fact]
-		public async Task Validators_should_be_scoped() {
+		public async ValueTask Validators_should_be_scoped() {
 			var result = await _client.GetErrors("Lifecycle", new FormData());
 			var hashCode1 = result.GetError("Foo");
 
@@ -51,7 +51,7 @@
 		}
 
 		[Fact]
-		public async Task Gets_validator_for_model_not_underlying_collection_type() {
+		public async ValueTask Gets_validator_for_model_not_underlying_collection_type() {
 			var result = await _client.GetErrors("ModelThatimplementsIEnumerable", new FormData());
 			result.GetError("Name").ShouldEqual("Foo");
 		}

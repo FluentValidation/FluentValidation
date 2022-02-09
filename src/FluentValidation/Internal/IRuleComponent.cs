@@ -53,7 +53,7 @@ namespace FluentValidation.Internal {
 		/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
 		/// </summary>
 		/// <param name="condition"></param>
-		void ApplyAsyncCondition(Func<ValidationContext<T>, CancellationToken, Task<bool>> condition);
+		void ApplyAsyncCondition(Func<ValidationContext<T>, CancellationToken, ValueTask<bool>> condition);
 
 		/// <summary>
 		/// Sets the overridden error message template for this validator.

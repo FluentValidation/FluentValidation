@@ -53,7 +53,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Transforms_property_value_with_propagated_original_object_async() {
+		public async ValueTask Transforms_property_value_with_propagated_original_object_async() {
 			var validator = new InlineValidator<Person>();
 			validator.Transform(x => x.Forename, (person, forename) => new {Nicks = person.NickNames, Name = forename})
 				.Must(context => context.Nicks.Any(nick => nick == context.Name.ToLower()));
@@ -73,10 +73,10 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Transforms_collection_element_async() {
+		public async ValueTask Transforms_collection_element_async() {
 			var validator = new InlineValidator<Person>();
 			validator.TransformForEach(x => x.Orders, order => order.Amount)
-				.MustAsync((amt, token) => Task.FromResult(amt > 0));
+				.MustAsync((amt, token) => new ValueTask<bool>(Task.FromResult(amt > 0)));
 
 			var result = await validator.ValidateAsync(new Person() {Orders = new List<Order> {new Order()}});
 			result.Errors.Count.ShouldEqual(1);
@@ -95,7 +95,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Transforms_collection_element_with_propagated_original_object_async() {
+		public async ValueTask Transforms_collection_element_with_propagated_original_object_async() {
 			var validator = new InlineValidator<Person>();
 			validator.TransformForEach(x => x.Children, (parent, children) => new {ParentName = parent.Surname, Children = children})
 				.Must(context => context.ParentName == context.Children.Surname);

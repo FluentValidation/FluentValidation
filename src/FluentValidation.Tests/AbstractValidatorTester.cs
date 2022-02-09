@@ -272,7 +272,7 @@ namespace FluentValidation.Tests {
 
 		[Theory]
 		[MemberData(nameof(PreValidationReturnValueTheoryData))]
-		public async Task WhenPreValidationReturnsFalse_ResultReturnToUserImmediatly_ValidateAsync(ValidationResult preValidationResult) {
+		public async ValueTask WhenPreValidationReturnsFalse_ResultReturnToUserImmediatly_ValidateAsync(ValidationResult preValidationResult) {
 			testValidatorWithPreValidate.PreValidateMethod = (context, validationResult) => {
 				foreach (ValidationFailure validationFailure in preValidationResult.Errors) {
 					validationResult.Errors.Add(validationFailure);
@@ -280,7 +280,7 @@ namespace FluentValidation.Tests {
 
 				return false;
 			};
-			testValidatorWithPreValidate.RuleFor(person => person.Age).MustAsync((age, token) => Task.FromResult(age >= 0));
+			testValidatorWithPreValidate.RuleFor(person => person.Age).MustAsync((age, token) => new ValueTask<bool>(Task.FromResult(age >= 0)));
 
 			var result = await testValidatorWithPreValidate.ValidateAsync(new Person() { Age = -1 });
 
@@ -316,14 +316,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task WhenPreValidationReturnsTrue_ValidatorsGetHit_ValidateAsync() {
+		public async ValueTask WhenPreValidationReturnsTrue_ValidatorsGetHit_ValidateAsync() {
 			const string testProperty = "TestProperty";
 			const string testMessage = "Test Message";
 			testValidatorWithPreValidate.PreValidateMethod = (context, validationResult) => {
 				validationResult.Errors.Add(new ValidationFailure(testProperty, testMessage));
 				return true;
 			};
-			testValidatorWithPreValidate.RuleFor(person => person.Age).MustAsync((age, token) => Task.FromResult(age >= 0));
+			testValidatorWithPreValidate.RuleFor(person => person.Age).MustAsync((age, token) => new ValueTask<bool>(Task.FromResult(age >= 0)));
 
 			var result = await testValidatorWithPreValidate.ValidateAsync(new Person() { Age = -1 });
 

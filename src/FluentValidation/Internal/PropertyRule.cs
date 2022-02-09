@@ -157,7 +157,7 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
-		public virtual async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
+		public virtual async ValueTask ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			if (!context.IsAsync) {
 				context.IsAsync = true;
 			}
@@ -238,7 +238,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, RuleComponent<T,TProperty> component, CancellationToken cancellation) {
+		private async ValueTask InvokePropertyValidatorAsync(ValidationContext<T> context, Lazy<TProperty> accessor, string propertyName, RuleComponent<T,TProperty> component, CancellationToken cancellation) {
 			bool valid = await component.ValidateAsync(context, accessor.Value, cancellation);
 
 			if (!valid) {

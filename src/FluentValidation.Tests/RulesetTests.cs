@@ -255,12 +255,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Combines_rulesets_and_explicit_properties_async() {
+		public async ValueTask Combines_rulesets_and_explicit_properties_async() {
 			var validator = new InlineValidator<Person>();
-			validator.RuleFor(x => x.Forename).MustAsync((x,t) => Task.FromResult(x != null));
-			validator.RuleFor(x => x.Surname).MustAsync((x,t) => Task.FromResult(x != null));
+			validator.RuleFor(x => x.Forename).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x != null)));
+			validator.RuleFor(x => x.Surname).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x != null)));
 			validator.RuleSet("Test", () => {
-				validator.RuleFor(x => x.Age).MustAsync((x,t) => Task.FromResult(x > 0));
+				validator.RuleFor(x => x.Age).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x > 0)));
 			});
 
 			var result = await validator.ValidateAsync(new Person(), options => {
@@ -294,14 +294,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Includes_combination_of_rulesets_async() {
+		public async ValueTask Includes_combination_of_rulesets_async() {
 			var validator = new InlineValidator<Person>();
-			validator.RuleFor(x => x.Forename).MustAsync((x,t) => Task.FromResult(x != null));
+			validator.RuleFor(x => x.Forename).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x != null)));
 			validator.RuleSet("Test1", () => {
-				validator.RuleFor(x => x.Surname).MustAsync((x,t) => Task.FromResult(x != null));
+				validator.RuleFor(x => x.Surname).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x != null)));
 			});
 			validator.RuleSet("Test2", () => {
-				validator.RuleFor(x => x.Age).MustAsync((x,t) => Task.FromResult(x > 0));
+				validator.RuleFor(x => x.Age).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x > 0)));
 			});
 
 			var result = await validator.ValidateAsync(new Person(), options => {
@@ -332,14 +332,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Includes_all_rulesets_async() {
+		public async ValueTask Includes_all_rulesets_async() {
 			var validator = new InlineValidator<Person>();
-			validator.RuleFor(x => x.Forename).MustAsync((x,t) => Task.FromResult(x != null));
+			validator.RuleFor(x => x.Forename).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x != null)));
 			validator.RuleSet("Test1", () => {
-				validator.RuleFor(x => x.Surname).MustAsync((x,t) => Task.FromResult(x != null));
+				validator.RuleFor(x => x.Surname).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x != null)));
 			});
 			validator.RuleSet("Test2", () => {
-				validator.RuleFor(x => x.Age).MustAsync((x,t) => Task.FromResult(x > 0));
+				validator.RuleFor(x => x.Age).MustAsync((x,t) => new ValueTask<bool>(Task.FromResult(x > 0)));
 			});
 
 			var result = await validator.ValidateAsync(new Person(), options => {

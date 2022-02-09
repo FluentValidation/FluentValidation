@@ -40,7 +40,7 @@
 		}
 
 		[Fact]
-		public async Task OnFailure_called_for_each_failed_rule_asyncAsync() {
+		public async ValueTask OnFailure_called_for_each_failed_rule_asyncAsync() {
 			_validator.CascadeMode = CascadeMode.Continue;
 
 			int invoked = 0;
@@ -111,12 +111,12 @@
 		}
 
 		[Fact]
-		public async Task WhenAsyncWithOnFailure_should_invoke_condition_on_inner_validator() {
+		public async ValueTask WhenAsyncWithOnFailure_should_invoke_condition_on_inner_validator() {
 			bool shouldNotBeTrue = false;
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname)
 				.NotEqual("foo")
-				.WhenAsync((x, token) => Task.FromResult(x.Id > 0))
+				.WhenAsync((x, token) => new ValueTask<bool>(Task.FromResult(x.Id > 0)))
 				.OnFailure(x => shouldNotBeTrue = true);
 
 			var result = await validator.ValidateAsync(new Person {Id = 0, Surname = "foo"});
@@ -130,7 +130,7 @@
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname)
 				.NotEqual("foo")
-				.WhenAsync((x, token) => Task.FromResult(x.Id > 0))
+				.WhenAsync((x, token) => new ValueTask<bool>(Task.FromResult(x.Id > 0)))
 				.OnFailure(x => shouldNotBeTrue = true);
 
 			var result = validator.Validate(new Person {Id = 0, Surname = "foo"});
@@ -139,11 +139,11 @@
 		}
 
 		[Fact]
-		public async Task WhenWithOnFailure_should_invoke_condition_on_async_inner_validator() {
+		public async ValueTask WhenWithOnFailure_should_invoke_condition_on_async_inner_validator() {
 			bool shouldNotBeTrue = false;
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname)
-				.MustAsync((x, ctx) => Task.FromResult(false))
+				.MustAsync((x, ctx) => new ValueTask<bool>(Task.FromResult(false)))
 				.When(x => x.Id > 0)
 				.OnFailure(x => shouldNotBeTrue = true);
 
@@ -153,12 +153,12 @@
 		}
 
 		[Fact]
-		public async Task WhenAsyncWithOnFailure_should_invoke_condition_on_async_inner_validator() {
+		public async ValueTask WhenAsyncWithOnFailure_should_invoke_condition_on_async_inner_validator() {
 			bool shouldNotBeTrue = false;
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname)
-				.MustAsync((x, ctx) => Task.FromResult(false))
-				.WhenAsync((x, ctx) => Task.FromResult(x.Id > 0))
+				.MustAsync((x, ctx) => new ValueTask<bool>(Task.FromResult(false)))
+				.WhenAsync((x, ctx) => new ValueTask<bool>(Task.FromResult(x.Id > 0)))
 				.OnFailure(x => shouldNotBeTrue = true);
 
 			var result = await validator.ValidateAsync(new Person {Id = 0, Surname = "foo"});

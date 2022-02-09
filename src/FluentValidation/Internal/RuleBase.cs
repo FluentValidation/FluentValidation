@@ -33,7 +33,7 @@ namespace FluentValidation.Internal {
 		private string _propertyDisplayName;
 		private string _propertyName;
 		private Func<ValidationContext<T>, bool> _condition;
-		private Func<ValidationContext<T>, CancellationToken, Task<bool>> _asyncCondition;
+		private Func<ValidationContext<T>, CancellationToken, ValueTask<bool>> _asyncCondition;
 		private string _displayName;
 		private Func<ValidationContext<T>, string> _displayNameFactory;
 
@@ -50,7 +50,7 @@ namespace FluentValidation.Internal {
 		/// <summary>
 		/// Asynchronous condition for all validators in this rule.
 		/// </summary>
-		internal Func<ValidationContext<T>, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
+		internal Func<ValidationContext<T>, CancellationToken, ValueTask<bool>> AsyncCondition => _asyncCondition;
 
 		/// <summary>
 		/// Property associated with this rule.
@@ -249,7 +249,7 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="predicate"></param>
 		/// <param name="applyConditionTo"></param>
-		public void ApplyAsyncCondition(Func<ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
+		public void ApplyAsyncCondition(Func<ValidationContext<T>, CancellationToken, ValueTask<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 			// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 			if (applyConditionTo == ApplyConditionTo.AllValidators) {
 				foreach (var validator in _components) {
@@ -277,7 +277,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		public void ApplySharedAsyncCondition(Func<ValidationContext<T>, CancellationToken, Task<bool>> condition) {
+		public void ApplySharedAsyncCondition(Func<ValidationContext<T>, CancellationToken, ValueTask<bool>> condition) {
 			if (_asyncCondition == null) {
 				_asyncCondition = condition;
 			}

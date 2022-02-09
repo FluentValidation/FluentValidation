@@ -136,7 +136,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Shared_async_When_is_not_applied_to_grouped_rules_when_initial_predicate_is_false() {
+		public async ValueTask Shared_async_When_is_not_applied_to_grouped_rules_when_initial_predicate_is_false() {
 			var validator = new SharedAsyncConditionValidator();
 			var person = new Person(); // fails the shared When predicate
 
@@ -156,7 +156,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Shared_async_When_is_applied_to_grouped_rules_when_initial_predicate_is_true() {
+		public async ValueTask Shared_async_When_is_applied_to_grouped_rules_when_initial_predicate_is_true() {
 			var validator = new SharedAsyncConditionValidator();
 			var person = new Person() {
 				Id = 4 // triggers the shared When predicate
@@ -180,7 +180,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Shared_async_When_is_applied_to_groupd_rules_when_initial_predicate_is_true_and_all_individual_rules_are_satisfied() {
+		public async ValueTask Shared_async_When_is_applied_to_groupd_rules_when_initial_predicate_is_true_and_all_individual_rules_are_satisfied() {
 			var validator = new SharedAsyncConditionValidator();
 			var person = new Person() {
 			                          	Id = 4, // triggers the shared When predicate
@@ -207,7 +207,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Shared_async_When_respects_the_smaller_scope_of_an_inner_Unless_when_the_inner_Unless_predicate_is_satisfied() {
+		public async ValueTask Shared_async_When_respects_the_smaller_scope_of_an_inner_Unless_when_the_inner_Unless_predicate_is_satisfied() {
 			var validator = new SharedAsyncConditionWithScopedUnlessValidator();
 			var person = new Person() {
 			                          	Id = 4 // triggers the shared When predicate
@@ -234,7 +234,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Shared_async_When_respects_the_smaller_scope_of_a_inner_Unless_when_the_inner_Unless_predicate_fails() {
+		public async ValueTask Shared_async_When_respects_the_smaller_scope_of_a_inner_Unless_when_the_inner_Unless_predicate_fails() {
 			var validator = new SharedAsyncConditionWithScopedUnlessValidator();
 			var person = new Person() {
 			                          	Id = 4 // triggers the shared When predicate
@@ -261,7 +261,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Outer_async_Unless_clause_will_trump_an_inner_Unless_clause_when_inner_fails_but_the_outer_is_satisfied() {
+		public async ValueTask Outer_async_Unless_clause_will_trump_an_inner_Unless_clause_when_inner_fails_but_the_outer_is_satisfied() {
 			var validator = new SharedAsyncConditionWithScopedUnlessValidator();
 			var person = new Person() {
 			                          	Id = 4, // triggers the shared When predicate
@@ -288,7 +288,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Async_condition_can_be_used_inside_ruleset() {
+		public async ValueTask Async_condition_can_be_used_inside_ruleset() {
 			var validator = new TestValidator();
 			validator.RuleSet("foo", () => {
 				validator.WhenAsync(async (x,c) => (x.Id > 0), () => {
@@ -316,7 +316,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task RuleSet_can_be_used_inside_async_condition() {
+		public async ValueTask RuleSet_can_be_used_inside_async_condition() {
 			var validator = new TestValidator();
 
 			validator.WhenAsync(async (x,c) => (x.Id > 0), () => { validator.RuleSet("foo", () => { validator.RuleFor(x => x.Forename).NotNull(); }); });
@@ -336,7 +336,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Rules_invoke_when_inverse_shared_async_condition_matches() {
+		public async ValueTask Rules_invoke_when_inverse_shared_async_condition_matches() {
 			var validator = new SharedAsyncConditionInverseValidator();
 			var result = await validator.ValidateAsync(new Person {Id = 1});
 			result.IsValid.ShouldBeFalse();
@@ -350,14 +350,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Rules_not_invoked_when_inverse_shared_async_condition_does_not_match() {
+		public async ValueTask Rules_not_invoked_when_inverse_shared_async_condition_does_not_match() {
 			var validator = new SharedAsyncConditionInverseValidator();
 			var result = await validator.ValidateAsync(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
 
 		[Fact]
-		public async Task Does_not_execute_custom_Rule_when_condition_false() {
+		public async ValueTask Does_not_execute_custom_Rule_when_condition_false() {
 			var validator = new TestValidator();
 			validator.When(x => false, () => {
 				validator.RuleFor(x=>x).Custom((x,ctx)=> ctx.AddFailure(new ValidationFailure("foo", "bar")));
@@ -368,7 +368,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Does_not_execute_custom_Rule_when_async_condition_false() {
+		public async ValueTask Does_not_execute_custom_Rule_when_async_condition_false() {
 			var validator = new TestValidator();
 			validator.WhenAsync(async (x,c) =>(false), () => {
 				validator.RuleFor(x=>x).Custom((x,ctx)=> ctx.AddFailure(new ValidationFailure("foo", "bar")));
@@ -392,7 +392,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Does_not_execute_customasync_Rule_when_async_condition_false() {
+		public async ValueTask Does_not_execute_customasync_Rule_when_async_condition_false() {
 			var validator = new TestValidator();
 			validator.WhenAsync(async (x,c) =>(false), () => {
 
@@ -428,7 +428,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Executes_customasync_rule_when_condition_true() {
+		public async ValueTask Executes_customasync_rule_when_condition_true() {
 			var validator = new TestValidator();
 			validator.When(x => true, () => validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("foo", "bar"))));
 
@@ -437,7 +437,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Executes_customasync_rule_when_async_condition_true() {
+		public async ValueTask Executes_customasync_rule_when_async_condition_true() {
 			var validator = new TestValidator();
 			validator.WhenAsync(async (x,c) =>(true), () => validator.RuleFor(x=>x).CustomAsync(async (x,ctx,c) => ctx.AddFailure(new ValidationFailure("foo", "bar"))));
 
@@ -471,7 +471,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Nested_conditions_with_CustomAsync_rule() {
+		public async ValueTask Nested_conditions_with_CustomAsync_rule() {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {
 				validator.When(x => false, () => {
@@ -483,7 +483,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Nested_async_conditions_with_CustomAsync_rule() {
+		public async ValueTask Nested_async_conditions_with_CustomAsync_rule() {
 			var validator = new TestValidator();
 			validator.When(x => true, () => {
 				validator.WhenAsync(async (x,c) =>(false), () => {
@@ -511,7 +511,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task WhenAsync_condition_only_executed_once() {
+		public async ValueTask WhenAsync_condition_only_executed_once() {
 			var validator = new TestValidator();
 			int executions = 0;
 			validator.WhenAsync(async (x, ct) => {
@@ -557,7 +557,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Runs_otherwise_conditions_for_WhenAsync() {
+		public async ValueTask Runs_otherwise_conditions_for_WhenAsync() {
 			var validator = new TestValidator();
 			validator.WhenAsync(async (x, ct) => x.Age > 10, () => {
 				validator.RuleFor(x => x.Forename).NotNull();
@@ -572,7 +572,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Runs_otherwise_conditions_for_UnlessAsync() {
+		public async ValueTask Runs_otherwise_conditions_for_UnlessAsync() {
 			var validator = new TestValidator();
 			validator.UnlessAsync(async (x, ct) => x.Age > 10, () => {
 				validator.RuleFor(x => x.Forename).NotNull();
@@ -633,7 +633,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task When_async_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
+		public async ValueTask When_async_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
 			var person = new Person {
 				Children = new List<Person> {
 					new Person { Id = 1},
@@ -666,7 +666,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Doesnt_throw_NullReferenceException_when_instance_not_null_async() {
+		public async ValueTask Doesnt_throw_NullReferenceException_when_instance_not_null_async() {
 			var v = new BadValidatorDisablesNullCheck();
 			var result = await v.ValidateAsync((string) null);
 			result.IsValid.ShouldBeTrue();
@@ -695,15 +695,15 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Shouldnt_break_with_hashcode_collision_async() {
+		public async ValueTask Shouldnt_break_with_hashcode_collision_async() {
 			var v1 = new InlineValidator<Collision1>();
 			var v2 = new InlineValidator<Collision2>();
 
 			var v = new InlineValidator<CollisionBase>();
-			v.WhenAsync((x, ct) => Task.FromResult(x is Collision1), () => {
+			v.WhenAsync((x, ct) => new ValueTask<bool>(Task.FromResult(x is Collision1)), () => {
 				v.RuleFor(x => ((Collision1)x).Name).NotNull();
 			});
-			v.WhenAsync((x, ct) => Task.FromResult(x is Collision2), () => {
+			v.WhenAsync((x, ct) => new ValueTask<bool>(Task.FromResult(x is Collision2)), () => {
 				v.RuleFor(x => ((Collision2)x).Name).NotNull();
 			});
 

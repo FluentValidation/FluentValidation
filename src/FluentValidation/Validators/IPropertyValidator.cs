@@ -32,7 +32,7 @@ namespace FluentValidation.Validators {
 		/// <param name="value">The current property value to validate</param>
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>True if valid, otherwise false.</returns>
-		Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
+		ValueTask<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
 	}
 
 	public interface IPropertyValidator<T, in TProperty> : IPropertyValidator {

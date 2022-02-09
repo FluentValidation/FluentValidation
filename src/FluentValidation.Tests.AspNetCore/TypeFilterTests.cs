@@ -34,7 +34,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Finds_and_executes_validator() {
+		public async ValueTask Finds_and_executes_validator() {
 			var client = _webApp.CreateClientWithServices(services => {
 				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
@@ -48,7 +48,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Filters_types() {
+		public async ValueTask Filters_types() {
 			var client = _webApp.CreateClientWithServices(services => {
 				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 					fv.RegisterValidatorsFromAssemblyContaining<TestController>(scanResult => {

@@ -50,13 +50,13 @@ namespace FluentValidation.Tests {
 
 
 		[Fact]
-		public async Task Validates_inheritance_async() {
+		public async ValueTask Validates_inheritance_async() {
 			var validator = new InlineValidator<Root>();
 			var impl1Validator = new InlineValidator<FooImpl1>();
 			var impl2Validator = new InlineValidator<FooImpl2>();
 
-			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => Task.FromResult(s != null));
-			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => Task.FromResult(i > 0));
+			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => new ValueTask<bool>(Task.FromResult(s != null)));
+			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => new ValueTask<bool>(Task.FromResult(i > 0)));
 
 			validator.RuleFor(x => x.Foo).SetInheritanceValidator(v => {
 				v.Add(impl1Validator)
@@ -97,13 +97,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_collection_async() {
+		public async ValueTask Validates_collection_async() {
 			var validator = new InlineValidator<Root>();
 			var impl1Validator = new InlineValidator<FooImpl1>();
 			var impl2Validator = new InlineValidator<FooImpl2>();
 
-			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => Task.FromResult(s != null));
-			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => Task.FromResult(i > 0));
+			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => new ValueTask<bool>(Task.FromResult(s != null)));
+			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => new ValueTask<bool>(Task.FromResult(i > 0)));
 
 			validator.RuleForEach(x => x.Foos).SetInheritanceValidator(v => {
 				v.Add(impl1Validator)
@@ -144,13 +144,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_with_callback_async() {
+		public async ValueTask Validates_with_callback_async() {
 			var validator = new InlineValidator<Root>();
 			var impl1Validator = new InlineValidator<FooImpl1>();
 			var impl2Validator = new InlineValidator<FooImpl2>();
 
-			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => Task.FromResult(s != null));
-			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => Task.FromResult(i > 0));
+			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => new ValueTask<bool>(Task.FromResult(s != null)));
+			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => new ValueTask<bool>(Task.FromResult(i > 0)));
 
 			validator.RuleFor(x => x.Foo).SetInheritanceValidator(v => {
 				v.Add(x => impl1Validator)
@@ -198,13 +198,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_with_callback_accepting_derived_async() {
+		public async ValueTask Validates_with_callback_accepting_derived_async() {
 			var validator = new InlineValidator<Root>();
 			var impl1Validator = new InlineValidator<FooImpl1>();
 			var impl2Validator = new InlineValidator<FooImpl2>();
 
-			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => Task.FromResult(s != null));
-			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => Task.FromResult(i > 0));
+			impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => new ValueTask<bool>(Task.FromResult(s != null)));
+			impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => new ValueTask<bool>(Task.FromResult(i > 0)));
 
 			validator.RuleFor(x => x.Foo).SetInheritanceValidator(v => {
 				v.Add<FooImpl1>((x, impl1) => {
@@ -262,20 +262,20 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_ruleset_async() {
+		public async ValueTask Validates_ruleset_async() {
 			var validator = new InlineValidator<Root>();
 			var impl1Validator = new InlineValidator<FooImpl1>();
 			var impl2Validator = new InlineValidator<FooImpl2>();
 
 			impl1Validator.RuleFor(x => x.Name).Equal("Foo");
 			impl1Validator.RuleSet("RuleSet1", () => {
-				impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => Task.FromResult(s != null));
+				impl1Validator.RuleFor(x => x.Name).MustAsync((s, token) => new ValueTask<bool>(Task.FromResult(s != null)));
 			});
 
 
 			impl2Validator.RuleFor(x => x.Number).Equal(42);
 			impl2Validator.RuleSet("RuleSet2", () => {
-				impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => Task.FromResult(i > 0));
+				impl2Validator.RuleFor(x => x.Number).MustAsync((i, token) => new ValueTask<bool>(Task.FromResult(i > 0)));
 			});
 
 			validator.RuleFor(x => x.Foo).SetInheritanceValidator(v => {

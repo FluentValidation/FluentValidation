@@ -199,7 +199,7 @@ namespace FluentValidation.Internal {
 			}
 		}
 
-		async Task IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
+		async ValueTask IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			if (!context.IsAsync) {
 				context.IsAsync = true;
 			}
@@ -348,7 +348,7 @@ namespace FluentValidation.Internal {
 			return validators;
 		}
 
-		private async Task<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, CancellationToken cancellation) {
+		private async ValueTask<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			// Loop over each validator and check if its condition allows it to run.
 			// This needs to be done prior to the main loop as within a collection rule
 			// validators' conditions still act upon the root object, not upon the collection property.
@@ -374,7 +374,7 @@ namespace FluentValidation.Internal {
 			return validators;
 		}
 
-		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, TElement value, string propertyName, RuleComponent<T,TElement> component, int index, CancellationToken cancellation) {
+		private async ValueTask InvokePropertyValidatorAsync(ValidationContext<T> context, TElement value, string propertyName, RuleComponent<T,TElement> component, int index, CancellationToken cancellation) {
 			context.MessageFormatter.AppendArgument("CollectionIndex", index);
 			bool valid = await component.ValidateAsync(context, value, cancellation);
 

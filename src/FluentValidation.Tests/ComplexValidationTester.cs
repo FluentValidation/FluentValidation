@@ -113,7 +113,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Condition_should_work_with_complex_property_when_invoked_async() {
+		public async ValueTask Condition_should_work_with_complex_property_when_invoked_async() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).When(x => x.Address.Line1 == "foo")
 			};
@@ -124,7 +124,7 @@ namespace FluentValidation.Tests {
 
 
 		[Fact]
-		public async Task Async_condition_should_work_with_complex_property() {
+		public async ValueTask Async_condition_should_work_with_complex_property() {
 			var validator = new TestValidator() {
 				v => v.RuleFor(x => x.Address).SetValidator(new AddressValidator()).WhenAsync(async (x, c) => x.Address.Line1 == "foo")
 			};
@@ -205,13 +205,13 @@ namespace FluentValidation.Tests {
 
 
 		[Fact]
-		public async Task Multiple_rules_in_chain_with_childvalidator_shouldnt_reuse_accessor_async() {
+		public async ValueTask Multiple_rules_in_chain_with_childvalidator_shouldnt_reuse_accessor_async() {
 			var validator = new InlineValidator<Person>();
 			var addrValidator = new InlineValidator<Address>();
-			addrValidator.RuleFor(x => x.Line1).MustAsync((l, t) => Task.FromResult(l != null));
+			addrValidator.RuleFor(x => x.Line1).MustAsync((l, t) => new ValueTask<bool>(Task.FromResult(l != null)));
 
 			validator.RuleFor(x => x.Address).SetValidator(addrValidator)
-				.MustAsync((a, t) => Task.FromResult(a != null));
+				.MustAsync((a, t) => new ValueTask<bool>(Task.FromResult(a != null)));
 
 			var result = await validator.ValidateAsync(new Person() {Address = new Address()});
 			result.Errors.Count.ShouldEqual(1);
@@ -296,7 +296,7 @@ namespace FluentValidation.Tests {
 				return base.Validate(context);
 			}
 
-			public override Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+			public override ValueTask<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 				WasCalledAsync = true;
 				return base.ValidateAsync(context, cancellation);
 			}

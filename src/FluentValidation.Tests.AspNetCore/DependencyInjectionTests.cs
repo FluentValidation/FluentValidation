@@ -32,14 +32,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Resolves_explicit_child_validator() {
+		public async ValueTask Resolves_explicit_child_validator() {
 			var result = await _client.GetErrors("InjectsExplicitChildValidator", new FormData());
 			result.IsValidField("Child.Name").ShouldBeFalse();
 			result.GetError("Child.Name").ShouldEqual("NotNullInjected");
 		}
 
 		[Fact]
-		public async Task Resolves_explicit_child_validator_for_collection() {
+		public async ValueTask Resolves_explicit_child_validator_for_collection() {
 			var formData = new FormData();
 			formData.Add("Children[0].Name", null);
 			var result = await _client.GetErrors("InjectsExplicitChildValidatorCollection", formData);

@@ -60,7 +60,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_collection_asynchronously() {
+		public async ValueTask Validates_collection_asynchronously() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleForEach(x => x.Orders).SetValidator(y => new AsyncOrderValidator(y))
@@ -92,7 +92,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_collection_several_levels_deep_async() {
+		public async ValueTask Validates_collection_several_levels_deep_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull(),
 				v => v.RuleForEach(x => x.Orders).SetValidator(y => new OrderValidator(y))
@@ -101,7 +101,7 @@ namespace FluentValidation.Tests {
 			var rootValidator = new InlineValidator<Tuple<Person, object>>();
 			rootValidator.RuleFor(x => x.Item1).SetValidator(validator);
 
-			var results  = await rootValidator.ValidateAsync(Tuple.Create(person, new object()));
+			var results = await rootValidator.ValidateAsync(Tuple.Create(person, new object()));
 			results.Errors.Count.ShouldEqual(3);
 
 			results.Errors[1].PropertyName.ShouldEqual("Item1.Orders[0].ProductName");
@@ -153,9 +153,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Async_condition_should_work_with_child_collection() {
+		public async ValueTask Async_condition_should_work_with_child_collection() {
 			var validator = new TestValidator() {
-				v => v.RuleForEach(x => x.Orders).SetValidator(y => new OrderValidator(y)).WhenAsync((x, c) => Task.FromResult(x.Orders.Count == 4) /*there are only 3*/)
+				v => v.RuleForEach(x => x.Orders).SetValidator(y => new OrderValidator(y)).WhenAsync((x, c) => new ValueTask<bool>(Task.FromResult(x.Orders.Count == 4)) /*there are only 3*/)
 			};
 
 			var result = await validator.ValidateAsync(person);
@@ -217,7 +217,7 @@ namespace FluentValidation.Tests {
 			validator.RuleForEach(x => x).SetValidator(personValidator);
 
 
-			var results = validator.Validate(new List<Person> {new Person(), new Person(), new Person {Surname = "Bishop"}});
+			var results = validator.Validate(new List<Person> { new Person(), new Person(), new Person { Surname = "Bishop" } });
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors[0].PropertyName.ShouldEqual("x[0].Surname");
 		}
@@ -231,7 +231,7 @@ namespace FluentValidation.Tests {
 			validator.RuleForEach(x => x).SetValidator(personValidator).OverridePropertyName("test");
 
 
-			var results = validator.Validate(new List<Person> {new Person(), new Person(), new Person {Surname = "Bishop"}});
+			var results = validator.Validate(new List<Person> { new Person(), new Person(), new Person { Surname = "Bishop" } });
 			results.Errors.Count.ShouldEqual(2);
 			results.Errors[0].PropertyName.ShouldEqual("test[0].Surname");
 		}
@@ -249,10 +249,10 @@ namespace FluentValidation.Tests {
 			personValidator.RuleForEach(x => x.Orders)
 				.SetValidator((p, order) => order.ProductName == "FreeProduct" ? freeOrderValidator : normalOrderValidator);
 
-			var result1 = personValidator.Validate(new Person() {Orders = new List<Order> {new Order {ProductName = "FreeProduct"}}});
+			var result1 = personValidator.Validate(new Person() { Orders = new List<Order> { new Order { ProductName = "FreeProduct" } } });
 			result1.IsValid.ShouldBeTrue();
 
-			var result2 = personValidator.Validate(new Person() {Orders = new List<Order> {new Order()}});
+			var result2 = personValidator.Validate(new Person() { Orders = new List<Order> { new Order() } });
 			result2.IsValid.ShouldBeFalse();
 			result2.Errors[0].ErrorCode.ShouldEqual("GreaterThanValidator");
 		}
@@ -278,8 +278,8 @@ namespace FluentValidation.Tests {
 				RuleFor(x => x.ProductName).MustAsync(BeOneOfTheChildrensEmailAddress(person));
 			}
 
-			private Func<string, CancellationToken, Task<bool>> BeOneOfTheChildrensEmailAddress(Person person) {
-				return (productName, cancel) => Task.FromResult(person.Children.Any(child => child.Email == productName));
+			private Func<string, CancellationToken, ValueTask<bool>> BeOneOfTheChildrensEmailAddress(Person person) {
+				return (productName, cancel) => new ValueTask<bool>(Task.FromResult(person.Children.Any(child => child.Email == productName)));
 			}
 		}
 	}

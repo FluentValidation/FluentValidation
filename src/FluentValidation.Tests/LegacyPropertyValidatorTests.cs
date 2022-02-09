@@ -34,7 +34,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Invokes_custom_validator_async() {
+		public async ValueTask Invokes_custom_validator_async() {
 			var validator = new InlineValidator<Person>();
 			validator.RuleFor(x => x.Forename).SetValidator(new LegacyNotNullValidator());
 			var result = await validator.ValidateAsync(new Person());

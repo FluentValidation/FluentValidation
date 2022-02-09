@@ -44,12 +44,12 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task New_Custom_Returns_single_failure_async() {
+		public async ValueTask New_Custom_Returns_single_failure_async() {
 			validator
 				.RuleFor(x => x)
 				.CustomAsync((x, context, cancel) => {
 					context.AddFailure("Surname", "Fail");
-					return Task.CompletedTask;
+					return new ValueTask(Task.CompletedTask);
 				});
 
 			var result = await validator.ValidateAsync(new Person());
@@ -90,20 +90,20 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task New_CustomAsync_within_ruleset() {
+		public async ValueTask New_CustomAsync_within_ruleset() {
 			var validator = new InlineValidator<Person>();
 
 			validator.RuleSet("foo", () => {
 				validator.RuleFor(x => x).CustomAsync((x, ctx,cancel) => {
 					ctx.AddFailure("x", "y");
-					return Task.CompletedTask;
+					return new ValueTask(Task.CompletedTask);
 				});
 			});
 
 			validator.RuleSet("bar", () => {
 				validator.RuleFor(x => x).CustomAsync((x, ctx,cancel) => {
 					ctx.AddFailure("x", "y");
-					return Task.CompletedTask;
+					return new ValueTask(Task.CompletedTask);
 				});
 			});
 
@@ -147,14 +147,14 @@ namespace FluentValidation.Tests {
 		public void Runs_async_rule_synchronously_when_validator_invoked_synchronously() {
 			validator.RuleFor(x => x.Forename).CustomAsync((x, context, cancel) => {
 				context.AddFailure("foo");
-				return Task.CompletedTask;
+				return new ValueTask(Task.CompletedTask);
 			});
 			var result = validator.Validate(new Person());
 			result.Errors.Count.ShouldEqual(1);
 		}
 
 		[Fact]
-		public async void Runs_sync_rule_asynchronously_when_validator_invoked_asynchronously() {
+		public async ValueTask Runs_sync_rule_asynchronously_when_validator_invoked_asynchronously() {
 			validator.RuleFor(x => x.Forename).Custom((x, context) => context.AddFailure("foo"));
 			var result = await validator.ValidateAsync(new Person());
 			result.Errors.Count.ShouldEqual(1);
@@ -184,11 +184,11 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Allows_conditions_async() {
+		public async ValueTask Allows_conditions_async() {
 			validator.RuleFor(x => x.Forename).CustomAsync((name, ctx, ct) => {
 				ctx.AddFailure("foo");
-				return Task.CompletedTask;
-			}).WhenAsync((x, ct) => Task.FromResult(x.Age < 18));
+				return new ValueTask(Task.CompletedTask);
+			}).WhenAsync((x, ct) => new ValueTask<bool>(Task.FromResult(x.Age < 18)));
 
 			var result = await validator.ValidateAsync(new Person() {Age = 17});
 			result.IsValid.ShouldBeFalse();

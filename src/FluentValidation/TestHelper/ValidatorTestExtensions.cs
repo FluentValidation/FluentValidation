@@ -76,7 +76,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		[Obsolete("This method is deprecated and will be removed in version 11. Use the TestValidateAsync method instead. See https://docs.fluentvalidation.net/en/latest/testing.html")]
-		public static async Task<IEnumerable<ValidationFailure>> ShouldHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator,
+		public static async ValueTask<IEnumerable<ValidationFailure>> ShouldHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, CancellationToken cancellationToken = default, string ruleSet = null) where T : class, new() {
 			var instanceToValidate = new T();
 
@@ -88,14 +88,14 @@ namespace FluentValidation.TestHelper {
 		}
 
 		[Obsolete("This method is deprecated and will be removed in version 11. Use the TestValidateAsync method instead. See https://docs.fluentvalidation.net/en/latest/testing.html")]
-		public static async Task<IEnumerable<ValidationFailure>> ShouldHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) {
+		public static async ValueTask<IEnumerable<ValidationFailure>> ShouldHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) {
 			var value = expression.Compile()(objectToTest);
 			var testValidationResult = await validator.TestValidateAsync(objectToTest, cancellationToken, ruleSet);
 			return testValidationResult.ShouldHaveValidationErrorFor(expression);
 		}
 
 		[Obsolete("This method is deprecated and will be removed in version 11. Use the TestValidateAsync method instead. See https://docs.fluentvalidation.net/en/latest/testing.html")]
-		public static async Task ShouldNotHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator,
+		public static async ValueTask ShouldNotHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator,
 			Expression<Func<T, TValue>> expression, TValue value, CancellationToken cancellationToken = default, string ruleSet = null) where T : class, new() {
 
 			var instanceToValidate = new T();
@@ -108,7 +108,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		[Obsolete("This method is deprecated and will be removed in version 11. Use the TestValidateAsync method instead. See https://docs.fluentvalidation.net/en/latest/testing.html")]
-		public static async Task ShouldNotHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) {
+		public static async ValueTask ShouldNotHaveValidationErrorForAsync<T, TValue>(this IValidator<T> validator, Expression<Func<T, TValue>> expression, T objectToTest, CancellationToken cancellationToken = default, string ruleSet = null) {
 			var testValidationResult = await validator.TestValidateAsync(objectToTest, cancellationToken, ruleSet);
 			testValidationResult.ShouldNotHaveValidationErrorFor(expression);
 		}
@@ -170,7 +170,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		[Obsolete("Use the overload that takes an Action<ValidationStrategy> instead, which allows the ruleset to be specified inside the delegate.")]
-		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, CancellationToken cancellationToken, string ruleSet) {
+		public static async ValueTask<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, CancellationToken cancellationToken, string ruleSet) {
 			return await validator.TestValidateAsync(objectToTest, options => {
 				if (ruleSet != null) {
 					options.IncludeRuleSets(RulesetValidatorSelector.LegacyRulesetSplit(ruleSet));
@@ -190,7 +190,7 @@ namespace FluentValidation.TestHelper {
 		/// <summary>
 		/// Performs async validation, returning a TestValidationResult which allows assertions to be performed.
 		/// </summary>
-		public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) {
+		public static async ValueTask<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) {
 			options ??= _ => { };
 			var validationResult = await validator.ValidateAsync(objectToTest, options, cancellationToken);
 			return new TestValidationResult<T>(validationResult);

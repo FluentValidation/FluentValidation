@@ -139,15 +139,15 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void MustAsync_should_create_AsyncPredicateValidator_with_PropertyValidatorContext() {
+		public async ValueTask MustAsync_should_create_AsyncPredicateValidator_with_PropertyValidatorContext() {
 			var hasPropertyValidatorContext = false;
 			this.validator.RuleFor(x => x.Surname).MustAsync(async (x, val, ctx, cancel) => {
 				hasPropertyValidatorContext = ctx != null;
 				return true;
 			});
-			this.validator.ValidateAsync(new Person {
+			await this.validator.ValidateAsync(new Person {
 				Surname = "Surname"
-			}).Wait();
+			});
 			this.AssertValidator<AsyncPredicateValidator<Person,string>>();
 			hasPropertyValidatorContext.ShouldBeTrue();
 		}
@@ -225,7 +225,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task MustAsync_should_not_throw_InvalidCastException() {
+		public async ValueTask MustAsync_should_not_throw_InvalidCastException() {
 			var model = new Model {
 				Ids = new Guid[0]
 			};
@@ -247,7 +247,7 @@ namespace FluentValidation.Tests {
 		class AsyncModelTestValidator : AbstractValidator<Model> {
 			public AsyncModelTestValidator() {
 				RuleForEach(m => m.Ids)
-					.MustAsync((g, cancel) => Task.FromResult(true));
+					.MustAsync((g, cancel) => new ValueTask<bool>(Task.FromResult(true)));
 			}
 		}
 	}

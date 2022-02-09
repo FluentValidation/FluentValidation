@@ -36,7 +36,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Throws_exception_async() {
+		public async ValueTask Throws_exception_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
@@ -47,7 +47,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Throws_exception_with_a_ruleset_async() {
+		public async ValueTask Throws_exception_with_a_ruleset_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
@@ -86,7 +86,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Does_not_throw_when_valid_async() {
+		public async ValueTask Does_not_throw_when_valid_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
@@ -95,7 +95,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Does_not_throw_when_valid_and_a_ruleset_async() {
+		public async ValueTask Does_not_throw_when_valid_and_a_ruleset_async() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull()
 			};
@@ -218,7 +218,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Throws_exception_when_preValidate_fails_and_continueValidation_true_async() {
+		public async ValueTask Throws_exception_when_preValidate_fails_and_continueValidation_true_async() {
 			var validator = new TestValidatorWithPreValidate {
 				PreValidateMethod = (context, result) => {
 					result.Errors.Add(new ValidationFailure("test", "test"));
@@ -232,7 +232,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Throws_exception_when_preValidate_fails_and_continueValidation_false_async() {
+		public async ValueTask Throws_exception_when_preValidate_fails_and_continueValidation_false_async() {
 			var validator = new TestValidatorWithPreValidate {
 				PreValidateMethod = (context, result) => {
 					result.Errors.Add(new ValidationFailure("test", "test"));
@@ -246,7 +246,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Does_not_throws_exception_when_preValidate_ends_with_continueValidation_false_async() {
+		public async ValueTask Does_not_throws_exception_when_preValidate_ends_with_continueValidation_false_async() {
 			var validator = new TestValidatorWithPreValidate {
 				PreValidateMethod = (context, result) => false
 			};

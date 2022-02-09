@@ -48,7 +48,7 @@ namespace FluentValidation {
 		/// <param name="options">Callback to configure additional options</param>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		public static Task<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, Action<ValidationStrategy<T>> options, CancellationToken cancellation = default) {
+		public static ValueTask<ValidationResult> ValidateAsync<T>(this IValidator<T> validator, T instance, Action<ValidationStrategy<T>> options, CancellationToken cancellation = default) {
 			return validator.ValidateAsync(ValidationContext<T>.CreateWithOptions(instance, options), cancellation);
 		}
 
@@ -71,7 +71,7 @@ namespace FluentValidation {
 		/// <param name="validator">The validator this method is extending.</param>
 		/// <param name="instance">The instance of the type we are validating.</param>
 		/// <param name="cancellationToken"></param>
-		public static async Task ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance, CancellationToken cancellationToken = default) {
+		public static async ValueTask ValidateAndThrowAsync<T>(this IValidator<T> validator, T instance, CancellationToken cancellationToken = default) {
 			await validator.ValidateAsync(instance, options => {
 				options.ThrowOnFailures();
 			}, cancellationToken);

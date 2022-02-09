@@ -94,13 +94,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Overrides_indexer_async() {
+		public async ValueTask Overrides_indexer_async() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames)
 					.OverrideIndexer((x, collection, element, index) => {
 						return "<" + index + ">";
 					})
-					.MustAsync((x, elem, ct) => Task.FromResult(elem != null))
+					.MustAsync((x, elem, ct) => new ValueTask<bool>(Task.FromResult(elem != null)))
 			};
 
 			var person = new Person {
@@ -113,7 +113,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Executes_rule_for_each_item_in_collection_async() {
+		public async ValueTask Executes_rule_for_each_item_in_collection_async() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).SetAsyncValidator(new MyAsyncNotNullValidator<Person,string>())
 			};
@@ -127,7 +127,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Correctly_gets_collection_indices_async() {
+		public async ValueTask Correctly_gets_collection_indices_async() {
 			var validator = new TestValidator {
 				v => v.RuleForEach(x => x.NickNames).SetAsyncValidator(new MyAsyncNotNullValidator<Person,string>())
 			};
@@ -148,8 +148,8 @@ namespace FluentValidation.Tests {
 		private class MyAsyncNotNullValidator<T,TProperty> : IAsyncPropertyValidator<T,TProperty> {
 			private IPropertyValidator<T, TProperty> _inner = new NotNullValidator<T, TProperty>();
 
-			public Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
-				return Task.FromResult(_inner.IsValid(context, value));
+			public ValueTask<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+				return new ValueTask<bool>(Task.FromResult(_inner.IsValid(context, value)));
 			}
 
 			public string Name => _inner.Name;
@@ -174,7 +174,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Should_not_scramble_property_name_when_using_collection_validators_several_levels_deep_with_ValidateAsync() {
+		public async ValueTask Should_not_scramble_property_name_when_using_collection_validators_several_levels_deep_with_ValidateAsync() {
 			var v = new ApplicationViewModelValidator();
 			var result = await v.ValidateAsync(new ApplicationViewModel());
 
@@ -199,15 +199,15 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task RuleForEach_async_RunsTasksSynchronously() {
+		public async ValueTask RuleForEach_async_RunsTasksSynchronously() {
 			var validator = new InlineValidator<Person>();
 			var result = new List<bool>();
 
-			validator.RuleForEach(x => x.Children).MustAsync(async (person, token) =>
-				await ExclusiveDelay(1)
-					.ContinueWith(t => result.Add(t.Result), token)
-					.ContinueWith(t => true, token)
-			);
+			validator.RuleForEach(x => x.Children).MustAsync(async (person, token) => {
+				bool value = await ExclusiveDelay(1);
+				result.Add(value);
+				return true;
+			});
 
 			await validator.ValidateAsync(new Person() {
 				Children = new List<Person> {new Person(), new Person() }
@@ -300,7 +300,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Resets_state_correctly_between_rules_async() {
+		public async ValueTask Resets_state_correctly_between_rules_async() {
 			var v = new InlineValidator<Person>();
 			v.RuleForEach(x => x.NickNames).NotNull();
 			v.RuleFor(x => x.Forename).NotNull();
@@ -382,7 +382,7 @@ namespace FluentValidation.Tests {
 			}
 		}
 
-		private async Task<bool> ExclusiveDelay(int milliseconds) {
+		private async ValueTask<bool> ExclusiveDelay(int milliseconds) {
 			lock (_lock) {
 				if (_counter != 0) return false;
 				_counter += 1;
@@ -455,9 +455,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-	    public async Task Async_condition_should_work_with_child_collection() {
+	    public async ValueTask Async_condition_should_work_with_child_collection() {
 	        var validator = new TestValidator() {
-	                                                v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator()).WhenAsync( (x,c) => Task.FromResult(x.Orders.Count == 3) /*there are only 2*/)
+	                                                v => v.RuleForEach(x => x.Orders).SetValidator(new OrderValidator()).WhenAsync( (x,c) => new ValueTask<bool>(Task.FromResult(x.Orders.Count == 3)) /*there are only 2*/)
 	                                            };
 
 	        var result = await validator.ValidateAsync(_person);
@@ -536,7 +536,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validates_child_validator_asynchronously() {
+		public async ValueTask Validates_child_validator_asynchronously() {
 			var validator = new ComplexValidationTester.TracksAsyncCallValidator<Person>();
 			var childValidator = new ComplexValidationTester.TracksAsyncCallValidator<Person>();
 			childValidator.RuleFor(x => x.Forename).NotNull();
@@ -556,9 +556,9 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Can_access_colletion_index_async() {
+		public async ValueTask Can_access_colletion_index_async() {
 			var validator = new InlineValidator<Person>();
-			validator.RuleForEach(x => x.Orders).MustAsync((x, ct) => Task.FromResult(x != null)).WithMessage("{CollectionIndex}");
+			validator.RuleForEach(x => x.Orders).MustAsync((x, ct) => new ValueTask<bool>(Task.FromResult(x != null))).WithMessage("{CollectionIndex}");
 			var result = await validator.ValidateAsync(new Person {Orders = new List<Order>() {new Order(), null}});
 			result.IsValid.ShouldBeFalse();
 			result.Errors[0].ErrorMessage.ShouldEqual("1");
@@ -579,11 +579,11 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task When_runs_outside_RuleForEach_loop_async() {
+		public async ValueTask When_runs_outside_RuleForEach_loop_async() {
 			// Shouldn't throw an exception if the condition is run outside the loop.
 			var validator = new InlineValidator<Tuple<Person>>();
 			validator.RuleForEach(x => x.Item1.Orders)
-				.MustAsync((x,c) => Task.FromResult(false))
+				.MustAsync((x,c) => new ValueTask<bool>(Task.FromResult(false)))
 				.When(x => x.Item1 != null);
 
 			var result =	await validator.ValidateAsync(Tuple.Create((Person) null));
@@ -626,7 +626,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Can_access_parent_index_async() {
+		public async ValueTask Can_access_parent_index_async() {
 			var personValidator = new InlineValidator<Person>();
 			var orderValidator = new InlineValidator<Order>();
 
@@ -672,13 +672,13 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Failing_condition_should_prevent_multiple_components_running_and_not_throw_async() {
+		public async ValueTask Failing_condition_should_prevent_multiple_components_running_and_not_throw_async() {
 			// https://github.com/FluentValidation/FluentValidation/issues/1698
 			var validator = new InlineValidator<Person>();
 
 			validator.RuleForEach(x => x.Orders)
-				.MustAsync((o, ct) => Task.FromResult(o != null))
-				.MustAsync((o, ct) => Task.FromResult(o != null))
+				.MustAsync((o, ct) => new ValueTask<bool>(Task.FromResult(o != null)))
+				.MustAsync((o, ct) => new ValueTask<bool>(Task.FromResult(o != null)))
 				.When(x => x.Orders.Count > 0);
 
 			var result = await validator.ValidateAsync(new Person());

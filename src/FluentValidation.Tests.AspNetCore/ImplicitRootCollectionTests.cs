@@ -1,5 +1,6 @@
 namespace FluentValidation.Tests {
 	using System.Net.Http;
+	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
 	using FluentValidation.AspNetCore;
@@ -24,7 +25,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Does_not_implicitly_run_root_collection_element_validator_when_disabled() {
+		public async ValueTask Does_not_implicitly_run_root_collection_element_validator_when_disabled() {
 			var client = CreateClient(false);
 			var result = await client.GetErrorsViaJSON(
 				nameof(TestController.ImplicitRootCollectionElementValidator),
@@ -34,7 +35,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Does_not_implicitly_run_child_validator_when_root_collection_element_validation_enabled() {
+		public async ValueTask Does_not_implicitly_run_child_validator_when_root_collection_element_validation_enabled() {
 			var client = CreateClient(true);
 			var result = await client.GetErrorsViaJSON(
 				nameof(TestController.ImplicitRootCollectionElementValidationEnabled),
@@ -44,7 +45,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async void Executes_implicit_root_collection_element_validator_when_enabled() {
+		public async ValueTask Executes_implicit_root_collection_element_validator_when_enabled() {
 			var client = CreateClient(true);
 			var result = await client.GetErrorsViaJSON(
 				nameof(TestController.ImplicitRootCollectionElementValidator),

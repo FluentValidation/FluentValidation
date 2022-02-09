@@ -1,6 +1,7 @@
 ﻿namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Net.Http;
+	using System.Threading.Tasks;
 	using AspNetCore;
 	using AspNetCore.Controllers;
 	using FluentValidation.AspNetCore;
@@ -26,7 +27,7 @@
 		}
 
 		[Fact]
-		public async void Validates_with_BindProperty_attribute_when_implicit_validation_disabled() {
+		public async ValueTask Validates_with_BindProperty_attribute_when_implicit_validation_disabled() {
 			var form = new FormData {
 				{"Name", null},
 			};
@@ -38,7 +39,7 @@
 		}
 
 		[Fact]
-		public async void Validates_with_BindProperty_attribute_when_implicit_validation_disabled_using_prefix() {
+		public async ValueTask Validates_with_BindProperty_attribute_when_implicit_validation_disabled_using_prefix() {
 			var form = new FormData {
 				{"Test.Name", null},
 			};
@@ -51,7 +52,7 @@
 
 #if NETCOREAPP3_1 || NET5_0
 		[Fact]
-		public async void Should_only_validate_specified_ruleset() {
+		public async ValueTask Should_only_validate_specified_ruleset() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},
@@ -87,7 +88,7 @@
 		}
 
 		[Fact]
-		public async void Validates_with_BindProperty_attribute_when_implicit_validation_enabled() {
+		public async ValueTask Validates_with_BindProperty_attribute_when_implicit_validation_enabled() {
 			var form = new FormData {
 				{"Name", null},
 			};
@@ -99,7 +100,7 @@
 		}
 
 		[Fact]
-		public async void Validates_with_BindProperty_attribute_when_implicit_validation_disabled_using_prefix() {
+		public async ValueTask Validates_with_BindProperty_attribute_when_implicit_validation_disabled_using_prefix() {
 			var form = new FormData {
 				{"Test.Name", null},
 			};
@@ -112,7 +113,7 @@
 
 #if NETCOREAPP3_1 || NET5_0
 		[Fact]
-		public async void Should_only_validate_specified_ruleset() {
+		public async ValueTask Should_only_validate_specified_ruleset() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},

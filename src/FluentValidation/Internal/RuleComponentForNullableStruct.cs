@@ -57,7 +57,7 @@ namespace FluentValidation.Internal {
 			return _propertyValidator.IsValid(context, value.Value);
 		}
 
-		internal override async Task<bool> ValidateAsync(ValidationContext<T> context, TProperty? value, CancellationToken cancellation) {
+		internal override async ValueTask<bool> ValidateAsync(ValidationContext<T> context, TProperty? value, CancellationToken cancellation) {
 			if (!value.HasValue) return true;
 			return await _asyncPropertyValidator.IsValidAsync(context, value.Value, cancellation);
 		}

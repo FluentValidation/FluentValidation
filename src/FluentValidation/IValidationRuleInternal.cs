@@ -25,7 +25,7 @@ namespace FluentValidation {
 	internal interface IValidationRuleInternal<T> : IValidationRule<T> {
 		void Validate(ValidationContext<T> context);
 
-		Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
+		ValueTask ValidateAsync(ValidationContext<T> context, CancellationToken cancellation);
 
 		void AddDependentRules(IEnumerable<IValidationRuleInternal<T>> rules);
 	}

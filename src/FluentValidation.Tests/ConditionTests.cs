@@ -32,7 +32,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validation_should_succeed_when_async_condition_does_not_match() {
+		public async ValueTask Validation_should_succeed_when_async_condition_does_not_match() {
 			var validator = new TestConditionAsyncValidator();
 			var result = await validator.ValidateAsync(new Person {Id = 1});
             result.IsValid.ShouldBeTrue();
@@ -46,7 +46,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validation_should_fail_when_async_condition_matches() {
+		public async ValueTask Validation_should_fail_when_async_condition_matches() {
 			var validator = new TestConditionAsyncValidator();
 			var result = await validator.ValidateAsync(new Person());
 			result.IsValid.ShouldBeFalse();
@@ -60,7 +60,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validation_should_succeed_when_async_condition_matches() {
+		public async ValueTask Validation_should_succeed_when_async_condition_matches() {
 			var validator = new InverseConditionAsyncValidator();
 			var result = await validator.ValidateAsync(new Person());
 			result.IsValid.ShouldBeTrue();
@@ -74,7 +74,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Validation_should_fail_when_async_condition_does_not_match() {
+		public async ValueTask Validation_should_fail_when_async_condition_does_not_match() {
 			var validator = new InverseConditionAsyncValidator();
 			var result = await validator.ValidateAsync(new Person {Id = 1});
 			result.IsValid.ShouldBeFalse();
@@ -91,7 +91,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Async_condition_is_applied_to_all_validators_in_the_chain() {
+		public async ValueTask Async_condition_is_applied_to_all_validators_in_the_chain() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(async (x,c) => x.Id > 0)
 			};
@@ -111,7 +111,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Sync_condition_is_applied_to_async_validators() {
+		public async ValueTask Sync_condition_is_applied_to_async_validators() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname)
 					.MustAsync(async (val, token) => val != null)
@@ -134,7 +134,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public async Task Async_condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
+		public async ValueTask Async_condition_is_applied_to_single_validator_in_the_chain_when_ApplyConditionTo_set_to_CurrentValidator() {
 			var validator = new TestValidator {
 				v => v.RuleFor(x => x.Surname).NotNull().NotEqual("foo").WhenAsync(async (x,c) => x.Id > 0, ApplyConditionTo.CurrentValidator)
 			};
@@ -147,7 +147,7 @@ namespace FluentValidation.Tests {
 		public void Async_condition_executed_synchronosuly_with_synchronous_role() {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname).NotNull()
-				.WhenAsync((x, token) => Task.FromResult(false));
+				.WhenAsync((x, token) => new ValueTask<bool>(Task.FromResult(false)));
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
@@ -156,8 +156,8 @@ namespace FluentValidation.Tests {
 		public void Async_condition_executed_synchronosuly_with_asynchronous_rule() {
 			var validator = new TestValidator();
 			validator.RuleFor(x => x.Surname)
-				.MustAsync((surname, c) => Task.FromResult(surname != null))
-				.WhenAsync((x, token) => Task.FromResult(false));
+				.MustAsync((surname, c) => new ValueTask<bool>(Task.FromResult(surname != null)))
+				.WhenAsync((x, token) => new ValueTask<bool>(Task.FromResult(false)));
 			var result = validator.Validate(new Person());
 			result.IsValid.ShouldBeTrue();
 		}
@@ -166,7 +166,7 @@ namespace FluentValidation.Tests {
 		public void Async_condition_executed_synchronosuly_with_synchronous_collection_role() {
 			var validator = new TestValidator();
 			validator.RuleForEach(x => x.NickNames).NotNull()
-				.WhenAsync((x, token) => Task.FromResult(false));
+				.WhenAsync((x, token) => new ValueTask<bool>(Task.FromResult(false)));
 			var result = validator.Validate(new Person { NickNames = new string[0] });
 			result.IsValid.ShouldBeTrue();
 		}
@@ -175,8 +175,8 @@ namespace FluentValidation.Tests {
 		public void Async_condition_executed_synchronosuly_with_asynchronous_collection_rule() {
 			var validator = new TestValidator();
 			validator.RuleForEach(x => x.NickNames)
-				.MustAsync((n, c) => Task.FromResult(n != null))
-				.WhenAsync((x, token) => Task.FromResult(false));
+				.MustAsync((n, c) => new ValueTask<bool>(Task.FromResult(n != null)))
+				.WhenAsync((x, token) => new ValueTask<bool>(Task.FromResult(false)));
 			var result = validator.Validate(new Person { NickNames = new string[0]});
 			result.IsValid.ShouldBeTrue();
 		}

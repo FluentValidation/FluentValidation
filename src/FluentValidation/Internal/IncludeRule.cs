@@ -60,7 +60,7 @@ namespace FluentValidation.Internal {
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
 		}
 
-		public override async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
+		public override async ValueTask ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
 			await base.ValidateAsync(context, cancellation);
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);

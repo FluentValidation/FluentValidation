@@ -36,7 +36,7 @@ namespace FluentValidation.Validators {
 		protected virtual string GetDefaultMessageTemplate(string errorCode) => "No default error message has been specified";
 
 		/// <inheritdoc />
-		public abstract Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
+		public abstract ValueTask<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
 
 		/// <summary>
 		/// Retrieves a localized string from the LanguageManager.

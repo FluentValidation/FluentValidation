@@ -44,7 +44,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Should_add_all_errors_in_one_go() {
+		public async ValueTask Should_add_all_errors_in_one_go() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},
@@ -62,7 +62,7 @@ namespace FluentValidation.Tests.AspNetCore {
 
 
 		[Fact]
-		public async Task Should_add_all_errors_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
+		public async ValueTask Should_add_all_errors_in_one_go_when_NotEmpty_rule_specified_for_non_nullable_value_type() {
 			var form = new FormData {
 				{"SomeBool", "False"},
 				{"Id", "0"}
@@ -74,7 +74,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task When_a_validation_error_occurs_the_error_should_be_added_to_modelstate() {
+		public async ValueTask When_a_validation_error_occurs_the_error_should_be_added_to_modelstate() {
 			var form = new FormData {
 				{"test.Name", null}
 			};
@@ -86,7 +86,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task When_a_validation_error_occurs_the_error_should_be_added_to_modelstate_using_TryUpdateModel() {
+		public async ValueTask When_a_validation_error_occurs_the_error_should_be_added_to_modelstate_using_TryUpdateModel() {
 			var form = new FormData {
 				{"test.Name", null}
 			};
@@ -98,7 +98,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task When_a_validation_error_occurs_the_error_should_be_added_to_Modelstate_without_prefix() {
+		public async ValueTask When_a_validation_error_occurs_the_error_should_be_added_to_Modelstate_without_prefix() {
 			var form = new FormData {
 				{"Name", null}
 			};
@@ -108,13 +108,13 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Should_not_fail_when_no_validator_can_be_found() {
+		public async ValueTask Should_not_fail_when_no_validator_can_be_found() {
 			var result = await _client.PostResponse("/Test/Test2", new FormData());
 			result.ShouldEqual("not null");
 		}
 
 		[Fact]
-		public async Task Should_not_add_default_message_to_modelstate() {
+		public async ValueTask Should_not_add_default_message_to_modelstate() {
 			var form = new FormData {
 				{"Id", ""}
 			};
@@ -125,7 +125,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Should_not_add_default_message_to_modelstate_prefix() {
+		public async ValueTask Should_not_add_default_message_to_modelstate_prefix() {
 			var form = new FormData {
 				{"test.Id", ""}
 			};
@@ -137,7 +137,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Should_not_add_default_message_to_modelstate_not_specified() {
+		public async ValueTask Should_not_add_default_message_to_modelstate_not_specified() {
 			var form = new FormData {
 			};
 
@@ -147,7 +147,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
+		public async ValueTask Should_add_default_message_to_modelstate_when_there_is_no_required_validator_explicitly_specified() {
 			var form = new FormData {
 				{"Id", ""}
 			};
@@ -157,7 +157,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Should_add_Default_message_to_modelstate_when_no_validator_specified() {
+		public async ValueTask Should_add_Default_message_to_modelstate_when_no_validator_specified() {
 			var form = new FormData {
 				{"Id", ""}
 			};
@@ -167,7 +167,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Allows_override_of_required_message_for_non_nullable_value_types() {
+		public async ValueTask Allows_override_of_required_message_for_non_nullable_value_types() {
 			var form = new FormData {
 				{"Id", ""}
 			};
@@ -177,7 +177,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Allows_override_of_required_property_name_for_non_nullable_value_types() {
+		public async ValueTask Allows_override_of_required_property_name_for_non_nullable_value_types() {
 			var form = new FormData {
 				{"Id", ""}
 			};
@@ -186,7 +186,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Should_only_validate_specified_ruleset() {
+		public async ValueTask Should_only_validate_specified_ruleset() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},
@@ -200,7 +200,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Should_only_validate_specified_properties() {
+		public async ValueTask Should_only_validate_specified_properties() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},
@@ -215,7 +215,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task When_interceptor_specified_Intercepts_validation() {
+		public async ValueTask When_interceptor_specified_Intercepts_validation() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},
@@ -229,7 +229,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task When_interceptor_specified_Intercepts_validation_provides_custom_errors() {
+		public async ValueTask When_interceptor_specified_Intercepts_validation_provides_custom_errors() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},
@@ -242,7 +242,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked() {
+		public async ValueTask When_validator_implements_IValidatorInterceptor_directly_interceptor_invoked() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},
@@ -255,7 +255,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Validator_customizations_should_only_apply_to_single_parameter() {
+		public async ValueTask Validator_customizations_should_only_apply_to_single_parameter() {
 			var form = new FormData {
 				{"first.Email", "foo"},
 				{"first.Surname", "foo"},
@@ -275,7 +275,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Returns_multiple_errors_for_same_property() {
+		public async ValueTask Returns_multiple_errors_for_same_property() {
 			var form = new FormData() {
 				{"model.Name", "baz"}
 			};
@@ -286,66 +286,66 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Uses_both_dataannotations_and_fv_in_same_model() {
+		public async ValueTask Uses_both_dataannotations_and_fv_in_same_model() {
 			var result = await _client.GetErrors("MultipleValidationStrategies", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result));
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact]
-		public async Task Uses_both_dataannotations_and_fv_on_same_property() {
+		public async ValueTask Uses_both_dataannotations_and_fv_on_same_property() {
 			var result = await _client.GetErrors("MultipleValidationStrategies2", new FormData());
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact]
-		public async void Mixes_DataAnnotations_with_FV_on_explicitly_set_child_validator() {
+		public async ValueTask Mixes_DataAnnotations_with_FV_on_explicitly_set_child_validator() {
 			var result = await _client.GetErrors("MultipleValidationStrategies3", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result));
 			result.Count.ShouldEqual(3);
 		}
 
 		[Fact]
-		public async Task Uses_DataAnnotations_when_no_FV_validatior_defined() {
+		public async ValueTask Uses_DataAnnotations_when_no_FV_validatior_defined() {
 			var result = await _client.GetErrors("DataAnnotations", new FormData());
 			result.Count.ShouldEqual(1);
 			result[0].Message.ShouldEqual("The Name field is required.");
 		}
 
 		[Fact]
-		public async void Can_mix_FV_with_IValidatableObject() {
+		public async ValueTask Can_mix_FV_with_IValidatableObject() {
 			var result = await _client.GetErrors("ImplementsIValidatableObject", new FormData());
 			_output.WriteLine(JsonConvert.SerializeObject(result, Formatting.Indented));
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact]
-		public async void Can_validate_using_JSON() {
+		public async ValueTask Can_validate_using_JSON() {
 			var result = await _client.GetErrorsViaJSON("Test5", new TestModel5());
 			result.IsValidField("SomeBool").ShouldBeFalse();
 			result.Count.ShouldEqual(2);
 		}
 
 		[Fact]
-		public async Task Skips_validation() {
+		public async ValueTask Skips_validation() {
 			var results = await _client.GetErrors("SkipsValidation", new FormData());
 			results.Count.ShouldEqual(0);
 		}
 
 		[Fact]
-		public async void Does_not_implicitly_validate_child_collections_by_default() {
+		public async ValueTask Does_not_implicitly_validate_child_collections_by_default() {
 			var result = await _client.GetErrorsViaJSONRaw("ImplicitChildCollection", @"{ Children: [ { Name: null } ] }");
 			result.Count.ShouldEqual(0);
 		}
 
 		[Fact]
-		public async void Does_implicitly_validate_child_collections_by_default_with_DataAnnotations() {
+		public async ValueTask Does_implicitly_validate_child_collections_by_default_with_DataAnnotations() {
 			var result = await _client.GetErrorsViaJSONRaw("ImplicitChildCollectionDataAnnotations", @"{ Children: [ { Name: null } ] }");
 			result.Count.ShouldEqual(1);
 		}
 
 		[Fact]
-		public async void When_skipping_children_does_not_leave_validation_state_unvalidated() {
+		public async ValueTask When_skipping_children_does_not_leave_validation_state_unvalidated() {
 			string json = @"{ Children: [ { Name: null } ] }";
 
 			var request = new HttpRequestMessage(HttpMethod.Post, $"/Test/CheckUnvalidated");
@@ -357,7 +357,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Validation_invoked_with_ApiController() {
+		public async ValueTask Validation_invoked_with_ApiController() {
 			string json = @"{ Name: null }";
 			var response = await _client.PostAsync("/ApiTest", new StringContent(json, Encoding.UTF8, "application/json"));
 			var responseJson = await response.Content.ReadAsStringAsync();
@@ -369,7 +369,7 @@ namespace FluentValidation.Tests.AspNetCore {
 
 
 		[Fact]
-		public async Task When_calling_AddFluentValidation_prior_to_AddMvc_doesnot_break() {
+		public async ValueTask When_calling_AddFluentValidation_prior_to_AddMvc_doesnot_break() {
 			var form = new FormData {
 				{"Email", "foo"},
 				{"Surname", "foo"},

@@ -98,7 +98,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_when_async_predicate_is_null() {
-			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WhenAsync((Func<Person, CancellationToken, Task<bool>>) null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).WhenAsync((Func<Person, CancellationToken, ValueTask<bool>>) null));
 		}
 
 		[Fact]
@@ -113,7 +113,7 @@ namespace FluentValidation.Tests {
 
 		[Fact]
 		public void Should_throw_when_async_inverse_predicate_is_null() {
-			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).UnlessAsync((Func<Person, CancellationToken, Task<bool>>) null));
+			Assert.Throws<ArgumentNullException>(() => builder.SetValidator(new TestPropertyValidator<Person, string>()).UnlessAsync((Func<Person, CancellationToken, ValueTask<bool>>) null));
 		}
 
 		[Fact]
@@ -143,7 +143,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Nullable_object_with_async_condition_should_not_throw() {
 			_validator.RuleFor(x => x.NullableInt.Value)
-				.GreaterThanOrEqualTo(3).WhenAsync((x,c) => Task.FromResult(x.NullableInt != null));
+				.GreaterThanOrEqualTo(3).WhenAsync((x,c) => new ValueTask<bool>(Task.FromResult(x.NullableInt != null)));
 			_validator.Validate(new ValidationContext<Person>(new Person(), new PropertyChain(), new DefaultValidatorSelector()));
 		}
 

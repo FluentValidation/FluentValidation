@@ -32,7 +32,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Disables_automatic_validation() {
+		public async ValueTask Disables_automatic_validation() {
 			var client = _webApp.CreateClientWithServices(services => {
 				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
@@ -47,7 +47,7 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
-		public async Task Disables_automatic_validation_for_implicit_validation() {
+		public async ValueTask Disables_automatic_validation_for_implicit_validation() {
 			var client = _webApp.CreateClientWithServices(services => {
 				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 					fv.RegisterValidatorsFromAssemblyContaining<TestController>();

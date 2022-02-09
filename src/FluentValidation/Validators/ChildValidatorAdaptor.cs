@@ -65,7 +65,7 @@ namespace FluentValidation.Validators {
 			return true;
 		}
 
-		public virtual async Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+		public virtual async ValueTask<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
 			if (value == null) {
 				return true;
 			}

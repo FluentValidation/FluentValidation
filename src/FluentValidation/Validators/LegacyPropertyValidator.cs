@@ -44,7 +44,7 @@ namespace FluentValidation.Validators {
 			return _inner.IsValidInternal(pvc);
 		}
 
-		public Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+		public ValueTask<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
 			var pvc = new PropertyValidatorContext(context, context.PropertyName, value, () => context.DisplayName);
 			return _inner.IsValidInternalAsync(pvc, cancellation);
 		}
@@ -63,13 +63,13 @@ namespace FluentValidation.Validators {
 		internal bool IsValidInternal(PropertyValidatorContext context)
 			=> IsValid(context);
 
-		internal Task<bool> IsValidInternalAsync(PropertyValidatorContext context, CancellationToken cancellation)
+		internal ValueTask<bool> IsValidInternalAsync(PropertyValidatorContext context, CancellationToken cancellation)
 			=> IsValidAsync(context, cancellation);
 
 		protected abstract bool IsValid(PropertyValidatorContext context);
 
-		protected virtual Task<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
-			return Task.FromResult(IsValid(context));
+		protected virtual ValueTask<bool> IsValidAsync(PropertyValidatorContext context, CancellationToken cancellation) {
+			return new ValueTask<bool>(Task.FromResult(IsValid(context)));
 		}
 
 		string IPropertyValidator.Name => GetType().Name;

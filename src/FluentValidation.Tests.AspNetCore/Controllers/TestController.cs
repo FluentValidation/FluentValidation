@@ -191,7 +191,7 @@ namespace FluentValidation.Tests.AspNetCore.Controllers {
 			return TestResult();
 		}
 
-		public async Task<ActionResult> UpdateModel() {
+		public async ValueTask<ActionResult> UpdateModel() {
 			var model = new TestModel();
 			await TryUpdateModelAsync(model);
 			return TestResult();

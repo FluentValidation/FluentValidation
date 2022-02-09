@@ -143,7 +143,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="predicate">The condition to apply</param>
 		/// <param name="applyConditionTo">Whether the condition should be applied to the current property validator in the chain, or all preceding property validators in the chain.</param>
-		void ApplyAsyncCondition(Func<ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
+		void ApplyAsyncCondition(Func<ValidationContext<T>, CancellationToken, ValueTask<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators);
 
 		/// <summary>
 		/// Applies a pre-condition to this rule.
@@ -155,7 +155,7 @@ namespace FluentValidation {
 		/// Applies an async pre-condition to this rule.
 		/// </summary>
 		/// <param name="condition"></param>
-		void ApplySharedAsyncCondition(Func<ValidationContext<T>, CancellationToken, Task<bool>> condition);
+		void ApplySharedAsyncCondition(Func<ValidationContext<T>, CancellationToken, ValueTask<bool>> condition);
 
 		/// <summary>
 		/// Gets the property value for this rule. Note that this bypasses all conditions.
