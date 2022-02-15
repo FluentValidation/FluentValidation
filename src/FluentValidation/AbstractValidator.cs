@@ -33,16 +33,119 @@ namespace FluentValidation {
 	/// <typeparam name="T">The type of the object being validated</typeparam>
 	public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
 		internal TrackingCollection<IValidationRuleInternal<T>> Rules { get; } = new();
-		private Func<CascadeMode> _cascadeMode = () => ValidatorOptions.Global.CascadeMode;
+		private Func<CascadeMode> _classLevelCascadeMode = () => ValidatorOptions.Global.DefaultClassLevelCascadeMode;
+		private Func<CascadeMode> _ruleLevelCascadeMode = () => ValidatorOptions.Global.DefaultRuleLevelCascadeMode;
 
+#pragma warning disable 618
 		/// <summary>
-		/// Sets the cascade mode for all rules within this validator.
+		/// <para>
+		/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
+		/// <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>., based on the same logic as used when setting
+		/// this property as described below. 
+		/// </para>
+		/// <para>
+		/// Sets the values of <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>. 
+		/// </para>
+		/// <para>
+		/// If set to <see cref="CascadeMode.Continue"/> or <see cref="CascadeMode.Stop"/>, then both properties are set
+		/// to that value.
+		/// </para>
+		/// <para>
+		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>,
+		/// then <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+		/// is set to <see cref="CascadeMode.Continue"/>, and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
+		/// is set to <see cref="CascadeMode.Stop"/>.
+		/// This results in the same behaviour as before this property was deprecated.
+		/// </para>
 		/// </summary>
+		[Obsolete($"Use {nameof(ClassLevelCascadeMode)} and/or {nameof(RuleLevelCascadeMode)} instead. " +
+			"CascadeMode will be removed in a future release. " +
+			"For more details, see https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode")]
 		public CascadeMode CascadeMode {
-			get => _cascadeMode();
-			set => _cascadeMode = () => value;
+			get {
+				if (ClassLevelCascadeMode == RuleLevelCascadeMode) {
+					return ClassLevelCascadeMode;
+				}
+				else if (ClassLevelCascadeMode == CascadeMode.Continue && RuleLevelCascadeMode == CascadeMode.Stop) {
+					return CascadeMode.StopOnFirstFailure;
+				}
+				else {
+					throw new Exception(
+						$"There is no conversion to a single {nameof(CascadeMode)} value from the current combination of " +
+							$"{nameof(ClassLevelCascadeMode)} and {nameof(RuleLevelCascadeMode)}. " +
+							$"Please use these properties instead of the deprecated {nameof(CascadeMode)} going forward.");
+				}
+			}
+			set {
+				ClassLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+					? CascadeMode.Continue
+					: value;
+
+				RuleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+					? CascadeMode.Stop
+					: value;
+			}
 		}
 
+		/// <summary>
+		/// <para>
+		/// Sets the cascade behaviour <i>in between</i> rules in this validator.
+		/// This overrides the default value set in <see cref="ValidatorConfiguration.DefaultClassLevelCascadeMode"/>.
+		/// </para>
+		/// <para>
+		/// If set to <see cref="CascadeMode.Continue"/> then all rules in the class will execute regardless of failures.
+		/// </para>
+		/// <para>
+		/// If set to <see cref="CascadeMode.Stop"/> then execution of the validator will stop after any rule fails.
+		/// </para>
+		/// <para>
+		/// Note that cascade behaviour <i>within</i> individual rules is controlled by
+		/// <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
+		/// </para>
+		/// <para>
+		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
+		/// <see cref="CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
+		/// result in <see cref="CascadeMode.Stop"/> being used.
+		/// </para>
+		/// </summary>
+		public CascadeMode ClassLevelCascadeMode {
+			get => _classLevelCascadeMode();
+			set => _classLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+				? () => CascadeMode.Stop
+				: () => value;
+		}
+
+		/// <summary>
+		/// <para>
+		/// Sets the default cascade behaviour <i>within</i> each rule in this validator.
+		/// </para>
+		/// <para>
+		/// This overrides the default value set in <see cref="ValidatorConfiguration.DefaultRuleLevelCascadeMode"/>.
+		/// </para>
+		/// <para>
+		/// It can be further overridden for specific rules by calling
+		/// <see cref="DefaultValidatorOptions.Cascade{T, TProperty}(IRuleBuilderInitial{T, TProperty}, CascadeMode)"/>.
+		/// <seealso cref="RuleBase{T, TProperty, TValue}.CascadeMode"/>.
+		/// </para>
+		/// <para>
+		/// Note that cascade behaviour <i>between</i> rules is controlled by <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>.
+		/// </para>
+		/// <para>
+		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
+		/// <see cref="CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
+		/// result in <see cref="CascadeMode.Stop"/> being used.
+		/// </para>
+		/// </summary>
+		public CascadeMode RuleLevelCascadeMode {
+			get => _ruleLevelCascadeMode();
+			set => _ruleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+				? () => CascadeMode.Stop
+				: () => value;
+		}
+
+#pragma warning restore 618
 		ValidationResult IValidator.Validate(IValidationContext context) {
 			context.Guard("Cannot pass null to Validate", nameof(context));
 			return Validate(ValidationContext<T>.GetFromNonGenericContext(context));
@@ -97,7 +200,7 @@ namespace FluentValidation {
 				foreach (var rule in Rules) {
 					rule.Validate(context);
 
-					if (CascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
+					if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 						// Bail out if we're "failing-fast".
 						// Check for > 0 rather than == 1 because a rule chain may have overridden the Stop behaviour to Continue
 						// meaning that although the first rule failed, it actually generated 2 failures if there were 2 validators
@@ -147,7 +250,7 @@ namespace FluentValidation {
 				cancellation.ThrowIfCancellationRequested();
 				await rule.ValidateAsync(context, cancellation);
 
-				if (CascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
+				if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 					// Bail out if we're "failing-fast".
 					// Check for > 0 rather than == 1 because a rule chain may have overridden the Stop behaviour to Continue
 					// meaning that although the first rule failed, it actually generated 2 failures if there were 2 validators
@@ -193,7 +296,7 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 			expression.Guard("Cannot pass null to RuleFor", nameof(expression));
-			var rule = PropertyRule<T, TProperty>.Create(expression, () => CascadeMode);
+			var rule = PropertyRule<T, TProperty>.Create(expression, () => RuleLevelCascadeMode);
 			Rules.Add(rule);
 			return new RuleBuilder<T, TProperty>(rule, this);
 		}
@@ -211,7 +314,7 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<TProperty, TTransformed> to) {
 			from.Guard("Cannot pass null to Transform", nameof(from));
-			var rule = PropertyRule<T, TTransformed>.Create(from, to, () => CascadeMode);
+			var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
 			Rules.Add(rule);
 			return new RuleBuilder<T, TTransformed>(rule, this);
 		}
@@ -229,7 +332,7 @@ namespace FluentValidation {
 		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
 			from.Guard("Cannot pass null to Transform", nameof(from));
-			var rule = PropertyRule<T, TTransformed>.Create(from, to, () => CascadeMode);
+			var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
 			Rules.Add(rule);
 			return new RuleBuilder<T, TTransformed>(rule, this);
 		}
@@ -243,7 +346,7 @@ namespace FluentValidation {
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
-			var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => CascadeMode);
+			var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => RuleLevelCascadeMode);
 			Rules.Add(rule);
 			return new RuleBuilder<T, TElement>(rule, this);
 		}
@@ -258,7 +361,7 @@ namespace FluentValidation {
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
-			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(expression, to, () => CascadeMode);
+			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(expression, to, () => RuleLevelCascadeMode);
 			Rules.Add(rule);
 			return new RuleBuilder<T, TTransformed>(rule, this);
 		}
@@ -273,7 +376,7 @@ namespace FluentValidation {
 		/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 		public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
 			expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
-			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(expression, to, () => CascadeMode);
+			var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed<TElement>(expression, to, () => RuleLevelCascadeMode);
 			Rules.Add(rule);
 			return new RuleBuilder<T, TTransformed>(rule, this);
 		}
@@ -377,7 +480,7 @@ namespace FluentValidation {
 		/// </summary>
 		public void Include(IValidator<T> rulesToInclude) {
 			rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
-			var rule = IncludeRule<T>.Create(rulesToInclude, () => CascadeMode);
+			var rule = IncludeRule<T>.Create(rulesToInclude, () => RuleLevelCascadeMode);
 			Rules.Add(rule);
 		}
 
@@ -386,7 +489,7 @@ namespace FluentValidation {
 		/// </summary>
 		public void Include<TValidator>(Func<T, TValidator> rulesToInclude) where TValidator : IValidator<T> {
 			rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
-			var rule = IncludeRule<T>.Create(rulesToInclude, () => CascadeMode);
+			var rule = IncludeRule<T>.Create(rulesToInclude, () => RuleLevelCascadeMode);
 			Rules.Add(rule);
 		}
 

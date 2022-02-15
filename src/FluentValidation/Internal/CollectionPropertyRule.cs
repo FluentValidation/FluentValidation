@@ -169,14 +169,12 @@ namespace FluentValidation.Internal {
 							InvokePropertyValidator(context, valueToValidate, propertyNameToValidate, validator, index);
 						}
 
-						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
+						// If there has been at least one failure, and our CascadeMode has been set to Stop
 						// then don't continue to the next rule
-#pragma warning disable 618
-						if (context.Failures.Count > totalFailuresInner && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
+						if (context.Failures.Count > totalFailuresInner && cascade == CascadeMode.Stop) {
 							context.RestoreState();
 							goto AfterValidate; // 🙃
 						}
-#pragma warning restore 618
 					}
 					context.RestoreState();
 				}
@@ -277,14 +275,12 @@ namespace FluentValidation.Internal {
 							InvokePropertyValidator(context, valueToValidate, propertyNameToValidate, validator, index);
 						}
 
-						// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
+						// If there has been at least one failure, and our CascadeMode has been set to Stop
 						// then don't continue to the next rule
-#pragma warning disable 618
-						if (context.Failures.Count > totalFailuresInner && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
+						if (context.Failures.Count > totalFailuresInner && cascade == CascadeMode.Stop) {
 							context.RestoreState();
 							goto AfterValidate; // 🙃
 						}
-#pragma warning restore 618
 					}
 
 					context.RestoreState();

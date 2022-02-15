@@ -19,12 +19,10 @@
 namespace FluentValidation.Internal {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Threading;
 	using System.Threading.Tasks;
-	using Validators;
 
 	/// <summary>
 	/// Defines a rule associated with a property.
@@ -126,11 +124,9 @@ namespace FluentValidation.Internal {
 					InvokePropertyValidator(context, accessor, propertyName, step);
 				}
 
-				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
+				// If there has been at least one failure, and our CascadeMode has been set to Stop
 				// then don't continue to the next rule
-#pragma warning disable 618
-				if (context.Failures.Count > totalFailures && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
-#pragma warning restore 618
+				if (context.Failures.Count > totalFailures && cascade == CascadeMode.Stop) {
 					break;
 				}
 			}
@@ -206,11 +202,9 @@ namespace FluentValidation.Internal {
 					InvokePropertyValidator(context, accessor, propertyName, validator);
 				}
 
-				// If there has been at least one failure, and our CascadeMode has been set to StopOnFirst
+				// If there has been at least one failure, and our CascadeMode has been set to Stop
 				// then don't continue to the next rule
-#pragma warning disable 618
-				if (context.Failures.Count > totalFailures && (cascade == CascadeMode.StopOnFirstFailure || cascade == CascadeMode.Stop)) {
-#pragma warning restore 618
+				if (context.Failures.Count > totalFailures && cascade == CascadeMode.Stop) {
 					break;
 				}
 			}

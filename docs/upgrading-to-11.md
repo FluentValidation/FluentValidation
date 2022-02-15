@@ -1,3 +1,4 @@
+
 # 11.0 Upgrade Guide
 
 ### Introduction
@@ -36,6 +37,56 @@ These were callbacks that could be used to define an action that would be called
 ### Test Helper changes
 
 The deprecated extension methods `validator.ShouldHaveValidationErrorFor` and `validator.ShouldNotHaveValidationErrorFor` have been removed. The recommended alternative is to use `TestValidate` instead, [which is covered in the documentation here](https://docs.fluentvalidation.net/en/latest/testing.html).
+
+### Cascade Mode Changes
+
+The `CascadeMode` properties on `AbstractValidator` and `ValidatorOptions.Global` have been deprecated and replaced with the properties `RuleLevelCascadeMode` and `ClassLevelCascadeMode` which provide finer-grained control for setting the cascade mode.
+
+If you are currently setting `ValidatorOptions.Global.CascadeMode` to `Continue` or `Stop`, you can simply replace this with
+
+```csharp
+ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.<YourCurrentValue>;
+ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.<YourCurrentValue>;
+```
+
+If you are currently setting it to `StopOnFirstFailure`, replace it with
+
+```csharp
+ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue; // Not actually needed as this is the default. Just here for completeness.
+ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
+```
+
+Similarly, if you are currently setting `AbstractValidator.CascadeMode` to `Continue` or `Stop`, replace this with
+
+```csharp
+ClassLevelCascadeMode = CascadeMode.<YourCurrentValue>;
+RuleLevelCascadeMode = CascadeMode.<YourCurrentValue>;
+```
+
+If you are currently setting it to `StopOnFirstFailure`, replace it with
+
+```csharp
+ClassLevelCascadeMode = CascadeMode.Continue;
+RuleLevelCascadeMode = CascadeMode.Stop;
+```
+
+If you are calling `.Cascade(CascadeMode.StopOnFirstFailure)` in a rule chain, replace `StopOnFirstFailure` with `Stop` (this has always had the same behavior at rule-level since `Stop` was introduced anyway).
+
+All of the changes described above are exactly what the code does now anyway - e.g. if you set `AbstractValidator.CascadeMode` to `Stop`, it sets `AbstractValidator.DefaultRuleLevelCascadeMode` and `AbstractValidator.DefaultClassLevelCascadeMode` to `Stop`, and doesn't use `AbstractValidator.CascadeMode` in any logic internally.
+
+You may also be able to remove some now-unneeded calls to `.Cascade` at rule-level. For example, if you have the cascade mode at validator class-level set to `Continue`, and are repeating `.Cascade(CascadeMode.Stop[/StopOnFirstFailure])` for each rule, you can now replace this with
+
+```csharp
+ClassLevelCascadeMode = CascadeMode.Continue;
+RuleLevelCascadeMode = CascadeMode.Stop;
+```
+
+...or their global default equivalents. 
+
+ See [this page in the documentation](https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode) for details of how cascade modes work and the reasons for this change.
+
+As `StopOnFirstFailure` is deprecated and scheduled for removal, it cannot be assigned to either of the two new `AbstractValidator` properties or their global equivalents (it still can be assigned to the also-deprecated `AbstractValidator.CascadeMode`). Attempting to set the new properties to `StopOnFirstFailure` will simply result in `Stop` being used instead.
+
 
 ### ASP.NET Core Integration changes
 

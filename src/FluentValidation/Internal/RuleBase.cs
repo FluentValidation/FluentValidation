@@ -112,7 +112,13 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		public CascadeMode CascadeMode {
 			get => _cascadeModeThunk();
-			set => _cascadeModeThunk = () => value;
+			set {
+#pragma warning disable 618
+				_cascadeModeThunk = value == CascadeMode.StopOnFirstFailure
+					? () => CascadeMode.Stop
+					: () => value;
+#pragma warning restore 618
+			}
 		}
 
 		/// <summary>

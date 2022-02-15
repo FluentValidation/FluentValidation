@@ -35,7 +35,11 @@ namespace FluentValidation.Tests.Benchmarks {
 		[GlobalSetup]
 		public void GlobalSetup() {
 			_validator = new FullModelValidator();
-			_failFastValidator = new FullModelValidator {CascadeMode = CascadeMode.Stop};
+			_failFastValidator = new FullModelValidator {
+				ClassLevelCascadeMode = CascadeMode.Stop,
+				RuleLevelCascadeMode = CascadeMode.Stop,
+			};
+
 			_dataSets = FluentValidation.Tests.Benchmarks.DataSet.DataSets;
 		}
 
