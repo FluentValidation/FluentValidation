@@ -60,6 +60,8 @@ The `Validate` method returns a ValidationResult object. This contains two prope
 The following code would write any validation failures to the console:
 
 ```csharp
+using FluentValidation.Results; 
+
 Customer customer = new Customer();
 CustomerValidator validator = new CustomerValidator();
 
