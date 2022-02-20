@@ -41,6 +41,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+Alternatively you can call `AddFluentValidation()` after a call to `AddControllers` in projects where you aren't using the full MVC stack (for example, in Web API projects). 
+
 ### Automatic Registration
 
 You can also use the `AddFromAssemblyContaining` method to automatically register all validators within a particular assembly. This will automatically find any public, non-abstract types that inherit from `AbstractValidator` and register them with the container (open generics are not supported).
@@ -73,21 +75,21 @@ This next example assumes that the `PersonValidator` is defined to validate a cl
 ```csharp
 public class Person 
 {
-	public int Id { get; set; }
-	public string Name { get; set; }
-	public string Email { get; set; }
-	public int Age { get; set; }
+  public int Id { get; set; }
+  public string Name { get; set; }
+  public string Email { get; set; }
+  public int Age { get; set; }
 }
 
 public class PersonValidator : AbstractValidator<Person> 
 {
-	public PersonValidator() 
+  public PersonValidator() 
   {
-		RuleFor(x => x.Id).NotNull();
-		RuleFor(x => x.Name).Length(0, 10);
-		RuleFor(x => x.Email).EmailAddress();
-		RuleFor(x => x.Age).InclusiveBetween(18, 60);
-	}
+    RuleFor(x => x.Id).NotNull();
+    RuleFor(x => x.Name).Length(0, 10);
+    RuleFor(x => x.Email).EmailAddress();
+    RuleFor(x => x.Age).InclusiveBetween(18, 60);
+  }
 }
 ```
 
@@ -96,27 +98,25 @@ We can use the Person class within our controller and associated view:
 ```csharp
 public class PeopleController : Controller 
 {
-	public ActionResult Create() 
+  public ActionResult Create() 
   {
-		return View();
-	}
+    return View();
+  }
 
-	[HttpPost]
-	public IActionResult Create(Person person) 
+  [HttpPost]
+  public IActionResult Create(Person person) 
   {
-
-		if(! ModelState.IsValid) 
+    if(! ModelState.IsValid) 
     { 
       // re-render the view when validation failed.
-			return View("Create", person);
-		}
+      return View("Create", person);
+    }
 
-		Save(person); //Save the person to the database, or some other logic
+    Save(person); //Save the person to the database, or some other logic
 
-		TempData["notice"] = "Person successfully created";
-		return RedirectToAction("Index");
-
-	}
+    TempData["notice"] = "Person successfully created";
+    return RedirectToAction("Index");
+  }
 }
 ```
 
