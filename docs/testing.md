@@ -90,3 +90,31 @@ There are also inverse methods available (`WithoutMessage`, `WithoutErrorCode`, 
 ## Asynchronous TestValidate
 
 There is also an asynchronous `TestValidateAsync` method available which corresponds to the regular `ValidateAsync` method. Usage is similar, except the method returns an awaitable `Task` instead.
+
+## Mocking
+
+Validators are intended to be "black boxes" and we don't generally recommend mocking them. Within a test, the recommended appraoch is to supply a real validator instance with known bad data in order to trigger a validation error. 
+
+Mocking validators tends to require that you make assuptions about how the validators are built internally (both the rules contained within them, as well as FluentValidation's own internals). Mocking this behaviour leads to brittle tests that aren't upgrade-safe.
+
+However if you find yourself in a situation where you absoloutely do need to mock a validator, then we suggest using `InlineValidator<T>` to create a stub implementation as this way you can take advantage of re-using FluentValidation's own internal logic for creating validation failures. We *strongly* recommend not using a mocking library. An example of using `InlineValidator` is shown below:
+
+```csharp
+// Original validator that relies on an external service.
+// External service is used to check that the customer ID is not already used in the database.
+public class CustomerValidator : AbstractValidator<Customer> 
+{
+  public CustomerValidator(ICustomerRepository customerRepository) 
+  {
+    RuleFor(x => x.Id)
+      .Must(id => customerRepository.CheckIdNotInUse(id));
+  }
+}
+
+// If you needed to stub this failure in a unit/integration test, 
+// you could do the following:
+var validator = new InlineValidator<Customer>();
+validator.RuleFor(x => x.Id).Must(id => false); 
+
+// This instance could then be passed into anywhere expecting an IValidator<Customer>
+```
