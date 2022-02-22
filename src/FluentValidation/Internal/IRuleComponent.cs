@@ -22,6 +22,7 @@ namespace FluentValidation.Internal {
 	using System;
 	using System.Threading;
 	using System.Threading.Tasks;
+	using Results;
 	using Validators;
 
 	/// <summary>
@@ -66,6 +67,14 @@ namespace FluentValidation.Internal {
 		/// </summary>
 		/// <param name="errorMessage">The error message to set</param>
 		void SetErrorMessage(string errorMessage);
+
+		/// <summary>
+		/// Sets a callback which will be invoked after this component has executed.
+		/// Arguments are the context, the property value and the validation failure which was generated.
+		/// The validation failure will be null if validation succeeded.
+		/// </summary>
+		/// <param name="callback"></param>
+		void SetAfterExecuted(Action<ValidationContext<T>, TProperty, ValidationFailure> callback);
 	}
 
 	/// <summary>

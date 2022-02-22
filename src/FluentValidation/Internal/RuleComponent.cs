@@ -23,6 +23,7 @@ namespace FluentValidation.Internal {
 	using System.Threading;
 	using System.Threading.Tasks;
 	using Internal;
+	using Results;
 	using Validators;
 
 	/// <summary>
@@ -46,6 +47,8 @@ namespace FluentValidation.Internal {
 			_asyncPropertyValidator = asyncPropertyValidator;
 			_propertyValidator = propertyValidator;
 		}
+
+		internal Action<ValidationContext<T>, TProperty, ValidationFailure> AfterExecuted { get; private set; }
 
 		/// <inheritdoc />
 		public bool HasCondition => _condition != null;
@@ -205,6 +208,12 @@ namespace FluentValidation.Internal {
 		public void SetErrorMessage(string errorMessage) {
 			_errorMessage = errorMessage;
 			_errorMessageFactory = null;
+		}
+
+		/// <inheritdoc />
+		public void SetAfterExecuted(Action<ValidationContext<T>, TProperty, ValidationFailure> callback) {
+			if (callback == null) throw new ArgumentNullException(nameof(callback));
+			AfterExecuted = callback;
 		}
 	}
 

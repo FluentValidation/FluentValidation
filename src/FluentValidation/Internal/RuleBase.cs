@@ -200,6 +200,8 @@ namespace FluentValidation.Internal {
 
 		IEnumerable<IValidationRule> IValidationRule.DependentRules => DependentRules;
 
+		public Action<ValidationContext<T>, IEnumerable<ValidationFailure>> AfterRuleExecuted { get; set; }
+
 		string IValidationRule.GetDisplayName(IValidationContext context) =>
 			GetDisplayName(context != null ? ValidationContext<T>.GetFromNonGenericContext(context) : null);
 

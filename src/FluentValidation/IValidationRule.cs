@@ -106,6 +106,11 @@ namespace FluentValidation {
 		/// <param name="instance">The model from which the property value should be retrieved.</param>
 		/// <returns>The property value.</returns>
 		object GetPropertyValue(T instance);
+
+		/// <summary>
+		/// Callback invoked after a rule is executed.
+		/// </summary>
+		public Action<ValidationContext<T>, IEnumerable<ValidationFailure>> AfterRuleExecuted { get; set; }
 	}
 
 	/// <summary>

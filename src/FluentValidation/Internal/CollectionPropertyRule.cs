@@ -182,6 +182,11 @@ namespace FluentValidation.Internal {
 
 			AfterValidate:
 
+			if (AfterRuleExecuted != null) {
+				var failuresThisRound = context.Failures.Skip(totalFailures).ToList();
+				AfterRuleExecuted(context, failuresThisRound);
+			}
+
 			if (context.Failures.Count <= totalFailures && DependentRules != null) {
 				foreach (var dependentRule in DependentRules) {
 					dependentRule.Validate(context);
@@ -289,6 +294,11 @@ namespace FluentValidation.Internal {
 
 			AfterValidate:
 
+			if (AfterRuleExecuted != null) {
+				var failuresThisRound = context.Failures.Skip(totalFailures).ToList();
+				AfterRuleExecuted(context, failuresThisRound);
+			}
+
 			if (context.Failures.Count <= totalFailures && DependentRules != null) {
 				foreach (var dependentRule in DependentRules) {
 					cancellation.ThrowIfCancellationRequested();
@@ -360,6 +370,10 @@ namespace FluentValidation.Internal {
 				PrepareMessageFormatterForValidationError(context, value);
 				var failure = CreateValidationError(context, value, component);
 				context.Failures.Add(failure);
+				component.AfterExecuted?.Invoke(context, value, failure);
+			}
+			else {
+				component.AfterExecuted?.Invoke(context, value, null);
 			}
 		}
 
@@ -371,6 +385,10 @@ namespace FluentValidation.Internal {
 				PrepareMessageFormatterForValidationError(context, value);
 				var failure = CreateValidationError(context, value, component);
 				context.Failures.Add(failure);
+				component.AfterExecuted?.Invoke(context, value, failure);
+			}
+			else {
+				component.AfterExecuted?.Invoke(context, value, null);
 			}
 		}
 
