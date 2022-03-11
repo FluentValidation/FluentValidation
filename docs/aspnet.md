@@ -350,6 +350,8 @@ public ActionResult Index()
 }
 ```
 
+You can force all rules to be used to generate client-side error message by specifying a ruleset of "*".
+
 ### Injecting Child Validators
 
 As an alternative to directly instantiating child validators, with the ASP.NET Core integration you can choose to inject them instead. This can be done via the validator's constructor:
