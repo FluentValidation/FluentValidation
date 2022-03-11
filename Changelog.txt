@@ -1,3 +1,7 @@
+10.4.0 - 11 Mar 2022
+Allow use of "*" with RuleSetForClientSideMessagesAttribute and HttpContext.SetRulesetForClientsideMessages (#1912)
+Fix Azerbaijani language code (#1874)
+
 10.3.6 - 13 Dec 2021
 Fix Azerbaijani language code (#1865)
 Setting DisableAutomaticValidation to true should prevent implicit validation running (#1868)
