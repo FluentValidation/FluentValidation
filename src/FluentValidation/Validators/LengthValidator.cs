@@ -18,8 +18,8 @@
 
 namespace FluentValidation.Validators {
 	using System;
-		using System.Globalization;
-		using Resources;
+	using System.Globalization;
+	using Resources;
 
 	public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator {
 		public override string Name => "LengthValidator";
