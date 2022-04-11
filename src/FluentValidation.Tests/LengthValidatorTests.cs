@@ -106,6 +106,14 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void When_the_text_has_grapheme_clusters_then_each_should_be_counted_exactly_once()
+		{
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Length(2));
+			var result = validator.Validate(new Person { Surname = "🙂🙁" });
+			result.IsValid.ShouldBeTrue();
+		}
+
+		[Fact]
 		public void When_the_max_is_smaller_than_the_min_then_the_validator_should_throw() {
 			Assert.Throws<ArgumentOutOfRangeException>(() =>
 				new TestValidator(v => v.RuleFor(x => x.Surname).Length(10,1))

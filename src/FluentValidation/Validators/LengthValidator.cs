@@ -18,7 +18,8 @@
 
 namespace FluentValidation.Validators {
 	using System;
-	using Resources;
+		using System.Globalization;
+		using Resources;
 
 	public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator {
 		public override string Name => "LengthValidator";
@@ -54,7 +55,8 @@ namespace FluentValidation.Validators {
 				min = MinFunc(context.InstanceToValidate);
 			}
 
-			int length = value.Length;
+			var stringInfo = new StringInfo(value);
+			int length = stringInfo.LengthInTextElements;
 
 			if (length < min || (length > max && max != -1)) {
 				context.MessageFormatter
