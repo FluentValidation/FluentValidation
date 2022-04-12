@@ -38,8 +38,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void When_the_text_contains_grapheme_clusters_then_the_validator_should_count_each_exactly_once()
-		{
+		public void When_the_text_contains_grapheme_clusters_then_the_validator_should_count_each_exactly_once() {
 			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Length(4) };
 			var result = validator.Validate(new Person { Surname = "🌹🥀🌞🌚" });
 			result.IsValid.ShouldBeTrue();

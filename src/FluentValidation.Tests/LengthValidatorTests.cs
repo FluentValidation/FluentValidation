@@ -98,8 +98,7 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void When_the_text_is_exactly_the_size_of_the_lambda_lower_bound_then_the_validator_should_pass()
-		{
+		public void When_the_text_is_exactly_the_size_of_the_lambda_lower_bound_then_the_validator_should_pass() {
 			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Length(x => x.MinLength, x => x.MaxLength));
 			var result = validator.Validate(new Person { Surname = "Test", MinLength = 4, MaxLength = 5 });
 			result.IsValid.ShouldBeTrue();
