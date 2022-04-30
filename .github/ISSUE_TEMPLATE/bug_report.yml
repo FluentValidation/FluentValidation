@@ -1,5 +1,5 @@
 name: "\U0001F41B Bug Report"
-description: "Report a reproducible bug in FluentValidation. Also use this template if you're having trouble upgrading from version 9.x 
+description: "Report a reproducible bug in FluentValidation. Also use this template if you're having trouble upgrading from version 10.x 
 to 10.x"
 body:
 - type: markdown
