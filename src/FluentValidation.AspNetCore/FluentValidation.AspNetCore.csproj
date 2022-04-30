@@ -6,7 +6,7 @@
     <Product>FluentValidation.AspNetCore</Product>
     <Description>AspNetCore integration for FluentValidation</Description>
     <PackageReleaseNotes>
-FluentValidation 10 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-10.html
+FluentValidation 11 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-11.html
 
 Full release notes can be found at https://github.com/FluentValidation/FluentValidation/releases
     </PackageReleaseNotes>
