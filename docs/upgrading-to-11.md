@@ -14,7 +14,7 @@ Below is a summary of all the changes in this release:
 
 ### Changes in supported platforms
 
-- .NET Core 2.1 is no longer supported as Microsoft has stopped support for this playform.
+- .NET Core 2.1 is no longer supported as Microsoft has stopped support for this platform.
 
 ### Sync-over-async now throws an exception
 
