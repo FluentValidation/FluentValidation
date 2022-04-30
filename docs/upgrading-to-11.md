@@ -5,7 +5,7 @@
 
 FluentValidation 11.0 is a major release that included several breaking changes. Please review this document carefully before upgrading from FluentValidation 10.x to 11.
 
-There were 2 main goals for this release:
+There were 3 main goals for this release:
 - Removing deprecated code and support for obsolete platforms
 - Update sync-over-async workflows to clearly throw an exception
 - Remove ambiguity in handling of `CascadeMode` settings
