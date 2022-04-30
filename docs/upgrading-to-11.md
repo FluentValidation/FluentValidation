@@ -24,7 +24,7 @@ Starting in FluentValidation 11.0, validators that contain asynchronous rules wi
 
 This affects rules that contain any of the following:
 - Calls to `MustAsync`
-- Calls to `WhenAsync`\`UnlessAsync`
+- Calls to `WhenAsync` and `UnlessAsync`
 - Calls to `CustomAsync`
 - Use of any custom async validators 
 
