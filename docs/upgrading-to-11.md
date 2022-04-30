@@ -8,13 +8,13 @@ FluentValidation 11.0 is a major release that included several breaking changes.
 There were 2 main goals for this release:
 - Removing deprecated code and support for obsolete platforms
 - Update sync-over-async workflows to clearly throw an exception
+- Remove ambiguity in handling of `CascadeMode` settings
 
 Below is a summary of all the changes in this release:
 
 ### Changes in supported platforms
 
-- Support for .NET Core 2.1 has been removed, as Microsoft support has ended for this release.
-- Support for the `netstandard2.0` platform has been removed removed from the core library. `netstandard2.1` is now the minimum supported version. This implicitly means that FluentValidation 11.x can't be used on legacy .NET Framework 4.x. If you need to run on .NET 4.x or another netstandard2 platform, you must use FluentValidation 10.x instead.
+- .NET Core 2.1 is no longer supported as Microsoft has stopped support for this playform.
 
 ### Sync-over-async now throws an exception
 
@@ -33,6 +33,8 @@ This affects rules that contain any of the following:
 The deprecated methods `OnFailure` and `OnAnyFailure` have been removed.
 
 These were callbacks that could be used to define an action that would be called when a particular rule fails. These methods were deprecated in 10.x as they allowed the standard FluentValidation workflow to be bypassed, and additionally they have caused various maintenance issues since they were introduced. 
+
+If you were previously using `OnFailure` or `OnAnyFailure` to perform custom logic after validation, we recommend using a `Custom` validator instead.
 
 ### Test Helper changes
 
