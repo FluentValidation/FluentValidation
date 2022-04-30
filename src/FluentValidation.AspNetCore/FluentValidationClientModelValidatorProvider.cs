@@ -125,11 +125,19 @@ namespace FluentValidation.AspNetCore {
 				.FirstOrDefault();
 
 			if (factory != null) {
+				bool shouldExecute = false;
 				var ruleSetToGenerateClientSideRules = RuleSetForClientSideMessagesAttribute.GetRuleSetsForClientValidation(_httpContextAccessor?.HttpContext);
-				bool executeDefaultRule = ruleSetToGenerateClientSideRules.Contains(RulesetValidatorSelector.DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)
-          && (rule.RuleSets == null || rule.RuleSets.Length == 0 || rule.RuleSets.Contains(RulesetValidatorSelector.DefaultRuleSetName, StringComparer.OrdinalIgnoreCase));
 
-				bool shouldExecute = (rule.RuleSets != null && ruleSetToGenerateClientSideRules.Intersect(rule.RuleSets, StringComparer.OrdinalIgnoreCase).Any()) || executeDefaultRule;
+				if (ruleSetToGenerateClientSideRules.Contains(RulesetValidatorSelector.WildcardRuleSetName)) {
+					// If RuleSet "*" is specified, include all rules.
+					shouldExecute = true;
+				}
+				else {
+					bool executeDefaultRule = ruleSetToGenerateClientSideRules.Contains(RulesetValidatorSelector.DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)
+					                          && (rule.RuleSets == null || rule.RuleSets.Length == 0 || rule.RuleSets.Contains(RulesetValidatorSelector.DefaultRuleSetName, StringComparer.OrdinalIgnoreCase));
+
+					shouldExecute = (rule.RuleSets != null && ruleSetToGenerateClientSideRules.Intersect(rule.RuleSets, StringComparer.OrdinalIgnoreCase).Any()) || executeDefaultRule;
+				}
 
 				if (shouldExecute) {
 					return factory.Invoke(context, rule, component);

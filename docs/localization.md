@@ -60,7 +60,7 @@ This is a simple example that only replaces one validator's message in English o
 Of course, if all you want to do is replace this message for a single use of a validator, then you could just use `WithMessage("'{PropertyName}' is required");`
 
 ### Contributing Languages
-If you'd like to contribute a translation of FluentValidation's default messages, then I'd be very grateful! Please open a pull request that adds a language file to the project and I'll happily merge it in. The current language files are [located in the GitHub repository](https://github.com/JeremySkinner/FluentValidation/tree/master/src/FluentValidation/Resources/Languages).
+If you'd like to contribute a translation of FluentValidation's default messages, please open a pull request that adds a language file to the project. The current language files are [located in the GitHub repository](https://github.com/JeremySkinner/FluentValidation/tree/master/src/FluentValidation/Resources/Languages). Additionally you'll need to [add the new language to the default LanguageManager](https://github.com/FluentValidation/FluentValidation/blob/main/src/FluentValidation/Resources/LanguageManager.cs#L38) 
 
 [The default English messages are stored here](https://github.com/JeremySkinner/FluentValidation/blob/master/src/FluentValidation/Resources/Languages/EnglishLanguage.cs)
 

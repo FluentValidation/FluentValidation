@@ -204,6 +204,15 @@ namespace FluentValidation.Tests.AspNetCore {
 		}
 
 		[Fact]
+		public async Task Should_use_rules_from_all_rulesets() {
+			var msgs = await _client.RunRulesetAction("/ClientSide/All");
+			msgs.Length.ShouldEqual(3);
+			msgs[0].ShouldEqual("first");
+			msgs[1].ShouldEqual("second");
+			msgs[2].ShouldEqual("third");
+		}
+
+		[Fact]
 		public async Task Renders_attributes_inside_partial() {
 			var msg = await _client.GetClientsideMessage("RequiredInsidePartial", "data-val-required");
 			msg.ShouldEqual("'Required Inside Partial' must not be empty.");

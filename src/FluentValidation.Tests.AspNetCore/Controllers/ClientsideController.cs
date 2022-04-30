@@ -26,6 +26,9 @@
 			return View("RuleSet");
 		}
 
-
+		[RuleSetForClientSideMessages("*")]
+		public ActionResult All() {
+			return View("RuleSet");
+		}
 	}
 }
