@@ -2,7 +2,7 @@
 
 ```eval_rst
 .. note::
-    If you are upgrading to FluentValidation 10 from an older version, `please read the upgrade notes <upgrading-to-10.html>`_.
+    If you are upgrading to FluentValidation 11 from an older version, `please read the upgrade notes <upgrading-to-11.html>`_.
 ```
 
 Before creating any validators, you will need to add a reference to FluentValidation.dll in your project. The simplest way to do this is to use either the NuGet package manager, or the dotnet CLI.
