@@ -8,7 +8,7 @@ FluentValidation
 
 FluentValidation is a .NET library for building strongly-typed validation rules.
 
-FluentValidation 10 supports the following platforms:
+FluentValidation 11 supports the following platforms:
 
 * .NET Core 3.1
 * .NET 5
@@ -61,6 +61,7 @@ Example
   rulesets
   including-rules
   di
+  upgrading-to-11
   upgrading-to-10
   upgrading-to-9
   upgrading-to-8
