@@ -137,7 +137,7 @@ public class PeopleController : Controller
   Age: <input asp-for="Age" /> <span asp-validation-for="Age"></span>
 
   <br /><br />
-  <input type="submit" value="submtit" />
+  <input type="submit" value="submit" />
 </form>
 ```
 
