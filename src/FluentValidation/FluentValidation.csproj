@@ -24,5 +24,6 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="System.Text.Json" Version="6.0.3" />
   </ItemGroup>
 </Project>

@@ -20,6 +20,7 @@ namespace FluentValidation.Results {
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Text.Json.Serialization;
 
 	/// <summary>
 	/// The result of running a validator
@@ -45,6 +46,15 @@ namespace FluentValidation.Results {
 		/// </summary>
 		public ValidationResult() {
 			_errors = new List<ValidationFailure>();
+		}
+
+		/// <summary>
+		/// Helps System.Text.Json to deserialize jsons correctly. This constructor cannot be called for other purposes.
+		/// </summary>
+		[Obsolete]
+		[JsonConstructor]
+		public ValidationResult(List<ValidationFailure> errors , bool isValid) {
+			_errors = errors;
 		}
 
 		/// <summary>

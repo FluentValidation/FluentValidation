@@ -19,6 +19,7 @@
 namespace FluentValidation.Results {
 	using System;
 	using System.Collections.Generic;
+	using System.Text.Json.Serialization;
 
 	/// <summary>
 	/// Defines a validation failure
@@ -38,6 +39,7 @@ namespace FluentValidation.Results {
 		/// <summary>
 		/// Creates a new ValidationFailure.
 		/// </summary>
+		[JsonConstructor]
 		public ValidationFailure(string propertyName, string errorMessage, object attemptedValue) {
 			PropertyName = propertyName;
 			ErrorMessage = errorMessage;
