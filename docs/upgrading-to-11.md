@@ -89,6 +89,35 @@ RuleLevelCascadeMode = CascadeMode.Stop;
 
 As `StopOnFirstFailure` is deprecated and scheduled for removal, it cannot be assigned to either of the two new `AbstractValidator` properties or their global equivalents (it still can be assigned to the also-deprecated `AbstractValidator.CascadeMode`). Attempting to set the new properties to `StopOnFirstFailure` will simply result in `Stop` being used instead.
 
+### MessageBuilder changes
+
+If you use the `MessageBuilder` functionality to provide custom logic for error message creation then please note that as of 11.0 you can only have a single `MessageBuilder` associated with a rule chain. This property is also now set-only. In previous versions you may have had code like this:
+
+```csharp
+return ruleBuilder.Configure(rule => {
+  var originalMessageBuilder = rule.MessageBuilder;
+  rule.MessageBuilder = context => {
+    
+    // ... some custom logic in here.
+    
+    return originalMessageBuilder?.Invoke(context) ?? context.GetDefaultMessage();
+  };
+});
+```
+
+Now as this property is set-only you'll need to update it to remove references to `originalMessageBuilder`:
+
+```csharp
+return ruleBuilder.Configure(rule => {
+  rule.MessageBuilder = context => {
+    // ... some custom logic in here.
+    return context.GetDefaultMessage();
+  };
+});
+```
+
+This means you can no longer chain MessageBuilders together, and whichever one is set last will be the only one associated with the rule, so please confirm that you aren't relying on the previous behaviour before making this change. 
+
 
 ### ASP.NET Core Integration changes
 
