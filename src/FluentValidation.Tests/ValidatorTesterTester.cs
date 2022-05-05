@@ -470,6 +470,22 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
+		public void Unexpected_without_error_code_check() {
+			//#1937
+			var validator = new InlineValidator<Person> {
+				v => v.RuleFor(x => x.Surname).NotNull(),
+				v => v.RuleFor(x => x.Forename).NotNull()
+			};
+
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithoutErrorCode("foo")
+				.WithoutErrorMessage("bar")
+				.WithoutSeverity(Severity.Warning)
+				.WithoutCustomState(1);
+		}
+
+		[Fact]
 		public void Expected_severity_check() {
 			var validator = new InlineValidator<Person> {
 				v => v.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Warning)

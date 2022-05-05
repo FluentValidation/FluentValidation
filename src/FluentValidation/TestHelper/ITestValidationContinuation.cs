@@ -9,6 +9,7 @@ namespace FluentValidation.TestHelper {
 	}
 
 	public interface ITestValidationContinuation : IEnumerable<ValidationFailure> {
+		IEnumerable<ValidationFailure> MatchedFailures { get; }
 		IEnumerable<ValidationFailure> UnmatchedFailures { get; }
 	}
 
