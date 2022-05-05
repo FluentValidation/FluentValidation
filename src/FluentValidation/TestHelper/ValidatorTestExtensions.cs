@@ -198,7 +198,7 @@ namespace FluentValidation.TestHelper {
 		}
 
 		public static ITestValidationContinuation WhenAll(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-			var result = TestValidationContinuation.Create(failures.MatchedFailures);
+			var result = TestValidationContinuation.Create(((TestValidationContinuation)failures).MatchedFailures);
 			result.ApplyPredicate(failurePredicate);
 
 			bool allMatched = !result.UnmatchedFailures.Any();
