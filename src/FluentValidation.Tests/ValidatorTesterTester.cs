@@ -486,8 +486,23 @@ namespace FluentValidation.Tests {
 		}
 
 		[Fact]
-		public void Expected_with_error_code_check() {
+		public void Unexpected_with_error_message_check() {
 			//#1937
+			var validator = new InlineValidator<Person>
+			{
+				v => v.RuleFor(x => x.Forename).NotEmpty(),
+				v => v.RuleFor(x => x.Surname).NotEmpty()
+			};
+
+			var ex = Assert.Throws<ValidationTestException>(() =>
+				validator.TestValidate(new Person())
+					.ShouldHaveValidationErrorFor(x => x.Surname)
+					.WithErrorMessage("bar"));
+			ex.Message.ShouldEqual("Expected an error message of 'bar'. Actual message was ''Surname' must not be empty.'");
+		}
+
+		[Fact]
+		public void Expected_with_error_code_check() {
 			var validator = new InlineValidator<Person> {
 				v => v.RuleFor(x => x.Forename).NotNull(),
 				v => v.RuleFor(x => x.Surname).NotNull()
