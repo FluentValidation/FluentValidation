@@ -5,3 +5,4 @@ FluentValidation does not provide integration with Blazor out of the box, but th
 - [Blazored.FluentValidation](https://github.com/Blazored/FluentValidation)
 - [Blazor-Validation](https://github.com/mrpmorris/blazor-validation)
 - [Accelist.FluentValidation.Blazor](https://github.com/ryanelian/FluentValidation.Blazor)
+- [vNext.BlazorComponents.FluentValidation](https://github.com/Liero/vNext.BlazorComponents.FluentValidation)
