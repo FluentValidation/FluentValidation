@@ -97,7 +97,7 @@ namespace FluentValidation.Validators {
 
 		protected virtual IValidationContext CreateNewValidationContextForChildValidator(ValidationContext<T> context, TProperty value) {
 			var selector = GetSelector(context, value);
-			var newContext = context.CloneForChildValidator(value, selector);
+			var newContext = context.CloneForChildValidator(value, true, selector);
 
 			if(!context.IsChildCollectionContext)
 				newContext.PropertyChain.Add(context.RawPropertyName);

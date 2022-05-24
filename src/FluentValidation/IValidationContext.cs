@@ -238,13 +238,14 @@ namespace FluentValidation {
 		/// Creates a new validation context for use with a child validator
 		/// </summary>
 		/// <param name="instanceToValidate"></param>
+		/// <param name="preserveParentContext"></param>
 		/// <param name="selector"></param>
 		/// <returns></returns>
-		public ValidationContext<TChild> CloneForChildValidator<TChild>(TChild instanceToValidate, IValidatorSelector selector = null) {
+		public ValidationContext<TChild> CloneForChildValidator<TChild>(TChild instanceToValidate, bool preserveParentContext = false, IValidatorSelector selector = null) {
 			return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector, Failures, MessageFormatter) {
 				IsChildContext = true,
 				RootContextData = RootContextData,
-				_parentContext = this,
+				_parentContext = preserveParentContext ? this : null,
 				IsAsync = IsAsync,
 			};
 		}
