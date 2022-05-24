@@ -238,7 +238,6 @@ namespace FluentValidation {
 		/// Creates a new validation context for use with a child validator
 		/// </summary>
 		/// <param name="instanceToValidate"></param>
-		/// <param name="preserveParentContext"></param>
 		/// <param name="selector"></param>
 		/// <returns></returns>
 		public ValidationContext<TChild> CloneForChildValidator<TChild>(TChild instanceToValidate, IValidatorSelector selector = null) {
