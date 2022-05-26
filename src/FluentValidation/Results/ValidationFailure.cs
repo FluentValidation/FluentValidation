@@ -25,7 +25,11 @@ namespace FluentValidation.Results {
 	/// </summary>
 	[Serializable]
 	public class ValidationFailure {
-		private ValidationFailure() {
+
+		/// <summary>
+		/// Creates a new validation failure.
+		/// </summary>
+		public ValidationFailure() {
 
 		}
 
@@ -33,6 +37,7 @@ namespace FluentValidation.Results {
 		/// Creates a new validation failure.
 		/// </summary>
 		public ValidationFailure(string propertyName, string errorMessage) : this(propertyName, errorMessage, null) {
+
 		}
 
 		/// <summary>

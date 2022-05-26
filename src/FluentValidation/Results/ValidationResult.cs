@@ -26,7 +26,7 @@ namespace FluentValidation.Results {
 	/// </summary>
 	[Serializable]
 	public class ValidationResult {
-		private readonly List<ValidationFailure> _errors;
+		private List<ValidationFailure> _errors;
 
 		/// <summary>
 		/// Whether validation succeeded
@@ -36,9 +36,23 @@ namespace FluentValidation.Results {
 		/// <summary>
 		/// A collection of errors
 		/// </summary>
-		public List<ValidationFailure> Errors => _errors;
+		public List<ValidationFailure> Errors {
+			get => _errors;
+			set {
+				if (value == null) {
+					throw new ArgumentNullException(nameof(value));
+				}
 
-		public string[] RuleSetsExecuted { get; internal set; }
+				// Ensure any nulls are removed and the list is copied
+				// to be consistent with the constructor below.
+				_errors = value.Where(failure => failure != null).ToList();;
+			}
+		}
+
+		/// <summary>
+		/// The RuleSets that were executed during the validation run.
+		/// </summary>
+		public string[] RuleSetsExecuted { get; set; }
 
 		/// <summary>
 		/// Creates a new validationResult
@@ -50,9 +64,10 @@ namespace FluentValidation.Results {
 		/// <summary>
 		/// Creates a new ValidationResult from a collection of failures
 		/// </summary>
-		/// <param name="failures">List of <see cref="ValidationFailure"/> which is later available through <see cref="Errors"/>. This list get's copied.</param>
+		/// <param name="failures">Collection of <see cref="ValidationFailure"/> instances which is later available through the <see cref="Errors"/> property.</param>
 		/// <remarks>
-		/// Every caller is responsible for not adding <c>null</c> to the list.
+		/// Any nulls will be excluded.
+		/// The list is copied.
 		/// </remarks>
 		public ValidationResult(IEnumerable<ValidationFailure> failures) {
 			_errors = failures.Where(failure => failure != null).ToList();
@@ -76,7 +91,7 @@ namespace FluentValidation.Results {
 		/// <param name="separator">The character to separate the error messages.</param>
 		/// <returns></returns>
 		public string ToString(string separator) {
-			return	string.Join(separator, _errors.Select(failure => failure.ErrorMessage));
+			return string.Join(separator, _errors.Select(failure => failure.ErrorMessage));
 		}
 	}
 }
