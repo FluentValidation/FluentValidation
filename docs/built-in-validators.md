@@ -45,6 +45,7 @@ Example error: *'Surname' should not be equal to 'Foo'*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{ComparisonValue}` – Value that the property should not equal
+* `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
 
 Optionally, a comparer can be provided to ensure a specific type of comparison is performed:
@@ -80,6 +81,7 @@ Example error: *'Surname' should be equal to 'Foo'*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{ComparisonValue}` – Value that the property should equal
+* `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
 
 ```csharp
@@ -169,6 +171,7 @@ Notes: Only valid on types that implement `IComparable<T>`
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{ComparisonValue}` – Value to which the property was compared
+* `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
 
 ## Less Than Or Equal Validator
@@ -185,6 +188,7 @@ Example error: *'Credit Limit' must be less than or equal to 100.*
 Notes: Only valid on types that implement `IComparable<T>`
 * `{PropertyName}` – Name of the property being validated
 * `{ComparisonValue}` – Value to which the property was compared
+* `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
 
 ## Greater Than Validator
@@ -201,6 +205,7 @@ Example error: *'Credit Limit' must be greater than 0.*
 Notes: Only valid on types that implement `IComparable<T>`
 * `{PropertyName}` – Name of the property being validated
 * `{ComparisonValue}` – Value to which the property was compared
+* `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
 
 ## Greater Than Or Equal Validator
@@ -217,6 +222,7 @@ Example error: *'Credit Limit' must be greater than or equal to 1.*
 Notes: Only valid on types that implement `IComparable<T>`
 * `{PropertyName}` – Name of the property being validated
 * `{ComparisonValue}` – Value to which the property was compared
+* `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
 
 ## Predicate Validator

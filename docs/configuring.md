@@ -25,6 +25,7 @@ These include the predicate validator (`Must` validator), the email and the rege
 
 Used in comparison validators: (`Equal`, `NotEqual`, `GreaterThan`, `GreaterThanOrEqual`, etc.)
 * `{ComparisonValue}` – Value that the property should be compared to
+* `{ComparisonProperty}` – Name of the property being compared against (if any)
 
 Used only in the Length validator:
 * `{MinLength}` – Minimum length
