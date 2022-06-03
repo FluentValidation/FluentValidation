@@ -190,10 +190,6 @@ namespace FluentValidation.Internal {
 		}
 
 		async Task IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
-			if (!context.IsAsync) {
-				context.IsAsync = true;
-			}
-
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {

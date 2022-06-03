@@ -216,7 +216,8 @@ namespace FluentValidation {
 					IsChildContext = context.IsChildContext,
 					RootContextData = context.RootContextData,
 					ThrowOnFailures = context.ThrowOnFailures,
-					_parentContext = context.ParentContext
+					_parentContext = context.ParentContext,
+					IsAsync = context.IsAsync
 				};
 			}
 
@@ -228,6 +229,7 @@ namespace FluentValidation {
 					RootContextData = context.RootContextData,
 					ThrowOnFailures = context.ThrowOnFailures,
 					_parentContext = context.ParentContext,
+					IsAsync = context.IsAsync
 				};
 			}
 

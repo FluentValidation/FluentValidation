@@ -49,7 +49,6 @@ namespace FluentValidation.Validators {
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context, value);
-			var totalFailures = context.Failures.Count;
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to
@@ -75,7 +74,6 @@ namespace FluentValidation.Validators {
 			}
 
 			var newContext = CreateNewValidationContextForChildValidator(context, value);
-			var totalFailures = context.Failures.Count;
 
 			// If we're inside a collection with RuleForEach, then preserve the CollectionIndex placeholder
 			// and pass it down to child validator by caching it in the RootContextData which flows through to

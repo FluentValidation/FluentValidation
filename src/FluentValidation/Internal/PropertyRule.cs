@@ -74,6 +74,7 @@ namespace FluentValidation.Internal {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A collection of validation failures</returns>
 		public virtual void Validate(ValidationContext<T> context) {
+			// TODO: 12.x This method shouldn't be public
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -145,10 +146,6 @@ namespace FluentValidation.Internal {
 		/// <param name="cancellation"></param>
 		/// <returns>A collection of validation failures</returns>
 		public virtual async Task ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
-			if (!context.IsAsync) {
-				context.IsAsync = true;
-			}
-
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
