@@ -87,7 +87,7 @@ namespace FluentValidation.Internal {
 			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOriginal));
 		}
 
-		void IValidationRuleInternal<T>.Validate(ValidationContext<T> context) {
+		async ValueTask IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, bool allowAsyncComponents, CancellationToken cancellation) {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -115,10 +115,17 @@ namespace FluentValidation.Internal {
 			}
 
 			if (AsyncCondition != null) {
-				throw new AsyncValidatorInvokedSynchronouslyException();
+				if (allowAsyncComponents) {
+					if (!await AsyncCondition(context, cancellation)) {
+						return;
+					}
+				}
+				else {
+					throw new AsyncValidatorInvokedSynchronouslyException();
+				}
 			}
 
-			var filteredValidators = GetValidatorsToExecute(context);
+			var filteredValidators = await GetValidatorsToExecuteAsync(context, allowAsyncComponents, cancellation);
 
 			if (filteredValidators.Count == 0) {
 				// If there are no property validators to execute after running the conditions, bail out.
@@ -160,117 +167,29 @@ namespace FluentValidation.Internal {
 					var totalFailuresInner = context.Failures.Count;
 					context.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
 
-					foreach (var validator in filteredValidators) {
+					foreach (var component in filteredValidators) {
 						context.MessageFormatter.Reset();
-						if (validator.ShouldValidateAsynchronously(context)) {
-							throw new AsyncValidatorInvokedSynchronouslyException();
+						context.MessageFormatter.AppendArgument("CollectionIndex", index);
+
+						bool valid;
+
+						if (component.ShouldValidateAsynchronously(context)) {
+							if (allowAsyncComponents) {
+								valid = await component.ValidateAsync(context, valueToValidate, cancellation);
+							}
+							else {
+								throw new AsyncValidatorInvokedSynchronouslyException();
+							}
 						}
 						else {
-							InvokePropertyValidator(context, valueToValidate, propertyNameToValidate, validator, index);
+							context.MessageFormatter.AppendArgument("CollectionIndex", index);
+							valid = component.Validate(context, valueToValidate);
 						}
 
-						// If there has been at least one failure, and our CascadeMode has been set to Stop
-						// then don't continue to the next rule
-						if (context.Failures.Count > totalFailuresInner && cascade == CascadeMode.Stop) {
-							context.RestoreState();
-							goto AfterValidate; // 🙃
-						}
-					}
-					context.RestoreState();
-				}
-			}
-
-			AfterValidate:
-
-			if (context.Failures.Count <= totalFailures && DependentRules != null) {
-				foreach (var dependentRule in DependentRules) {
-					dependentRule.Validate(context);
-				}
-			}
-		}
-
-		async Task IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
-			string displayName = GetDisplayName(context);
-
-			if (PropertyName == null && displayName == null) {
-				//No name has been specified. Assume this is a model-level rule, so we should use empty string instead.
-				displayName = string.Empty;
-			}
-
-			// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
-			string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
-
-			if (string.IsNullOrEmpty(propertyName)) {
-				propertyName = InferPropertyName(Expression);
-			}
-
-			// Ensure that this rule is allowed to run.
-			// The validatselector has the opportunity to veto this before any of the validators execute.
-			if (!context.Selector.CanExecute(this, propertyName, context)) {
-				return;
-			}
-
-			if (Condition != null) {
-				if (!Condition(context)) {
-					return;
-				}
-			}
-
-			if (AsyncCondition != null) {
-				if (!await AsyncCondition(context, cancellation)) {
-					return;
-				}
-			}
-
-			var filteredValidators = await GetValidatorsToExecuteAsync(context, cancellation);
-
-			if (filteredValidators.Count == 0) {
-				// If there are no property validators to execute after running the conditions, bail out.
-				return;
-			}
-
-			var cascade = CascadeMode;
-			var collection = PropertyFunc(context.InstanceToValidate) as IEnumerable<TElement>;
-
-			int count = 0;
-			int totalFailures = context.Failures.Count;
-
-			if (collection != null) {
-				if (string.IsNullOrEmpty(propertyName)) {
-					throw new InvalidOperationException("Could not automatically determine the property name ");
-				}
-
-				foreach (var element in collection) {
-					int index = count++;
-
-					if (Filter != null && !Filter(element)) {
-						continue;
-					}
-
-					string indexer = index.ToString();
-					bool useDefaultIndexFormat = true;
-
-					if (IndexBuilder != null) {
-						indexer = IndexBuilder(context.InstanceToValidate, collection, element, index);
-						useDefaultIndexFormat = false;
-					}
-
-					context.PrepareForChildCollectionValidator();
-					context.PropertyChain.Add(propertyName);
-					context.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
-
-					var valueToValidate = element;
-					var propertyNameToValidate = context.PropertyChain.ToString();
-					var totalFailuresInner = context.Failures.Count;
-					context.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
-
-					foreach (var validator in filteredValidators) {
-						context.MessageFormatter.Reset();
-						if (validator.ShouldValidateAsynchronously(context)) {
-							await InvokePropertyValidatorAsync(context, valueToValidate, propertyNameToValidate, validator, index, cancellation);
-						}
-						else {
-							InvokePropertyValidator(context, valueToValidate, propertyNameToValidate, validator, index);
+						if (!valid) {
+							PrepareMessageFormatterForValidationError(context, valueToValidate);
+							var failure = CreateValidationError(context, valueToValidate, component);
+							context.Failures.Add(failure);
 						}
 
 						// If there has been at least one failure, and our CascadeMode has been set to Stop
@@ -290,7 +209,7 @@ namespace FluentValidation.Internal {
 			if (context.Failures.Count <= totalFailures && DependentRules != null) {
 				foreach (var dependentRule in DependentRules) {
 					cancellation.ThrowIfCancellationRequested();
-					await dependentRule.ValidateAsync(context, cancellation);
+					await dependentRule.ValidateAsync(context, allowAsyncComponents, cancellation);
 				}
 			}
 		}
@@ -300,7 +219,7 @@ namespace FluentValidation.Internal {
 			DependentRules.AddRange(rules);
 		}
 
-		private List<RuleComponent<T,TElement>> GetValidatorsToExecute(ValidationContext<T> context) {
+		private async ValueTask<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, bool allowAsyncComponents, CancellationToken cancellation) {
 			// Loop over each validator and check if its condition allows it to run.
 			// This needs to be done prior to the main loop as within a collection rule
 			// validators' conditions still act upon the root object, not upon the collection property.
@@ -317,59 +236,18 @@ namespace FluentValidation.Internal {
 				}
 
 				if (component.HasAsyncCondition) {
-					throw new AsyncValidatorInvokedSynchronouslyException();
-				}
-			}
-
-			return validators;
-		}
-
-		private async Task<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, CancellationToken cancellation) {
-			// Loop over each validator and check if its condition allows it to run.
-			// This needs to be done prior to the main loop as within a collection rule
-			// validators' conditions still act upon the root object, not upon the collection property.
-			// This allows the property validators to cancel their execution prior to the collection
-			// being retrieved (thereby possibly avoiding NullReferenceExceptions).
-			// Must call ToList so we don't modify the original collection mid-loop.
-			var validators = Components.ToList();
-
-			foreach (var component in Components) {
-				if (component.HasCondition) {
-					if (!component.InvokeCondition(context)) {
-						validators.Remove(component);
+					if (allowAsyncComponents) {
+						if (!await component.InvokeAsyncCondition(context, cancellation)) {
+							validators.Remove(component);
+						}
 					}
-				}
-
-				if (component.HasAsyncCondition) {
-					if (!await component.InvokeAsyncCondition(context, cancellation)) {
-						validators.Remove(component);
+					else {
+						throw new AsyncValidatorInvokedSynchronouslyException();
 					}
 				}
 			}
 
 			return validators;
-		}
-
-		private async Task InvokePropertyValidatorAsync(ValidationContext<T> context, TElement value, string propertyName, RuleComponent<T,TElement> component, int index, CancellationToken cancellation) {
-			context.MessageFormatter.AppendArgument("CollectionIndex", index);
-			bool valid = await component.ValidateAsync(context, value, cancellation);
-
-			if (!valid) {
-				PrepareMessageFormatterForValidationError(context, value);
-				var failure = CreateValidationError(context, value, component);
-				context.Failures.Add(failure);
-			}
-		}
-
-		private void InvokePropertyValidator(ValidationContext<T> context, TElement value, string propertyName, RuleComponent<T, TElement> component, int index) {
-			context.MessageFormatter.AppendArgument("CollectionIndex", index);
-			bool valid = component.Validate(context, value);
-
-			if (!valid) {
-				PrepareMessageFormatterForValidationError(context, value);
-				var failure = CreateValidationError(context, value, component);
-				context.Failures.Add(failure);
-			}
 		}
 
 		private static string InferPropertyName(LambdaExpression expression) {

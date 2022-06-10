@@ -181,46 +181,28 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
-			context.Guard("Cannot pass null to Validate.", nameof(context));
+			if (context == null) throw new ArgumentNullException(nameof(context));
 
-			var result = new ValidationResult(context.Failures);
-			bool shouldContinue = PreValidate(context, result);
+			// Note: Typically sync-over-async is a bad idea,
+			// but it's OK in this situation as no actual async code will be invoked.
+			// This allows us to have 1 code path from rule level downwards rather than
+			// having an explicit Validate/ValidateAsync on rule instances.
+			// We can guarantee that no actual async code is running because by setting
+			// allowAsyncComponents = false we ensure that async components and async conditions
+			// will instead trigger an exception rather than forcibly being run synchronously.
 
-			if (!shouldContinue) {
-				if (!result.IsValid && context.ThrowOnFailures) {
-					RaiseValidationException(context, result);
-				}
-
-				return result;
-			}
-
-			EnsureInstanceNotNull(context.InstanceToValidate);
+			// Note: It's important to call GetResult to signal to the IValueTaskSource that
+			// the ValueTask has now been consumed. We can also use .Result (no need for GetAwaiter().GetResult())
+			// as this is a ValueTask not a Task.
 
 			try {
-				foreach (var rule in Rules) {
-					rule.Validate(context);
-
-					if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
-						// Bail out if we're "failing-fast".
-						// Check for > 0 rather than == 1 because a rule chain may have overridden the Stop behaviour to Continue
-						// meaning that although the first rule failed, it actually generated 2 failures if there were 2 validators
-						// in the chain.
-						break;
-					}
-				}
+				return ValidateInternalAsync(context, allowAsyncComponents: false, default)
+					.Result;
 			}
 			catch (AsyncValidatorInvokedSynchronouslyException) {
 				bool wasInvokedByMvc = context.RootContextData.ContainsKey("InvokedByMvc");
 				throw new AsyncValidatorInvokedSynchronouslyException(GetType(), wasInvokedByMvc);
 			}
-
-			SetExecutedRulesets(result, context);
-
-			if (!result.IsValid && context.ThrowOnFailures) {
-				RaiseValidationException(context, result);
-			}
-
-			return result;
 		}
 
 		/// <summary>
@@ -230,9 +212,12 @@ namespace FluentValidation {
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
-			context.Guard("Cannot pass null to Validate", nameof(context));
+			if (context == null) throw new ArgumentNullException(nameof(context));
 			context.IsAsync = true;
+			return await ValidateInternalAsync(context, allowAsyncComponents: true, cancellation);
+		}
 
+		private async ValueTask<ValidationResult> ValidateInternalAsync(ValidationContext<T> context, bool allowAsyncComponents, CancellationToken cancellation) {
 			var result = new ValidationResult(context.Failures);
 			bool shouldContinue = PreValidate(context, result);
 
@@ -248,7 +233,7 @@ namespace FluentValidation {
 
 			foreach (var rule in Rules) {
 				cancellation.ThrowIfCancellationRequested();
-				await rule.ValidateAsync(context, cancellation);
+				await rule.ValidateAsync(context, allowAsyncComponents, cancellation);
 
 				if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 					// Bail out if we're "failing-fast".
@@ -267,6 +252,7 @@ namespace FluentValidation {
 
 			return result;
 		}
+
 
 		private void SetExecutedRulesets(ValidationResult result, ValidationContext<T> context) {
 			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>{RulesetValidatorSelector.DefaultRuleSetName});
