@@ -139,16 +139,7 @@ namespace FluentValidation.Internal {
 					}
 				}
 
-				bool valid;
-
-				if (component.ShouldValidateAsynchronously(context)) {
-					valid = useAsync
-						? await component.ValidateAsync(context, accessor.Value, cancellation)
-						: throw new AsyncValidatorInvokedSynchronouslyException();
-				}
-				else {
-					valid = component.Validate(context, accessor.Value);
-				}
+				bool valid = await component.ValidateAsync(context, accessor.Value, useAsync, cancellation);
 
 				if (!valid) {
 					PrepareMessageFormatterForValidationError(context, accessor.Value);

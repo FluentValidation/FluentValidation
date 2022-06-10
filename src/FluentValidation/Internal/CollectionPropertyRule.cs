@@ -171,20 +171,7 @@ namespace FluentValidation.Internal {
 						context.MessageFormatter.Reset();
 						context.MessageFormatter.AppendArgument("CollectionIndex", index);
 
-						bool valid;
-
-						if (component.ShouldValidateAsynchronously(context)) {
-							if (useAsync) {
-								valid = await component.ValidateAsync(context, valueToValidate, cancellation);
-							}
-							else {
-								throw new AsyncValidatorInvokedSynchronouslyException();
-							}
-						}
-						else {
-							context.MessageFormatter.AppendArgument("CollectionIndex", index);
-							valid = component.Validate(context, valueToValidate);
-						}
+						bool valid = await component.ValidateAsync(context, valueToValidate, useAsync, cancellation);
 
 						if (!valid) {
 							PrepareMessageFormatterForValidationError(context, valueToValidate);
