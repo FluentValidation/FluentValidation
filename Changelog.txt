@@ -1,3 +1,6 @@
+11.0.3 - 10 June 2022
+Fix an issue where an exception would be thrown when calling ValidateAsync if a rule was wrapped with a call to WhenAsync. (#1955)
+
 11.0.2 - 27 May 2022
 Child validator contexts should contain a reference to their parent context (#1945)
 Support deserialization of ValidationResult using System.Text.Json (#1928)
