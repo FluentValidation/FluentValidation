@@ -188,16 +188,20 @@ namespace FluentValidation {
 			// This allows us to have 1 code path from rule level downwards rather than
 			// having an explicit Validate/ValidateAsync on rule instances.
 			// We can guarantee that no actual async code is running because by setting
-			// useAsync = false we ensure that async components and async conditions
-			// will instead trigger an exception rather than forcibly being run synchronously.
-
-			// Note: It's important to call GetResult to signal to the IValueTaskSource that
-			// the ValueTask has now been consumed. We can also use .Result (no need for GetAwaiter().GetResult())
-			// as this is a ValueTask not a Task.
+			// useAsync = false individual rules will not not attempt to run async components
+			// or async conditions and will instead throw an exception.
+			// This technique is also used internally by Microsoft within the .net runtime.
+			// See https://www.thereformedprogrammer.net/using-valuetask-to-create-methods-that-can-work-as-sync-or-async/
 
 			try {
-				return ValidateInternalAsync(context, useAsync: false, default)
-					.Result;
+				ValueTask<ValidationResult> completedValueTask
+					= ValidateInternalAsync(context, useAsync: false, default);
+
+				// Sync tasks should always be completed.
+				System.Diagnostics.Debug.Assert(completedValueTask.IsCompleted);
+
+				// GetResult() will also bubble up any exceptions correctly.
+				return completedValueTask.GetAwaiter().GetResult();
 			}
 			catch (AsyncValidatorInvokedSynchronouslyException) {
 				bool wasInvokedByMvc = context.RootContextData.ContainsKey("InvokedByMvc");
@@ -252,7 +256,6 @@ namespace FluentValidation {
 
 			return result;
 		}
-
 
 		private void SetExecutedRulesets(ValidationResult result, ValidationContext<T> context) {
 			var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>{RulesetValidatorSelector.DefaultRuleSetName});
