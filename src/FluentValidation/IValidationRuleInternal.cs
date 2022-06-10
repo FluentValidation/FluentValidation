@@ -23,7 +23,7 @@ namespace FluentValidation {
 	using Internal;
 
 	internal interface IValidationRuleInternal<T> : IValidationRule<T> {
-		ValueTask ValidateAsync(ValidationContext<T> context, bool allowAsyncComponents, CancellationToken cancellation);
+		ValueTask ValidateAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation);
 
 		void AddDependentRules(IEnumerable<IValidationRuleInternal<T>> rules);
 	}

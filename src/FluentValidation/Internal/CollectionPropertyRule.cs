@@ -87,7 +87,7 @@ namespace FluentValidation.Internal {
 			return new CollectionPropertyRule<T, TElement>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOriginal));
 		}
 
-		async ValueTask IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, bool allowAsyncComponents, CancellationToken cancellation) {
+		async ValueTask IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -115,7 +115,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (AsyncCondition != null) {
-				if (allowAsyncComponents) {
+				if (useAsync) {
 					if (!await AsyncCondition(context, cancellation)) {
 						return;
 					}
@@ -125,7 +125,7 @@ namespace FluentValidation.Internal {
 				}
 			}
 
-			var filteredValidators = await GetValidatorsToExecuteAsync(context, allowAsyncComponents, cancellation);
+			var filteredValidators = await GetValidatorsToExecuteAsync(context, useAsync, cancellation);
 
 			if (filteredValidators.Count == 0) {
 				// If there are no property validators to execute after running the conditions, bail out.
@@ -174,7 +174,7 @@ namespace FluentValidation.Internal {
 						bool valid;
 
 						if (component.ShouldValidateAsynchronously(context)) {
-							if (allowAsyncComponents) {
+							if (useAsync) {
 								valid = await component.ValidateAsync(context, valueToValidate, cancellation);
 							}
 							else {
@@ -209,7 +209,7 @@ namespace FluentValidation.Internal {
 			if (context.Failures.Count <= totalFailures && DependentRules != null) {
 				foreach (var dependentRule in DependentRules) {
 					cancellation.ThrowIfCancellationRequested();
-					await dependentRule.ValidateAsync(context, allowAsyncComponents, cancellation);
+					await dependentRule.ValidateAsync(context, useAsync, cancellation);
 				}
 			}
 		}
@@ -219,7 +219,7 @@ namespace FluentValidation.Internal {
 			DependentRules.AddRange(rules);
 		}
 
-		private async ValueTask<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, bool allowAsyncComponents, CancellationToken cancellation) {
+		private async ValueTask<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
 			// Loop over each validator and check if its condition allows it to run.
 			// This needs to be done prior to the main loop as within a collection rule
 			// validators' conditions still act upon the root object, not upon the collection property.
@@ -236,7 +236,7 @@ namespace FluentValidation.Internal {
 				}
 
 				if (component.HasAsyncCondition) {
-					if (allowAsyncComponents) {
+					if (useAsync) {
 						if (!await component.InvokeAsyncCondition(context, cancellation)) {
 							validators.Remove(component);
 						}

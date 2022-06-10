@@ -188,7 +188,7 @@ namespace FluentValidation {
 			// This allows us to have 1 code path from rule level downwards rather than
 			// having an explicit Validate/ValidateAsync on rule instances.
 			// We can guarantee that no actual async code is running because by setting
-			// allowAsyncComponents = false we ensure that async components and async conditions
+			// useAsync = false we ensure that async components and async conditions
 			// will instead trigger an exception rather than forcibly being run synchronously.
 
 			// Note: It's important to call GetResult to signal to the IValueTaskSource that
@@ -196,7 +196,7 @@ namespace FluentValidation {
 			// as this is a ValueTask not a Task.
 
 			try {
-				return ValidateInternalAsync(context, allowAsyncComponents: false, default)
+				return ValidateInternalAsync(context, useAsync: false, default)
 					.Result;
 			}
 			catch (AsyncValidatorInvokedSynchronouslyException) {
@@ -214,10 +214,10 @@ namespace FluentValidation {
 		public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
 			if (context == null) throw new ArgumentNullException(nameof(context));
 			context.IsAsync = true;
-			return await ValidateInternalAsync(context, allowAsyncComponents: true, cancellation);
+			return await ValidateInternalAsync(context, useAsync: true, cancellation);
 		}
 
-		private async ValueTask<ValidationResult> ValidateInternalAsync(ValidationContext<T> context, bool allowAsyncComponents, CancellationToken cancellation) {
+		private async ValueTask<ValidationResult> ValidateInternalAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
 			var result = new ValidationResult(context.Failures);
 			bool shouldContinue = PreValidate(context, result);
 
@@ -233,7 +233,7 @@ namespace FluentValidation {
 
 			foreach (var rule in Rules) {
 				cancellation.ThrowIfCancellationRequested();
-				await rule.ValidateAsync(context, allowAsyncComponents, cancellation);
+				await rule.ValidateAsync(context, useAsync, cancellation);
 
 				if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 					// Bail out if we're "failing-fast".

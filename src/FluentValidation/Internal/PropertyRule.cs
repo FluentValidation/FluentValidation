@@ -72,7 +72,7 @@ namespace FluentValidation.Internal {
 		/// Performs validation using a validation context and adds collected validation failures to the Context.
 		/// </summary>
 		/// <param name="context">Validation Context</param>
-		/// <param name="allowAsyncComponents">
+		/// <param name="useAsync">
 		/// Whether asynchronous components are allowed to execute.
 		/// This will be set to True when ValidateAsync is called on the root validator.
 		/// This will be set to False when Validate is called on the root validator.
@@ -80,7 +80,7 @@ namespace FluentValidation.Internal {
 		/// When set to False, an exception will be thrown if a component can only be executed asynchronously or if a component has an async condition associated with it.
 		/// </param>
 		/// <param name="cancellation"></param>
-		public virtual async ValueTask ValidateAsync(ValidationContext<T> context, bool allowAsyncComponents, CancellationToken cancellation) {
+		public virtual async ValueTask ValidateAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
 			string displayName = GetDisplayName(context);
 
 			if (PropertyName == null && displayName == null) {
@@ -104,7 +104,7 @@ namespace FluentValidation.Internal {
 			}
 
 			if (AsyncCondition != null) {
-				if (allowAsyncComponents) {
+				if (useAsync) {
 					if (!await AsyncCondition(context, cancellation)) {
 						return;
 					}
@@ -129,7 +129,7 @@ namespace FluentValidation.Internal {
 				}
 
 				if (component.HasAsyncCondition) {
-					if (allowAsyncComponents) {
+					if (useAsync) {
 						if (!await component.InvokeAsyncCondition(context, cancellation)) {
 							continue;
 						}
@@ -142,7 +142,7 @@ namespace FluentValidation.Internal {
 				bool valid;
 
 				if (component.ShouldValidateAsynchronously(context)) {
-					valid = allowAsyncComponents
+					valid = useAsync
 						? await component.ValidateAsync(context, accessor.Value, cancellation)
 						: throw new AsyncValidatorInvokedSynchronouslyException();
 				}
@@ -166,7 +166,7 @@ namespace FluentValidation.Internal {
 			if (context.Failures.Count <= totalFailures && DependentRules != null) {
 				foreach (var dependentRule in DependentRules) {
 					cancellation.ThrowIfCancellationRequested();
-					await dependentRule.ValidateAsync(context, allowAsyncComponents, cancellation);
+					await dependentRule.ValidateAsync(context, useAsync, cancellation);
 				}
 			}
 		}
