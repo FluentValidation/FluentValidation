@@ -391,5 +391,21 @@ namespace FluentValidation.Tests.AspNetCore {
 			result.IsValidField("DateOfBirth").ShouldBeFalse(); //Date of Birth not specified (implicit required error)
 			result.IsValidField("Surname").ShouldBeFalse(); //cross-property
 		}
+
+		[Fact]
+		public async Task Generates_error_when_async_validator_invoked_synchronously() {
+			var client = _webApp.CreateClientWithServices(services => {
+				services.AddFluentValidation();
+				services.AddMvc().AddNewtonsoftJson();
+				services.AddScoped<IValidator<BadAsyncModel>, BadAsyncValidator>();
+			});
+
+			var ex = await Assert.ThrowsAsync<AsyncValidatorInvokedSynchronouslyException>(async () => {
+				await client.PostResponse("/Test/BadAsyncModel", new FormData());
+			});
+
+			// Default exception message should've been swapped out for the asp.net specific version.
+			ex.Message.ShouldEqual("Validator \"BadAsyncValidator\" can't be used with ASP.NET automatic validation as it contains asynchronous rules. ASP.NET's validation pipeline is not asynchronous and can't invoke asynchronous rules. Remove the asynchronous rules in order for this validator to run.");
+		}
 	}
 }

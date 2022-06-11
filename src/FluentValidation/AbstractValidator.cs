@@ -42,11 +42,11 @@ namespace FluentValidation {
 		/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
 		/// <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
 		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>., based on the same logic as used when setting
-		/// this property as described below. 
+		/// this property as described below.
 		/// </para>
 		/// <para>
 		/// Sets the values of <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
-		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>. 
+		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
 		/// </para>
 		/// <para>
 		/// If set to <see cref="CascadeMode.Continue"/> or <see cref="CascadeMode.Stop"/>, then both properties are set

@@ -111,15 +111,7 @@ namespace FluentValidation.AspNetCore {
 					context = interceptor.BeforeAspNetValidation(mvContext.ActionContext, context) ?? context;
 				}
 
-
-				ValidationResult result;
-
-				try {
-					result = validator.Validate(context);
-				}
-				catch (AsyncValidatorInvokedSynchronouslyException ex) {
-					throw new AsyncValidatorInvokedSynchronouslyException($"The validator \"{ex.ValidatorType.Name}\" can't be used with ASP.NET automatic validation as it contains asynchronous rules.");
-				}
+				var result = validator.Validate(context);
 
 				if (interceptor != null) {
 					// allow the user to provide a custom collection of failures, which could be empty.

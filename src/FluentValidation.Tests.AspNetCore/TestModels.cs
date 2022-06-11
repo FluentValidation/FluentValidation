@@ -3,6 +3,7 @@ namespace FluentValidation.Tests.AspNetCore {
 	using System.Collections;
 	using System.Collections.Generic;
 	using System.ComponentModel.DataAnnotations;
+	using System.Net.Http;
 	using FluentValidation;
 	using FluentValidation.AspNetCore;
 	using FluentValidation.Results;
@@ -435,6 +436,22 @@ namespace FluentValidation.Tests.AspNetCore {
 	public class InjectsExplicitChildValidatorCollection : AbstractValidator<ParentModel6> {
 		public InjectsExplicitChildValidatorCollection() {
 			RuleForEach(x => x.Children).InjectValidator();
+		}
+	}
+
+	public class BadAsyncModel {
+		public int Id { get; set; }
+	}
+
+	// Not allowed with ASP.NET auto-validation.
+	// Async calls during auto validation should trigger an exception.
+	public class BadAsyncValidator : AbstractValidator<BadAsyncModel> {
+		public BadAsyncValidator() {
+			RuleFor(x => x.Id).MustAsync(async (id, cancel) => {
+				var client = new HttpClient();
+				var resp = await client.GetAsync("https://dotnet.microsoft.com/");
+				return resp.IsSuccessStatusCode;
+			});
 		}
 	}
 }
