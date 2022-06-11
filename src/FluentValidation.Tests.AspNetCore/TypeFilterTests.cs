@@ -16,51 +16,50 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System.Net.Http;
-	using System.Threading.Tasks;
-	using AspNetCore;
-	using AspNetCore.Controllers;
-	using FluentValidation.AspNetCore;
-	using Microsoft.Extensions.DependencyInjection;
-	using Xunit;
-	using Xunit.Abstractions;
+namespace FluentValidation.Tests;
 
-	public class TypeFilterTests : IClassFixture<WebAppFixture> {
-		private WebAppFixture _webApp;
+using System.Threading.Tasks;
+using AspNetCore;
+using Controllers;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+using Xunit;
+using Xunit.Abstractions;
 
-		public TypeFilterTests(ITestOutputHelper output, WebAppFixture webApp) {
-			_webApp = webApp;
-		}
+public class TypeFilterTests : IClassFixture<WebAppFixture> {
+	private WebAppFixture _webApp;
 
-		[Fact]
-		public async Task Finds_and_executes_validator() {
-			var client = _webApp.CreateClientWithServices(services => {
-				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+	public TypeFilterTests(ITestOutputHelper output, WebAppFixture webApp) {
+		_webApp = webApp;
+	}
+
+	[Fact]
+	public async Task Finds_and_executes_validator() {
+		var client = _webApp.CreateClientWithServices(services => {
+			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+				fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+			});
+		});
+		var result = await client.GetErrors("InjectsExplicitChildValidator");
+
+		// Validator was found and executed so field shouldn't be valid.
+		result.IsValidField("Child.Name").ShouldBeFalse();
+
+	}
+
+	[Fact]
+	public async Task Filters_types() {
+		var client = _webApp.CreateClientWithServices(services => {
+			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+				fv.RegisterValidatorsFromAssemblyContaining<TestController>(scanResult => {
+					return scanResult.ValidatorType != typeof(InjectsExplicitChildValidator);
 				});
 			});
-			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
+		});
 
-			// Validator was found and executed so field shouldn't be valid.
-			result.IsValidField("Child.Name").ShouldBeFalse();
+		var result = await client.GetErrors("InjectsExplicitChildValidator");
 
-		}
-
-		[Fact]
-		public async Task Filters_types() {
-			var client = _webApp.CreateClientWithServices(services => {
-				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-					fv.RegisterValidatorsFromAssemblyContaining<TestController>(scanResult => {
-						return scanResult.ValidatorType != typeof(InjectsExplicitChildValidator);
-					});
-				});
-			});
-
-			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
-
-			// Should be valid as the validator was skipped.
-			result.IsValidField("Child.Name").ShouldBeTrue();
-		}
+		// Should be valid as the validator was skipped.
+		result.IsValidField("Child.Name").ShouldBeTrue();
 	}
 }

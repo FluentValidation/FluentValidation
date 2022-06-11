@@ -1,34 +1,34 @@
-﻿namespace FluentValidation.Tests.AspNetCore.Controllers {
-	using FluentValidation.AspNetCore;
-	using Microsoft.AspNetCore.Mvc;
+﻿namespace FluentValidation.Tests.Controllers;
 
-	public class ClientsideController : Controller {
-		public ActionResult Inputs() {
-			return View();
-		}
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc;
 
-		public ActionResult DefaultRuleset() {
-			return View("RuleSet");
-		}
+public class ClientsideController : Controller {
+	public ActionResult Inputs() {
+		return View();
+	}
 
-		[RuleSetForClientSideMessages("Foo")]
-		public ActionResult SpecifiedRuleset() {
-			return View("RuleSet");
-		}
+	public ActionResult DefaultRuleset() {
+		return View("RuleSet");
+	}
 
-		[RuleSetForClientSideMessages("Foo", "Bar")]
-		public ActionResult MultipleRulesets() {
-			return View("RuleSet");
-		}
+	[RuleSetForClientSideMessages("Foo")]
+	public ActionResult SpecifiedRuleset() {
+		return View("RuleSet");
+	}
 
-		[RuleSetForClientSideMessages("Foo", "default")]
-		public ActionResult DefaultAndSpecified() {
-			return View("RuleSet");
-		}
+	[RuleSetForClientSideMessages("Foo", "Bar")]
+	public ActionResult MultipleRulesets() {
+		return View("RuleSet");
+	}
 
-		[RuleSetForClientSideMessages("*")]
-		public ActionResult All() {
-			return View("RuleSet");
-		}
+	[RuleSetForClientSideMessages("Foo", "default")]
+	public ActionResult DefaultAndSpecified() {
+		return View("RuleSet");
+	}
+
+	[RuleSetForClientSideMessages("*")]
+	public ActionResult All() {
+		return View("RuleSet");
 	}
 }

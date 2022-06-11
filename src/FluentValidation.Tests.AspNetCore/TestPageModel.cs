@@ -2,7 +2,7 @@ namespace FluentValidation.Tests {
 	using System.Collections.Generic;
 	using System.Threading.Tasks;
 	using AspNetCore;
-	using AspNetCore.Controllers;
+	using Controllers;
 	using FluentValidation.AspNetCore;
 	using Microsoft.AspNetCore.Mvc;
 	using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -124,7 +124,6 @@ namespace FluentValidation.Tests {
 
 		public IActionResult OnGetDefault() => Page();
 
-#if NETCOREAPP3_1 || NET5_0
 		public IActionResult OnGetSpecified() {
 			PageContext.SetRulesetForClientsideMessages("Foo");
 			return Page();
@@ -139,6 +138,5 @@ namespace FluentValidation.Tests {
 			PageContext.SetRulesetForClientsideMessages("Foo", "default");
 			return Page();
 		}
-#endif
 	}
 }

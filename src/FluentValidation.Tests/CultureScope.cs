@@ -15,35 +15,35 @@
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
-namespace FluentValidation.Tests {
-	using System;
-	using System.Globalization;
-	using System.Threading;
+namespace FluentValidation.Tests;
 
-	public class CultureScope : IDisposable {
-		CultureInfo _originalUiCulture;
-		CultureInfo _originalCulture;
+using System;
+using System.Globalization;
+using System.Threading;
 
-		public CultureScope(CultureInfo culture) {
-			_originalCulture = Thread.CurrentThread.CurrentCulture;
-			_originalUiCulture = Thread.CurrentThread.CurrentUICulture;
+public class CultureScope : IDisposable {
+	CultureInfo _originalUiCulture;
+	CultureInfo _originalCulture;
 
-			Thread.CurrentThread.CurrentCulture = culture;
-			Thread.CurrentThread.CurrentUICulture = culture;
-		}
+	public CultureScope(CultureInfo culture) {
+		_originalCulture = Thread.CurrentThread.CurrentCulture;
+		_originalUiCulture = Thread.CurrentThread.CurrentUICulture;
 
-		public CultureScope(string culture) : this(new CultureInfo(culture)) {
+		Thread.CurrentThread.CurrentCulture = culture;
+		Thread.CurrentThread.CurrentUICulture = culture;
+	}
 
-		}
+	public CultureScope(string culture) : this(new CultureInfo(culture)) {
 
-		public void Dispose() {
-			Thread.CurrentThread.CurrentCulture = _originalCulture;
-			Thread.CurrentThread.CurrentUICulture = _originalUiCulture;
-		}
+	}
 
-		public static void SetDefaultCulture() {
-			Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
-			Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
-		}
+	public void Dispose() {
+		Thread.CurrentThread.CurrentCulture = _originalCulture;
+		Thread.CurrentThread.CurrentUICulture = _originalUiCulture;
+	}
+
+	public static void SetDefaultCulture() {
+		Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+		Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
 	}
 }

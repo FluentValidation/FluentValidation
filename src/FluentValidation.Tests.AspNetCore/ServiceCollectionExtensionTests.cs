@@ -1,94 +1,94 @@
-﻿namespace FluentValidation.Tests {
-	using System.Linq;
-	using Microsoft.Extensions.DependencyInjection;
-	using Xunit;
+﻿namespace FluentValidation.Tests;
 
-	public class ServiceCollectionExtensionTests {
-		public class TestClass { }
-		public class TestValidator : AbstractValidator<TestClass> { }
-		public class TestValidator2 : AbstractValidator<TestClass> { }
-		internal class TestValidatorInternal : AbstractValidator<TestClass> { }
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Xunit;
 
-		[Fact]
-		public void Should_resolve_validator_auto_registered_from_assembly_as_self() {
-			var serviceProvider = new ServiceCollection()
-				.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>()
-				.BuildServiceProvider();
+public class ServiceCollectionExtensionTests {
+	public class TestClass { }
+	public class TestValidator : AbstractValidator<TestClass> { }
+	public class TestValidator2 : AbstractValidator<TestClass> { }
+	internal class TestValidatorInternal : AbstractValidator<TestClass> { }
 
-			serviceProvider.GetService<TestValidator>().ShouldNotBeNull();
-		}
+	[Fact]
+	public void Should_resolve_validator_auto_registered_from_assembly_as_self() {
+		var serviceProvider = new ServiceCollection()
+			.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>()
+			.BuildServiceProvider();
 
-		[Fact]
-		public void Should_resolve_validator_auto_registered_from_assembly_as_interface() {
-			var serviceProvider = new ServiceCollection()
-				.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>()
-				.BuildServiceProvider();
+		serviceProvider.GetService<TestValidator>().ShouldNotBeNull();
+	}
 
-			serviceProvider.GetService<IValidator<TestClass>>().ShouldNotBeNull();
-		}
+	[Fact]
+	public void Should_resolve_validator_auto_registered_from_assembly_as_interface() {
+		var serviceProvider = new ServiceCollection()
+			.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>()
+			.BuildServiceProvider();
 
-		[Fact]
-		public void AddValidatorsFromAssemblyContaining_T_When_Instructed_Should_Add_Internal_Validators() {
-			var serviceCollection = new ServiceCollection()
-				.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>(includeInternalTypes: true);
+		serviceProvider.GetService<IValidator<TestClass>>().ShouldNotBeNull();
+	}
 
-			Assert.Contains(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
-		}
+	[Fact]
+	public void AddValidatorsFromAssemblyContaining_T_When_Instructed_Should_Add_Internal_Validators() {
+		var serviceCollection = new ServiceCollection()
+			.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>(includeInternalTypes: true);
 
-		[Fact]
-		public void AddValidatorsFromAssemblyContaining_T_By_Default_Should_Not_Add_Internal_Validators() {
-			var serviceCollection = new ServiceCollection()
-				.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>();
+		Assert.Contains(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
+	}
 
-			Assert.DoesNotContain(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
-		}
+	[Fact]
+	public void AddValidatorsFromAssemblyContaining_T_By_Default_Should_Not_Add_Internal_Validators() {
+		var serviceCollection = new ServiceCollection()
+			.AddValidatorsFromAssemblyContaining<ServiceCollectionExtensionTests>();
 
-		[Fact]
-		public void AddValidatorsFromAssemblyContaining_When_Instructed_Should_Add_Internal_Validators() {
-			var serviceCollection = new ServiceCollection()
-				.AddValidatorsFromAssemblyContaining(typeof(ServiceCollectionExtensionTests), includeInternalTypes: true);
+		Assert.DoesNotContain(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
+	}
 
-			Assert.Contains(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
-		}
+	[Fact]
+	public void AddValidatorsFromAssemblyContaining_When_Instructed_Should_Add_Internal_Validators() {
+		var serviceCollection = new ServiceCollection()
+			.AddValidatorsFromAssemblyContaining(typeof(ServiceCollectionExtensionTests), includeInternalTypes: true);
 
-		[Fact]
-		public void AddValidatorsFromAssemblyContaining_By_Default_Should_Not_Add_Internal_Validators() {
-			var serviceCollection = new ServiceCollection()
-				.AddValidatorsFromAssemblyContaining(typeof(ServiceCollectionExtensionTests));
+		Assert.Contains(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
+	}
 
-			Assert.DoesNotContain(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
-		}
+	[Fact]
+	public void AddValidatorsFromAssemblyContaining_By_Default_Should_Not_Add_Internal_Validators() {
+		var serviceCollection = new ServiceCollection()
+			.AddValidatorsFromAssemblyContaining(typeof(ServiceCollectionExtensionTests));
 
-		[Fact]
-		public void AddValidatorsFromAssembly_When_Instructed_Should_Add_Internal_Validators() {
-			var serviceCollection = new ServiceCollection()
-				.AddValidatorsFromAssembly(typeof(ServiceCollectionExtensionTests).Assembly, includeInternalTypes: true);
+		Assert.DoesNotContain(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
+	}
 
-			Assert.Contains(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
-		}
+	[Fact]
+	public void AddValidatorsFromAssembly_When_Instructed_Should_Add_Internal_Validators() {
+		var serviceCollection = new ServiceCollection()
+			.AddValidatorsFromAssembly(typeof(ServiceCollectionExtensionTests).Assembly, includeInternalTypes: true);
 
-		[Fact]
-		public void AddValidatorsFromAssembly_By_Default_Should_Not_Add_Internal_Validators() {
-			var serviceCollection = new ServiceCollection()
-				.AddValidatorsFromAssembly(typeof(ServiceCollectionExtensionTests).Assembly);
+		Assert.Contains(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
+	}
 
-			Assert.DoesNotContain(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
-		}
+	[Fact]
+	public void AddValidatorsFromAssembly_By_Default_Should_Not_Add_Internal_Validators() {
+		var serviceCollection = new ServiceCollection()
+			.AddValidatorsFromAssembly(typeof(ServiceCollectionExtensionTests).Assembly);
 
-		[Fact]
-		public void AddValidatorsFromAssemblies_When_Instructed_Should_Add_Internal_Validators() {
-			var serviceCollection = new ServiceCollection()
-				.AddValidatorsFromAssemblies(new[] { typeof(ServiceCollectionExtensionTests).Assembly }, includeInternalTypes: true);
+		Assert.DoesNotContain(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
+	}
 
-			Assert.Contains(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
-		}
+	[Fact]
+	public void AddValidatorsFromAssemblies_When_Instructed_Should_Add_Internal_Validators() {
+		var serviceCollection = new ServiceCollection()
+			.AddValidatorsFromAssemblies(new[] { typeof(ServiceCollectionExtensionTests).Assembly }, includeInternalTypes: true);
 
-		[Fact]
-		public void AddValidatorsFromAssemblies_By_Default_Should_Not_Add_Internal_Validators() {
-			var serviceCollection = new ServiceCollection()
-				.AddValidatorsFromAssemblies(new[] { typeof(ServiceCollectionExtensionTests).Assembly });
+		Assert.Contains(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
+	}
 
-			Assert.DoesNotContain(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
-		}
+	[Fact]
+	public void AddValidatorsFromAssemblies_By_Default_Should_Not_Add_Internal_Validators() {
+		var serviceCollection = new ServiceCollection()
+			.AddValidatorsFromAssemblies(new[] { typeof(ServiceCollectionExtensionTests).Assembly });
+
+		Assert.DoesNotContain(serviceCollection, o => o.ImplementationType == typeof(TestValidatorInternal));
 	}
 }

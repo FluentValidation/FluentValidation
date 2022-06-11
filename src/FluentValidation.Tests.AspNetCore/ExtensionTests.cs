@@ -18,68 +18,68 @@
 
 #endregion
 
-namespace FluentValidation.Tests.AspNetCore {
-	using Xunit;
-	using FluentValidation.AspNetCore;
-	using Microsoft.AspNetCore.Mvc.ModelBinding;
-	using FluentValidation.Results;
+namespace FluentValidation.Tests;
 
-	public class ValidationResultExtensionTests {
-		private ValidationResult result;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Xunit;
 
-		public ValidationResultExtensionTests() {
-			result = new ValidationResult(new[] {
-				new ValidationFailure("foo", "A foo error occurred", "x"),
-				new ValidationFailure("bar", "A bar error occurred", "y"),
-				new ValidationFailure("", "A nameless error occurred", "z"),
-			});
-		}
+public class ValidationResultExtensionTests {
+	private ValidationResult result;
 
-		[Fact]
-		public void Should_persist_to_modelstate() {
-			var modelstate = new ModelStateDictionary();
-			result.AddToModelState(modelstate, null);
+	public ValidationResultExtensionTests() {
+		result = new ValidationResult(new[] {
+			new ValidationFailure("foo", "A foo error occurred", "x"),
+			new ValidationFailure("bar", "A bar error occurred", "y"),
+			new ValidationFailure("", "A nameless error occurred", "z"),
+		});
+	}
 
-			modelstate.IsValid.ShouldBeFalse();
-			modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
-			modelstate["bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
-			modelstate[""].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
-		}
+	[Fact]
+	public void Should_persist_to_modelstate() {
+		var modelstate = new ModelStateDictionary();
+		result.AddToModelState(modelstate, null);
 
-		[Fact]
-		public void Should_persist_modelstate_with_empty_prefix() {
-			var modelstate = new ModelStateDictionary();
-			result.AddToModelState(modelstate, "");
-			modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
-			modelstate[""].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
-		}
+		modelstate.IsValid.ShouldBeFalse();
+		modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
+		modelstate["bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
+		modelstate[""].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
+	}
 
-		[Fact]
-		public void Should_persist_to_modelstate_with_prefix() {
-			var modelstate = new ModelStateDictionary();
-			result.AddToModelState(modelstate, "baz");
+	[Fact]
+	public void Should_persist_modelstate_with_empty_prefix() {
+		var modelstate = new ModelStateDictionary();
+		result.AddToModelState(modelstate, "");
+		modelstate["foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
+		modelstate[""].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
+	}
 
-			modelstate.IsValid.ShouldBeFalse();
-			modelstate["baz.foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
-			modelstate["baz.bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
-			modelstate["baz"].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
-		}
+	[Fact]
+	public void Should_persist_to_modelstate_with_prefix() {
+		var modelstate = new ModelStateDictionary();
+		result.AddToModelState(modelstate, "baz");
 
-		[Fact]
-		public void Should_do_nothing_if_result_is_valid() {
-			var modelState = new ModelStateDictionary();
-			new ValidationResult().AddToModelState(modelState, null);
-			modelState.IsValid.ShouldBeTrue();
-		}
+		modelstate.IsValid.ShouldBeFalse();
+		modelstate["baz.foo"].Errors[0].ErrorMessage.ShouldEqual("A foo error occurred");
+		modelstate["baz.bar"].Errors[0].ErrorMessage.ShouldEqual("A bar error occurred");
+		modelstate["baz"].Errors[0].ErrorMessage.ShouldEqual("A nameless error occurred");
+	}
 
-		[Fact]
-		public void Does_not_overwrite_existing_values() {
-			var modelstate = new ModelStateDictionary();
-			modelstate.AddModelError("model.Foo", "Foo");
+	[Fact]
+	public void Should_do_nothing_if_result_is_valid() {
+		var modelState = new ModelStateDictionary();
+		new ValidationResult().AddToModelState(modelState, null);
+		modelState.IsValid.ShouldBeTrue();
+	}
 
-			result.AddToModelState(modelstate, "model");
+	[Fact]
+	public void Does_not_overwrite_existing_values() {
+		var modelstate = new ModelStateDictionary();
+		modelstate.AddModelError("model.Foo", "Foo");
 
-			modelstate["model.Foo"].Errors.Count.ShouldEqual(2);
-		}
+		result.AddToModelState(modelstate, "model");
+
+		modelstate["model.Foo"].Errors.Count.ShouldEqual(2);
 	}
 }

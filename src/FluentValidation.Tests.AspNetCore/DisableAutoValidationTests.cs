@@ -16,50 +16,50 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests.AspNetCore {
-	using System.Threading.Tasks;
-	using FluentValidation.AspNetCore;
-	using Controllers;
-	using Microsoft.Extensions.DependencyInjection;
-	using Xunit;
-	using Xunit.Abstractions;
+namespace FluentValidation.Tests;
 
-	public class DisableAutoValidationTests : IClassFixture<WebAppFixture> {
-		private WebAppFixture _webApp;
+using System.Threading.Tasks;
+using Controllers;
+using FluentValidation.AspNetCore;
+using Microsoft.Extensions.DependencyInjection;
+using Xunit;
+using Xunit.Abstractions;
 
-		public DisableAutoValidationTests(ITestOutputHelper output, WebAppFixture webApp) {
-			_webApp = webApp;
-		}
+public class DisableAutoValidationTests : IClassFixture<WebAppFixture> {
+	private WebAppFixture _webApp;
 
-		[Fact]
-		public async Task Disables_automatic_validation() {
-			var client = _webApp.CreateClientWithServices(services => {
-				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-					fv.AutomaticValidationEnabled = false;
-				});
+	public DisableAutoValidationTests(ITestOutputHelper output, WebAppFixture webApp) {
+		_webApp = webApp;
+	}
+
+	[Fact]
+	public async Task Disables_automatic_validation() {
+		var client = _webApp.CreateClientWithServices(services => {
+			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+				fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+				fv.AutomaticValidationEnabled = false;
 			});
+		});
 
-			var result = await client.GetErrors("InjectsExplicitChildValidator", new FormData());
+		var result = await client.GetErrors("InjectsExplicitChildValidator");
 
-			// Should be valid as automatic validation is completely disabled..
-			result.IsValidField("Child.Name").ShouldBeTrue();
-		}
+		// Should be valid as automatic validation is completely disabled..
+		result.IsValidField("Child.Name").ShouldBeTrue();
+	}
 
-		[Fact]
-		public async Task Disables_automatic_validation_for_implicit_validation() {
-			var client = _webApp.CreateClientWithServices(services => {
-				services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-					fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-					fv.ImplicitlyValidateChildProperties = true;
-					// Disabling auto validation supersedes enabling implicit validation.
-					fv.AutomaticValidationEnabled = false;
-				});
+	[Fact]
+	public async Task Disables_automatic_validation_for_implicit_validation() {
+		var client = _webApp.CreateClientWithServices(services => {
+			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+				fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+				fv.ImplicitlyValidateChildProperties = true;
+				// Disabling auto validation supersedes enabling implicit validation.
+				fv.AutomaticValidationEnabled = false;
 			});
+		});
 
-			var result = await client.GetErrors("ImplicitChildValidator", new FormData());
-			// Validation is disabled; no errors.
-			result.Count.ShouldEqual(0);
-		}
+		var result = await client.GetErrors("ImplicitChildValidator");
+		// Validation is disabled; no errors.
+		result.Count.ShouldEqual(0);
 	}
 }
