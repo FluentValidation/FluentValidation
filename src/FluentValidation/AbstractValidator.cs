@@ -183,16 +183,14 @@ namespace FluentValidation {
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
 			if (context == null) throw new ArgumentNullException(nameof(context));
 
-			// Note: Typically sync-over-async is a bad idea,
-			// but it's OK in this situation as no actual async code will be invoked.
-			// This allows us to have 1 code path from rule level downwards rather than
-			// having an explicit Validate/ValidateAsync on rule instances.
-			// We can guarantee that no actual async code is running because by setting
-			// useAsync = false individual rules will not not attempt to run async components
-			// or async conditions and will instead throw an exception.
-			// This technique is also used internally by Microsoft within the .net runtime.
+			// Note: Sync-over-async is OK in this scenario.
+			// The use of the `useAsync` parameter ensures that no async code is
+			// actually run, and we're using ValueTask
+			// which is optimised for synchronous execution of tasks.
+			// Unlike 'real' sync-over-async, we can never run into deadlocks as we're not actually invoking anything asynchronously.
+			// See RuleComponent.ValidateAsync for the lowest level.
+			// This technique is used by Microsoft within the .net runtime to avoid duplicate code paths for sync/async.
 			// See https://www.thereformedprogrammer.net/using-valuetask-to-create-methods-that-can-work-as-sync-or-async/
-
 			try {
 				ValueTask<ValidationResult> completedValueTask
 					= ValidateInternalAsync(context, useAsync: false, default);
@@ -204,6 +202,7 @@ namespace FluentValidation {
 				return completedValueTask.GetAwaiter().GetResult();
 			}
 			catch (AsyncValidatorInvokedSynchronouslyException) {
+				// If we tempted to execute an async validator, re-create the exception with more useful info.
 				bool wasInvokedByMvc = context.RootContextData.ContainsKey("InvokedByMvc");
 				throw new AsyncValidatorInvokedSynchronouslyException(GetType(), wasInvokedByMvc);
 			}
