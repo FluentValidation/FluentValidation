@@ -202,7 +202,7 @@ namespace FluentValidation {
 				return completedValueTask.GetAwaiter().GetResult();
 			}
 			catch (AsyncValidatorInvokedSynchronouslyException) {
-				// If we tempted to execute an async validator, re-create the exception with more useful info.
+				// If we attempted to execute an async validator, re-create the exception with more useful info.
 				bool wasInvokedByMvc = context.RootContextData.ContainsKey("InvokedByMvc");
 				throw new AsyncValidatorInvokedSynchronouslyException(GetType(), wasInvokedByMvc);
 			}
