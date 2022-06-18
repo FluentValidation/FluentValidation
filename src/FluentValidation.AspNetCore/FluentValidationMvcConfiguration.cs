@@ -44,6 +44,7 @@ namespace FluentValidation.AspNetCore {
 		/// <summary>
 		/// The validator factory to use. Uses the ServiceProviderValidatorFactory by default.
 		/// </summary>
+		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
 		public IValidatorFactory ValidatorFactory { get; set; }
 
 		/// <summary>
@@ -116,7 +117,9 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
 		/// <param name="includeInternalTypes">Include internal validators. The default is false.</param>
 		public FluentValidationMvcConfiguration RegisterValidatorsFromAssembly(Assembly assembly, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped, bool includeInternalTypes = false) {
+#pragma warning disable CS0618
 			ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
+#pragma warning restore CS0618
 			AssembliesToRegister.Add(assembly);
 			TypeFilter = filter;
 			ServiceLifetime = lifetime;
@@ -132,7 +135,9 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="lifetime">The service lifetime that should be used for the validator registration. Defaults to Scoped</param>
 		/// <param name="includeInternalTypes">Include internal validators. The default is false.</param>
 		public FluentValidationMvcConfiguration RegisterValidatorsFromAssemblies(IEnumerable<Assembly> assemblies, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, ServiceLifetime lifetime = ServiceLifetime.Scoped, bool includeInternalTypes = false) {
+#pragma warning disable CS0618
 			ValidatorFactoryType = typeof(ServiceProviderValidatorFactory);
+#pragma warning restore CS0618
 			AssembliesToRegister.AddRange(assemblies);
 			TypeFilter = filter;
 			ServiceLifetime = lifetime;

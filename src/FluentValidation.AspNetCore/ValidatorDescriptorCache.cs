@@ -48,7 +48,9 @@ namespace FluentValidation.AspNetCore {
 				return descriptor;
 			}
 
+#pragma warning disable CS0618
 			var validatorFactory = (IValidatorFactory)httpContextAccessor.HttpContext.RequestServices.GetService(typeof(IValidatorFactory));
+#pragma warning restore CS0618
 
 			var validator = validatorFactory.GetValidator(modelType);
 			descriptor = validator?.CreateDescriptor();

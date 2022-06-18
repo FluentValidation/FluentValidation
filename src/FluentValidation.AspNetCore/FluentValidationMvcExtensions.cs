@@ -69,6 +69,7 @@ namespace FluentValidation.AspNetCore {
 			services.AddValidatorsFromAssemblies(config.AssembliesToRegister, config.ServiceLifetime, config.TypeFilter, config.IncludeInternalValidatorTypes);
 			services.AddSingleton(config.ValidatorOptions);
 
+#pragma warning disable CS0618
 			if (config.ValidatorFactory != null) {
 				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type.
 				var factory = config.ValidatorFactory;
@@ -77,6 +78,7 @@ namespace FluentValidation.AspNetCore {
 			else {
 				services.Add(ServiceDescriptor.Scoped(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
 			}
+#pragma warning restore CS0618
 
 			if (config.AutomaticValidationEnabled) {
 				services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {

@@ -22,6 +22,7 @@ namespace FluentValidation {
 	/// <summary>
 	/// Factory for creating validators
 	/// </summary>
+	[Obsolete("IValidatorFactory and its implementors are deprecated and will be removed in a future release. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
 	public abstract class ValidatorFactoryBase : IValidatorFactory {
 		/// <summary>
 		/// Gets a validator for a type
