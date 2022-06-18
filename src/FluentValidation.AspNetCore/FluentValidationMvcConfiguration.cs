@@ -63,6 +63,7 @@ namespace FluentValidation.AspNetCore {
 		/// <summary>
 		/// Whether or not child properties should be implicitly validated if a matching validator can be found. By default this is false, and you should wire up child validators using SetValidator.
 		/// </summary>
+		[Obsolete("Implicit validation of child properties deprecated and will be removed in a future release. Please use SetValidator instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
 		public bool ImplicitlyValidateChildProperties { get; set; }
 
 		/// <summary>
@@ -71,6 +72,7 @@ namespace FluentValidation.AspNetCore {
 		/// By default this is <see langword="false"/>, and you will need to create a validator for the collection type
 		/// (unless <see cref="ImplicitlyValidateChildProperties"/> is <see langword="true"/>.
 		/// </summary>
+		[Obsolete("Implicit validation of root collection elements is deprecated and will be removed in a future release. Please use an explicit collection validator instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
 		public bool ImplicitlyValidateRootCollectionElements { get; set; }
 
 		internal bool ClientsideEnabled = true;

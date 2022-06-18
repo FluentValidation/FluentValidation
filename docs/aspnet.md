@@ -166,6 +166,11 @@ services.AddMvc().AddFluentValidation(fv => {
 
 ### Implicit vs Explicit Child Property Validation
 
+```eval_rst
+.. warning::
+  Implicit validation of child properties is deprecated and will be removed from a future release. The documentation remains here for reference but we no longer recommend taking this approach. `See this issue for details <https://github.com/FluentValidation/FluentValidation/issues/1960>`_.
+```
+
 When validating complex object graphs, by default, you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](start.html#complex-properties))
 
 When running an ASP.NET MVC application, you can also optionally enable implicit validation for child properties. When this is enabled, instead of having to specify child validators using `SetValidator`, MVC's validation infrastructure will recursively attempt to automatically find validators for each property. This can be done by setting `ImplicitlyValidateChildProperties` to true:
@@ -180,6 +185,11 @@ services.AddMvc().AddFluentValidation(fv =>
 Note that if you enable this behaviour you should not use `SetValidator` for child properties, or the validator will be executed twice.
 
 ### Implicit Validation of Collection-Type Models
+
+```eval_rst
+.. warning::
+  Implicit validation of collection-type models is deprecated and will be removed from a future release. The documentation remains here for reference but we no longer recommend taking this approach. `See this issue for details <https://github.com/FluentValidation/FluentValidation/issues/1960>`_.
+```
 
 By default, you must create a specific collection validator or enable implicit child property validation to validate a model that is of a collection type. For example, no validation of the following model will occur with the default settings unless you define a validator that inherits from `AbstractValidator<List<Person>>`.
 
@@ -365,30 +375,6 @@ public class PersonValidator : AbstractValidator<Person>
   }
 }
 ```
-
-Alternatively, as of version 8.2 you can call `InjectValidator` without having to use constructor injection:
-
-```csharp
-public class PersonValidator : AbstractValidator<Person> 
-{
-  public PersonValidator() 
-  {
-    RuleFor(x => x.Address).InjectValidator();
-  }
-}
-```
-
-Note that in this case, FluentValidation will attempt to resolve an instance of `IValidator<T>` from ASP.NET's service collection, where `T` is the same type as the property being validated. If you need to explicitly specify the type, then this can be done with the other overload of `InjectValidator` which accepts a func referencing the service provider:
-
-```csharp
-public class PersonValidator : AbstractValidator<Person> {
-  public PersonValidator() {
-    RuleFor(x => x.Address).InjectValidator((services, context) => services.GetService<MyAddressValidator>());
-  }
-}
-```
-
-Please be aware that `InjectValidator` can *only* be used when using automatic validation. It can't be used if you directly invoke the `Validate` method.
 
 ### Disabling automatic validation
 

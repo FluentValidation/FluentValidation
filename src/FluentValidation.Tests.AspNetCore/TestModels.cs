@@ -424,7 +424,9 @@ public class ChildModel7 {
 
 public class InjectsExplicitChildValidator : AbstractValidator<ParentModel> {
 	public InjectsExplicitChildValidator() {
+#pragma warning disable CS0618
 		RuleFor(x => x.Child).InjectValidator();
+#pragma warning restore CS0618
 	}
 }
 
@@ -436,7 +438,9 @@ public class InjectedChildValidator : AbstractValidator<ChildModel> {
 
 public class InjectsExplicitChildValidatorCollection : AbstractValidator<ParentModel6> {
 	public InjectsExplicitChildValidatorCollection() {
+#pragma warning disable CS0618
 		RuleForEach(x => x.Children).InjectValidator();
+#pragma warning restore CS0618
 	}
 }
 

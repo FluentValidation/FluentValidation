@@ -103,7 +103,9 @@ namespace FluentValidation.AspNetCore {
 
 				IValidationContext context = new ValidationContext<object>(mvContext.Model, new PropertyChain(), selector);
 				context.RootContextData["InvokedByMvc"] = true;
+#pragma warning disable CS0618
 				context.SetServiceProvider(mvContext.ActionContext.HttpContext.RequestServices);
+#pragma warning restore CS0618
 
 				if (interceptor != null) {
 					// Allow the user to provide a customized context

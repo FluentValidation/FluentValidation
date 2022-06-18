@@ -35,6 +35,7 @@ namespace FluentValidation {
 		/// <param name="context"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
+		[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
 		public static IServiceProvider GetServiceProvider(this IValidationContext context)
 			=> Get(context.RootContextData);
 
@@ -44,6 +45,7 @@ namespace FluentValidation {
 		/// <param name="context"></param>
 		/// <returns></returns>
 		/// <exception cref="InvalidOperationException"></exception>
+		[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
 		public static IServiceProvider GetServiceProvider<T,TProperty>(this MessageBuilderContext<T,TProperty> context)
 			=> Get(context.ParentContext.RootContextData);
 
@@ -62,6 +64,7 @@ namespace FluentValidation {
 		/// </summary>
 		/// <param name="context"></param>
 		/// <param name="serviceProvider"></param>
+		[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
 		public static void SetServiceProvider(this IValidationContext context, IServiceProvider serviceProvider) {
 			context.RootContextData["_FV_ServiceProvider"] = serviceProvider;
 		}
@@ -74,6 +77,7 @@ namespace FluentValidation {
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TProperty"></typeparam>
 		/// <returns></returns>
+		[Obsolete("The InjectValidator method is deprecated and will be removed in a future release. Please use Constructor Injection instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
 		public static IRuleBuilderOptions<T, TProperty> InjectValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, params string[] ruleSets) {
 			return ruleBuilder.InjectValidator((s, ctx) => s.GetService<IValidatorFactory>().GetValidator<TProperty>(), ruleSets);
 		}
@@ -87,6 +91,7 @@ namespace FluentValidation {
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="TProperty"></typeparam>
 		/// <returns></returns>
+		[Obsolete("The InjectValidator method is deprecated and will be removed in a future release. Please use Constructor Injection instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
 		public static IRuleBuilderOptions<T, TProperty> InjectValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<IServiceProvider, ValidationContext<T>, IValidator<TProperty>> callback, params string[] ruleSets) {
 			var adaptor = new ChildValidatorAdaptor<T,TProperty>((context, _) => {
 				var serviceProvider = context.GetServiceProvider();

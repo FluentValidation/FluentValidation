@@ -96,10 +96,12 @@ namespace FluentValidation.AspNetCore {
 					}
 
 					if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
+#pragma warning disable CS0618
 						options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(
 							config.ImplicitlyValidateChildProperties,
 							config.ImplicitlyValidateRootCollectionElements));
 					}
+#pragma warning restore CS0618
 				});
 			}
 
