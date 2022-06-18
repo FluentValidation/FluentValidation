@@ -112,8 +112,4 @@ services.AddValidatorsFromAssemblyContaining<MyValidator>(ServiceLifetime.Scoped
     filter => filter.ValidatorType != typeof(CustomerValidator));
 ```
 
-The `CustomerValidator` will not be added to the service provider (but all other validators will)
-
-## Injecting child validators
-
-The `FluentValidation.DependencyInjectionExtensions` package also provides some helper methods for injecting child validators when working with ASP.NET Core. See [this page](aspnet.html#injecting-child-validators).
+The `CustomerValidator` will not be added to the service provider (but all other validators will).

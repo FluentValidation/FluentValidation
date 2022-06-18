@@ -31,7 +31,7 @@ var result = await validator.ValidateAsync(customer);
 
 ```eval_rst
 .. warning::
-  If your validator contains asynchronous validators or asynchronous conditions, it's important that you *always* call `ValidateAsync` on your validator and never `Validate`. If you call `Validate`, then your asynchronous rules *will be run synchronously*, which is not desirable.
+  If your validator contains asynchronous validators or asynchronous conditions, it's important that you *always* call `ValidateAsync` on your validator and never `Validate`. If you call `Validate`, then an exception will be thrown.
 
   You should not use asynchronous rules when `using automatic validation with ASP.NET <aspnet.html>`_ as ASP.NET's validation pipeline is not asynchronous. If you use asynchronous rules with ASP.NET's automatic validation, they will always be run synchronously (10.x and older) or throw an exception (11.x and newer).
 ```

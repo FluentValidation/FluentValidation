@@ -57,14 +57,6 @@ Example
   installation
   start
   collections
-  inheritance
-  rulesets
-  including-rules
-  di
-  upgrading-to-11
-  upgrading-to-10
-  upgrading-to-9
-  upgrading-to-8
 
 .. _config-docs:
 .. toctree::
@@ -73,9 +65,6 @@ Example
 
   configuring
   conditions
-  severity
-  error-codes
-  custom-state
 
 .. _validator-docs:
 .. toctree::
@@ -84,6 +73,20 @@ Example
 
   built-in-validators
   custom-validators
+
+.. _feature-docs:
+.. toctree::
+  :maxdepth: 1
+  :caption: Other Features
+
+  including-rules
+  rulesets
+  cascade
+  di
+  async
+  severity
+  error-codes
+  custom-state
 
 .. _localization-docs:
 .. toctree::
@@ -99,6 +102,16 @@ Example
 
   testing
 
+.. _advanced-docs:
+.. toctree::
+  :maxdepth: 1
+  :caption: Advanced
+
+  dependentrules
+  inheritance
+  transform
+  advanced
+
 .. _aspnet-docs:
 .. toctree::
   :maxdepth: 1
@@ -107,11 +120,12 @@ Example
   aspnet
   blazor
 
-.. _advanced-docs:
+.. _upgrading-docs:
 .. toctree::
   :maxdepth: 1
-  :caption: Advanced
+  :caption: Upgrading
 
-  async
-  transform
-  advanced
+  upgrading-to-11
+  upgrading-to-10
+  upgrading-to-9
+  upgrading-to-8

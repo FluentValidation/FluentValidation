@@ -105,7 +105,7 @@ There are also inverse methods available (`WithoutMessage`, `WithoutErrorCode`, 
 
 There is also an asynchronous `TestValidateAsync` method available which corresponds to the regular `ValidateAsync` method. Usage is similar, except the method returns an awaitable `Task` instead.
 
-## Mocking
+# Mocking
 
 Validators are intended to be "black boxes" and we don't generally recommend mocking them. Within a test, the recommended appraoch is to supply a real validator instance with known bad data in order to trigger a validation error. 
 
