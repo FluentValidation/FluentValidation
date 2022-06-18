@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
+#pragma warning disable CS0618
+
 public class DependencyInjectionTests : IClassFixture<WebAppFixture> {
 	private readonly ITestOutputHelper _output;
 	private readonly HttpClient _client;

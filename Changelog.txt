@@ -1,3 +1,8 @@
+11.1.0 -
+InjectValidator has been deprecated (#1960)
+MVC auto validation: Implicit validation of child properties has been deprecated (#1960)
+MVC auto validation: Implicit validation of root collection elements has been deprecated (#1960)
+
 11.0.3 - 10 June 2022
 Fix an issue where an exception would be thrown when calling ValidateAsync if a rule was wrapped with a call to WhenAsync. (#1955)
 

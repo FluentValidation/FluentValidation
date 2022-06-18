@@ -52,7 +52,9 @@ public class DisableAutoValidationTests : IClassFixture<WebAppFixture> {
 		var client = _webApp.CreateClientWithServices(services => {
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 				fv.RegisterValidatorsFromAssemblyContaining<TestController>();
+#pragma warning disable CS0618
 				fv.ImplicitlyValidateChildProperties = true;
+#pragma warning restore CS0618
 				// Disabling auto validation supersedes enabling implicit validation.
 				fv.AutomaticValidationEnabled = false;
 			});

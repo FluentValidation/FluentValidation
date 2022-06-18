@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;
 
+
+
 public class RazorPagesTestsWithImplicitValidationDisabled : IClassFixture<WebAppFixture> {
 	private readonly ITestOutputHelper _output;
 	private readonly HttpClient _client;
@@ -76,7 +78,9 @@ public class RazorPagesTestsWithImplicitValidationEnabled : IClassFixture<WebApp
 		_output = output;
 		_client = _client = webApp.CreateClientWithServices(services => {
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
+#pragma warning disable CS0618
 				fv.ImplicitlyValidateChildProperties = true;
+#pragma warning restore CS0618
 			});
 			services.AddScoped<IValidator<TestModel>, TestModelValidator>();
 			services.AddScoped<IValidator<RulesetTestModel>, RulesetTestValidator>();

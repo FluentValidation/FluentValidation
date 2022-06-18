@@ -11,6 +11,8 @@ using Xunit;
 using Xunit.Abstractions;
 using FormData = System.Collections.Generic.Dictionary<string, string>;
 
+#pragma warning disable CS0618
+
 public class ImplicitValidationTests : IClassFixture<WebAppFixture> {
 	private WebAppFixture _app;
 	private ITestOutputHelper _output;

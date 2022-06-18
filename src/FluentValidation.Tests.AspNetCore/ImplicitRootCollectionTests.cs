@@ -6,6 +6,8 @@ using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
+#pragma warning disable CS0618
+
 public class ImplicitRootCollectionTests : IClassFixture<WebAppFixture> {
 	private readonly WebAppFixture _app;
 
