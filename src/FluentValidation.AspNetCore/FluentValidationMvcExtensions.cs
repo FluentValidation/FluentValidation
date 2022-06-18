@@ -63,10 +63,9 @@ namespace FluentValidation.AspNetCore {
 		///     A reference to this instance after the operation has completed.
 		/// </returns>
 		public static IServiceCollection AddFluentValidation(this IServiceCollection services, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
-			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global);
+			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global, services);
 			configurationExpression?.Invoke(config);
 
-			services.AddValidatorsFromAssemblies(config.AssembliesToRegister, config.ServiceLifetime, config.TypeFilter, config.IncludeInternalValidatorTypes);
 			services.AddSingleton(config.ValidatorOptions);
 
 #pragma warning disable CS0618

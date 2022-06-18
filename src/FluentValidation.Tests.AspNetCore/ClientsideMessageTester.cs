@@ -34,9 +34,8 @@ public class ClientsideMessageTester : IClassFixture<WebAppFixture> {
 
 	public ClientsideMessageTester(WebAppFixture webApp) {
 		_client = webApp.CreateClientWithServices(services => {
-			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-				fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-			});
+			services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+			services.AddValidatorsFromAssemblyContaining<TestController>();
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddScoped<ClientsideScopedDependency>();
 			services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });
@@ -265,9 +264,8 @@ public class RazorPagesClientsideMessageTester : IClassFixture<WebAppFixture> {
 
 	public RazorPagesClientsideMessageTester(WebAppFixture webApp) {
 		_client = webApp.CreateClientWithServices(services => {
-			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
-				fv.RegisterValidatorsFromAssemblyContaining<TestController>();
-			});
+			services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+			services.AddValidatorsFromAssemblyContaining<TestController>();
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddScoped<ClientsideScopedDependency>();
 			services.AddLocalization(opts => { opts.ResourcesPath = "Resources"; });

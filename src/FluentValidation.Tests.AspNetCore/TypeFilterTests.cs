@@ -26,6 +26,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using Xunit.Abstractions;
 
+#pragma warning disable CS0618
+
 public class TypeFilterTests : IClassFixture<WebAppFixture> {
 	private WebAppFixture _webApp;
 
