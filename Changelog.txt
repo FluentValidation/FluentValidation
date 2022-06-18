@@ -1,7 +1,11 @@
 11.1.0 -
-InjectValidator has been deprecated (#1960)
-MVC auto validation: Implicit validation of child properties has been deprecated (#1960)
-MVC auto validation: Implicit validation of root collection elements has been deprecated (#1960)
+Added a ToDictionary method to ValidationResult
+MVC auto validation: Deprecated Implicit validation of child properties (#1960)
+MVC auto validation: Deprecated Implicit validation of root collection elements (#1960)
+Deprecated InjectValidator (#1960)
+Deprecate validator factories (#1961)
+Deprecate the RegisterValidator... within calls to AddFluentValidation (use the service collection extension methods instead) (#1963)
+
 IValidatorFactory and its implementors have been deprecated (#1961)
 
 11.0.3 - 10 June 2022

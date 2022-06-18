@@ -1,76 +1,21 @@
 # ASP.NET Core
 
-### Getting Started
+FluentValidation can be used within ASP.NET Core web applications to validate incoming models. There are two main approaches for doing this: Manual validation and Automatic validation.
 
-FluentValidation supports integration with ASP.NET Core 3.1 or ASP.NET Core running on .NET 5. Once enabled, MVC will use FluentValidation to validate objects that are passed in to controller actions by the model binding infrastructure.
+With manual validation, you inject the validator into your controller (or api endpoint), invoke the validator and act upon the result. This is the most straightforward and reliable approach. 
 
-Note that Minimal APIs that are part of .NET 6 don't support automatic validation.
+With automatic validation, FluentValidation plugs the validation pipeline that's part of ASP.NET Core MVC and allows models to be validated before a controller action is invoked (during model-binding). This approach to validation is more seamless but has several downsides:
 
-To enable MVC integration, you'll need to add a reference to the `FluentValidation.AspNetCore` assembly in your web project by installing the appropriate NuGet package. From the command line, you can install the package by typing:
+- **Auto validation is not asynchronous**: If your validator contains asynchronous rules then your validator will not be able to run. You will receive an exception at runtime if you attempt to use an asynchronous validator with auto-validation.
+- **Auto validation is MVC-only**: Auto-validation only works with MVC Controllers and Razor Pages. It does not work with the more modern parts of ASP.NET such as Minimal APIs or Blazor.
 
-```shell
-dotnet add package FluentValidation.AspNetCore
-```
+We do not generally recommend using auto validation for new projects, but it is still available for legacy implementations.
 
-Once installed, you'll need to configure FluentValidation in your app's Startup class by calling the `AddFluentValidation` extension method inside the `ConfigureServices` method (which requires a `using FluentValidation.AspNetCore`). This method must be called directly after calling `AddMvc`.
+Auto validaton is available for Core 3.1, .NET 5, .NET 6 and newer.
 
+## Getting started
 
-```csharp
-public void ConfigureServices(IServiceCollection services) 
-{
-    services.AddMvc(setup => 
-    {
-      //...mvc setup...
-    }).AddFluentValidation();
-}
-```
-
-In order for ASP.NET to discover your validators, they must be registered with the services collection. You can do this by calling the `AddTransient` method for each of your validators:
-
-
-```csharp
-public void ConfigureServices(IServiceCollection services) 
-{
-    services.AddMvc(setup => 
-    {
-      //...mvc setup...
-    }).AddFluentValidation();
-
-    services.AddTransient<IValidator<Person>, PersonValidator>();
-    //etc
-}
-```
-
-Alternatively you can call `AddFluentValidation()` after a call to `AddControllers` in projects where you aren't using the full MVC stack (for example, in Web API projects). 
-
-### Automatic Registration
-
-You can also use the `AddFromAssemblyContaining` method to automatically register all validators within a particular assembly. This will automatically find any public, non-abstract types that inherit from `AbstractValidator` and register them with the container (open generics are not supported).
-
-```csharp
-services.AddMvc()
-  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>());
-```
-
-Validators that are registered automatically using `RegisterValidatorsFromAssemblyContaining` are registered as `Scoped` with the container rather than as `Singleton`. This is done to avoid lifecycle scoping issues where a developer may inadvertently cause a singleton-scoped validator from depending on a Transient or Request-scoped service (for example, a DB context). If you are aware of these kind of issues and understand how to avoid them, then you may choose to register the validators as singletons instead, which will give a performance boost by passing in a second argument: `fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>(lifetime: ServiceLifetime.Singleton)` (note that this optional parameter is only available in FluentValidation 9.0 or later).
-
-By default, only public validators will be registered. To include internal validators you can set the `includeInternalTypes` optional parameter to `true` (e.g., `fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>(includeInternalTypes: true)`).
-
-You can also optionally prevent certain types from being automatically registered when using this approach by passing a filter to `RegisterValidatorsFromAssemblyContaining`. For example, if there is a specific validator type that you don't want to be registered, you can use a filter callback to exclude it:
-
-```csharp
-services.AddMvc()
-  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>(discoveredType => discoveredType.ValidatorType != typeof(SomeValidatorToExclude)));
-```
-
-```eval_rst
-.. note::
-  Automatic Registration for validators will only work for `AbstractValidators` implementing a concrete type like `List` or `Array`. Implementations with interface types like `IEnumerable` or `IList` may be used, but the validator will need to be specifically registered as a scoped service in your app's Startup class. This is due to the ASP.NET's Model-Binding of collection types where interfaces like `IEnumerable` will be converted to a `List` implementation and a `List` is the type MVC passes to FluentValidation.
-```
-
-### Using the validator in a controller
-
-This next example assumes that the `PersonValidator` is defined to validate a class called `Person`. Once you've configured FluentValidation, ASP.NET will then automatically validate incoming requests using the validator mappings configured in your startup routine.
+The following examples will make use of a `Person` object which is validated using a `PersonValidator`. These classes are defined as follows:
 
 ```csharp
 public class Person 
@@ -93,7 +38,172 @@ public class PersonValidator : AbstractValidator<Person>
 }
 ```
 
-We can use the Person class within our controller and associated view:
+If you're using MVC, Web Api or Razor Pages you'll need to register your validator with the Service Provider in the `ConfigureServices` method of your application's `Startup` class. (note that if you're using Minimal APIs, [see the section on Minimal APIs below](aspnet.html#minimal-apis)). 
+
+```csharp
+public void ConfigureServices(IServiceCollection services) 
+{
+    // If you're using MVC or WebApi you'll probably have
+    // a call to AddMvc() or AddControllers() already.
+    services.AddMvc();
+    
+    // ... other configuration ...
+    
+    services.AddScoped<IValidator<Person>, PersonValidator>();
+}
+```
+
+Here we register our `PersonValidator` with the service provider by calling `AddScoped`.
+
+```eval_rst
+.. note::
+  Note that you must register each validator as `IValidator<T>` where `T` is the type being validated. So if you have a `PersonValidator` that inherits from `AbstractValidator<Person>` then you should register it as `IValidator<Person>`
+```
+
+Alternatively you can register all validators in a specific assembly by using our Service Collection extensions. To do this you'll need to install the `FluentValidation.DependencyInjectionExtensions` package and then call the appropriate `AddValidators...` extension method on the services collection. [See this page for more details](di.html#automatic-registration)
+
+```csharp
+public void ConfigureServices(IServiceCollection services) 
+{
+    services.AddMvc();
+
+    // ... other configuration ...
+
+    services.AddValidatorsFromAssemblyContaining<PersonValidator>();
+}
+```
+
+Here we use the `AddValidatorsFromAssemblyContaining` method from the `FluentValidation.DependencyInjectionExtension` package to automatically register all validators in the same assembly as `PersonValidator` with the service provider.
+
+Now that the validators are registered with the service provider you can start working with either manual validation or automatic validation.
+
+## Manual Validation
+
+With the manual validation approach, you'll inject the validator into your controller (or Razor page) and invoke it against the model.
+
+For example, you might have a controller that looks like this:
+
+```csharp
+public class PeopleController : Controller 
+{
+  private IValidator<Person> _validator;
+  private IPersonRepository _repository;
+
+  public PeopleController(IValidator<Person> validator, IPersonRepository repository) 
+  {
+    // Inject our validator and also a DB context for storing our person object.
+    _validator = validator;
+    _repository = personRepository;
+  }
+
+  public ActionResult Create() 
+  {
+    return View();
+  }
+
+  [HttpPost]
+  public async Task<IActionResult> Create(Person person) 
+  {
+    ValidationResult result = await _validator.ValidateAsync(person);
+
+    if (!result.IsValid) 
+    {
+      // Copy the validation results into ModelState.
+      // ASP.NET uses the ModelState collection to populate 
+      // error messages in the View.
+      result.AddToModelState(this.ModelState);
+
+      // re-render the view when validation failed.
+      return View("Create", person);
+    }
+
+    _repository.Save(person); //Save the person to the database, or some other logic
+
+    TempData["notice"] = "Person successfully created";
+    return RedirectToAction("Index");
+  }
+}
+```
+
+Because our validator is registered with the Serivce Provider, it will be injected into our controller via the constructor. We can then make use of the validator inside the `Create` action by invoking it with `ValidateAsync`. 
+
+If validation fails, we need to pass the error messages back down to the view so they can be displayed to the end user. We can do this by defining an extension method for FluentValidation's `ValidationResult` type that copies the error messages into ASP.NET's `ModelState` dictionary:
+
+```csharp
+public static class Extensions 
+{
+  public static void AddToModelState(this ValidationResult result, ModelStateDictionary modelState) 
+  {
+    if (!result.IsValid) 
+    {
+      foreach (var error in result.Errors) 
+      {
+        modelState.AddModelError(error.PropertyName, error.ErrorMessage);
+      }
+    }
+  }
+}
+```
+
+This method is invoked inside the controller action in the example above. 
+
+
+For completeness, here is the corresponding View. This view will pick up the error messages from `ModelState` and dispaly them next to the corresponding property. (If you were writing an API controller, then you'd probably return eithe ra `ValidationProblemDetails` or `BadRequest` instead of a view result)
+
+```html
+@model Person
+
+<div asp-validation-summary="ModelOnly"></div>
+
+<form asp-action="Create">
+  Id: <input asp-for="Id" /> <span asp-validation-for="Id"></span>
+  <br />
+  Name: <input asp-for="Name" /> <span asp-validation-for="Name"></span>
+  <br />
+  Email: <input asp-for="Email" /> <span asp-validation-for="Email"></span>
+  <br />
+  Age: <input asp-for="Age" /> <span asp-validation-for="Age"></span>
+
+  <br /><br />
+  <input type="submit" value="submit" />
+</form>
+```
+
+## Automatic Validation
+
+The `FluentValidation.AspNetCore` package provides auto-validation for ASP.NET Core MVC projects by plugging into ASP.NET's validation pipeline. 
+
+```eval_rst
+.. warning::
+  We no longer recommend using auto-validation for new projects for the reasons mentioned at the start of this page. 
+```
+
+Install the `FluentValidation.AspNetCore` package in your web application from the command line:
+
+```shell
+dotnet add package FluentValidation.AspNetCore
+```
+
+Once installed, you'll need to modify the `ConfigureServices` in your `Startup` to include a call to `AddFluentValidation`:
+
+```csharp
+public void ConfigureServices(IServiceCollection services) 
+{
+    services.AddMvc();
+
+    // ... other configuration ...
+
+    services.AddFluentValidation();
+
+    services.AddScoped<IValidator<Person>, PersonValidator>();
+}
+```
+
+This method must be called after `AddMvc` (or `AddControllers`/`AddControllersWithViews`). Make sure you add `using FluentValidation.AspNetCore` to your startup file so the appropriate extension methods are available. 
+
+You'll also still need to register your validators in the same as our manual validation example above (either by calling `AddScoped` for each validator, or by using one of the registration methods provided by `FluentValidation.DependencyInjectionExtensions`).
+
+We can use the `Person` class within our controller and associated view:
 
 ```csharp
 public class PeopleController : Controller 
@@ -120,7 +230,7 @@ public class PeopleController : Controller
 }
 ```
 
-...and here's the corresponding view (using Razor):
+The view is the same as before:
 
 ```html
 @model Person
@@ -141,24 +251,25 @@ public class PeopleController : Controller
 </form>
 ```
 
-Now when you post the form, MVC's model-binding infrastructure will validate the `Person` object with the `PersonValidator`, and add the validation results to `ModelState`.
+Now when you post the form, MVC's model-binding infrastructure will automatically instantiate the `PersonValidator`, invoke it and add the validation results to `ModelState`.
 
-*Note for advanced users* When validators are executed using this automatic integration, the [RootContextData](advanced.html#root-context-data) contains an entry called `InvokedByMvc` with a value set to true, which can be used within custom validators to tell whether a validator was invoked automatically (by MVC), or manually.
+Unlike the manual validation example, we don't have a reference to the validator directly. Instead, ASP.NET will handle invoking the validator and adding the error messages to `ModelState` before the controller action is invoked. Inside the action, you only need to check `ModelState.IsValid`
 
 ```eval_rst
 .. warning::
-  You should not use asynchronous rules when using ASP.NET automatic validation as ASP.NET's validation pipeline is not asynchronous.
+  Remember you can't use asynchronous rules when using auto-validation as ASP.NET's validation pipeline is not asynchronous.
 ```
 
 ### Compatibility with ASP.NET's built-in Validation
 
-By default, after FluentValidation is executed, any other validator providers will also have a chance to execute. This means you can mix FluentValidation with [DataAnnotations attributes](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations) (or any other ASP.NET `ModelValidatorProvider` implementation).
+After FluentValidation is executed, any other validator providers will also have a chance to execute. This means you can mix FluentValidation auto-validation with [DataAnnotations attributes](https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.dataannotations) (or any other ASP.NET `ModelValidatorProvider` implementation).
 
-If you want to disable this behaviour so that FluentValidation is the only validation library that executes, you can set the `DisableDataAnnotationsValidation` to `true` in your application startup routine:
+If you want to disable this behaviour so that FluentValidation is the only validation library that executes, you can set `DisableDataAnnotationsValidation` to `true` in your application startup routine:
 
 ```csharp
-services.AddMvc().AddFluentValidation(fv => {
- fv.DisableDataAnnotationsValidation = true;
+services.AddFluentValidation(config => 
+{
+ config.DisableDataAnnotationsValidation = true;
 });
 ```
 
@@ -171,14 +282,14 @@ services.AddMvc().AddFluentValidation(fv => {
   Implicit validation of child properties is deprecated and will be removed from a future release. The documentation remains here for reference but we no longer recommend taking this approach. `See this issue for details <https://github.com/FluentValidation/FluentValidation/issues/1960>`_.
 ```
 
-When validating complex object graphs, by default, you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](start.html#complex-properties))
+When validating complex object graphs you must explicitly specify any child validators for complex properties by using `SetValidator` ([see the section on validating complex properties](start.html#complex-properties))
 
 When running an ASP.NET MVC application, you can also optionally enable implicit validation for child properties. When this is enabled, instead of having to specify child validators using `SetValidator`, MVC's validation infrastructure will recursively attempt to automatically find validators for each property. This can be done by setting `ImplicitlyValidateChildProperties` to true:
 
 ```csharp
-services.AddMvc().AddFluentValidation(fv => 
+services.AddFluentValidation(config => 
 {
- fv.ImplicitlyValidateChildProperties = true;
+ config.ImplicitlyValidateChildProperties = true;
 });
 ```
 
@@ -200,9 +311,9 @@ public ActionResult DoSomething(List<Person> people) => Ok();
 With implicit child property validation enabled (see above), you don't have to explicitly create a collection validator class as each person element in the collection will be validated automatically. However, any child properties on the `Person` object will be automatically validated too meaning you can no longer use `SetValidator`. If you don't want this behaviour, you can also optionally enable implicit validation for root collection elements only. For example, if you want each `Person` element in the collection to be validated automatically, but not its child properties you can set `ImplicitlyValidateRootCollectionElements` to true:
 
 ```csharp
-services.AddMvc().AddFluentValidation(fv => 
+services.AddFluentValidation(config => 
 {
- fv.ImplicitlyValidateRootCollectionElements = true;
+ config.ImplicitlyValidateRootCollectionElements = true;
 });
 ```
 
@@ -213,50 +324,14 @@ Note that this setting is ignored when `ImplicitlyValidateChildProperties` is `t
   Automatic Registration for validators will only work for `AbstractValidators` implementing a concrete type like `List` or `Array`. Implementations with interface types like `IEnumerable` or `IList` may be used, but the validator will need to be specifically registered as a scoped service in your app's Startup class. This is due to the ASP.NET's Model-Binding of collection types where interfaces like `IEnumerable` will be converted to a `List` implementation and a `List` is the type MVC passes to FluentValidation.
 ```
 
-### Clientside Validation
-
-FluentValidation is a server-side framework, and does not provide any client-side validation directly. However, it can provide metadata which, when applied to the generated HTML elements, can be used by a client-side framework such as jQuery Validate, in the same way that ASP.NET's default validation attributes work.
-
-Note that not all rules defined in FluentValidation will work with ASP.NET's client-side validation. For example, any rules defined using a condition (with When/Unless), custom validators, or calls to `Must` will not run on the client side. Nor will any rules in a `RuleSet` (although this can be changed - see the section below on "RuleSet for client-side messages"). The following validators are supported on the client:
-
-* NotNull/NotEmpty
-* Matches (regex)
-* InclusiveBetween (range)
-* CreditCard
-* Email
-* EqualTo (cross-property equality comparison)
-* MaxLength
-* MinLength
-* Length
-
-Alternatively, instead of using client-side validation you could instead execute your full server-side rules via AJAX using a library such as [FormHelper](https://github.com/sinanbozkus/FormHelper). This allows you to use the full power of FluentValidation, while still having a responsive user experience.
-
-### Manual validation
-
-Sometimes you may want to manually validate an object in a MVC project. In this case, the validation results can be copied to MVC's modelstate dictionary:
-
-```csharp
-public ActionResult DoSomething() 
-{
-  var customer = new Customer();
-  var validator = new CustomerValidator();
-  var results = validator.Validate(customer);
-
-  results.AddToModelState(ModelState, null);
-  return View();
-}
-```
-
-The `AddToModelState` method is implemented as an extension method, and requires a using statement for the `FluentValidation.AspNetCore` namespace. Note that the second parameter is an optional model name, which will cause property names in the `ModelState` to be prefixed (e.g., a call to `AddToModelState(ModelState, "Foo")` will generate property names of `Foo.Id` and `Foo.Name` etc. rather than just `Id` or `Name`)
-
 ### Validator customization
 
-The downside to using this automatic integration is that you don't have access to the validator directly which means that you don't have as much control over the validation processes compared to running the validator manually.
+One downside to using auto-validation is that you don't have access to the validator instance meaning you don't have as much control over the validation processes compared to running the validator manually.
 
 You can use the `CustomizeValidatorAttribute` to configure how the validator will be run. For example, if you want the validator to only run for a particular ruleset then you can specify that ruleset name by attributing the parameter that is going to be validated:
 
 ```csharp
-public ActionResult Save([CustomizeValidator(RuleSet="MyRuleset")] Customer cust) 
+public ActionResult Save([CustomizeValidator(RuleSet="MyRuleset")] Person person) 
 {
   // ...
 }
@@ -265,15 +340,15 @@ public ActionResult Save([CustomizeValidator(RuleSet="MyRuleset")] Customer cust
 This is the equivalent of specifying the ruleset if you were to pass a ruleset name to a validator:
 
 ```csharp
-var validator = new CustomerValidator();
-var customer = new Customer();
-var result = validator.Validate(customer, options => options.IncludeRuleSet("MyRuleset"));
+var validator = new PersonValidator();
+var person = new Person();
+var result = validator.Validate(person, options => options.IncludeRuleSet("MyRuleset"));
 ```
 
 The attribute can also be used to invoke validation for individual properties:
 
 ```csharp
-public ActionResult Save([CustomizeValidator(Properties="Surname,Forename")] Customer cust) 
+public ActionResult Save([CustomizeValidator(Properties="Surname,Forename")] Person person) 
 {
   // ...
 }
@@ -281,20 +356,19 @@ public ActionResult Save([CustomizeValidator(Properties="Surname,Forename")] Cus
 …which would be the equivalent of specifying properties in the call to validator.Validate:
 
 ```csharp
-var validator = new CustomerValidator();
-var customer = new Customer();
-var result = validator.Validate(customer, options => options.IncludeProperties("Surname", "Forename"));
+var validator = new PersonValidator();
+var person = new Person();
+var result = validator.Validate(person, options => options.IncludeProperties("Surname", "Forename"));
 ```
 
 You can also use the `CustomizeValidatorAttribute` to skip validation for a particular type. This is useful for if you need to validate a type manually (for example, if you want to perform async validation then you'll need to instantiate the validator manually and call `ValidateAsync` as MVC's validation pipeline is not asynchronous).
 
 ```csharp
-public ActionResult Save([CustomizeValidator(Skip=true)] Customer cust) 
+public ActionResult Save([CustomizeValidator(Skip=true)] Person person) 
 {
   // ...
 }
 ```
-
 
 ### Validator Interceptors
 
@@ -343,6 +417,42 @@ public void ConfigureServices(IServiceCollection services)
 
 Note that this is considered to be an advanced scenario. Most of the time you probably won't need to use an interceptor, but the option is there if you want it.
 
+## Clientside Validation
+
+FluentValidation is a server-library framework and does not provide any client-side validation directly. However, it can provide metadata which, when applied to the generated HTML elements, can be used by a client-side framework such as jQuery Validate, in the same way that ASP.NET's default validation attributes work.
+
+Note that not all rules defined in FluentValidation will work with ASP.NET's client-side validation. For example, any rules defined using a condition (with When/Unless), custom validators, or calls to `Must` will not run on the client side. Nor will any rules in a `RuleSet` (although this can be changed - see below). The following validators are supported on the client:
+
+* NotNull/NotEmpty
+* Matches (regex)
+* InclusiveBetween (range)
+* CreditCard
+* Email
+* EqualTo (cross-property equality comparison)
+* MaxLength
+* MinLength
+* Length
+
+To enable clientside integration you need to install the `FluentValidation.AspNetCore` package and call the `AddFluentValidationClientsideAdapters` in your application startup:
+
+```csharp
+public void ConfigureServices(IServiceCollection services) 
+{
+    services.AddMvc();
+
+    services.AddFluentValidationClientsideAdapters();
+
+    services.AddScoped<IValidator<Person>, PersonValidator>();
+    // etc
+}
+```
+```eval_rst
+.. note::
+  Note that the `AddFluentValidationClientsideAdapters` method is only available in FluentValidation 11.1 and newer. In older versions, you should use the `AddFluentValidation` method which enables *both* auto-validation and clientside adapters. If you only want clientside adapters and don't want auto validation, you can configure this by calling `services.AddFluentValidation(config => config.AutomaticValidationEnabled = false)`
+```
+
+Alternatively, instead of using client-side validation you could instead execute your full server-side rules via AJAX using a library such as [FormHelper](https://github.com/sinanbozkus/FormHelper). This allows you to use the full power of FluentValidation, while still having a responsive user experience.
+
 ### Specifying a RuleSet for client-side messages
 
 If you're using rulesets alongside ASP.NET MVC, then you'll notice that by default FluentValidation will only generate client-side error messages for rules not part of any ruleset. You can instead specify that FluentValidation should generate clientside rules from a particular ruleset by attributing your controller action with a `RuleSetForClientSideMessagesAttribute`:
@@ -351,57 +461,30 @@ If you're using rulesets alongside ASP.NET MVC, then you'll notice that by defau
 [RuleSetForClientSideMessages("MyRuleset")]
 public ActionResult Index() 
 {
-   return View(new PersonViewModel());
+   return View(new Person());
 }
 ```
 
-You can also use the `SetRulesetForClientsideMessages` extension method within your controller action:
+You can also use the `SetRulesetForClientsideMessages` extension method within your controller action, which has the same affect:
 
 ```csharp
 public ActionResult Index() 
 {
    ControllerContext.SetRulesetForClientsideMessages("MyRuleset");
-   return View(new PersonViewModel());
+   return View(new Person());
 }
 ```
 
 You can force all rules to be used to generate client-side error message by specifying a ruleset of "*".
 
-### Injecting Child Validators
 
-As an alternative to directly instantiating child validators, with the ASP.NET Core integration you can choose to inject them instead. This can be done via the validator's constructor:
+## Razor Pages
 
-```csharp
-public class PersonValidator : AbstractValidator<Person> 
-{
-  public PersonValidator(IValidator<Address> addressValidator) 
-  {
-    RuleFor(x => x.Address).SetValidator(addressValidator);
-  }
-}
-```
+Both the manual validation and auto validation approaches can be used with Razor pages. 
 
-### Disabling automatic validation
+Auto validation has an additional limitation with Razor pages in that you can't define a validator for the whole Page Model itself, only for models exposed as properties on the page model.
 
- In some cases it may be desirable to disable automatic validation, and perform all validation manually. In that case disable automatic validation as follows:
-
-```csharp
-services.AddFluentValidation(config => 
-{
-  config.AutomaticValidationEnabled = false;
-});
-```
-
-When disabled, ASP.NET won't attempt to use FluentValidation to validate objects during model binding.
-
-Note that if you do not need integration with client-side validation, an alternative is to use the `FluentValidation` library instead of `FluentValidation.AspNetCore`, in which case you do not need to use this property at all.
-
-
-### Use with Page Models
-
-Configuration for use with ASP.NET Razor Pages and PageModels is exactly the same as with MVC above, but with the limitation that you can't define a validator for the whole page-model, only for models exposed as properties on the page model.
-
-You can also use the `SetRulesetForClientsideMessages` extension method within your page handler:
+Additionally when using client side integration, you can't use the `[RuleSetForClientsideMessages]` attribute and should use the `SetRulesetForClientsideMessages` extension method within your page handler:
 
 ```csharp
 public IActionResult OnGet() 
@@ -409,4 +492,51 @@ public IActionResult OnGet()
    PageContext.SetRulesetForClientsideMessages("MyRuleset");
    return Page();
 }
+```
+
+## Minimal APIs
+
+When using FluentValidation with minimal APIs, you can still register the validators with the service provider, (or you can instantiate them directly if they don't have dependencies) and invoke them inside your API endpoint.
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+var app = builder.Build();
+
+// Register validator with service provider (or use one of the automatic registration methods)
+builder.Services.AddScoped<IValidator<Person>, PersonValidator>();
+
+// Also registering a DB access repository for demo purposes
+// replace this with whatever you're using in your application.
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+app.MapPost("/person", async (IPersonRepository repository, Person person) => 
+{
+  ValidationResult result = await repository.ValidateAsync(person);
+
+  if (!result.IsValid) 
+  {
+    return Results.ValidationProblem(validationResult.ToDictionary());
+  }
+
+  repository.Save(person);
+  return Results.Created($"/{person.Id}", person);
+});
+```
+
+Note the `ToDictionary` method on the `ValidationResult` is only available from FluentValidation 11.1 and newer. In older versions you will need to implement this as an extension method:
+
+```csharp
+public static class FluentValidationExtensions
+{
+  public static IDictionary<string, string[]> ToDictionary(this ValidationResult validationResult)
+    {
+      return validationResult.Errors
+        .GroupBy(x => x.PropertyName)
+        .ToDictionary(
+          g => g.Key,
+          g => g.Select(x => x.ErrorMessage).ToArray()
+        );
+    }
+}
+
 ```
