@@ -72,15 +72,6 @@ namespace FluentValidation.AspNetCore {
 
 			services.AddSingleton(config.ValidatorOptions);
 
-			if (config.ValidatorFactory != null) {
-				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type.
-				var factory = config.ValidatorFactory;
-				services.Add(ServiceDescriptor.Scoped(s => factory));
-			}
-			else {
-				services.Add(ServiceDescriptor.Scoped(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
-			}
-
 			if (config.AutomaticValidationEnabled) {
 				services.AddFluentValidationAutoValidation(cfg => {
 					cfg.DisableDataAnnotationsValidation = config.DisableDataAnnotationsValidation;
@@ -95,7 +86,6 @@ namespace FluentValidation.AspNetCore {
 
 			return services;
 		}
-#pragma warning restore CS0618
 
 		/// <summary>
 		/// Enables integration between FluentValidation and ASP.NET MVC's automatic validation pipeline.
@@ -106,6 +96,17 @@ namespace FluentValidation.AspNetCore {
 		public static IServiceCollection AddFluentValidationAutoValidation(this IServiceCollection services, Action<FluentValidationAutoValidationConfiguration> configurationExpression = null) {
 			var config = new FluentValidationAutoValidationConfiguration();
 			configurationExpression?.Invoke(config);
+
+			services.TryAddSingleton(ValidatorOptions.Global);
+
+			if (config.ValidatorFactory != null) {
+				// Allow user to register their own IValidatorFactory instance, before falling back to try resolving by Type.
+				var factory = config.ValidatorFactory;
+				services.Add(ServiceDescriptor.Scoped(s => factory));
+			}
+			else {
+				services.Add(ServiceDescriptor.Scoped(typeof(IValidatorFactory), config.ValidatorFactoryType ?? typeof(ServiceProviderValidatorFactory)));
+			}
 
 			services.Add(ServiceDescriptor.Singleton<IObjectModelValidator, FluentValidationObjectModelValidator>(s => {
 				var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
@@ -124,16 +125,16 @@ namespace FluentValidation.AspNetCore {
 				}
 
 				if (!options.ModelValidatorProviders.Any(x => x is FluentValidationModelValidatorProvider)) {
-#pragma warning disable CS0618
 					options.ModelValidatorProviders.Insert(0, new FluentValidationModelValidatorProvider(
 						config.ImplicitlyValidateChildProperties,
 						config.ImplicitlyValidateRootCollectionElements));
 				}
-#pragma warning restore CS0618
 			});
 
 			return services;
 		}
+
+#pragma warning restore CS0618
 
 		/// <summary>
 		/// Enables integration between FluentValidation and ASP.NET client-side validation. See https://docs.fluentvalidation.net/en/latest/aspnet.html#clientside-validation for details.
@@ -143,6 +144,7 @@ namespace FluentValidation.AspNetCore {
 		/// <returns></returns>
 		public static IServiceCollection AddFluentValidationClientsideAdapters(this IServiceCollection services, Action<FluentValidationClientModelValidatorProvider> configuration = null) {
 			services.AddHttpContextAccessor();
+			services.TryAddSingleton(ValidatorOptions.Global);
 
 			services.TryAddEnumerable(ServiceDescriptor.Singleton<IConfigureOptions<MvcViewOptions>, FluentValidationViewOptionsSetup>(s => {
 				return new FluentValidationViewOptionsSetup(configuration, s.GetService<IHttpContextAccessor>());

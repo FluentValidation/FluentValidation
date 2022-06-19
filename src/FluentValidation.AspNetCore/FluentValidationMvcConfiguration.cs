@@ -43,6 +43,18 @@ namespace FluentValidation.AspNetCore {
 		public bool ImplicitlyValidateRootCollectionElements { get; set; }
 
 		/// <summary>
+		/// The type of validator factory to use. Uses the ServiceProviderValidatorFactory by default.
+		/// </summary>
+		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly. For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
+		public Type ValidatorFactoryType { get; set; }
+
+		/// <summary>
+		/// The validator factory to use. Uses the ServiceProviderValidatorFactory by default.
+		/// </summary>
+		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly. For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
+		public IValidatorFactory ValidatorFactory { get; set; }
+
+		/// <summary>
 		/// By default Data Annotations validation will also run as well as FluentValidation.
 		/// Setting this to true will disable DataAnnotations and only run FluentValidation.
 		/// </summary>
@@ -54,11 +66,6 @@ namespace FluentValidation.AspNetCore {
 	/// </summary>
 	public class FluentValidationMvcConfiguration : FluentValidationAutoValidationConfiguration {
 		private readonly IServiceCollection _services;
-
-		[Obsolete]
-		public FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions) {
-			ValidatorOptions = validatorOptions;
-		}
 
 		internal FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions, IServiceCollection services) {
 			_services = services;
@@ -72,19 +79,6 @@ namespace FluentValidation.AspNetCore {
 		/// </summary>
 		[Obsolete("Global options should be set using the static ValidatorOptions.Global instead.")]
 		public ValidatorConfiguration ValidatorOptions { get; private set; }
-
-		/// <summary>
-		/// The type of validator factory to use. Uses the ServiceProviderValidatorFactory by default.
-		/// </summary>
-		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly. For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
-		public Type ValidatorFactoryType { get; set; }
-
-		/// <summary>
-		/// The validator factory to use. Uses the ServiceProviderValidatorFactory by default.
-		/// </summary>
-		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly. For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
-		public IValidatorFactory ValidatorFactory { get; set; }
-
 
 		/// <summary>
 		/// Enables or disables localization support within FluentValidation
