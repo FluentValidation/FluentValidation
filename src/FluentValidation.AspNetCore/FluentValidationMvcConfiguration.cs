@@ -23,51 +23,9 @@ namespace FluentValidation.AspNetCore {
 	using Microsoft.Extensions.DependencyInjection;
 
 	/// <summary>
-	/// FluentValidation asp.net core configuration
+	/// Auto-validation configuration.
 	/// </summary>
-	public class FluentValidationMvcConfiguration {
-		private readonly IServiceCollection _services;
-
-		[Obsolete]
-		public FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions) {
-			ValidatorOptions = validatorOptions;
-		}
-
-		internal FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions, IServiceCollection services) {
-			_services = services;
-			ValidatorOptions = validatorOptions;
-		}
-
-		/// <summary>
-		/// Options that are used to configure all validators.
-		/// </summary>
-		public ValidatorConfiguration ValidatorOptions { get; private set; }
-
-		/// <summary>
-		/// The type of validator factory to use. Uses the ServiceProviderValidatorFactory by default.
-		/// </summary>
-		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
-		public Type ValidatorFactoryType { get; set; }
-
-		/// <summary>
-		/// The validator factory to use. Uses the ServiceProviderValidatorFactory by default.
-		/// </summary>
-		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
-		public IValidatorFactory ValidatorFactory { get; set; }
-
-		/// <summary>
-		/// By default Data Annotations validation will also run as well as FluentValidation.
-		/// Setting this to true will disable DataAnnotations and only run FluentValidation.
-		/// </summary>
-		public bool DisableDataAnnotationsValidation { get; set; }
-
-		/// <summary>
-		/// Enables or disables localization support within FluentValidation
-		/// </summary>
-		public bool LocalizationEnabled {
-			get => ValidatorOptions.LanguageManager.Enabled;
-			set => ValidatorOptions.LanguageManager.Enabled = value;
-		}
+	public class FluentValidationAutoValidationConfiguration {
 
 		/// <summary>
 		/// Whether or not child properties should be implicitly validated if a matching validator can be found. By default this is false, and you should wire up child validators using SetValidator.
@@ -83,6 +41,59 @@ namespace FluentValidation.AspNetCore {
 		/// </summary>
 		[Obsolete("Implicit validation of root collection elements is deprecated and will be removed in a future release. Please use an explicit collection validator instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
 		public bool ImplicitlyValidateRootCollectionElements { get; set; }
+
+		/// <summary>
+		/// By default Data Annotations validation will also run as well as FluentValidation.
+		/// Setting this to true will disable DataAnnotations and only run FluentValidation.
+		/// </summary>
+		public bool DisableDataAnnotationsValidation { get; set; }
+	}
+
+	/// <summary>
+	/// FluentValidation asp.net core configuration
+	/// </summary>
+	public class FluentValidationMvcConfiguration : FluentValidationAutoValidationConfiguration {
+		private readonly IServiceCollection _services;
+
+		[Obsolete]
+		public FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions) {
+			ValidatorOptions = validatorOptions;
+		}
+
+		internal FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions, IServiceCollection services) {
+			_services = services;
+#pragma warning disable CS0618
+			ValidatorOptions = validatorOptions;
+#pragma warning restore CS0618
+		}
+
+		/// <summary>
+		/// Options that are used to configure all validators.
+		/// </summary>
+		[Obsolete("Global options should be set using the static ValidatorOptions.Global instead.")]
+		public ValidatorConfiguration ValidatorOptions { get; private set; }
+
+		/// <summary>
+		/// The type of validator factory to use. Uses the ServiceProviderValidatorFactory by default.
+		/// </summary>
+		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly. For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
+		public Type ValidatorFactoryType { get; set; }
+
+		/// <summary>
+		/// The validator factory to use. Uses the ServiceProviderValidatorFactory by default.
+		/// </summary>
+		[Obsolete("IValidatorFactory and its implementors are deprecated. Please use the Service Provider directly. For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
+		public IValidatorFactory ValidatorFactory { get; set; }
+
+
+		/// <summary>
+		/// Enables or disables localization support within FluentValidation
+		/// </summary>
+		[Obsolete("Set the static ValidatorOptions.Global.LanguageManager.Enabled property instead.")]
+		public bool LocalizationEnabled {
+			get => ValidatorOptions.LanguageManager.Enabled;
+			set => ValidatorOptions.LanguageManager.Enabled = value;
+		}
 
 		internal bool ClientsideEnabled = true;
 		internal Action<FluentValidationClientModelValidatorProvider> ClientsideConfig = x => {};
@@ -155,6 +166,7 @@ namespace FluentValidation.AspNetCore {
 		/// <param name="clientsideConfig"></param>
 		/// <param name="enabled">Whether clientside validation integration is enabled</param>
 		/// <returns></returns>
+		[Obsolete("ConfigureClientsideValidation is deprecated and will be removed in a future release. Call services.AddFluentValidationClientsideAdapters() instead. If you want to disable clientside validation but still use Auto Validation then call services.AddFluentValidationAutoValidation() instead of services.AddFluentValidation()")]
 		public FluentValidationMvcConfiguration ConfigureClientsideValidation(Action<FluentValidationClientModelValidatorProvider> clientsideConfig=null, bool enabled=true) {
 			if (clientsideConfig != null) {
 				ClientsideConfig = clientsideConfig;

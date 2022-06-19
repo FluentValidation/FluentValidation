@@ -184,7 +184,7 @@ Install the `FluentValidation.AspNetCore` package in your web application from t
 dotnet add package FluentValidation.AspNetCore
 ```
 
-Once installed, you'll need to modify the `ConfigureServices` in your `Startup` to include a call to `AddFluentValidation`:
+Once installed, you'll need to modify the `ConfigureServices` in your `Startup` to include a call to `AddFluentValidationAutoValidation()`:
 
 ```csharp
 public void ConfigureServices(IServiceCollection services) 
@@ -193,13 +193,18 @@ public void ConfigureServices(IServiceCollection services)
 
     // ... other configuration ...
 
-    services.AddFluentValidation();
+    services.AddFluentValidationAutoValidation();
 
     services.AddScoped<IValidator<Person>, PersonValidator>();
 }
 ```
 
 This method must be called after `AddMvc` (or `AddControllers`/`AddControllersWithViews`). Make sure you add `using FluentValidation.AspNetCore` to your startup file so the appropriate extension methods are available. 
+
+```eval_rst
+.. note::
+  The `AddFluentValidationAutoValidation` method is only available in version 11.1 and newer. In older versions, call `services.AddFluentValidation()` instead, which is the equivalent of calling `services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters()`
+```
 
 You'll also still need to register your validators in the same as our manual validation example above (either by calling `AddScoped` for each validator, or by using one of the registration methods provided by `FluentValidation.DependencyInjectionExtensions`).
 
@@ -267,7 +272,7 @@ After FluentValidation is executed, any other validator providers will also have
 If you want to disable this behaviour so that FluentValidation is the only validation library that executes, you can set `DisableDataAnnotationsValidation` to `true` in your application startup routine:
 
 ```csharp
-services.AddFluentValidation(config => 
+services.AddFluentValidationAutoValidation(config => 
 {
  config.DisableDataAnnotationsValidation = true;
 });
@@ -287,13 +292,18 @@ When validating complex object graphs you must explicitly specify any child vali
 When running an ASP.NET MVC application, you can also optionally enable implicit validation for child properties. When this is enabled, instead of having to specify child validators using `SetValidator`, MVC's validation infrastructure will recursively attempt to automatically find validators for each property. This can be done by setting `ImplicitlyValidateChildProperties` to true:
 
 ```csharp
-services.AddFluentValidation(config => 
+services.AddFluentValidationAutoValidation(config => 
 {
  config.ImplicitlyValidateChildProperties = true;
 });
 ```
 
 Note that if you enable this behaviour you should not use `SetValidator` for child properties, or the validator will be executed twice.
+
+```eval_rst
+.. note::
+  The `AddFluentValidationAutoValidation` method is only available in version 11.1 and newer. In older versions, call `services.AddFluentValidation()` instead, which is the equivalent of calling `services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters()`
+```
 
 ### Implicit Validation of Collection-Type Models
 
@@ -311,7 +321,7 @@ public ActionResult DoSomething(List<Person> people) => Ok();
 With implicit child property validation enabled (see above), you don't have to explicitly create a collection validator class as each person element in the collection will be validated automatically. However, any child properties on the `Person` object will be automatically validated too meaning you can no longer use `SetValidator`. If you don't want this behaviour, you can also optionally enable implicit validation for root collection elements only. For example, if you want each `Person` element in the collection to be validated automatically, but not its child properties you can set `ImplicitlyValidateRootCollectionElements` to true:
 
 ```csharp
-services.AddFluentValidation(config => 
+services.AddFluentValidationAutoValidation(config => 
 {
  config.ImplicitlyValidateRootCollectionElements = true;
 });
@@ -321,7 +331,7 @@ Note that this setting is ignored when `ImplicitlyValidateChildProperties` is `t
 
 ```eval_rst
 .. note::
-  Automatic Registration for validators will only work for `AbstractValidators` implementing a concrete type like `List` or `Array`. Implementations with interface types like `IEnumerable` or `IList` may be used, but the validator will need to be specifically registered as a scoped service in your app's Startup class. This is due to the ASP.NET's Model-Binding of collection types where interfaces like `IEnumerable` will be converted to a `List` implementation and a `List` is the type MVC passes to FluentValidation.
+  The `AddFluentValidationAutoValidation` method is only available in version 11.1 and newer. In older versions, call `services.AddFluentValidation()` instead, which is the equivalent of calling `services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters()`
 ```
 
 ### Validator customization
@@ -405,9 +415,10 @@ Alternatively, you can register a default `IValidatorInterceptor` with the ASP.N
 ```csharp
 public void ConfigureServices(IServiceCollection services) 
 {
-    services
-      .AddMvc()
-      .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<PersonValidator>());
+    services.AddMvc();
+
+    services.AddFluentValidationAutoValidation();
+    services.AddValidatorsFromAssemblyContaining<PersonValidator>());
 
     // Register a default interceptor, where MyDefaultInterceptor is a class that
     // implements IValidatorInterceptor.
@@ -417,9 +428,14 @@ public void ConfigureServices(IServiceCollection services)
 
 Note that this is considered to be an advanced scenario. Most of the time you probably won't need to use an interceptor, but the option is there if you want it.
 
+```eval_rst
+.. note::
+  The `AddFluentValidationAutoValidation` method is only available in version 11.1 and newer. In older versions, call `services.AddFluentValidation()` instead, which is the equivalent of calling `services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters()`
+```
+
 ## Clientside Validation
 
-FluentValidation is a server-library framework and does not provide any client-side validation directly. However, it can provide metadata which, when applied to the generated HTML elements, can be used by a client-side framework such as jQuery Validate, in the same way that ASP.NET's default validation attributes work.
+FluentValidation is a server-library and does not provide any client-side validation directly. However, it can provide metadata which can be applied to the generated HTML elements for use with a client-side framework such as jQuery Validate in the same way that ASP.NET's default validation attributes work.
 
 Note that not all rules defined in FluentValidation will work with ASP.NET's client-side validation. For example, any rules defined using a condition (with When/Unless), custom validators, or calls to `Must` will not run on the client side. Nor will any rules in a `RuleSet` (although this can be changed - see below). The following validators are supported on the client:
 

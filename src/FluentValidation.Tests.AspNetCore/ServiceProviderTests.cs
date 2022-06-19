@@ -14,7 +14,9 @@ public class ServiceProviderTests : IClassFixture<WebAppFixture> {
 	public ServiceProviderTests(WebAppFixture webApp) {
 
 		_client = webApp.CreateClientWithServices(services => {
+#pragma warning disable CS0618
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+#pragma warning restore CS0618
 			services.AddValidatorsFromAssemblyContaining<TestController>();
 		});
 	}

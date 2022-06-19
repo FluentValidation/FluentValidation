@@ -23,7 +23,9 @@ public class MvcIntegrationTests : IClassFixture<WebAppFixture> {
 		_output = output;
 		_webApp = webApp;
 		_client = webApp.CreateClientWithServices(services => {
+#pragma warning disable CS0618
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+#pragma warning restore CS0618
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddScoped<IValidator<TestModel>, TestModelValidator>();
 			services.AddScoped<IValidator<TestModel3>, TestModelValidator3>();
@@ -381,7 +383,7 @@ public class MvcIntegrationTests : IClassFixture<WebAppFixture> {
 
 		// Usual mechanism calls AddMvc().AddFluentValidation(). Test it the other way around.
 		var client = _webApp.CreateClientWithServices(services => {
-			services.AddFluentValidation();
+			services.AddFluentValidationAutoValidation();
 			services.AddMvc().AddNewtonsoftJson();
 			services.AddScoped<IValidator<TestModel4>, TestModel4Validator>();
 		});
@@ -396,7 +398,7 @@ public class MvcIntegrationTests : IClassFixture<WebAppFixture> {
 	[Fact]
 	public async Task Generates_error_when_async_validator_invoked_synchronously() {
 		var client = _webApp.CreateClientWithServices(services => {
-			services.AddFluentValidation();
+			services.AddFluentValidationAutoValidation();
 			services.AddMvc().AddNewtonsoftJson();
 			services.AddScoped<IValidator<BadAsyncModel>, BadAsyncValidator>();
 		});
