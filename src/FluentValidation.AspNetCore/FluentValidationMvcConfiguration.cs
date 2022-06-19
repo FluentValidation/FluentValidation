@@ -67,6 +67,13 @@ namespace FluentValidation.AspNetCore {
 	public class FluentValidationMvcConfiguration : FluentValidationAutoValidationConfiguration {
 		private readonly IServiceCollection _services;
 
+		[Obsolete]
+		public FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions) {
+#pragma warning disable CS0618
+			ValidatorOptions = validatorOptions;
+#pragma warning restore CS0618
+		}
+
 		internal FluentValidationMvcConfiguration(ValidatorConfiguration validatorOptions, IServiceCollection services) {
 			_services = services;
 #pragma warning disable CS0618
