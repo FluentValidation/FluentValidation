@@ -181,46 +181,31 @@ namespace FluentValidation {
 		/// <param name="context">Validation Context</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual ValidationResult Validate(ValidationContext<T> context) {
-			context.Guard("Cannot pass null to Validate.", nameof(context));
+			if (context == null) throw new ArgumentNullException(nameof(context));
 
-			var result = new ValidationResult(context.Failures);
-			bool shouldContinue = PreValidate(context, result);
-
-			if (!shouldContinue) {
-				if (!result.IsValid && context.ThrowOnFailures) {
-					RaiseValidationException(context, result);
-				}
-
-				return result;
-			}
-
-			EnsureInstanceNotNull(context.InstanceToValidate);
-
+			// Note: Sync-over-async is OK in this scenario.
+			// The use of the `useAsync` parameter ensures that no async code is
+			// actually run, and we're using ValueTask
+			// which is optimised for synchronous execution of tasks.
+			// Unlike 'real' sync-over-async, we can never run into deadlocks as we're not actually invoking anything asynchronously.
+			// See RuleComponent.ValidateAsync for the lowest level.
+			// This technique is used by Microsoft within the .net runtime to avoid duplicate code paths for sync/async.
+			// See https://www.thereformedprogrammer.net/using-valuetask-to-create-methods-that-can-work-as-sync-or-async/
 			try {
-				foreach (var rule in Rules) {
-					rule.Validate(context);
+				ValueTask<ValidationResult> completedValueTask
+					= ValidateInternalAsync(context, useAsync: false, default);
 
-					if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
-						// Bail out if we're "failing-fast".
-						// Check for > 0 rather than == 1 because a rule chain may have overridden the Stop behaviour to Continue
-						// meaning that although the first rule failed, it actually generated 2 failures if there were 2 validators
-						// in the chain.
-						break;
-					}
-				}
+				// Sync tasks should always be completed.
+				System.Diagnostics.Debug.Assert(completedValueTask.IsCompleted);
+
+				// GetResult() will also bubble up any exceptions correctly.
+				return completedValueTask.GetAwaiter().GetResult();
 			}
 			catch (AsyncValidatorInvokedSynchronouslyException) {
+				// If we attempted to execute an async validator, re-create the exception with more useful info.
 				bool wasInvokedByMvc = context.RootContextData.ContainsKey("InvokedByMvc");
 				throw new AsyncValidatorInvokedSynchronouslyException(GetType(), wasInvokedByMvc);
 			}
-
-			SetExecutedRulesets(result, context);
-
-			if (!result.IsValid && context.ThrowOnFailures) {
-				RaiseValidationException(context, result);
-			}
-
-			return result;
 		}
 
 		/// <summary>
@@ -230,9 +215,12 @@ namespace FluentValidation {
 		/// <param name="cancellation">Cancellation token</param>
 		/// <returns>A ValidationResult object containing any validation failures.</returns>
 		public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
-			context.Guard("Cannot pass null to Validate", nameof(context));
+			if (context == null) throw new ArgumentNullException(nameof(context));
 			context.IsAsync = true;
+			return await ValidateInternalAsync(context, useAsync: true, cancellation);
+		}
 
+		private async ValueTask<ValidationResult> ValidateInternalAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
 			var result = new ValidationResult(context.Failures);
 			bool shouldContinue = PreValidate(context, result);
 
@@ -248,7 +236,7 @@ namespace FluentValidation {
 
 			foreach (var rule in Rules) {
 				cancellation.ThrowIfCancellationRequested();
-				await rule.ValidateAsync(context, cancellation);
+				await rule.ValidateAsync(context, useAsync, cancellation);
 
 				if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 					// Bail out if we're "failing-fast".
