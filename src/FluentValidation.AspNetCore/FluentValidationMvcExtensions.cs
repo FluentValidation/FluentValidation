@@ -77,6 +77,8 @@ namespace FluentValidation.AspNetCore {
 					cfg.DisableDataAnnotationsValidation = config.DisableDataAnnotationsValidation;
 					cfg.ImplicitlyValidateChildProperties = config.ImplicitlyValidateChildProperties;
 					cfg.ImplicitlyValidateRootCollectionElements = config.ImplicitlyValidateRootCollectionElements;
+					cfg.ValidatorFactory = config.ValidatorFactory;
+					cfg.ValidatorFactoryType = config.ValidatorFactoryType;
 				});
 			}
 
