@@ -37,7 +37,7 @@ namespace FluentValidation.AspNetCore {
 		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcCoreBuilder" /> that can be used to further configure the
 		///     MVC services.
 		/// </returns>
-		[Obsolete("Calling AddFluentValidation() is deprecated. Call services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters() instead, which has the same effect. For details see https://github.com/FluentValidation/FluentValidation/issues/1965")]
+		// [Obsolete("Calling AddFluentValidation() is deprecated. Call services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters() instead, which has the same effect. For details see https://github.com/FluentValidation/FluentValidation/issues/1965")]
 		public static IMvcCoreBuilder AddFluentValidation(this IMvcCoreBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			mvcBuilder.Services.AddFluentValidation(configurationExpression);
 			return mvcBuilder;
@@ -51,7 +51,7 @@ namespace FluentValidation.AspNetCore {
 		///     An <see cref="T:Microsoft.Extensions.DependencyInjection.IMvcBuilder" /> that can be used to further configure the
 		///     MVC services.
 		/// </returns>
-		[Obsolete("Calling AddFluentValidation() is deprecated. Call services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters() instead, which has the same effect. For details see https://github.com/FluentValidation/FluentValidation/issues/1965")]
+		// [Obsolete("Calling AddFluentValidation() is deprecated. Call services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters() instead, which has the same effect. For details see https://github.com/FluentValidation/FluentValidation/issues/1965")]
 		public static IMvcBuilder AddFluentValidation(this IMvcBuilder mvcBuilder, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			mvcBuilder.Services.AddFluentValidation(configurationExpression);
 			return mvcBuilder;
@@ -65,7 +65,7 @@ namespace FluentValidation.AspNetCore {
 		/// <returns>
 		///     A reference to this instance after the operation has completed.
 		/// </returns>
-		[Obsolete("Calling AddFluentValidation() is deprecated. Call services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters() instead, which has the same effect. For details see https://github.com/FluentValidation/FluentValidation/issues/1965")]
+		// [Obsolete("Calling AddFluentValidation() is deprecated. Call services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters() instead, which has the same effect. For details see https://github.com/FluentValidation/FluentValidation/issues/1965")]
 		public static IServiceCollection AddFluentValidation(this IServiceCollection services, Action<FluentValidationMvcConfiguration> configurationExpression = null) {
 			var config = new FluentValidationMvcConfiguration(ValidatorOptions.Global, services);
 			configurationExpression?.Invoke(config);
