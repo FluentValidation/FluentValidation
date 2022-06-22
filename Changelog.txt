@@ -1,10 +1,11 @@
-11.1.0 -
+11.1.0 - 22 June 2022
 Added a ToDictionary method to ValidationResult
 MVC auto validation: Deprecated Implicit validation of child properties (#1960)
 MVC auto validation: Deprecated Implicit validation of root collection elements (#1960)
 Deprecated InjectValidator (#1960)
 Deprecate validator factories (#1961)
 Introduce services.AddFluentValidationAutoValidation() and services.AddFluentValidationClientsideAdapters() as replacements for services.AddFluentValidation() (#1965)
+Remove duplication between sync and async validation in the internal model.
 
 11.0.3 - 10 June 2022
 Fix an issue where an exception would be thrown when calling ValidateAsync if a rule was wrapped with a call to WhenAsync. (#1955)
