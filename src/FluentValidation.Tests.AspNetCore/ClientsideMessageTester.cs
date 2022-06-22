@@ -34,7 +34,9 @@ public class ClientsideMessageTester : IClassFixture<WebAppFixture> {
 
 	public ClientsideMessageTester(WebAppFixture webApp) {
 		_client = webApp.CreateClientWithServices(services => {
+#pragma warning disable CS0618
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+#pragma warning restore CS0618
 			services.AddValidatorsFromAssemblyContaining<TestController>();
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddScoped<ClientsideScopedDependency>();
@@ -264,7 +266,9 @@ public class RazorPagesClientsideMessageTester : IClassFixture<WebAppFixture> {
 
 	public RazorPagesClientsideMessageTester(WebAppFixture webApp) {
 		_client = webApp.CreateClientWithServices(services => {
+#pragma warning disable CS0618
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+#pragma warning restore CS0618
 			services.AddValidatorsFromAssemblyContaining<TestController>();
 			services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 			services.AddScoped<ClientsideScopedDependency>();

@@ -20,7 +20,9 @@ public class RazorPagesTestsWithImplicitValidationDisabled : IClassFixture<WebAp
 
 		_output = output;
 		_client = webApp.CreateClientWithServices(services => {
+#pragma warning disable CS0618
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+#pragma warning restore CS0618
 			services.AddScoped<IValidator<TestModel>, TestModelValidator>();
 			services.AddScoped<IValidator<RulesetTestModel>, RulesetTestValidator>();
 			services.AddScoped<IValidator<ClientsideRulesetModel>, ClientsideRulesetValidator>();
@@ -77,11 +79,11 @@ public class RazorPagesTestsWithImplicitValidationEnabled : IClassFixture<WebApp
 
 		_output = output;
 		_client = _client = webApp.CreateClientWithServices(services => {
-			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 #pragma warning disable CS0618
+			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 				fv.ImplicitlyValidateChildProperties = true;
-#pragma warning restore CS0618
 			});
+#pragma warning restore CS0618
 			services.AddScoped<IValidator<TestModel>, TestModelValidator>();
 			services.AddScoped<IValidator<RulesetTestModel>, RulesetTestValidator>();
 			services.AddScoped<IValidator<ClientsideRulesetModel>, ClientsideRulesetValidator>();

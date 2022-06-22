@@ -23,7 +23,9 @@ public class GlobalInterceptorTests : IClassFixture<WebAppFixture> {
 			{"Forename", "foo"},
 		};
 		var client = _app.CreateClientWithServices(services => {
+#pragma warning disable CS0618
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation();
+#pragma warning restore CS0618
 			services.AddScoped<IValidator<RulesetTestModel>, RulesetTestValidator>();
 			services.AddSingleton<IValidatorInterceptor, SimplePropertyInterceptor>();
 		});

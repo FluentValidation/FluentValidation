@@ -15,9 +15,11 @@ public class DisableDataAnnotationsTests : IClassFixture<WebAppFixture> {
 	[Fact]
 	public async Task Disables_data_annotations() {
 		var client = _app.CreateClientWithServices(services => {
+#pragma warning disable CS0618
 			services.AddMvc().AddNewtonsoftJson().AddFluentValidation(fv => {
 				fv.DisableDataAnnotationsValidation = true;
 			});
+#pragma warning restore CS0618
 			services.AddScoped<IValidator<MultiValidationModel>, MultiValidationValidator>();
 		});
 
