@@ -1,4 +1,8 @@
+<p>
 <img src="https://raw.githubusercontent.com/FluentValidation/FluentValidation/gh-pages/assets/images/logo/fluent-validation-logo.png" alt="FluentValidation" width="250px" />
+</p>
+
+[![Build Status](https://github.com/FluentValidation/FluentValidation/workflows/CI/badge.svg)](https://github.com/FluentValidation/FluentValidation/actions?query=workflow%3ACI) [![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg)](https://nuget.org/packages/FluentValidation)
 
 [Full Documentation](https://fluentvalidation.net)
 
@@ -12,25 +16,16 @@ If you use FluentValidation in a commercial project, please sponsor the project 
 ---
 
 ### Get Started
+
 FluentValidation can be installed using the Nuget package manager or the `dotnet` CLI.
 
 ```
 dotnet add package FluentValidation
 ```
 
-For ASP.NET Core integration:
-```
-dotnet add package FluentValidation.AspNetCore
-```
+[Review our documentation](https://docs.fluentvalidation.net) for instructions on how to use the package.
+
 ---
-
-[![Build Status](https://github.com/FluentValidation/FluentValidation/workflows/CI/badge.svg)](https://github.com/FluentValidation/FluentValidation/actions?query=workflow%3ACI)
-
-|         |       |       |
-| ------- | ----- | ----- |
-| `FluentValidation` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.svg)](https://nuget.org/packages/FluentValidation) |
-| `FluentValidation.AspNetCore` | [![NuGet](https://img.shields.io/nuget/v/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore) | [![Nuget](https://img.shields.io/nuget/dt/FluentValidation.AspNetCore.svg)](https://nuget.org/packages/FluentValidation.AspNetCore)
-
 
 ### Example
 ```csharp
@@ -61,10 +56,6 @@ bool success = results.IsValid;
 List<ValidationFailure> failures = results.Errors;
 ```
 
-### Documentation
-
-[Documentation can be found on the project site.](https://fluentvalidation.net)
-
 ### License, Copyright etc
 
 FluentValidation has adopted the [Code of Conduct](https://github.com/FluentValidation/FluentValidation/blob/main/.github/CODE_OF_CONDUCT.md) defined by the Contributor Covenant to clarify expected behavior in our community.
@@ -78,8 +69,5 @@ This project is sponsored by the following organisations whose support help keep
 
 - [Amazon's .NET on AWS team](https://aws.amazon.com/developer/language/net/) for their financial sponsorship 
 - [JetBrains](https://www.jetbrains.com/?from=FluentValidation) for providing licenses to their developer tools
-
-
-### .NET Foundation
 
 This project is part of the [.NET Foundation](https://dotnetfoundation.org).
