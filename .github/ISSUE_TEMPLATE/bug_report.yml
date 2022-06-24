@@ -13,13 +13,13 @@ body:
 - type: input
   attributes:
     label: FluentValidation version
-    description: Which version of FluentValidation are you using? Please note that only FluentValidation versions 9.x and 10.x are supported. Issues related to older versions will be closed. 
+    description: Which version of FluentValidation are you using? Please note that only FluentValidation versions 11.x and 10.x are supported. Issues related to older versions will be closed. 
   validations:
     required: true
 - type: input
   attributes:
     label: ASP.NET version
-    description: If you are using FluentValidation with ASP.NET, please provide the version of ASP.NET that you're using (eg .NET Core 3.1, .NET 5 etc). Leave this blank if you're not using ASP.NET.
+    description: If you are using FluentValidation with ASP.NET, please provide the version of ASP.NET that you're using (eg .NET Core 3.1, .NET 6 etc). Leave this blank if you're not using ASP.NET.
 - type: textarea
   attributes:
     label: Summary
