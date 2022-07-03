@@ -16,245 +16,245 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
-	using System.Reflection;
-	using Internal;
-	using Resources;
-	using Validators;
+namespace FluentValidation;
+
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Reflection;
+using Internal;
+using Resources;
+using Validators;
+
+/// <summary>
+/// Configuration options for validators.
+/// </summary>
+public class ValidatorConfiguration {
+	private Func<Type, MemberInfo, LambdaExpression, string> _propertyNameResolver = DefaultPropertyNameResolver;
+	private Func<Type, MemberInfo, LambdaExpression, string> _displayNameResolver = DefaultDisplayNameResolver;
+	private Func<MessageFormatter> _messageFormatterFactory = () => new MessageFormatter();
+	private Func<IPropertyValidator, string> _errorCodeResolver = DefaultErrorCodeResolver;
+	private ILanguageManager _languageManager = new LanguageManager();
+
+	private CascadeMode _defaultClassLevelCascadeMode = CascadeMode.Continue;
+	private CascadeMode _defaultRuleLevelCascadeMode = CascadeMode.Continue;
 
 	/// <summary>
-	/// Configuration options for validators.
+	/// <para>
+	/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
+	/// <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+	/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>., based on the same logic as used when setting
+	/// this property as described below.
+	/// </para>
+	/// <para>
+	/// Sets the default values of <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+	/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
+	/// </para>
+	/// <para>
+	/// If set to <see cref="FluentValidation.CascadeMode.Continue"/> or <see cref="FluentValidation.CascadeMode.Stop"/>, then both properties are set
+	/// to that value by default.
+	/// </para>
+	/// <para>
+	/// If set to the deprecated <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>,
+	/// then <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
+	/// is set to <see cref="FluentValidation.CascadeMode.Continue"/> by default, and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
+	/// is set to <see cref="FluentValidation.CascadeMode.Stop"/> by default.
+	/// This results in the same behaviour as before this property was deprecated.
+	/// </para>
+	/// <para>
+	/// Note that cascade mode behaviour <i>within</i> individual rules is controlled by
+	/// <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
+	/// </para>
 	/// </summary>
-	public class ValidatorConfiguration {
-		private Func<Type, MemberInfo, LambdaExpression, string> _propertyNameResolver = DefaultPropertyNameResolver;
-		private Func<Type, MemberInfo, LambdaExpression, string> _displayNameResolver = DefaultDisplayNameResolver;
-		private Func<MessageFormatter> _messageFormatterFactory = () => new MessageFormatter();
-		private Func<IPropertyValidator, string> _errorCodeResolver = DefaultErrorCodeResolver;
-		private ILanguageManager _languageManager = new LanguageManager();
-
-		private CascadeMode _defaultClassLevelCascadeMode = CascadeMode.Continue;
-		private CascadeMode _defaultRuleLevelCascadeMode = CascadeMode.Continue;
-
-		/// <summary>
-		/// <para>
-		/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
-		/// <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
-		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>., based on the same logic as used when setting
-		/// this property as described below. 
-		/// </para>
-		/// <para>
-		/// Sets the default values of <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
-		/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>. 
-		/// </para>
-		/// <para>
-		/// If set to <see cref="CascadeMode.Continue"/> or <see cref="CascadeMode.Stop"/>, then both properties are set
-		/// to that value by default.
-		/// </para>
-		/// <para>
-		/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>,
-		/// then <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
-		/// is set to <see cref="CascadeMode.Continue"/> by default, and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
-		/// is set to <see cref="CascadeMode.Stop"/> by default.
-		/// This results in the same behaviour as before this property was deprecated.
-		/// </para>
-		/// <para>
-		/// Note that cascade mode behaviour <i>within</i> individual rules is controlled by
-		/// <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
-		/// </para>
-		/// </summary>
-		[Obsolete($"Use {nameof(DefaultClassLevelCascadeMode)} and/or {nameof(DefaultRuleLevelCascadeMode)} instead. " +
-			"CascadeMode will be removed in a future release. " +
-			"For more details, see https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode")]
-		public CascadeMode CascadeMode {
+	[Obsolete($"Use {nameof(DefaultClassLevelCascadeMode)} and/or {nameof(DefaultRuleLevelCascadeMode)} instead. " +
+	          "CascadeMode will be removed in a future release. " +
+	          "For more details, see https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode")]
+	public CascadeMode CascadeMode {
 #pragma warning disable 618
-			get {
-				if (_defaultClassLevelCascadeMode == _defaultRuleLevelCascadeMode) {
-					return _defaultClassLevelCascadeMode;
-				}
-				else if (_defaultClassLevelCascadeMode == CascadeMode.Continue && _defaultRuleLevelCascadeMode == CascadeMode.Stop) {
-					return CascadeMode.StopOnFirstFailure;
-				}
-				else {
-					throw new Exception(
-						$"There is no conversion to a single {nameof(CascadeMode)} value from the current combination of " +
-							$"{nameof(DefaultClassLevelCascadeMode)} and {nameof(DefaultRuleLevelCascadeMode)}. " +
-							$"Please use these properties instead of the deprecated {nameof(CascadeMode)} going forward.");
-				}
+		get {
+			if (_defaultClassLevelCascadeMode == _defaultRuleLevelCascadeMode) {
+				return _defaultClassLevelCascadeMode;
 			}
-
-			set {
-				DefaultClassLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
-					? CascadeMode.Continue
-					: value;
-
-				DefaultRuleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
-					? CascadeMode.Stop
-					: value;
-#pragma warning restore 618
+			else if (_defaultClassLevelCascadeMode == CascadeMode.Continue && _defaultRuleLevelCascadeMode == CascadeMode.Stop) {
+				return CascadeMode.StopOnFirstFailure;
+			}
+			else {
+				throw new Exception(
+					$"There is no conversion to a single {nameof(CascadeMode)} value from the current combination of " +
+					$"{nameof(DefaultClassLevelCascadeMode)} and {nameof(DefaultRuleLevelCascadeMode)}. " +
+					$"Please use these properties instead of the deprecated {nameof(CascadeMode)} going forward.");
 			}
 		}
 
-		/// <summary>
-		/// <para>
-		/// Sets the default value for <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>.
-		/// Defaults to <see cref="CascadeMode.Continue"/> if not set.
-		/// </para>
-		/// <para>
-		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
-		/// <see cref="CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
-		/// result in <see cref="CascadeMode.Stop"/> being used.
-		/// </para>
-		/// </summary>
-		public CascadeMode DefaultClassLevelCascadeMode {
-			get => _defaultClassLevelCascadeMode;
-#pragma warning disable 618
-			set => _defaultClassLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+		set {
+			DefaultClassLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+				? CascadeMode.Continue
+				: value;
+
+			DefaultRuleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
 				? CascadeMode.Stop
 				: value;
 #pragma warning restore 618
 		}
+	}
 
-		/// <summary>
-		/// <para>
-		/// Sets the default value for <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
-		/// Defaults to <see cref="CascadeMode.Continue"/> if not set.
-		/// </para>
-		/// <para>
-		/// This cannot be set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>.
-		/// <see cref="CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
-		/// result in <see cref="CascadeMode.Stop"/> being used.
-		/// </para>
-		/// </summary>
-		public CascadeMode DefaultRuleLevelCascadeMode {
-			get => _defaultRuleLevelCascadeMode;
+	/// <summary>
+	/// <para>
+	/// Sets the default value for <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>.
+	/// Defaults to <see cref="FluentValidation.CascadeMode.Continue"/> if not set.
+	/// </para>
+	/// <para>
+	/// This cannot be set to the deprecated <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>.
+	/// <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
+	/// result in <see cref="FluentValidation.CascadeMode.Stop"/> being used.
+	/// </para>
+	/// </summary>
+	public CascadeMode DefaultClassLevelCascadeMode {
+		get => _defaultClassLevelCascadeMode;
 #pragma warning disable 618
-			set => _defaultRuleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
-				? CascadeMode.Stop
-				: value;
+		set => _defaultClassLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+			? CascadeMode.Stop
+			: value;
 #pragma warning restore 618
-		}
-
-		/// <summary>
-		/// Default severity level
-		/// </summary>
-		public Severity Severity { get; set; } = Severity.Error;
-
-		/// <summary>
-		/// Default property chain separator
-		/// </summary>
-		public string PropertyChainSeparator { get; set; } = ".";
-
-		/// <summary>
-		/// Default language manager
-		/// </summary>
-		public ILanguageManager LanguageManager {
-			get => _languageManager;
-			set => _languageManager = value ?? throw new ArgumentNullException(nameof(value));
-		}
-
-		/// <summary>
-		/// Customizations of validator selector
-		/// </summary>
-		public ValidatorSelectorOptions ValidatorSelectors { get; } = new ValidatorSelectorOptions();
-
-		/// <summary>
-		/// Specifies a factory for creating MessageFormatter instances.
-		/// </summary>
-		public Func<MessageFormatter> MessageFormatterFactory {
-			get => _messageFormatterFactory;
-			set => _messageFormatterFactory = value ?? (() => new MessageFormatter());
-		}
-
-		/// <summary>
-		/// Pluggable logic for resolving property names
-		/// </summary>
-		public Func<Type, MemberInfo, LambdaExpression, string> PropertyNameResolver {
-			get => _propertyNameResolver;
-			set => _propertyNameResolver = value ?? DefaultPropertyNameResolver;
-		}
-
-		/// <summary>
-		/// Pluggable logic for resolving display names
-		/// </summary>
-		public Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver {
-			get => _displayNameResolver;
-			set => _displayNameResolver = value ?? DefaultDisplayNameResolver;
-		}
-
-		/// <summary>
-		/// Disables the expression accessor cache. Not recommended.
-		/// </summary>
-		public bool DisableAccessorCache { get; set; }
-
-		/// <summary>
-		/// Pluggable resolver for default error codes
-		/// </summary>
-		public Func<IPropertyValidator, string> ErrorCodeResolver {
-			get => _errorCodeResolver;
-			set => _errorCodeResolver = value ?? DefaultErrorCodeResolver;
-		}
-
-		static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
-			if (expression != null) {
-				var chain = PropertyChain.FromExpression(expression);
-				if (chain.Count > 0) return chain.ToString();
-			}
-
-			return memberInfo?.Name;
-		}
-
-		static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) => null;
-
-		static string DefaultErrorCodeResolver(IPropertyValidator validator) {
-			return validator.Name;
-		}
 	}
 
 	/// <summary>
-	/// Validator runtime options
+	/// <para>
+	/// Sets the default value for <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
+	/// Defaults to <see cref="FluentValidation.CascadeMode.Continue"/> if not set.
+	/// </para>
+	/// <para>
+	/// This cannot be set to the deprecated <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>.
+	/// <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
+	/// result in <see cref="FluentValidation.CascadeMode.Stop"/> being used.
+	/// </para>
 	/// </summary>
-	public static class ValidatorOptions {
-		/// <summary>
-		/// Global configuration for all validators.
-		/// </summary>
-		public static ValidatorConfiguration Global { get; } = new ValidatorConfiguration();
+	public CascadeMode DefaultRuleLevelCascadeMode {
+		get => _defaultRuleLevelCascadeMode;
+#pragma warning disable 618
+		set => _defaultRuleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
+			? CascadeMode.Stop
+			: value;
+#pragma warning restore 618
 	}
 
 	/// <summary>
-	/// ValidatorSelector options
+	/// Default severity level
 	/// </summary>
-	public class ValidatorSelectorOptions {
-		private static readonly IValidatorSelector DefaultSelector = new DefaultValidatorSelector();
+	public Severity Severity { get; set; } = Severity.Error;
 
-		private Func<IValidatorSelector> _defaultValidatorSelector = () => DefaultSelector;
-		private Func<IEnumerable<string>, IValidatorSelector> _memberNameValidatorSelector = properties => new MemberNameValidatorSelector(properties);
-		private Func<IEnumerable<string>, IValidatorSelector> _rulesetValidatorSelector = ruleSets => new RulesetValidatorSelector(ruleSets);
+	/// <summary>
+	/// Default property chain separator
+	/// </summary>
+	public string PropertyChainSeparator { get; set; } = ".";
 
-		/// <summary>
-		/// Factory func for creating the default validator selector
-		/// </summary>
-		public Func<IValidatorSelector> DefaultValidatorSelectorFactory {
-			get => _defaultValidatorSelector;
-			set => _defaultValidatorSelector = value ?? (() => new DefaultValidatorSelector());
+	/// <summary>
+	/// Default language manager
+	/// </summary>
+	public ILanguageManager LanguageManager {
+		get => _languageManager;
+		set => _languageManager = value ?? throw new ArgumentNullException(nameof(value));
+	}
+
+	/// <summary>
+	/// Customizations of validator selector
+	/// </summary>
+	public ValidatorSelectorOptions ValidatorSelectors { get; } = new ValidatorSelectorOptions();
+
+	/// <summary>
+	/// Specifies a factory for creating MessageFormatter instances.
+	/// </summary>
+	public Func<MessageFormatter> MessageFormatterFactory {
+		get => _messageFormatterFactory;
+		set => _messageFormatterFactory = value ?? (() => new MessageFormatter());
+	}
+
+	/// <summary>
+	/// Pluggable logic for resolving property names
+	/// </summary>
+	public Func<Type, MemberInfo, LambdaExpression, string> PropertyNameResolver {
+		get => _propertyNameResolver;
+		set => _propertyNameResolver = value ?? DefaultPropertyNameResolver;
+	}
+
+	/// <summary>
+	/// Pluggable logic for resolving display names
+	/// </summary>
+	public Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver {
+		get => _displayNameResolver;
+		set => _displayNameResolver = value ?? DefaultDisplayNameResolver;
+	}
+
+	/// <summary>
+	/// Disables the expression accessor cache. Not recommended.
+	/// </summary>
+	public bool DisableAccessorCache { get; set; }
+
+	/// <summary>
+	/// Pluggable resolver for default error codes
+	/// </summary>
+	public Func<IPropertyValidator, string> ErrorCodeResolver {
+		get => _errorCodeResolver;
+		set => _errorCodeResolver = value ?? DefaultErrorCodeResolver;
+	}
+
+	static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
+		if (expression != null) {
+			var chain = PropertyChain.FromExpression(expression);
+			if (chain.Count > 0) return chain.ToString();
 		}
 
-		/// <summary>
-		/// Factory func for creating the member validator selector
-		/// </summary>
-		public Func<IEnumerable<string>, IValidatorSelector> MemberNameValidatorSelectorFactory {
-			get => _memberNameValidatorSelector;
-			set => _memberNameValidatorSelector = value ?? (properties => new MemberNameValidatorSelector(properties));
-		}
+		return memberInfo?.Name;
+	}
 
-		/// <summary>
-		/// Factory func for creating the ruleset validator selector
-		/// </summary>
-		public Func<IEnumerable<string>, IValidatorSelector> RulesetValidatorSelectorFactory {
-			get => _rulesetValidatorSelector;
-			set => _rulesetValidatorSelector = value ?? (ruleSets => new RulesetValidatorSelector(ruleSets));
-		}
+	static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) => null;
+
+	static string DefaultErrorCodeResolver(IPropertyValidator validator) {
+		return validator.Name;
+	}
+}
+
+/// <summary>
+/// Validator runtime options
+/// </summary>
+public static class ValidatorOptions {
+	/// <summary>
+	/// Global configuration for all validators.
+	/// </summary>
+	public static ValidatorConfiguration Global { get; } = new ValidatorConfiguration();
+}
+
+/// <summary>
+/// ValidatorSelector options
+/// </summary>
+public class ValidatorSelectorOptions {
+	private static readonly IValidatorSelector DefaultSelector = new DefaultValidatorSelector();
+
+	private Func<IValidatorSelector> _defaultValidatorSelector = () => DefaultSelector;
+	private Func<IEnumerable<string>, IValidatorSelector> _memberNameValidatorSelector = properties => new MemberNameValidatorSelector(properties);
+	private Func<IEnumerable<string>, IValidatorSelector> _rulesetValidatorSelector = ruleSets => new RulesetValidatorSelector(ruleSets);
+
+	/// <summary>
+	/// Factory func for creating the default validator selector
+	/// </summary>
+	public Func<IValidatorSelector> DefaultValidatorSelectorFactory {
+		get => _defaultValidatorSelector;
+		set => _defaultValidatorSelector = value ?? (() => new DefaultValidatorSelector());
+	}
+
+	/// <summary>
+	/// Factory func for creating the member validator selector
+	/// </summary>
+	public Func<IEnumerable<string>, IValidatorSelector> MemberNameValidatorSelectorFactory {
+		get => _memberNameValidatorSelector;
+		set => _memberNameValidatorSelector = value ?? (properties => new MemberNameValidatorSelector(properties));
+	}
+
+	/// <summary>
+	/// Factory func for creating the ruleset validator selector
+	/// </summary>
+	public Func<IEnumerable<string>, IValidatorSelector> RulesetValidatorSelectorFactory {
+		get => _rulesetValidatorSelector;
+		set => _rulesetValidatorSelector = value ?? (ruleSets => new RulesetValidatorSelector(ruleSets));
 	}
 }
