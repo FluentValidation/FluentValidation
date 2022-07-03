@@ -1,6 +1,9 @@
 # ASP.NET Core
 
-FluentValidation can be used within ASP.NET Core web applications to validate incoming models. There are two main approaches for doing this: Manual validation and Automatic validation.
+FluentValidation can be used within ASP.NET Core web applications to validate incoming models. There are two main approaches for doing this: 
+
+- Manual validation
+- Automatic validation
 
 With manual validation, you inject the validator into your controller (or api endpoint), invoke the validator and act upon the result. This is the most straightforward and reliable approach. 
 
