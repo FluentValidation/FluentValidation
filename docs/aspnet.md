@@ -11,6 +11,7 @@ With automatic validation, FluentValidation plugs into the validation pipeline t
 
 - **Auto validation is not asynchronous**: If your validator contains asynchronous rules then your validator will not be able to run. You will receive an exception at runtime if you attempt to use an asynchronous validator with auto-validation.
 - **Auto validation is MVC-only**: Auto-validation only works with MVC Controllers and Razor Pages. It does not work with the more modern parts of ASP.NET such as Minimal APIs or Blazor.
+- **Auto validation is hard to debug**: The 'magic' nature of auto-validation makes it hard to debug/troubleshoot if something goes wrong as so much is done behind the scenes. 
 
 We do not generally recommend using auto validation for new projects, but it is still available for legacy implementations.
 
