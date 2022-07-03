@@ -15,22 +15,20 @@
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
-namespace FluentValidation {
-	using System;
+namespace FluentValidation;
 
-	/// <summary>
-	/// Validator factory implementation that uses the asp.net service provider to construct validators.
-	/// </summary>
-	[Obsolete("IValidatorFactory and its implementors are deprecated and will be removed in a future release. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
-	public class ServiceProviderValidatorFactory : ValidatorFactoryBase {
-		private readonly IServiceProvider _serviceProvider;
+using System;
 
-		public ServiceProviderValidatorFactory(IServiceProvider serviceProvider) {
-			_serviceProvider = serviceProvider;
-		}
+/// <summary>
+/// Validator factory implementation that uses the asp.net service provider to construct validators.
+/// </summary>
+[Obsolete("IValidatorFactory and its implementors are deprecated and will be removed in a future release. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
+public class ServiceProviderValidatorFactory : ValidatorFactoryBase {
+	private readonly IServiceProvider _serviceProvider;
 
-		public override IValidator CreateInstance(Type validatorType) {
-			return _serviceProvider.GetService(validatorType) as IValidator;
-		}
-	}
+	public ServiceProviderValidatorFactory(IServiceProvider serviceProvider)
+		=> _serviceProvider = serviceProvider;
+
+	public override IValidator CreateInstance(Type validatorType)
+		=> _serviceProvider.GetService(validatorType) as IValidator;
 }

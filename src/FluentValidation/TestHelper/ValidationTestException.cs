@@ -17,19 +17,19 @@
 #endregion
 
 #pragma warning disable 1591
-namespace FluentValidation.TestHelper {
-	using System;
-	using System.Collections.Generic;
-	using FluentValidation.Results;
+namespace FluentValidation.TestHelper;
 
-	public class ValidationTestException : Exception {
-		public List<ValidationFailure> Errors { get; }
+using System;
+using System.Collections.Generic;
+using FluentValidation.Results;
 
-		public ValidationTestException(string message) : base(message) {
-		}
+public class ValidationTestException : Exception {
+	public List<ValidationFailure> Errors { get; }
 
-		public ValidationTestException(string message, List<ValidationFailure> errors) : this(message) {
-			Errors = errors;
-		}
+	public ValidationTestException(string message) : base(message) {
+	}
+
+	public ValidationTestException(string message, List<ValidationFailure> errors) : this(message) {
+		Errors = errors;
 	}
 }

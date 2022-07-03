@@ -18,89 +18,89 @@
 
 using FluentValidation.Internal;
 
-namespace FluentValidation {
-	using System;
-	using System.Collections.Generic;
-	using Microsoft.Extensions.DependencyInjection;
-	using Validators;
+namespace FluentValidation;
+
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using Validators;
+
+/// <summary>
+/// Extension methods for working with a Service Provider.
+/// </summary>
+public static class DependencyInjectionExtensions {
 
 	/// <summary>
-	/// Extension methods for working with a Service Provider.
+	/// Gets the service provider associated with the validation context.
 	/// </summary>
-	public static class DependencyInjectionExtensions {
+	/// <param name="context"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
+	public static IServiceProvider GetServiceProvider(this IValidationContext context)
+		=> Get(context.RootContextData);
 
-		/// <summary>
-		/// Gets the service provider associated with the validation context.
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
-		public static IServiceProvider GetServiceProvider(this IValidationContext context)
-			=> Get(context.RootContextData);
+	/// <summary>
+	/// Gets the service provider associated with the validation context.
+	/// </summary>
+	/// <param name="context"></param>
+	/// <returns></returns>
+	/// <exception cref="InvalidOperationException"></exception>
+	[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
+	public static IServiceProvider GetServiceProvider<T,TProperty>(this MessageBuilderContext<T,TProperty> context)
+		=> Get(context.ParentContext.RootContextData);
 
-		/// <summary>
-		/// Gets the service provider associated with the validation context.
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		/// <exception cref="InvalidOperationException"></exception>
-		[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
-		public static IServiceProvider GetServiceProvider<T,TProperty>(this MessageBuilderContext<T,TProperty> context)
-			=> Get(context.ParentContext.RootContextData);
-
-		private static IServiceProvider Get(IDictionary<string, object> rootContextData) {
-			if (rootContextData.TryGetValue("_FV_ServiceProvider", out var sp)) {
-				if (sp is IServiceProvider serviceProvider) {
-					return serviceProvider;
-				}
+	private static IServiceProvider Get(IDictionary<string, object> rootContextData) {
+		if (rootContextData.TryGetValue("_FV_ServiceProvider", out var sp)) {
+			if (sp is IServiceProvider serviceProvider) {
+				return serviceProvider;
 			}
-
-			throw new InvalidOperationException("The service provider has not been configured to work with FluentValidation. Making use of InjectValidator or GetServiceProvider is only supported when using the automatic MVC integration.");
 		}
 
-		/// <summary>
-		/// Sets the service provider associated with the validation context.
-		/// </summary>
-		/// <param name="context"></param>
-		/// <param name="serviceProvider"></param>
-		[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
-		public static void SetServiceProvider(this IValidationContext context, IServiceProvider serviceProvider) {
-			context.RootContextData["_FV_ServiceProvider"] = serviceProvider;
-		}
+		throw new InvalidOperationException("The service provider has not been configured to work with FluentValidation. Making use of InjectValidator or GetServiceProvider is only supported when using the automatic MVC integration.");
+	}
 
-		/// <summary>
-		/// Uses the Service Provider to inject the default validator for the property type.
-		/// </summary>
-		/// <param name="ruleBuilder"></param>
-		/// <param name="ruleSets"></param>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="TProperty"></typeparam>
-		/// <returns></returns>
-		[Obsolete("The InjectValidator method is deprecated and will be removed in a future release. Please use Constructor Injection instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
-		public static IRuleBuilderOptions<T, TProperty> InjectValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, params string[] ruleSets) {
-			return ruleBuilder.InjectValidator((s, ctx) => s.GetService<IValidatorFactory>().GetValidator<TProperty>(), ruleSets);
-		}
+	/// <summary>
+	/// Sets the service provider associated with the validation context.
+	/// </summary>
+	/// <param name="context"></param>
+	/// <param name="serviceProvider"></param>
+	[Obsolete("Storing a service provider within a ValidationContext is no longer supported. If you still require this functionality, you should manually store the service provider within context.RootContextData")]
+	public static void SetServiceProvider(this IValidationContext context, IServiceProvider serviceProvider) {
+		context.RootContextData["_FV_ServiceProvider"] = serviceProvider;
+	}
 
-		/// <summary>
-		/// Uses the Service Provider to inject the default validator for the property type.
-		/// </summary>
-		/// <param name="ruleBuilder"></param>
-		/// <param name="callback"></param>
-		/// <param name="ruleSets"></param>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="TProperty"></typeparam>
-		/// <returns></returns>
-		[Obsolete("The InjectValidator method is deprecated and will be removed in a future release. Please use Constructor Injection instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
-		public static IRuleBuilderOptions<T, TProperty> InjectValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<IServiceProvider, ValidationContext<T>, IValidator<TProperty>> callback, params string[] ruleSets) {
-			var adaptor = new ChildValidatorAdaptor<T,TProperty>((context, _) => {
-				var serviceProvider = context.GetServiceProvider();
-				var validator = callback(serviceProvider, context);
-				return validator;
-			}, typeof(IValidator<TProperty>));
+	/// <summary>
+	/// Uses the Service Provider to inject the default validator for the property type.
+	/// </summary>
+	/// <param name="ruleBuilder"></param>
+	/// <param name="ruleSets"></param>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
+	/// <returns></returns>
+	[Obsolete("The InjectValidator method is deprecated and will be removed in a future release. Please use Constructor Injection instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
+	public static IRuleBuilderOptions<T, TProperty> InjectValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, params string[] ruleSets) {
+		return ruleBuilder.InjectValidator((s, ctx) => s.GetService<IValidatorFactory>().GetValidator<TProperty>(), ruleSets);
+	}
 
-			adaptor.RuleSets = ruleSets;
-			return ruleBuilder.SetAsyncValidator(adaptor);
-		}
+	/// <summary>
+	/// Uses the Service Provider to inject the default validator for the property type.
+	/// </summary>
+	/// <param name="ruleBuilder"></param>
+	/// <param name="callback"></param>
+	/// <param name="ruleSets"></param>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
+	/// <returns></returns>
+	[Obsolete("The InjectValidator method is deprecated and will be removed in a future release. Please use Constructor Injection instead. See the following page for further details: https://github.com/FluentValidation/FluentValidation/issues/1960")]
+	public static IRuleBuilderOptions<T, TProperty> InjectValidator<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<IServiceProvider, ValidationContext<T>, IValidator<TProperty>> callback, params string[] ruleSets) {
+		var adaptor = new ChildValidatorAdaptor<T,TProperty>((context, _) => {
+			var serviceProvider = context.GetServiceProvider();
+			var validator = callback(serviceProvider, context);
+			return validator;
+		}, typeof(IValidator<TProperty>));
+
+		adaptor.RuleSets = ruleSets;
+		return ruleBuilder.SetAsyncValidator(adaptor);
 	}
 }

@@ -16,22 +16,22 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation {
-	using System;
+namespace FluentValidation;
+
+using System;
+
+/// <summary>
+/// Gets validators for a particular type.
+/// </summary>
+[Obsolete("IValidatorFactory and its implementors are deprecated and will be removed in a future release. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
+public interface IValidatorFactory {
+	/// <summary>
+	/// Gets the validator for the specified type.
+	/// </summary>
+	IValidator<T> GetValidator<T>();
 
 	/// <summary>
-	/// Gets validators for a particular type.
+	/// Gets the validator for the specified type.
 	/// </summary>
-	[Obsolete("IValidatorFactory and its implementors are deprecated and will be removed in a future release. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
-	public interface IValidatorFactory {
-		/// <summary>
-		/// Gets the validator for the specified type.
-		/// </summary>
-		IValidator<T> GetValidator<T>();
-
-		/// <summary>
-		/// Gets the validator for the specified type.
-		/// </summary>
-		IValidator GetValidator(Type type);
-	}
+	IValidator GetValidator(Type type);
 }

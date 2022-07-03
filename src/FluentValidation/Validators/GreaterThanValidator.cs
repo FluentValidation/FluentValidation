@@ -16,38 +16,38 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Validators {
-	using System;
-	using System.Reflection;
-	using Internal;
-	using Resources;
+namespace FluentValidation.Validators;
 
-	public class GreaterThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty>, IComparable {
+using System;
+using System.Reflection;
+using Internal;
+using Resources;
 
-		public override string Name => "GreaterThanValidator";
+public class GreaterThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty>, IComparable {
 
-		public GreaterThanValidator(TProperty value) : base(value) {
-		}
+	public override string Name => "GreaterThanValidator";
 
-		public GreaterThanValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
-			: base(valueToCompareFunc, member, memberDisplayName) {
-		}
+	public GreaterThanValidator(TProperty value) : base(value) {
+	}
 
-		public GreaterThanValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
-			: base(valueToCompareFunc, member, memberDisplayName) {
-		}
+	public GreaterThanValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+		: base(valueToCompareFunc, member, memberDisplayName) {
+	}
 
-		public override bool IsValid(TProperty value, TProperty valueToCompare) {
-			if (valueToCompare == null)
-				return false;
+	public GreaterThanValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+		: base(valueToCompareFunc, member, memberDisplayName) {
+	}
 
-			return value.CompareTo(valueToCompare) > 0;
-		}
+	public override bool IsValid(TProperty value, TProperty valueToCompare) {
+		if (valueToCompare == null)
+			return false;
 
-		public override Comparison Comparison => Validators.Comparison.GreaterThan;
+		return value.CompareTo(valueToCompare) > 0;
+	}
 
-		protected override string GetDefaultMessageTemplate(string errorCode) {
-			return Localized(errorCode, Name);
-		}
+	public override Comparison Comparison => Validators.Comparison.GreaterThan;
+
+	protected override string GetDefaultMessageTemplate(string errorCode) {
+		return Localized(errorCode, Name);
 	}
 }

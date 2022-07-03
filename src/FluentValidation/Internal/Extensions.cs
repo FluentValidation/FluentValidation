@@ -16,56 +16,52 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Internal {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
-	using System.Reflection;
-	using System.Text;
-	using Resources;
+namespace FluentValidation.Internal;
+
+using System;
+using System.Linq.Expressions;
+using System.Reflection;
+
+/// <summary>
+/// Useful extensions
+/// </summary>
+public static class Extensions {
 
 	/// <summary>
-	/// Useful extensions
+	/// Gets a MemberInfo from a member expression.
 	/// </summary>
-	public static class Extensions {
+	public static MemberInfo GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
+		var memberExp = RemoveUnary(expression.Body) as MemberExpression;
 
-		/// <summary>
-		/// Gets a MemberInfo from a member expression.
-		/// </summary>
-		public static MemberInfo GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
-			var memberExp = RemoveUnary(expression.Body) as MemberExpression;
-
-			if (memberExp == null) {
-				return null;
-			}
-
-			Expression currentExpr = memberExp.Expression;
-
-			// Unwind the expression to get the root object that the expression acts upon.
-			while (true) {
-				currentExpr = RemoveUnary(currentExpr);
-
-				if (currentExpr != null && currentExpr.NodeType == ExpressionType.MemberAccess) {
-					currentExpr = ((MemberExpression)currentExpr).Expression;
-				} else {
-					break;
-				}
-			}
-
-			if (currentExpr == null || currentExpr.NodeType != ExpressionType.Parameter) {
-				return null; // We don't care if we're not acting upon the model instance.
-			}
-
-			return memberExp.Member;
+		if (memberExp == null) {
+			return null;
 		}
 
-		private static Expression RemoveUnary(Expression toUnwrap) {
-			if (toUnwrap is UnaryExpression) {
-				return ((UnaryExpression)toUnwrap).Operand;
-			}
+		Expression currentExpr = memberExp.Expression;
 
-			return toUnwrap;
+		// Unwind the expression to get the root object that the expression acts upon.
+		while (true) {
+			currentExpr = RemoveUnary(currentExpr);
+
+			if (currentExpr != null && currentExpr.NodeType == ExpressionType.MemberAccess) {
+				currentExpr = ((MemberExpression)currentExpr).Expression;
+			} else {
+				break;
+			}
 		}
+
+		if (currentExpr == null || currentExpr.NodeType != ExpressionType.Parameter) {
+			return null; // We don't care if we're not acting upon the model instance.
+		}
+
+		return memberExp.Member;
 	}
 
+	private static Expression RemoveUnary(Expression toUnwrap) {
+		if (toUnwrap is UnaryExpression) {
+			return ((UnaryExpression)toUnwrap).Operand;
+		}
+
+		return toUnwrap;
+	}
 }

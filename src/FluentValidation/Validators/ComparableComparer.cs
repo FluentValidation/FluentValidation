@@ -16,20 +16,19 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Validators {
-	using System;
-	using System.Collections.Generic;
-	using System.Drawing;
+namespace FluentValidation.Validators;
 
-	internal class ComparableComparer<T> : IComparer<T> where T : IComparable<T> {
-		internal static ComparableComparer<T> Instance { get; }
+using System;
+using System.Collections.Generic;
 
-		static ComparableComparer() {
-			Instance = new ComparableComparer<T>();
-		}
+internal class ComparableComparer<T> : IComparer<T> where T : IComparable<T> {
+	internal static ComparableComparer<T> Instance { get; }
 
-		public int Compare(T x, T y) {
-			return x.CompareTo(y);
-		}
+	static ComparableComparer() {
+		Instance = new ComparableComparer<T>();
+	}
+
+	public int Compare(T x, T y) {
+		return x.CompareTo(y);
 	}
 }

@@ -16,35 +16,35 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Validators {
-	using System;
-	using System.Reflection;
+namespace FluentValidation.Validators;
 
-	public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty>, IComparable {
-		public override string Name => "LessThanValidator";
+using System;
+using System.Reflection;
 
-		public LessThanValidator(TProperty value) : base(value) {
-		}
+public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty>, IComparable {
+	public override string Name => "LessThanValidator";
 
-		public LessThanValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
-			: base(valueToCompareFunc, member, memberDisplayName) {
-		}
+	public LessThanValidator(TProperty value) : base(value) {
+	}
 
-		public LessThanValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
-			: base(valueToCompareFunc, member, memberDisplayName) {
-		}
+	public LessThanValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+		: base(valueToCompareFunc, member, memberDisplayName) {
+	}
 
-		public override bool IsValid(TProperty value, TProperty valueToCompare) {
-			if (valueToCompare == null)
-				return false;
+	public LessThanValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+		: base(valueToCompareFunc, member, memberDisplayName) {
+	}
 
-			return value.CompareTo(valueToCompare) < 0;
-		}
+	public override bool IsValid(TProperty value, TProperty valueToCompare) {
+		if (valueToCompare == null)
+			return false;
 
-		public override Comparison Comparison => Comparison.LessThan;
+		return value.CompareTo(valueToCompare) < 0;
+	}
 
-		protected override string GetDefaultMessageTemplate(string errorCode) {
-			return Localized(errorCode, Name);
-		}
+	public override Comparison Comparison => Comparison.LessThan;
+
+	protected override string GetDefaultMessageTemplate(string errorCode) {
+		return Localized(errorCode, Name);
 	}
 }

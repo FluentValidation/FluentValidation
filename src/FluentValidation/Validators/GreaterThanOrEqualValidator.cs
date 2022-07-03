@@ -16,39 +16,39 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Validators {
-	using System;
-	using System.Reflection;
+namespace FluentValidation.Validators;
 
-	public class GreaterThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, IGreaterThanOrEqualValidator where TProperty : IComparable<TProperty>, IComparable {
+using System;
+using System.Reflection;
 
-		public override string Name => "GreaterThanOrEqualValidator";
+public class GreaterThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, IGreaterThanOrEqualValidator where TProperty : IComparable<TProperty>, IComparable {
 
-		public GreaterThanOrEqualValidator(TProperty value) :
-			base(value) {
-		}
+	public override string Name => "GreaterThanOrEqualValidator";
 
-		public GreaterThanOrEqualValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
-			: base(valueToCompareFunc, member, memberDisplayName) {
-		}
-
-		public GreaterThanOrEqualValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
-			: base(valueToCompareFunc, member, memberDisplayName) {
-		}
-
-		public override bool IsValid(TProperty value, TProperty valueToCompare) {
-			if (valueToCompare == null)
-				return false;
-
-			return value.CompareTo(valueToCompare) >= 0;
-		}
-
-		public override Comparison Comparison => Validators.Comparison.GreaterThanOrEqual;
-
-		protected override string GetDefaultMessageTemplate(string errorCode) {
-			return Localized(errorCode, Name);
-		}
+	public GreaterThanOrEqualValidator(TProperty value) :
+		base(value) {
 	}
 
-	public interface IGreaterThanOrEqualValidator : IComparisonValidator { }
+	public GreaterThanOrEqualValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+		: base(valueToCompareFunc, member, memberDisplayName) {
+	}
+
+	public GreaterThanOrEqualValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+		: base(valueToCompareFunc, member, memberDisplayName) {
+	}
+
+	public override bool IsValid(TProperty value, TProperty valueToCompare) {
+		if (valueToCompare == null)
+			return false;
+
+		return value.CompareTo(valueToCompare) >= 0;
+	}
+
+	public override Comparison Comparison => Validators.Comparison.GreaterThanOrEqual;
+
+	protected override string GetDefaultMessageTemplate(string errorCode) {
+		return Localized(errorCode, Name);
+	}
 }
+
+public interface IGreaterThanOrEqualValidator : IComparisonValidator { }
