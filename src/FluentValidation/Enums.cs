@@ -24,7 +24,7 @@ namespace FluentValidation {
 	/// </summary>
 	public enum CascadeMode {
 		/// <summary>
-		/// When a rule/validator fails, execution continues to the next rule/validator. 
+		/// When a rule/validator fails, execution continues to the next rule/validator.
 		/// For more information, see the methods/properties that accept this enum as a parameter.
 		/// </summary>
 		Continue,
@@ -36,7 +36,7 @@ namespace FluentValidation {
 				$"separate validator-level properties {nameof(AbstractValidator<object>.ClassLevelCascadeMode)} " +
 				$"and {nameof(AbstractValidator<object>.RuleLevelCascadeMode)}, " +
 				$"and their global default equivalents. {nameof(StopOnFirstFailure)} will be removed in a later release. " +
-				"For more details, see https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode .")]
+				"For more details, see https://docs.fluentvalidation.net/en/latest/cascade.html .")]
 		StopOnFirstFailure,
 
 		/// <summary>

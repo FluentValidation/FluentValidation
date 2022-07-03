@@ -64,7 +64,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// </summary>
 	[Obsolete($"Use {nameof(ClassLevelCascadeMode)} and/or {nameof(RuleLevelCascadeMode)} instead. " +
 	          "CascadeMode will be removed in a future release. " +
-	          "For more details, see https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode")]
+	          "For more details, see https://docs.fluentvalidation.net/en/latest/cascade.html")]
 	public CascadeMode CascadeMode {
 		get {
 			if (ClassLevelCascadeMode == RuleLevelCascadeMode) {

@@ -68,7 +68,7 @@ public class ValidatorConfiguration {
 	/// </summary>
 	[Obsolete($"Use {nameof(DefaultClassLevelCascadeMode)} and/or {nameof(DefaultRuleLevelCascadeMode)} instead. " +
 	          "CascadeMode will be removed in a future release. " +
-	          "For more details, see https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode")]
+	          "For more details, see https://docs.fluentvalidation.net/en/latest/cascade.html")]
 	public CascadeMode CascadeMode {
 #pragma warning disable 618
 		get {
