@@ -25,19 +25,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Get SDKs to install
-      shell: pwsh
-      # Collect the SDKs we need by parsing global.json
-      # Supplementary sdks are stored in an "others" array.
-      run: |
-        $json = ConvertFrom-Json (Get-Content global.json -Raw)
-        $sdks = ($json.others + $json.sdk.version) -join ","
-        echo "REQUIRED_SDKS=$sdks" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-    - name: Install .NET SDKs
-      uses: JeremySkinner/global-json-dotnet-install@master
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v2
       with:
-        versions: ${{ env.REQUIRED_SDKS }}
+        dotnet-version: 6.0.x
 
     - name: Build and Test
       run: ./build.ps1
