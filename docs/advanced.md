@@ -37,7 +37,7 @@ For advanced users, it's possible to pass arbitrary data into the validation pip
 The `RootContextData` property is a `Dictionary<string, object>` available on the `ValidationContext`.:
 
 ```csharp
-var instanceToValidate = new Person();
+var person = new Person();
 var context = new ValidationContext<Person>(person);
 context.RootContextData["MyCustomData"] = "Test";
 var validator = new PersonValidator();
