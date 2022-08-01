@@ -33,11 +33,13 @@ namespace FluentValidation.Tests {
 				order.RuleFor(x => x.Amount).GreaterThan(0);
 			});
 
-			var result = validator.Validate(new Person {Orders = new List<Order> {
+			var result = validator.Validate(new Person {
+				Orders = new List<Order> {
 				new Order { ProductName = null, Amount = 10 },
 				new Order { ProductName = "foo", Amount = 0},
 				new Order { ProductName = "foo", Amount = 10 }
-			}});
+			}
+			});
 
 			result.Errors.Count.ShouldEqual(2);
 			result.Errors[0].PropertyName.ShouldEqual("Orders[0].ProductName");
@@ -71,7 +73,33 @@ namespace FluentValidation.Tests {
 			result.Errors.Count.ShouldEqual(0);
 		}
 
-		private class RulesetChildRulesValidator : AbstractValidator<Person>  {
+		[Fact]
+		public void ChildRules_works_with_SetValidator_and_RuleSet() {
+			var validator = new RulesetChildValidatorRulesValidator();
+
+			// If the validator inside a child rule specifies a rule set "b",
+			// the rules inside the rule set "b" should not be used for the validation
+			// if the validation context specified the ruleset "a"
+			var result = validator.Validate(new Person {
+				Orders = new List<Order> {
+					new Order()
+				}
+			}, options => options.IncludeRuleSets("a"));
+
+			result.Errors.Count.ShouldEqual(1);
+			result.Errors[0].PropertyName.ShouldEqual("Surname");			
+
+			// They shouldn't be executed if a different ruleset is chosen.
+			result = validator.Validate(new Person {
+				Orders = new List<Order> {
+					new Order()
+				}
+			}, options => options.IncludeRuleSets("other"));
+
+			result.Errors.Count.ShouldEqual(0);
+		}
+
+		private class RulesetChildRulesValidator : AbstractValidator<Person> {
 			public RulesetChildRulesValidator() {
 				RuleSet("testing", () => {
 					RuleFor(a => a.Surname).NotEmpty();
@@ -81,5 +109,26 @@ namespace FluentValidation.Tests {
 				});
 			}
 		}
+
+		private class RulesetChildValidatorRulesValidator : AbstractValidator<Person> {
+			public RulesetChildValidatorRulesValidator() {
+				RuleSet("a, b", () => {
+					RuleFor(x => x.Surname).NotEmpty();
+					RuleFor(x => x).ChildRules(child => {
+						child.RuleForEach(o => o.Orders).SetValidator(new RulesetOrderValidator());
+					});
+				});
+			}
+
+			private class RulesetOrderValidator : AbstractValidator<Order> {
+				public RulesetOrderValidator() {
+					RuleSet("b", () => {
+						RuleFor(o => o.ProductName).NotEmpty();
+					});
+				}
+			}
+		}
+
 	}
 }
+
