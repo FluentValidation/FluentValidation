@@ -22,9 +22,9 @@ public class Person : IContact
   public DateTime DateOfBirth { get; set; }
 }
 
-// An organisation is another type of contact,
+// An organization is another type of contact,
 // with a name and the address of their HQ.
-public class Organisation : IContact {
+public class Organization : IContact {
   public string Name { get; set; }
   public string Email { get; set; }
 
@@ -41,7 +41,7 @@ public class ContactRequest
 }
 ```
 
-Next we create validators for Person and Organisation:
+Next we create validators for Person and Organization:
 
 ```csharp
 public class PersonValidator : AbstractValidator<Person> 
@@ -54,9 +54,9 @@ public class PersonValidator : AbstractValidator<Person>
   }
 }
 
-public class OrganisationValidator : AbstractValidator<Organisation> 
+public class OrganizationValidator : AbstractValidator<Organization> 
 {
-  public OrganisationValidator() 
+  public OrganizationValidator() 
   {
     RuleFor(x => x.Name).NotNull();
     RuleFor(x => x.Email).NotNull();
@@ -75,7 +75,7 @@ public class ContactRequestValidator : AbstractValidator<ContactRequest>
 
     RuleFor(x => x.Contact).SetInheritanceValidator(v => 
     {
-      v.Add<Organisation>(new OrganisationValidator());
+      v.Add<Organization>(new OrganizationValidator());
       v.Add<Person>(new PersonValidator());
     });
 
