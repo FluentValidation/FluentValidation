@@ -1169,7 +1169,7 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> ChildRules<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<InlineValidator<TProperty>> action) {
 		if (action == null) throw new ArgumentNullException(nameof(action));
 		var validator = new InlineValidator<TProperty>();
-		var ruleSets = ((IRuleBuilderInternal<T, TProperty>)ruleBuilder).Rule.RuleSets;
+		var ruleSets = DefaultValidatorOptions.Configurable(ruleBuilder).RuleSets;
 		action(validator);
 		foreach(var rule in validator.Rules) {
 			if (rule.RuleSets == null) {
