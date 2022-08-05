@@ -1176,7 +1176,7 @@ public static partial class DefaultValidatorExtensions {
 				rule.RuleSets = ruleSets;
 			}
 		}
-		return ruleBuilder.SetValidator(validator, ruleSets);
+		return ruleBuilder.SetValidator(validator);
 	}
 
 	/// <summary>

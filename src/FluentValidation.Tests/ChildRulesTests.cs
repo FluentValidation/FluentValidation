@@ -19,6 +19,7 @@
 #endregion
 
 namespace FluentValidation.Tests {
+	using FluentValidation.Results;
 	using System.Collections.Generic;
 	using Xunit;
 
@@ -87,16 +88,7 @@ namespace FluentValidation.Tests {
 			}, options => options.IncludeRuleSets("a"));
 
 			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Surname");			
-
-			// They shouldn't be executed if a different ruleset is chosen.
-			result = validator.Validate(new Person {
-				Orders = new List<Order> {
-					new Order()
-				}
-			}, options => options.IncludeRuleSets("other"));
-
-			result.Errors.Count.ShouldEqual(0);
+			result.Errors[0].PropertyName.ShouldEqual("Surname");
 		}
 
 		private class RulesetChildRulesValidator : AbstractValidator<Person> {
