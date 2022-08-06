@@ -1,3 +1,7 @@
+11.1.1 - 6 August 2022
+Fix issue with incorrect rulesets being executed in a child validator when combined with ChildRules (#1981)
+Bulgarian translations of default messages (#1973)
+
 11.1.0 - 22 June 2022
 Added a ToDictionary method to ValidationResult
 MVC auto validation: Deprecated Implicit validation of child properties (#1960)
