@@ -16,90 +16,88 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Linq.Expressions;
-	using Internal;
-	using Xunit;
-	using System.Reflection;
+namespace FluentValidation.Tests;
 
+using System;
+using System.Linq.Expressions;
+using Internal;
+using Xunit;
 
-	public class PropertyChainTests {
-		PropertyChain chain;
+public class PropertyChainTests {
+	PropertyChain chain;
 
-		public PropertyChainTests() {
-			chain = new PropertyChain();
-		}
-
-		[Fact]
-		public void Calling_ToString_should_construct_string_representation_of_chain() {
-
-			chain.Add(typeof(Parent).GetProperty("Child"));
-			chain.Add(typeof(Child).GetProperty("GrandChild"));
-			const string expected = "Child.GrandChild";
-
-			chain.ToString().ShouldEqual(expected);
-		}
-
-		[Fact]
-		public void Calling_ToString_should_construct_string_representation_of_chain_with_indexers() {
-			chain.Add(typeof(Parent).GetProperty("Child"));
-			chain.AddIndexer(0);
-			chain.Add(typeof(Child).GetProperty("GrandChild"));
-			const string expected = "Child[0].GrandChild";
-
-			chain.ToString().ShouldEqual(expected);
-		}
-
-		[Fact]
-		public void AddIndexer_throws_when_nothing_added() {
-			Assert.Throws<InvalidOperationException>(() => chain.AddIndexer(0));
-		}
-
-		[Fact]
-		public void Should_be_subchain() {
-			chain.Add("Parent");
-			chain.Add("Child");
-
-			var childChain = new PropertyChain(chain);
-			childChain.Add("Grandchild");
-
-			childChain.IsChildChainOf(chain).ShouldBeTrue();
-		}
-
-		[Fact]
-		public void Should_not_be_subchain() {
-			chain.Add("Foo");
-
-			var otherChain = new PropertyChain();
-			otherChain.Add("Bar");
-
-			otherChain.IsChildChainOf(chain).ShouldBeFalse();
-		}
-
-		[Fact]
-		public void Creates_from_expression() {
-			Expression<Func<Person, int>> expr = x => x.Address.Id;
-			var chain = PropertyChain.FromExpression(expr);
-			chain.ToString().ShouldEqual("Address.Id");
-		}
-
-		[Fact]
-		public void Should_ignore_blanks() {
-			chain.Add("");
-			chain.Add("Foo");
-
-			chain.ToString().ShouldEqual("Foo");
-		}
-
-		public class Parent {
-			public Child Child { get; set; }
-		}
-
-		public class Child {
-			public Grandchild GrandChild { get; set; }
-		}
-
-		public class Grandchild {}
+	public PropertyChainTests() {
+		chain = new PropertyChain();
 	}
+
+	[Fact]
+	public void Calling_ToString_should_construct_string_representation_of_chain() {
+
+		chain.Add(typeof(Parent).GetProperty("Child"));
+		chain.Add(typeof(Child).GetProperty("GrandChild"));
+		const string expected = "Child.GrandChild";
+
+		chain.ToString().ShouldEqual(expected);
+	}
+
+	[Fact]
+	public void Calling_ToString_should_construct_string_representation_of_chain_with_indexers() {
+		chain.Add(typeof(Parent).GetProperty("Child"));
+		chain.AddIndexer(0);
+		chain.Add(typeof(Child).GetProperty("GrandChild"));
+		const string expected = "Child[0].GrandChild";
+
+		chain.ToString().ShouldEqual(expected);
+	}
+
+	[Fact]
+	public void AddIndexer_throws_when_nothing_added() {
+		Assert.Throws<InvalidOperationException>(() => chain.AddIndexer(0));
+	}
+
+	[Fact]
+	public void Should_be_subchain() {
+		chain.Add("Parent");
+		chain.Add("Child");
+
+		var childChain = new PropertyChain(chain);
+		childChain.Add("Grandchild");
+
+		childChain.IsChildChainOf(chain).ShouldBeTrue();
+	}
+
+	[Fact]
+	public void Should_not_be_subchain() {
+		chain.Add("Foo");
+
+		var otherChain = new PropertyChain();
+		otherChain.Add("Bar");
+
+		otherChain.IsChildChainOf(chain).ShouldBeFalse();
+	}
+
+	[Fact]
+	public void Creates_from_expression() {
+		Expression<Func<Person, int>> expr = x => x.Address.Id;
+		var chain = PropertyChain.FromExpression(expr);
+		chain.ToString().ShouldEqual("Address.Id");
+	}
+
+	[Fact]
+	public void Should_ignore_blanks() {
+		chain.Add("");
+		chain.Add("Foo");
+
+		chain.ToString().ShouldEqual("Foo");
+	}
+
+	public class Parent {
+		public Child Child { get; set; }
+	}
+
+	public class Child {
+		public Grandchild GrandChild { get; set; }
+	}
+
+	public class Grandchild {}
 }

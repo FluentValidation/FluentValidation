@@ -16,58 +16,58 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq.Expressions;
-	using Xunit;
-	using Internal;
+namespace FluentValidation.Tests;
 
-	public class ExtensionTester {
-		[Fact]
-		public void Should_extract_member_from_member_expression() {
-			Expression<Func<Person, string>> expression = person => person.Surname;
-			var member = expression.GetMember();
-			member.Name.ShouldEqual("Surname");
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using Xunit;
+using Internal;
+
+public class ExtensionTester {
+	[Fact]
+	public void Should_extract_member_from_member_expression() {
+		Expression<Func<Person, string>> expression = person => person.Surname;
+		var member = expression.GetMember();
+		member.Name.ShouldEqual("Surname");
+	}
+
+	[Fact]
+	public void Should_return_null_for_non_member_expressions() {
+		Expression<Func<Person, string>> expression = person => "Foo";
+		expression.GetMember().ShouldBeNull();
+	}
+
+	[Fact]
+	public void Should_split_pascal_cased_member_name() {
+		var cases = new Dictionary<string, string> {
+			{"DateOfBirth", "Date Of Birth"},
+			{"DATEOFBIRTH", "DATEOFBIRTH"},
+			{"dateOfBirth", "date Of Birth"},
+			{"dateofbirth", "dateofbirth"},
+			{"Date_Of_Birth", "Date_ Of_ Birth"},
+			{"Name2", "Name2"},
+			{"ProductID", "Product ID"},
+			{"MyTVRemote", "My TV Remote"},
+			{"TVRemote", "TV Remote"},
+			{"XCopy", "X Copy"},
+			{"ThisXCopy", "This X Copy"},
+			{"Address.Line1", "Address Line1"},
+			{"Address..Line1", "Address. Line1"},
+			{"address.Line1", "address Line1"},
+			{"addressLine1", "address Line1"},
+			{"address.line1", "address.line1"},
+			{"address.line1.", "address.line1."}
+		};
+
+		foreach (var @case in cases) {
+			string name = @case.Key.SplitPascalCase();
+			name.ShouldEqual(@case.Value);
 		}
+	}
 
-		[Fact]
-		public void Should_return_null_for_non_member_expressions() {
-			Expression<Func<Person, string>> expression = person => "Foo";
-			expression.GetMember().ShouldBeNull();
-		}
-
-		[Fact]
-		public void Should_split_pascal_cased_member_name() {
-			var cases = new Dictionary<string, string> {
-				{"DateOfBirth", "Date Of Birth"},
-				{"DATEOFBIRTH", "DATEOFBIRTH"},
-				{"dateOfBirth", "date Of Birth"},
-				{"dateofbirth", "dateofbirth"},
-				{"Date_Of_Birth", "Date_ Of_ Birth"},
-				{"Name2", "Name2"},
-				{"ProductID", "Product ID"},
-				{"MyTVRemote", "My TV Remote"},
-				{"TVRemote", "TV Remote"},
-				{"XCopy", "X Copy"},
-				{"ThisXCopy", "This X Copy"},
-				{"Address.Line1", "Address Line1"},
-				{"Address..Line1", "Address. Line1"},
-				{"address.Line1", "address Line1"},
-				{"addressLine1", "address Line1"},
-				{"address.line1", "address.line1"},
-				{"address.line1.", "address.line1."}
-			};
-
-			foreach (var @case in cases) {
-				string name = @case.Key.SplitPascalCase();
-				name.ShouldEqual(@case.Value);
-			}
-		}
-
-		[Fact]
-		public void SplitPascalCase_should_return_null_when_input_is_null() {
-			ExtensionsInternal.SplitPascalCase(null).ShouldBeNull();
-		}
+	[Fact]
+	public void SplitPascalCase_should_return_null_when_input_is_null() {
+		ExtensionsInternal.SplitPascalCase(null).ShouldBeNull();
 	}
 }

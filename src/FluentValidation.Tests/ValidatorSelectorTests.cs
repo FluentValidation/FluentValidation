@@ -16,141 +16,134 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using Internal;
-	using Xunit;
-	using Validators;
-	using System.Collections.Generic;
-	using System.Threading;
-	using System.Threading.Tasks;
+namespace FluentValidation.Tests;
+
+using Xunit;
+using System.Threading.Tasks;
 
 
-	public class ValidatorSelectorTests {
+public class ValidatorSelectorTests {
 
-		[Fact]
-		public void MemberNameValidatorSelector_returns_true_when_property_name_matches() {
-			var validator = new InlineValidator<TestObject> {
-				v => v.RuleFor(x => x.SomeProperty).NotNull()
-			};
+	[Fact]
+	public void MemberNameValidatorSelector_returns_true_when_property_name_matches() {
+		var validator = new InlineValidator<TestObject> {
+			v => v.RuleFor(x => x.SomeProperty).NotNull()
+		};
 
-			var result = validator.Validate(new TestObject(), v => v.IncludeProperties("SomeProperty"));
-			result.Errors.Count.ShouldEqual(1);
-		}
+		var result = validator.Validate(new TestObject(), v => v.IncludeProperties("SomeProperty"));
+		result.Errors.Count.ShouldEqual(1);
+	}
 
-		[Fact]
-		public void Does_not_validate_other_property() {
-			var validator = new InlineValidator<TestObject> {
-				v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
-			};
+	[Fact]
+	public void Does_not_validate_other_property() {
+		var validator = new InlineValidator<TestObject> {
+			v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
+		};
 
-			var result = validator.Validate(new TestObject(),v => v.IncludeProperties("SomeProperty"));
-			result.Errors.Count.ShouldEqual(0);
-		}
+		var result = validator.Validate(new TestObject(),v => v.IncludeProperties("SomeProperty"));
+		result.Errors.Count.ShouldEqual(0);
+	}
 
-		[Fact]
-		public void Validates_property_using_expression() {
-			var validator = new InlineValidator<TestObject> {
-				v => v.RuleFor(x => x.SomeProperty).NotNull()
-			};
+	[Fact]
+	public void Validates_property_using_expression() {
+		var validator = new InlineValidator<TestObject> {
+			v => v.RuleFor(x => x.SomeProperty).NotNull()
+		};
 
-			var result = validator.Validate(new TestObject(), v => v.IncludeProperties(x => x.SomeProperty));
-			result.Errors.Count.ShouldEqual(1);
-		}
+		var result = validator.Validate(new TestObject(), v => v.IncludeProperties(x => x.SomeProperty));
+		result.Errors.Count.ShouldEqual(1);
+	}
 
-		[Fact]
-		public void Does_not_validate_other_property_using_expression() {
-			var validator = new InlineValidator<TestObject> {
-				v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
-			};
+	[Fact]
+	public void Does_not_validate_other_property_using_expression() {
+		var validator = new InlineValidator<TestObject> {
+			v => v.RuleFor(x => x.SomeOtherProperty).NotNull()
+		};
 
-			var result = validator.Validate(new TestObject(), v => v.IncludeProperties(x => x.SomeProperty));
-			result.Errors.Count.ShouldEqual(0);
-		}
+		var result = validator.Validate(new TestObject(), v => v.IncludeProperties(x => x.SomeProperty));
+		result.Errors.Count.ShouldEqual(0);
+	}
 
-		[Fact]
-		public void Validates_nullable_property_with_overriden_name_when_selected() {
+	[Fact]
+	public void Validates_nullable_property_with_overriden_name_when_selected() {
 
-			var validator = new InlineValidator<TestObject> {
-				v => v.RuleFor(x => x.SomeNullableProperty.Value)
+		var validator = new InlineValidator<TestObject> {
+			v => v.RuleFor(x => x.SomeNullableProperty.Value)
 				.GreaterThan(0)
 				.When(x => x.SomeNullableProperty.HasValue)
 				.OverridePropertyName("SomeNullableProperty")
-			};
+		};
 
-			var result = validator.Validate(new TestObject { SomeNullableProperty = 0 },
-				v => v.IncludeProperties(x => x.SomeNullableProperty));
-			result.Errors.Count.ShouldEqual(1);
-		}
+		var result = validator.Validate(new TestObject { SomeNullableProperty = 0 },
+			v => v.IncludeProperties(x => x.SomeNullableProperty));
+		result.Errors.Count.ShouldEqual(1);
+	}
 
-		[Fact]
-		public void Includes_nested_property() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull(),
-				v => v.RuleFor(x => x.Address.Id).NotEqual(0)
-			};
+	[Fact]
+	public void Includes_nested_property() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotNull(),
+			v => v.RuleFor(x => x.Address.Id).NotEqual(0)
+		};
 
-			var result = validator.Validate(new Person { Address = new Address() }, v => v.IncludeProperties("Address.Id"));
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
-		}
+		var result = validator.Validate(new Person { Address = new Address() }, v => v.IncludeProperties("Address.Id"));
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors[0].PropertyName.ShouldEqual("Address.Id");
+	}
 
-		[Fact]
-		public void Includes_nested_property_using_expression() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull(),
-				v => v.RuleFor(x => x.Address.Id).NotEqual(0)
-			};
+	[Fact]
+	public void Includes_nested_property_using_expression() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotNull(),
+			v => v.RuleFor(x => x.Address.Id).NotEqual(0)
+		};
 
-			var result = validator.Validate(new Person { Address = new Address() }, v => v.IncludeProperties(x => x.Address.Id));
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Address.Id");
+		var result = validator.Validate(new Person { Address = new Address() }, v => v.IncludeProperties(x => x.Address.Id));
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors[0].PropertyName.ShouldEqual("Address.Id");
 
-		}
+	}
 
-		[Fact]
-		public void Can_use_property_with_include() {
-			var validator = new TestValidator();
-			var validator2 = new TestValidator();
-			validator2.RuleFor(x => x.Forename).NotNull();
-			validator.Include(validator2);
+	[Fact]
+	public void Can_use_property_with_include() {
+		var validator = new TestValidator();
+		var validator2 = new TestValidator();
+		validator2.RuleFor(x => x.Forename).NotNull();
+		validator.Include(validator2);
 
-			var result = validator.Validate(new Person(), v => v.IncludeProperties("Forename"));
-			result.IsValid.ShouldBeFalse();
-		}
+		var result = validator.Validate(new Person(), v => v.IncludeProperties("Forename"));
+		result.IsValid.ShouldBeFalse();
+	}
 
-		[Fact]
-		public void Executes_correct_rule_when_using_property_with_include() {
-			var validator = new TestValidator();
-			var validator2 = new TestValidator();
-			validator2.RuleFor(x => x.Forename).NotNull();
-			validator2.RuleFor(x => x.Surname).NotNull();
-			validator.Include(validator2);
+	[Fact]
+	public void Executes_correct_rule_when_using_property_with_include() {
+		var validator = new TestValidator();
+		var validator2 = new TestValidator();
+		validator2.RuleFor(x => x.Forename).NotNull();
+		validator2.RuleFor(x => x.Surname).NotNull();
+		validator.Include(validator2);
 
-			var result = validator.Validate(new Person(), v => v.IncludeProperties("Forename"));
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Forename");
-		}
+		var result = validator.Validate(new Person(), v => v.IncludeProperties("Forename"));
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors[0].PropertyName.ShouldEqual("Forename");
+	}
 
-		[Fact]
-		public async Task Executes_correct_rule_when_using_property_with_include_async() {
-			var validator = new TestValidator();
-			var validator2 = new TestValidator();
-			validator2.RuleFor(x => x.Forename).NotNull();
-			validator2.RuleFor(x => x.Surname).NotNull();
-			validator.Include(validator2);
+	[Fact]
+	public async Task Executes_correct_rule_when_using_property_with_include_async() {
+		var validator = new TestValidator();
+		var validator2 = new TestValidator();
+		validator2.RuleFor(x => x.Forename).NotNull();
+		validator2.RuleFor(x => x.Surname).NotNull();
+		validator.Include(validator2);
 
-			var result = await validator.ValidateAsync(new Person(), v => v.IncludeProperties("Forename"));
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors[0].PropertyName.ShouldEqual("Forename");
-		}
+		var result = await validator.ValidateAsync(new Person(), v => v.IncludeProperties("Forename"));
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors[0].PropertyName.ShouldEqual("Forename");
+	}
 
-		private class TestObject {
-			public object SomeProperty { get; set; }
-			public object SomeOtherProperty { get; set; }
-			public decimal? SomeNullableProperty { get; set; }
-		}
+	private class TestObject {
+		public object SomeProperty { get; set; }
+		public object SomeOtherProperty { get; set; }
+		public decimal? SomeNullableProperty { get; set; }
 	}
 }

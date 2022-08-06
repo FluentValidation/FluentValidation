@@ -16,70 +16,70 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System.Collections.Generic;
-	using System.Linq;
-	using Xunit;
+namespace FluentValidation.Tests;
 
-	public class AssemblyScannerTester {
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
-		[Fact]
-		public void Finds_validators_for_types() {
-			var scanner = new AssemblyScanner(new[] { typeof(Model1Validator), typeof(Model2Validator) });
-			var results = scanner.ToList();
+public class AssemblyScannerTester {
 
-			results[0].ValidatorType.ShouldEqual(typeof(Model1Validator));
-			results[0].InterfaceType.ShouldEqual(typeof(IValidator<Model1>));
+	[Fact]
+	public void Finds_validators_for_types() {
+		var scanner = new AssemblyScanner(new[] { typeof(Model1Validator), typeof(Model2Validator) });
+		var results = scanner.ToList();
 
-			results[1].ValidatorType.ShouldEqual(typeof(Model2Validator));
-			results[1].InterfaceType.ShouldEqual(typeof(IValidator<Model2>));
-		}
+		results[0].ValidatorType.ShouldEqual(typeof(Model1Validator));
+		results[0].InterfaceType.ShouldEqual(typeof(IValidator<Model1>));
 
-		[Fact]
-		public void ForEach_iterates_over_types() {
-			var scanner = new AssemblyScanner(new[] { typeof(Model1Validator), typeof(Model2Validator) });
-			var results = new List<AssemblyScanner.AssemblyScanResult>();
+		results[1].ValidatorType.ShouldEqual(typeof(Model2Validator));
+		results[1].InterfaceType.ShouldEqual(typeof(IValidator<Model2>));
+	}
 
-			scanner.ForEach(x => results.Add(x));
-			results.Count.ShouldEqual(2);
-		}
+	[Fact]
+	public void ForEach_iterates_over_types() {
+		var scanner = new AssemblyScanner(new[] { typeof(Model1Validator), typeof(Model2Validator) });
+		var results = new List<AssemblyScanner.AssemblyScanResult>();
 
-		[Fact]
-		public void FindValidatorsInAssembly_When_Instructed_Should_Find_Internal_Types() {
-			var scanner = AssemblyScanner.FindValidatorsInAssembly(GetType().Assembly, true);
-			var results = new List<AssemblyScanner.AssemblyScanResult>();
+		scanner.ForEach(x => results.Add(x));
+		results.Count.ShouldEqual(2);
+	}
 
-			scanner.ForEach(x => results.Add(x));
-			Assert.Contains(results, o=> o.ValidatorType == typeof(Model1InternalValidator));
-		}
+	[Fact]
+	public void FindValidatorsInAssembly_When_Instructed_Should_Find_Internal_Types() {
+		var scanner = AssemblyScanner.FindValidatorsInAssembly(GetType().Assembly, true);
+		var results = new List<AssemblyScanner.AssemblyScanResult>();
 
-		[Fact]
-		public void FindValidatorsInAssembly_By_Default_Should_Not_Find_Internal_Types() {
-			var scanner = AssemblyScanner.FindValidatorsInAssembly(GetType().Assembly);
-			var results = new List<AssemblyScanner.AssemblyScanResult>();
+		scanner.ForEach(x => results.Add(x));
+		Assert.Contains(results, o=> o.ValidatorType == typeof(Model1InternalValidator));
+	}
 
-			scanner.ForEach(x => results.Add(x));
-			Assert.DoesNotContain(results, o=> o.ValidatorType == typeof(Model1InternalValidator));
-		}
+	[Fact]
+	public void FindValidatorsInAssembly_By_Default_Should_Not_Find_Internal_Types() {
+		var scanner = AssemblyScanner.FindValidatorsInAssembly(GetType().Assembly);
+		var results = new List<AssemblyScanner.AssemblyScanResult>();
 
-		public class Model1 {
+		scanner.ForEach(x => results.Add(x));
+		Assert.DoesNotContain(results, o=> o.ValidatorType == typeof(Model1InternalValidator));
+	}
 
-		}
+	public class Model1 {
 
-		public class Model2 {
+	}
 
-		}
+	public class Model2 {
 
-		public class Model1Validator:AbstractValidator<Model1> {
+	}
 
-		}
+	public class Model1Validator:AbstractValidator<Model1> {
 
-		public class Model2Validator:AbstractValidator<Model2> {
+	}
 
-		}
+	public class Model2Validator:AbstractValidator<Model2> {
 
-		internal class Model1InternalValidator : AbstractValidator<Model1> {
+	}
 
-		}
+	internal class Model1InternalValidator : AbstractValidator<Model1> {
+
 	}
 }

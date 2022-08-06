@@ -16,49 +16,48 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-    using System.Linq;
-    using Xunit;
+namespace FluentValidation.Tests;
 
+using System.Linq;
+using Xunit;
 
-    public class NullTester {
-		public NullTester() {
-            CultureScope.SetDefaultCulture();
-        }
+public class NullTester {
+	public NullTester() {
+		CultureScope.SetDefaultCulture();
+	}
 
-		[Fact]
-		public void NullValidator_should_fail_if_value_has_value() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Null());
-			var result = validator.Validate(new Person{Surname = "Foo"});
-			result.IsValid.ShouldBeFalse();
-		}
+	[Fact]
+	public void NullValidator_should_fail_if_value_has_value() {
+		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Null());
+		var result = validator.Validate(new Person{Surname = "Foo"});
+		result.IsValid.ShouldBeFalse();
+	}
 
-		[Fact]
-		public void NullValidator_should_pass_if_value_is_null() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Null());
-			var result = validator.Validate(new Person { Surname = null });
-			result.IsValid.ShouldBeTrue();
-		}
+	[Fact]
+	public void NullValidator_should_pass_if_value_is_null() {
+		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Null());
+		var result = validator.Validate(new Person { Surname = null });
+		result.IsValid.ShouldBeTrue();
+	}
 
-		[Fact]
-		public void When_the_validator_passes_the_error_message_should_be_set() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Null());
-			var result = validator.Validate(new Person { Surname = "Foo" });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be empty.");
-		}
+	[Fact]
+	public void When_the_validator_passes_the_error_message_should_be_set() {
+		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Null());
+		var result = validator.Validate(new Person { Surname = "Foo" });
+		result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must be empty.");
+	}
 
-		[Fact]
-		public void Not_null_validator_should_not_crash_with_non_nullable_value_type() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.Id).Null());
-			var result = validator.Validate(new Person());
-			result.IsValid.ShouldBeFalse();
-		}
+	[Fact]
+	public void Not_null_validator_should_not_crash_with_non_nullable_value_type() {
+		var validator = new TestValidator(v => v.RuleFor(x => x.Id).Null());
+		var result = validator.Validate(new Person());
+		result.IsValid.ShouldBeFalse();
+	}
 
-		[Fact]
-		public void Passes_when_nullable_value_type_is_null() {
-			var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).Null());
-			var result = validator.Validate(new Person());
-			result.IsValid.ShouldBeTrue();
-		}
+	[Fact]
+	public void Passes_when_nullable_value_type_is_null() {
+		var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).Null());
+		var result = validator.Validate(new Person());
+		result.IsValid.ShouldBeTrue();
 	}
 }

@@ -16,34 +16,34 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Collections.Generic;
-	using System.Diagnostics.CodeAnalysis;
+namespace FluentValidation.Tests;
 
-	class StreetNumberComparer : IComparer<Address> {
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
-		bool TryParseStreetNumber(string s, out int streetNumber) {
-			var streetNumberStr = s.Substring(0, s.IndexOf(" "));
-			return int.TryParse(streetNumberStr, out streetNumber);
-		}
+class StreetNumberComparer : IComparer<Address> {
 
-		int GetValue(object o) {
-			return o is Address addr && TryParseStreetNumber(addr.Line1, out var streetNumber)
-				? streetNumber
-				: throw new ArgumentException("Can't convert", nameof(o));
+	bool TryParseStreetNumber(string s, out int streetNumber) {
+		var streetNumberStr = s.Substring(0, s.IndexOf(" "));
+		return int.TryParse(streetNumberStr, out streetNumber);
+	}
+
+	int GetValue(object o) {
+		return o is Address addr && TryParseStreetNumber(addr.Line1, out var streetNumber)
+			? streetNumber
+			: throw new ArgumentException("Can't convert", nameof(o));
+	}
+	public int Compare([AllowNull] Address x, [AllowNull] Address y) {
+		if (x == y) {
+			return 0;
 		}
-		public int Compare([AllowNull] Address x, [AllowNull] Address y) {
-			if (x == y) {
-				return 0;
-			}
-			if (x == null) {
-				return -1;
-			}
-			if (y == null) {
-				return 1;
-			}
-			return GetValue(x).CompareTo(GetValue(y));
+		if (x == null) {
+			return -1;
 		}
+		if (y == null) {
+			return 1;
+		}
+		return GetValue(x).CompareTo(GetValue(y));
 	}
 }

@@ -16,116 +16,111 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Collections;
-	using System.Globalization;
-	using System.Linq;
-	using System.Linq.Expressions;
-	using System.Threading;
-	using Internal;
-	using Xunit;
-	using Validators;
+namespace FluentValidation.Tests;
+
+using System;
+using System.Linq;
+using Xunit;
+using Validators;
 
 
-	public class EqualValidatorTests {
+public class EqualValidatorTests {
 
-		public EqualValidatorTests() {
-			CultureScope.SetDefaultCulture();
-        }
+	public EqualValidatorTests() {
+		CultureScope.SetDefaultCulture();
+	}
 
-		[Fact]
-		public void When_the_objects_are_equal_validation_should_succeed() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal("Foo") };
-			var result = validator.Validate(new Person { Forename = "Foo"});
+	[Fact]
+	public void When_the_objects_are_equal_validation_should_succeed() {
+		var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal("Foo") };
+		var result = validator.Validate(new Person { Forename = "Foo"});
 
-			result.IsValid.ShouldBeTrue();
-		}
+		result.IsValid.ShouldBeTrue();
+	}
 
-		[Fact]
-		public void When_the_objects_are_not_equal_validation_should_fail() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal("Foo") };
-			var result = validator.Validate(new Person() { Forename = "Bar" });
+	[Fact]
+	public void When_the_objects_are_not_equal_validation_should_fail() {
+		var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal("Foo") };
+		var result = validator.Validate(new Person() { Forename = "Bar" });
 
-			result.IsValid.ShouldBeFalse();
-		}
+		result.IsValid.ShouldBeFalse();
+	}
 
-		[Fact]
-		public void When_validation_fails_the_error_should_be_set() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal("Foo") };
-			var result = validator.Validate(new Person() {Forename = "Bar"});
+	[Fact]
+	public void When_validation_fails_the_error_should_be_set() {
+		var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal("Foo") };
+		var result = validator.Validate(new Person() {Forename = "Bar"});
 
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' must be equal to 'Foo'.");
-		}
+		result.Errors.Single().ErrorMessage.ShouldEqual("'Forename' must be equal to 'Foo'.");
+	}
 
-		[Fact]
-		public void Should_store_property_to_compare() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal(x => x.Surname) };
-			var descriptor = validator.CreateDescriptor();
-			var propertyValidator = descriptor.GetValidatorsForMember("Forename")
-				.Select(x => x.Validator)
-				.Cast<EqualValidator<Person,string>>().Single();
+	[Fact]
+	public void Should_store_property_to_compare() {
+		var validator = new TestValidator { v => v.RuleFor(x => x.Forename).Equal(x => x.Surname) };
+		var descriptor = validator.CreateDescriptor();
+		var propertyValidator = descriptor.GetValidatorsForMember("Forename")
+			.Select(x => x.Validator)
+			.Cast<EqualValidator<Person,string>>().Single();
 
-			propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
-		}
+		propertyValidator.MemberToCompare.ShouldEqual(typeof(Person).GetProperty("Surname"));
+	}
 
 
-		[Fact]
-		public void Should_store_comparison_type() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal("Foo") };
-			var descriptor = validator.CreateDescriptor();
-			var propertyValidator = descriptor.GetValidatorsForMember("Surname")
-				.Select(x => x.Validator)
-				.Cast<EqualValidator<Person,string>>().Single();
+	[Fact]
+	public void Should_store_comparison_type() {
+		var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal("Foo") };
+		var descriptor = validator.CreateDescriptor();
+		var propertyValidator = descriptor.GetValidatorsForMember("Surname")
+			.Select(x => x.Validator)
+			.Cast<EqualValidator<Person,string>>().Single();
 
-			propertyValidator.Comparison.ShouldEqual(Comparison.Equal);
-		}
+		propertyValidator.Comparison.ShouldEqual(Comparison.Equal);
+	}
 
-		[Fact]
-		public void Validates_against_property() {
+	[Fact]
+	public void Validates_against_property() {
+		var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
+		var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
+		result.IsValid.ShouldBeFalse();
+		result.Errors[0].ErrorMessage.ShouldEqual("Forename");
+	}
+
+	[Fact]
+	public void Comparison_property_uses_custom_resolver() {
+		var originalResolver = ValidatorOptions.Global.DisplayNameResolver;
+
+		try {
+			ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
 			var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
 			var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
-			result.IsValid.ShouldBeFalse();
-			result.Errors[0].ErrorMessage.ShouldEqual("Forename");
+			result.Errors[0].ErrorMessage.ShouldEqual("ForenameFoo");
 		}
-
-		[Fact]
-		public void Comparison_property_uses_custom_resolver() {
-			var originalResolver = ValidatorOptions.Global.DisplayNameResolver;
-
-			try {
-				ValidatorOptions.Global.DisplayNameResolver = (type, member, expr) => member.Name + "Foo";
-				var validator = new TestValidator {v => v.RuleFor(x => x.Surname).Equal(x => x.Forename).WithMessage("{ComparisonProperty}")};
-				var result = validator.Validate(new Person {Surname = "foo", Forename = "bar"});
-				result.Errors[0].ErrorMessage.ShouldEqual("ForenameFoo");
-			}
-			finally {
-				ValidatorOptions.Global.DisplayNameResolver = originalResolver;
-			}
+		finally {
+			ValidatorOptions.Global.DisplayNameResolver = originalResolver;
 		}
+	}
 
-		[Fact]
-		public void Should_succeed_on_case_insensitive_comparison() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal("FOO", StringComparer.OrdinalIgnoreCase) };
-			var result = validator.Validate(new Person { Surname = "foo" });
+	[Fact]
+	public void Should_succeed_on_case_insensitive_comparison() {
+		var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal("FOO", StringComparer.OrdinalIgnoreCase) };
+		var result = validator.Validate(new Person { Surname = "foo" });
 
-			result.IsValid.ShouldBeTrue();
-		}
+		result.IsValid.ShouldBeTrue();
+	}
 
-		[Fact]
-		public void Should_succeed_on_case_insensitive_comparison_using_expression() {
-			var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal(x => x.Forename, StringComparer.OrdinalIgnoreCase) };
-			var result = validator.Validate(new Person { Surname = "foo", Forename = "FOO"});
+	[Fact]
+	public void Should_succeed_on_case_insensitive_comparison_using_expression() {
+		var validator = new TestValidator { v => v.RuleFor(x => x.Surname).Equal(x => x.Forename, StringComparer.OrdinalIgnoreCase) };
+		var result = validator.Validate(new Person { Surname = "foo", Forename = "FOO"});
 
-			result.IsValid.ShouldBeTrue();
-		}
+		result.IsValid.ShouldBeTrue();
+	}
 
-		[Fact]
-		public void Should_use_ordinal_comparison_by_default() {
-			var validator = new TestValidator();
-			validator.RuleFor(x => x.Surname).Equal("a");
-			var result = validator.Validate(new Person {Surname = "a\0"});
-			result.IsValid.ShouldBeFalse();
-		}
+	[Fact]
+	public void Should_use_ordinal_comparison_by_default() {
+		var validator = new TestValidator();
+		validator.RuleFor(x => x.Surname).Equal("a");
+		var result = validator.Validate(new Person {Surname = "a\0"});
+		result.IsValid.ShouldBeFalse();
 	}
 }

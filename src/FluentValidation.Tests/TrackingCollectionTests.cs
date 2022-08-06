@@ -16,44 +16,44 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System.Collections.Generic;
-	using Internal;
-	using Xunit;
-	using System.Linq;
+namespace FluentValidation.Tests;
+
+using System.Collections.Generic;
+using Internal;
+using Xunit;
+using System.Linq;
 
 
-	public class TrackingCollectionTests {
-		[Fact]
-		public void Add_AddsItem() {
-			var items = new TrackingCollection<string>();
+public class TrackingCollectionTests {
+	[Fact]
+	public void Add_AddsItem() {
+		var items = new TrackingCollection<string>();
+		items.Add("foo");
+		items.Single().ShouldEqual("foo");
+	}
+
+	[Fact]
+	public void When_Item_Added_Raises_ItemAdded() {
+		string addedItem = null;
+		var items = new TrackingCollection<string>();
+
+		using(items.OnItemAdded(x => addedItem = x)) {
 			items.Add("foo");
-			items.Single().ShouldEqual("foo");
 		}
 
-		[Fact]
-		public void When_Item_Added_Raises_ItemAdded() {
-			string addedItem = null;
-			var items = new TrackingCollection<string>();
+		addedItem.ShouldEqual("foo");
+	}
 
-			using(items.OnItemAdded(x => addedItem = x)) {
-				items.Add("foo");
-			}
+	[Fact]
+	public void Should_not_raise_event_once_handler_detached() {
+		var addedItems = new List<string>();
+		var items = new TrackingCollection<string>();
 
-			addedItem.ShouldEqual("foo");
+		using(items.OnItemAdded(addedItems.Add)) {
+			items.Add("foo");
 		}
+		items.Add("bar");
 
-		[Fact]
-		public void Should_not_raise_event_once_handler_detached() {
-			var addedItems = new List<string>();
-			var items = new TrackingCollection<string>();
-
-			using(items.OnItemAdded(addedItems.Add)) {
-				items.Add("foo");
-			}
-			items.Add("bar");
-
-			addedItems.Count.ShouldEqual(1);
-		}
+		addedItems.Count.ShouldEqual(1);
 	}
 }

@@ -16,53 +16,53 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using Xunit;
+namespace FluentValidation.Tests;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 
-	public class UserStateTester {
-		TestValidator validator;
+public class UserStateTester {
+	TestValidator validator;
 
 
-		public  UserStateTester() {
-			validator = new TestValidator();
-		}
+	public  UserStateTester() {
+		validator = new TestValidator();
+	}
 
-		[Fact]
-		public void Stores_user_state_against_validation_failure() {
-			validator.RuleFor(x => x.Surname).NotNull().WithState(x =>  "foo");
-			var result = validator.Validate(new Person());
-			result.Errors.Single().CustomState.ShouldEqual("foo");
-		}
+	[Fact]
+	public void Stores_user_state_against_validation_failure() {
+		validator.RuleFor(x => x.Surname).NotNull().WithState(x =>  "foo");
+		var result = validator.Validate(new Person());
+		result.Errors.Single().CustomState.ShouldEqual("foo");
+	}
 
-		[Fact]
-		public void Throws_when_provider_is_null() {
-			Assert.Throws<ArgumentNullException>(() => validator.RuleFor(x => x.Surname).NotNull().WithState((Func<Person, object>) null));
-		}
+	[Fact]
+	public void Throws_when_provider_is_null() {
+		Assert.Throws<ArgumentNullException>(() => validator.RuleFor(x => x.Surname).NotNull().WithState((Func<Person, object>) null));
+	}
 
-		[Fact]
-		public void Correctly_provides_object_being_validated() {
-			Person resultPerson = null;
+	[Fact]
+	public void Correctly_provides_object_being_validated() {
+		Person resultPerson = null;
 
-			validator.RuleFor(x => x.Surname).NotNull().WithState(x => {
-				resultPerson = x;
-				return new object();
-			});
+		validator.RuleFor(x => x.Surname).NotNull().WithState(x => {
+			resultPerson = x;
+			return new object();
+		});
 
-			var person = new Person();
-			validator.Validate(person);
+		var person = new Person();
+		validator.Validate(person);
 
-			resultPerson.ShouldBeTheSameAs(person);
-		}
+		resultPerson.ShouldBeTheSameAs(person);
+	}
 
-		[Fact]
-		public void Can_Provide_state_for_item_in_collection() {
-			validator.RuleForEach(x => x.Children).NotNull().WithState((person, child) => "test");
-			var result = validator.Validate(new Person {Children = new List<Person> {null}});
-			result.Errors[0].CustomState.ToString().ShouldEqual("test");
-		}
+	[Fact]
+	public void Can_Provide_state_for_item_in_collection() {
+		validator.RuleForEach(x => x.Children).NotNull().WithState((person, child) => "test");
+		var result = validator.Validate(new Person {Children = new List<Person> {null}});
+		result.Errors[0].CustomState.ToString().ShouldEqual("test");
 	}
 }

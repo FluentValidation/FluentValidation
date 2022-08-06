@@ -15,42 +15,41 @@
 //
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
-namespace FluentValidation.Tests {
-	using System.Linq;
-	using Validators;
-	using Xunit;
+namespace FluentValidation.Tests;
 
-	public class ModelLevelValidatorTests {
+using System.Linq;
+using Xunit;
 
-		public ModelLevelValidatorTests() {
-			CultureScope.SetDefaultCulture();
-		}
+public class ModelLevelValidatorTests {
 
-		[Fact]
-		public void Validates_at_model_level() {
-			var v = new TestValidator();
-			v.RuleFor(x => x).Must(x => false);
+	public ModelLevelValidatorTests() {
+		CultureScope.SetDefaultCulture();
+	}
 
-			var result = v.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("");
-		}
+	[Fact]
+	public void Validates_at_model_level() {
+		var v = new TestValidator();
+		v.RuleFor(x => x).Must(x => false);
 
-		[Fact]
-		public void Can_use_child_validator_at_model_level() {
-			var v = new TestValidator();
-			v.RuleFor(x => x).SetValidator(new ChildValidator());
+		var result = v.Validate(new Person());
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors.Single().PropertyName.ShouldEqual("");
+	}
 
-			var result = v.Validate(new Person());
-			result.Errors.Count.ShouldEqual(1);
-			result.Errors.Single().PropertyName.ShouldEqual("Forename");
+	[Fact]
+	public void Can_use_child_validator_at_model_level() {
+		var v = new TestValidator();
+		v.RuleFor(x => x).SetValidator(new ChildValidator());
 
-		}
+		var result = v.Validate(new Person());
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors.Single().PropertyName.ShouldEqual("Forename");
 
-		private class ChildValidator : AbstractValidator<Person> {
-			public ChildValidator() {
-				RuleFor(x => x.Forename).NotNull();
-			}
+	}
+
+	private class ChildValidator : AbstractValidator<Person> {
+		public ChildValidator() {
+			RuleFor(x => x.Forename).NotNull();
 		}
 	}
 }

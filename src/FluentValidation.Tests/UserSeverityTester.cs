@@ -16,99 +16,99 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using Xunit;
+namespace FluentValidation.Tests;
 
-	public class UserSeverityTester : IDisposable {
-		TestValidator validator;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
-		public UserSeverityTester() {
-			ValidatorOptions.Global.Severity = Severity.Error;
-			validator = new TestValidator();
-		}
+public class UserSeverityTester : IDisposable {
+	TestValidator validator;
 
-		public void Dispose() {
-			ValidatorOptions.Global.Severity = Severity.Error;
-		}
+	public UserSeverityTester() {
+		ValidatorOptions.Global.Severity = Severity.Error;
+		validator = new TestValidator();
+	}
 
-		[Fact]
-		public void Stores_user_severity_against_validation_failure() {
-			validator.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Info);
-			var result = validator.Validate(new Person());
-			result.Errors.Single().Severity.ShouldEqual(Severity.Info);
-		}
+	public void Dispose() {
+		ValidatorOptions.Global.Severity = Severity.Error;
+	}
 
-		[Fact]
-		public void Defaults_user_severity_to_error() {
-			validator.RuleFor(x => x.Surname).NotNull();
-			var result = validator.Validate(new Person());
-			result.Errors.Single().Severity.ShouldEqual(Severity.Error);
-		}
+	[Fact]
+	public void Stores_user_severity_against_validation_failure() {
+		validator.RuleFor(x => x.Surname).NotNull().WithSeverity(Severity.Info);
+		var result = validator.Validate(new Person());
+		result.Errors.Single().Severity.ShouldEqual(Severity.Info);
+	}
 
-		[Theory]
-		[InlineData(Severity.Error)]
-		[InlineData(Severity.Info)]
-		[InlineData(Severity.Warning)]
-		public void Defaults_user_severity_can_be_overridden_by_global_options(Severity severity) {
-			ValidatorOptions.Global.Severity = severity;
+	[Fact]
+	public void Defaults_user_severity_to_error() {
+		validator.RuleFor(x => x.Surname).NotNull();
+		var result = validator.Validate(new Person());
+		result.Errors.Single().Severity.ShouldEqual(Severity.Error);
+	}
 
-			validator.RuleFor(x => x.Surname).NotNull();
-			var result = validator.Validate(new Person());
-			result.Errors.Single().Severity.ShouldEqual(severity);
-		}
+	[Theory]
+	[InlineData(Severity.Error)]
+	[InlineData(Severity.Info)]
+	[InlineData(Severity.Warning)]
+	public void Defaults_user_severity_can_be_overridden_by_global_options(Severity severity) {
+		ValidatorOptions.Global.Severity = severity;
 
-		[Fact]
-		public void Throws_when_provider_is_null() {
-			Assert.Throws<ArgumentNullException>(() => validator.RuleFor(x => x.Surname).NotNull().WithSeverity((Func<Person, Severity>)null));
-		}
+		validator.RuleFor(x => x.Surname).NotNull();
+		var result = validator.Validate(new Person());
+		result.Errors.Single().Severity.ShouldEqual(severity);
+	}
 
-		[Fact]
-		public void Correctly_provides_object_being_validated() {
-			Person resultPerson = null;
+	[Fact]
+	public void Throws_when_provider_is_null() {
+		Assert.Throws<ArgumentNullException>(() => validator.RuleFor(x => x.Surname).NotNull().WithSeverity((Func<Person, Severity>)null));
+	}
 
-			validator.RuleFor(x => x.Surname).NotNull().WithSeverity(x => {
-				resultPerson = x;
-				return Severity.Warning;
-			});
+	[Fact]
+	public void Correctly_provides_object_being_validated() {
+		Person resultPerson = null;
 
-			var person = new Person();
-			validator.Validate(person);
+		validator.RuleFor(x => x.Surname).NotNull().WithSeverity(x => {
+			resultPerson = x;
+			return Severity.Warning;
+		});
 
-			resultPerson.ShouldBeTheSameAs(person);
-		}
+		var person = new Person();
+		validator.Validate(person);
 
-		[Fact]
-		public void Can_Provide_severity_for_item_in_collection() {
-			validator.RuleForEach(x => x.Children).NotNull().WithSeverity((person, child) => Severity.Warning);
-			var result = validator.Validate(new Person { Children = new List<Person> { null } });
-			result.Errors[0].Severity.ShouldEqual(Severity.Warning);
-		}
+		resultPerson.ShouldBeTheSameAs(person);
+	}
 
-		[Fact]
-		public void Can_Provide_conditional_severity() {
-			validator.RuleFor(x => x.Surname).NotNull().WithSeverity(x => x.Age > 10 ? Severity.Info : Severity.Warning);
+	[Fact]
+	public void Can_Provide_severity_for_item_in_collection() {
+		validator.RuleForEach(x => x.Children).NotNull().WithSeverity((person, child) => Severity.Warning);
+		var result = validator.Validate(new Person { Children = new List<Person> { null } });
+		result.Errors[0].Severity.ShouldEqual(Severity.Warning);
+	}
 
-			var person = new Person();
+	[Fact]
+	public void Can_Provide_conditional_severity() {
+		validator.RuleFor(x => x.Surname).NotNull().WithSeverity(x => x.Age > 10 ? Severity.Info : Severity.Warning);
 
-			var result = validator.Validate(person);
-			result.Errors[0].Severity.ShouldEqual(Severity.Warning);
+		var person = new Person();
 
-			person.Age = 100;
-			result = validator.Validate(person);
-			result.Errors[0].Severity.ShouldEqual(Severity.Info);
-		}
+		var result = validator.Validate(person);
+		result.Errors[0].Severity.ShouldEqual(Severity.Warning);
 
-		[Fact]
-		public void Should_use_last_supplied_severity() {
-			validator.RuleFor(x => x.Surname).NotNull().WithSeverity(x => Severity.Warning).WithSeverity(Severity.Info);
+		person.Age = 100;
+		result = validator.Validate(person);
+		result.Errors[0].Severity.ShouldEqual(Severity.Info);
+	}
 
-			var person = new Person();
+	[Fact]
+	public void Should_use_last_supplied_severity() {
+		validator.RuleFor(x => x.Surname).NotNull().WithSeverity(x => Severity.Warning).WithSeverity(Severity.Info);
 
-			var result = validator.Validate(person);
-			result.Errors[0].Severity.ShouldEqual(Severity.Info);
-		}
+		var person = new Person();
+
+		var result = validator.Validate(person);
+		result.Errors[0].Severity.ShouldEqual(Severity.Info);
 	}
 }

@@ -16,125 +16,121 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Linq;
-	using System.Threading;
-	using Xunit;
+namespace FluentValidation.Tests;
 
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
-	public class NotEmptyTester {
-		public NotEmptyTester() {
-          CultureScope.SetDefaultCulture();
-        }
+public class NotEmptyTester {
+	public NotEmptyTester() {
+		CultureScope.SetDefaultCulture();
+	}
 
-		[Fact]
-		public void When_there_is_a_value_then_the_validator_should_pass() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotEmpty()
-			};
+	[Fact]
+	public void When_there_is_a_value_then_the_validator_should_pass() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotEmpty()
+		};
 
-			var result = validator.Validate(new Person { Surname = "Foo" });
-			result.IsValid.ShouldBeTrue();
+		var result = validator.Validate(new Person { Surname = "Foo" });
+		result.IsValid.ShouldBeTrue();
+	}
+
+	[Fact]
+	public void When_value_is_null_validator_should_fail() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotEmpty()
+		};
+
+		var result = validator.Validate(new Person { Surname = null });
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void When_value_is_empty_string_validator_should_fail() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotEmpty()
+		};
+
+		var result = validator.Validate(new Person { Surname = "" });
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void When_value_is_whitespace_validation_should_fail() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotEmpty()
+		};
+
+		var result = validator.Validate(new Person { Surname = "         " });
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void When_value_is_Default_for_type_validator_should_fail_datetime() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.DateOfBirth).NotEmpty()
+		};
+
+		var result = validator.Validate(new Person { DateOfBirth = default });
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void When_value_is_Default_for_type_validator_should_fail_int() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Id).NotEmpty()
+		};
+
+		var result = validator.Validate(new Person { Id = 0 });
+		result.IsValid.ShouldBeFalse();
+
+		var result1 = validator.Validate(new Person{Id = 1});
+		result1.IsValid.ShouldBeTrue();
+	}
+
+	[Fact]
+	public void Fails_when_collection_empty() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Children).NotEmpty()
+		};
+
+		var result = validator.Validate(new Person { Children = new List<Person>() });
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void When_validation_fails_error_should_be_set() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotEmpty()
+		};
+
+		var result = validator.Validate(new Person { Surname = null });
+		result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
+	}
+
+	[Fact]
+	public void Fails_for_ienumerable_that_doesnt_implement_ICollection() {
+		var validator = new InlineValidator<TestModel> {
+			v => v.RuleFor(x => x.Strings).NotEmpty()
+		};
+
+		var result = validator.Validate(new TestModel());
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void Fails_for_array() {
+		var validator = new InlineValidator<string[]>();
+		validator.RuleFor(x => x).NotEmpty();
+		var result = validator.Validate(new string[0]);
+		result.IsValid.ShouldBeFalse();
+	}
+
+	public class TestModel {
+		public IEnumerable<string> Strings {
+			get { yield break; }
 		}
-
-		[Fact]
-		public void When_value_is_null_validator_should_fail() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotEmpty()
-			};
-
-			var result = validator.Validate(new Person { Surname = null });
-			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void When_value_is_empty_string_validator_should_fail() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotEmpty()
-			};
-
-			var result = validator.Validate(new Person { Surname = "" });
-			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void When_value_is_whitespace_validation_should_fail() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotEmpty()
-			};
-
-			var result = validator.Validate(new Person { Surname = "         " });
-			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void When_value_is_Default_for_type_validator_should_fail_datetime() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.DateOfBirth).NotEmpty()
-			};
-
-			var result = validator.Validate(new Person { DateOfBirth = default });
-			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void When_value_is_Default_for_type_validator_should_fail_int() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Id).NotEmpty()
-			};
-
-			var result = validator.Validate(new Person { Id = 0 });
-			result.IsValid.ShouldBeFalse();
-
-			var result1 = validator.Validate(new Person{Id = 1});
-			result1.IsValid.ShouldBeTrue();
-		}
-
-		[Fact]
-		public void Fails_when_collection_empty() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Children).NotEmpty()
-			};
-
-			var result = validator.Validate(new Person { Children = new List<Person>() });
-			result.IsValid.ShouldBeFalse();
-		}
-
-		[Fact]
-		public void When_validation_fails_error_should_be_set() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotEmpty()
-			};
-
-			var result = validator.Validate(new Person { Surname = null });
-			result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' must not be empty.");
-		}
-
-	    [Fact]
-	    public void Fails_for_ienumerable_that_doesnt_implement_ICollection() {
-	        var validator = new InlineValidator<TestModel> {
-                v => v.RuleFor(x => x.Strings).NotEmpty()
-	        };
-
-	        var result = validator.Validate(new TestModel());
-            result.IsValid.ShouldBeFalse();
-	    }
-
-		[Fact]
-		public void Fails_for_array() {
-			var validator = new InlineValidator<string[]>();
-			validator.RuleFor(x => x).NotEmpty();
-			var result = validator.Validate(new string[0]);
-			result.IsValid.ShouldBeFalse();
-		}
-
-        public class TestModel {
-            public IEnumerable<string> Strings {
-                get { yield break; }
-            }
-        }
 	}
 }

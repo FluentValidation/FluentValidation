@@ -18,44 +18,44 @@
 
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Linq;
-	using Xunit;
+namespace FluentValidation.Tests;
 
-	public class LocalisedNameTester : IDisposable {
-		public LocalisedNameTester() {
-			CultureScope.SetDefaultCulture();
-		}
+using System;
+using System.Linq;
+using Xunit;
 
-		public void Dispose() {
-			CultureScope.SetDefaultCulture();
-		}
+public class LocalisedNameTester : IDisposable {
+	public LocalisedNameTester() {
+		CultureScope.SetDefaultCulture();
+	}
 
-		[Fact]
-		public void Uses_localized_name() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull().WithName(x => MyResources.CustomProperty)
-			};
+	public void Dispose() {
+		CultureScope.SetDefaultCulture();
+	}
 
-			var result = validator.Validate(new Person());
-			result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
-		}
+	[Fact]
+	public void Uses_localized_name() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotNull().WithName(x => MyResources.CustomProperty)
+		};
 
-		[Fact]
-		public void Uses_localized_name_expression() {
-			var validator = new TestValidator {
-				v => v.RuleFor(x => x.Surname).NotNull().WithName(x => MyResources.CustomProperty)
-			};
+		var result = validator.Validate(new Person());
+		result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
+	}
 
-			var result = validator.Validate(new Person());
-			result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
-		}
+	[Fact]
+	public void Uses_localized_name_expression() {
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Surname).NotNull().WithName(x => MyResources.CustomProperty)
+		};
 
-		public static class MyResources {
-			public static string CustomProperty {
-				get { return "foo"; }
-			}
+		var result = validator.Validate(new Person());
+		result.Errors.Single().ErrorMessage.ShouldEqual("'foo' must not be empty.");
+	}
+
+	public static class MyResources {
+		public static string CustomProperty {
+			get { return "foo"; }
 		}
 	}
 }

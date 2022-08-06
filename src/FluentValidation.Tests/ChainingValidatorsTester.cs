@@ -16,47 +16,44 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System.Linq;
-	using Internal;
-	using Xunit;
-	using System.Collections.Generic;
+namespace FluentValidation.Tests;
 
+using System.Linq;
+using Xunit;
 
-	public class ChainingValidatorsTester {
-		TestValidator validator;
+public class ChainingValidatorsTester {
+	TestValidator validator;
 
-		public ChainingValidatorsTester() {
-			validator = new TestValidator();
-		}
+	public ChainingValidatorsTester() {
+		validator = new TestValidator();
+	}
 
-		[Fact]
-		public void Should_create_multiple_validators() {
-			validator.RuleFor(x => x.Surname)
-				.NotNull()
-				.NotEqual("foo");
+	[Fact]
+	public void Should_create_multiple_validators() {
+		validator.RuleFor(x => x.Surname)
+			.NotNull()
+			.NotEqual("foo");
 
-			validator.Single().Components.Count().ShouldEqual(2);
-		}
+		validator.Single().Components.Count().ShouldEqual(2);
+	}
 
-		[Fact]
-		public void Should_execute_multiple_validators() {
-			validator.RuleFor(x => x.Surname).NotNull()
-				.Equal("Foo");
+	[Fact]
+	public void Should_execute_multiple_validators() {
+		validator.RuleFor(x => x.Surname).NotNull()
+			.Equal("Foo");
 
-			validator.Validate(new Person()).Errors.Count().ShouldEqual(2);
-		}
+		validator.Validate(new Person()).Errors.Count().ShouldEqual(2);
+	}
 
-		[Fact]
-		public void Options_should_only_apply_to_current_validator() {
-			validator.RuleFor(x => x.Surname).NotNull()
-				.WithMessage("null")
-				.Equal("foo")
-				.WithMessage("equal");
+	[Fact]
+	public void Options_should_only_apply_to_current_validator() {
+		validator.RuleFor(x => x.Surname).NotNull()
+			.WithMessage("null")
+			.Equal("foo")
+			.WithMessage("equal");
 
-			var results = validator.Validate(new Person());
-			results.Errors.ElementAt(0).ErrorMessage.ShouldEqual("null");
-			results.Errors.ElementAt(1).ErrorMessage.ShouldEqual("equal");
-		}
+		var results = validator.Validate(new Person());
+		results.Errors.ElementAt(0).ErrorMessage.ShouldEqual("null");
+		results.Errors.ElementAt(1).ErrorMessage.ShouldEqual("equal");
 	}
 }

@@ -16,95 +16,92 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
-	using System.Diagnostics;
-	using System.Globalization;
-	using System.Linq;
-	using System.Threading;
-	using Internal;
-	using Xunit;
-	using Resources;
-	using Validators;
+namespace FluentValidation.Tests;
 
+using System;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+using Internal;
+using Xunit;
 
-	public class LocalisedMessagesTester : IDisposable {
+public class LocalisedMessagesTester : IDisposable {
 
-		public LocalisedMessagesTester() {
-			// ensure the resource provider is reset after any tests that use it.
-			CultureScope.SetDefaultCulture();
-		}
+	public LocalisedMessagesTester() {
+		// ensure the resource provider is reset after any tests that use it.
+		CultureScope.SetDefaultCulture();
+	}
 
-        public void Dispose()
-        {
-			CultureScope.SetDefaultCulture();
-		}
+	public void Dispose()
+	{
+		CultureScope.SetDefaultCulture();
+	}
 
-		[Fact]
-		public void Correctly_assigns_default_localized_error_message() {
+	[Fact]
+	public void Correctly_assigns_default_localized_error_message() {
 
-			var originalCulture = Thread.CurrentThread.CurrentUICulture;
-			try {
-				var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotEmpty());
+		var originalCulture = Thread.CurrentThread.CurrentUICulture;
+		try {
+			var validator = new TestValidator(v => v.RuleFor(x => x.Surname).NotEmpty());
 
-				foreach (var culture in new[] { "en", "de", "fr", "es", "de", "it", "nl", "pl", "pt", "ru", "sv", "ar" }) {
-					Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
-					var message = ValidatorOptions.Global.LanguageManager.GetString("NotEmptyValidator");
-					var errorMessage = new MessageFormatter().AppendPropertyName("Surname").BuildMessage(message);
-					Debug.WriteLine(errorMessage);
-					var result = validator.Validate(new Person{Surname = null});
-					result.Errors.Single().ErrorMessage.ShouldEqual(errorMessage);
-				}
-			}
-			finally {
-				// Always reset the culture.
-				Thread.CurrentThread.CurrentUICulture = originalCulture;
+			foreach (var culture in new[] { "en", "de", "fr", "es", "de", "it", "nl", "pl", "pt", "ru", "sv", "ar" }) {
+				Thread.CurrentThread.CurrentUICulture = new CultureInfo(culture);
+				var message = ValidatorOptions.Global.LanguageManager.GetString("NotEmptyValidator");
+				var errorMessage = new MessageFormatter().AppendPropertyName("Surname").BuildMessage(message);
+				Debug.WriteLine(errorMessage);
+				var result = validator.Validate(new Person{Surname = null});
+				result.Errors.Single().ErrorMessage.ShouldEqual(errorMessage);
 			}
 		}
-
-		[Fact]
-		public void Uses_func_to_get_message() {
-			var validator = new TestValidator();
-			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => "el foo");
-
-			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("el foo");
+		finally {
+			// Always reset the culture.
+			Thread.CurrentThread.CurrentUICulture = originalCulture;
 		}
+	}
 
-		[Fact]
-		public void Formats_string_with_placeholders() {
-			var validator = new TestValidator();
-			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => string.Format("{{PropertyName}} {0}", x.AnotherInt));
-			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
-		}
+	[Fact]
+	public void Uses_func_to_get_message() {
+		var validator = new TestValidator();
+		validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => "el foo");
+
+		var result = validator.Validate(new Person());
+		result.Errors[0].ErrorMessage.ShouldEqual("el foo");
+	}
+
+	[Fact]
+	public void Formats_string_with_placeholders() {
+		var validator = new TestValidator();
+		validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => string.Format("{{PropertyName}} {0}", x.AnotherInt));
+		var result = validator.Validate(new Person());
+		result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
+	}
 
 
-		[Fact]
-		public void Formats_string_with_placeholders_when_you_cant_edit_the_string() {
-			var validator = new TestValidator();
-			validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => string.Format("{{PropertyName}} {0}", x.AnotherInt));
-			var result = validator.Validate(new Person());
-			result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
-		}
+	[Fact]
+	public void Formats_string_with_placeholders_when_you_cant_edit_the_string() {
+		var validator = new TestValidator();
+		validator.RuleFor(x => x.Forename).NotNull().WithMessage(x => string.Format("{{PropertyName}} {0}", x.AnotherInt));
+		var result = validator.Validate(new Person());
+		result.Errors[0].ErrorMessage.ShouldEqual("Forename 0");
+	}
 
-		[Fact]
-		public void Uses_string_format_with_property_value() {
-			var validator = new TestValidator();
-			validator.RuleFor(x => x.Forename).Equal("Foo").WithMessage((x, forename) => $"Hello {forename}");
-			var result = validator.Validate(new Person {Forename = "Jeremy"});
-			result.Errors[0].ErrorMessage.ShouldEqual("Hello Jeremy");
-		}
+	[Fact]
+	public void Uses_string_format_with_property_value() {
+		var validator = new TestValidator();
+		validator.RuleFor(x => x.Forename).Equal("Foo").WithMessage((x, forename) => $"Hello {forename}");
+		var result = validator.Validate(new Person {Forename = "Jeremy"});
+		result.Errors[0].ErrorMessage.ShouldEqual("Hello Jeremy");
+	}
 
-		[Fact]
-		public void Does_not_throw_InvalidCastException_when_using_RuleForEach() {
-			var validator = new InlineValidator<Person>();
-			validator.RuleForEach(x => x.NickNames)
-				.Must(x => false)
-				.WithMessage((parent, name) => "x");
+	[Fact]
+	public void Does_not_throw_InvalidCastException_when_using_RuleForEach() {
+		var validator = new InlineValidator<Person>();
+		validator.RuleForEach(x => x.NickNames)
+			.Must(x => false)
+			.WithMessage((parent, name) => "x");
 
-			var result = validator.Validate(new Person() {NickNames = new[] {"What"}});
-			result.Errors.Single().ErrorMessage.ShouldEqual("x");
-		}
+		var result = validator.Validate(new Person() {NickNames = new[] {"What"}});
+		result.Errors.Single().ErrorMessage.ShouldEqual("x");
 	}
 }

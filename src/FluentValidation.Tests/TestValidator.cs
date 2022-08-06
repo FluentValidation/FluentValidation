@@ -16,18 +16,18 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-namespace FluentValidation.Tests {
-	using System;
+namespace FluentValidation.Tests;
 
-	public class TestValidator : InlineValidator<Person> {
-		public TestValidator() {
+using System;
 
-		}
+public class TestValidator : InlineValidator<Person> {
+	public TestValidator() {
 
-		public TestValidator(params Action<TestValidator>[] actions) {
-			foreach(var action in actions) {
-				action(this);
-			}
+	}
+
+	public TestValidator(params Action<TestValidator>[] actions) {
+		foreach(var action in actions) {
+			action(this);
 		}
 	}
 }
