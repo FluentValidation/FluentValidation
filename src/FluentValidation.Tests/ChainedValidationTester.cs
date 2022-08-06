@@ -114,8 +114,7 @@ namespace FluentValidation.Tests {
 		[Fact]
 		public void Separate_validation_on_chained_property() {
 			var validator = new DepartmentValidator();
-			var result = validator.Validate(new Department
-			{
+			var result = validator.Validate(new Department {
 				Manager = new Person(),
 				Assistant = new Person()
 			});
@@ -171,7 +170,7 @@ namespace FluentValidation.Tests {
 			var validator = new InlineValidator<Person>();
 			validator.RuleFor(x => x.Address).SetValidator(addressValidator, ruleSets: "ruleset1");
 
-			var result = validator.Validate(new Person {Address = new Address()});
+			var result = validator.Validate(new Person { Address = new Address() });
 			result.Errors.Count.ShouldEqual(1);
 			result.Errors[0].PropertyName.ShouldEqual("Address.Line1");
 		}
