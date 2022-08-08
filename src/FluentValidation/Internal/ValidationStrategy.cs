@@ -141,7 +141,7 @@ public class ValidationStrategy<T> {
 				selectors.Add(ValidatorOptions.Global.ValidatorSelectors.RulesetValidatorSelectorFactory(_ruleSets.ToArray()));
 			}
 
-			selector = selectors.Count == 1 ? selectors[0] : new CompositeValidatorSelector(selectors);
+			selector = selectors.Count == 1 ? selectors[0] : ValidatorOptions.Global.ValidatorSelectors.CompositeValidatorSelectorFactory(selectors);
 		}
 		else {
 			selector = ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory();

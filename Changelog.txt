@@ -1,5 +1,6 @@
 11.2.0 - 8 August 2022
 Resolve issue with unexpected results when with nested Include calls with the MemberNameValidatorSelector (#1989)
+Add a new Selector Factory for the Composite Selector (#1988)
 
 11.1.1 - 6 August 2022
 Fix issue with incorrect rulesets being executed in a child validator when combined with ChildRules (#1981)

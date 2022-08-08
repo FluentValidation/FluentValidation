@@ -233,13 +233,14 @@ public class ValidatorSelectorOptions {
 	private Func<IValidatorSelector> _defaultValidatorSelector = () => DefaultSelector;
 	private Func<IEnumerable<string>, IValidatorSelector> _memberNameValidatorSelector = properties => new MemberNameValidatorSelector(properties);
 	private Func<IEnumerable<string>, IValidatorSelector> _rulesetValidatorSelector = ruleSets => new RulesetValidatorSelector(ruleSets);
+	private Func<IEnumerable<IValidatorSelector>, IValidatorSelector> _compositeValidatorSelectorFactory = selectors => new CompositeValidatorSelector(selectors);
 
 	/// <summary>
 	/// Factory func for creating the default validator selector
 	/// </summary>
 	public Func<IValidatorSelector> DefaultValidatorSelectorFactory {
 		get => _defaultValidatorSelector;
-		set => _defaultValidatorSelector = value ?? (() => new DefaultValidatorSelector());
+		set => _defaultValidatorSelector = value ?? (() => DefaultSelector);
 	}
 
 	/// <summary>
@@ -256,5 +257,13 @@ public class ValidatorSelectorOptions {
 	public Func<IEnumerable<string>, IValidatorSelector> RulesetValidatorSelectorFactory {
 		get => _rulesetValidatorSelector;
 		set => _rulesetValidatorSelector = value ?? (ruleSets => new RulesetValidatorSelector(ruleSets));
+	}
+
+	/// <summary>
+	/// Factory func for creating the composite validator selector
+	/// </summary>
+	public Func<IEnumerable<IValidatorSelector>, IValidatorSelector> CompositeValidatorSelectorFactory {
+		get => _compositeValidatorSelectorFactory;
+		set => _compositeValidatorSelectorFactory = value ?? (selectors => new CompositeValidatorSelector(selectors));
 	}
 }
