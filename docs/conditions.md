@@ -1,12 +1,12 @@
 # Conditions
 
-The `When` and `Unless` methods can be used to specify conditions that control when the rule should execute. For example, this rule on the `CustomerDiscount` property will only execute when `IsPreferredCustomer` is `true`:
+The `When` and `Otherwise` methods can be used to specify conditions that control when the rule should execute. For example, this rule on the `CustomerDiscount` property will only execute when `IsPreferredCustomer` is `true`:
 
 ```csharp
 RuleFor(customer => customer.CustomerDiscount).GreaterThan(0).When(customer => customer.IsPreferredCustomer);
 ```
 
-The `Unless` method is simply the opposite of `When`.
+The `Otherwise` method is simply the opposite of `When`.
 
 If you need to specify the same condition for multiple rules then you can call the top-level `When` method instead of chaining the `When` call at the end of the rule:
 
