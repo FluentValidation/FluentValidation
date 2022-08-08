@@ -21,7 +21,6 @@ namespace FluentValidation.Tests;
 using Xunit;
 using System.Threading.Tasks;
 
-
 public class ValidatorSelectorTests {
 
 	[Fact]
@@ -139,6 +138,29 @@ public class ValidatorSelectorTests {
 		var result = await validator.ValidateAsync(new Person(), v => v.IncludeProperties("Forename"));
 		result.Errors.Count.ShouldEqual(1);
 		result.Errors[0].PropertyName.ShouldEqual("Forename");
+	}
+
+	[Fact]
+	public void Executes_correct_rule_when_using_property_with_nested_includes() {
+		var validator3 = new TestValidator();
+		validator3.RuleFor(x => x.Age).GreaterThan(0);
+
+		// In the middle validator ensure that the Include statement is
+		// before the additional rules in order to trigger the case reported in
+		// https://github.com/FluentValidation/FluentValidation/issues/1989
+		var validator2 = new TestValidator();
+		validator2.Include(validator3);
+		validator2.RuleFor(x => x.Orders).NotEmpty();
+
+		var validator = new TestValidator();
+		validator.Include(validator2);
+
+		var result = validator.Validate(new Person(), v => v.IncludeProperties("Age"));
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors[0].PropertyName.ShouldEqual("Age");
+
+		result = validator.Validate(new Person { Age = 1 }, v => v.IncludeProperties("Age"));
+		result.Errors.Count.ShouldEqual(0);
 	}
 
 	private class TestObject {

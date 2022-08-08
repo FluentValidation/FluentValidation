@@ -53,8 +53,23 @@ internal class IncludeRule<T> : PropertyRule<T, T>, IIncludeRule {
 	}
 
 	public override async ValueTask ValidateAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
-		context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
+		// Special handling for the MemberName selector.
+		// We need to disable the MemberName selector's cascade functionality whilst executing
+		// an include rule, as an include rule should be have as if its children are actually children of the parent.
+		// Also ensure that we only add/remove the state key if it's not present already.
+		// If it is present already then we're in a situation where there are nested Include rules
+		// in which case only the root Include rule should add/remove the key.
+		// See https://github.com/FluentValidation/FluentValidation/issues/1989
+		bool shouldAddStateKey = !context.RootContextData.ContainsKey(MemberNameValidatorSelector.DisableCascadeKey);
+
+		if (shouldAddStateKey) {
+			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
+		}
+
 		await base.ValidateAsync(context, useAsync, cancellation);
-		context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
+
+		if (shouldAddStateKey) {
+			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
+		}
 	}
 }
