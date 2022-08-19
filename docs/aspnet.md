@@ -207,9 +207,9 @@ builder.Services.AddScoped<IValidator<Person>, PersonValidator>();
 // replace this with whatever you're using in your application.
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
-app.MapPost("/person", async (IPersonRepository repository, Person person) => 
+app.MapPost("/person", async (IValidator<Person> validator, IPersonRepository repository, Person person) => 
 {
-  ValidationResult result = await repository.ValidateAsync(person);
+  ValidationResult result = await validator.ValidateAsync(person);
 
   if (!result.IsValid) 
   {
