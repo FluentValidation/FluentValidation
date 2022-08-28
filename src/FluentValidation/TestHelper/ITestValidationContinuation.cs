@@ -11,27 +11,18 @@ public interface ITestValidationWith : ITestValidationContinuation {
 
 public interface ITestValidationContinuation : IEnumerable<ValidationFailure> {
 	IEnumerable<ValidationFailure> UnmatchedFailures { get; }
+	//TODO: 12.x expose MatchedFailures on the interface too.
 }
 
 internal class TestValidationContinuation : ITestValidationContinuation, ITestValidationWith {
 	private readonly IEnumerable<ValidationFailure> _allFailures;
 	private readonly List<Func<ValidationFailure,bool>> _predicates;
+	private readonly TestValidationContinuation _parent;
 
-	public static TestValidationContinuation Create(IEnumerable<ValidationFailure> failures) =>
-		new TestValidationContinuation(failures);
-
-	public static TestValidationContinuation Create(ITestValidationContinuation continuation) {
-		if (continuation is TestValidationContinuation instance)
-			return instance;
-		var allFailures = continuation.Union(continuation.UnmatchedFailures);
-		instance = new TestValidationContinuation(allFailures);
-		instance.ApplyPredicate(failure => !continuation.UnmatchedFailures.Contains(failure));
-		return instance;
-	}
-
-	private TestValidationContinuation(IEnumerable<ValidationFailure> failures) {
+	public TestValidationContinuation(IEnumerable<ValidationFailure> failures, TestValidationContinuation parent = null) {
 		_allFailures = failures;
 		_predicates = new List<Func<ValidationFailure, bool>>();
+		_parent = parent;
 	}
 
 	public void ApplyPredicate(Func<ValidationFailure, bool> failurePredicate) {

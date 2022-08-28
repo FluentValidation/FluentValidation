@@ -21,7 +21,10 @@
 namespace FluentValidation.TestHelper;
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 using Internal;
 using Results;
 
@@ -33,19 +36,74 @@ public class TestValidationResult<T> : ValidationResult {
 
 	public ITestValidationWith ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 		string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-		return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, true);
+		return ShouldHaveValidationError(propertyName, true);
 	}
 
 	public void ShouldNotHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
 		string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
-		ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, true);
+		ShouldNotHaveValidationError(propertyName, true);
 	}
 
 	public ITestValidationWith ShouldHaveValidationErrorFor(string propertyName) {
-		return ValidationTestExtension.ShouldHaveValidationError(Errors, propertyName, false);
+		return ShouldHaveValidationError(propertyName, false);
 	}
 
 	public void ShouldNotHaveValidationErrorFor(string propertyName) {
-		ValidationTestExtension.ShouldNotHaveValidationError(Errors, propertyName, false);
+		ShouldNotHaveValidationError(propertyName, false);
+	}
+
+	// TODO: Make private in 12.0
+	internal ITestValidationWith ShouldHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
+		var result = new TestValidationContinuation(Errors);
+		result.ApplyPredicate(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+		                           || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+		                           || propertyName == ValidationTestExtension.MatchAnyFailure);
+
+		if (result.Any()) {
+			return result;
+		}
+
+		// We expected an error but failed to match it.
+		var errorMessageBanner = $"Expected a validation error for property {propertyName}";
+
+		string errorMessage = "";
+
+		if (Errors?.Any() == true) {
+			string errorMessageDetails = "";
+			for (int i = 0; i < Errors.Count; i++) {
+				errorMessageDetails += $"[{i}]: {Errors[i].PropertyName}\n";
+			}
+			errorMessage = $"{errorMessageBanner}\n----\nProperties with Validation Errors:\n{errorMessageDetails}";
+		}
+		else {
+			errorMessage = $"{errorMessageBanner}";
+		}
+
+		throw new ValidationTestException(errorMessage);
+	}
+
+	// TODO: Make private in 12.0
+	internal void ShouldNotHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
+		var failures = Errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+		                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
+		                                 || propertyName == ValidationTestExtension.MatchAnyFailure
+		).ToList();
+
+		if (failures.Any()) {
+			var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
+			if (propertyName == ValidationTestExtension.MatchAnyFailure) {
+				errorMessageBanner = "Expected no validation errors";
+			}
+			string errorMessageDetails = "";
+			for (int i = 0; i < failures.Count; i++) {
+				errorMessageDetails += $"[{i}]: {failures[i].ErrorMessage}\n";
+			}
+			var errorMessage = $"{errorMessageBanner}\n----\nValidation Errors:\n{errorMessageDetails}";
+			throw new ValidationTestException(errorMessage, failures);
+		}
+	}
+
+	private static string NormalizePropertyName(string propertyName) {
+		return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 	}
 }

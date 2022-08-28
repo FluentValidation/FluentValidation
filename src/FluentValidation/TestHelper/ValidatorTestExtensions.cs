@@ -105,15 +105,17 @@ public static class ValidationTestExtension {
 		return new TestValidationResult<T>(validationResult);
 	}
 
+	// TODO: 12.0: Move this to an instance method on TestValidationResult
 	public static ITestValidationContinuation ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) {
 		if (!testValidationResult.Errors.Any())
 			throw new ValidationTestException($"Expected at least one validation error, but none were found.");
 
-		return TestValidationContinuation.Create(testValidationResult.Errors);
+		return new TestValidationContinuation(testValidationResult.Errors);
 	}
 
+	// TODO: 12.0: Move this to an instance method on TestValidationResult
 	public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) {
-		ShouldNotHaveValidationError(testValidationResult.Errors, MatchAnyFailure, true);
+		testValidationResult.ShouldNotHaveValidationError(MatchAnyFailure, true);
 	}
 
 	private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
@@ -134,57 +136,9 @@ public static class ValidationTestExtension {
 		return defaultMessage;
 	}
 
-	internal static ITestValidationWith ShouldHaveValidationError(IList<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
-		var result = TestValidationContinuation.Create(errors);
-		result.ApplyPredicate(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
-		                           || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
-		                           || propertyName == MatchAnyFailure);
-
-		if (result.Any()) {
-			return result;
-		}
-
-		// We expected an error but failed to match it.
-		var errorMessageBanner = $"Expected a validation error for property {propertyName}";
-
-		string errorMessage = "";
-
-		if (errors?.Any() == true) {
-			string errorMessageDetails = "";
-			for (int i = 0; i < errors.Count; i++) {
-				errorMessageDetails += $"[{i}]: {errors[i].PropertyName}\n";
-			}
-			errorMessage = $"{errorMessageBanner}\n----\nProperties with Validation Errors:\n{errorMessageDetails}";
-		}
-		else {
-			errorMessage = $"{errorMessageBanner}";
-		}
-
-		throw new ValidationTestException(errorMessage);
-	}
-
-	internal static void ShouldNotHaveValidationError(IEnumerable<ValidationFailure> errors, string propertyName, bool shouldNormalizePropertyName) {
-		var failures = errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
-		                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
-		                                 || propertyName == MatchAnyFailure
-		).ToList();
-
-		if (failures.Any()) {
-			var errorMessageBanner = $"Expected no validation errors for property {propertyName}";
-			if (propertyName == MatchAnyFailure) {
-				errorMessageBanner = "Expected no validation errors";
-			}
-			string errorMessageDetails = "";
-			for (int i = 0; i < failures.Count; i++) {
-				errorMessageDetails += $"[{i}]: {failures[i].ErrorMessage}\n";
-			}
-			var errorMessage = $"{errorMessageBanner}\n----\nValidation Errors:\n{errorMessageDetails}";
-			throw new ValidationTestException(errorMessage, failures);
-		}
-	}
 
 	public static ITestValidationWith When(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-		var result = TestValidationContinuation.Create(((TestValidationContinuation)failures).MatchedFailures);
+		var result = new TestValidationContinuation(((TestValidationContinuation)failures).MatchedFailures);
 		result.ApplyPredicate(failurePredicate);
 
 		var anyMatched = result.Any();
@@ -198,7 +152,7 @@ public static class ValidationTestExtension {
 	}
 
 	public static ITestValidationContinuation WhenAll(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-		var result = TestValidationContinuation.Create(((TestValidationContinuation)failures).MatchedFailures);
+		var result = new TestValidationContinuation(((TestValidationContinuation)failures).MatchedFailures);
 		result.ApplyPredicate(failurePredicate);
 
 		bool allMatched = !result.UnmatchedFailures.Any();
@@ -265,7 +219,5 @@ public static class ValidationTestExtension {
 		return failures;
 	}
 
-	private static string NormalizePropertyName(string propertyName) {
-		return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
-	}
+
 }
