@@ -1,3 +1,6 @@
+11.2.1 - 28 August 2022
+Fix test helper .Only() not taking into account parent-level unmatched failures (#1986)
+
 11.2.0 - 8 August 2022
 Resolve issue with unexpected results when with nested Include calls with the MemberNameValidatorSelector (#1989)
 Add a new Selector Factory for the Composite Selector (#1988)
