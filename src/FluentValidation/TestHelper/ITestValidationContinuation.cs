@@ -17,12 +17,13 @@ public interface ITestValidationContinuation : IEnumerable<ValidationFailure> {
 internal class TestValidationContinuation : ITestValidationContinuation, ITestValidationWith {
 	private readonly IEnumerable<ValidationFailure> _allFailures;
 	private readonly List<Func<ValidationFailure,bool>> _predicates;
-	private readonly TestValidationContinuation _parent;
 
-	public TestValidationContinuation(IEnumerable<ValidationFailure> failures, TestValidationContinuation parent = null) {
+	public ITestValidationContinuation Parent { get; }
+
+	public TestValidationContinuation(IEnumerable<ValidationFailure> failures, ITestValidationContinuation parent = null) {
 		_allFailures = failures;
 		_predicates = new List<Func<ValidationFailure, bool>>();
-		_parent = parent;
+		Parent = parent;
 	}
 
 	public void ApplyPredicate(Func<ValidationFailure, bool> failurePredicate) {

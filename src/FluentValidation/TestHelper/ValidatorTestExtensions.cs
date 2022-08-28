@@ -138,7 +138,8 @@ public static class ValidationTestExtension {
 
 
 	public static ITestValidationWith When(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-		var result = new TestValidationContinuation(((TestValidationContinuation)failures).MatchedFailures);
+		//TODO 12.0 remove casts.
+		var result = new TestValidationContinuation(((TestValidationContinuation)failures).MatchedFailures, failures);
 		result.ApplyPredicate(failurePredicate);
 
 		var anyMatched = result.Any();
@@ -152,7 +153,8 @@ public static class ValidationTestExtension {
 	}
 
 	public static ITestValidationContinuation WhenAll(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-		var result = new TestValidationContinuation(((TestValidationContinuation)failures).MatchedFailures);
+		//TODO 12.0 remove casts.
+		var result = new TestValidationContinuation(((TestValidationContinuation)failures).MatchedFailures, failures);
 		result.ApplyPredicate(failurePredicate);
 
 		bool allMatched = !result.UnmatchedFailures.Any();
@@ -204,13 +206,24 @@ public static class ValidationTestExtension {
 	}
 
 	public static ITestValidationWith Only(this ITestValidationWith failures) {
-		if (failures.UnmatchedFailures.Any()) {
+		var unmatchedFailures = failures.UnmatchedFailures;
+		var continuation = (TestValidationContinuation) failures;
 
+		// Also add in any unmatched failures from the parent (if there is one) recursively.
+		do {
+			if (continuation.Parent != null) {
+				unmatchedFailures = unmatchedFailures.Union(continuation.Parent.UnmatchedFailures);
+			}
+			continuation = continuation.Parent as TestValidationContinuation;
+		} while (continuation != null);
+
+		var unmatchedFailuresList = unmatchedFailures.ToList();
+
+		if (unmatchedFailuresList.Count > 0) {
 			var errorMessageBanner = "Expected to have errors only matching specified conditions";
 			string errorMessageDetails = "";
-			var unmatchedFailures = failures.UnmatchedFailures.ToList();
-			for (int i = 0; i < unmatchedFailures.Count; i++) {
-				errorMessageDetails += $"[{i}]: {unmatchedFailures[i].ErrorMessage}\n";
+			for (int i = 0; i < unmatchedFailuresList.Count; i++) {
+				errorMessageDetails += $"[{i}]: {unmatchedFailuresList[i].ErrorMessage}\n";
 			}
 			var errorMessage = $"{errorMessageBanner}\n----\nUnexpected Errors:\n{errorMessageDetails}";
 
@@ -218,6 +231,4 @@ public static class ValidationTestExtension {
 		}
 		return failures;
 	}
-
-
 }

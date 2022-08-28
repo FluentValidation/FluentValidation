@@ -874,6 +874,21 @@ public class ValidatorTesterTester {
 	}
 
 	[Fact]
+	public void ShouldHaveValidationErrorFor_WithMessage_Only_throws_when_there_is_a_failure_for_a_different_property() {
+		var validator = new InlineValidator<Person>();
+		validator.RuleFor(x => x.Surname)
+			.Must((x, ct) => false);
+		validator.RuleFor(x => x.Forename).NotEmpty();
+
+		Assert.Throws<ValidationTestException>(() =>
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithErrorMessage("The specified condition was not met for 'Surname'.")
+				.Only()
+		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Forename' must not be empty.\n");
+	}
+
+	[Fact]
 	public void ShouldHaveValidationErrorFor_WithSeverity_Only() {
 		var validator = new InlineValidator<Person>();
 		validator.RuleFor(x => x.Surname)
@@ -948,6 +963,51 @@ public class ValidatorTesterTester {
 				.WithErrorMessage("The specified condition was not met for 'Now'.")
 				.Only()
 		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Now' must be less than '1/1/1900 12:00:00 AM'.\n");
+	}
+
+	[Fact]
+	public void ShouldHaveValidationErrorFor_WithMessage_Only_throws_combining_several_conditions() {
+		var validator = new InlineValidator<Person>();
+
+		// 2 rules with same property and message, different error code.
+		validator.RuleFor(x => x.Surname)
+			.Must((x, ct) => false);
+
+		validator.RuleFor(x => x.Surname)
+			.Must((x, ct) => false)
+			.WithErrorCode("Foo");
+
+		Assert.Throws<ValidationTestException>(() =>
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithErrorMessage("The specified condition was not met for 'Surname'.")
+				.WithErrorCode("Foo")
+				.Only()
+		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: The specified condition was not met for 'Surname'.\n");
+	}
+
+	[Fact]
+	public void ShouldHaveValidationErrorFor_WithMessage_Only_throws_combining_several_conditions_and_another_property() {
+		var validator = new InlineValidator<Person>();
+
+		// 2 rules with same property and message, different error code.
+		validator.RuleFor(x => x.Surname)
+			.Must((x, ct) => false);
+
+		validator.RuleFor(x => x.Surname)
+			.Must((x, ct) => false)
+			.WithErrorCode("Foo");
+
+		// Another message for a different property.
+		validator.RuleFor(x => x.Forename).NotEmpty();
+
+		Assert.Throws<ValidationTestException>(() =>
+			validator.TestValidate(new Person())
+				.ShouldHaveValidationErrorFor(x => x.Surname)
+				.WithErrorMessage("The specified condition was not met for 'Surname'.")
+				.WithErrorCode("Foo")
+				.Only()
+		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: The specified condition was not met for 'Surname'.\n[1]: 'Forename' must not be empty.\n");
 	}
 
 	private class AddressValidator : AbstractValidator<Address> {
