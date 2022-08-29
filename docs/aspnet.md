@@ -209,9 +209,9 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 app.MapPost("/person", async (IValidator<Person> validator, IPersonRepository repository, Person person) => 
 {
-  ValidationResult result = await validator.ValidateAsync(person);
+  ValidationResult validationResult = await validator.ValidateAsync(person);
 
-  if (!result.IsValid) 
+  if (!validationResult.IsValid) 
   {
     return Results.ValidationProblem(validationResult.ToDictionary());
   }
