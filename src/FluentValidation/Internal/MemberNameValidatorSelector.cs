@@ -79,6 +79,7 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 			throw new ArgumentException($"Expression '{expression}' does not specify a valid property or field.");
 		}
 
-		return chain.ToString();
+		var propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), expression.GetMember(), expression);
+		return propertyName;
 	}
 }
