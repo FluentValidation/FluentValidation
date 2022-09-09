@@ -143,7 +143,7 @@ Example:
 ```csharp
 RuleFor(customer => customer.Surname).MinimumLength(10); //must be 10 chars or more
 ```
-Example error: *The length of 'Surname' must be at least 10 characters. You entered 20 characters.*
+Example error: *The length of 'Surname' must be at least 10 characters. You entered 5 characters.*
 
 Note: Only valid on string properties.
 
