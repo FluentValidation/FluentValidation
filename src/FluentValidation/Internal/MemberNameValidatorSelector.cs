@@ -73,13 +73,12 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 	}
 
 	private static string MemberFromExpression<T>(Expression<Func<T, object>> expression) {
-		var chain = PropertyChain.FromExpression(expression);
+		var propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), expression.GetMember(), expression);
 
-		if (chain.Count == 0) {
+		if (string.IsNullOrEmpty(propertyName)) {
 			throw new ArgumentException($"Expression '{expression}' does not specify a valid property or field.");
 		}
 
-		var propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), expression.GetMember(), expression);
 		return propertyName;
 	}
 }
