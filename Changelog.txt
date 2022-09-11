@@ -1,3 +1,6 @@
+11.2.2 - 11 September 2022
+MemberNameValidatorSelector should make use of PropertyNameResolver when parsing expressions (#2003)
+
 11.2.1 - 28 August 2022
 Fix test helper .Only() not taking into account parent-level unmatched failures (#1986)
 
