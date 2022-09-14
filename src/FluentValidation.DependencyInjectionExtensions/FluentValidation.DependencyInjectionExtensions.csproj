@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <AssemblyName>FluentValidation.DependencyInjectionExtensions</AssemblyName>
         <PackageId>FluentValidation.DependencyInjectionExtensions</PackageId>
         <Product>FluentValidation.DependencyInjectionExtensions</Product>
