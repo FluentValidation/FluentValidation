@@ -88,9 +88,6 @@ public static class DefaultValidatorOptions {
 	/// <para>
 	/// If set to <see cref="CascadeMode.Continue"/> then all validators in the chain will execute regardless of failures.
 	/// </para>
-	/// <para>
-	/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>, behavior is as with <see cref="CascadeMode.Stop"/>.
-	/// </para>
 	/// </summary>
 	public static IRuleBuilderInitial<T, TProperty> Cascade<T, TProperty>(this IRuleBuilderInitial<T, TProperty> ruleBuilder, CascadeMode cascadeMode) {
 		Configurable(ruleBuilder).CascadeMode = cascadeMode;
@@ -106,9 +103,6 @@ public static class DefaultValidatorOptions {
 	/// </para>
 	/// <para>
 	/// If set to <see cref="CascadeMode.Continue"/> then all validators in the chain will execute regardless of failures.
-	/// </para>
-	/// <para>
-	/// If set to the deprecated <see cref="CascadeMode.StopOnFirstFailure"/>, behaviour is as with <see cref="CascadeMode.Stop"/>.
 	/// </para>
 	/// </summary>
 	public static IRuleBuilderInitialCollection<T, TProperty> Cascade<T, TProperty>(this IRuleBuilderInitialCollection<T, TProperty> ruleBuilder, CascadeMode cascadeMode) {

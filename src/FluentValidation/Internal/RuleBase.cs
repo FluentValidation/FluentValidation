@@ -113,13 +113,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// </summary>
 	public CascadeMode CascadeMode {
 		get => _cascadeModeThunk();
-		set {
-#pragma warning disable 618
-			_cascadeModeThunk = value == CascadeMode.StopOnFirstFailure
-				? () => CascadeMode.Stop
-				: () => value;
-#pragma warning restore 618
-		}
+		set => _cascadeModeThunk = () => value;
 	}
 
 	/// <summary>

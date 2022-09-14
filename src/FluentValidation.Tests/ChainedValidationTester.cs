@@ -177,9 +177,7 @@ public class ChainedValidationTester {
 
 	public class DepartmentValidator : AbstractValidator<Department> {
 		public DepartmentValidator() {
-#pragma warning disable 618
-			CascadeMode = CascadeMode.StopOnFirstFailure;
-#pragma warning restore 618
+			RuleLevelCascadeMode = CascadeMode.Stop;
 			RuleFor(x => x.Manager).NotNull();
 			RuleFor(x => x.Assistant.Surname).NotEqual(x => x.Manager.Surname).When(x => x.Assistant != null && x.Manager.Surname != null);
 		}
