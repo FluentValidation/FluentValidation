@@ -28,23 +28,13 @@ public enum CascadeMode {
 	/// When a rule/validator fails, execution continues to the next rule/validator.
 	/// For more information, see the methods/properties that accept this enum as a parameter.
 	/// </summary>
-	Continue,
-	/// <summary>
-	/// For more information, see the methods/properties that accept this enum as a parameter.
-	/// </summary>
-	[Obsolete(
-		$"The behaviour of {nameof(StopOnFirstFailure)} has been replaced by use of the " +
-		$"separate validator-level properties {nameof(AbstractValidator<object>.ClassLevelCascadeMode)} " +
-		$"and {nameof(AbstractValidator<object>.RuleLevelCascadeMode)}, " +
-		$"and their global default equivalents. {nameof(StopOnFirstFailure)} will be removed in a later release. " +
-		"For more details, see https://docs.fluentvalidation.net/en/latest/cascade.html .")]
-	StopOnFirstFailure,
+	Continue = 0,
 
 	/// <summary>
 	/// When a rule/validator fails, validation is stopped for the current rule/validator.
 	/// For more information, see the methods/properties that accept this enum as a parameter.
 	/// </summary>
-	Stop,
+	Stop = 2, // Note Stop is 2 for backwards compatibility. The StopOnFirstFailure option was 1, which was removed in 12.0. This is explicitly set to 2 to prevent it from being automatically renumbered to 1.
 }
 
 /// <summary>
