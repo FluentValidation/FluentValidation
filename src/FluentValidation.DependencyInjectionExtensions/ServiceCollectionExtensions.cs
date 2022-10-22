@@ -25,6 +25,18 @@ using System.Reflection;
 
 public static class ServiceCollectionExtensions	{
 	/// <summary>
+	/// Adds a single validator explicitly
+	/// </summary>
+	/// <param name="services"></param>
+	/// <param name="lifetime"></param>
+	/// <typeparam name="T"></typeparam>
+	/// <returns></returns>
+	public static IServiceCollection AddValidator<T>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped) where T : IValidator<T> {
+		services.AddScanResult(new AssemblyScanner.AssemblyScanResult(typeof(IValidator<T>), typeof(T)), lifetime, null);
+		return services;
+	}
+
+	/// <summary>
 	/// Adds all validators in specified assemblies
 	/// </summary>
 	/// <param name="services">The collection of services</param>
