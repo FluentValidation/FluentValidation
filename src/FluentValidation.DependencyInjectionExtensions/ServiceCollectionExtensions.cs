@@ -24,15 +24,22 @@ using System.Collections.Generic;
 using System.Reflection;
 
 public static class ServiceCollectionExtensions	{
+
 	/// <summary>
-	/// Adds a single validator explicitly
+	/// Add explicit model and validator
 	/// </summary>
 	/// <param name="services"></param>
 	/// <param name="lifetime"></param>
-	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TModel"></typeparam>
+	/// <typeparam name="TValidator"></typeparam>
 	/// <returns></returns>
-	public static IServiceCollection AddValidator<T>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped) where T : IValidator<T> {
-		services.AddScanResult(new AssemblyScanner.AssemblyScanResult(typeof(IValidator<T>), typeof(T)), lifetime, null);
+	public static IServiceCollection AddValidator<TModel, TValidator>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped) where TValidator : class, IValidator<TModel> {
+		services.Add(
+			new ServiceDescriptor(
+				serviceType: typeof(IValidator<TModel>),
+				implementationType: typeof(TValidator),
+				lifetime: lifetime));
+
 		return services;
 	}
 
