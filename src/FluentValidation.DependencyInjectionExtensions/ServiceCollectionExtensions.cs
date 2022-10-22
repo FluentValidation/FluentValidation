@@ -28,10 +28,10 @@ public static class ServiceCollectionExtensions	{
 	/// <summary>
 	/// Add explicit model and validator
 	/// </summary>
-	/// <param name="services"></param>
-	/// <param name="lifetime"></param>
-	/// <typeparam name="TModel"></typeparam>
-	/// <typeparam name="TValidator"></typeparam>
+	/// <param name="services">The collection of services</param>
+	/// <param name="lifetime">The lifetime of the validators. The default is scoped (per-request in web applications)</param>
+	/// <typeparam name="TModel">The model to be validated. I.E. Person</typeparam>
+	/// <typeparam name="TValidator">The validator for the model. I.E. PersonValidator</typeparam>
 	/// <returns></returns>
 	public static IServiceCollection AddValidator<TModel, TValidator>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped) where TValidator : class, IValidator<TModel> {
 		services.Add(
