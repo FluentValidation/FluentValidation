@@ -97,7 +97,7 @@ public class PeopleController : Controller
   {
     // Inject our validator and also a DB context for storing our person object.
     _validator = validator;
-    _repository = personRepository;
+    _repository = repository;
   }
 
   public ActionResult Create() 
