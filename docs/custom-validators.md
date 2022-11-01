@@ -200,8 +200,3 @@ public class NotNullValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 }
 
 ```
-
-```eval_rst
-.. note::
-  Prior to FluentValidation 10.0, the PropertyValidator class did not have generic type parameters.
-```
