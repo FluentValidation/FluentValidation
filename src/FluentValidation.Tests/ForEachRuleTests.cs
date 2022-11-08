@@ -141,7 +141,7 @@ public class ForEachRuleTests {
 		result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
 	}
 
-	class request {
+	class Request {
 		public Person person = null;
 	}
 
@@ -158,10 +158,10 @@ public class ForEachRuleTests {
 
 	[Fact]
 	public void Nested_collection_for_null_property_should_not_throw_null_reference() {
-		var validator = new InlineValidator<request>();
+		var validator = new InlineValidator<Request>();
 		validator.When(r => r.person != null, () => { validator.RuleForEach(x => x.person.NickNames).NotNull(); });
 
-		var result = validator.Validate(new request());
+		var result = validator.Validate(new Request());
 		result.Errors.Count.ShouldEqual(0);
 	}
 
@@ -233,7 +233,7 @@ public class ForEachRuleTests {
 
 	[Fact]
 	public void Nested_conditions_Rule_For() {
-		var validator = new InlineValidator<request>();
+		var validator = new InlineValidator<Request>();
 		validator.When(r => true, () => {
 			validator.When(r => r.person?.NickNames?.Any() == true, () => {
 				validator.RuleFor(r => r.person.NickNames)
@@ -241,13 +241,13 @@ public class ForEachRuleTests {
 					.WithMessage("Failed RuleFor");
 			});
 		});
-		var result = validator.Validate(new request());
+		var result = validator.Validate(new Request());
 		result.IsValid.ShouldBeTrue();
 	}
 
 	[Fact]
 	public void Nested_conditions_Rule_For_Each() {
-		var validator = new InlineValidator<request>();
+		var validator = new InlineValidator<Request>();
 
 		validator.When(x => true, () => {
 			validator.When(r => r.person?.NickNames?.Any() == true, () => {
@@ -257,7 +257,7 @@ public class ForEachRuleTests {
 			});
 		});
 
-		var result = validator.Validate(new request());
+		var result = validator.Validate(new Request());
 		result.Errors.Count.ShouldEqual(0);
 	}
 
