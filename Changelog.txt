@@ -1,3 +1,9 @@
+11.3.0 - 10 Nov 2022
+Annotate string parameters with StringSyntaxAttribute.Regex in net7 builds (#1957)
+Fixes to SourceLink integration (#2019)
+Add Uzbek Latin and Cyrillic languages (#2013)
+Updates to Danish language (#2012)
+
 11.2.2 - 11 September 2022
 MemberNameValidatorSelector should make use of PropertyNameResolver when parsing expressions (#2003)
 
