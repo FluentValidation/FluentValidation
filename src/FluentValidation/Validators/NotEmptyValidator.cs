@@ -22,6 +22,7 @@ namespace FluentValidation.Validators;
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, INotEmptyValidator {
 
@@ -37,13 +38,7 @@ public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, I
 				return false;
 		}
 
-		//TODO: Rewrite to avoid boxing
-		if (Equals(value, default(TProperty))) {
-			// Note: Code analysis indicates "Expression is always false" but this is incorrect.
-			return false;
-		}
-
-		return true;
+		return !EqualityComparer<TProperty>.Default.Equals(value, default);
 	}
 
 	protected override string GetDefaultMessageTemplate(string errorCode) {
