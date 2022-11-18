@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0;net6.0;net7.0</TargetFrameworks>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>netstandard2.1;net7.0</TargetFrameworks>
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
     <PackageReleaseNotes>
 FluentValidation 11 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-11.html
@@ -17,7 +16,7 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <ContinuousIntegrationBuild Condition="'$(Configuration)'=='Release'">true</ContinuousIntegrationBuild>
-<!--    <EnablePackageValidation>true</EnablePackageValidation>-->
+    <EnablePackageValidation>false</EnablePackageValidation>
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1591</NoWarn>
