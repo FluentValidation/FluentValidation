@@ -44,6 +44,17 @@ public class TestValidationResult<T> : ValidationResult {
 		ShouldNotHaveValidationError(propertyName, true);
 	}
 
+	public void ShouldNotHaveAnyValidationErrors() {
+		ShouldNotHaveValidationError(ValidationTestExtension.MatchAnyFailure, true);
+	}
+
+	public ITestValidationContinuation ShouldHaveAnyValidationError() {
+		if (!Errors.Any())
+			throw new ValidationTestException($"Expected at least one validation error, but none were found.");
+
+		return new TestValidationContinuation(Errors);
+	}
+
 	public ITestValidationWith ShouldHaveValidationErrorFor(string propertyName) {
 		return ShouldHaveValidationError(propertyName, false);
 	}
@@ -52,8 +63,7 @@ public class TestValidationResult<T> : ValidationResult {
 		ShouldNotHaveValidationError(propertyName, false);
 	}
 
-	// TODO: Make private in 12.0
-	internal ITestValidationWith ShouldHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
+	private ITestValidationWith ShouldHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
 		var result = new TestValidationContinuation(Errors);
 		result.ApplyPredicate(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
 		                           || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
@@ -82,8 +92,7 @@ public class TestValidationResult<T> : ValidationResult {
 		throw new ValidationTestException(errorMessage);
 	}
 
-	// TODO: Make private in 12.0
-	internal void ShouldNotHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
+	private void ShouldNotHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
 		var failures = Errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
 		                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
 		                                 || propertyName == ValidationTestExtension.MatchAnyFailure
