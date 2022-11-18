@@ -11,7 +11,7 @@ public interface ITestValidationWith : ITestValidationContinuation {
 
 public interface ITestValidationContinuation : IEnumerable<ValidationFailure> {
 	IEnumerable<ValidationFailure> UnmatchedFailures { get; }
-	//TODO: 12.x expose MatchedFailures on the interface too.
+	IEnumerable<ValidationFailure> MatchedFailures { get; }
 }
 
 internal class TestValidationContinuation : ITestValidationContinuation, ITestValidationWith {
