@@ -1079,7 +1079,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="precision">Allowed precision of the value</param>
 	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
 	/// <returns></returns>
-	[Obsolete("Please use the PrecisionScale method instead, which takes precision as the first parameter and scale as the second.")]
+	[Obsolete("Please use the PrecisionScale method instead, which takes precision as the first parameter and scale as the second. See https://github.com/FluentValidation/FluentValidation/issues/2030 for further details")]
 	public static IRuleBuilderOptions<T, decimal> ScalePrecision<T>(this IRuleBuilder<T, decimal> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false)
 		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
 
@@ -1092,7 +1092,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="precision">Allowed precision of the value</param>
 	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
 	/// <returns></returns>
-	[Obsolete("Please use the PrecisionScale method instead, which takes precision as the first parameter and scale as the second.")]
+	[Obsolete("Please use the PrecisionScale method instead, which takes precision as the first parameter and scale as the second. See https://github.com/FluentValidation/FluentValidation/issues/2030 for further details")]
 	public static IRuleBuilderOptions<T, decimal?> ScalePrecision<T>(this IRuleBuilder<T, decimal?> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false)
 		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
 
