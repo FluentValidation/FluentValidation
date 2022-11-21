@@ -397,10 +397,10 @@ String format args:
 * `{From}` – Lower bound of the range
 * `{To}` – Upper bound of the range
 
-## ScalePrecision Validator
-Checks whether a decimal value has the specified scale and precision.
+## PrecisionScale Validator
+Checks whether a decimal value has the specified precision and scale.
 ```csharp
-RuleFor(x => x.Amount).ScalePrecision(2, 4);
+RuleFor(x => x.Amount).PrecisionScale(4, 2, false);
 ```
 Example error: *'Amount' must not be more than 4 digits in total, with allowance for 2 decimals. 5 digits and 3 decimals were found.*
 
@@ -412,4 +412,8 @@ String format args:
 * `{Digits}` – Total number of digits in the property value
 * `{ActualScale}` – Actual scale of the property value
 
-Note that this method contains an additional optional parameter `ignoreTrailingZeros`. When set to `true`, trailing zeros after the decimal point will not count towards the expected number of decimal places. By default, this is set to `false`.
+Note that the 3rd parameter of this method is `ignoreTrailingZeros`. When set to `true`, trailing zeros after the decimal point will not count towards the expected number of decimal places. 
+
+Example:
+- When `ignoreTrailingZeros` is `false` then the decimal `123.4500` will be considered to have a precision of 7 and scale of 4
+- When `ignoreTrailingZeros` is `true` then the decimal `123.4500` will be considered to have a precision of 5 and scale of 2. 
