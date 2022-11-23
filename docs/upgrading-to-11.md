@@ -85,7 +85,7 @@ RuleLevelCascadeMode = CascadeMode.Stop;
 
 ...or their global default equivalents. 
 
- See [this page in the documentation](https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode) for details of how cascade modes work and the reasons for this change.
+ See [this page in the documentation](https://docs.fluentvalidation.net/en/latest/conditions.html#setting-the-cascade-mode) for details of how cascade modes work.
 
 As `StopOnFirstFailure` is deprecated and scheduled for removal, it cannot be assigned to either of the two new `AbstractValidator` properties or their global equivalents (it still can be assigned to the also-deprecated `AbstractValidator.CascadeMode`). Attempting to set the new properties to `StopOnFirstFailure` will simply result in `Stop` being used instead.
 

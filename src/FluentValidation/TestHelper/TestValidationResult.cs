@@ -48,7 +48,7 @@ public class TestValidationResult<T> : ValidationResult {
 		ShouldNotHaveValidationError(ValidationTestExtension.MatchAnyFailure, true);
 	}
 
-	public ITestValidationContinuation ShouldHaveAnyValidationError() {
+	public ITestValidationContinuation ShouldHaveValidationErrors() {
 		if (!Errors.Any())
 			throw new ValidationTestException($"Expected at least one validation error, but none were found.");
 
