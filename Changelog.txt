@@ -1,3 +1,6 @@
+11.4.0 - 23 Nov 2022
+Deprecate ScalePrecision validator and introduce PrecisionScale validator as its replacement (#2030)
+
 11.3.0 - 10 Nov 2022
 Annotate string parameters with StringSyntaxAttribute.Regex in net7 builds (#1957)
 Fixes to SourceLink integration (#2019)
