@@ -27,7 +27,7 @@ public class ScalePrecisionValidatorTests {
 
 	[Fact]
 	public void Scale_precision_should_be_valid() {
-		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 4));
+		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).PrecisionScale(4, 2, false));
 
 		var result = validator.Validate(new Person { Discount = 12.34M });
 		result.IsValid.ShouldBeTrue();
@@ -47,7 +47,7 @@ public class ScalePrecisionValidatorTests {
 
 	[Fact]
 	public void Scale_precision_should_be_valid_nullable() {
-		var validator = new TestValidator(v => v.RuleFor(x => x.NullableDiscount).ScalePrecision(2, 4));
+		var validator = new TestValidator(v => v.RuleFor(x => x.NullableDiscount).PrecisionScale(4, 2, false));
 
 		var result = validator.Validate(new Person { NullableDiscount = 12.34M });
 		result.IsValid.ShouldBeTrue();
@@ -67,7 +67,7 @@ public class ScalePrecisionValidatorTests {
 
 	[Fact]
 	public void Scale_precision_should_not_be_valid() {
-		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 4));
+		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).PrecisionScale(4, 2, false));
 
 		var result = validator.Validate(new Person { Discount = 123.456778m });
 		result.IsValid.ShouldBeFalse();
@@ -100,7 +100,7 @@ public class ScalePrecisionValidatorTests {
 
 	[Fact]
 	public void Scale_precision_should_not_be_valid_nullable() {
-		var validator = new TestValidator(v => v.RuleFor(x => x.NullableDiscount).ScalePrecision(2, 4).WithName("Discount"));
+		var validator = new TestValidator(v => v.RuleFor(x => x.NullableDiscount).PrecisionScale(4, 2, false).WithName("Discount"));
 
 		var result = validator.Validate(new Person { NullableDiscount = 123.456778m });
 		result.IsValid.ShouldBeFalse();
@@ -125,7 +125,7 @@ public class ScalePrecisionValidatorTests {
 
 	[Fact]
 	public void Scale_precision_should_be_valid_when_they_are_equal() {
-		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 2));
+		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).PrecisionScale(2, 2, false));
 
 		var result = validator.Validate(new Person { Discount = 0.34M });
 		result.IsValid.ShouldBeTrue();
@@ -142,7 +142,7 @@ public class ScalePrecisionValidatorTests {
 
 	[Fact]
 	public void Scale_precision_should_not_be_valid_when_they_are_equal() {
-		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 2));
+		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).PrecisionScale(2, 2, false));
 
 		var result = validator.Validate(new Person { Discount = 123.456778m });
 		result.IsValid.ShouldBeFalse();
@@ -167,7 +167,7 @@ public class ScalePrecisionValidatorTests {
 
 	[Fact]
 	public void Scale_precision_should_be_valid_when_ignoring_trailing_zeroes() {
-		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 4, true));
+		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).PrecisionScale(4, 2, true));
 
 		var result = validator.Validate(new Person { Discount = 15.0000000000000000000000000M });
 		result.IsValid.ShouldBeTrue();
@@ -181,7 +181,7 @@ public class ScalePrecisionValidatorTests {
 
 	[Fact]
 	public void Scale_precision_should_not_be_valid_when_ignoring_trailing_zeroes() {
-		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).ScalePrecision(2, 4, true));
+		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).PrecisionScale(4, 2, true));
 
 		var result = validator.Validate(new Person { Discount = 1565.0M });
 		result.IsValid.ShouldBeFalse();

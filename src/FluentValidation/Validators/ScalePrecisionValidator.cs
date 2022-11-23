@@ -37,6 +37,8 @@ using System;
 /// and precision of 2 and 5 respectively.
 /// </summary>
 public class ScalePrecisionValidator<T> : PropertyValidator<T, decimal> {
+
+	// TODO: For 12.0 swap the parameter order to match the PrecisionScale extension methods and add parameter for IgnoreTrailingZeros.
 	public ScalePrecisionValidator(int scale, int precision) {
 		Init(scale, precision);
 	}

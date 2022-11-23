@@ -214,13 +214,13 @@ public class DefaultValidatorExtensionTester {
 
 	[Fact]
 	public void ScalePrecision_should_create_ScalePrecisionValidator() {
-		validator.RuleFor(x => x.Discount).ScalePrecision(2, 5);
+		validator.RuleFor(x => x.Discount).PrecisionScale(5, 2, false);
 		AssertValidator<ScalePrecisionValidator<Person>>();
 	}
 
 	[Fact]
 	public void ScalePrecision_should_create_ScalePrecisionValidator_with_ignore_trailing_zeros() {
-		validator.RuleFor(x => x.Discount).ScalePrecision(2, 5, true);
+		validator.RuleFor(x => x.Discount).PrecisionScale(5, 2, true);
 		AssertValidator<ScalePrecisionValidator<Person>>();
 	}
 
