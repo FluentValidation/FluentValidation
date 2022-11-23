@@ -25,11 +25,6 @@ The two cascade modes are:
 - `Continue` (the default) - always invokes all rules in a validator class, or all validators in a rule, depending on where it is used (see below).
 - `Stop` - stops executing a validator class as soon as a rule fails, or stops executing a rule as soon as a validator fails, depending on where it is used (see below).
 
-```eval_rst
-.. warning::
-  The Stop option is only available in FluentValidation 9.1 and newer. In older versions, you can use StopOnFirstFailure instead (see "Stop vs StopOnFirstFailure").
-```
-
 If you have a validator class with multiple rules, and would like this `Stop` behaviour to be set for all of your rules, you could do e.g.:
 ```csharp
 RuleFor(x => x.Forename).Cascade(CascadeMode.Stop).NotNull().NotEqual("foo");
@@ -60,45 +55,19 @@ To set the default cascade modes at rule-level and/or validator class-level glob
 
 ```eval_rst
 .. warning::
-  The RuleLevelCascadeMode, ClassLevelCascadeMode, and their global defaults are only available in FluentValidation 11 and newer. See below.
+  The RuleLevelCascadeMode, ClassLevelCascadeMode, and their global defaults are only available in FluentValidation 11 and newer.
 ```
 
-## Introduction of RuleLevelCascadeMode and ClassLevelCascadeMode (and deprecation of CascadeMode)
+## Introduction of RuleLevelCascadeMode and ClassLevelCascadeMode (and removal of CascadeMode)
 The `AbstractValidator.RuleLevelCascadeMode`, `AbstractValidator.ClassLevelCascadeMode`, and their global defaults were introduced in FluentValidation 11
 
-In older versions, there was only one property controlling cascade modes: `AbstractValidator.CascadeMode`. Changing this value would set the cascade mode at both validator class-level and rule-level. Therefore, for example, if you wanted to have the above-described functionality where you create a list of validation errors, by stopping on failure at rule-level to avoid crashes, but continuing at validator class-level, you would need to set `AbstractValidator.CascadeMode` to `Continue`, and then repeat `Cascade(CascadeMode.Stop)` on every rule chain (or use the deprecated `StopOnFirstFailure` with a warning; see "Stop vs StopOnFirstFailure").
+In older versions, there was only one property controlling cascade modes: `AbstractValidator.CascadeMode`. Changing this value would set the cascade mode at both validator class-level and rule-level. Therefore, for example, if you wanted to have the above-described functionality where you create a list of validation errors, by stopping on failure at rule-level to avoid crashes, but continuing at validator class-level, you would need to set `AbstractValidator.CascadeMode` to `Continue`, and then repeat `Cascade(CascadeMode.Stop)` on every rule chain.
 
 The new properties enable finer control of the cascade mode at the different levels, with less repetition.
 
 ```eval_rst
 .. warning::
-  In FluentValidation11, there are _no_ breaking changes to cascade modes. The `AbstractValidator.CascadeMode` property (and its global default property) are still present, and they function exactly the same as they did before, but they do so by setting / returning the values of `RuleLevelCascadeMode` and `ClassLevelCascadeMode`, as opposed to being used by the code directly.
-
-  However, `AbstractValidator.CascadeMode` and its global default are deprecated, and will be removed in a future version. To convert to the new properties, see `the upgrade guide <upgrading-to-11.html#cascade-mode-changes>`_.
+  The `CascadeMode` property was deprecated in FluentValidation 11 and removed in FluentValidation 12. The `RuleLevelCascadeMode` and `ClassLevelCascadeMode` properties should be used instead.
+  
+  To convert to the new properties, see `the upgrade guide <upgrading-to-11.html#cascade-mode-changes>`_.
 ```
-
-## Stop vs StopOnFirstFailure
-
-In FluentValidation 9.0 and older, the `CascadeMode.StopOnFirstFailure` option was used to provide control over the default cascade mode at rule-level, but its use was not intuitive. There was no  `CascadeMode.Stop` option. 
-
-With `StopOnFirstFailure`,  the following would provide the example behavior described previously (stop any rule if it fails, but then continue executing at validator class-level, so that all rules are executed):
-
-```csharp
-CascadeMode = CascadeMode.StopOnFirstFailure;
-
-RuleFor(x => x.Forename).NotNull().NotEqual("foo");
-RuleFor(x => x.MiddleNames).NotNull().NotEqual("foo");
-RuleFor(x => x.Surname).NotNull().NotEqual("foo");
-```
-If they all fail, you will get three validation errors. That is the equivalent of doing
-
-```csharp
-RuleFor(x => x.Forename).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqual("foo");
-RuleFor(x => x.MiddleNames).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqual("foo");
-RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().NotEqual("foo");
-```
-This behaviour caused a lot of confusion over the years, so the `Stop` option was introduced in FluentValidation 9.1. Using `Stop` instead of `StopOnFirstFailure`, _any_ failure at all would stop execution, so only the first failure result would be returned.
-
-The `Stop` option was introduced rather than changing the behaviour of `StopOnFirstFailure` as this would've been a very subtle breaking change, so we thought it was best to maintain the existing behaviour while adding a new option. `StopOnFirstFailure` was marked as Obsolete in FluentValidation 9.1, and generated compiler warnings.
-
-See also the FluentValidation 11 changes described above, that further change how the above code would be written. `StopOnFirstFailure` is still available as of version 11 and has no breaking changes to how it functions. However, in a future version, it _will_ be removed, now that it's possible to replicate its behavior using the new properties `AbstractValidator.RuleLevelCascadeMode` and `AbstractValidator.ClassLevelCascadeMode`.

@@ -125,6 +125,7 @@ Example
   :maxdepth: 1
   :caption: Upgrading
 
+  upgrading-to-12
   upgrading-to-11
   upgrading-to-10
   upgrading-to-9
