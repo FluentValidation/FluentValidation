@@ -143,6 +143,12 @@ public class LengthValidatorTests {
 		result.Errors.Single().ErrorMessage.ShouldEqual("The length of 'Surname' must be at least 4 characters. You entered 3 characters.");
 	}
 
+	[Fact]
+	public void When_the_minlength_validator_fails_the_content_is_null_and_error_message_should_be_set() {
+		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).MinimumLength(4));
+		var result = validator.Validate(new Person { Surname = null });
+		result.Errors.Single().ErrorMessage.ShouldEqual("The length of 'Surname' must be at least 4 characters. You entered 0 characters.");
+	}
 
 	[Fact]
 	public void When_the_maxlength_validator_fails_the_error_message_should_be_set() {

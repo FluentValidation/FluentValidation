@@ -20,7 +20,7 @@ namespace FluentValidation.Validators;
 
 using System;
 
-public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator {
+public class LengthValidator<T> : PropertyValidator<T, string>, ILengthValidator {
 	public override string Name => "LengthValidator";
 
 	public int Min { get; }
@@ -76,7 +76,7 @@ public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator 
 public class ExactLengthValidator<T> : LengthValidator<T>, IExactLengthValidator {
 	public override string Name => "ExactLengthValidator";
 
-	public ExactLengthValidator(int length) : base(length,length) {
+	public ExactLengthValidator(int length) : base(length, length) {
 
 	}
 
@@ -123,6 +123,29 @@ public class MinimumLengthValidator<T> : LengthValidator<T>, IMinimumLengthValid
 
 	protected override string GetDefaultMessageTemplate(string errorCode) {
 		return Localized(errorCode, Name);
+	}
+
+	public override bool IsValid(ValidationContext<T> context, string value) {
+		var min = Min;
+		var max = Max;
+
+		if (MaxFunc != null && MinFunc != null) {
+			max = MaxFunc(context.InstanceToValidate);
+			min = MinFunc(context.InstanceToValidate);
+		}
+
+		int length = value?.Length ?? 0;
+
+		if (length < min || (length > max && max != -1)) {
+			context.MessageFormatter
+				.AppendArgument("MinLength", min)
+				.AppendArgument("MaxLength", max)
+				.AppendArgument("TotalLength", length);
+
+			return false;
+		}
+
+		return true;
 	}
 }
 
