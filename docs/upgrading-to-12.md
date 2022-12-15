@@ -4,13 +4,16 @@
 
 FluentValidation 12.0 is a major release that included several breaking changes. Please review this document carefully before upgrading from FluentValidation 11.x to 12.
 
-The main goal of this release was removal of deprecated code and removal of support for obsolete platforms.
+The main goal of this release was removal of deprecated code and removal of support for obsolete platforms. There are no new features in this release.
 
 ### Changes in supported platforms
 
 - .NET 5 is no longer supported (Microsoft's support for .NET 5 ended in November 2022)
 - .NET Core 3.1 is no longer supported (Microsoft's support for .NET Core 3.1 ended in December 2022)
 - .NET Standard 2.0 is no longer supported as FluentValidation 12 is not intended to be run under .NET 4.x. 
+- .NET Standard 2.1 is now the minimum supported platform.
+
+If you still need .NET Standard 2.0 compatibility then you will need to continue to use FluentValidation 11.x and only upgrade to FluentValidation 12 once you've moved to a more modern version of .NET.  
 
 ### Removal of CascadeMode.StopOnFirstFailure
 
