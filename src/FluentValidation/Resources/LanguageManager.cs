@@ -65,6 +65,7 @@ public class LanguageManager : ILanguageManager {
 			ItalianLanguage.Culture => ItalianLanguage.GetTranslation(key),
 			IndonesianLanguage.Culture => IndonesianLanguage.GetTranslation(key),
 			JapaneseLanguage.Culture => JapaneseLanguage.GetTranslation(key),
+			KazakhLanguage.Culture => KazakhLanguage.GetTranslation(key),
 			KoreanLanguage.Culture => KoreanLanguage.GetTranslation(key),
 			MacedonianLanguage.Culture => MacedonianLanguage.GetTranslation(key),
 			NorwegianBokmalLanguage.Culture => NorwegianBokmalLanguage.GetTranslation(key),
