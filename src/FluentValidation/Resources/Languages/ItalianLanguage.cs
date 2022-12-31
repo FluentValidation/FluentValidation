@@ -45,7 +45,7 @@ internal class ItalianLanguage {
 		"AsyncPredicateValidator" => "La condizione non è verificata per '{PropertyName}'.",
 		"RegularExpressionValidator" => "'{PropertyName}' non è nel formato corretto.",
 		"CreditCardValidator" => "'{PropertyName}' non è un numero di carta di credito valido.",
-		"ScalePrecisionValidator" => "'{PropertyName}' potrebbe non avere più di {ExpectedPrecision} cifre in totale, con una tolleranza per {ExpectedScale} decimali. Sono stati trovate {Digits} cifre e {ActualScale} decimali.",
+		"ScalePrecisionValidator" => "'{PropertyName}' non può avere più di {ExpectedPrecision} cifre in totale, con una tolleranza per {ExpectedScale} decimali. Sono state trovate {Digits} cifre e {ActualScale} decimali.",
 		"EmptyValidator" => "'{PropertyName}' dovrebbe essere vuoto.",
 		"NullValidator" => "'{PropertyName}' dovrebbe essere vuoto.",
 		"EnumValidator" => "'{PropertyName}' ha un intervallo di valori che non include '{PropertyValue}'.",
