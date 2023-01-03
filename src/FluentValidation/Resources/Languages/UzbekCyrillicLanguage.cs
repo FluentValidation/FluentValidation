@@ -26,7 +26,7 @@ internal class UzbekCyrillicLanguage {
 	public const string Culture = "uz-Cyrl-UZ";
 
 	public static string GetTranslation(string key) => key switch {
-		"EmailValidator" => "'{PropertyName}' яроқли электрон манзил эмас.",
+		"EmailValidator" => "'{PropertyName}' яроқли электрон почта манзили эмас.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' камида '{ComparisonValue}'га тенг бўлиши шарт.",
 		"GreaterThanValidator" => "'{PropertyName}' '{ComparisonValue}'дан катта бўлиши шарт.",
 		"LengthValidator" => "'{PropertyName}' {MinLength}тадан {MaxLength}тагача белгидан иборат бўлиши шарт. Сиз {TotalLength}та белги киритдингиз.",
