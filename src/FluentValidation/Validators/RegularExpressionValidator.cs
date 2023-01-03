@@ -58,7 +58,7 @@ public class RegularExpressionValidator<T> : PropertyValidator<T,string>, IRegul
 
 	public override bool IsValid(ValidationContext<T> context, string value) {
 		if (value == null) {
-			return true	
+			return true;
 		}
 		
 		var regex = _regexFunc(context.InstanceToValidate);
