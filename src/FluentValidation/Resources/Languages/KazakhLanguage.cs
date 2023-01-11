@@ -41,7 +41,7 @@ internal class KazakhLanguage {
 		"AsyncPredicateValidator" => "'{PropertyName}' үшін көрсетілген шарт орындалмады.",
 		"RegularExpressionValidator" => "'{PropertyName}' дұрыс пішімде емес.",
 		"EqualValidator" => "'{PropertyName}' '{ComparisonValue}' мәніне тең болуы керек.",
-		"ExactLengthValidator" => "'{PropertyName}' ұзындығы {MaxLength} таңба болуы керек. Енгізілген таңбалар саны: {TotalLength}.	",
+		"ExactLengthValidator" => "'{PropertyName}' ұзындығы {MaxLength} таңба болуы керек. Енгізілген таңбалар саны: {TotalLength}.",
 		"InclusiveBetweenValidator" => "'{PropertyName}' {From} және {To} аралығында болуы керек. Енгізілген мән: {PropertyValue}.",
 		"ExclusiveBetweenValidator" => "'{PropertyName}' {From} және {To} аралығында болуы керек (осы мәндерді қоспағанда). Енгізілген мән: {PropertyValue}.",
 		"CreditCardValidator" => "'{PropertyName}' қате карта нөмірі.",
