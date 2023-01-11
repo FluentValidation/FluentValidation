@@ -26,7 +26,7 @@ internal class UzbekLatinLanguage {
 	public const string Culture = "uz";
 
 	public static string GetTranslation(string key) => key switch {
-		"EmailValidator" => "'{PropertyName}' yaroqli elektron manzil emas.",
+		"EmailValidator" => "'{PropertyName}' yaroqli elektron pochta manzili emas.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' kamida '{ComparisonValue}'ga teng bo'lishi shart.",
 		"GreaterThanValidator" => "'{PropertyName}' '{ComparisonValue}'dan katta bo'lishi shart.",
 		"LengthValidator" => "'{PropertyName}' {MinLength}tadan {MaxLength}tagacha belgidan iborat bo'lishi shart. Siz {TotalLength}ta belgi kiritdingiz.",
