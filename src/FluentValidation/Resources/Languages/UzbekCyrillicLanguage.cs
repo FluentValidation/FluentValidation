@@ -48,7 +48,7 @@ internal class UzbekCyrillicLanguage {
 		"ScalePrecisionValidator" => "'{PropertyName}' бутун қисми жами {ExpectedPrecision}та рақамдан ошмаслиги шарт, жумладан рухсат этилган {ExpectedScale} хона каср(лар) аниқликда. Бутун қисмда {Digits}та рақам(лар) ва {ActualScale} хона каср(лар) топилди.",
 		"EmptyValidator" => "'{PropertyName}' бўш бўлиши шарт.",
 		"NullValidator" => "'{PropertyName}' бўш бўлиши шарт.",
-		"EnumValidator" => "'{PropertyName}' қийматлари орасида '{PropertyValue}' ёъқ.",
+		"EnumValidator" => "'{PropertyName}' қийматлари орасида '{PropertyValue}' йўқ.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' {MinLength}тадан {MaxLength}тагача белгидан иборат бўлиши шарт.",
 		"MinimumLength_Simple" => "'{PropertyName}' камида {MinLength}та белгидан иборат бўлиши шарт.",
