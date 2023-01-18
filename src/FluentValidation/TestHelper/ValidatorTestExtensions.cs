@@ -85,9 +85,16 @@ public static class ValidationTestExtension {
 	/// </summary>
 	public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null) {
 		options ??= _ => { };
+		return TestValidate(validator, ValidationContext<T>.CreateWithOptions(objectToTest, options));
+	}
+
+	/// <summary>
+	/// Performs validation, returning a TestValidationResult which allows assertions to be performed.
+	/// </summary>
+	public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, ValidationContext<T> context) {
 		ValidationResult validationResult;
 		try {
-			validationResult = validator.Validate(objectToTest, options);
+			validationResult = validator.Validate(context);
 		}
 		catch (AsyncValidatorInvokedSynchronouslyException ex) {
 			throw new AsyncValidatorInvokedSynchronouslyException(ex.ValidatorType.Name + " contains asynchronous rules - please use the asynchronous test methods instead.");
@@ -99,14 +106,21 @@ public static class ValidationTestExtension {
 	/// <summary>
 	/// Performs async validation, returning a TestValidationResult which allows assertions to be performed.
 	/// </summary>
-	public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) {
+	public static Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) {
 		options ??= _ => { };
-		var validationResult = await validator.ValidateAsync(objectToTest, options, cancellationToken);
+		return TestValidateAsync(validator, ValidationContext<T>.CreateWithOptions(objectToTest, options), cancellationToken);
+	}
+
+	/// <summary>
+	/// Performs async validation, returning a TestValidationResult which allows assertions to be performed.
+	/// </summary>
+	public static async Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, ValidationContext<T> context, CancellationToken cancellationToken = default) {
+		var validationResult = await validator.ValidateAsync(context, cancellationToken);
 		return new TestValidationResult<T>(validationResult);
 	}
 
 	// TODO: 12.0: Move this to an instance method on TestValidationResult
-	public static ITestValidationContinuation ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) {
+		public static ITestValidationContinuation ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) {
 		if (!testValidationResult.Errors.Any())
 			throw new ValidationTestException($"Expected at least one validation error, but none were found.");
 
