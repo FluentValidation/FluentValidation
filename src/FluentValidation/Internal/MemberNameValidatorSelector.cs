@@ -56,9 +56,43 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 		bool isChildContext = context.IsChildContext;
 		bool cascadeEnabled = !context.RootContextData.ContainsKey(DisableCascadeKey);
 
-		return (isChildContext && cascadeEnabled && !_memberNames.Any(x => x.Contains(".")))
-		       || rule is IIncludeRule
-		       || ( _memberNames.Any(x => x == propertyPath || propertyPath.StartsWith(x + ".") || x.StartsWith(propertyPath + ".")));
+		// If a child validator is being executed and the cascade is enabled (which is the default)
+		// then the child validator's rule should always be included.
+		// The only time this isn't the case is if the member names contained for inclusion are for child
+		// properties (which is indicated by them containing a period).
+		if (isChildContext && cascadeEnabled && !_memberNames.Any(x => x.Contains('.'))) {
+			return true;
+		}
+
+		// Rules included via Include() are always executed.
+		if (rule is IIncludeRule) {
+			return true;
+		}
+
+		// If the current property path is equal to any of the member names for inclusion
+		// or it's a child property path (indicated by a period) where we have a partial match.
+		foreach (var memberName in _memberNames) {
+			// If the property path is equal to any of the input member names then it should be executed.
+			if (memberName == propertyPath) {
+				return true;
+			}
+
+			// If the property path is for a child property,
+			// and the parent property is selected for inclusion,
+			// then it should be allowed to execute.
+			if (propertyPath.StartsWith(memberName + ".")) {
+				return true;
+			}
+
+			// If the property path is for a parent property,
+			// and any of its child properties are selected for inclusion
+			// then it should be allowed to execute
+			if (memberName.StartsWith(propertyPath + ".")) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/// <summary>
