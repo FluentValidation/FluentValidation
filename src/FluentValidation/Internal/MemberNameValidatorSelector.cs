@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 /// <summary>
 /// Selects validators that are associated with a particular property.
@@ -90,6 +91,19 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 			if (memberName.StartsWith(propertyPath + ".")) {
 				return true;
 			}
+
+			// If the property path is for parent property,
+			// it's a collection
+			if (memberName.StartsWith(propertyPath + "[")) {
+				return true;
+			}
+			// If property path is for child property within collection,
+			// and member path contains wildcard []
+			// then it should be allowed to execute
+			if (Regex.IsMatch(propertyPath, memberName.Replace("[]", @"\[\d+\]"))) {
+				return true;
+			}
+
 		}
 
 		return false;
