@@ -105,6 +105,12 @@ public interface IOrder {
 public class Order : IOrder {
 	public string ProductName { get; set; }
 	public decimal Amount { get; set; }
+
+	public List<Payment> Payments { get; set; }
+}
+
+public class Payment {
+	public decimal Amount { get; set; }
 }
 
 public enum EnumGender

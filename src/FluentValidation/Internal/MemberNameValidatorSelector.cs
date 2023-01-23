@@ -32,7 +32,7 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 	readonly IEnumerable<string> _memberNames;
 
 	// Regex for normalizing collection indicies from Orders[0].Name to Orders[].Name
-	private static Regex _collectionIndexNormalizer = new Regex(@"\[.*\]", RegexOptions.Compiled);
+	private static Regex _collectionIndexNormalizer = new Regex(@"\[.*?\]", RegexOptions.Compiled);
 
 	/// <summary>
 	/// Creates a new instance of MemberNameValidatorSelector.
@@ -119,7 +119,15 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 					normalizedPropertyPath = _collectionIndexNormalizer.Replace(propertyPath, "[]");
 				}
 
-				if (normalizedPropertyPath == memberName) {
+				if (memberName == normalizedPropertyPath) {
+					return true;
+				}
+
+				if (memberName.StartsWith(normalizedPropertyPath + ".")) {
+					return true;
+				}
+
+				if (memberName.StartsWith(normalizedPropertyPath + "[")) {
 					return true;
 				}
 			}
