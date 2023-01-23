@@ -31,6 +31,9 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 	internal const string DisableCascadeKey = "_FV_DisableSelectorCascadeForChildRules";
 	readonly IEnumerable<string> _memberNames;
 
+	// Regex for normalizing collection indicies from Orders[0].Name to Orders[].Name
+	private static Regex _collectionIndexNormalizer = new Regex(@"\[.*\]", RegexOptions.Compiled);
+
 	/// <summary>
 	/// Creates a new instance of MemberNameValidatorSelector.
 	/// </summary>
@@ -70,6 +73,10 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 			return true;
 		}
 
+		// Stores the normalized property name if we're working with collection properties
+		// eg Orders[0].Name -> Orders[].Name. This is only initialized if needed (see below).
+		string normalizedPropertyPath = null;
+
 		// If the current property path is equal to any of the member names for inclusion
 		// or it's a child property path (indicated by a period) where we have a partial match.
 		foreach (var memberName in _memberNames) {
@@ -92,18 +99,30 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 				return true;
 			}
 
-			// If the property path is for parent property,
-			// it's a collection
+			// If the property path is for a collection property
+			// and a child property for this collection has been passed in for inclusion.
+			// For example, memberName is "Orders[0].Amount"
+			// and propertyPath is "Orders" then it should be allowed to execute.
 			if (memberName.StartsWith(propertyPath + "[")) {
 				return true;
 			}
-			// If property path is for child property within collection,
-			// and member path contains wildcard []
-			// then it should be allowed to execute
-			if (Regex.IsMatch(propertyPath, memberName.Replace("[]", @"\[\d+\]"))) {
-				return true;
-			}
 
+			// If property path is for child property within collection,
+			// and member path contains wildcard [] then this means that we want to match
+			// with all items in the collection, but we need to normalize the property path
+			// in order to match. For example, if the propertyPath is "Orders[0].Name"
+			// and the memberName for inclusion is "Orders[].Name" then this should
+			// be allowed to match.
+			if (memberName.Contains("[]")) {
+				if (normalizedPropertyPath == null) {
+					// Normalize the property path using a regex. Orders[0].Name -> Orders[].Name.
+					normalizedPropertyPath = _collectionIndexNormalizer.Replace(propertyPath, "[]");
+				}
+
+				if (normalizedPropertyPath == memberName) {
+					return true;
+				}
+			}
 		}
 
 		return false;
