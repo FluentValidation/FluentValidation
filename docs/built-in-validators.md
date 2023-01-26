@@ -262,10 +262,12 @@ String format args:
 * `{RegularExpression}` – Regular expression that was not matched
 
 ## Email Validator
+
+### Overload 1
 Ensures that the value of the specified property is a valid email address format.
 Example:
 ```csharp
-RuleFor(customer => customer.Email).EmailAddress();
+RuleFor(customer => customer.Email).EmailAddress(EmailValidationMode.AspNetCoreCompatible);
 ```
 Example error: *'Email' is not a valid email address.*
 
@@ -285,6 +287,16 @@ Alternatively, you can use the old email validation behaviour that uses a regula
 .. note::
   In FluentValidation 9, the ASP.NET Core-compatible "simple" check is the default mode. In FluentValidation 8.x (and older), the Regex mode is the default.
 ```
+
+### Overload 2
+Ensures that the value of the specified property is a valid email address format using a regex match.
+Example:
+```csharp
+RuleFor(customer => customer.Email).EmailAddress();
+```
+regex:```^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-||_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+([a-z]+|\d|-|\.{0,1}|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])?([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$```
+
+link to implementation regex: https://github.com/FluentValidation/FluentValidation/blob/main/src/FluentValidation/Validators/EmailValidator.cs
 
 ## Credit Card Validator
 Checks whether a string property could be a valid credit card number.
