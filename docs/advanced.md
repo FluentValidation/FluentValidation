@@ -55,3 +55,40 @@ RuleFor(x => x.Surname).Custom((x, context) =>
   }
 });
 ```
+
+## Customizing the Validation Exception
+
+If you use the `ValidateAndThrow` method to [throw an exception when validation fails](start.html#throwing-exceptions) FluentValidation will internally throw a `ValidationException`. You can customzie this behaviour so a different exception is thrown by overriding the `RaiseValidationException` in your validator. 
+
+This simplistic example wraps the default `ValidaitionException` in an `ArgumentException` instead:
+
+```csharp
+protected override void RaiseValidationException(ValidationContext<T> context, ValidationResult result)
+{
+    var ex = new ValidationException(result.Errors);
+    throw new ArgumentException(ex.Message, ex);
+}
+```
+
+This approach is useful if you always want to throw a specific custom exception type every time `ValidateAndThrow` is invoked.
+
+As an alternative you could create your own extension method that calls `Validate` and then throws your own custom exception if there are validation errors. 
+
+
+```csharp
+public static class FluentValidationExtensions
+{
+    public static void ValidateAndThrowArgumentException<T>(this IValidator<T> validator, T instance)
+    {
+        var res = validator.Validate(instance);
+
+        if (!res.IsValid)
+        {
+            var ex = new ValidationException(res.Errors);
+            throw new ArgumentException(ex.Message, ex);
+        }
+    }
+}
+```
+
+This approach is more useful if you only want to throw the custom exception when your specific method is invoked, rather than any time `ValidateAndThrow` is invoked.

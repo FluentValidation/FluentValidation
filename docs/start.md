@@ -139,48 +139,7 @@ validator.Validate(customer, options =>
 });
 ```
 
-# Customize exception thrown
-If you want, you can customize which exceptions are thrown on validation errors. From the outset, you can define this behaviour in the base-class of your validators, or you can write your own extension-method. Both strategies builds on top of the existing code base.
-
-
-  1. Create your own extension method that calls the validation and throws exception if there are validation errors. 
-  2. Create a subclass of `AbstractValidator`
-
-for (1) the implementation could be
-
-```
-public static class FluentValidationExtensions
-{
-    public static void ValidateAndThrowArgumentException<T>(this IValidator<T> validator, T instance)
-    {
-        var res = validator.Validate(instance);
-
-        if (!res.IsValid)
-        {
-            var ex = new ValidationException(res.Errors);
-            throw new ArgumentException(ex.Message, ex);
-        }
-    }
-}
-```
-
-for (2) The implementation could be
-
-```
-public class ThrowArgumentExceptionValidator<T> : AbstractValidator<T>
-{
-    protected override void RaiseValidationException(ValidationContext<T> context, ValidationResult result)
-    {
-        var ex = new ValidationException(result.Errors);
-        throw new ArgumentException(ex.Message, ex);
-    }
-}
-```
-
-(1) is perhaps the least intrusive, as the validation implementations themselves are untouched. Only the explicit calls to the validation framework are affected. Hence the same rules can be applied in cases where an exception should be thrown and in other cases where they should not.
-
-(2) Is more invasive in all validation implementations by requiring a new base-class. On The other hand, it may be a natural place for company specific customizations.
-
+It is also possible to customize type of exception thrown, [which is covered in this section](advanced.html#customizing-the-validation-exception).
 
 # Complex Properties
 
