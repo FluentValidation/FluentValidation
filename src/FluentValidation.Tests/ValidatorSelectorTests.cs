@@ -18,8 +18,11 @@
 
 namespace FluentValidation.Tests;
 
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Xunit;
 using System.Threading.Tasks;
+using Internal;
 
 public class ValidatorSelectorTests {
 
@@ -163,6 +166,123 @@ public class ValidatorSelectorTests {
 		result.Errors.Count.ShouldEqual(0);
 	}
 
+	[Fact]
+	public void Only_validates_doubly_nested_property() {
+		var person = new Person {
+			Address = new Address {
+				Country = new Country()
+			},
+			Orders = new List<Order> {
+				new() {Amount = 5},
+				new() {ProductName = "Foo"}
+			}
+		};
+
+		var validator = new InlineValidator<Person>();
+		validator.RuleFor(x => x.Address.Country.Name).NotEmpty();
+
+		// ChildRules should not be included. Bug prior to 11.1.1 meant that ChildRules were
+		// incorrectly included for execution.
+		validator.RuleForEach(x => x.Orders).ChildRules(x => {
+			x.RuleFor(y => y.Amount).GreaterThan(6);
+			x.RuleFor(y => y.ProductName).MinimumLength(5);
+		});
+
+		var result = validator.Validate(person, options => options.IncludeProperties("Address.Country.Name"));
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors[0].PropertyName.ShouldEqual("Address.Country.Name");
+		result.Errors[0].ErrorMessage.ShouldEqual("'Address Country Name' must not be empty.");
+	}
+
+	[Fact]
+	public void Only_validates_child_property_for_single_item_in_collection() {
+		var person = new Person {
+			Address = new Address {
+				Country = new Country()
+			},
+			Orders = new List<Order> {
+				new() {Amount = 5},
+				new() {ProductName = "Foo"}
+			}
+		};
+
+		var validator = new InlineValidator<Person>();
+		validator.RuleFor(x => x.Address.Country.Name).NotEmpty();
+		validator.RuleForEach(x => x.Orders).ChildRules(x => {
+			x.RuleFor(y => y.Amount).GreaterThan(6);
+			x.RuleFor(y => y.ProductName).MinimumLength(5);
+		});
+
+		var result = validator.Validate(person, opt => opt.IncludeProperties("Orders[1].Amount"));
+		result.Errors.Count.ShouldEqual(1);
+		result.Errors[0].PropertyName.ShouldEqual("Orders[1].Amount");
+		result.Errors[0].ErrorMessage.ShouldEqual("'Amount' must be greater than '6'.");
+	}
+
+	[Fact]
+	public void Only_validates_single_child_property_of_all_elements_in_collection() {
+		var person = new Person {
+			Address = new Address {
+				Country = new Country()
+			},
+			Orders = new List<Order> {
+				new() {Amount = 5},
+				new() {ProductName = "Foo"},
+				new() {Amount = 10}
+			}
+		};
+
+		var validator = new InlineValidator<Person>();
+		validator.RuleFor(x => x.Address.Country.Name).NotEmpty();
+		validator.RuleForEach(x => x.Orders).ChildRules(x => {
+			x.RuleFor(y => y.Amount).GreaterThan(6);
+			x.RuleFor(y => y.ProductName).MinimumLength(5);
+		});
+
+		var result = validator.Validate(person, opt => opt.IncludeProperties("Orders[].Amount"));
+		result.Errors.Count.ShouldEqual(2);
+		result.Errors[0].PropertyName.ShouldEqual("Orders[0].Amount");
+		result.Errors[0].ErrorMessage.ShouldEqual("'Amount' must be greater than '6'.");
+		result.Errors[1].PropertyName.ShouldEqual("Orders[1].Amount");
+		result.Errors[1].ErrorMessage.ShouldEqual("'Amount' must be greater than '6'.");
+	}
+
+	[Fact]
+	public void Only_validates_single_child_property_of_all_elements_in_nested_collection() {
+		var person = new Person {
+			Orders = new List<Order> {
+				new() {
+					Amount = 5,
+					Payments = new List<Payment> {
+						new Payment() { Amount = 0 },
+					}
+				},
+				new() {
+					ProductName = "Foo",
+					Payments = new List<Payment> {
+						new Payment() { Amount = 1 },
+						new Payment() { Amount = 0 }
+					}
+				},
+			}
+		};
+
+		var validator = new InlineValidator<Person>();
+		validator.RuleForEach(x => x.Orders).ChildRules(x => {
+			x.RuleFor(y => y.Amount).GreaterThan(6);
+			x.RuleForEach(y => y.Payments).ChildRules(a => {
+				a.RuleFor(b => b.Amount).GreaterThan(0);
+			});
+		});
+
+		var result = validator.Validate(person, opt => opt.IncludeProperties("Orders[].Payments[].Amount"));
+		result.Errors.Count.ShouldEqual(2);
+		result.Errors[0].PropertyName.ShouldEqual("Orders[0].Payments[0].Amount");
+		result.Errors[0].ErrorMessage.ShouldEqual("'Amount' must be greater than '0'.");
+		result.Errors[1].PropertyName.ShouldEqual("Orders[1].Payments[1].Amount");
+		result.Errors[1].ErrorMessage.ShouldEqual("'Amount' must be greater than '0'.");
+	}
+	
 	private class TestObject {
 		public object SomeProperty { get; set; }
 		public object SomeOtherProperty { get; set; }
