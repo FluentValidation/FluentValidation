@@ -24,7 +24,8 @@ public class Person : IContact
 
 // An organisation is another type of contact,
 // with a name and the address of their HQ.
-public class Organisation : IContact {
+public class Organisation : IContact 
+{
   public string Name { get; set; }
   public string Email { get; set; }
 
@@ -85,4 +86,28 @@ public class ContactRequestValidator : AbstractValidator<ContactRequest>
 
 There are also overloads of `Add` available that take a callback, which allows for lazy construction of the child validators.
 
-This method also works with [collections](collections), where each element of the collection may be a different subclass.
+This method also works with [collections](collections), where each element of the collection may be a different subclass. For example, taking the above example if instead of a single `Contact` property, the `ContactRequest` instead had a collection of contacts:
+
+```csharp
+public class ContactRequest 
+{
+  public List<IContact> Contacts { get; } = new();
+}
+```
+
+...then you could define inheritance validation for each item in the collection:
+
+```csharp
+public class ContactRequestValidator : AbstractValidator<ContactRequest>
+{
+  public ContactRequestValidator()
+  {
+
+    RuleForEach(x => x.Contacts).SetInheritanceValidator(v => 
+    {
+      v.Add<Organisation>(new OrganisationValidator());
+      v.Add<Person>(new PersonValidator());
+    });
+  }
+}
+```
