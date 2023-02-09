@@ -45,7 +45,7 @@ internal class FrenchLanguage {
 		"ExclusiveBetweenValidator" => "'{PropertyName}' doit être entre {From} et {To} (exclusif). Vous avez saisi {PropertyValue}.",
 		"InclusiveBetweenValidator" => "'{PropertyName}' doit être entre {From} et {To}. Vous avez saisi {PropertyValue}.",
 		"CreditCardValidator" => "'{PropertyName}' n'est pas un numéro de carte de crédit valide.",
-		"ScalePrecisionValidator" => "'{PropertyName}' ne doit pas dépasser {ExpectedPrecision} chiffres au total, avec une tolérance pour les décimales {ExpectedScale}. Les chiffres {Digits} et les décimales {ActualScale} ont été trouvés.",
+		"ScalePrecisionValidator" => "'{PropertyName}' ne doit pas dépasser {ExpectedPrecision} chiffres au total, avec une tolérance de {ExpectedScale} décimales. {Digits} nombres entiers et {ActualScale} décimales ont été trouvés.",
 		"EmptyValidator" => "'{PropertyName}' devrait être vide.",
 		"NullValidator" => "'{PropertyName}' devrait être vide.",
 		"EnumValidator" => "'{PropertyName}' a une plage de valeurs qui n'inclut pas '{PropertyValue}'.",
