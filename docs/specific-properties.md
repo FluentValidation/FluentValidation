@@ -25,7 +25,7 @@ validator.Validate(customer, options =>
 
 In the above example only the rule for the `Surname` property will be executed. 
 
-When working with sub-properties of collections, you can use a wildcard indexer (`[]`) to indicat all items of a collection. For example, if you wanted to validate the `Cost` property of every order, you could use the following:
+When working with sub-properties of collections, you can use a wildcard indexer (`[]`) to indicate all items of a collection. For example, if you wanted to validate the `Cost` property of every order, you could use the following:
 
 ```csharp
 var validator = new CustomerValidator();
