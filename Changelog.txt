@@ -1,3 +1,13 @@
+11.5.0 - 13 Feb 2023
+MemberNameValidatorSelector now supports wildcard indexes in property paths (#2056) 
+Added overload of TestValidateAsync that accepts a context (#2052)
+Minor optimization to regex validator (#2035)
+Added Kazakh translations (#2036)
+Added Catalan translations and updated Spanish translations (#2050)
+Updates to Uzbek Latin and Cyrillic translations (#2040/#2041/#2045)
+Updates to Italian translations (#2039)
+Updates to French translations (#2065)
+
 11.4.0 - 23 Nov 2022
 Deprecate ScalePrecision validator and introduce PrecisionScale validator as its replacement (#2030)
 
