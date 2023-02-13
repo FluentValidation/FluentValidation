@@ -80,6 +80,7 @@ Example
   :caption: Other Features
 
   including-rules
+  specific-properties
   rulesets
   cascade
   di
