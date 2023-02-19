@@ -78,9 +78,33 @@ public class PersonValidator : AbstractValidator<Person>
 }
 ```
 
+### Changes to AbstractValidator.EnsureInstanceNotNull
+
+The `EnsureInstanceNotNull` method now takes a parameter of type `T` instead of type `object`. If you are overriding this method you'll need to update the method signature:
+
+```csharp
+// Before 
+public class PersonValidator : AbstractValidator<Person> 
+{
+  protected override void EnsureInstanceNotNull(object instance) 
+  {
+  }
+}
+
+// After
+public class PersonValidator : AbstractValidator<Person> 
+{
+  protected override void EnsureInstanceNotNull(Person instance) 
+  {
+  }
+}
+```
+
+Additionally, this method has been marked as deprecated. Overriding this method allowed you to disable FluentValidation's null-checking of the root model being validated. Disabling this check is no longer supported and this method will not be overridable in FluentValidation 13. For more details see https://github.com/FluentValidation/FluentValidation/issues/2069
+
+
 ### Other breaking API changes 
 
-- `AbstractValidator<T>.EnsureInstanceNotNull` now takes a parameter of type `T` instead of type `object`
 - The `ITestValidationContinuation` interface now exposes a `MatchedFailures` property (as well as the existing `UnmatchedFailures`)
 - The `ShouldHaveAnyValidationError` method has been renamed to `ShouldHaveValidationErrors`
 - `ShouldNotHaveAnyValidationErrors` and `ShouldHaveValidationErrors` are now instance methods on `TestValidationResult`, instead of extension methods. 
