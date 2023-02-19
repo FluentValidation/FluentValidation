@@ -104,7 +104,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="instance">The object to validate</param>
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
-	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new())
+	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = default)
 		=> ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 
 	/// <summary>
@@ -113,7 +113,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="context">Validation Context</param>
 	/// <returns>A ValidationResult object containing any validation failures.</returns>
 	public virtual ValidationResult Validate(ValidationContext<T> context) {
-		if (context == null) throw new ArgumentNullException(nameof(context));
+		ArgumentNullException.ThrowIfNull(context);
 
 		// Note: Sync-over-async is OK in this scenario.
 		// The use of the `useAsync` parameter ensures that no async code is
@@ -146,8 +146,8 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="context">Validation Context</param>
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures.</returns>
-	public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
-		if (context == null) throw new ArgumentNullException(nameof(context));
+	public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = default) {
+		ArgumentNullException.ThrowIfNull(context);
 		context.IsAsync = true;
 		return await ValidateInternalAsync(context, useAsync: true, cancellation);
 	}
@@ -201,7 +201,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	public virtual IValidatorDescriptor CreateDescriptor() => new ValidatorDescriptor<T>(Rules);
 
 	bool IValidator.CanValidateInstancesOfType(Type type) {
-		if (type == null) throw new ArgumentNullException(nameof(type));
+		ArgumentNullException.ThrowIfNull(type);
 		return typeof(T).IsAssignableFrom(type);
 	}
 
@@ -254,11 +254,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
 		ArgumentNullException.ThrowIfNull(from);
+		ArgumentNullException.ThrowIfNull(to);
 		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		return new RuleBuilder<T, TTransformed>(rule, this);
 	}
-
 
 	/// <summary>
 	/// Invokes a rule for each item in the collection.
@@ -284,6 +284,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
 		ArgumentNullException.ThrowIfNull(expression);
+		ArgumentNullException.ThrowIfNull(to);
 		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		return new RuleBuilder<T, TTransformed>(rule, this);
@@ -300,6 +301,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
 		ArgumentNullException.ThrowIfNull(expression);
+		ArgumentNullException.ThrowIfNull(to);
 		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		return new RuleBuilder<T, TTransformed>(rule, this);
@@ -329,8 +331,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="predicate">The condition that should apply to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
-	public IConditionBuilder When(Func<T, bool> predicate, Action action)
-		=> When((x, _) => predicate(x), action);
+	public IConditionBuilder When(Func<T, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return When((x, _) => predicate(x), action);
+	}
 
 	/// <summary>
 	/// Defines a condition that applies to several rules
@@ -338,24 +343,33 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="predicate">The condition that should apply to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
-	public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action)
-		=> new ConditionBuilder<T>(Rules).When(predicate, action);
+	public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return new ConditionBuilder<T>(Rules).When(predicate, action);
+	}
 
 	/// <summary>
 	/// Defines an inverse condition that applies to several rules
 	/// </summary>
 	/// <param name="predicate">The condition that should be applied to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules</param>
-	public IConditionBuilder Unless(Func<T, bool> predicate, Action action)
-		=> Unless((x, _) => predicate(x), action);
+	public IConditionBuilder Unless(Func<T, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return Unless((x, _) => predicate(x), action);
+	}
 
 	/// <summary>
 	/// Defines an inverse condition that applies to several rules
 	/// </summary>
 	/// <param name="predicate">The condition that should be applied to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules</param>
-	public IConditionBuilder Unless(Func<T, ValidationContext<T>, bool> predicate, Action action)
-		=> new ConditionBuilder<T>(Rules).Unless(predicate, action);
+	public IConditionBuilder Unless(Func<T, ValidationContext<T>, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return new ConditionBuilder<T>(Rules).Unless(predicate, action);
+	}
 
 	/// <summary>
 	/// Defines an asynchronous condition that applies to several rules
@@ -363,8 +377,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
-	public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action)
-		=> WhenAsync((x, _, cancel) => predicate(x, cancel), action);
+	public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return WhenAsync((x, _, cancel) => predicate(x, cancel), action);
+	}
 
 	/// <summary>
 	/// Defines an asynchronous condition that applies to several rules
@@ -372,24 +389,33 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
-	public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action)
-		=> new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
+	public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
+	}
 
 	/// <summary>
 	/// Defines an inverse asynchronous condition that applies to several rules
 	/// </summary>
 	/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules</param>
-	public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action)
-		=> UnlessAsync((x, _, cancel) => predicate(x, cancel), action);
+	public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return UnlessAsync((x, _, cancel) => predicate(x, cancel), action);
+	}
 
 	/// <summary>
 	/// Defines an inverse asynchronous condition that applies to several rules
 	/// </summary>
 	/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules</param>
-	public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action)
-		=> new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
+	public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
+	}
 
 	/// <summary>
 	/// Includes the rules from the specified validator
