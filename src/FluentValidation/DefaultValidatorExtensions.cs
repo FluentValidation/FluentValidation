@@ -58,7 +58,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty?> SetAsyncValidator<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, IAsyncPropertyValidator<T, TProperty> validator)
 		where TProperty : struct {
-		var component = new RuleComponentForNullableStruct<T, TProperty>(validator, validator as IPropertyValidator<T, TProperty>);
+		var component = new RuleComponentForNullableStruct<T, TProperty>(validator);
 		var rb = (RuleBuilder<T, TProperty?>) ruleBuilder;
 		rb.AddComponent(component);
 		return rb;

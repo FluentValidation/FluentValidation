@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Internal;
 
 using System;
@@ -24,8 +26,8 @@ using System.Collections.Generic;
 
 internal class TrackingCollection<T> : IEnumerable<T> {
 	readonly List<T> _innerCollection = new();
-	public event Action<T> ItemAdded;
-	private Action<T> _capture = null;
+	public event Action<T>? ItemAdded;
+	private Action<T>? _capture = null;
 
 	public void Add(T item) {
 		if (_capture == null) {
@@ -81,11 +83,11 @@ internal class TrackingCollection<T> : IEnumerable<T> {
 
 	private class CaptureDisposable : IDisposable {
 		readonly TrackingCollection<T> _parent;
-		readonly Action<T> _old;
+		readonly Action<T>? _old;
 
 		public CaptureDisposable(TrackingCollection<T> parent, Action<T> handler) {
-			this._parent = parent;
-			this._old = parent._capture;
+			_parent = parent;
+			_old = parent._capture;
 			parent._capture = handler;
 		}
 

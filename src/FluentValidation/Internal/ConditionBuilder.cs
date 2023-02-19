@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Internal;
 
 using System;
@@ -24,7 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Validators;
 
-internal class ConditionBuilder<T> {
+internal class ConditionBuilder<T> where T : notnull {
 	private TrackingCollection<IValidationRuleInternal<T>> _rules;
 
 	public ConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
@@ -38,6 +40,9 @@ internal class ConditionBuilder<T> {
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
 	public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+
 		var propertyRules = new List<IValidationRuleInternal<T>>();
 
 		using (_rules.OnItemAdded(propertyRules.Add)) {
@@ -58,7 +63,7 @@ internal class ConditionBuilder<T> {
 				}
 			}
 
-			var executionResult = predicate(actualContext.InstanceToValidate, actualContext);
+			var executionResult = predicate(actualContext.InstanceToValidate!, actualContext);
 			if (actualContext.InstanceToValidate != null) {
 				if (actualContext.SharedConditionCache.TryGetValue(id, out var cachedResults)) {
 					cachedResults.Add(actualContext.InstanceToValidate, executionResult);
@@ -90,7 +95,7 @@ internal class ConditionBuilder<T> {
 	}
 }
 
-internal class AsyncConditionBuilder<T> {
+internal class AsyncConditionBuilder<T> where T : notnull {
 	private TrackingCollection<IValidationRuleInternal<T>> _rules;
 
 	public AsyncConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
@@ -124,7 +129,7 @@ internal class AsyncConditionBuilder<T> {
 				}
 			}
 
-			var executionResult = await predicate((T)context.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(context), ct);
+			var executionResult = await predicate(actualContext.InstanceToValidate!, ValidationContext<T>.GetFromNonGenericContext(context), ct);
 			if (actualContext.InstanceToValidate != null) {
 				if (actualContext.SharedConditionCache.TryGetValue(id, out var cachedResults)) {
 					cachedResults.Add(actualContext.InstanceToValidate, executionResult);

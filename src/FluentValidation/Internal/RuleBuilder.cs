@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Internal;
 
 using System;
@@ -58,7 +60,7 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	public IRuleBuilderOptions<T, TProperty> SetAsyncValidator(IAsyncPropertyValidator<T, TProperty> validator) {
 		if (validator == null) throw new ArgumentNullException(nameof(validator));
 		// See if the async validator supports synchronous execution too.
-		IPropertyValidator<T, TProperty> fallback = validator as IPropertyValidator<T, TProperty>;
+		IPropertyValidator<T, TProperty>? fallback = validator as IPropertyValidator<T, TProperty>;
 		Rule.AddAsyncValidator(validator, fallback);
 		return this;
 	}

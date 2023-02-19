@@ -28,6 +28,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 /// <summary>
 /// Rule definition for collection properties
 /// </summary>
@@ -44,13 +46,13 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 	/// <summary>
 	/// Filter that should include/exclude items in the collection.
 	/// </summary>
-	public Func<TElement, bool> Filter { get; set; }
+	public Func<TElement, bool>? Filter { get; set; }
 
 	/// <summary>
 	/// Constructs the indexer in the property name associated with the error message.
 	/// By default this is "[" + index + "]"
 	/// </summary>
-	public Func<T, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
+	public Func<T, IEnumerable<TElement>, TElement, int, string>? IndexBuilder { get; set; }
 
 	/// <summary>
 	/// Creates a new property rule from a lambda expression.
@@ -62,7 +64,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 	}
 
 	async ValueTask IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
-		string displayName = GetDisplayName(context);
+		string? displayName = GetDisplayName(context);
 
 		if (PropertyName == null && displayName == null) {
 			//No name has been specified. Assume this is a model-level rule, so we should use empty string instead.
@@ -70,10 +72,10 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		}
 
 		// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
-		string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
+		string? propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
 
 		if (string.IsNullOrEmpty(propertyName)) {
-			propertyName = InferPropertyName(Expression);
+			propertyName = InferPropertyName(Expression!);
 		}
 
 		// Ensure that this rule is allowed to run.
@@ -211,7 +213,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		return validators;
 	}
 
-	private static string InferPropertyName(LambdaExpression expression) {
+	private static string? InferPropertyName(LambdaExpression expression) {
 		var paramExp = expression.Body as ParameterExpression;
 
 		if (paramExp == null) {
