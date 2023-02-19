@@ -289,7 +289,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <param name="propertyName">The property name</param>
 	/// <param name="errorMessage">The error message</param>
 	public void AddFailure(string propertyName, string errorMessage) {
-		errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+		ExtensionsInternal.ThrowIfNullOrEmpty(errorMessage);
 		errorMessage = MessageFormatter.BuildMessage(errorMessage);
 		AddFailure(new ValidationFailure(PropertyChain.BuildPropertyName(propertyName ?? string.Empty), errorMessage));
 	}
@@ -300,7 +300,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// </summary>
 	/// <param name="errorMessage">The error message</param>
 	public void AddFailure(string errorMessage) {
-		errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+		ExtensionsInternal.ThrowIfNullOrEmpty(errorMessage);
 		errorMessage = MessageFormatter.BuildMessage(errorMessage);
 		AddFailure(new ValidationFailure(PropertyName, errorMessage));
 	}
