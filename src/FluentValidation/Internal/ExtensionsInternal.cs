@@ -20,24 +20,19 @@ namespace FluentValidation.Internal;
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Resources;
 
 internal static class ExtensionsInternal {
-	internal static void Guard(this object obj, string message, string paramName) {
-		if (obj == null) {
-			throw new ArgumentNullException(paramName, message);
-		}
-	}
 
-	internal static void Guard(this string str, string message, string paramName) {
-		if (str == null) {
-			throw new ArgumentNullException(paramName, message);
-		}
-
-		if (string.IsNullOrEmpty(str)) {
-			throw new ArgumentException(message, paramName);
+	// Todo: Replace with ArgumentException.ThrowIfNullOrEmpty once we stop supporting .net 6
+	public static void ThrowIfNullOrEmpty([NotNull] string argument, [CallerArgumentExpression("argument")] string paramName = null) {
+		if (string.IsNullOrEmpty(argument)) {
+			ArgumentNullException.ThrowIfNull(argument, paramName);
+			throw new ArgumentException("The value cannot be an empty string", paramName);
 		}
 	}
 

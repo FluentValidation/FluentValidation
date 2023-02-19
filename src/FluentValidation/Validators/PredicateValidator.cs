@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Validators;
 
+using System;
 using Internal;
 using Resources;
 
@@ -29,8 +30,8 @@ public class PredicateValidator<T,TProperty> : PropertyValidator<T,TProperty>, I
 	public override string Name => "PredicateValidator";
 
 	public PredicateValidator(Predicate predicate) {
-		predicate.Guard("A predicate must be specified.", nameof(predicate));
-		this._predicate = predicate;
+		ArgumentNullException.ThrowIfNull(predicate);
+		_predicate = predicate;
 	}
 
 	public override bool IsValid(ValidationContext<T> context, TProperty value) {
