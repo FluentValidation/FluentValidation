@@ -1094,32 +1094,6 @@ public static partial class DefaultValidatorExtensions {
 		=> ruleBuilder.SetValidator(new EnumValidator<T,TProperty>());
 
 	/// <summary>
-	/// Defines a scale precision validator on the current rule builder that ensures that the specific value has a certain scale and precision
-	/// </summary>
-	/// <typeparam name="T">Type of object being validated</typeparam>
-	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="scale">Allowed scale of the value</param>
-	/// <param name="precision">Allowed precision of the value</param>
-	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
-	/// <returns></returns>
-	[Obsolete("Please use the PrecisionScale method instead, which takes precision as the first parameter and scale as the second. See https://github.com/FluentValidation/FluentValidation/issues/2030 for further details")]
-	public static IRuleBuilderOptions<T, decimal> ScalePrecision<T>(this IRuleBuilder<T, decimal> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false)
-		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
-
-	/// <summary>
-	/// Defines a scale precision validator on the current rule builder that ensures that the specific value has a certain scale and precision
-	/// </summary>
-	/// <typeparam name="T">Type of object being validated</typeparam>
-	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="scale">Allowed scale of the value</param>
-	/// <param name="precision">Allowed precision of the value</param>
-	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
-	/// <returns></returns>
-	[Obsolete("Please use the PrecisionScale method instead, which takes precision as the first parameter and scale as the second. See https://github.com/FluentValidation/FluentValidation/issues/2030 for further details")]
-	public static IRuleBuilderOptions<T, decimal?> ScalePrecision<T>(this IRuleBuilder<T, decimal?> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false)
-		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
-
-	/// <summary>
 	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale.
 	/// </summary>
 	/// <typeparam name="T">Type of object being validated</typeparam>
@@ -1129,7 +1103,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros after the decimal point. For example, when set to true the decimal 123.4500 will be considered to have a precision of 5 and scale of 2. When set to false, it will be considered to have a precision of 7 and scale of 4.</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, decimal> PrecisionScale<T>(this IRuleBuilder<T, decimal> ruleBuilder, int precision, int scale, bool ignoreTrailingZeros)
-		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
+		=> ruleBuilder.SetValidator(new PrecisionScaleValidator<T>(precision, scale, ignoreTrailingZeros));
 
 	/// <summary>
 	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale.
@@ -1141,7 +1115,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros after the decimal point. For example, when set to true the decimal 123.4500 will be considered to have a precision of 5 and scale of 2. When set to false, it will be considered to have a precision of 7 and scale of 4.</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, decimal?> PrecisionScale<T>(this IRuleBuilder<T, decimal?> ruleBuilder, int precision, int scale, bool ignoreTrailingZeros)
-		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
+		=> ruleBuilder.SetValidator(new PrecisionScaleValidator<T>(precision, scale, ignoreTrailingZeros));
 
 	/// <summary>
 	/// Defines a custom validation rule
