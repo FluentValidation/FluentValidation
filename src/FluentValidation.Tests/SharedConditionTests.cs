@@ -158,6 +158,7 @@ public class SharedConditionTests {
 			});
 		}
 
+		[Obsolete("Overriding the EnsureInstanceNotNull method to prevent FluentValidation for throwing an exception for null root models is no longer supported or recommended. The ability to override this method will be removed in FluentValidation 12. For details, see https://github.com/FluentValidation/FluentValidation/issues/2069")]
 		protected override void EnsureInstanceNotNull(object instanceToValidate) {
 			//bad.
 		}
@@ -174,6 +175,7 @@ public class SharedConditionTests {
 			});
 		}
 
+		[Obsolete("Overriding the EnsureInstanceNotNull method to prevent FluentValidation for throwing an exception for null root models is no longer supported or recommended. The ability to override this method will be removed in FluentValidation 12. For details, see https://github.com/FluentValidation/FluentValidation/issues/2069")]
 		protected override void EnsureInstanceNotNull(object instanceToValidate) {
 			//bad.
 		}

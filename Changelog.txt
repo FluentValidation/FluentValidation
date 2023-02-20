@@ -1,3 +1,7 @@
+11.5.1 - 20 Feb 2023
+Deprecated the ability to disable the root model null check via overriding AbstractValidator.EnsureInstanceNotNull (#2069)
+Deprecated the Transform and TransformAsync methods (#2072)
+
 11.5.0 - 13 Feb 2023
 MemberNameValidatorSelector now supports wildcard indexes in property paths (#2056) 
 Added overload of TestValidateAsync that accepts a context (#2052)

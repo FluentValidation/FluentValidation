@@ -232,7 +232,9 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 			return result;
 		}
 
+#pragma warning disable CS0618
 		EnsureInstanceNotNull(context.InstanceToValidate);
+#pragma warning restore CS0618
 
 		foreach (var rule in Rules) {
 			cancellation.ThrowIfCancellationRequested();
@@ -490,8 +492,8 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// Throws an exception if the instance being validated is null.
 	/// </summary>
 	/// <param name="instanceToValidate"></param>
+	[Obsolete("Overriding the EnsureInstanceNotNull method to prevent FluentValidation for throwing an exception for null root models is no longer supported or recommended. The ability to override this method will be removed in FluentValidation 12. For details, see https://github.com/FluentValidation/FluentValidation/issues/2069")]
 	protected virtual void EnsureInstanceNotNull(object instanceToValidate)
-	  // TODO: Parameter should be made generic in 12.0
 		=> instanceToValidate.Guard("Cannot pass null model to Validate.", nameof(instanceToValidate));
 
 	/// <summary>
