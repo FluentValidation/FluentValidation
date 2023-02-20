@@ -150,37 +150,7 @@ public class SharedConditionTests {
 			UnlessAsync(async (x,c) => x.Id == 0, () => { RuleFor(x => x.Forename).NotNull(); });
 		}
 	}
-
-	class BadValidatorDisablesNullCheck : AbstractValidator<string> {
-		public BadValidatorDisablesNullCheck() {
-			When(x => x != null, () => {
-				RuleFor(x => x).Must(x => x != "foo");
-			});
-		}
-
-		[Obsolete("Overriding the EnsureInstanceNotNull method to prevent FluentValidation for throwing an exception for null root models is no longer supported or recommended. The ability to override this method will be removed in FluentValidation 12. For details, see https://github.com/FluentValidation/FluentValidation/issues/2069")]
-		protected override void EnsureInstanceNotNull(object instanceToValidate) {
-			//bad.
-		}
-	}
-
-	class AsyncBadValidatorDisablesNullCheck : AbstractValidator<string> {
-		public AsyncBadValidatorDisablesNullCheck() {
-			When(x => x != null, () => {
-				RuleFor(x => x).Must(x => x != "foo");
-			});
-
-			WhenAsync(async (x, ct) => x != null, () => {
-				RuleFor(x => x).Must(x => x != "foo");
-			});
-		}
-
-		[Obsolete("Overriding the EnsureInstanceNotNull method to prevent FluentValidation for throwing an exception for null root models is no longer supported or recommended. The ability to override this method will be removed in FluentValidation 12. For details, see https://github.com/FluentValidation/FluentValidation/issues/2069")]
-		protected override void EnsureInstanceNotNull(object instanceToValidate) {
-			//bad.
-		}
-	}
-
+	
 	[Fact]
 	public void shared_When_not_applied_to_grouped_collection_rules_when_initial_predicate_is_false() {
 		var validator = new SharedCollectionConditionValidator();
@@ -790,20 +760,6 @@ public class SharedConditionTests {
 		var validationResult = await personValidator.ValidateAsync(person);
 		validationResult.IsValid.ShouldBeTrue();
 		executions.ShouldEqual(2);
-	}
-
-	[Fact]
-	public void Doesnt_throw_NullReferenceException_when_instance_not_null() {
-		var v = new BadValidatorDisablesNullCheck();
-		var result = v.Validate((string) null);
-		result.IsValid.ShouldBeTrue();
-	}
-
-	[Fact]
-	public async Task Doesnt_throw_NullReferenceException_when_instance_not_null_async() {
-		var v = new AsyncBadValidatorDisablesNullCheck();
-		var result = await v.ValidateAsync((string) null);
-		result.IsValid.ShouldBeTrue();
 	}
 
 	[Fact]

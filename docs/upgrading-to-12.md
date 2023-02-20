@@ -78,29 +78,9 @@ public class PersonValidator : AbstractValidator<Person>
 }
 ```
 
-### Changes to AbstractValidator.EnsureInstanceNotNull
+### Removal of AbstractValidator.EnsureInstanceNotNull
 
-The `EnsureInstanceNotNull` method now takes a parameter of type `T` instead of type `object`. If you are overriding this method you'll need to update the method signature:
-
-```csharp
-// Before 
-public class PersonValidator : AbstractValidator<Person> 
-{
-  protected override void EnsureInstanceNotNull(object instance) 
-  {
-  }
-}
-
-// After
-public class PersonValidator : AbstractValidator<Person> 
-{
-  protected override void EnsureInstanceNotNull(Person instance) 
-  {
-  }
-}
-```
-
-Additionally, this method has been marked as deprecated. Overriding this method allowed you to disable FluentValidation's null-checking of the root model being validated. Disabling this check is no longer supported and this method will not be overridable in FluentValidation 13. For more details see https://github.com/FluentValidation/FluentValidation/issues/2069
+In previous versions of FluentValidation it was possible to override the `AbstractValidator.EnsureInstanceNotNull` method to disable FluentValidation's root-model null check. The ability to do this was deprecated in 11.5.x and has now been removed. For further details please see [https://github.com/FluentValidation/FluentValidation/issues/2069](https://github.com/FluentValidation/FluentValidation/issues/2069)
 
 
 ### Other breaking API changes 
