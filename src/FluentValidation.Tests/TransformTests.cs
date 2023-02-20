@@ -23,6 +23,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
+#pragma warning disable CS0618
+
 public class TransformTests {
 	[Fact]
 	public void Transforms_property_value() {

@@ -298,6 +298,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="from">The expression representing the property to transform</param>
 	/// <param name="to">Function to transform the property value into a different type</param>
 	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
+	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<TProperty, TTransformed> to) {
 		from.Guard("Cannot pass null to Transform", nameof(from));
 		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
@@ -316,6 +317,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="from">The expression representing the property to transform</param>
 	/// <param name="to">Function to transform the property value into a different type</param>
 	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
+	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
 		from.Guard("Cannot pass null to Transform", nameof(from));
 		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
@@ -345,6 +347,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="expression">Expression representing the collection to validate</param>
 	/// <param name="to">Function to transform the collection element into a different type</param>
 	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
+	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
 		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
@@ -360,6 +363,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="expression">Expression representing the collection to validate</param>
 	/// <param name="to">Function to transform the collection element into a different type</param>
 	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
+	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
 		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);

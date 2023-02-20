@@ -110,7 +110,6 @@ Example
 
   dependentrules
   inheritance
-  transform
   advanced
 
 .. _aspnet-docs:
