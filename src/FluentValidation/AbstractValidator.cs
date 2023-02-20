@@ -222,45 +222,6 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	}
 
 	/// <summary>
-	/// Defines a validation rule for a specify property and transform it to a different type.
-	/// </summary>
-	/// <example>
-	/// Transform(x => x.OrderNumber, to: orderNumber => orderNumber.ToString())...
-	/// </example>
-	/// <typeparam name="TProperty">The type of property being validated</typeparam>
-	/// <typeparam name="TTransformed">The type after the transformer has been applied</typeparam>
-	/// <param name="from">The expression representing the property to transform</param>
-	/// <param name="to">Function to transform the property value into a different type</param>
-	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
-	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<TProperty, TTransformed> to) {
-		ArgumentNullException.ThrowIfNull(from);
-		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
-		Rules.Add(rule);
-		return new RuleBuilder<T, TTransformed>(rule, this);
-	}
-
-	/// <summary>
-	/// Defines a validation rule for a specify property and transform it to a different type.
-	/// </summary>
-	/// <example>
-	/// Transform(x => x.OrderNumber, to: orderNumber => orderNumber.ToString())...
-	/// </example>
-	/// <typeparam name="TProperty">The type of property being validated</typeparam>
-	/// <typeparam name="TTransformed">The type after the transformer has been applied</typeparam>
-	/// <param name="from">The expression representing the property to transform</param>
-	/// <param name="to">Function to transform the property value into a different type</param>
-	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
-	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
-		ArgumentNullException.ThrowIfNull(from);
-		ArgumentNullException.ThrowIfNull(to);
-		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
-		Rules.Add(rule);
-		return new RuleBuilder<T, TTransformed>(rule, this);
-	}
-
-	/// <summary>
 	/// Invokes a rule for each item in the collection.
 	/// </summary>
 	/// <typeparam name="TElement">Type of property</typeparam>
@@ -271,40 +232,6 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		return new RuleBuilder<T, TElement>(rule, this);
-	}
-
-	/// <summary>
-	/// Invokes a rule for each item in the collection, transforming the element from one type to another.
-	/// </summary>
-	/// <typeparam name="TElement">Type of property</typeparam>
-	/// <typeparam name="TTransformed">The type after the transformer has been applied</typeparam>
-	/// <param name="expression">Expression representing the collection to validate</param>
-	/// <param name="to">Function to transform the collection element into a different type</param>
-	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
-	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
-	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
-		ArgumentNullException.ThrowIfNull(expression);
-		ArgumentNullException.ThrowIfNull(to);
-		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
-		Rules.Add(rule);
-		return new RuleBuilder<T, TTransformed>(rule, this);
-	}
-
-	/// <summary>
-	/// Invokes a rule for each item in the collection, transforming the element from one type to another.
-	/// </summary>
-	/// <typeparam name="TElement">Type of property</typeparam>
-	/// <typeparam name="TTransformed">The type after the transformer has been applied</typeparam>
-	/// <param name="expression">Expression representing the collection to validate</param>
-	/// <param name="to">Function to transform the collection element into a different type</param>
-	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
-	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
-	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
-		ArgumentNullException.ThrowIfNull(expression);
-		ArgumentNullException.ThrowIfNull(to);
-		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
-		Rules.Add(rule);
-		return new RuleBuilder<T, TTransformed>(rule, this);
 	}
 
 	/// <summary>
