@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System.Linq;
 using Resources;
 
@@ -29,11 +31,11 @@ public class CreditCardValidator<T> : PropertyValidator<T,string>, ICreditCardVa
 
 	public override string Name => "CreditCardValidator";
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 
-	public override bool IsValid(ValidationContext<T> context, string value) {
+	public override bool IsValid(ValidationContext<T> context, string? value) {
 		if (value == null) {
 			return true;
 		}

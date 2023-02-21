@@ -20,6 +20,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Reflection;
 
@@ -28,7 +30,7 @@ public class EnumValidator<T, TProperty> : PropertyValidator<T,TProperty> {
 
 	public override string Name => "EnumValidator";
 
-	public override bool IsValid(ValidationContext<T> context, TProperty value) {
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) {
 		if (value == null) return true;
 
 		var underlyingEnumType = Nullable.GetUnderlyingType(_enumType) ?? _enumType;
@@ -110,7 +112,7 @@ public class EnumValidator<T, TProperty> : PropertyValidator<T,TProperty> {
 		return false;
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

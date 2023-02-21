@@ -18,11 +18,13 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Text.RegularExpressions;
 
 public class RegularExpressionValidator<T> : PropertyValidator<T,string>, IRegularExpressionValidator {
-	readonly Func<T, Regex> _regexFunc;
+	readonly Func<T, Regex?> _regexFunc;
 
 	public override string Name => "RegularExpressionValidator";
 
@@ -56,11 +58,11 @@ public class RegularExpressionValidator<T> : PropertyValidator<T,string>, IRegul
 		_regexFunc = x => CreateRegex(expression(x), options);
 	}
 
-	public override bool IsValid(ValidationContext<T> context, string value) {
+	public override bool IsValid(ValidationContext<T> context, string? value) {
 		if (value == null) {
 			return true;
 		}
-		
+
 		var regex = _regexFunc(context.InstanceToValidate);
 
 		if (regex != null && !regex.IsMatch(value)) {
@@ -74,13 +76,13 @@ public class RegularExpressionValidator<T> : PropertyValidator<T,string>, IRegul
 		return new Regex(expression, options, TimeSpan.FromSeconds(2.0));
 	}
 
-	public string Expression { get; }
+	public string? Expression { get; }
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }
 
 public interface IRegularExpressionValidator : IPropertyValidator {
-	string Expression { get; }
+	string? Expression { get; }
 }

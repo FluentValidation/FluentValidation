@@ -88,7 +88,7 @@ public interface IRuleComponent {
 	/// <summary>
 	/// The validator associated with this component.
 	/// </summary>
-	IPropertyValidator? Validator { get; }
+	IPropertyValidator Validator { get; }
 
 	/// <summary>
 	/// Gets the raw unformatted error message. Placeholders will not have been rewritten.

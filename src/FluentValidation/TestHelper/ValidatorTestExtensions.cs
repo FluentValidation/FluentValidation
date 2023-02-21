@@ -17,6 +17,8 @@
 #endregion
 
 #pragma warning disable 1591
+#nullable enable
+
 namespace FluentValidation.TestHelper;
 
 using System;
@@ -60,7 +62,7 @@ public static class ValidationTestExtension {
 		}
 	}
 
-	private static IEnumerable<IPropertyValidator> GetDependentRules<T, TProperty>(string expressionMemberName, Expression<Func<T, TProperty>> expression, IValidatorDescriptor descriptor) {
+	private static IEnumerable<IPropertyValidator> GetDependentRules<T, TProperty>(string? expressionMemberName, Expression<Func<T, TProperty>> expression, IValidatorDescriptor descriptor) {
 		var member = expression.IsParameterExpression() ? null : expressionMemberName;
 
 		var rules = descriptor.GetRulesForMember(member)
@@ -83,7 +85,7 @@ public static class ValidationTestExtension {
 	/// <summary>
 	/// Performs validation, returning a TestValidationResult which allows assertions to be performed.
 	/// </summary>
-	public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null) {
+	public static TestValidationResult<T> TestValidate<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>>? options = null) {
 		options ??= _ => { };
 		return TestValidate(validator, ValidationContext<T>.CreateWithOptions(objectToTest, options));
 	}
@@ -106,7 +108,7 @@ public static class ValidationTestExtension {
 	/// <summary>
 	/// Performs async validation, returning a TestValidationResult which allows assertions to be performed.
 	/// </summary>
-	public static Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>> options = null, CancellationToken cancellationToken = default) {
+	public static Task<TestValidationResult<T>> TestValidateAsync<T>(this IValidator<T> validator, T objectToTest, Action<ValidationStrategy<T>>? options = null, CancellationToken cancellationToken = default) {
 		options ??= _ => { };
 		return TestValidateAsync(validator, ValidationContext<T>.CreateWithOptions(objectToTest, options), cancellationToken);
 	}
@@ -119,7 +121,7 @@ public static class ValidationTestExtension {
 		return new TestValidationResult<T>(validationResult);
 	}
 
-	private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
+	private static string BuildErrorMessage(ValidationFailure? failure, string? exceptionMessage, string defaultMessage) {
 		if (exceptionMessage != null && failure != null) {
 			var formattedExceptionMessage = exceptionMessage.Replace("{Code}", failure.ErrorCode)
 				.Replace("{Message}", failure.ErrorMessage)
@@ -128,8 +130,8 @@ public static class ValidationTestExtension {
 
 			var messageArgumentMatches = Regex.Matches(formattedExceptionMessage, "{MessageArgument:(.*)}");
 			for (var i = 0; i < messageArgumentMatches.Count; i++) {
-				if (failure.FormattedMessagePlaceholderValues.ContainsKey(messageArgumentMatches[i].Groups[1].Value)) {
-					formattedExceptionMessage = formattedExceptionMessage.Replace(messageArgumentMatches[i].Value, failure.FormattedMessagePlaceholderValues[messageArgumentMatches[i].Groups[1].Value].ToString());
+				if (failure.FormattedMessagePlaceholderValues != null && failure.FormattedMessagePlaceholderValues.ContainsKey(messageArgumentMatches[i].Groups[1].Value)) {
+					formattedExceptionMessage = formattedExceptionMessage.Replace(messageArgumentMatches[i].Value, failure.FormattedMessagePlaceholderValues[messageArgumentMatches[i].Groups[1].Value]!.ToString());
 				}
 			}
 			return formattedExceptionMessage;
@@ -138,7 +140,7 @@ public static class ValidationTestExtension {
 	}
 
 
-	public static ITestValidationWith When(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
+	public static ITestValidationWith When(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string? exceptionMessage = null) {
 		var result = new TestValidationContinuation(failures.MatchedFailures, failures);
 		result.ApplyPredicate(failurePredicate);
 
@@ -152,7 +154,7 @@ public static class ValidationTestExtension {
 		return result;
 	}
 
-	public static ITestValidationContinuation WhenAll(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
+	public static ITestValidationContinuation WhenAll(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string? exceptionMessage = null) {
 		var result = new TestValidationContinuation(failures.MatchedFailures, failures);
 		result.ApplyPredicate(failurePredicate);
 
@@ -171,13 +173,13 @@ public static class ValidationTestExtension {
 		return failures.When(failure => failure.Severity == expectedSeverity, string.Format("Expected a severity of '{0}'. Actual severity was '{{Severity}}'", expectedSeverity));
 	}
 
-	public static ITestValidationWith WithCustomState(this ITestValidationContinuation failures, object expectedCustomState, IEqualityComparer comparer = null) {
+	public static ITestValidationWith WithCustomState(this ITestValidationContinuation failures, object expectedCustomState, IEqualityComparer? comparer = null) {
 		return failures.When(failure => comparer?.Equals(failure.CustomState, expectedCustomState) ?? Equals(failure.CustomState, expectedCustomState), string.Format("Expected custom state of '{0}'. Actual state was '{{State}}'", expectedCustomState));
 	}
 
 	public static ITestValidationWith WithMessageArgument<T>(this ITestValidationContinuation failures, string argumentKey, T argumentValue) {
-		return failures.When(failure => failure.FormattedMessagePlaceholderValues.ContainsKey(argumentKey) && ((T)failure.FormattedMessagePlaceholderValues[argumentKey]).Equals(argumentValue),
-			string.Format("Expected message argument '{0}' with value '{1}'. Actual value was '{{MessageArgument:{0}}}'", argumentKey, argumentValue.ToString()));
+		return failures.When(failure => failure.FormattedMessagePlaceholderValues != null && failure.FormattedMessagePlaceholderValues.ContainsKey(argumentKey) && Equals(failure.FormattedMessagePlaceholderValues[argumentKey], argumentValue),
+			string.Format("Expected message argument '{0}' with value '{1}'. Actual value was '{{MessageArgument:{0}}}'", argumentKey, argumentValue?.ToString()));
 	}
 
 	public static ITestValidationWith WithErrorMessage(this ITestValidationContinuation failures, string expectedErrorMessage) {

@@ -18,12 +18,14 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System.Threading;
 using System.Threading.Tasks;
 using Internal;
 
 public abstract class AsyncPropertyValidator<T, TProperty> : IAsyncPropertyValidator<T, TProperty> {
-	string IPropertyValidator.GetDefaultMessageTemplate(string errorCode)
+	string IPropertyValidator.GetDefaultMessageTemplate(string? errorCode)
 		=> GetDefaultMessageTemplate(errorCode);
 
 	/// <inheritdoc />
@@ -34,10 +36,10 @@ public abstract class AsyncPropertyValidator<T, TProperty> : IAsyncPropertyValid
 	/// </summary>
 	/// <param name="errorCode">The currently configured error code for the validator.</param>
 	/// <returns></returns>
-	protected virtual string GetDefaultMessageTemplate(string errorCode) => "No default error message has been specified";
+	protected virtual string GetDefaultMessageTemplate(string? errorCode) => "No default error message has been specified";
 
 	/// <inheritdoc />
-	public abstract Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
+	public abstract Task<bool> IsValidAsync(ValidationContext<T> context, TProperty? value, CancellationToken cancellation);
 
 	/// <summary>
 	/// Retrieves a localized string from the LanguageManager.
@@ -48,7 +50,7 @@ public abstract class AsyncPropertyValidator<T, TProperty> : IAsyncPropertyValid
 	/// <param name="errorCode">The currently configured error code for the validator.</param>
 	/// <param name="fallbackKey">The fallback key to use for translation, if no ErrorCode is available.</param>
 	/// <returns>The translated error message template.</returns>
-	protected string Localized(string errorCode, string fallbackKey) {
+	protected string Localized(string? errorCode, string fallbackKey) {
 		return ValidatorOptions.Global.LanguageManager.ResolveErrorMessageUsingErrorCode(errorCode, fallbackKey);
 	}
 }

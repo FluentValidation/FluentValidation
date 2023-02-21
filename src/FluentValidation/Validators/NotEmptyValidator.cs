@@ -24,11 +24,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#nullable enable
+
 public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, INotEmptyValidator {
 
 	public override string Name => "NotEmptyValidator";
 
-	public override bool IsValid(ValidationContext<T> context, TProperty value) {
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) {
 		switch (value) {
 			case null:
 			case string s when string.IsNullOrWhiteSpace(s):
@@ -41,7 +43,7 @@ public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, I
 		return !EqualityComparer<TProperty>.Default.Equals(value, default);
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

@@ -24,7 +24,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Resources;
 using Results;
+#nullable enable
 
 public abstract class NoopPropertyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
-	public override bool IsValid(ValidationContext<T> context, TProperty value) => true;
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) => true;
 }

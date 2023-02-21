@@ -20,8 +20,12 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Internal;
 
 /// <summary>
@@ -33,7 +37,7 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 	readonly Dictionary<Type, DerivedValidatorFactory> _derivedValidators = new();
 
 	// Need the base constructor call, even though we're just passing null.
-	public PolymorphicValidator() : base((IValidator<TProperty>) null, typeof(IValidator<TProperty>)) {
+	public PolymorphicValidator() : base((IValidator<TProperty>?) null, typeof(IValidator<TProperty>)) {
 	}
 
 	/// <summary>
@@ -71,7 +75,7 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 	/// <returns></returns>
 	public PolymorphicValidator<T, TProperty> Add<TDerived>(Func<T, TDerived, IValidator<TDerived>> validatorFactory, params string[] ruleSets) where TDerived : TProperty {
 		if (validatorFactory == null) throw new ArgumentNullException(nameof(validatorFactory));
-		_derivedValidators[typeof(TDerived)] = new DerivedValidatorFactory((context, value) => validatorFactory(context.InstanceToValidate, (TDerived)value), ruleSets);
+		_derivedValidators[typeof(TDerived)] = new DerivedValidatorFactory((context, value) => validatorFactory(context.InstanceToValidate, (TDerived)value!), ruleSets);
 		return this;
 	}
 
@@ -96,7 +100,7 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 		return this;
 	}
 
-	public override IValidator GetValidator(ValidationContext<T> context, TProperty value) {
+	public override IValidator? GetValidator(ValidationContext<T> context, TProperty value) {
 		// bail out if the current item is null
 		if (value == null) return null;
 
@@ -107,16 +111,16 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 		return null;
 	}
 
-	private protected override IValidatorSelector GetSelector(ValidationContext<T> context, TProperty value) {
-		if (_derivedValidators.TryGetValue(value.GetType(), out var derivedValidatorFactory) && derivedValidatorFactory.RuleSets is {Length: > 0}) {
+	private protected override IValidatorSelector? GetSelector(ValidationContext<T> context, TProperty value) {
+		if (_derivedValidators.TryGetValue(value!.GetType(), out var derivedValidatorFactory) && derivedValidatorFactory.RuleSets is {Length: > 0}) {
 			return new RulesetValidatorSelector(derivedValidatorFactory.RuleSets);
 		}
 		return null;
 	}
 
 	private class DerivedValidatorFactory {
-		private IValidator _innerValidator;
-		private readonly Func<ValidationContext<T>, TProperty, IValidator> _factory;
+		private IValidator? _innerValidator;
+		private readonly Func<ValidationContext<T>, TProperty, IValidator>? _factory;
 		public string[] RuleSets { get; }
 
 		public DerivedValidatorFactory(IValidator innerValidator, string[] ruleSets) {
@@ -130,7 +134,7 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 		}
 
 		public IValidator GetValidator(ValidationContext<T> context, TProperty value) {
-			return _factory?.Invoke(context, value) ?? _innerValidator;
+			return (_factory?.Invoke(context, value) ?? _innerValidator)!;
 		}
 	}
 }

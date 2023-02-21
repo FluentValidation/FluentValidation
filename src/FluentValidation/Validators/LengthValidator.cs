@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 
 public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator {
@@ -26,8 +28,8 @@ public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator 
 	public int Min { get; }
 	public int Max { get; }
 
-	public Func<T, int> MinFunc { get; set; }
-	public Func<T, int> MaxFunc { get; set; }
+	public Func<T, int>? MinFunc { get; set; }
+	public Func<T, int>? MaxFunc { get; set; }
 
 	public LengthValidator(int min, int max) {
 		Max = max;
@@ -43,7 +45,7 @@ public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator 
 		MinFunc = min;
 	}
 
-	public override bool IsValid(ValidationContext<T> context, string value) {
+	public override bool IsValid(ValidationContext<T> context, string? value) {
 		if (value == null) return true;
 
 		var min = Min;
@@ -68,7 +70,7 @@ public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator 
 		return true;
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }
@@ -85,7 +87,7 @@ public class ExactLengthValidator<T> : LengthValidator<T>, IExactLengthValidator
 
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }
@@ -103,7 +105,7 @@ public class MaximumLengthValidator<T> : LengthValidator<T>, IMaximumLengthValid
 
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }
@@ -121,7 +123,7 @@ public class MinimumLengthValidator<T> : LengthValidator<T>, IMinimumLengthValid
 
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

@@ -20,6 +20,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,7 +31,7 @@ public class EmptyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 
 	public override string Name => "EmptyValidator";
 
-	public override bool IsValid(ValidationContext<T> context, TProperty value) {
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) {
 		switch (value) {
 			case null:
 			case string s when string.IsNullOrWhiteSpace(s):
@@ -42,7 +44,7 @@ public class EmptyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 		return EqualityComparer<TProperty>.Default.Equals(value, default);
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

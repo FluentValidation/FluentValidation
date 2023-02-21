@@ -20,31 +20,33 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 
 public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqualValidator {
-	readonly Func<T, TProperty> _func;
-	private readonly string _memberDisplayName;
-	readonly IEqualityComparer<TProperty> _comparer;
+	readonly Func<T, TProperty>? _func;
+	private readonly string? _memberDisplayName;
+	readonly IEqualityComparer<TProperty?>? _comparer;
 
 	public override string Name => "EqualValidator";
 
 
-	public EqualValidator(TProperty valueToCompare, IEqualityComparer<TProperty> comparer = null) {
+	public EqualValidator(TProperty? valueToCompare, IEqualityComparer<TProperty?>? comparer = null) {
 		ValueToCompare = valueToCompare;
 		_comparer = comparer;
 	}
 
-	public EqualValidator(Func<T, TProperty> comparisonProperty, MemberInfo member, string memberDisplayName, IEqualityComparer<TProperty> comparer = null) {
+	public EqualValidator(Func<T, TProperty>? comparisonProperty, MemberInfo? member, string memberDisplayName, IEqualityComparer<TProperty?>? comparer = null) {
 		_func = comparisonProperty;
 		_memberDisplayName = memberDisplayName;
 		MemberToCompare = member;
 		_comparer = comparer;
 	}
 
-	public override bool IsValid(ValidationContext<T> context, TProperty value) {
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) {
 		var comparisonValue = GetComparisonValue(context);
 		bool success = Compare(comparisonValue, value);
 
@@ -63,17 +65,19 @@ public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqu
 			return _func(context.InstanceToValidate);
 		}
 
-		return ValueToCompare;
+		// OK to suppress null warning. If value func not supplied then
+		// ValueToCompare will be non-null.
+		return ValueToCompare!;
 	}
 
 	public Comparison Comparison => Comparison.Equal;
 
-	public MemberInfo MemberToCompare { get; private set; }
-	public TProperty ValueToCompare { get; private set; }
+	public MemberInfo? MemberToCompare { get; private set; }
+	public TProperty? ValueToCompare { get; private set; }
 
-	object IComparisonValidator.ValueToCompare => ValueToCompare;
+	object? IComparisonValidator.ValueToCompare => ValueToCompare;
 
-	protected bool Compare(TProperty comparisonValue, TProperty propertyValue) {
+	protected bool Compare(TProperty? comparisonValue, TProperty? propertyValue) {
 		if (_comparer != null) {
 			return _comparer.Equals(comparisonValue, propertyValue);
 		}
@@ -81,7 +85,7 @@ public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqu
 		return Equals(comparisonValue, propertyValue);
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

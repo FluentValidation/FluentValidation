@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 #pragma warning disable 1591
 namespace FluentValidation.TestHelper;
 
@@ -27,6 +29,7 @@ public class ValidationTestException : Exception {
 	public List<ValidationFailure> Errors { get; }
 
 	public ValidationTestException(string message) : base(message) {
+		Errors = new List<ValidationFailure>();
 	}
 
 	public ValidationTestException(string message, List<ValidationFailure> errors) : this(message) {

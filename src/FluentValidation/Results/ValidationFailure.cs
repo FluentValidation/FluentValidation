@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Results;
 
 using System;
@@ -31,7 +33,7 @@ public class ValidationFailure {
 	/// Creates a new validation failure.
 	/// </summary>
 	public ValidationFailure() {
-
+		PropertyName = string.Empty;
 	}
 
 	/// <summary>
@@ -44,7 +46,7 @@ public class ValidationFailure {
 	/// <summary>
 	/// Creates a new ValidationFailure.
 	/// </summary>
-	public ValidationFailure(string propertyName, string errorMessage, object attemptedValue) {
+	public ValidationFailure(string propertyName, string errorMessage, object? attemptedValue) {
 		PropertyName = propertyName;
 		ErrorMessage = errorMessage;
 		AttemptedValue = attemptedValue;
@@ -58,17 +60,17 @@ public class ValidationFailure {
 	/// <summary>
 	/// The error message
 	/// </summary>
-	public string ErrorMessage { get; set; }
+	public string? ErrorMessage { get; set; }
 
 	/// <summary>
 	/// The property value that caused the failure.
 	/// </summary>
-	public object AttemptedValue { get; set; }
+	public object? AttemptedValue { get; set; }
 
 	/// <summary>
 	/// Custom state associated with the failure.
 	/// </summary>
-	public object CustomState { get; set; }
+	public object? CustomState { get; set; }
 
 	/// <summary>
 	/// Custom severity level associated with the failure.
@@ -78,17 +80,17 @@ public class ValidationFailure {
 	/// <summary>
 	/// Gets or sets the error code.
 	/// </summary>
-	public string ErrorCode { get; set; }
+	public string? ErrorCode { get; set; }
 
 	/// <summary>
 	/// Gets or sets the formatted message placeholder values.
 	/// </summary>
-	public Dictionary<string, object> FormattedMessagePlaceholderValues { get; set; }
+	public Dictionary<string, object?>? FormattedMessagePlaceholderValues { get; set; }
 
 	/// <summary>
 	/// Creates a textual representation of the failure.
 	/// </summary>
 	public override string ToString() {
-		return ErrorMessage;
+		return ErrorMessage ?? string.Empty;
 	}
 }

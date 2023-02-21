@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Linq;
 using System.Reflection;
@@ -39,7 +41,7 @@ public class StringEnumValidator<T> : PropertyValidator<T, string> {
 		_caseSensitive = caseSensitive;
 	}
 
-	public override bool IsValid(ValidationContext<T> context, string value) {
+	public override bool IsValid(ValidationContext<T> context, string? value) {
 		if (value == null) return true;
 		var comparison = _caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 		return Enum.GetNames(_enumType).Any(n => n.Equals(value, comparison));
@@ -52,7 +54,7 @@ public class StringEnumValidator<T> : PropertyValidator<T, string> {
 		}
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		// Intentionally the same message as EnumValidator.
 		return Localized(errorCode, "EnumValidator");
 	}

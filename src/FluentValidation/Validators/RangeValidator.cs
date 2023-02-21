@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 
@@ -42,12 +44,12 @@ public abstract class RangeValidator<T, TProperty> : PropertyValidator<T, TPrope
 	public TProperty From { get; }
 	public TProperty To { get; }
 
-	object IBetweenValidator.From => From;
-	object IBetweenValidator.To => To;
+	object IBetweenValidator.From => From!;
+	object IBetweenValidator.To => To!;
 
 	protected abstract bool HasError(TProperty value);
 
-	public override bool IsValid(ValidationContext<T> context, TProperty value) {
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) {
 		// If the value is null then we abort and assume success.
 		// This should not be a failure condition - only a NotNull/NotEmpty should cause a null to fail.
 		if (value == null) return true;
@@ -67,7 +69,7 @@ public abstract class RangeValidator<T, TProperty> : PropertyValidator<T, TPrope
 		return _explicitComparer.Compare(a, b);
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

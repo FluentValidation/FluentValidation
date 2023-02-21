@@ -21,6 +21,8 @@ namespace FluentValidation.Validators;
 using System;
 using System.Reflection;
 
+#nullable enable
+
 public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty>, IComparable {
 	public override string Name => "LessThanValidator";
 
@@ -35,7 +37,7 @@ public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TP
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
-	public override bool IsValid(TProperty value, TProperty valueToCompare) {
+	public override bool IsValid(TProperty value, TProperty? valueToCompare) {
 		if (valueToCompare == null)
 			return false;
 
@@ -44,7 +46,7 @@ public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TP
 
 	public override Comparison Comparison => Comparison.LessThan;
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

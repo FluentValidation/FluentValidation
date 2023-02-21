@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Validators;
 
 using System;
@@ -36,14 +38,14 @@ public class LessThanOrEqualValidator<T, TProperty> : AbstractComparisonValidato
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
-	public override bool IsValid(TProperty value, TProperty valueToCompare) {
+	public override bool IsValid(TProperty value, TProperty? valueToCompare) {
 		if (valueToCompare == null)
 			return false;
 
 		return value.CompareTo(valueToCompare) <= 0;
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 

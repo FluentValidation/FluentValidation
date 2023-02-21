@@ -22,26 +22,28 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
+#nullable enable
+
 public class NotEqualValidator<T,TProperty> : PropertyValidator<T,TProperty>, IComparisonValidator {
-	private readonly IEqualityComparer<TProperty> _comparer;
-	private readonly Func<T, TProperty> _func;
-	private readonly string _memberDisplayName;
+	private readonly IEqualityComparer<TProperty?>? _comparer;
+	private readonly Func<T, TProperty>? _func;
+	private readonly string? _memberDisplayName;
 
 	public override string Name => "NotEqualValidator";
 
-	public NotEqualValidator(Func<T, TProperty> func, MemberInfo memberToCompare, string memberDisplayName, IEqualityComparer<TProperty> equalityComparer = null) {
+	public NotEqualValidator(Func<T, TProperty> func, MemberInfo? memberToCompare, string memberDisplayName, IEqualityComparer<TProperty?>? equalityComparer = null) {
 		_func = func;
 		_comparer = equalityComparer;
 		_memberDisplayName = memberDisplayName;
 		MemberToCompare = memberToCompare;
 	}
 
-	public NotEqualValidator(TProperty comparisonValue, IEqualityComparer<TProperty> equalityComparer = null) {
+	public NotEqualValidator(TProperty comparisonValue, IEqualityComparer<TProperty?>? equalityComparer = null) {
 		ValueToCompare = comparisonValue;
 		_comparer = equalityComparer;
 	}
 
-	public override bool IsValid(ValidationContext<T> context, TProperty value) {
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) {
 		var comparisonValue = GetComparisonValue(context);
 		bool success = !Compare(comparisonValue, value);
 
@@ -59,17 +61,19 @@ public class NotEqualValidator<T,TProperty> : PropertyValidator<T,TProperty>, IC
 			return _func(context.InstanceToValidate);
 		}
 
-		return ValueToCompare;
+		// OK to suppress null warning. If value func not supplied then
+		// ValueToCompare will be non-null.
+		return ValueToCompare!;
 	}
 
 	public Comparison Comparison => Comparison.NotEqual;
 
-	public MemberInfo MemberToCompare { get; private set; }
-	public TProperty ValueToCompare { get; private set; }
+	public MemberInfo? MemberToCompare { get; private set; }
+	public TProperty? ValueToCompare { get; private set; }
 
-	object IComparisonValidator.ValueToCompare => ValueToCompare;
+	object? IComparisonValidator.ValueToCompare => ValueToCompare;
 
-	protected bool Compare(TProperty comparisonValue, TProperty propertyValue) {
+	protected bool Compare(TProperty? comparisonValue, TProperty? propertyValue) {
 		if(_comparer != null) {
 			return _comparer.Equals(comparisonValue, propertyValue);
 		}
@@ -77,7 +81,7 @@ public class NotEqualValidator<T,TProperty> : PropertyValidator<T,TProperty>, IC
 		return Equals(comparisonValue, propertyValue);
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

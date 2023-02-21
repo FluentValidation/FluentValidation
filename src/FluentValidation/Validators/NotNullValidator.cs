@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using Resources;
 
@@ -25,11 +27,11 @@ public class NotNullValidator<T,TProperty> : PropertyValidator<T,TProperty>, INo
 
 	public override string Name => "NotNullValidator";
 
-	public override bool IsValid(ValidationContext<T> context, TProperty value) {
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) {
 		return value != null;
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

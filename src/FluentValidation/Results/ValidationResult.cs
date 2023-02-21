@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Results;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,7 +55,7 @@ public class ValidationResult {
 	/// <summary>
 	/// The RuleSets that were executed during the validation run.
 	/// </summary>
-	public string[] RuleSetsExecuted { get; set; }
+	public string[]? RuleSetsExecuted { get; set; }
 
 	/// <summary>
 	/// Creates a new validationResult
@@ -70,8 +72,8 @@ public class ValidationResult {
 	/// Any nulls will be excluded.
 	/// The list is copied.
 	/// </remarks>
-	public ValidationResult(IEnumerable<ValidationFailure> failures) {
-		_errors = failures.Where(failure => failure != null).ToList();
+	public ValidationResult(IEnumerable<ValidationFailure?> failures) {
+		_errors = failures.Where(failure => failure != null).ToList()!;
 	}
 
 	internal ValidationResult(List<ValidationFailure> errors) {
@@ -101,9 +103,9 @@ public class ValidationResult {
 	/// <returns>A dictionary keyed by property name
 	/// where each value is an array of error messages associated with that property.
 	/// </returns>
-	public IDictionary<string, string[]> ToDictionary() {
+	public IDictionary<string, string?[]> ToDictionary() {
 		return Errors
-			.GroupBy(x => x.PropertyName)
+			.GroupBy(x => x.PropertyName ?? string.Empty)
 			.ToDictionary(
 				g => g.Key,
 				g => g.Select(x => x.ErrorMessage).ToArray()

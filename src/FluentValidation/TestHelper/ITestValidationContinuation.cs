@@ -1,5 +1,7 @@
 namespace FluentValidation.TestHelper;
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,9 +20,9 @@ internal class TestValidationContinuation : ITestValidationContinuation, ITestVa
 	private readonly IEnumerable<ValidationFailure> _allFailures;
 	private readonly List<Func<ValidationFailure,bool>> _predicates;
 
-	public ITestValidationContinuation Parent { get; }
+	public ITestValidationContinuation? Parent { get; }
 
-	public TestValidationContinuation(IEnumerable<ValidationFailure> failures, ITestValidationContinuation parent = null) {
+	public TestValidationContinuation(IEnumerable<ValidationFailure> failures, ITestValidationContinuation? parent = null) {
 		_allFailures = failures;
 		_predicates = new List<Func<ValidationFailure, bool>>();
 		Parent = parent;

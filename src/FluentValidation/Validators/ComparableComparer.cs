@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 
@@ -28,7 +30,11 @@ internal class ComparableComparer<T> : IComparer<T> where T : IComparable<T> {
 		Instance = new ComparableComparer<T>();
 	}
 
-	public int Compare(T x, T y) {
+	public int Compare(T? x, T? y) {
+		if (x == null && y == null) return 0;
+		if (x == null) return -1;
+		if (y == null) return 1;
+
 		return x.CompareTo(y);
 	}
 }

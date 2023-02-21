@@ -20,6 +20,8 @@
 
 namespace FluentValidation.TestHelper;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,7 +114,8 @@ public class TestValidationResult<T> : ValidationResult {
 		}
 	}
 
-	private static string NormalizePropertyName(string propertyName) {
+	private static string NormalizePropertyName(string? propertyName) {
+		if (propertyName == null) return string.Empty;
 		return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 	}
 }

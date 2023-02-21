@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Reflection;
 using Internal;
@@ -38,7 +40,7 @@ public class GreaterThanValidator<T, TProperty> : AbstractComparisonValidator<T,
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
-	public override bool IsValid(TProperty value, TProperty valueToCompare) {
+	public override bool IsValid(TProperty value, TProperty? valueToCompare) {
 		if (valueToCompare == null)
 			return false;
 
@@ -47,7 +49,7 @@ public class GreaterThanValidator<T, TProperty> : AbstractComparisonValidator<T,
 
 	public override Comparison Comparison => Validators.Comparison.GreaterThan;
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

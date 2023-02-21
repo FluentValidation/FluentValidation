@@ -18,11 +18,13 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using Internal;
 
 public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TProperty> {
 
-	string IPropertyValidator.GetDefaultMessageTemplate(string errorCode)
+	string IPropertyValidator.GetDefaultMessageTemplate(string? errorCode)
 		=> GetDefaultMessageTemplate(errorCode);
 
 	/// <summary>
@@ -30,7 +32,7 @@ public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TPr
 	/// </summary>
 	/// <param name="errorCode">The currently configured error code for the validator.</param>
 	/// <returns></returns>
-	protected virtual string GetDefaultMessageTemplate(string errorCode) => "No default error message has been specified";
+	protected virtual string GetDefaultMessageTemplate(string? errorCode) => "No default error message has been specified";
 
 	/// <inheritdoc />
 	public abstract string Name { get; }
@@ -44,7 +46,7 @@ public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TPr
 	/// <param name="errorCode">The currently configured error code for the validator.</param>
 	/// <param name="fallbackKey">The fallback key to use for translation, if no ErrorCode is available.</param>
 	/// <returns>The translated error message template.</returns>
-	protected string Localized(string errorCode, string fallbackKey) {
+	protected string Localized(string? errorCode, string fallbackKey) {
 		return ValidatorOptions.Global.LanguageManager.ResolveErrorMessageUsingErrorCode(errorCode, fallbackKey);
 	}
 
@@ -54,5 +56,5 @@ public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TPr
 	/// <param name="context">The validation context. The parent object can be obtained from here.</param>
 	/// <param name="value">The current property value to validate</param>
 	/// <returns>True if valid, otherwise false.</returns>
-	public abstract bool IsValid(ValidationContext<T> context, TProperty value);
+	public abstract bool IsValid(ValidationContext<T> context, TProperty? value);
 }

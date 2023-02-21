@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Validators;
 
+#nullable enable
+
 using System;
 using System.Text.RegularExpressions;
 
@@ -46,7 +48,7 @@ public class EmailValidator<T> : PropertyValidator<T,string>, IRegularExpression
 
 	public override string Name => "EmailValidator";
 
-	public override bool IsValid(ValidationContext<T> context, string value) {
+	public override bool IsValid(ValidationContext<T> context, string? value) {
 		if (value == null) return true;
 
 		if (!_regex.IsMatch(value)) {
@@ -63,7 +65,7 @@ public class EmailValidator<T> : PropertyValidator<T,string>, IRegularExpression
 		return new Regex(_expression, options, TimeSpan.FromSeconds(2.0));
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }
@@ -72,7 +74,7 @@ public class AspNetCoreCompatibleEmailValidator<T> : PropertyValidator<T,string>
 
 	public override string Name => "EmailValidator";
 
-	public override bool IsValid(ValidationContext<T> context, string value) {
+	public override bool IsValid(ValidationContext<T> context, string? value) {
 		if (value == null) {
 			return true;
 		}
@@ -87,7 +89,7 @@ public class AspNetCoreCompatibleEmailValidator<T> : PropertyValidator<T,string>
 			index == value.LastIndexOf('@');
 	}
 
-	protected override string GetDefaultMessageTemplate(string errorCode) {
+	protected override string GetDefaultMessageTemplate(string? errorCode) {
 		return Localized(errorCode, Name);
 	}
 }

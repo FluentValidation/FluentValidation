@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Validators;
 
 using System;
@@ -26,9 +28,9 @@ using Internal;
 /// Base class for all comparison validators
 /// </summary>
 public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValidator<T,TProperty>, IComparisonValidator where TProperty : IComparable<TProperty>, IComparable {
-	readonly Func<T, (bool HasValue, TProperty Value)> _valueToCompareFuncForNullables;
-	private readonly Func<T, TProperty> _valueToCompareFunc;
-	private readonly string _comparisonMemberDisplayName;
+	readonly Func<T, (bool HasValue, TProperty Value)>? _valueToCompareFuncForNullables;
+	private readonly Func<T, TProperty?>? _valueToCompareFunc;
+	private readonly string? _comparisonMemberDisplayName;
 
 	/// <summary>
 	/// </summary>
@@ -66,7 +68,7 @@ public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValida
 	/// <param name="context"></param>
 	/// <param name="propertyValue"></param>
 	/// <returns></returns>
-	public sealed override bool IsValid(ValidationContext<T> context, TProperty propertyValue) {
+	public sealed override bool IsValid(ValidationContext<T> context, TProperty? propertyValue) {
 		if(propertyValue == null) {
 			// If we're working with a nullable type then this rule should not be applied.
 			// If you want to ensure that it's never null then a NotNull rule should also be applied.
@@ -84,7 +86,7 @@ public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValida
 		return true;
 	}
 
-	public (bool HasValue, TProperty Value) GetComparisonValue(ValidationContext<T> context) {
+	public (bool HasValue, TProperty? Value) GetComparisonValue(ValidationContext<T> context) {
 		if(_valueToCompareFunc != null) {
 			var value = _valueToCompareFunc(context.InstanceToValidate);
 			return (value != null, value);
@@ -102,7 +104,7 @@ public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValida
 	/// <param name="value"></param>
 	/// <param name="valueToCompare"></param>
 	/// <returns></returns>
-	public abstract bool IsValid(TProperty value, TProperty valueToCompare);
+	public abstract bool IsValid(TProperty value, TProperty? valueToCompare);
 
 	/// <summary>
 	/// Metadata- the comparison type
@@ -111,17 +113,17 @@ public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValida
 	/// <summary>
 	/// Metadata- the member being compared
 	/// </summary>
-	public MemberInfo MemberToCompare { get; private set; }
+	public MemberInfo? MemberToCompare { get; private set; }
 
 	/// <summary>
 	/// The value being compared
 	/// </summary>
-	public TProperty ValueToCompare { get; }
+	public TProperty? ValueToCompare { get; }
 
 	/// <summary>
 	/// Comparison value as non-generic for metadata.
 	/// </summary>
-	object IComparisonValidator.ValueToCompare =>
+	object? IComparisonValidator.ValueToCompare =>
 		// For clientside validation to work, we must return null if MemberToCompare or valueToCompareFunc is set.
 		// We can't rely on ValueToCompare being null itself as it's generic, and will be initialized
 		// as default(TProperty) which for non-nullable value types will emit the
@@ -140,11 +142,11 @@ public interface IComparisonValidator : IPropertyValidator {
 	/// <summary>
 	/// Metadata- the member being compared
 	/// </summary>
-	MemberInfo MemberToCompare { get; }
+	MemberInfo? MemberToCompare { get; }
 	/// <summary>
 	/// Metadata- the value being compared
 	/// </summary>
-	object ValueToCompare { get; }
+	object? ValueToCompare { get; }
 }
 
 #pragma warning disable 1591
