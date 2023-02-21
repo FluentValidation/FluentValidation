@@ -19,17 +19,14 @@
 namespace FluentValidation.Validators;
 
 using System;
-using Internal;
-using Resources;
 
 public class PredicateValidator<T,TProperty> : PropertyValidator<T,TProperty>, IPredicateValidator {
-	public delegate bool Predicate(T instanceToValidate, TProperty propertyValue, ValidationContext<T> propertyValidatorContext);
 
-	private readonly Predicate _predicate;
+	private readonly Func<T, TProperty, ValidationContext<T>, bool> _predicate;
 
 	public override string Name => "PredicateValidator";
 
-	public PredicateValidator(Predicate predicate) {
+	public PredicateValidator(Func<T, TProperty, ValidationContext<T>, bool> predicate) {
 		ArgumentNullException.ThrowIfNull(predicate);
 		_predicate = predicate;
 	}
