@@ -450,7 +450,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, ValidationContext<T>, bool> predicate) {
 		ArgumentNullException.ThrowIfNull(predicate);
-		return ruleBuilder.SetValidator(new PredicateValidator<T,TProperty>((instance, property, propertyValidatorContext) => predicate(instance, property, propertyValidatorContext)));
+		return ruleBuilder.SetValidator(new PredicateValidator<T,TProperty>(predicate));
 	}
 
 	/// <summary>
