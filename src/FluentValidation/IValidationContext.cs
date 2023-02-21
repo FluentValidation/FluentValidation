@@ -302,7 +302,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	public void AddFailure(string errorMessage) {
 		ExtensionsInternal.ThrowIfNullOrEmpty(errorMessage);
 		errorMessage = MessageFormatter.BuildMessage(errorMessage);
-		AddFailure(new ValidationFailure(PropertyName, errorMessage));
+		AddFailure(new ValidationFailure(PropertyName ?? string.Empty, errorMessage));
 	}
 
 	private Func<ValidationContext<T>, string> _displayNameFunc;

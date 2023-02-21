@@ -22,6 +22,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#nullable enable
+
 /// <summary>
 /// The result of running a validator
 /// </summary>
@@ -53,7 +55,7 @@ public class ValidationResult {
 	/// <summary>
 	/// The RuleSets that were executed during the validation run.
 	/// </summary>
-	public string[] RuleSetsExecuted { get; set; }
+	public string[]? RuleSetsExecuted { get; set; }
 
 	/// <summary>
 	/// Creates a new validationResult
