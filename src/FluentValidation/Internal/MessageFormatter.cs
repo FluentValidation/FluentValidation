@@ -17,6 +17,8 @@
 #endregion
 namespace FluentValidation.Internal;
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -24,7 +26,7 @@ using System.Text.RegularExpressions;
 /// Assists in the construction of validation messages.
 /// </summary>
 public class MessageFormatter {
-	readonly Dictionary<string, object> _placeholderValues = new(2);
+	readonly Dictionary<string, object?> _placeholderValues = new(2);
 
 	private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled);
 
@@ -44,7 +46,7 @@ public class MessageFormatter {
 	/// <param name="name"></param>
 	/// <param name="value"></param>
 	/// <returns></returns>
-	public MessageFormatter AppendArgument(string name, object value) {
+	public MessageFormatter AppendArgument(string name, object? value) {
 		_placeholderValues[name] = value;
 		return this;
 	}
@@ -63,7 +65,7 @@ public class MessageFormatter {
 	/// </summary>
 	/// <param name="value">The value of the property</param>
 	/// <returns></returns>
-	public MessageFormatter AppendPropertyValue(object value) {
+	public MessageFormatter AppendPropertyValue(object? value) {
 		return AppendArgument(PropertyValue, value);
 	}
 
@@ -83,16 +85,16 @@ public class MessageFormatter {
 				? $"{{0:{m.Groups[2].Value}}}"
 				: null;
 
-			return format == null
+			return (format == null
 				? value?.ToString()
-				: string.Format(format, value);
+				: string.Format(format, value)) ?? string.Empty;
 		});
 	}
 
 	/// <summary>
 	/// Additional placeholder values
 	/// </summary>
-	public Dictionary<string, object> PlaceholderValues => _placeholderValues;
+	public Dictionary<string, object?> PlaceholderValues => _placeholderValues;
 
 	internal void Reset() {
 		_placeholderValues.Clear();

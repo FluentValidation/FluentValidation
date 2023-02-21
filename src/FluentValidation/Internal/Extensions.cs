@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Internal;
 
 using System;
@@ -30,14 +32,14 @@ public static class Extensions {
 	/// <summary>
 	/// Gets a MemberInfo from a member expression.
 	/// </summary>
-	public static MemberInfo GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
+	public static MemberInfo? GetMember<T, TProperty>(this Expression<Func<T, TProperty>> expression) {
 		var memberExp = RemoveUnary(expression.Body) as MemberExpression;
 
 		if (memberExp == null) {
 			return null;
 		}
 
-		Expression currentExpr = memberExp.Expression;
+		Expression? currentExpr = memberExp.Expression;
 
 		// Unwind the expression to get the root object that the expression acts upon.
 		while (true) {
@@ -57,7 +59,7 @@ public static class Extensions {
 		return memberExp.Member;
 	}
 
-	private static Expression RemoveUnary(Expression toUnwrap) {
+	private static Expression? RemoveUnary(Expression? toUnwrap) {
 		if (toUnwrap is UnaryExpression) {
 			return ((UnaryExpression)toUnwrap).Operand;
 		}

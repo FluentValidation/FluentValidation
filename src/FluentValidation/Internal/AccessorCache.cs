@@ -1,5 +1,7 @@
 namespace FluentValidation.Internal;
 
+#nullable enable
+
 using System;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
@@ -21,7 +23,7 @@ public static class AccessorCache<T> {
 	/// <param name="bypassCache"></param>
 	/// <param name="cachePrefix">Cache prefix</param>
 	/// <returns>Accessor func</returns>
-	public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, bool bypassCache = false, string cachePrefix = null) {
+	public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo? member, Expression<Func<T, TProperty>> expression, bool bypassCache = false, string? cachePrefix = null) {
 		if (member == null || bypassCache || ValidatorOptions.Global.DisableAccessorCache) {
 			return expression.Compile();
 		}
@@ -38,7 +40,7 @@ public static class AccessorCache<T> {
 		private readonly MemberInfo _memberInfo;
 		private readonly string _expressionDebugView;
 
-		public Key(MemberInfo member, Expression expression, string cachePrefix) {
+		public Key(MemberInfo member, Expression expression, string? cachePrefix) {
 			_memberInfo = member;
 			_expressionDebugView = cachePrefix != null ? cachePrefix + expression.ToString() : expression.ToString();
 		}
@@ -47,7 +49,7 @@ public static class AccessorCache<T> {
 			return Equals(_memberInfo, other._memberInfo) && string.Equals(_expressionDebugView, other._expressionDebugView);
 		}
 
-		public override bool Equals(object obj) {
+		public override bool Equals(object? obj) {
 			if (ReferenceEquals(null, obj)) return false;
 			if (ReferenceEquals(this, obj)) return true;
 			if (obj.GetType() != this.GetType()) return false;
@@ -56,7 +58,7 @@ public static class AccessorCache<T> {
 
 		public override int GetHashCode() {
 			unchecked {
-				return ((_memberInfo != null ? _memberInfo.GetHashCode() : 0)*397) ^ (_expressionDebugView != null ? _expressionDebugView.GetHashCode() : 0);
+				return ((_memberInfo.GetHashCode())*397) ^ (_expressionDebugView != null ? _expressionDebugView.GetHashCode() : 0);
 			}
 		}
 	}

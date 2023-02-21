@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Internal;
 
 using System;
@@ -29,7 +31,7 @@ using Resources;
 internal static class ExtensionsInternal {
 
 	// Todo: Replace with ArgumentException.ThrowIfNullOrEmpty once we stop supporting .net 6
-	public static void ThrowIfNullOrEmpty([NotNull] string argument, [CallerArgumentExpression("argument")] string paramName = null) {
+	public static void ThrowIfNullOrEmpty([NotNull] string? argument, [CallerArgumentExpression("argument")] string? paramName = null) {
 		if (string.IsNullOrEmpty(argument)) {
 			ArgumentNullException.ThrowIfNull(argument, paramName);
 			throw new ArgumentException("The value cannot be an empty string", paramName);
@@ -76,7 +78,7 @@ internal static class ExtensionsInternal {
 		return retVal.ToString().Trim();
 	}
 
-	internal static T GetOrAdd<T>(this IDictionary<string, object> dict, string key, Func<T> value) {
+	internal static T GetOrAdd<T>(this IDictionary<string, object?> dict, string key, Func<T> value) {
 		if (dict.TryGetValue(key, out var tmp)) {
 			if (tmp is T result) {
 				return result;
@@ -88,7 +90,7 @@ internal static class ExtensionsInternal {
 		return val;
 	}
 
-	internal static string ResolveErrorMessageUsingErrorCode(this ILanguageManager languageManager, string errorCode, string fallbackKey) {
+	internal static string ResolveErrorMessageUsingErrorCode(this ILanguageManager languageManager, string? errorCode, string fallbackKey) {
 		if (errorCode != null) {
 			string result = languageManager.GetString(errorCode);
 

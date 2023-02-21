@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Internal;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +77,7 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 
 		// Stores the normalized property name if we're working with collection properties
 		// eg Orders[0].Name -> Orders[].Name. This is only initialized if needed (see below).
-		string normalizedPropertyPath = null;
+		string? normalizedPropertyPath = null;
 
 		// If the current property path is equal to any of the member names for inclusion
 		// or it's a child property path (indicated by a period) where we have a partial match.

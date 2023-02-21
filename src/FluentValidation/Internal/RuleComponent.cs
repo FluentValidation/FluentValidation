@@ -20,6 +20,8 @@
 
 namespace FluentValidation.Internal;
 
+#nullable enable
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,18 +33,18 @@ using Validators;
 /// the NotNull and the NotEqual are both rule components.
 /// </summary>
 public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
-	private string _errorMessage;
-	private Func<ValidationContext<T>, TProperty, string> _errorMessageFactory;
-	private Func<ValidationContext<T>, bool> _condition;
-	private Func<ValidationContext<T>, CancellationToken, Task<bool>> _asyncCondition;
-	private readonly IPropertyValidator<T, TProperty> _propertyValidator;
-	private readonly IAsyncPropertyValidator<T, TProperty> _asyncPropertyValidator;
+	private string? _errorMessage;
+	private Func<ValidationContext<T>?, TProperty?, string>? _errorMessageFactory;
+	private Func<ValidationContext<T>, bool>? _condition;
+	private Func<ValidationContext<T>, CancellationToken, Task<bool>>? _asyncCondition;
+	private readonly IPropertyValidator<T, TProperty>? _propertyValidator;
+	private readonly IAsyncPropertyValidator<T, TProperty>? _asyncPropertyValidator;
 
-	internal RuleComponent(IPropertyValidator<T, TProperty> propertyValidator) {
+	internal RuleComponent(IPropertyValidator<T, TProperty>? propertyValidator) {
 		_propertyValidator = propertyValidator;
 	}
 
-	internal RuleComponent(IAsyncPropertyValidator<T, TProperty> asyncPropertyValidator, IPropertyValidator<T, TProperty> propertyValidator) {
+	internal RuleComponent(IAsyncPropertyValidator<T, TProperty>? asyncPropertyValidator, IPropertyValidator<T, TProperty>? propertyValidator) {
 		_asyncPropertyValidator = asyncPropertyValidator;
 		_propertyValidator = propertyValidator;
 	}
@@ -54,8 +56,14 @@ public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
 	public bool HasAsyncCondition => _asyncCondition != null;
 
 	/// <inheritdoc />
-	public virtual IPropertyValidator Validator
-		=> (IPropertyValidator) _propertyValidator ?? _asyncPropertyValidator;
+	public virtual IPropertyValidator Validator {
+		get {
+			if (_propertyValidator != null) return _propertyValidator;
+			// Suppress nullability warning - either _propertyValidator
+			// or _asyncPropertyValidator will be non-null.
+			return _asyncPropertyValidator!;
+		}
+	}
 
 	private protected virtual bool SupportsAsynchronousValidation
 		=> _asyncPropertyValidator != null;
@@ -89,10 +97,10 @@ public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
 	}
 
 	private protected virtual bool InvokePropertyValidator(ValidationContext<T> context, TProperty value)
-		=> _propertyValidator.IsValid(context, value);
+		=> _propertyValidator!.IsValid(context, value);
 
 	private protected virtual Task<bool> InvokePropertyValidatorAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation)
-		=> _asyncPropertyValidator.IsValidAsync(context, value, cancellation);
+		=> _asyncPropertyValidator!.IsValidAsync(context, value, cancellation);
 
 	/// <summary>
 	/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
@@ -141,17 +149,17 @@ public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
 	/// <summary>
 	/// Function used to retrieve custom state for the validator
 	/// </summary>
-	public Func<ValidationContext<T>, TProperty, object> CustomStateProvider { get; set; }
+	public Func<ValidationContext<T>, TProperty?, object>? CustomStateProvider { get; set; }
 
 	/// <summary>
 	/// Function used to retrieve the severity for the validator
 	/// </summary>
-	public Func<ValidationContext<T>, TProperty, Severity> SeverityProvider { get; set; }
+	public Func<ValidationContext<T>, TProperty?, Severity>? SeverityProvider { get; set; }
 
 	/// <summary>
 	/// Retrieves the error code.
 	/// </summary>
-	public string ErrorCode { get; set; }
+	public string? ErrorCode { get; set; }
 
 	/// <summary>
 	/// Gets the error message. If a context is supplied, it will be used to format the message if it has placeholders.
@@ -160,10 +168,9 @@ public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
 	/// <param name="context">The validation context.</param>
 	/// <param name="value">The current property value.</param>
 	/// <returns>Either the formatted or unformatted error message.</returns>
-	public string GetErrorMessage(ValidationContext<T> context, TProperty value) {
+	public string GetErrorMessage(ValidationContext<T>? context, TProperty value) {
 		// Use a custom message if one has been specified.
-		string rawTemplate = _errorMessageFactory?.Invoke(context, value) ?? _errorMessage;
-
+		string? rawTemplate = _errorMessageFactory?.Invoke(context, value) ?? _errorMessage;
 
 		// If no custom message has been supplied, use the default.
 		if (rawTemplate == null) {
@@ -182,7 +189,7 @@ public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
 	/// </summary>
 	/// <returns></returns>
 	public string GetUnformattedErrorMessage() {
-		string message = _errorMessageFactory?.Invoke(null, default) ?? _errorMessage;
+		string? message = _errorMessageFactory?.Invoke(null, default) ?? _errorMessage;
 
 		// If no custom message has been supplied, use the default.
 		if (message == null) {
@@ -196,7 +203,7 @@ public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
 	/// Sets the overridden error message template for this validator.
 	/// </summary>
 	/// <param name="errorFactory">A function for retrieving the error message template.</param>
-	public void SetErrorMessage(Func<ValidationContext<T>, TProperty, string> errorFactory) {
+	public void SetErrorMessage(Func<ValidationContext<T>?, TProperty?, string> errorFactory) {
 		_errorMessageFactory = errorFactory;
 		_errorMessage = null;
 	}

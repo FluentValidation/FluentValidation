@@ -66,7 +66,7 @@ internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, I
 		}
 
 		// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
-		string? propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
+		string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
 
 		// Ensure that this rule is allowed to run.
 		// The validatselector has the opportunity to veto this before any of the validators execute.

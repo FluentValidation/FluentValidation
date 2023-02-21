@@ -39,7 +39,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 	/// <summary>
 	/// Initializes new instance of the CollectionPropertyRule class
 	/// </summary>
-	public CollectionPropertyRule(MemberInfo member, Func<T, IEnumerable<TElement>> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+	public CollectionPropertyRule(MemberInfo? member, Func<T, IEnumerable<TElement>> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
 		: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
 	}
 
@@ -213,10 +213,10 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		return validators;
 	}
 
-	private static string? InferPropertyName(LambdaExpression expression) {
+	private static string InferPropertyName(LambdaExpression expression) {
 		var paramExp = expression.Body as ParameterExpression;
 
-		if (paramExp == null) {
+		if (paramExp?.Name == null) {
 			throw new InvalidOperationException("Could not infer property name for expression: " + expression + ". Please explicitly specify a property name by calling OverridePropertyName as part of the rule chain. Eg: RuleForEach(x => x).NotNull().OverridePropertyName(\"MyProperty\")");
 		}
 

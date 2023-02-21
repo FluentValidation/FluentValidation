@@ -181,7 +181,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 		get { return _propertyName; }
 		set {
 			_propertyName = value;
-			_propertyDisplayName = _propertyName.SplitPascalCase();
+			_propertyDisplayName = _propertyName?.SplitPascalCase();
 		}
 	}
 
@@ -319,7 +319,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 
 		var failure = new ValidationFailure(context.PropertyName, error, value);
 
-		failure.FormattedMessagePlaceholderValues = new Dictionary<string, object>(context.MessageFormatter.PlaceholderValues);
+		failure.FormattedMessagePlaceholderValues = new Dictionary<string, object?>(context.MessageFormatter.PlaceholderValues);
 		failure.ErrorCode = component.ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(component.Validator);
 
 		failure.Severity = component.SeverityProvider != null

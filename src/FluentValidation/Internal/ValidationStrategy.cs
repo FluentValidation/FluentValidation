@@ -18,15 +18,17 @@
 
 namespace FluentValidation.Internal;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
 public class ValidationStrategy<T> {
-	private List<string> _properties;
-	private List<string> _ruleSets;
+	private List<string>? _properties;
+	private List<string>? _ruleSets;
 	private bool _throw = false;
-	private IValidatorSelector _customSelector;
+	private IValidatorSelector? _customSelector;
 
 	internal ValidationStrategy() {
 	}
@@ -124,7 +126,7 @@ public class ValidationStrategy<T> {
 	}
 
 	private IValidatorSelector GetSelector() {
-		IValidatorSelector selector = null;
+		IValidatorSelector? selector;
 
 		if (_properties != null || _ruleSets != null || _customSelector != null) {
 			var selectors = new List<IValidatorSelector>(3);

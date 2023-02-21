@@ -16,6 +16,8 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Internal;
 
 using System;
@@ -38,7 +40,7 @@ public class PropertyChain {
 	/// <summary>
 	/// Creates a new PropertyChain based on another.
 	/// </summary>
-	public PropertyChain(PropertyChain parent) {
+	public PropertyChain(PropertyChain? parent) {
 		if(parent != null
 		   && parent._memberNames.Count > 0) {
 			_memberNames.AddRange(parent._memberNames);
@@ -50,7 +52,7 @@ public class PropertyChain {
 	/// </summary>
 	/// <param name="memberNames"></param>
 	public PropertyChain(IEnumerable<string> memberNames) {
-		this._memberNames.AddRange(memberNames);
+		_memberNames.AddRange(memberNames);
 	}
 
 	/// <summary>
@@ -61,7 +63,7 @@ public class PropertyChain {
 	public static PropertyChain FromExpression(LambdaExpression expression) {
 		var memberNames = new Stack<string>();
 
-		var getMemberExp = new Func<Expression, MemberExpression>(toUnwrap => {
+		var getMemberExp = new Func<Expression?, MemberExpression?>(toUnwrap => {
 			if (toUnwrap is UnaryExpression) {
 				return ((UnaryExpression)toUnwrap).Operand as MemberExpression;
 			}
@@ -83,7 +85,7 @@ public class PropertyChain {
 	/// Adds a MemberInfo instance to the chain
 	/// </summary>
 	/// <param name="member">Member to add</param>
-	public void Add(MemberInfo member) {
+	public void Add(MemberInfo? member) {
 		if(member != null)
 			_memberNames.Add(member.Name);
 	}
@@ -92,7 +94,7 @@ public class PropertyChain {
 	/// Adds a property name to the chain
 	/// </summary>
 	/// <param name="propertyName">Name of the property to add</param>
-	public void Add(string propertyName) {
+	public void Add(string? propertyName) {
 		if(!string.IsNullOrEmpty(propertyName))
 			_memberNames.Add(propertyName);
 	}
@@ -145,9 +147,9 @@ public class PropertyChain {
 	/// <summary>
 	/// Builds a property path.
 	/// </summary>
-	public string BuildPropertyName(string propertyName) {
+	public string BuildPropertyName(string? propertyName) {
 		if (_memberNames.Count == 0) {
-			return propertyName;
+			return propertyName ?? string.Empty;
 		}
 
 		var chain = new PropertyChain(this);

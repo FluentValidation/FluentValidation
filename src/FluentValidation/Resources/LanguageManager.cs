@@ -20,6 +20,8 @@
 
 namespace FluentValidation.Resources;
 
+#nullable enable
+
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
@@ -28,7 +30,7 @@ using System.Globalization;
 /// Allows the default error message translations to be managed.
 /// </summary>
 public class LanguageManager : ILanguageManager {
-	private readonly ConcurrentDictionary<string, string> _languages = new ConcurrentDictionary<string, string>();
+	private readonly ConcurrentDictionary<string, string?> _languages = new ConcurrentDictionary<string, string?>();
 
 	/// <summary>
 	/// Language factory.
@@ -36,7 +38,7 @@ public class LanguageManager : ILanguageManager {
 	/// <param name="culture">The culture code.</param>
 	/// <param name="key">The key to load</param>
 	/// <returns>The corresponding Language instance or null.</returns>
-	private static string GetTranslation(string culture, string key) {
+	private static string? GetTranslation(string culture, string key) {
 		return culture switch {
 			EnglishLanguage.AmericanCulture => EnglishLanguage.GetTranslation(key),
 			EnglishLanguage.BritishCulture => EnglishLanguage.GetTranslation(key),
@@ -100,7 +102,7 @@ public class LanguageManager : ILanguageManager {
 	/// <summary>
 	/// Default culture to use for all requests to the LanguageManager. If not specified, uses the current UI culture.
 	/// </summary>
-	public CultureInfo Culture { get; set; }
+	public CultureInfo? Culture { get; set; }
 
 	/// <summary>
 	/// Removes all languages except the default.
@@ -116,8 +118,8 @@ public class LanguageManager : ILanguageManager {
 	/// <param name="key">The key</param>
 	/// <param name="culture">The culture to translate into</param>
 	/// <returns></returns>
-	public virtual string GetString(string key, CultureInfo culture = null) {
-		string value;
+	public virtual string GetString(string key, CultureInfo? culture = null) {
+		string? value;
 
 		if (Enabled) {
 			culture = culture ?? Culture ?? CultureInfo.CurrentUICulture;

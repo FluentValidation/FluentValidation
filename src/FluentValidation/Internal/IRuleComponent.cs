@@ -20,6 +20,8 @@
 
 namespace FluentValidation.Internal;
 
+#nullable enable
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,17 +34,17 @@ public interface IRuleComponent<T, out TProperty> : IRuleComponent {
 	/// <summary>
 	/// The error code associated with this rule component.
 	/// </summary>
-	new string ErrorCode { get; set; }
+	new string? ErrorCode { get; set; }
 
 	/// <summary>
 	/// Function used to retrieve custom state for the validator
 	/// </summary>
-	Func<ValidationContext<T>, TProperty, object> CustomStateProvider { set; }
+	Func<ValidationContext<T>, TProperty?, object>? CustomStateProvider { set; }
 
 	/// <summary>
 	/// Function used to retrieve the severity for the validator
 	/// </summary>
-	Func<ValidationContext<T>, TProperty, Severity> SeverityProvider { set; }
+	Func<ValidationContext<T>, TProperty?, Severity>? SeverityProvider { set; }
 
 	/// <summary>
 	/// Adds a condition for this validator. If there's already a condition, they're combined together with an AND.
@@ -60,7 +62,7 @@ public interface IRuleComponent<T, out TProperty> : IRuleComponent {
 	/// Sets the overridden error message template for this validator.
 	/// </summary>
 	/// <param name="errorFactory">A function for retrieving the error message template.</param>
-	void SetErrorMessage(Func<ValidationContext<T>, TProperty, string> errorFactory);
+	void SetErrorMessage(Func<ValidationContext<T>?, TProperty?, string> errorFactory);
 
 	/// <summary>
 	/// Sets the overridden error message template for this validator.
@@ -86,7 +88,7 @@ public interface IRuleComponent {
 	/// <summary>
 	/// The validator associated with this component.
 	/// </summary>
-	IPropertyValidator Validator { get; }
+	IPropertyValidator? Validator { get; }
 
 	/// <summary>
 	/// Gets the raw unformatted error message. Placeholders will not have been rewritten.
@@ -97,5 +99,5 @@ public interface IRuleComponent {
 	/// <summary>
 	/// The error code associated with this rule component.
 	/// </summary>
-	string ErrorCode { get; }
+	string? ErrorCode { get; }
 }
