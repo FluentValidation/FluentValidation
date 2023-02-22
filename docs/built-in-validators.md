@@ -30,7 +30,7 @@ String format args:
 
 ## NotEqual Validator
 
-Ensures that the value of the specified property is not equal to a particular value (or not equal to the value of another property)
+Ensures that the value of the specified property is not equal to a particular value (or not equal to the value of another property).
 
 Example:
 ```csharp
@@ -67,7 +67,7 @@ RuleFor(customer => customer.Surname).NotEqual("Foo", StringComparer.Ordinal);
 If you are using FluentValidation 9 (or newer), ordinal will be the default behaviour. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.
 
 ## Equal Validator
-Ensures that the value of the specified property is equal to a particular value (or equal to the value of another property)
+Ensures that the value of the specified property is equal to a particular value (or equal to the value of another property).
 
 Example:
 ```csharp
@@ -155,7 +155,8 @@ String format args:
 
 
 ## Less Than Validator
-Ensures that the value of the specified property is less than a particular value (or less than the value of another property)
+Ensures that the value of the specified property is less than a particular value (or less than the value of another property).
+
 Example:
 ```csharp
 //Less than a particular value
@@ -175,7 +176,8 @@ String format args:
 * `{PropertyValue}` – Current value of the property
 
 ## Less Than Or Equal Validator
-Ensures that the value of the specified property is less than or equal to a particular value (or less than or equal to the value of another property)
+Ensures that the value of the specified property is less than or equal to a particular value (or less than or equal to the value of another property).
+
 Example:
 ```csharp
 //Less than a particular value
@@ -192,7 +194,8 @@ Notes: Only valid on types that implement `IComparable<T>`
 * `{PropertyValue}` – Current value of the property
 
 ## Greater Than Validator
-Ensures that the value of the specified property is greater than a particular value (or greater than the value of another property)
+Ensures that the value of the specified property is greater than a particular value (or greater than the value of another property).
+
 Example:
 ```csharp
 //Greater than a particular value
@@ -209,7 +212,8 @@ Notes: Only valid on types that implement `IComparable<T>`
 * `{PropertyValue}` – Current value of the property
 
 ## Greater Than Or Equal Validator
-Ensures that the value of the specified property is greater than or equal to a particular value (or greater than or equal to the value of another property)
+Ensures that the value of the specified property is greater than or equal to a particular value (or greater than or equal to the value of another property).
+
 Example:
 ```csharp
 //Greater than a particular value
@@ -228,7 +232,7 @@ Notes: Only valid on types that implement `IComparable<T>`
 ## Predicate Validator
 (Also known as `Must`)
 
-Passes the value of the specified property into a delegate that can perform custom validation logic on the value
+Passes the value of the specified property into a delegate that can perform custom validation logic on the value.
 
 Example:
 ```
@@ -251,6 +255,7 @@ Note that in this particular example, it would be better to use the cross-proper
 
 ## Regular Expression Validator
 Ensures that the value of the specified property matches the given regular expression.
+
 Example:
 ```csharp
 RuleFor(customer => customer.Surname).Matches("some regex here");
@@ -263,6 +268,7 @@ String format args:
 
 ## Email Validator
 Ensures that the value of the specified property is a valid email address format.
+
 Example:
 ```csharp
 RuleFor(customer => customer.Email).EmailAddress();
@@ -289,6 +295,7 @@ Alternatively, you can use the old email validation behaviour that uses a regula
 ## Credit Card Validator
 Checks whether a string property could be a valid credit card number.
 
+Example:
 ```csharp
 RuleFor(x => x.CreditCard).CreditCard();
 ```
@@ -332,6 +339,7 @@ String format args:
 ## Enum Name Validator
 Checks whether a string is a valid enum name.
 
+Example:
 ```csharp
 // For a case sensitive comparison
 RuleFor(x => x.ErrorLevelName).IsEnumName(typeof(ErrorLevel));
@@ -349,6 +357,7 @@ String format args:
 Opposite of the `NotEmpty` validator. Checks if a property value is null, or is the default value for the type.
 When used on an IEnumerable (such as arrays, collections, lists, etc.), the validator ensures that the IEnumerable is empty.
 
+Example:
 ```csharp
 RuleFor(x => x.Surname).Empty();
 ```
@@ -360,6 +369,8 @@ String format args:
 
 ## Null Validator
 Opposite of the `NotNull` validator. Checks if a property value is null.
+
+Example:
 ```csharp
 RuleFor(x => x.Surname).Null();
 ```
@@ -372,6 +383,7 @@ String format args:
 ## ExclusiveBetween Validator
 Checks whether the property value is in a range between the two specified numbers (exclusive).
 
+Example:
 ```csharp
 RuleFor(x => x.Id).ExclusiveBetween(1,10);
 ```
@@ -386,6 +398,7 @@ String format args:
 ## InclusiveBetween Validator
 Checks whether the property value is in a range between the two specified numbers (inclusive).
 
+Example:
 ```csharp
 RuleFor(x => x.Id).InclusiveBetween(1,10);
 ```
@@ -399,6 +412,8 @@ String format args:
 
 ## PrecisionScale Validator
 Checks whether a decimal value has the specified precision and scale.
+
+Example:
 ```csharp
 RuleFor(x => x.Amount).PrecisionScale(4, 2, false);
 ```
