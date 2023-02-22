@@ -76,9 +76,9 @@ public class CustomerValidator : AbstractValidator<Customer>
 {
   public CustomerValidator() 
   {
-    RuleForEach(x => x.Orders).ChildRules(orders => 
+    RuleForEach(x => x.Orders).ChildRules(order => 
     {
-      orders.RuleFor(x => x.Total).GreaterThan(0);
+      order.RuleFor(x => x.Total).GreaterThan(0);
     });
   }
 }
