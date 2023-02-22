@@ -56,7 +56,7 @@ RuleFor(customer => customer.Surname).NotEqual("Foo", StringComparer.OrdinalIgno
 
 ```eval_rst
 .. warning::
-  FluentValidation versions prior to 9 will perform a *culture specific* comparison when using `Equal` or `NotEqual` with string properties. Starting with version 9, this will be changed to an ordinal comparison.
+  FluentValidation versions prior to 9 perform a *culture specific* comparison when using `Equal` or `NotEqual` with string properties. Starting with version 9, this is changed to an ordinal comparison.
 ```
 
 If you are using FluentValidation 8.x (or older), you can force an ordinal comparison by using
@@ -90,7 +90,7 @@ RuleFor(customer => customer.Surname).Equal("Foo", StringComparer.OrdinalIgnoreC
 
 ```eval_rst
 .. warning::
-  FluentValidation versions prior to 9 will perform a *culture specific* comparison when using `Equal` or `NotEqual` with string properties. Starting with version 9, this will be changed to an ordinal comparison.
+  FluentValidation versions prior to 9 perform a *culture specific* comparison when using `Equal` or `NotEqual` with string properties. Starting with version 9, this is changed to an ordinal comparison.
 ```
 
 If you are using FluentValidation 8.x (or older), you can force an ordinal comparison by using
