@@ -18,8 +18,6 @@
 
 namespace FluentValidation;
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +65,9 @@ public class ValidatorDescriptor<T> : IValidatorDescriptor {
 			from component in rule.Components
 			select new { propertyName = rule.PropertyName, component };
 
+		#pragma warning disable 8619
 		return query.ToLookup(x => x.propertyName, x => (x.component.Validator, x.component));
+		#pragma warning restore 8619
 	}
 
 	/// <summary>
@@ -113,7 +113,7 @@ public class ValidatorDescriptor<T> : IValidatorDescriptor {
 	/// <returns></returns>
 	public IEnumerable<RulesetMetadata> GetRulesByRuleset() {
 		var query = from rule in Rules
-			from ruleset in rule.RuleSets
+			from ruleset in (rule.RuleSets ?? new string?[] { null })
 			group rule by ruleset
 			into grp
 			select new RulesetMetadata(grp.Key, grp);

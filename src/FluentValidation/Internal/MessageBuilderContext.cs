@@ -1,7 +1,5 @@
 ﻿namespace FluentValidation.Internal;
 
-#nullable enable
-
 using Validators;
 
 public interface IMessageBuilderContext<T, out TProperty> {

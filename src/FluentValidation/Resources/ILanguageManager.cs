@@ -17,8 +17,6 @@
 #endregion
 namespace FluentValidation.Resources;
 
-#nullable enable
-
 using System.Globalization;
 
 /// <summary>

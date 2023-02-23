@@ -18,8 +18,6 @@
 
 namespace FluentValidation;
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using Internal;
@@ -314,7 +312,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 		AddFailure(new ValidationFailure(PropertyName, errorMessage));
 	}
 
-	private Func<ValidationContext<T>, string>? _displayNameFunc;
+	private Func<ValidationContext<T>, string?>? _displayNameFunc;
 
 	/// <summary>
 	/// Gets the display name for the current property being validated.
@@ -329,7 +327,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 
 	internal string? RawPropertyName { get; private set; }
 
-	internal void InitializeForPropertyValidator(string propertyName, Func<ValidationContext<T>, string> displayNameFunc, string? rawPropertyName) {
+	internal void InitializeForPropertyValidator(string propertyName, Func<ValidationContext<T>, string?> displayNameFunc, string? rawPropertyName) {
 		PropertyName = propertyName;
 		_displayNameFunc = displayNameFunc;
 		RawPropertyName = rawPropertyName;

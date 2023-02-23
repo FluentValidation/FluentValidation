@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class GreekLanguage {
 	public const string Culture = "el";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "Το πεδίο '{PropertyName}' δεν περιέχει μια έγκυρη διεύθυνση email.",
 		"GreaterThanOrEqualValidator" => "Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μεγαλύτερη ή ίση με '{ComparisonValue}'.",
 		"GreaterThanValidator" => "Το πεδίο '{PropertyName}' πρέπει να έχει τιμή μεγαλύτερη από '{ComparisonValue}'.",

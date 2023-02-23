@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class IcelandicLanguage {
 	public const string Culture = "is";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' er ekki gilt netfang.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' verður að vera meiri en eða jöfn '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' verður að vera meiri en '{ComparisonValue}'.",

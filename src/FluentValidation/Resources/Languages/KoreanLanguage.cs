@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class KoreanLanguage {
 	public const string Culture = "ko";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"CreditCardValidator" => "'{PropertyName}'이(가) 올바른 신용카드 번호가 아닙니다.",
 		"EmailValidator" => "'{PropertyName}'이(가) 올바른 이메일 주소가 아닙니다.",
 		"EqualValidator" => "'{PropertyName}'은(는) '{ComparisonValue}'이어야 합니다.",

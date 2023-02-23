@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using System.Threading;
 using System.Threading.Tasks;
 using Internal;
@@ -39,7 +37,7 @@ public abstract class AsyncPropertyValidator<T, TProperty> : IAsyncPropertyValid
 	protected virtual string GetDefaultMessageTemplate(string? errorCode) => "No default error message has been specified";
 
 	/// <inheritdoc />
-	public abstract Task<bool> IsValidAsync(ValidationContext<T> context, TProperty? value, CancellationToken cancellation);
+	public abstract Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
 
 	/// <summary>
 	/// Retrieves a localized string from the LanguageManager.

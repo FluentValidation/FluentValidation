@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using System;
 using Resources;
 

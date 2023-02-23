@@ -27,7 +27,7 @@ internal class EnglishLanguage {
 	public const string AmericanCulture = "en-US";
 	public const string BritishCulture = "en-GB";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' is not a valid email address.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' must be greater than or equal to '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' must be greater than '{ComparisonValue}'.",

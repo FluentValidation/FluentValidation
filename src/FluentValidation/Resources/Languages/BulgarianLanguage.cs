@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class BulgarianLanguage {
 	public const string Culture = "bg";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' не е валиден е-мейл адрес.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' трябва да бъде по-голямо или равно на  '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' трябва да бъде по-голямо от '{ComparisonValue}'.",

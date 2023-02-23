@@ -17,8 +17,6 @@
 #endregion
 namespace FluentValidation.Internal;
 
-#nullable enable
-
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 

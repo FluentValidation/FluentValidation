@@ -131,7 +131,10 @@ public static class DefaultValidatorOptions {
 	public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
 		ArgumentNullException.ThrowIfNull(messageProvider);
 		Configurable(rule).Current.SetErrorMessage((ctx, val) => {
-			return messageProvider(ctx == null ? default : ctx.InstanceToValidate);
+			// Suppress nullability warning. We technically allow a null to be passed into the message provider
+			// but we don't expose that via the method parameter. This is only used by FluentValidation.AspNetCore for generating
+			// clientside messages (where no context is available), and they explicitly catch NullReferenceExceptions.
+			return messageProvider((ctx == null ? default : ctx.InstanceToValidate)!);
 		});
 		return rule;
 	}
@@ -142,10 +145,13 @@ public static class DefaultValidatorOptions {
 	/// <param name="rule">The current rule</param>
 	/// <param name="messageProvider">Delegate that will be invoked.Uses_localized_name to retrieve the localized message. </param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, string> messageProvider) {
+	public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty?, string> messageProvider) {
 		ArgumentNullException.ThrowIfNull(messageProvider);
 		Configurable(rule).Current.SetErrorMessage((context, value) => {
-			return messageProvider(context == null ? default : context.InstanceToValidate, value);
+			// Suppress nullability warning. We technically allow a null to be passed into the message provider
+			// but we don't expose that via the method parameter. This is only used by FluentValidation.AspNetCore for generating
+			// clientside messages (where no context is available), and they explicitly catch NullReferenceExceptions.
+			return messageProvider((context == null ? default : context.InstanceToValidate)!, value);
 		});
 		return rule;
 	}
@@ -307,7 +313,7 @@ public static class DefaultValidatorOptions {
 	public static IRuleBuilderOptions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 		ArgumentNullException.ThrowIfNull(predicate);
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-		Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
+		Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
 		return rule;
 	}
 
@@ -384,7 +390,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="rule">The current rule</param>
 	/// <param name="predicate">The condition</param>
 	/// <returns></returns>
-	public static IRuleBuilderInitialCollection<T, TCollectionElement> Where<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<TCollectionElement, bool> predicate) {
+	public static IRuleBuilderInitialCollection<T, TCollectionElement?> Where<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement?> rule, Func<TCollectionElement?, bool> predicate) {
 		// This overload supports RuleFor().SetCollectionValidator() (which returns IRuleBuilderOptions<T, IEnumerable<TElement>>)
 		ArgumentNullException.ThrowIfNull(predicate);
 		Configurable(rule).Filter = predicate;
@@ -415,7 +421,10 @@ public static class DefaultValidatorOptions {
 		// The MVC clientside validation will try and retrieve the name, but won't
 		// be able to to so if we've used this overload of WithName.
 		Configurable(rule).SetDisplayName((context => {
-			T instance = context == null ? default : context.InstanceToValidate;
+			// Nullability annotations indicate context is not null (which is what we want to expose in the api)
+			// but in reality it can be null when invoked by our ASP.NET MVC clientside integration. In those cases
+			// the integration actually explicitly catches NullReferenceExceptions.
+			T instance = (context == null ? default : context.InstanceToValidate)!;
 			return nameProvider(instance);
 		}));
 		return rule;
@@ -459,7 +468,7 @@ public static class DefaultValidatorOptions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
 		ArgumentNullException.ThrowIfNull(stateProvider);
-		var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, _) => stateProvider(ctx.InstanceToValidate));
+		var wrapper = new Func<ValidationContext<T>, TProperty?, object>((ctx, _) => stateProvider(ctx.InstanceToValidate));
 		Configurable(rule).Current.CustomStateProvider = wrapper;
 		return rule;
 	}
@@ -472,10 +481,10 @@ public static class DefaultValidatorOptions {
 	/// <param name="rule"></param>
 	/// <param name="stateProvider"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, object> stateProvider) {
+	public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty?, object> stateProvider) {
 		ArgumentNullException.ThrowIfNull(stateProvider);
 
-		var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, val) => {
+		var wrapper = new Func<ValidationContext<T>, TProperty?, object>((ctx, val) => {
 			return stateProvider(ctx.InstanceToValidate, val);
 		});
 
@@ -507,7 +516,7 @@ public static class DefaultValidatorOptions {
 	public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, Severity> severityProvider) {
 		ArgumentNullException.ThrowIfNull(severityProvider);
 
-		Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
+		Severity SeverityProvider(ValidationContext<T> ctx, TProperty? value) {
 			return severityProvider(ctx.InstanceToValidate);
 		}
 
@@ -523,10 +532,10 @@ public static class DefaultValidatorOptions {
 	/// <param name="rule"></param>
 	/// <param name="severityProvider"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, Severity> severityProvider) {
+	public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty?, Severity> severityProvider) {
 		ArgumentNullException.ThrowIfNull(severityProvider);
 
-		Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
+		Severity SeverityProvider(ValidationContext<T> ctx, TProperty? value) {
 			return severityProvider(ctx.InstanceToValidate, value);
 		}
 
@@ -540,7 +549,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="rule">The current rule</param>
 	/// <param name="callback">The callback. Receives the model, the collection, the current element and the current index as parameters. Should return a string representation of the indexer. The default is "[" + index + "]"</param>
 	/// <returns></returns>
-	public static IRuleBuilderInitialCollection<T, TCollectionElement> OverrideIndexer<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<T, IEnumerable<TCollectionElement>, TCollectionElement, int, string> callback) {
+	public static IRuleBuilderInitialCollection<T, TCollectionElement?> OverrideIndexer<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement?> rule, Func<T, IEnumerable<TCollectionElement?>, TCollectionElement?, int, string> callback) {
 		// This overload supports RuleFor().SetCollectionValidator() (which returns IRuleBuilderOptions<T, IEnumerable<TElement>>)
 		ArgumentNullException.ThrowIfNull(callback);
 		Configurable(rule).IndexBuilder = callback;

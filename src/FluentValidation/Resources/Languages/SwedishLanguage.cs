@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class SwedishLanguage {
 	public const string Culture = "sv";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "\"{PropertyName}\" är inte en giltig e-postadress.",
 		"GreaterThanOrEqualValidator" => "\"{PropertyName}\" måste vara större än eller lika med {ComparisonValue}.",
 		"GreaterThanValidator" => "\"{PropertyName}\" måste vara större än {ComparisonValue}.",

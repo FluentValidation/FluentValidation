@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class HindiLanguage {
 	public const string Culture = "hi";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' मान्य ईमेल एड्रेस नहीं है।",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' '{ComparisonValue}' से अधिक या के उसके बराबर होनी चाहिए।",
 		"GreaterThanValidator" => "'{PropertyName}' '{ComparisonValue}' से अधिक होनी चाहिए।",

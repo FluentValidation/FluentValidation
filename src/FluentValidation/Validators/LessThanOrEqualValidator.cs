@@ -16,25 +16,23 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-#nullable enable
-
 namespace FluentValidation.Validators;
 
 using System;
 using System.Reflection;
 
-public class LessThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, ILessThanOrEqualValidator where TProperty : IComparable<TProperty>, IComparable {
+public class LessThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, ILessThanOrEqualValidator where TProperty : IComparable<TProperty>?, IComparable? {
 
 	public override string Name => "LessThanOrEqualValidator";
 
 	public LessThanOrEqualValidator(TProperty value) : base(value) {
 	}
 
-	public LessThanOrEqualValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+	public LessThanOrEqualValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo? member, string? memberDisplayName)
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
-	public LessThanOrEqualValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+	public LessThanOrEqualValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo? member, string? memberDisplayName)
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
@@ -42,7 +40,8 @@ public class LessThanOrEqualValidator<T, TProperty> : AbstractComparisonValidato
 		if (valueToCompare == null)
 			return false;
 
-		return value.CompareTo(valueToCompare) <= 0;
+		// Safe to suppress null check. Handled by AbstractComparisonValidator.IsValid.
+		return value!.CompareTo(valueToCompare) <= 0;
 	}
 
 	protected override string GetDefaultMessageTemplate(string? errorCode) {

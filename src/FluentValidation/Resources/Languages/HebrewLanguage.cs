@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class HebrewLanguage {
 	public const string Culture = "he";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' אינה כתובת דוא\"ל חוקית.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' חייב להיות גדול או שווה ל- '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' חייב להיות גדול מ- '{ComparisonValue}'.",

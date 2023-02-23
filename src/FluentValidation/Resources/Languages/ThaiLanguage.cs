@@ -7,7 +7,7 @@ namespace FluentValidation.Resources;
 internal class ThaiLanguage {
 	public const string Culture = "th";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}'ไม่ใช่อีเมลที่ถูกต้อง",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}'ต้องมีค่ามากกว่าหรือเท่ากับ'{ComparisonValue}'",
 		"GreaterThanValidator" => "'{PropertyName}'ต้องมีค่ามากกว่า'{ComparisonValue}'",

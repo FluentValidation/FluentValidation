@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class IndonesianLanguage {
 	public const string Culture = "id";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' bukan alamat email yang benar.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' harus lebih besar dari atau sama dengan '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' harus lebih besar dari '{ComparisonValue}'.",

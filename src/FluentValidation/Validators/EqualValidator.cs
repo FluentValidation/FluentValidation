@@ -20,8 +20,6 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -29,17 +27,17 @@ using System.Reflection;
 public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqualValidator {
 	readonly Func<T, TProperty>? _func;
 	private readonly string? _memberDisplayName;
-	readonly IEqualityComparer<TProperty?>? _comparer;
+	readonly IEqualityComparer<TProperty>? _comparer;
 
 	public override string Name => "EqualValidator";
 
 
-	public EqualValidator(TProperty? valueToCompare, IEqualityComparer<TProperty?>? comparer = null) {
+	public EqualValidator(TProperty? valueToCompare, IEqualityComparer<TProperty>? comparer = null) {
 		ValueToCompare = valueToCompare;
 		_comparer = comparer;
 	}
 
-	public EqualValidator(Func<T, TProperty>? comparisonProperty, MemberInfo? member, string memberDisplayName, IEqualityComparer<TProperty?>? comparer = null) {
+	public EqualValidator(Func<T, TProperty>? comparisonProperty, MemberInfo? member, string? memberDisplayName, IEqualityComparer<TProperty>? comparer = null) {
 		_func = comparisonProperty;
 		_memberDisplayName = memberDisplayName;
 		MemberToCompare = member;

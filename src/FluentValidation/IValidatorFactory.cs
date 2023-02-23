@@ -18,8 +18,6 @@
 
 namespace FluentValidation;
 
-#nullable enable
-
 using System;
 
 /// <summary>

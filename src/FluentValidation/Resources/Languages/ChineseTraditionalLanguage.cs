@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class ChineseTraditionalLanguage {
 	public const string Culture = "zh-TW";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' 不是有效的電子郵件地址。",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' 必須大於或等於 '{ComparisonValue}'。",
 		"GreaterThanValidator" => "'{PropertyName}' 必須大於 '{ComparisonValue}'。",

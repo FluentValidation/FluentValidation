@@ -16,8 +16,6 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-#nullable enable
-
 namespace FluentValidation.Internal;
 
 /// <summary>

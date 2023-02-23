@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class CzechLanguage {
 	public const string Culture = "cs";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "Pole '{PropertyName}' musí obsahovat platnou emailovou adresu.",
 		"GreaterThanOrEqualValidator" => "Hodnota pole '{PropertyName}' musí být větší nebo rovna '{ComparisonValue}'.",
 		"GreaterThanValidator" => "Hodnota pole '{PropertyName}' musí být větší než '{ComparisonValue}'.",

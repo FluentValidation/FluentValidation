@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class PolishLanguage {
 	public const string Culture = "pl";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "Pole '{PropertyName}' nie zawiera poprawnego adresu email.",
 		"GreaterThanOrEqualValidator" => "Wartość pola '{PropertyName}' musi być równa lub większa niż '{ComparisonValue}'.",
 		"GreaterThanValidator" => "Wartość pola '{PropertyName}' musi być większa niż '{ComparisonValue}'.",

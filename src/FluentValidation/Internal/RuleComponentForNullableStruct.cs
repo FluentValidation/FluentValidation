@@ -18,8 +18,6 @@
 
 #endregion
 
-#nullable enable
-
 namespace FluentValidation.Internal;
 
 using System.Threading;

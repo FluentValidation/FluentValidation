@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class TurkishLanguage {
 	public const string Culture = "tr";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}'  geçerli bir e-posta adresi değil.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' değeri '{ComparisonValue}' değerinden büyük veya eşit olmalı.",
 		"GreaterThanValidator" => "'{PropertyName}' değeri '{ComparisonValue}' değerinden büyük olmalı.",

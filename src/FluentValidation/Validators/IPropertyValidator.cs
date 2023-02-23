@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +29,7 @@ public interface IAsyncPropertyValidator<T, in TProperty> : IPropertyValidator {
 	/// <param name="value">The current property value to validate</param>
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>True if valid, otherwise false.</returns>
-	Task<bool> IsValidAsync(ValidationContext<T> context, TProperty? value, CancellationToken cancellation);
+	Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation);
 }
 
 public interface IPropertyValidator<T, in TProperty> : IPropertyValidator {
@@ -41,7 +39,7 @@ public interface IPropertyValidator<T, in TProperty> : IPropertyValidator {
 	/// <param name="context">The validation context. The parent object can be obtained from here.</param>
 	/// <param name="value">The current property value to validate</param>
 	/// <returns>True if valid, otherwise false.</returns>
-	bool IsValid(ValidationContext<T> context, TProperty? value);
+	bool IsValid(ValidationContext<T> context, TProperty value);
 }
 
 /// <summary>

@@ -18,12 +18,10 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using System;
 using System.Reflection;
 
-public class GreaterThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, IGreaterThanOrEqualValidator where TProperty : IComparable<TProperty>, IComparable {
+public class GreaterThanOrEqualValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty>, IGreaterThanOrEqualValidator where TProperty : IComparable<TProperty>?, IComparable? {
 
 	public override string Name => "GreaterThanOrEqualValidator";
 
@@ -31,11 +29,11 @@ public class GreaterThanOrEqualValidator<T, TProperty> : AbstractComparisonValid
 		base(value) {
 	}
 
-	public GreaterThanOrEqualValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+	public GreaterThanOrEqualValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo? member, string? memberDisplayName)
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
-	public GreaterThanOrEqualValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+	public GreaterThanOrEqualValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo? member, string? memberDisplayName)
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
@@ -43,7 +41,8 @@ public class GreaterThanOrEqualValidator<T, TProperty> : AbstractComparisonValid
 		if (valueToCompare == null)
 			return false;
 
-		return value.CompareTo(valueToCompare) >= 0;
+		// Safe to suppress null check. Handled by AbstractComparisonValidator.IsValid.
+		return value!.CompareTo(valueToCompare) >= 0;
 	}
 
 	public override Comparison Comparison => Validators.Comparison.GreaterThanOrEqual;

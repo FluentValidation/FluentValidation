@@ -18,12 +18,10 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using System;
 using System.Text.RegularExpressions;
 
-public class RegularExpressionValidator<T> : PropertyValidator<T,string>, IRegularExpressionValidator {
+public class RegularExpressionValidator<T> : PropertyValidator<T,string?>, IRegularExpressionValidator {
 	readonly Func<T, Regex?> _regexFunc;
 
 	public override string Name => "RegularExpressionValidator";

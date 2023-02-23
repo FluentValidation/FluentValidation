@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class NorwegianBokmalLanguage {
 	public const string Culture = "nb";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' er ikke en gyldig e-postadresse.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' skal være større enn eller lik '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' skal være større enn '{ComparisonValue}'.",

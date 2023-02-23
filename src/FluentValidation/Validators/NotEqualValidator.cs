@@ -22,23 +22,21 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-#nullable enable
-
 public class NotEqualValidator<T,TProperty> : PropertyValidator<T,TProperty>, IComparisonValidator {
-	private readonly IEqualityComparer<TProperty?>? _comparer;
+	private readonly IEqualityComparer<TProperty>? _comparer;
 	private readonly Func<T, TProperty>? _func;
 	private readonly string? _memberDisplayName;
 
 	public override string Name => "NotEqualValidator";
 
-	public NotEqualValidator(Func<T, TProperty> func, MemberInfo? memberToCompare, string memberDisplayName, IEqualityComparer<TProperty?>? equalityComparer = null) {
+	public NotEqualValidator(Func<T, TProperty> func, MemberInfo? memberToCompare, string? memberDisplayName, IEqualityComparer<TProperty>? equalityComparer = null) {
 		_func = func;
 		_comparer = equalityComparer;
 		_memberDisplayName = memberDisplayName;
 		MemberToCompare = memberToCompare;
 	}
 
-	public NotEqualValidator(TProperty comparisonValue, IEqualityComparer<TProperty?>? equalityComparer = null) {
+	public NotEqualValidator(TProperty? comparisonValue, IEqualityComparer<TProperty>? equalityComparer = null) {
 		ValueToCompare = comparisonValue;
 		_comparer = equalityComparer;
 	}

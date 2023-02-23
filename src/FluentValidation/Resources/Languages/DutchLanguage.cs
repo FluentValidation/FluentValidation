@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class DutchLanguage {
 	public const string Culture = "nl";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' is geen geldig email adres.",
 		"EqualValidator" => "'{PropertyName}' moet gelijk zijn aan '{ComparisonValue}'.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' moet groter zijn dan of gelijk zijn aan '{ComparisonValue}'.",

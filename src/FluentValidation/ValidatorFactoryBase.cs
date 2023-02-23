@@ -20,8 +20,6 @@ namespace FluentValidation;
 
 using System;
 
-#nullable enable
-
 /// <summary>
 /// Factory for creating validators
 /// </summary>

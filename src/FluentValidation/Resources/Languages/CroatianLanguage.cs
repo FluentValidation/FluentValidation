@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class CroatianLanguage {
 	public const string Culture = "hr";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' nije ispravna e-mail adresa.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' mora biti veći ili jednak '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' mora biti veći od '{ComparisonValue}'.",

@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class FrenchLanguage {
 	public const string Culture = "fr";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' n'est pas une adresse email valide.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' doit être plus grand ou égal à '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' doit être plus grand que '{ComparisonValue}'.",

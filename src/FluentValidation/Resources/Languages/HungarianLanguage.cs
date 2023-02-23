@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class HungarianLanguage {
 	public const string Culture = "hu";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' nem érvényes email cím.",
 		"GreaterThanOrEqualValidator" => "A(z) '{PropertyName}' nagyobb vagy egyenlő kell, hogy legyen, mint '{ComparisonValue}'.",
 		"GreaterThanValidator" => "A(z) '{PropertyName}' nagyobb kell, hogy legyen, mint '{ComparisonValue}'.",

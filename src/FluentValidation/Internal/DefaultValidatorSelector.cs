@@ -21,8 +21,6 @@ namespace FluentValidation.Internal;
 using System;
 using System.Linq;
 
-#nullable enable
-
 /// <summary>
 /// Default validator selector that will execute all rules that do not belong to a RuleSet.
 /// </summary>

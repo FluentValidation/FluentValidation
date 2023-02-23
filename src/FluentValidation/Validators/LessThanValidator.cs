@@ -21,19 +21,17 @@ namespace FluentValidation.Validators;
 using System;
 using System.Reflection;
 
-#nullable enable
-
-public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty>, IComparable {
+public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TProperty> where TProperty : IComparable<TProperty>?, IComparable? {
 	public override string Name => "LessThanValidator";
 
 	public LessThanValidator(TProperty value) : base(value) {
 	}
 
-	public LessThanValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+	public LessThanValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo? member, string? memberDisplayName)
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
-	public LessThanValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName)
+	public LessThanValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo? member, string? memberDisplayName)
 		: base(valueToCompareFunc, member, memberDisplayName) {
 	}
 
@@ -41,7 +39,8 @@ public class LessThanValidator<T, TProperty> : AbstractComparisonValidator<T, TP
 		if (valueToCompare == null)
 			return false;
 
-		return value.CompareTo(valueToCompare) < 0;
+		// Safe to suppress null check. Handled by AbstractComparisonValidator.IsValid.
+		return value!.CompareTo(valueToCompare) < 0;
 	}
 
 	public override Comparison Comparison => Comparison.LessThan;

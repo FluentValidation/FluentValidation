@@ -24,8 +24,6 @@ using Results;
 using System.Linq;
 using System.Runtime.Serialization;
 
-#nullable enable
-
 /// <summary>
 /// An exception that represents failed validation
 /// </summary>

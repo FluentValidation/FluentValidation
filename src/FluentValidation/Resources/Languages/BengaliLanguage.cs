@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class BengaliLanguage {
 	public const string Culture = "bn";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' বৈধ ইমেইল ঠিকানা নয়।",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' অবশ্যই '{ComparisonValue}' এর সমান অথবা বেশি হবে।",
 		"GreaterThanValidator" => "'{PropertyName}' অবশ্যই '{ComparisonValue}' এর বেশি হবে।",

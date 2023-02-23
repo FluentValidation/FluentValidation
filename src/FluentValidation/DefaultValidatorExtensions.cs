@@ -118,7 +118,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="min"></param>
 	/// <param name="max"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, int min, int max)
+	public static IRuleBuilderOptions<T, string?> Length<T>(this IRuleBuilder<T, string?> ruleBuilder, int min, int max)
 		=> ruleBuilder.SetValidator(new LengthValidator<T>(min, max));
 
 	/// <summary>
@@ -130,7 +130,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="min"></param>
 	/// <param name="max"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, int> min, Func<T, int> max)
+	public static IRuleBuilderOptions<T, string?> Length<T>(this IRuleBuilder<T, string?> ruleBuilder, Func<T, int> min, Func<T, int> max)
 		=> ruleBuilder.SetValidator(new LengthValidator<T>(min, max));
 
 	/// <summary>
@@ -141,7 +141,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="exactLength"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, int exactLength)
+	public static IRuleBuilderOptions<T, string?> Length<T>(this IRuleBuilder<T, string?> ruleBuilder, int exactLength)
 		=> ruleBuilder.SetValidator(new ExactLengthValidator<T>(exactLength));
 
 	/// <summary>
@@ -152,7 +152,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="exactLength"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Length<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, int> exactLength)
+	public static IRuleBuilderOptions<T, string?> Length<T>(this IRuleBuilder<T, string?> ruleBuilder, Func<T, int> exactLength)
 		=> ruleBuilder.SetValidator(new ExactLengthValidator<T>(exactLength));
 
 	/// <summary>
@@ -163,7 +163,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">The regular expression to check the value against.</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder,
+	public static IRuleBuilderOptions<T, string?> Matches<T>(this IRuleBuilder<T, string?> ruleBuilder,
 		#if NET7_0_OR_GREATER
 		[StringSyntax(StringSyntaxAttribute.Regex)]
 		#endif
@@ -178,7 +178,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="maximumLength"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> MaximumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int maximumLength)
+	public static IRuleBuilderOptions<T, string?> MaximumLength<T>(this IRuleBuilder<T, string?> ruleBuilder, int maximumLength)
 		=> ruleBuilder.SetValidator(new MaximumLengthValidator<T>(maximumLength));
 
 	/// <summary>
@@ -189,7 +189,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="minimumLength"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> MinimumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int minimumLength)
+	public static IRuleBuilderOptions<T, string?> MinimumLength<T>(this IRuleBuilder<T, string?> ruleBuilder, int minimumLength)
 		=> ruleBuilder.SetValidator(new MinimumLengthValidator<T>(minimumLength));
 
 	/// <summary>
@@ -200,7 +200,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">The regular expression to check the value against.</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, string> expression) {
+	public static IRuleBuilderOptions<T, string?> Matches<T>(this IRuleBuilder<T, string?> ruleBuilder, Func<T, string> expression) {
 		return ruleBuilder.SetValidator(new RegularExpressionValidator<T>(expression));
 	}
 
@@ -212,7 +212,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="regex">The regular expression to use</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Regex regex)
+	public static IRuleBuilderOptions<T, string?> Matches<T>(this IRuleBuilder<T, string?> ruleBuilder, Regex regex)
 		=> ruleBuilder.SetValidator(new RegularExpressionValidator<T>(regex));
 
 	/// <summary>
@@ -223,7 +223,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="regex">The regular expression to use</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, Regex> regex)
+	public static IRuleBuilderOptions<T, string?> Matches<T>(this IRuleBuilder<T, string?> ruleBuilder, Func<T, Regex> regex)
 		=> ruleBuilder.SetValidator(new RegularExpressionValidator<T>(regex));
 
 
@@ -236,7 +236,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="expression">The regular expression to check the value against.</param>
 	/// <param name="options">Regex options</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder,
+	public static IRuleBuilderOptions<T, string?> Matches<T>(this IRuleBuilder<T, string?> ruleBuilder,
 		#if NET7_0_OR_GREATER
 		[StringSyntax(StringSyntaxAttribute.Regex)]
 		#endif
@@ -252,7 +252,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="expression">The regular expression to check the value against.</param>
 	/// <param name="options">Regex options</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, string> expression, RegexOptions options)
+	public static IRuleBuilderOptions<T, string?> Matches<T>(this IRuleBuilder<T, string?> ruleBuilder, Func<T, string> expression, RegexOptions options)
 		=> ruleBuilder.SetValidator(new RegularExpressionValidator<T>(expression, options));
 
 	/// <summary>
@@ -263,9 +263,9 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="mode">The mode to use for email validation. If set to <see cref="EmailValidationMode.Net4xRegex"/>, then a regular expression will be used. This is the same regex used by the EmailAddressAttribute in .NET 4.x. If set to <see cref="EmailValidationMode.AspNetCoreCompatible"/> then this uses the simplified ASP.NET Core logic for checking an email address, which just checks for the presence of an @ sign.</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> EmailAddress<T>(this IRuleBuilder<T, string> ruleBuilder, EmailValidationMode mode = EmailValidationMode.AspNetCoreCompatible) {
+	public static IRuleBuilderOptions<T, string?> EmailAddress<T>(this IRuleBuilder<T, string?> ruleBuilder, EmailValidationMode mode = EmailValidationMode.AspNetCoreCompatible) {
 #pragma warning disable 618
-		var validator = mode == EmailValidationMode.AspNetCoreCompatible ? new AspNetCoreCompatibleEmailValidator<T>() : (PropertyValidator<T,string>)new EmailValidator<T>();
+		var validator = mode == EmailValidationMode.AspNetCoreCompatible ? new AspNetCoreCompatibleEmailValidator<T>() : (PropertyValidator<T,string?>)new EmailValidator<T>();
 #pragma warning restore 618
 		return ruleBuilder.SetValidator(validator);
 	}
@@ -282,7 +282,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="comparer">Equality comparer to use</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		TProperty toCompare, IEqualityComparer<TProperty> comparer = null)
+		TProperty toCompare, IEqualityComparer<TProperty>? comparer = null)
 		=> ruleBuilder.SetValidator(new NotEqualValidator<T, TProperty>(toCompare, comparer));
 
 	/// <summary>
@@ -295,10 +295,10 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="toCompare">The value to compare</param>
 	/// <param name="comparer">Equality comparer to use</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> NotEqual<T>(this IRuleBuilder<T, string> ruleBuilder,
-		string toCompare, IEqualityComparer<string> comparer = null) {
+	public static IRuleBuilderOptions<T, string?> NotEqual<T>(this IRuleBuilder<T, string?> ruleBuilder,
+		string? toCompare, IEqualityComparer<string?>? comparer = null) {
 		comparer ??= StringComparer.Ordinal;
-		return ruleBuilder.SetValidator(new NotEqualValidator<T, string>(toCompare, comparer));
+		return ruleBuilder.SetValidator(new NotEqualValidator<T, string?>(toCompare, comparer));
 	}
 
 	/// <summary>
@@ -313,10 +313,10 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="comparer">Equality Comparer to use</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> NotEqual<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		Expression<Func<T, TProperty>> expression, IEqualityComparer<TProperty> comparer = null) {
+		Expression<Func<T, TProperty>> expression, IEqualityComparer<TProperty>? comparer = null) {
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
-		string comparisonPropertyName = GetDisplayName(member, expression);
+		string? comparisonPropertyName = GetDisplayName(member, expression);
 		return ruleBuilder.SetValidator(new NotEqualValidator<T,TProperty>(func, member, comparisonPropertyName, comparer));
 	}
 
@@ -330,14 +330,14 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="expression">A lambda expression to provide the comparison value</param>
 	/// <param name="comparer">Equality Comparer to use</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> NotEqual<T>(this IRuleBuilder<T, string> ruleBuilder,
-		Expression<Func<T, string>> expression, IEqualityComparer<string> comparer = null) {
+	public static IRuleBuilderOptions<T, string?> NotEqual<T>(this IRuleBuilder<T, string?> ruleBuilder,
+		Expression<Func<T, string?>> expression, IEqualityComparer<string?>? comparer = null) {
 		comparer ??= StringComparer.Ordinal;
 
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
-		string comparisonPropertyName = GetDisplayName(member, expression);
-		return ruleBuilder.SetValidator(new NotEqualValidator<T,string>(func, member, comparisonPropertyName, comparer));
+		string? comparisonPropertyName = GetDisplayName(member, expression);
+		return ruleBuilder.SetValidator(new NotEqualValidator<T,string?>(func, member, comparisonPropertyName, comparer));
 	}
 
 	/// <summary>
@@ -351,7 +351,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="toCompare">The value to compare</param>
 	/// <param name="comparer">Equality Comparer to use</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare, IEqualityComparer<TProperty> comparer = null)
+	public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty toCompare, IEqualityComparer<TProperty>? comparer = null)
 		=> ruleBuilder.SetValidator(new EqualValidator<T,TProperty>(toCompare, comparer));
 
 	/// <summary>
@@ -364,11 +364,10 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="toCompare">The value to compare</param>
 	/// <param name="comparer">Equality Comparer to use</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Equal<T>(this IRuleBuilder<T, string> ruleBuilder, string toCompare, IEqualityComparer<string> comparer = null) {
+	public static IRuleBuilderOptions<T, string?> Equal<T>(this IRuleBuilder<T, string?> ruleBuilder, string? toCompare, IEqualityComparer<string?>? comparer = null) {
 		comparer ??= StringComparer.Ordinal;
-		return ruleBuilder.SetValidator(new EqualValidator<T,string>(toCompare, comparer));
+		return ruleBuilder.SetValidator(new EqualValidator<T,string?>(toCompare, comparer));
 	}
-
 
 	/// <summary>
 	/// Defines an 'equals' validator on the current rule builder using a lambda to specify the comparison value.
@@ -381,7 +380,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="expression">A lambda expression to provide the comparison value</param>
 	/// <param name="comparer">Equality comparer to use</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression, IEqualityComparer<TProperty> comparer = null) {
+	public static IRuleBuilderOptions<T, TProperty> Equal<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression, IEqualityComparer<TProperty>? comparer = null) {
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -398,12 +397,12 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="expression">A lambda expression to provide the comparison value</param>
 	/// <param name="comparer">Equality comparer to use</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> Equal<T>(this IRuleBuilder<T, string> ruleBuilder, Expression<Func<T, string>> expression, IEqualityComparer<string> comparer = null) {
+	public static IRuleBuilderOptions<T, string?> Equal<T>(this IRuleBuilder<T, string?> ruleBuilder, Expression<Func<T, string?>> expression, IEqualityComparer<string?>? comparer = null) {
 		comparer ??= StringComparer.Ordinal;
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
-		return ruleBuilder.SetValidator(new EqualValidator<T,string>(func, member, name, comparer));
+		return ruleBuilder.SetValidator(new EqualValidator<T,string?>(func, member, name, comparer));
 	}
 
 	/// <summary>
@@ -513,7 +512,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		TProperty valueToCompare)
-		where TProperty : IComparable<TProperty>, IComparable {
+		where TProperty : IComparable<TProperty>?, IComparable? {
 		return ruleBuilder.SetValidator(new LessThanValidator<T, TProperty>(valueToCompare));
 	}
 
@@ -544,7 +543,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="valueToCompare">The value being compared</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> LessThanOrEqualTo<T, TProperty>(
-		this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare) where TProperty : IComparable<TProperty>, IComparable {
+		this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare) where TProperty : IComparable<TProperty>?, IComparable? {
 		return ruleBuilder.SetValidator(new LessThanOrEqualValidator<T,TProperty>(valueToCompare));
 	}
 
@@ -574,7 +573,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="valueToCompare">The value being compared</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare)
-		where TProperty : IComparable<TProperty>, IComparable {
+		where TProperty : IComparable<TProperty>?, IComparable? {
 		return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(valueToCompare));
 	}
 
@@ -604,7 +603,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="valueToCompare">The value being compared</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> GreaterThanOrEqualTo<T, TProperty>(
-		this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare) where TProperty : IComparable<TProperty>, IComparable {
+		this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare) where TProperty : IComparable<TProperty>?, IComparable? {
 		return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(valueToCompare));
 	}
 
@@ -634,7 +633,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		Expression<Func<T, TProperty>> expression)
-		where TProperty : IComparable<TProperty>, IComparable {
+		where TProperty : IComparable<TProperty>?, IComparable? {
 		ArgumentNullException.ThrowIfNull(expression);
 
 		var member = expression.GetMember();
@@ -727,7 +726,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> LessThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression)
-		where TProperty : IComparable<TProperty>, IComparable {
+		where TProperty : IComparable<TProperty>?, IComparable? {
 		ArgumentNullException.ThrowIfNull(expression);
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
@@ -820,7 +819,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		Expression<Func<T, TProperty>> expression)
-		where TProperty : IComparable<TProperty>, IComparable {
+		where TProperty : IComparable<TProperty>?, IComparable? {
 		ArgumentNullException.ThrowIfNull(expression);
 
 		var member = expression.GetMember();
@@ -914,7 +913,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> GreaterThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> valueToCompare)
-		where TProperty : IComparable<TProperty>, IComparable {
+		where TProperty : IComparable<TProperty>?, IComparable? {
 		ArgumentNullException.ThrowIfNull(valueToCompare);
 
 		var member = valueToCompare.GetMember();
@@ -1005,7 +1004,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="from">The lowest allowed value</param>
 	/// <param name="to">The highest allowed value</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
+	public static IRuleBuilderOptions<T, TProperty> InclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>?, IComparable? {
 		return ruleBuilder.SetValidator(RangeValidatorFactory.CreateInclusiveBetween<T,TProperty>(from, to));
 	}
 	/// <summary>
@@ -1046,7 +1045,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="from">The lowest allowed value</param>
 	/// <param name="to">The highest allowed value</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>, IComparable {
+	public static IRuleBuilderOptions<T, TProperty> ExclusiveBetween<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty from, TProperty to) where TProperty : IComparable<TProperty>?, IComparable? {
 		return ruleBuilder.SetValidator(RangeValidatorFactory.CreateExclusiveBetween<T,TProperty>(from, to));
 	}
 
@@ -1157,9 +1156,9 @@ public static partial class DefaultValidatorExtensions {
 	/// <typeparam name="T"></typeparam>
 	/// <typeparam name="TElement"></typeparam>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, IEnumerable<TElement>> ForEach<T, TElement>(this IRuleBuilder<T, IEnumerable<TElement>> ruleBuilder,
-		Action<IRuleBuilderInitialCollection<IEnumerable<TElement>, TElement>> action) {
-		var innerValidator = new InlineValidator<IEnumerable<TElement>>();
+	public static IRuleBuilderOptions<T, IEnumerable<TElement>?> ForEach<T, TElement>(this IRuleBuilder<T, IEnumerable<TElement>?> ruleBuilder,
+		Action<IRuleBuilderInitialCollection<IEnumerable<TElement>?, TElement>> action) {
+		var innerValidator = new InlineValidator<IEnumerable<TElement>?>();
 
 		// https://github.com/FluentValidation/FluentValidation/issues/1231
 		// We need to explicitly set a display name override on the nested validator
@@ -1171,7 +1170,7 @@ public static partial class DefaultValidatorExtensions {
 		collectionRule.PropertyName = string.Empty;
 
 		collectionRule.SetDisplayName(context => {
-			return originalRule.GetDisplayName(((IValidationContext) context).ParentContext);
+			return originalRule.GetDisplayName(((IValidationContext) context).ParentContext)!;
 		});
 
 		action(collectionRuleBuilder);
@@ -1226,6 +1225,6 @@ public static partial class DefaultValidatorExtensions {
 		return ruleBuilder.SetAsyncValidator((IAsyncPropertyValidator<T, TProperty>) validator);
 	}
 
-	private static string GetDisplayName<T, TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression)
+	private static string? GetDisplayName<T, TProperty>(MemberInfo? member, Expression<Func<T, TProperty>> expression)
 		=> ValidatorOptions.Global.DisplayNameResolver(typeof(T), member, expression) ?? member?.Name.SplitPascalCase();
 }

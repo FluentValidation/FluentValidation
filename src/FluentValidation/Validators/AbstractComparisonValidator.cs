@@ -16,8 +16,6 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
-#nullable enable
-
 namespace FluentValidation.Validators;
 
 using System;
@@ -27,7 +25,7 @@ using Internal;
 /// <summary>
 /// Base class for all comparison validators
 /// </summary>
-public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValidator<T,TProperty>, IComparisonValidator where TProperty : IComparable<TProperty>, IComparable {
+public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValidator<T,TProperty>, IComparisonValidator where TProperty : IComparable<TProperty>?, IComparable? {
 	readonly Func<T, (bool HasValue, TProperty Value)>? _valueToCompareFuncForNullables;
 	private readonly Func<T, TProperty?>? _valueToCompareFunc;
 	private readonly string? _comparisonMemberDisplayName;
@@ -45,7 +43,7 @@ public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValida
 	/// <param name="valueToCompareFunc"></param>
 	/// <param name="member"></param>
 	/// <param name="memberDisplayName"></param>
-	protected AbstractComparisonValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo member, string memberDisplayName) {
+	protected AbstractComparisonValidator(Func<T, (bool HasValue, TProperty Value)> valueToCompareFunc, MemberInfo? member, string? memberDisplayName) {
 		_valueToCompareFuncForNullables = valueToCompareFunc;
 		_comparisonMemberDisplayName = memberDisplayName;
 		MemberToCompare = member;
@@ -56,7 +54,7 @@ public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValida
 	/// <param name="valueToCompareFunc"></param>
 	/// <param name="member"></param>
 	/// <param name="memberDisplayName"></param>
-	protected AbstractComparisonValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo member, string memberDisplayName) {
+	protected AbstractComparisonValidator(Func<T, TProperty> valueToCompareFunc, MemberInfo? member, string? memberDisplayName) {
 		_valueToCompareFunc = valueToCompareFunc;
 		_comparisonMemberDisplayName = memberDisplayName;
 		MemberToCompare = member;

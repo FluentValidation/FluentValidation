@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class KazakhLanguage {
 	public const string Culture = "kk";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' Қате электрондық пошта мекенжайы.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' мән мынадан -'{ComparisonValue}' үлкен немесе оған тең болуы керек.",
 		"GreaterThanValidator" => "'{PropertyName}' мән мынадан -'{ComparisonValue}' үлкенірек болуы керек.",

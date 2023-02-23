@@ -27,7 +27,7 @@ using Validators;
 internal class AlbanianLanguage {
 	public const string Culture = "sq";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' nuk është një adresë e saktë emaili.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' duhet të jetë më e madhe se ose e barabartë me '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' duhet të jetë më e madhe se '{ComparisonValue}'.",

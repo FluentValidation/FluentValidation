@@ -5,8 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Internal;
 
-#nullable enable
-
 /// <summary>
 /// Indicates that this validator wraps another validator.
 /// </summary>
@@ -25,7 +23,7 @@ public class ChildValidatorAdaptor<T,TProperty> : NoopPropertyValidator<T,TPrope
 
 	public Type ValidatorType { get; }
 
-	public string[]? RuleSets { get; set; }
+	public string[] RuleSets { get; internal set; } = Array.Empty<string>();
 
 	public ChildValidatorAdaptor(IValidator<TProperty>? validator, Type validatorType) {
 		_validator = validator;

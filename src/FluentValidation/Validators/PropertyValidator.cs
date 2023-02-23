@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using Internal;
 
 public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TProperty> {
@@ -56,5 +54,5 @@ public abstract class PropertyValidator<T, TProperty> : IPropertyValidator<T,TPr
 	/// <param name="context">The validation context. The parent object can be obtained from here.</param>
 	/// <param name="value">The current property value to validate</param>
 	/// <returns>True if valid, otherwise false.</returns>
-	public abstract bool IsValid(ValidationContext<T> context, TProperty? value);
+	public abstract bool IsValid(ValidationContext<T> context, TProperty value);
 }

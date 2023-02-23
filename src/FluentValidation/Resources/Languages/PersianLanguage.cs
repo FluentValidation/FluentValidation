@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class PersianLanguage {
 	public const string Culture = "fa";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' وارد شده قالب صحیح یک ایمیل را ندارد.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' باید بیشتر یا مساوی '{ComparisonValue}' باشد.",
 		"GreaterThanValidator" => "'{PropertyName}' باید بیشتر از '{ComparisonValue}' باشد.",

@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class ItalianLanguage {
 	public const string Culture = "it";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' non è un indirizzo email valido.",
 		"EqualValidator" => "'{PropertyName}' dovrebbe essere uguale a '{ComparisonValue}'.",
 		"ExactLengthValidator" => "'{PropertyName}' deve essere lungo {MaxLength} caratteri. Hai inserito {TotalLength} caratteri.",

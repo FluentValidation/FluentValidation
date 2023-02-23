@@ -18,11 +18,9 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using System;
 
-public class LengthValidator<T> : PropertyValidator<T,string>, ILengthValidator {
+public class LengthValidator<T> : PropertyValidator<T,string?>, ILengthValidator {
 	public override string Name => "LengthValidator";
 
 	public int Min { get; }

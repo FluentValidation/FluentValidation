@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class MacedonianLanguage {
 	public const string Culture = "mk";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' не е валидна емаил адреса.",
 		"GreaterThanOrEqualValidator" => "Вредноста на '{PropertyName}' мора да биде поголема или еднаква на '{ComparisonValue}'.",
 		"GreaterThanValidator" => "Вредноста на '{PropertyName}' мора да биде поголема од '{ComparisonValue}'.",

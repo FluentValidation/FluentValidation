@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class UzbekLatinLanguage {
 	public const string Culture = "uz";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' yaroqli elektron pochta manzili emas.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' kamida '{ComparisonValue}'ga teng bo'lishi shart.",
 		"GreaterThanValidator" => "'{PropertyName}' '{ComparisonValue}'dan katta bo'lishi shart.",

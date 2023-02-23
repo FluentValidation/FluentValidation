@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class ArabicLanguage {
 	public const string Culture = "ar";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' ليس بريد الكتروني صحيح.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' يجب أن يكون أكبر من أو يساوي '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' يجب أن يكون أكبر من '{ComparisonValue}'.",

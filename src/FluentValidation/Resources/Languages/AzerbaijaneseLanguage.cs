@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class AzerbaijaneseLanguage {
 	public const string Culture = "az";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}'  keçərli bir e-poçt ünvanı deyil.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' dəyəri '{ComparisonValue}' dəyərindən böyük və ya bərabər olmalıdır.",
 		"GreaterThanValidator" => "'{PropertyName}' dəyəri '{ComparisonValue}' dəyərindən böyük olmalıdır.",

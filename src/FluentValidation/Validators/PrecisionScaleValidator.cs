@@ -20,8 +20,6 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 using System;
 
 // Attribution: This class was contributed to FluentValidation using code posted on StackOverflow by Jon Skeet

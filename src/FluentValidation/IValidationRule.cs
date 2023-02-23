@@ -18,8 +18,6 @@
 
 namespace FluentValidation;
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -62,7 +60,7 @@ public interface IValidationRule<T, out TProperty> : IValidationRule<T> {
 	/// <summary>
 	/// The current rule component.
 	/// </summary>
-	IRuleComponent<T,TProperty>? Current { get; }
+	IRuleComponent<T,TProperty> Current { get; }
 
 	/// <summary>
 	/// Allows custom creation of an error message
@@ -123,14 +121,14 @@ public interface IValidationRule {
 	/// Name of the rule-set to which this rule belongs.
 	/// Will return a null array (rather than empty) if not part of a rule set.
 	/// </summary>
-	string[]? RuleSets { get; set; }
+	string[] RuleSets { get; set; }
 
 	/// <summary>
 	/// Gets the display name for the property.
 	/// </summary>
 	/// <param name="context">Current context. If null, this will not be able to retrieve </param>
 	/// <returns>Display name</returns>
-	string GetDisplayName(IValidationContext? context);
+	string? GetDisplayName(IValidationContext? context);
 
 	/// <summary>
 	/// Returns the property name for the property being validated.

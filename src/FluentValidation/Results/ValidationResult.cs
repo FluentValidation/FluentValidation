@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Results;
 
-#nullable enable
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +53,7 @@ public class ValidationResult {
 	/// <summary>
 	/// The RuleSets that were executed during the validation run.
 	/// </summary>
-	public string[]? RuleSetsExecuted { get; set; }
+	public string[] RuleSetsExecuted { get; set; } = Array.Empty<string>();
 
 	/// <summary>
 	/// Creates a new validationResult

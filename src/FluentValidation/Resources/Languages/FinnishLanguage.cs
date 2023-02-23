@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class FinnishLanguage {
 	public const string Culture = "fi";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' ei ole kelvollinen sähköpostiosoite.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' pitää olla suurempi tai yhtä suuri kuin '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' pitää olla suurempi kuin '{ComparisonValue}'.",

@@ -17,8 +17,6 @@
 #endregion
 
 #pragma warning disable 1591
-#nullable enable
-
 namespace FluentValidation.TestHelper;
 
 using System;

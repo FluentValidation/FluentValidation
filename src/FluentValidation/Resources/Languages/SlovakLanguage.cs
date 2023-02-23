@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class SlovakLanguage {
 	public const string Culture = "sk";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "Pole '{PropertyName}' musí obsahovať platnú emailovú adresu.",
 		"GreaterThanOrEqualValidator" => "Hodnota poľa '{PropertyName}' musí byť väčšia alebo sa rovnať '{ComparisonValue}'.",
 		"GreaterThanValidator" => "Hodnota poľa '{PropertyName}' musí byť väčšia ako '{ComparisonValue}'.",

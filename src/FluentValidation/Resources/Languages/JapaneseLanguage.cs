@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class JapaneseLanguage {
 	public const string Culture = "ja";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' は有効なメールアドレスではありません。",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' は '{ComparisonValue} 以上でなければなりません'.",
 		"GreaterThanValidator" => "'{PropertyName}' は '{ComparisonValue}' よりも大きくなければなりません。",

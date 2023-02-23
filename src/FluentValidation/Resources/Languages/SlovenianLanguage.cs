@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class SlovenianLanguage {
 	public const string Culture = "sl";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' ni veljaven e-poštni naslov.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' mora biti večji ali enak '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' mora biti večji od '{ComparisonValue}'.",

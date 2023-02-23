@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class VietnameseLanguage {
 	public const string Culture = "vi";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' không phải là một email hợp lệ.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' phải lớn hơn hoặc bằng với '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' phải lớn hơn '{ComparisonValue}'.",

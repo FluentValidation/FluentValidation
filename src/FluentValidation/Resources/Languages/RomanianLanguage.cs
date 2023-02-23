@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class RomanianLanguage {
 	public const string Culture = "ro";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' nu este o adresă de email validă.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' trebuie să fie mai mare sau egală cu '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' trebuie să fie mai mare ca '{ComparisonValue}'.",

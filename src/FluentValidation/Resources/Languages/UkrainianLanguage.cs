@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class UkrainianLanguage {
 	public const string Culture = "uk";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' не є email-адресою.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' має бути більшим, або дорівнювати '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' має бути більшим за '{ComparisonValue}'.",

@@ -24,8 +24,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#nullable enable
-
 public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, INotEmptyValidator {
 
 	public override string Name => "NotEmptyValidator";

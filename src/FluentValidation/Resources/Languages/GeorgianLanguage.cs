@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class GeorgianLanguage {
 	public const string Culture = "ka";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' არ არის ვალიდური ელ.ფოსტის მისამართი.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე მეტი ან ტოლი.",
 		"GreaterThanValidator" => "'{PropertyName}' უნდა იყოს '{ComparisonValue}'-ზე მეტი.",

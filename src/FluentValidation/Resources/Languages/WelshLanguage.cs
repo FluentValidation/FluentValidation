@@ -25,7 +25,7 @@ namespace FluentValidation.Resources;
 internal class WelshLanguage {
 	public const string Culture = "cy";
 
-	public static string GetTranslation(string key) => key switch {
+	public static string? GetTranslation(string key) => key switch {
 		"EmailValidator" => "Nid yw '{PropertyName}' yn gyfeiriad e-bost dilys.",
 		"GreaterThanOrEqualValidator" => "Rhaid i '{PropertyName}' fod yn fwy na '{ComparisonValue}', neu'n gyfartal ag o.",
 		"GreaterThanValidator" => "Rhaid i '{PropertyName}' fod yn fwy na '{ComparisonValue}'.",

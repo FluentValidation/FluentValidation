@@ -18,8 +18,6 @@
 
 namespace FluentValidation.Validators;
 
-#nullable enable
-
 public class NullValidator<T,TProperty> : PropertyValidator<T,TProperty>, INullValidator {
 
 	public override string Name => "NullValidator";
