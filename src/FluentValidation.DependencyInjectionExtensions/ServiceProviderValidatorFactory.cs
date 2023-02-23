@@ -29,6 +29,6 @@ public class ServiceProviderValidatorFactory : ValidatorFactoryBase {
 	public ServiceProviderValidatorFactory(IServiceProvider serviceProvider)
 		=> _serviceProvider = serviceProvider;
 
-	public override IValidator CreateInstance(Type validatorType)
+	public override IValidator? CreateInstance(Type validatorType)
 		=> _serviceProvider.GetService(validatorType) as IValidator;
 }

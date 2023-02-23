@@ -18,6 +18,7 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <ContinuousIntegrationBuild Condition="'$(Configuration)'=='Release'">true</ContinuousIntegrationBuild>
+        <Nullable>enable</Nullable>
         <EnablePackageValidation>false</EnablePackageValidation>
     </PropertyGroup>
     <ItemGroup>
