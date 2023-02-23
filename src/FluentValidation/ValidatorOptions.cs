@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -30,8 +32,8 @@ using Validators;
 /// Configuration options for validators.
 /// </summary>
 public class ValidatorConfiguration {
-	private Func<Type, MemberInfo, LambdaExpression, string> _propertyNameResolver = DefaultPropertyNameResolver;
-	private Func<Type, MemberInfo, LambdaExpression, string> _displayNameResolver = DefaultDisplayNameResolver;
+	private Func<Type, MemberInfo?, LambdaExpression?, string?> _propertyNameResolver = DefaultPropertyNameResolver;
+	private Func<Type, MemberInfo?, LambdaExpression?, string?> _displayNameResolver = DefaultDisplayNameResolver;
 	private Func<MessageFormatter> _messageFormatterFactory = () => new MessageFormatter();
 	private Func<IPropertyValidator, string> _errorCodeResolver = DefaultErrorCodeResolver;
 	private ILanguageManager _languageManager = new LanguageManager();
@@ -86,7 +88,7 @@ public class ValidatorConfiguration {
 	/// <summary>
 	/// Pluggable logic for resolving property names
 	/// </summary>
-	public Func<Type, MemberInfo, LambdaExpression, string> PropertyNameResolver {
+	public Func<Type, MemberInfo?, LambdaExpression?, string?> PropertyNameResolver {
 		get => _propertyNameResolver;
 		set => _propertyNameResolver = value ?? DefaultPropertyNameResolver;
 	}
@@ -94,7 +96,7 @@ public class ValidatorConfiguration {
 	/// <summary>
 	/// Pluggable logic for resolving display names
 	/// </summary>
-	public Func<Type, MemberInfo, LambdaExpression, string> DisplayNameResolver {
+	public Func<Type, MemberInfo?, LambdaExpression?, string?> DisplayNameResolver {
 		get => _displayNameResolver;
 		set => _displayNameResolver = value ?? DefaultDisplayNameResolver;
 	}
@@ -112,7 +114,7 @@ public class ValidatorConfiguration {
 		set => _errorCodeResolver = value ?? DefaultErrorCodeResolver;
 	}
 
-	static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
+	static string? DefaultPropertyNameResolver(Type type, MemberInfo? memberInfo, LambdaExpression? expression) {
 		if (expression != null) {
 			var chain = PropertyChain.FromExpression(expression);
 			if (chain.Count > 0) return chain.ToString();
@@ -121,7 +123,7 @@ public class ValidatorConfiguration {
 		return memberInfo?.Name;
 	}
 
-	static string DefaultDisplayNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) => null;
+	static string? DefaultDisplayNameResolver(Type type, MemberInfo? memberInfo, LambdaExpression? expression) => null;
 
 	static string DefaultErrorCodeResolver(IPropertyValidator validator) {
 		return validator.Name;

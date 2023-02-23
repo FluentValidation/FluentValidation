@@ -37,12 +37,12 @@ public class TestValidationResult<T> : ValidationResult {
 	}
 
 	public ITestValidationWith ShouldHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
-		string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
+		string? propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
 		return ShouldHaveValidationError(propertyName, true);
 	}
 
 	public void ShouldNotHaveValidationErrorFor<TProperty>(Expression<Func<T, TProperty>> memberAccessor) {
-		string propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
+		string? propertyName = ValidatorOptions.Global.PropertyNameResolver(typeof(T), memberAccessor.GetMember(), memberAccessor);
 		ShouldNotHaveValidationError(propertyName, true);
 	}
 
@@ -65,7 +65,7 @@ public class TestValidationResult<T> : ValidationResult {
 		ShouldNotHaveValidationError(propertyName, false);
 	}
 
-	private ITestValidationWith ShouldHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
+	private ITestValidationWith ShouldHaveValidationError(string? propertyName, bool shouldNormalizePropertyName) {
 		var result = new TestValidationContinuation(Errors);
 		result.ApplyPredicate(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
 		                           || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
@@ -94,7 +94,7 @@ public class TestValidationResult<T> : ValidationResult {
 		throw new ValidationTestException(errorMessage);
 	}
 
-	private void ShouldNotHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
+	private void ShouldNotHaveValidationError(string? propertyName, bool shouldNormalizePropertyName) {
 		var failures = Errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
 		                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
 		                                 || propertyName == ValidationTestExtension.MatchAnyFailure

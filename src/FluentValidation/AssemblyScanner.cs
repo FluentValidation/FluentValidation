@@ -18,6 +18,8 @@
 
 #endregion
 
+#nullable enable
+
 namespace FluentValidation;
 
 using System;

@@ -26,7 +26,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Validators;
 
-internal class ConditionBuilder<T> where T : notnull {
+internal class ConditionBuilder<T> {
 	private TrackingCollection<IValidationRuleInternal<T>> _rules;
 
 	public ConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
@@ -69,7 +69,13 @@ internal class ConditionBuilder<T> where T : notnull {
 					cachedResults.Add(actualContext.InstanceToValidate, executionResult);
 				}
 				else {
+#pragma warning disable CS8714
+					// Disable CS8714 "Nullability of T doesn't match constraint" as Dictionary<TKey, TValue>
+					// has a "where TKey : notnull" constraint.
+					// We don't want to have to add notnull constraints everywhere throughout the codebase just for this.
+					// This is safe to disable as we specifically check for nulls above.
 					actualContext.SharedConditionCache.Add(id, new Dictionary<T, bool> {
+#pragma warning restore CS8714
 						{ actualContext.InstanceToValidate, executionResult }
 					});
 				}
@@ -95,7 +101,7 @@ internal class ConditionBuilder<T> where T : notnull {
 	}
 }
 
-internal class AsyncConditionBuilder<T> where T : notnull {
+internal class AsyncConditionBuilder<T> {
 	private TrackingCollection<IValidationRuleInternal<T>> _rules;
 
 	public AsyncConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
@@ -135,7 +141,13 @@ internal class AsyncConditionBuilder<T> where T : notnull {
 					cachedResults.Add(actualContext.InstanceToValidate, executionResult);
 				}
 				else {
+#pragma warning disable CS8714
+					// Disable CS8714 "Nullability of T doesn't match constraint" as Dictionary<TKey, TValue>
+					// has a "where TKey : notnull" constraint.
+					// We don't want to have to add notnull constraints everywhere throughout the codebase just for this.
+					// This is safe to disable as we specifically check for nulls above.
 					actualContext.SharedConditionCache.Add(id, new Dictionary<T, bool> {
+#pragma warning restore CS8714
 						{ actualContext.InstanceToValidate, executionResult }
 					});
 				}

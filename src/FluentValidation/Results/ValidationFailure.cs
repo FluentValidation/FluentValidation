@@ -39,14 +39,14 @@ public class ValidationFailure {
 	/// <summary>
 	/// Creates a new validation failure.
 	/// </summary>
-	public ValidationFailure(string propertyName, string errorMessage) : this(propertyName, errorMessage, null) {
+	public ValidationFailure(string? propertyName, string errorMessage) : this(propertyName, errorMessage, null) {
 
 	}
 
 	/// <summary>
 	/// Creates a new ValidationFailure.
 	/// </summary>
-	public ValidationFailure(string propertyName, string errorMessage, object? attemptedValue) {
+	public ValidationFailure(string? propertyName, string errorMessage, object? attemptedValue) {
 		PropertyName = propertyName;
 		ErrorMessage = errorMessage;
 		AttemptedValue = attemptedValue;
@@ -55,7 +55,7 @@ public class ValidationFailure {
 	/// <summary>
 	/// The name of the property.
 	/// </summary>
-	public string PropertyName { get; set; }
+	public string? PropertyName { get; set; }
 
 	/// <summary>
 	/// The error message

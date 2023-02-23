@@ -8,8 +8,8 @@ public interface IMessageBuilderContext<T, out TProperty> {
 	IRuleComponent<T, TProperty> Component { get; }
 	IPropertyValidator PropertyValidator { get; }
 	ValidationContext<T> ParentContext { get; }
-	string PropertyName { get; }
-	string DisplayName { get; }
+	string? PropertyName { get; }
+	string? DisplayName { get; }
 	MessageFormatter MessageFormatter { get; }
 	T InstanceToValidate { get; }
 	TProperty PropertyValue { get; }
@@ -37,9 +37,9 @@ public class MessageBuilderContext<T,TProperty> : IMessageBuilderContext<T,TProp
 
 	// public IValidationRule<T> Rule => _innerContext.Rule;
 
-	public string PropertyName => _innerContext.PropertyName;
+	public string? PropertyName => _innerContext.PropertyName;
 
-	public string DisplayName => _innerContext.DisplayName;
+	public string? DisplayName => _innerContext.DisplayName;
 
 	public MessageFormatter MessageFormatter => _innerContext.MessageFormatter;
 

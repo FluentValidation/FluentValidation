@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -45,7 +47,7 @@ public class InlineValidator<T> : AbstractValidator<T> {
 	/// <summary>
 	/// Allows configuration of the validator.
 	/// </summary>
-	public void Add<TProperty>(Func<InlineValidator<T>, IRuleBuilderOptions<T, TProperty>> ruleCreator) {
+	public void Add<TProperty>(Func<InlineValidator<T>, IRuleBuilderOptions<T, TProperty?>> ruleCreator) {
 		ruleCreator(this);
 	}
 }

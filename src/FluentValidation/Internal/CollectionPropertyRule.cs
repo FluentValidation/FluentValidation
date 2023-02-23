@@ -35,18 +35,18 @@ using System.Threading.Tasks;
 /// </summary>
 /// <typeparam name="TElement"></typeparam>
 /// <typeparam name="T"></typeparam>
-internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TElement>, TElement>, ICollectionRule<T, TElement>, IValidationRuleInternal<T, TElement> {
+internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TElement?>, TElement>, ICollectionRule<T, TElement>, IValidationRuleInternal<T, TElement> {
 	/// <summary>
 	/// Initializes new instance of the CollectionPropertyRule class
 	/// </summary>
-	public CollectionPropertyRule(MemberInfo? member, Func<T, IEnumerable<TElement>> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+	public CollectionPropertyRule(MemberInfo? member, Func<T, IEnumerable<TElement?>?> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
 		: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
 	}
 
 	/// <summary>
 	/// Filter that should include/exclude items in the collection.
 	/// </summary>
-	public Func<TElement, bool>? Filter { get; set; }
+	public Func<TElement?, bool>? Filter { get; set; }
 
 	/// <summary>
 	/// Constructs the indexer in the property name associated with the error message.
@@ -57,7 +57,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 	/// <summary>
 	/// Creates a new property rule from a lambda expression.
 	/// </summary>
-	public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement>>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+	public static CollectionPropertyRule<T, TElement> Create(Expression<Func<T, IEnumerable<TElement?>?>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 		var member = expression.GetMember();
 		var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache, "FV_RuleForEach");
 		return new CollectionPropertyRule<T, TElement>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TElement));

@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +50,7 @@ public class ValidatorDescriptor<T> : IValidatorDescriptor {
 	/// </summary>
 	/// <param name="property"></param>
 	/// <returns></returns>
-	public virtual string GetName(string property) {
+	public virtual string? GetName(string property) {
 		var nameUsed = Rules
 			.Where(x => x.PropertyName == property)
 			.Select(x => x.GetDisplayName(null))
@@ -60,7 +62,7 @@ public class ValidatorDescriptor<T> : IValidatorDescriptor {
 	/// Gets all members with their associated validators
 	/// </summary>
 	/// <returns></returns>
-	public virtual ILookup<string, (IPropertyValidator Validator, IRuleComponent Options)> GetMembersWithValidators() {
+	public virtual ILookup<string?, (IPropertyValidator Validator, IRuleComponent Options)> GetMembersWithValidators() {
 		var query = from rule in Rules
 			from component in rule.Components
 			select new { propertyName = rule.PropertyName, component };
@@ -71,9 +73,9 @@ public class ValidatorDescriptor<T> : IValidatorDescriptor {
 	/// <summary>
 	/// Gets validators for a specific member
 	/// </summary>
-	/// <param name="name"></param>
+	/// <param name="name">Name of property to get validators for. Set to null for root level validators.</param>
 	/// <returns></returns>
-	public IEnumerable<(IPropertyValidator Validator, IRuleComponent Options)> GetValidatorsForMember(string name) {
+	public IEnumerable<(IPropertyValidator Validator, IRuleComponent Options)> GetValidatorsForMember(string? name) {
 		return GetMembersWithValidators()[name];
 	}
 
@@ -82,7 +84,7 @@ public class ValidatorDescriptor<T> : IValidatorDescriptor {
 	/// </summary>
 	/// <param name="name"></param>
 	/// <returns></returns>
-	public IEnumerable<IValidationRule> GetRulesForMember(string name) {
+	public IEnumerable<IValidationRule> GetRulesForMember(string? name) {
 		var query = from rule in Rules
 			where rule.PropertyName == name
 			select rule;
@@ -95,7 +97,7 @@ public class ValidatorDescriptor<T> : IValidatorDescriptor {
 	/// </summary>
 	/// <param name="propertyExpression"></param>
 	/// <returns></returns>
-	public virtual string GetName(Expression<Func<T, object>> propertyExpression) {
+	public virtual string? GetName(Expression<Func<T, object>> propertyExpression) {
 		var member = propertyExpression.GetMember();
 
 		if (member == null) {

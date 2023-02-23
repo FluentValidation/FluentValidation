@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 
@@ -30,11 +32,11 @@ public interface ICollectionRule<T, TElement> : IValidationRule<T, TElement> {
 	/// <summary>
 	/// Filter that should include/exclude items in the collection.
 	/// </summary>
-	public Func<TElement, bool> Filter { get; set; }
+	public Func<TElement?, bool>? Filter { get; set; }
 
 	/// <summary>
 	/// Constructs the indexer in the property name associated with the error message.
 	/// By default this is "[" + index + "]"
 	/// </summary>
-	public Func<T, IEnumerable<TElement>, TElement, int, string> IndexBuilder { get; set; }
+	public Func<T, IEnumerable<TElement>, TElement, int, string>? IndexBuilder { get; set; }
 }

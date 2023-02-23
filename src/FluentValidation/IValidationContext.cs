@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using Internal;
@@ -27,12 +29,12 @@ public interface IValidationContext {
 	/// <summary>
 	/// The object currently being validated.
 	/// </summary>
-	object InstanceToValidate { get; }
+	object? InstanceToValidate { get; }
 
 	/// <summary>
 	/// Additional data associated with the validation request.
 	/// </summary>
-	IDictionary<string, object> RootContextData { get; }
+	IDictionary<string, object?> RootContextData { get; }
 
 	/// <summary>
 	/// Property chain
@@ -57,7 +59,7 @@ public interface IValidationContext {
 	/// <summary>
 	/// Parent validation context.
 	/// </summary>
-	IValidationContext ParentContext { get; }
+	IValidationContext? ParentContext { get; }
 
 	/// <summary>
 	/// Whether this context is async.
@@ -80,7 +82,7 @@ internal interface IHasFailures {
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class ValidationContext<T> : IValidationContext, IHasFailures {
-	private IValidationContext _parentContext;
+	private IValidationContext? _parentContext;
 
 	List<ValidationFailure> IHasFailures.Failures => Failures;
 	internal List<ValidationFailure> Failures { get; }
@@ -104,11 +106,11 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <param name="instanceToValidate"></param>
 	/// <param name="propertyChain"></param>
 	/// <param name="validatorSelector"></param>
-	public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector)
+	public ValidationContext(T instanceToValidate, PropertyChain? propertyChain, IValidatorSelector validatorSelector)
 		: this(instanceToValidate, propertyChain, validatorSelector, new List<ValidationFailure>(), ValidatorOptions.Global.MessageFormatterFactory()) {
 	}
 
-	internal ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, List<ValidationFailure> failures, MessageFormatter messageFormatter) {
+	internal ValidationContext(T instanceToValidate, PropertyChain? propertyChain, IValidatorSelector validatorSelector, List<ValidationFailure> failures, MessageFormatter messageFormatter) {
 		PropertyChain = new PropertyChain(propertyChain);
 		InstanceToValidate = instanceToValidate;
 		Selector = validatorSelector;
@@ -136,7 +138,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <summary>
 	/// Additional data associated with the validation request.
 	/// </summary>
-	public IDictionary<string, object> RootContextData { get; private protected set; } = new Dictionary<string, object>();
+	public IDictionary<string, object?> RootContextData { get; private protected set; } = new Dictionary<string, object?>();
 
 	/// <summary>
 	/// Property chain
@@ -146,7 +148,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <summary>
 	/// Object being validated
 	/// </summary>
-	object IValidationContext.InstanceToValidate => InstanceToValidate;
+	object? IValidationContext.InstanceToValidate => InstanceToValidate;
 
 	/// <summary>
 	/// Selector
@@ -165,7 +167,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 
 	// This is the root context so it doesn't have a parent.
 	// Explicit implementation so it's not exposed necessarily.
-	IValidationContext IValidationContext.ParentContext => _parentContext;
+	IValidationContext? IValidationContext.ParentContext => _parentContext;
 
 	/// <inheritdoc />
 	public bool IsAsync {
@@ -180,7 +182,11 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	public bool ThrowOnFailures { get; internal set; }
 
 
-	private Dictionary<string, Dictionary<T, bool>> _sharedConditionCache;
+#pragma warning disable CS8714
+	// Fine to suppress nullability constraint warning as we'll have already
+	// thrown an exception if root model is null before this is initialised and we
+	// don't want to use notnull constraints everwhere.
+	private Dictionary<string, Dictionary<T, bool>>? _sharedConditionCache;
 
 	/// <summary>
 	/// Shared condition results cache.
@@ -193,6 +199,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 			return _sharedConditionCache;
 		}
 	}
+#pragma warning restore CS8714
 
 	/// <summary>
 	/// Gets or creates generic validation context from non-generic validation context.
@@ -225,7 +232,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 		if (context.InstanceToValidate == null) {
 			var failures = (context is IHasFailures f) ? f.Failures : new List<ValidationFailure>();
 
-			return new ValidationContext<T>(default, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
+			return new ValidationContext<T>(default!, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 				IsChildContext = context.IsChildContext,
 				RootContextData = context.RootContextData,
 				ThrowOnFailures = context.ThrowOnFailures,
@@ -244,7 +251,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <param name="preserveParentContext"></param>
 	/// <param name="selector"></param>
 	/// <returns></returns>
-	public ValidationContext<TChild> CloneForChildValidator<TChild>(TChild instanceToValidate, bool preserveParentContext = false, IValidatorSelector selector = null) {
+	public ValidationContext<TChild> CloneForChildValidator<TChild>(TChild instanceToValidate, bool preserveParentContext = false, IValidatorSelector? selector = null) {
 		return new ValidationContext<TChild>(instanceToValidate, PropertyChain, selector ?? Selector, Failures, MessageFormatter) {
 			IsChildContext = true,
 			RootContextData = RootContextData,
@@ -262,7 +269,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	}
 
 	internal void RestoreState() {
-		var state = _state.Pop();
+		var state = _state!.Pop();
 		IsChildContext = state.IsChildContext;
 		IsChildCollectionContext = state.IsChildCollectionContext;
 		_parentContext = state.ParentContext;
@@ -270,8 +277,10 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 		_sharedConditionCache = state.SharedConditionCache;
 	}
 
-
-	private Stack<(bool IsChildContext, bool IsChildCollectionContext, IValidationContext ParentContext, PropertyChain Chain, Dictionary<string, Dictionary<T, bool>> SharedConditionCache)> _state;
+#pragma warning disable CS8714
+	// Fine to disable nullability warning on dictionary key.
+	private Stack<(bool IsChildContext, bool IsChildCollectionContext, IValidationContext? ParentContext, PropertyChain Chain, Dictionary<string, Dictionary<T, bool>>? SharedConditionCache)>? _state;
+#pragma warning restore CS8714
 
 	/// <summary>
 	/// Adds a new validation failure.
@@ -305,22 +314,22 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 		AddFailure(new ValidationFailure(PropertyName, errorMessage));
 	}
 
-	private Func<ValidationContext<T>, string> _displayNameFunc;
+	private Func<ValidationContext<T>, string>? _displayNameFunc;
 
 	/// <summary>
 	/// Gets the display name for the current property being validated.
 	/// </summary>
-	public string DisplayName => _displayNameFunc(this);
+	public string? DisplayName => _displayNameFunc?.Invoke(this);
 
 	/// <summary>
 	/// The full name of the current property being validated.
 	/// If accessed inside a child validator, this will include the parent's path too.
 	/// </summary>
-	public string PropertyName { get; private set; }
+	public string? PropertyName { get; private set; }
 
-	internal string RawPropertyName { get; private set; }
+	internal string? RawPropertyName { get; private set; }
 
-	internal void InitializeForPropertyValidator(string propertyName, Func<ValidationContext<T>, string> displayNameFunc, string rawPropertyName) {
+	internal void InitializeForPropertyValidator(string propertyName, Func<ValidationContext<T>, string> displayNameFunc, string? rawPropertyName) {
 		PropertyName = propertyName;
 		_displayNameFunc = displayNameFunc;
 		RawPropertyName = rawPropertyName;

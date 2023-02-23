@@ -18,13 +18,15 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 
 /// <summary>
 /// This exception is thrown when an asynchronous validator is executed synchronously.
 /// </summary>
 public class AsyncValidatorInvokedSynchronouslyException : InvalidOperationException {
-	public Type ValidatorType { get; }
+	public Type ValidatorType { get; } = null!;
 
 	internal AsyncValidatorInvokedSynchronouslyException() {
 	}

@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System.Collections.Generic;
 using System.Linq;
 using Internal;
@@ -36,20 +38,22 @@ public interface IValidatorDescriptor {
 	/// <summary>
 	/// Gets the name display name for a property.
 	/// </summary>
-	string GetName(string property);
+	string? GetName(string property);
 
 	/// <summary>
 	/// Gets a collection of validators grouped by property.
 	/// </summary>
-	ILookup<string, (IPropertyValidator Validator, IRuleComponent Options)> GetMembersWithValidators();
+	ILookup<string?, (IPropertyValidator Validator, IRuleComponent Options)> GetMembersWithValidators();
 
 	/// <summary>
 	/// Gets validators for a particular property.
 	/// </summary>
-	IEnumerable<(IPropertyValidator Validator, IRuleComponent Options)> GetValidatorsForMember(string name);
+  /// <param name="name">Name of property to get validators for. Set to null for root level validators.</param>
+	IEnumerable<(IPropertyValidator Validator, IRuleComponent Options)> GetValidatorsForMember(string? name);
 
 	/// <summary>
 	/// Gets rules for a property.
 	/// </summary>
-	IEnumerable<IValidationRule> GetRulesForMember(string name);
+	/// <param name="name">Name of property to get validators for. Set to null for root level rules.</param>
+	IEnumerable<IValidationRule> GetRulesForMember(string? name);
 }

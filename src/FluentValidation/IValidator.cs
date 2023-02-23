@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +43,7 @@ public interface IValidator<in T> : IValidator {
 	/// <param name="instance">The instance to validate</param>
 	/// <param name="cancellation"></param>
 	/// <returns>A ValidationResult object containing any validation failures.</returns>
-	Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new CancellationToken());
+	Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = default);
 }
 
 /// <summary>
@@ -61,7 +63,7 @@ public interface IValidator {
 	/// <param name="context">A ValidationContext</param>
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object contains any validation failures.</returns>
-	Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellation = new CancellationToken());
+	Task<ValidationResult> ValidateAsync(IValidationContext context, CancellationToken cancellation = default);
 
 	/// <summary>
 	/// Creates a hook to access various meta data properties

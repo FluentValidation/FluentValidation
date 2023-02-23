@@ -24,6 +24,8 @@ using Results;
 using System.Linq;
 using System.Runtime.Serialization;
 
+#nullable enable
+
 /// <summary>
 /// An exception that represents failed validation
 /// </summary>
@@ -76,11 +78,11 @@ public class ValidationException : Exception {
 	}
 
 	public ValidationException(SerializationInfo info, StreamingContext context) : base(info, context) {
-		Errors = info.GetValue("errors", typeof(IEnumerable<ValidationFailure>)) as IEnumerable<ValidationFailure>;
+		Errors = info.GetValue("errors", typeof(IEnumerable<ValidationFailure>)) as IEnumerable<ValidationFailure> ?? new List<ValidationFailure>();
 	}
 
 	public override void GetObjectData(SerializationInfo info, StreamingContext context) {
-		if (info == null) throw new ArgumentNullException("info");
+		ArgumentNullException.ThrowIfNull(info);
 
 		info.AddValue("errors", Errors);
 		base.GetObjectData(info, context);

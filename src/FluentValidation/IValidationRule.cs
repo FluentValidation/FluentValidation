@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -55,17 +57,17 @@ public interface IValidationRule<T, out TProperty> : IValidationRule<T> {
 	/// </summary>
 	/// <param name="asyncValidator">The async property validator to invoke</param>
 	/// <param name="fallback">A synchronous property validator to use as a fallback if executed synchronously. This parameter is optional. If omitted, the async validator will be called synchronously if needed.</param>
-	void AddAsyncValidator(IAsyncPropertyValidator<T, TProperty> asyncValidator, IPropertyValidator<T, TProperty> fallback = null);
+	void AddAsyncValidator(IAsyncPropertyValidator<T, TProperty> asyncValidator, IPropertyValidator<T, TProperty>? fallback = null);
 
 	/// <summary>
 	/// The current rule component.
 	/// </summary>
-	IRuleComponent<T,TProperty> Current { get; }
+	IRuleComponent<T,TProperty>? Current { get; }
 
 	/// <summary>
 	/// Allows custom creation of an error message
 	/// </summary>
-	public Func<IMessageBuilderContext<T,TProperty>, string> MessageBuilder { set; }
+	public Func<IMessageBuilderContext<T,TProperty?>, string> MessageBuilder { set; }
 }
 
 public interface IValidationRule<T> : IValidationRule {
@@ -105,7 +107,7 @@ public interface IValidationRule<T> : IValidationRule {
 	/// </summary>
 	/// <param name="instance">The model from which the property value should be retrieved.</param>
 	/// <returns>The property value.</returns>
-	object GetPropertyValue(T instance);
+	object? GetPropertyValue(T instance);
 }
 
 /// <summary>
@@ -116,28 +118,30 @@ public interface IValidationRule {
 	/// The components in this rule.
 	/// </summary>
 	IEnumerable<IRuleComponent> Components { get; }
+
 	/// <summary>
 	/// Name of the rule-set to which this rule belongs.
+	/// Will return a null array (rather than empty) if not part of a rule set.
 	/// </summary>
-	string[] RuleSets { get; set; }
+	string[]? RuleSets { get; set; }
 
 	/// <summary>
 	/// Gets the display name for the property.
 	/// </summary>
-	/// <param name="context">Current context</param>
+	/// <param name="context">Current context. If null, this will not be able to retrieve </param>
 	/// <returns>Display name</returns>
-	string GetDisplayName(IValidationContext context);
+	string GetDisplayName(IValidationContext? context);
 
 	/// <summary>
 	/// Returns the property name for the property being validated.
 	/// Returns null if it is not a property being validated (eg a method call)
 	/// </summary>
-	public string PropertyName { get; set; }
+	public string? PropertyName { get; set; }
 
 	/// <summary>
 	/// Property associated with this rule.
 	/// </summary>
-	public MemberInfo Member { get; }
+	public MemberInfo? Member { get; }
 
 	/// <summary>
 	/// Type of the property being validated
@@ -157,7 +161,7 @@ public interface IValidationRule {
 	/// <summary>
 	/// Expression that was used to create the rule.
 	/// </summary>
-	LambdaExpression Expression { get; }
+	LambdaExpression? Expression { get; }
 
 	/// <summary>
 	/// Dependent rules.

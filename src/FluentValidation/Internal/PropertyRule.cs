@@ -32,14 +32,14 @@ using System.Threading.Tasks;
 /// </summary>
 internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, IValidationRuleInternal<T, TProperty> {
 
-	public PropertyRule(MemberInfo? member, Func<T, TProperty> propertyFunc, LambdaExpression? expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+	public PropertyRule(MemberInfo? member, Func<T, TProperty?> propertyFunc, LambdaExpression? expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
 		: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
 	}
 
 	/// <summary>
 	/// Creates a new property rule from a lambda expression.
 	/// </summary>
-	public static PropertyRule<T, TProperty> Create(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
+	public static PropertyRule<T, TProperty> Create(Expression<Func<T, TProperty?>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 		var member = expression.GetMember();
 		var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
 		return new PropertyRule<T, TProperty>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TProperty));

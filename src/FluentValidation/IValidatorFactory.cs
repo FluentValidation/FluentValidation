@@ -18,6 +18,8 @@
 
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 
 /// <summary>
@@ -28,10 +30,10 @@ public interface IValidatorFactory {
 	/// <summary>
 	/// Gets the validator for the specified type.
 	/// </summary>
-	IValidator<T> GetValidator<T>();
+	IValidator<T>? GetValidator<T>();
 
 	/// <summary>
 	/// Gets the validator for the specified type.
 	/// </summary>
-	IValidator GetValidator(Type type);
+	IValidator? GetValidator(Type type);
 }

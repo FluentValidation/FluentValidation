@@ -19,6 +19,8 @@
 // ReSharper disable MemberCanBePrivate.Global
 namespace FluentValidation;
 
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -96,7 +98,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="instance">The object to validate</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
 	public ValidationResult Validate(T instance)
-		=> Validate(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()));
+		=> Validate(new ValidationContext<T>(instance, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()));
 
 	/// <summary>
 	/// Validates the specified instance asynchronously
@@ -105,7 +107,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
 	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = default)
-		=> ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
+		=> ValidateAsync(new ValidationContext<T>(instance, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 
 	/// <summary>
 	/// Validates the specified instance.
@@ -214,7 +216,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <typeparam name="TProperty">The type of property being validated</typeparam>
 	/// <param name="expression">The expression representing the property to validate</param>
 	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-	public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
+	public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty?>> expression) {
 		ArgumentNullException.ThrowIfNull(expression);
 		var rule = PropertyRule<T, TProperty>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
@@ -227,7 +229,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <typeparam name="TElement">Type of property</typeparam>
 	/// <param name="expression">Expression representing the collection to validate</param>
 	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
-	public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
+	public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement?>?>> expression) {
 		ArgumentNullException.ThrowIfNull(expression);
 		var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);

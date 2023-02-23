@@ -126,7 +126,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// <param name="expression">Lambda expression used to create the rule</param>
 	/// <param name="cascadeModeThunk">Function to get the cascade mode.</param>
 	/// <param name="typeToValidate">Type to validate</param>
-	public RuleBase(MemberInfo? member, Func<T, TProperty> propertyFunc, LambdaExpression? expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate) {
+	public RuleBase(MemberInfo? member, Func<T, TProperty?> propertyFunc, LambdaExpression? expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate) {
 		Member = member;
 		PropertyFunc = propertyFunc;
 		Expression = expression;
@@ -195,15 +195,15 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// </summary>
 	internal List<IValidationRuleInternal<T>>? DependentRules { get; private protected set; }
 
-	IEnumerable<IValidationRule>? IValidationRule.DependentRules => DependentRules;
+	IEnumerable<IValidationRule> IValidationRule.DependentRules => DependentRules ?? Enumerable.Empty<IValidationRule>();
 
-	string? IValidationRule.GetDisplayName(IValidationContext? context) =>
+	string IValidationRule.GetDisplayName(IValidationContext? context) =>
 		GetDisplayName(context != null ? ValidationContext<T>.GetFromNonGenericContext(context) : null);
 
 	/// <summary>
 	/// Display name for the property.
 	/// </summary>
-	public string? GetDisplayName(ValidationContext<T>? context) {
+	public string GetDisplayName(ValidationContext<T>? context) {
 		if (_displayNameFactory != null && context != null) {
 			string? displayNameFromFactory = _displayNameFactory(context);
 
@@ -212,7 +212,10 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 			}
 		}
 
-		return _displayName ?? _propertyDisplayName;
+		// Fine to suppress nullability warning. If we can't get a display name from
+		// any of these methods then we'll already have thrown an exception indicating
+		// name can't be inferred.
+		return _displayName ?? _propertyDisplayName!;
 	}
 
 	/// <summary>
