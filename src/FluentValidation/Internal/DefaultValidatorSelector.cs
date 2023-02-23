@@ -34,7 +34,7 @@ public class DefaultValidatorSelector : IValidatorSelector {
 	/// <returns>Whether or not the validator can execute.</returns>
 	public bool CanExecute(IValidationRule rule, string? propertyPath, IValidationContext context) {
 		// By default we ignore any rules part of a RuleSet.
-		if (rule.RuleSets != null && rule.RuleSets.Length > 0 && !rule.RuleSets.Contains(RulesetValidatorSelector.DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)) {
+		if (rule.RuleSets.Length > 0 && !rule.RuleSets.Contains(RulesetValidatorSelector.DefaultRuleSetName, StringComparer.OrdinalIgnoreCase)) {
 			return false;
 		}
 

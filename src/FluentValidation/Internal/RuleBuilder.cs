@@ -100,9 +100,9 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 			action();
 		}
 
-		if (Rule.RuleSets != null && Rule.RuleSets.Length > 0) {
+		if (Rule.RuleSets.Length > 0) {
 			foreach (var dependentRule in dependencyContainer) {
-				if (dependentRule.RuleSets == null) {
+				if (dependentRule.RuleSets.Length == 0) {
 					dependentRule.RuleSets = Rule.RuleSets;
 				}
 			}

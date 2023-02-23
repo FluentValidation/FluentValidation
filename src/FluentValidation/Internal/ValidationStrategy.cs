@@ -91,7 +91,7 @@ public class ValidationStrategy<T> {
 	/// <param name="ruleSets">The names of the rulesets to validate.</param>
 	/// <returns></returns>
 	public ValidationStrategy<T> IncludeRuleSets(params string[] ruleSets) {
-		if (ruleSets != null && ruleSets.Length > 0) {
+		if (ruleSets.Length > 0) {
 			if (_ruleSets == null) {
 				_ruleSets = new List<string>(ruleSets);
 			}

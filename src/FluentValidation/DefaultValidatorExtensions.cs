@@ -1202,11 +1202,15 @@ public static partial class DefaultValidatorExtensions {
 		var validator = new InlineValidator<TProperty>();
 		var ruleSets = DefaultValidatorOptions.Configurable(ruleBuilder).RuleSets;
 		action(validator);
-		foreach(var rule in validator.Rules) {
-			if (rule.RuleSets == null) {
-				rule.RuleSets = ruleSets;
+
+		if (ruleSets.Length > 0) {
+			foreach (var rule in validator.Rules) {
+				if (rule.RuleSets.Length == 0) {
+					rule.RuleSets = ruleSets;
+				}
 			}
 		}
+
 		return ruleBuilder.SetValidator(validator);
 	}
 
