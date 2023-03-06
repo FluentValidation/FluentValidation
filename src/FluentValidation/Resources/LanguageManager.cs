@@ -54,6 +54,7 @@ public class LanguageManager : ILanguageManager {
 			DanishLanguage.Culture => DanishLanguage.GetTranslation(key),
 			DutchLanguage.Culture => DutchLanguage.GetTranslation(key),
 			FinnishLanguage.Culture => FinnishLanguage.GetTranslation(key),
+			EstonianLanguage.Culture => EstonianLanguage.GetTranslation(key),
 			FrenchLanguage.Culture => FrenchLanguage.GetTranslation(key),
 			GermanLanguage.Culture => GermanLanguage.GetTranslation(key),
 			GeorgianLanguage.Culture => GeorgianLanguage.GetTranslation(key),
