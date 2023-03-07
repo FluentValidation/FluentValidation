@@ -274,7 +274,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	}
 
 	/// <summary>
-	/// Defines a validation rule for a specify property.
+	/// Defines a validation rule for a specific property.
 	/// </summary>
 	/// <example>
 	/// RuleFor(x => x.Surname)...
