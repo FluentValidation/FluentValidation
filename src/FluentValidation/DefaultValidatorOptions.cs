@@ -541,6 +541,25 @@ public static class DefaultValidatorOptions {
 	}
 
 	/// <summary>
+	/// Specifies custom severity that should be stored alongside the validation message when validation fails for this rule.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
+	/// <param name="rule"></param>
+	/// <param name="severityProvider"></param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, ValidationContext<T>, Severity> severityProvider) {
+		severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
+
+		Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
+			return severityProvider(ctx.InstanceToValidate, value, ctx);
+		}
+
+		Configurable(rule).Current.SeverityProvider = SeverityProvider;
+		return rule;
+	}
+
+	/// <summary>
 	/// Allows the generated indexer to be overridden for collection rules.
 	/// </summary>
 	/// <param name="rule">The current rule</param>
