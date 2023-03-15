@@ -543,7 +543,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="severityProvider"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, ValidationContext<T>, Severity> severityProvider) {
-		severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
+		ArgumentNullException.ThrowIfNull(severityProvider);
 
 		Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
 			return severityProvider(ctx.InstanceToValidate, value, ctx);
