@@ -497,7 +497,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		=> instanceToValidate.Guard("Cannot pass null model to Validate.", nameof(instanceToValidate));
 
 	/// <summary>
-	/// Determines if validation should occtur and provides a means to modify the context and ValidationResult prior to execution.
+	/// Determines if validation should occur and provides a means to modify the context and ValidationResult prior to execution.
 	/// If this method returns false, then the ValidationResult is immediately returned from Validate/ValidateAsync.
 	/// </summary>
 	/// <param name="context"></param>
