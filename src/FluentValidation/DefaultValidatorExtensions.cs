@@ -1203,9 +1203,22 @@ public static partial class DefaultValidatorExtensions {
 	/// <exception cref="ArgumentNullException"></exception>
 	public static IRuleBuilderOptions<T, TProperty> ChildRules<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<InlineValidator<TProperty>> action) {
 		if (action == null) throw new ArgumentNullException(nameof(action));
-		var validator = new InlineValidator<TProperty>();
-		var ruleSets = DefaultValidatorOptions.Configurable(ruleBuilder).RuleSets;
+		var validator = new ChildRulesContainer<TProperty>();
+		var parentValidator = ((RuleBuilder<T, TProperty>) ruleBuilder).ParentValidator;
+
+		string[] ruleSets;
+
+		if (parentValidator is ChildRulesContainer<T> container && container.RuleSetsToApplyToChildRules != null) {
+			ruleSets = container.RuleSetsToApplyToChildRules;
+		}
+		else {
+			ruleSets = DefaultValidatorOptions.Configurable(ruleBuilder).RuleSets;
+		}
+
+		validator.RuleSetsToApplyToChildRules = ruleSets;
+
 		action(validator);
+
 		foreach(var rule in validator.Rules) {
 			if (rule.RuleSets == null) {
 				rule.RuleSets = ruleSets;
