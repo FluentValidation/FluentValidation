@@ -1215,6 +1215,9 @@ public static partial class DefaultValidatorExtensions {
 			ruleSets = DefaultValidatorOptions.Configurable(ruleBuilder).RuleSets;
 		}
 
+		// Store the correct rulesets on the child validator in case
+		// we have nested calls to ChildRules, which can then pick this up from
+		// the parent validator.
 		validator.RuleSetsToApplyToChildRules = ruleSets;
 
 		action(validator);
