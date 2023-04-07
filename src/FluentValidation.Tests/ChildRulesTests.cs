@@ -91,6 +91,36 @@ public class ChildRulesTests {
 		result.Errors[0].PropertyName.ShouldEqual("Surname");
 	}
 
+	[Fact]
+	public void Multiple_levels_of_nested_child_rules_in_ruleset() {
+		var validator = new InlineValidator<RulesetChildValidatorRulesValidator.Baz>();
+		validator.RuleSet("Set1", () => {
+			validator.RuleForEach(baz => baz.Bars)
+				.ChildRules(barRule => barRule.RuleForEach(bar => bar.Foos)
+					.ChildRules(fooRule => fooRule.RuleForEach(foo => foo.Names)
+						.ChildRules(name => name.RuleFor(n => n)
+							.NotEmpty()
+							.WithMessage("Name is required"))));
+		});
+
+		var foos = new List<RulesetChildValidatorRulesValidator.Foo> {
+			new() { Names = { "Bob" }},
+			new() { Names = { string.Empty }},
+		};
+
+		var bars = new List<RulesetChildValidatorRulesValidator.Bar> {
+			new(),
+			new() { Foos = foos }
+		};
+
+		var baz = new RulesetChildValidatorRulesValidator.Baz {
+			Bars = bars
+		};
+
+		var result = validator.Validate(baz, options => options.IncludeRuleSets("Set1"));
+		result.IsValid.ShouldBeFalse();
+	}
+
 	private class RulesetChildRulesValidator : AbstractValidator<Person> {
 		public RulesetChildRulesValidator() {
 			RuleSet("testing", () => {
@@ -118,6 +148,18 @@ public class ChildRulesTests {
 					RuleFor(o => o.ProductName).NotEmpty();
 				});
 			}
+		}
+
+		public class Foo {
+			public List<string> Names { get; set; } = new();
+		}
+
+		public class Bar {
+			public List<Foo> Foos { get; set; } = new();
+		}
+
+		public class Baz {
+			public List<Bar> Bars { get; set; } = new();
 		}
 	}
 
