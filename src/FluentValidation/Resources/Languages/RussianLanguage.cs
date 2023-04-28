@@ -43,7 +43,7 @@ internal class RussianLanguage {
 		"EqualValidator" => "'{PropertyName}' должно быть равно '{ComparisonValue}'.",
 		"ExactLengthValidator" => "'{PropertyName}' должно быть длиной {MaxLength} символа(ов). Количество введенных символов: {TotalLength}.",
 		"InclusiveBetweenValidator" => "'{PropertyName}' должно быть в диапазоне от {From} до {To}. Введенное значение: {PropertyValue}.",
-		"ExclusiveBetweenValidator" => "'{PropertyName}' должно быть в даипазоне от {From} до {To} (не включая эти значения). Введенное значение: {PropertyValue}.",
+		"ExclusiveBetweenValidator" => "'{PropertyName}' должно быть в диапазоне от {From} до {To} (не включая эти значения). Введенное значение: {PropertyValue}.",
 		"CreditCardValidator" => "'{PropertyName}' неверный номер карты.",
 		"ScalePrecisionValidator" => "'{PropertyName}' должно содержать не более {ExpectedPrecision} цифр всего, в том числе {ExpectedScale} десятичных знака(ов). Введенное значение содержит {Digits} цифр(ы) в целой части и {ActualScale} десятичных знака(ов).",
 		"EmptyValidator" => "'{PropertyName}' должно быть пустым.",
