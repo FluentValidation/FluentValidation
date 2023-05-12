@@ -12,5 +12,6 @@ jobs:
         uses: JetBrains/qodana-action@main
         with:
           upload-result: false
+          args: --baseline,qodana.sarif.json
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
