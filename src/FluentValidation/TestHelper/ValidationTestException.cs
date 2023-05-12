@@ -25,6 +25,14 @@ using FluentValidation.Results;
 
 public class ValidationTestException : Exception {
 	public List<ValidationFailure> Errors { get; }
+	public string property { get; }
+	public string ThisIsATpyo { get; }
+	
+	public static void Foo()
+	{
+		var x = default(string);
+		Console.WriteLine(x.ToString());
+	}
 
 	public ValidationTestException(string message) : base(message) {
 	}
