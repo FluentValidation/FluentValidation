@@ -60,7 +60,7 @@ RuleFor(x => x.Surname).Custom((x, context) =>
 
 If you use the `ValidateAndThrow` method to [throw an exception when validation fails](start.html#throwing-exceptions) FluentValidation will internally throw a `ValidationException`. You can customzie this behaviour so a different exception is thrown by overriding the `RaiseValidationException` in your validator. 
 
-This simplistic example wraps the default `ValidaitionException` in an `ArgumentException` instead:
+This simplistic example wraps the default `ValidationException` in an `ArgumentException` instead:
 
 ```csharp
 protected override void RaiseValidationException(ValidationContext<T> context, ValidationResult result)
