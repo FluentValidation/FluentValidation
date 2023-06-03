@@ -30,6 +30,11 @@ var result = await validator.ValidateAsync(customer);
 ```
 
 ```eval_rst
+.. note::
+  Calling `ValidateAsync` will run both synchronous and asynchronous rules. 
+```
+
+```eval_rst
 .. warning::
   If your validator contains asynchronous validators or asynchronous conditions, it's important that you *always* call `ValidateAsync` on your validator and never `Validate`. If you call `Validate`, then an exception will be thrown.
 
