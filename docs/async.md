@@ -29,8 +29,10 @@ var validator = new CustomerValidator(new SomeExternalWebApiClient());
 var result = await validator.ValidateAsync(customer);
 ```
 
+```eval_rst
 .. note::
   Calling `ValidateAsync` will run both synchronous and asynchronous rules. 
+```
 
 ```eval_rst
 .. warning::
