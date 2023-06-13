@@ -20,10 +20,12 @@ namespace FluentValidation;
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
 using System.Reflection;
 using Internal;
 using Resources;
+using Results;
 using Validators;
 
 /// <summary>
@@ -197,6 +199,11 @@ public class ValidatorConfiguration {
 		get => _errorCodeResolver;
 		set => _errorCodeResolver = value ?? DefaultErrorCodeResolver;
 	}
+
+	/// <summary>
+	/// Defines a hook that runs when a <see cref="ValidationFailure"/> is created.
+	/// </summary>
+	public Func<ValidationFailure, IValidationContext, object, IValidationRule, IRuleComponent, ValidationFailure> OnFailureCreated { get; set; }
 
 	static string DefaultPropertyNameResolver(Type type, MemberInfo memberInfo, LambdaExpression expression) {
 		if (expression != null) {

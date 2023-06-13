@@ -325,6 +325,10 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 			failure.CustomState = component.CustomStateProvider(context, value);
 		}
 
+		if (ValidatorOptions.Global.OnFailureCreated != null) {
+			failure = ValidatorOptions.Global.OnFailureCreated(failure, context, value, this, component);
+		}
+
 		return failure;
 	}
 }
