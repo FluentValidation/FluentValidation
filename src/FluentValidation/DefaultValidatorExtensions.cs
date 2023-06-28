@@ -802,7 +802,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'less than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than the specified value.
 	/// The validation will fail if the property value is less than or equal to the specified value.
 	/// </summary>
@@ -822,7 +822,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'less than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than the specified value.
 	/// The validation will fail if the property value is less than or equal to the specified value.
 	/// </summary>
@@ -845,7 +845,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'less than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than the specified value.
 	/// The validation will fail if the property value is less than or equal to the specified value.
 	/// </summary>
@@ -865,7 +865,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'less than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than the specified value.
 	/// The validation will fail if the property value is less than or equal to the specified value.
 	/// </summary>
@@ -888,7 +888,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than or equal the specified value.
 	/// The validation will fail if the property value is less than the specified value.
 	/// </summary>
@@ -908,7 +908,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than or equal the specified value.
 	/// The validation will fail if the property value is less than the specified value.
 	/// </summary>
