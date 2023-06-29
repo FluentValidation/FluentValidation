@@ -29,6 +29,8 @@ public enum CascadeMode {
 	/// For more information, see the methods/properties that accept this enum as a parameter.
 	/// </summary>
 	Continue,
+
+#pragma warning disable 618
 	/// <summary>
 	/// For more information, see the methods/properties that accept this enum as a parameter.
 	/// </summary>
@@ -39,6 +41,7 @@ public enum CascadeMode {
 		$"and their global default equivalents. {nameof(StopOnFirstFailure)} will be removed in a later release. " +
 		"For more details, see https://docs.fluentvalidation.net/en/latest/cascade.html .")]
 	StopOnFirstFailure,
+#pragma warning restore 618
 
 	/// <summary>
 	/// When a rule/validator fails, validation is stopped for the current rule/validator.
