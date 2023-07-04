@@ -2,7 +2,7 @@
 Add OnFailurecCreated callback in ValidatorOptions.Global (#2120)
 Fix typo in Russian localization (#2102)
 Add Tajik language (#2108)
-Fixed some typos in Validator Extension docblocks (#2188)
+Fixed some typos in Validator Extension docblocks (#2118)
 
 11.5.2 - 7 Apr 2023
 Resolve issue with ruleset propogation for multiple levels of child rules (#2097)

@@ -235,3 +235,5 @@ public static class FluentValidationExtensions
 }
 
 ```
+
+Alternatively, instead of manually invoking the validator you could use a filter to apply validation to an endpoint (or group of endpoints). This isn't supported out of the box, but you can use the third-party [ForEvolve.FluentValidation.AspNetCore.Http](https://github.com/Carl-Hugo/FluentValidation.AspNetCore.Http) package for this purpose. 
