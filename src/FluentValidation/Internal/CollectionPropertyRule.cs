@@ -33,7 +33,7 @@ using System.Threading.Tasks;
 /// </summary>
 /// <typeparam name="TElement"></typeparam>
 /// <typeparam name="T"></typeparam>
-internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TElement>, TElement>, ICollectionRule<T, TElement>, IValidationRuleInternal<T, TElement> {
+internal partial class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TElement>, TElement>, ICollectionRule<T, TElement>, IValidationRuleInternal<T, TElement> {
 	/// <summary>
 	/// Initializes new instance of the CollectionPropertyRule class
 	/// </summary>
@@ -66,7 +66,9 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		return new CollectionPropertyRule<T, TElement>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TElement));
 	}
 
-	async ValueTask IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
+
+	[Zomp.SyncMethodGenerator.CreateSyncVersion]
+	async ValueTask IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 		string displayName = GetDisplayName(context);
 
 		if (PropertyName == null && displayName == null) {
@@ -94,17 +96,15 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		}
 
 		if (AsyncCondition != null) {
-			if (useAsync) {
-				if (!await AsyncCondition(context, cancellation)) {
-					return;
-				}
+			if (!await AsyncCondition(context, cancellation)) {
+				return;
 			}
-			else {
-				throw new AsyncValidatorInvokedSynchronouslyException();
-			}
+#if SYNC_ONLY
+			throw new AsyncValidatorInvokedSynchronouslyException();
+#endif
 		}
 
-		var filteredValidators = await GetValidatorsToExecuteAsync(context, useAsync, cancellation);
+		var filteredValidators = await GetValidatorsToExecuteAsync(context, cancellation);
 
 		if (filteredValidators.Count == 0) {
 			// If there are no property validators to execute after running the conditions, bail out.
@@ -168,7 +168,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 					context.MessageFormatter.Reset();
 					context.MessageFormatter.AppendArgument("CollectionIndex", index);
 
-					bool valid = await component.ValidateAsync(context, valueToValidate, useAsync, cancellation);
+					bool valid = await component.ValidateAsync(context, valueToValidate, cancellation);
 
 					if (!valid) {
 						PrepareMessageFormatterForValidationError(context, valueToValidate);
@@ -193,7 +193,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		if (context.Failures.Count <= totalFailures && DependentRules != null) {
 			foreach (var dependentRule in DependentRules) {
 				cancellation.ThrowIfCancellationRequested();
-				await dependentRule.ValidateAsync(context, useAsync, cancellation);
+				await dependentRule.ValidateAsync(context, cancellation);
 			}
 		}
 	}
@@ -203,7 +203,8 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		DependentRules.AddRange(rules);
 	}
 
-	private async ValueTask<List<RuleComponent<T,TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
+	[Zomp.SyncMethodGenerator.CreateSyncVersion]
+	private async ValueTask<List<RuleComponent<T, TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, CancellationToken cancellation) {
 		// Loop over each validator and check if its condition allows it to run.
 		// This needs to be done prior to the main loop as within a collection rule
 		// validators' conditions still act upon the root object, not upon the collection property.
@@ -220,14 +221,12 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 			}
 
 			if (component.HasAsyncCondition) {
-				if (useAsync) {
-					if (!await component.InvokeAsyncCondition(context, cancellation)) {
-						validators.Remove(component);
-					}
+				if (!await component.InvokeAsyncCondition(context, cancellation)) {
+					validators.Remove(component);
 				}
-				else {
-					throw new AsyncValidatorInvokedSynchronouslyException();
-				}
+#if SYNC_ONLY
+				throw new AsyncValidatorInvokedSynchronouslyException();
+#endif
 			}
 		}
 

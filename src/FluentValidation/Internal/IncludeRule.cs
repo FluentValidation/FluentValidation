@@ -13,7 +13,7 @@ public interface IIncludeRule { }
 /// <summary>
 /// Include rule
 /// </summary>
-internal class IncludeRule<T> : PropertyRule<T, T>, IIncludeRule {
+internal partial class IncludeRule<T> : PropertyRule<T, T>, IIncludeRule {
 	/// <summary>
 	/// Creates a new IncludeRule
 	/// </summary>
@@ -52,7 +52,8 @@ internal class IncludeRule<T> : PropertyRule<T, T>, IIncludeRule {
 		return new IncludeRule<T>((ctx, _) => func(ctx.InstanceToValidate), cascadeModeThunk, typeof(T), typeof(TValidator));
 	}
 
-	public override async ValueTask ValidateAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
+	[Zomp.SyncMethodGenerator.CreateSyncVersion]
+	public override async ValueTask ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 		// Special handling for the MemberName selector.
 		// We need to disable the MemberName selector's cascade functionality whilst executing
 		// an include rule, as an include rule should be have as if its children are actually children of the parent.
@@ -66,7 +67,7 @@ internal class IncludeRule<T> : PropertyRule<T, T>, IIncludeRule {
 			context.RootContextData[MemberNameValidatorSelector.DisableCascadeKey] = true;
 		}
 
-		await base.ValidateAsync(context, useAsync, cancellation);
+		await base.ValidateAsync(context, cancellation);
 
 		if (shouldAddStateKey) {
 			context.RootContextData.Remove(MemberNameValidatorSelector.DisableCascadeKey);
