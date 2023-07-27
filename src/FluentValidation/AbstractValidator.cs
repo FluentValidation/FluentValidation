@@ -33,7 +33,7 @@ using Results;
 /// Base class for object validators.
 /// </summary>
 /// <typeparam name="T">The type of the object being validated</typeparam>
-public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
+public abstract partial class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
 	internal TrackingCollection<IValidationRuleInternal<T>> Rules { get; } = new();
 	private Func<CascadeMode> _classLevelCascadeMode = () => ValidatorOptions.Global.DefaultClassLevelCascadeMode;
 	private Func<CascadeMode> _ruleLevelCascadeMode = () => ValidatorOptions.Global.DefaultRuleLevelCascadeMode;
@@ -115,23 +115,8 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	public virtual ValidationResult Validate(ValidationContext<T> context) {
 		ArgumentNullException.ThrowIfNull(context);
 
-		// Note: Sync-over-async is OK in this scenario.
-		// The use of the `useAsync` parameter ensures that no async code is
-		// actually run, and we're using ValueTask
-		// which is optimised for synchronous execution of tasks.
-		// Unlike 'real' sync-over-async, we can never run into deadlocks as we're not actually invoking anything asynchronously.
-		// See RuleComponent.ValidateAsync for the lowest level.
-		// This technique is used by Microsoft within the .net runtime to avoid duplicate code paths for sync/async.
-		// See https://www.thereformedprogrammer.net/using-valuetask-to-create-methods-that-can-work-as-sync-or-async/
 		try {
-			ValueTask<ValidationResult> completedValueTask
-				= ValidateInternalAsync(context, useAsync: false, default);
-
-			// Sync tasks should always be completed.
-			System.Diagnostics.Debug.Assert(completedValueTask.IsCompleted);
-
-			// GetResult() will also bubble up any exceptions correctly.
-			return completedValueTask.GetAwaiter().GetResult();
+			return ValidateInternal(context);
 		}
 		catch (AsyncValidatorInvokedSynchronouslyException) {
 			// If we attempted to execute an async validator, re-create the exception with more useful info.
@@ -149,10 +134,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = default) {
 		ArgumentNullException.ThrowIfNull(context);
 		context.IsAsync = true;
-		return await ValidateInternalAsync(context, useAsync: true, cancellation);
+		return await ValidateInternalAsync(context, cancellation);
 	}
 
-	private async ValueTask<ValidationResult> ValidateInternalAsync(ValidationContext<T> context, bool useAsync, CancellationToken cancellation) {
+	[Zomp.SyncMethodGenerator.CreateSyncVersion]
+	private async ValueTask<ValidationResult> ValidateInternalAsync(ValidationContext<T> context, CancellationToken cancellation) {
 		var result = new ValidationResult(context.Failures);
 		bool shouldContinue = PreValidate(context, result);
 
@@ -175,7 +161,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 			cancellation.ThrowIfCancellationRequested();
 			var totalFailures = context.Failures.Count;
 
-			await Rules[i].ValidateAsync(context, useAsync, cancellation);
+			await Rules[i].ValidateAsync(context, cancellation);
 
 			if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > totalFailures) {
 				// Bail out if we're "failing-fast". Check to see if the number of failures
