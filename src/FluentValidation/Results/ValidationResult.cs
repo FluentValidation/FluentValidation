@@ -56,7 +56,7 @@ public class ValidationResult {
 	public string[] RuleSetsExecuted { get; set; }
 
 	/// <summary>
-	/// Creates a new validationResult
+	/// Creates a new ValidationResult
 	/// </summary>
 	public ValidationResult() {
 		_errors = new List<ValidationFailure>();
