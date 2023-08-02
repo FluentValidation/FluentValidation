@@ -53,7 +53,7 @@ internal class PortugueseBrazilLanguage {
 		"Length_Simple" => "'{PropertyName}' deve ter entre {MinLength} e {MaxLength} caracteres.",
 		"MinimumLength_Simple" => "'{PropertyName}' deve ser maior ou igual a {MinLength} caracteres.",
 		"MaximumLength_Simple" => "'{PropertyName}' deve ser menor ou igual a {MaxLength} caracteres.",
-		"ExactLength_Simple" => "'{PropertyName}' deve ter no máximo {MaxLength} caracteres.",
+		"ExactLength_Simple" => "'{PropertyName}' deve ter {MaxLength} caracteres de comprimento.",
 		"InclusiveBetween_Simple" => "'{PropertyName}' deve estar entre {From} e {To}.",
 		_ => null,
 	};
