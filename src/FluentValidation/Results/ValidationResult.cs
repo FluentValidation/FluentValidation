@@ -74,6 +74,14 @@ public class ValidationResult {
 		_errors = failures.Where(failure => failure != null).ToList();
 	}
 
+	/// <summary>
+	/// Creates a new ValidationResult by combining several other ValidationResults.
+	/// </summary>
+	/// <param name="otherResults"></param>
+	public ValidationResult(IEnumerable<ValidationResult> otherResults) {
+		_errors = otherResults.SelectMany(x => x.Errors).ToList();
+	}
+
 	internal ValidationResult(List<ValidationFailure> errors) {
 		_errors = errors;
 	}
