@@ -74,17 +74,19 @@ public class ExactLengthValidatorTester {
 		error.PropertyName.ShouldEqual("Surname");
 		error.AttemptedValue.ShouldEqual("test");
 
-		error.FormattedMessagePlaceholderValues.Count.ShouldEqual(5);
+		error.FormattedMessagePlaceholderValues.Count.ShouldEqual(6);
 		error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
 		error.FormattedMessagePlaceholderValues.ContainsKey("PropertyValue").ShouldBeTrue();
 		error.FormattedMessagePlaceholderValues.ContainsKey("MinLength").ShouldBeTrue();
 		error.FormattedMessagePlaceholderValues.ContainsKey("MaxLength").ShouldBeTrue();
 		error.FormattedMessagePlaceholderValues.ContainsKey("TotalLength").ShouldBeTrue();
+		error.FormattedMessagePlaceholderValues.ContainsKey("PropertyPath").ShouldBeTrue();
 
 		error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Surname");
 		error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
 		error.FormattedMessagePlaceholderValues["MinLength"].ShouldEqual(2);
 		error.FormattedMessagePlaceholderValues["MaxLength"].ShouldEqual(2);
 		error.FormattedMessagePlaceholderValues["TotalLength"].ShouldEqual(4);
+		error.FormattedMessagePlaceholderValues["PropertyPath"].ShouldEqual("Surname");
 	}
 }

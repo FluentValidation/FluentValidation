@@ -14,6 +14,7 @@ Example error: *'Surname' must not be empty.*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## NotEmpty Validator
 Ensures that the specified property is not null, an empty string or whitespace (or the default value for value types, e.g., 0 for `int`).
@@ -27,6 +28,7 @@ Example error: *'Surname' should not be empty.*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## NotEqual Validator
 
@@ -47,6 +49,7 @@ String format args:
 * `{ComparisonValue}` – Value that the property should not equal
 * `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 Optionally, a comparer can be provided to ensure a specific type of comparison is performed:
 
@@ -83,6 +86,7 @@ String format args:
 * `{ComparisonValue}` – Value that the property should equal
 * `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ```csharp
 RuleFor(customer => customer.Surname).Equal("Foo", StringComparer.OrdinalIgnoreCase);
@@ -118,6 +122,7 @@ String format args:
 * `{MaxLength}` – Maximum length
 * `{TotalLength}` – Number of characters entered
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## MaxLength Validator
 Ensures that the length of a particular string property is no longer than the specified value.
@@ -135,6 +140,7 @@ String format args:
 * `{MaxLength}` – Maximum length
 * `{TotalLength}` – Number of characters entered
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## MinLength Validator
 Ensures that the length of a particular string property is longer than the specified value.
@@ -152,7 +158,7 @@ String format args:
 * `{MinLength}` – Minimum length
 * `{TotalLength}` – Number of characters entered
 * `{PropertyValue}` – Current value of the property
-
+* `{PropertyPath}` - The full path of the property
 
 ## Less Than Validator
 Ensures that the value of the specified property is less than a particular value (or less than the value of another property).
@@ -174,6 +180,7 @@ String format args:
 * `{ComparisonValue}` – Value to which the property was compared
 * `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## Less Than Or Equal Validator
 Ensures that the value of the specified property is less than or equal to a particular value (or less than or equal to the value of another property).
@@ -192,6 +199,7 @@ Notes: Only valid on types that implement `IComparable<T>`
 * `{ComparisonValue}` – Value to which the property was compared
 * `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## Greater Than Validator
 Ensures that the value of the specified property is greater than a particular value (or greater than the value of another property).
@@ -210,6 +218,7 @@ Notes: Only valid on types that implement `IComparable<T>`
 * `{ComparisonValue}` – Value to which the property was compared
 * `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## Greater Than Or Equal Validator
 Ensures that the value of the specified property is greater than or equal to a particular value (or greater than or equal to the value of another property).
@@ -228,6 +237,7 @@ Notes: Only valid on types that implement `IComparable<T>`
 * `{ComparisonValue}` – Value to which the property was compared
 * `{ComparisonProperty}` – Name of the property being compared against (if any)
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## Predicate Validator
 (Also known as `Must`)
@@ -244,6 +254,7 @@ Example error: *The specified condition was not met for 'Surname'*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 Note that there is an additional overload for `Must` that also accepts an instance of the parent object being validated. This can be useful if you want to compare the current property with another property from inside the predicate:
 
@@ -265,6 +276,7 @@ String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
 * `{RegularExpression}` – Regular expression that was not matched
+* `{PropertyPath}` - The full path of the property
 
 ## Email Validator
 Ensures that the value of the specified property is a valid email address format.
@@ -278,6 +290,7 @@ Example error: *'Email' is not a valid email address.*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 The email address validator can work in 2 modes. The default mode just performs a simple check that the string contains an "@" sign which is not at the beginning or the end of the string. This is an intentionally naive check to match the behaviour of ASP.NET Core's `EmailAddressAttribute`, which performs the same check. For the reasoning behind this, see [this post](https://github.com/dotnet/corefx/issues/32740):
 
@@ -304,6 +317,7 @@ Example error: *'Credit Card' is not a valid credit card number.*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## Enum Validator
 Checks whether a numeric value is valid to be in that enum. This is used to prevent numeric values from being cast to an enum type when the resulting value would be invalid. For example, the following is possible:
@@ -335,6 +349,7 @@ Example error: *'Error Level' has a range of values which does not include '4'.*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## Enum Name Validator
 Checks whether a string is a valid enum name.
@@ -352,6 +367,7 @@ Example error: *'Error Level' has a range of values which does not include 'Foo'
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## Empty Validator
 Opposite of the `NotEmpty` validator. Checks if a property value is null, or is the default value for the type.
@@ -366,6 +382,7 @@ Example error: *'Surname' must be empty.*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## Null Validator
 Opposite of the `NotNull` validator. Checks if a property value is null.
@@ -379,6 +396,7 @@ Example error: *'Surname' must be empty.*
 String format args:
 * `{PropertyName}` – Name of the property being validated
 * `{PropertyValue}` – Current value of the property
+* `{PropertyPath}` - The full path of the property
 
 ## ExclusiveBetween Validator
 Checks whether the property value is in a range between the two specified numbers (exclusive).
@@ -394,6 +412,7 @@ String format args:
 * `{PropertyValue}` – Current value of the property
 * `{From}` – Lower bound of the range
 * `{To}` – Upper bound of the range
+* `{PropertyPath}` - The full path of the property
 
 ## InclusiveBetween Validator
 Checks whether the property value is in a range between the two specified numbers (inclusive).
@@ -409,6 +428,7 @@ String format args:
 * `{PropertyValue}` – Current value of the property
 * `{From}` – Lower bound of the range
 * `{To}` – Upper bound of the range
+* `{PropertyPath}` - The full path of the property
 
 ## PrecisionScale Validator
 Checks whether a decimal value has the specified precision and scale.
@@ -426,6 +446,7 @@ String format args:
 * `{ExpectedScale}` – Expected scale
 * `{Digits}` – Total number of digits in the property value
 * `{ActualScale}` – Actual scale of the property value
+* `{PropertyPath}` - The full path of the property
 
 Note that the 3rd parameter of this method is `ignoreTrailingZeros`. When set to `true`, trailing zeros after the decimal point will not count towards the expected number of decimal places. 
 

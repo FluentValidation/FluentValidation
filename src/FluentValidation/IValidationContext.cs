@@ -291,7 +291,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	public void AddFailure(string propertyName, string errorMessage) {
 		errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
 		errorMessage = MessageFormatter.BuildMessage(errorMessage);
-		AddFailure(new ValidationFailure(PropertyChain.BuildPropertyName(propertyName ?? string.Empty), errorMessage));
+		AddFailure(new ValidationFailure(PropertyChain.BuildPropertyPath(propertyName ?? string.Empty), errorMessage));
 	}
 
 	/// <summary>
@@ -302,7 +302,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	public void AddFailure(string errorMessage) {
 		errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
 		errorMessage = MessageFormatter.BuildMessage(errorMessage);
-		AddFailure(new ValidationFailure(PropertyName, errorMessage));
+		AddFailure(new ValidationFailure(PropertyPath, errorMessage));
 	}
 
 	private Func<ValidationContext<T>, string> _displayNameFunc;
@@ -313,15 +313,18 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	public string DisplayName => _displayNameFunc(this);
 
 	/// <summary>
-	/// The full name of the current property being validated.
+	/// The full path of the current property being validated.
 	/// If accessed inside a child validator, this will include the parent's path too.
 	/// </summary>
-	public string PropertyName { get; private set; }
+	public string PropertyPath { get; private set; }
+
+	[Obsolete("This property has been deprecated due to its misleading name. Use the PropertyPath property instead, which returns the same value.")]
+	public string PropertyName => PropertyPath;
 
 	internal string RawPropertyName { get; private set; }
 
-	internal void InitializeForPropertyValidator(string propertyName, Func<ValidationContext<T>, string> displayNameFunc, string rawPropertyName) {
-		PropertyName = propertyName;
+	internal void InitializeForPropertyValidator(string propertyPath, Func<ValidationContext<T>, string> displayNameFunc, string rawPropertyName) {
+		PropertyPath = propertyPath;
 		_displayNameFunc = displayNameFunc;
 		RawPropertyName = rawPropertyName;
 	}
