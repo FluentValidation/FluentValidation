@@ -1,3 +1,7 @@
+11.7.0 - 
+Add additional constructor for combining multiple ValidationResult instances (#2125)
+Add PropertyPath placeholder (#2134)
+
 11.6.0 - 4 Jul 2023
 Add OnFailurecCreated callback in ValidatorOptions.Global (#2120)
 Fix typo in Russian localization (#2102)

@@ -73,11 +73,13 @@ public class PredicateValidatorTester {
 		error.AttemptedValue.ShouldEqual("test");
 		error.ErrorCode.ShouldEqual("PredicateValidator");
 
-		error.FormattedMessagePlaceholderValues.Count.ShouldEqual(2);
+		error.FormattedMessagePlaceholderValues.Count.ShouldEqual(3);
 		error.FormattedMessagePlaceholderValues.ContainsKey("PropertyName").ShouldBeTrue();
 		error.FormattedMessagePlaceholderValues.ContainsKey("PropertyValue").ShouldBeTrue();
+		error.FormattedMessagePlaceholderValues.ContainsKey("PropertyPath").ShouldBeTrue();
 
 		error.FormattedMessagePlaceholderValues["PropertyName"].ShouldEqual("Forename");
 		error.FormattedMessagePlaceholderValues["PropertyValue"].ShouldEqual("test");
+		error.FormattedMessagePlaceholderValues["PropertyPath"].ShouldEqual("Forename");
 	}
 }

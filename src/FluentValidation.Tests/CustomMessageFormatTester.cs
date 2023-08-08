@@ -18,6 +18,7 @@
 
 namespace FluentValidation.Tests;
 
+using System.Collections.Generic;
 using System.Linq;
 using Validators;
 using Xunit;
@@ -83,6 +84,19 @@ public class CustomMessageFormatTester {
 		validator.RuleFor(x => x.Surname).NotNull().WithMessage("Was '{PropertyValue}'");
 		var result = validator.Validate(new Person());
 		result.Errors.Single().ErrorMessage.ShouldEqual("Was ''");
+	}
+
+	[Fact]
+	public void Includes_property_path() {
+		validator.RuleFor(x => x.Surname).NotNull().WithMessage("{PropertyPath}");
+		validator.RuleForEach(x => x.Orders).NotNull().WithMessage("{PropertyPath}");
+
+		var result = validator.Validate(new Person {
+			Orders = new List<Order> {null}
+		});
+
+		result.Errors[0].ErrorMessage.ShouldEqual("Surname");
+		result.Errors[1].ErrorMessage.ShouldEqual("Orders[0]");
 	}
 
 }
