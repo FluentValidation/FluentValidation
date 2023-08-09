@@ -25,7 +25,7 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" />
-    <PackageReference Include="Zomp.SyncMethodGenerator" Version="1.1.2" />
+    <PackageReference Include="Zomp.SyncMethodGenerator" Version="1.1.2" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
