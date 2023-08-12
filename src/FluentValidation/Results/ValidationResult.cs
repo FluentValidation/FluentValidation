@@ -80,6 +80,7 @@ public class ValidationResult {
 	/// <param name="otherResults"></param>
 	public ValidationResult(IEnumerable<ValidationResult> otherResults) {
 		_errors = otherResults.SelectMany(x => x.Errors).ToList();
+		RuleSetsExecuted = otherResults.Where(x => x.RuleSetsExecuted != null).SelectMany(x => x.RuleSetsExecuted).Distinct().ToArray();
 	}
 
 	internal ValidationResult(List<ValidationFailure> errors) {
