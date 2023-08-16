@@ -286,6 +286,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		expression.Guard("Cannot pass null to RuleFor", nameof(expression));
 		var rule = PropertyRule<T, TProperty>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
+		OnRuleAdded(rule);
 		return new RuleBuilder<T, TProperty>(rule, this);
 	}
 
@@ -305,6 +306,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		from.Guard("Cannot pass null to Transform", nameof(from));
 		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
+		OnRuleAdded(rule);
 		return new RuleBuilder<T, TTransformed>(rule, this);
 	}
 
@@ -324,6 +326,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		from.Guard("Cannot pass null to Transform", nameof(from));
 		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
+		OnRuleAdded(rule);
 		return new RuleBuilder<T, TTransformed>(rule, this);
 	}
 
@@ -338,6 +341,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 		var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
+		OnRuleAdded(rule);
 		return new RuleBuilder<T, TElement>(rule, this);
 	}
 
@@ -354,6 +358,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
+		OnRuleAdded(rule);
 		return new RuleBuilder<T, TTransformed>(rule, this);
 	}
 
@@ -370,6 +375,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
+		OnRuleAdded(rule);
 		return new RuleBuilder<T, TTransformed>(rule, this);
 	}
 
@@ -466,6 +472,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
 		var rule = IncludeRule<T>.Create(rulesToInclude, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
+		OnRuleAdded(rule);
 	}
 
 	/// <summary>
@@ -475,6 +482,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
 		var rule = IncludeRule<T>.Create(rulesToInclude, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
+		OnRuleAdded(rule);
 	}
 
 	/// <summary>
@@ -514,4 +522,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <exception cref="ValidationException"></exception>
 	protected virtual void RaiseValidationException(ValidationContext<T> context, ValidationResult result)
 		=> throw new ValidationException(result.Errors);
+
+	/// <summary>
+	/// This method is invoked when a rule has been created (via RuleFor/RuleForEach) and has been added to the validator.
+	/// You can override this method to provide customizations to all rule instances.
+	/// </summary>
+	/// <param name="rule"></param>
+	protected virtual void OnRuleAdded(IValidationRule<T> rule) { }
 }
