@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>11.7.1</VersionPrefix>
-    <VersionSuffix></VersionSuffix>
+    <VersionPrefix>12.0.0</VersionPrefix>
+    <VersionSuffix>preview1</VersionSuffix>
     <!-- Use CI build number as version suffix (if defined) -->
     <!--<VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)'!=''">ci-$(GITHUB_RUN_NUMBER)</VersionSuffix>-->
     <Authors>Jeremy Skinner</Authors>

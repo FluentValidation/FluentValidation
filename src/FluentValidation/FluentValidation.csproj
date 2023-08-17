@@ -3,7 +3,7 @@
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
     <PackageReleaseNotes>
-FluentValidation 11 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-11.html
+FluentValidation 12 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-12.html
 
 Full release notes can be found at https://github.com/FluentValidation/FluentValidation/releases
     </PackageReleaseNotes>
