@@ -70,7 +70,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		}
 
 		// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
-		string propertyName = context.PropertyChain.BuildPropertyName(PropertyName ?? displayName);
+		string propertyName = context.PropertyChain.BuildPropertyPath(PropertyName ?? displayName);
 
 		if (string.IsNullOrEmpty(propertyName)) {
 			propertyName = InferPropertyName(Expression);
@@ -137,9 +137,9 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 				context.PropertyChain.AddIndexer(indexer, useDefaultIndexFormat);
 
 				var valueToValidate = element;
-				var propertyNameToValidate = context.PropertyChain.ToString();
+				var propertyPath = context.PropertyChain.ToString();
 				var totalFailuresInner = context.Failures.Count;
-				context.InitializeForPropertyValidator(propertyNameToValidate, GetDisplayName, PropertyName);
+				context.InitializeForPropertyValidator(propertyPath, GetDisplayName, PropertyName);
 
 				foreach (var component in filteredValidators) {
 					context.MessageFormatter.Reset();

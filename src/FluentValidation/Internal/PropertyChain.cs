@@ -142,10 +142,14 @@ public class PropertyChain {
 		return ToString().StartsWith(parentChain.ToString());
 	}
 
+	[Obsolete("BuildPropertyName is deprecated due to its misleading name. Use BuildPropertyPath instead which does the same thing.")]
+	public string BuildPropertyName(string propertyName)
+		=> BuildPropertyPath(propertyName);
+
 	/// <summary>
 	/// Builds a property path.
 	/// </summary>
-	public string BuildPropertyName(string propertyName) {
+	public string BuildPropertyPath(string propertyName) {
 		if (_memberNames.Count == 0) {
 			return propertyName;
 		}

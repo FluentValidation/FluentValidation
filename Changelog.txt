@@ -1,3 +1,23 @@
+11.8.0 - 
+Added AbstractValidator.OnRuleAdded to allow customization of rule instances after creation (#2114)
+
+11.7.1 - 12 Aug 2023
+Resolved issue with combining multiple ValidationResult instances where RuleSetsExecuted wasn't properly set on the combined result (#2125)
+
+11.7.0 - 11 Aug 2023
+Add additional constructor for combining multiple ValidationResult instances (#2125)
+Add PropertyPath placeholder (#2134)
+Fix Brazilian Portuguese translation (#2131)
+
+11.6.0 - 4 Jul 2023
+Add OnFailurecCreated callback in ValidatorOptions.Global (#2120)
+Fix typo in Russian localization (#2102)
+Add Tajik language (#2108)
+Fixed some typos in Validator Extension docblocks (#2118)
+
+11.5.2 - 7 Apr 2023
+Resolve issue with ruleset propogation for multiple levels of child rules (#2097)
+
 11.5.1 - 20 Feb 2023
 Deprecated the ability to disable the root model null check via overriding AbstractValidator.EnsureInstanceNotNull (#2069)
 Deprecated the Transform and TransformAsync methods (#2072)

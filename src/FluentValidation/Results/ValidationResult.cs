@@ -56,7 +56,7 @@ public class ValidationResult {
 	public string[] RuleSetsExecuted { get; set; }
 
 	/// <summary>
-	/// Creates a new validationResult
+	/// Creates a new ValidationResult
 	/// </summary>
 	public ValidationResult() {
 		_errors = new List<ValidationFailure>();
@@ -72,6 +72,15 @@ public class ValidationResult {
 	/// </remarks>
 	public ValidationResult(IEnumerable<ValidationFailure> failures) {
 		_errors = failures.Where(failure => failure != null).ToList();
+	}
+
+	/// <summary>
+	/// Creates a new ValidationResult by combining several other ValidationResults.
+	/// </summary>
+	/// <param name="otherResults"></param>
+	public ValidationResult(IEnumerable<ValidationResult> otherResults) {
+		_errors = otherResults.SelectMany(x => x.Errors).ToList();
+		RuleSetsExecuted = otherResults.Where(x => x.RuleSetsExecuted != null).SelectMany(x => x.RuleSetsExecuted).Distinct().ToArray();
 	}
 
 	internal ValidationResult(List<ValidationFailure> errors) {

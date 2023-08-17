@@ -280,6 +280,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	protected void PrepareMessageFormatterForValidationError(ValidationContext<T> context, TValue value) {
 		context.MessageFormatter.AppendPropertyName(context.DisplayName);
 		context.MessageFormatter.AppendPropertyValue(value);
+		context.MessageFormatter.AppendArgument("PropertyPath", context.PropertyPath);
 
 		// If there's a collection index cached in the root context data then add it
 		// to the message formatter. This happens when a child validator is executed
@@ -306,7 +307,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 			? MessageBuilder(new MessageBuilderContext<T, TValue>(context, value, component))
 			: component.GetErrorMessage(context, value);
 
-		var failure = new ValidationFailure(context.PropertyName, error, value);
+		var failure = new ValidationFailure(context.PropertyPath, error, value);
 
 		failure.FormattedMessagePlaceholderValues = new Dictionary<string, object>(context.MessageFormatter.PlaceholderValues);
 		failure.ErrorCode = component.ErrorCode ?? ValidatorOptions.Global.ErrorCodeResolver(component.Validator);
@@ -317,6 +318,10 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 
 		if (component.CustomStateProvider != null) {
 			failure.CustomState = component.CustomStateProvider(context, value);
+		}
+
+		if (ValidatorOptions.Global.OnFailureCreated != null) {
+			failure = ValidatorOptions.Global.OnFailureCreated(failure, context, value, this, component);
 		}
 
 		return failure;

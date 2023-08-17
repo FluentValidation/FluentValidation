@@ -809,7 +809,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'less than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than the specified value.
 	/// The validation will fail if the property value is less than or equal to the specified value.
 	/// </summary>
@@ -831,7 +831,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'less than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than the specified value.
 	/// The validation will fail if the property value is less than or equal to the specified value.
 	/// </summary>
@@ -856,7 +856,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'less than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than the specified value.
 	/// The validation will fail if the property value is less than or equal to the specified value.
 	/// </summary>
@@ -878,7 +878,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'less than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than the specified value.
 	/// The validation will fail if the property value is less than or equal to the specified value.
 	/// </summary>
@@ -903,7 +903,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than or equal the specified value.
 	/// The validation will fail if the property value is less than the specified value.
 	/// </summary>
@@ -925,7 +925,7 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
-	/// Defines a 'greater than' validator on the current rule builder using a lambda expression.
+	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression.
 	/// The validation will succeed if the property value is greater than or equal the specified value.
 	/// The validation will fail if the property value is less than the specified value.
 	/// </summary>
@@ -1200,9 +1200,25 @@ public static partial class DefaultValidatorExtensions {
 	/// <exception cref="ArgumentNullException"></exception>
 	public static IRuleBuilderOptions<T, TProperty> ChildRules<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<InlineValidator<TProperty>> action) {
 		if (action == null) throw new ArgumentNullException(nameof(action));
-		var validator = new InlineValidator<TProperty>();
-		var ruleSets = DefaultValidatorOptions.Configurable(ruleBuilder).RuleSets;
+		var validator = new ChildRulesContainer<TProperty>();
+		var parentValidator = ((RuleBuilder<T, TProperty>) ruleBuilder).ParentValidator;
+
+		string[] ruleSets;
+
+		if (parentValidator is ChildRulesContainer<T> container && container.RuleSetsToApplyToChildRules != null) {
+			ruleSets = container.RuleSetsToApplyToChildRules;
+		}
+		else {
+			ruleSets = DefaultValidatorOptions.Configurable(ruleBuilder).RuleSets;
+		}
+
+		// Store the correct rulesets on the child validator in case
+		// we have nested calls to ChildRules, which can then pick this up from
+		// the parent validator.
+		validator.RuleSetsToApplyToChildRules = ruleSets;
+
 		action(validator);
+
 		foreach(var rule in validator.Rules) {
 			if (rule.RuleSets == null) {
 				rule.RuleSets = ruleSets;

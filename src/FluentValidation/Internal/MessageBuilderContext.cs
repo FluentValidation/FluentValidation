@@ -37,7 +37,7 @@ public class MessageBuilderContext<T,TProperty> : IMessageBuilderContext<T,TProp
 
 	// public IValidationRule<T> Rule => _innerContext.Rule;
 
-	public string PropertyName => _innerContext.PropertyName;
+	public string PropertyName => _innerContext.PropertyPath;
 
 	public string DisplayName => _innerContext.DisplayName;
 
