@@ -21,9 +21,79 @@ namespace FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 public static class ServiceCollectionExtensions	{
+
+	/// <summary>
+	/// Adds a validator to the service collection.
+	/// </summary>
+	/// <param name="services">The collection of services</param>
+	/// <param name="lifetime">The lifetime of the validators. The default is scoped (per-request in web applications)</param>
+	/// <typeparam name="TValidator">Include internal validators. The default is false.</typeparam>
+	/// <returns></returns>
+	public static IServiceCollection AddValidator<TValidator>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Scoped) where TValidator : IValidator
+		=> services.AddValidators(new[] { typeof(TValidator) }, lifetime);
+
+	/// <summary>
+	/// Adds specified validators as scoped to the service collection.
+	/// </summary>
+	/// <param name="services">The collection of services</param>
+	/// <param name="types">The <see cref="AbstractValidator{T}"/> validator types</param>
+	/// <returns></returns>
+	public static IServiceCollection AddScopedValidators(this IServiceCollection services, params Type[] types)
+		=> services.AddValidators(types, ServiceLifetime.Scoped);
+
+	/// <summary>
+	/// Adds specified validators as transient to the service collection.
+	/// </summary>
+	/// <param name="services">The collection of services</param>
+	/// <param name="types">The <see cref="AbstractValidator{T}"/> validator types</param>
+	/// <returns></returns>
+	public static IServiceCollection AddTransientValidators(this IServiceCollection services, params Type[] types)
+		=> services.AddValidators(types, ServiceLifetime.Transient);
+
+	/// <summary>
+	/// Adds specified validators as singleton to the service collection.
+	/// </summary>
+	/// <param name="services">The collection of services</param>
+	/// <param name="types">The <see cref="AbstractValidator{T}"/> validator types</param>
+	/// <returns></returns>
+	public static IServiceCollection AddSingletonValidators(this IServiceCollection services, params Type[] types)
+		=> services.AddValidators(types, ServiceLifetime.Singleton);
+
+	/// <summary>
+	/// Adds specified validators to the service collection.
+	/// </summary>
+	/// <param name="services">The collection of services</param>
+	/// <param name="types">The <see cref="AbstractValidator{T}"/> validator types</param>
+	/// <param name="lifetime">The lifetime of the validators. The default is scoped (per-request in web applications)</param>
+	/// <returns></returns>
+	public static IServiceCollection AddValidators(this IServiceCollection services, IEnumerable<Type> types, ServiceLifetime lifetime = ServiceLifetime.Scoped)
+		=> types.Where(type => type is {
+				BaseType: { GenericTypeArguments.Length: 1 }
+			} && type.GetInterface(typeof(IValidator<>).Name) is not null)
+		.Aggregate(services, (state, validatorType) => {
+			var interfaceType =
+				typeof(IValidator<>).MakeGenericType(validatorType.BaseType!.GenericTypeArguments[0]);
+			//Register as interface
+			state.Add(
+				new ServiceDescriptor(
+				serviceType: interfaceType,
+				implementationType: validatorType,
+				lifetime: lifetime));
+
+			//Register as self
+			state.Add(
+				new ServiceDescriptor(
+					serviceType: validatorType,
+					implementationType: validatorType,
+					lifetime: lifetime));
+
+			return state;
+		});
+
 	/// <summary>
 	/// Adds all validators in specified assemblies
 	/// </summary>
@@ -50,11 +120,11 @@ public static class ServiceCollectionExtensions	{
 	/// <param name="includeInternalTypes">Include internal validators. The default is false.</param>
 	/// <returns></returns>
 	public static IServiceCollection AddValidatorsFromAssembly(this IServiceCollection services, Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Scoped, Func<AssemblyScanner.AssemblyScanResult, bool> filter = null, bool includeInternalTypes = false) {
-		AssemblyScanner
-			.FindValidatorsInAssembly(assembly, includeInternalTypes)
-			.ForEach(scanResult => services.AddScanResult(scanResult, lifetime, filter));
+		var validatorTypes =
+			AssemblyScanner.FindValidatorsInAssembly(assembly, includeInternalTypes)
+			.Select(r => r.ValidatorType);
 
-		return services;
+		return services.AddValidators(validatorTypes, lifetime);
 	}
 
 	/// <summary>
@@ -90,21 +160,8 @@ public static class ServiceCollectionExtensions	{
 	/// <returns></returns>
 	private static IServiceCollection AddScanResult(this IServiceCollection services, AssemblyScanner.AssemblyScanResult scanResult, ServiceLifetime lifetime, Func<AssemblyScanner.AssemblyScanResult, bool> filter) {
 		bool shouldRegister = filter?.Invoke(scanResult) ?? true;
-		if (shouldRegister) {
-			//Register as interface
-			services.Add(
-				new ServiceDescriptor(
-					serviceType: scanResult.InterfaceType,
-					implementationType: scanResult.ValidatorType,
-					lifetime: lifetime));
 
-			//Register as self
-			services.Add(
-				new ServiceDescriptor(
-					serviceType: scanResult.ValidatorType,
-					implementationType: scanResult.ValidatorType,
-					lifetime: lifetime));
-		}
+		if (shouldRegister) services.AddValidators(new[] { scanResult.ValidatorType }, lifetime);
 
 		return services;
 	}
