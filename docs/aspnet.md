@@ -1,21 +1,14 @@
 # ASP.NET Core
 
-FluentValidation can be used within ASP.NET Core web applications to validate incoming models. There are two main approaches for doing this: 
+FluentValidation can be used within ASP.NET Core web applications to validate incoming models. There are several approaches for doing this: 
 
 - Manual validation
-- Automatic validation
+- Automatic validation (using the ASP.NET validation pipeline)
+- Automatic validation (using a filter)
 
-With manual validation, you inject the validator into your controller (or api endpoint), invoke the validator and act upon the result. This is the most straightforward and reliable approach. 
+With manual validation, you inject the validator into your controller (or api endpoint), invoke the validator and act upon the result. This is the most straightforward approach and also the easiest to see what's happening. 
 
-With automatic validation, FluentValidation plugs into the validation pipeline that's part of ASP.NET Core MVC and allows models to be validated before a controller action is invoked (during model-binding). This approach to validation is more seamless but has several downsides:
-
-- **Auto validation is not asynchronous**: If your validator contains asynchronous rules then your validator will not be able to run. You will receive an exception at runtime if you attempt to use an asynchronous validator with auto-validation.
-- **Auto validation is MVC-only**: Auto-validation only works with MVC Controllers and Razor Pages. It does not work with the more modern parts of ASP.NET such as Minimal APIs or Blazor.
-- **Auto validation is hard to debug**: The 'magic' nature of auto-validation makes it hard to debug/troubleshoot if something goes wrong as so much is done behind the scenes. 
-
-We do not generally recommend using auto validation for new projects, but it is still available for legacy implementations.
-
-Automatic validation is handled by the separate [FluentValidation.AspNetCore package](https://github.com/FluentValidation/FluentValidation.AspNetCore).
+With automatic validation, FluentValidation is invoked automatically by ASP.NET earlier in the pipeline which allows models to be validated before a controller action is invoked. 
 
 ## Getting started
 
@@ -172,20 +165,37 @@ For completeness, here is the corresponding View. This view will pick up the err
 
 ## Automatic Validation
 
+Automatic validation instantiates and invokes a validator before the controller action is executed, meaning the ModelState will already be populated with validation results by the time your controller action is invoked. There are 2 implementations for this approach:
+
+- Using ASP.NET's validation pipeline (no longer recommended)
+- Using an Action Filter (supported by a 3rd party package)
+
+### Using the ASP.NET Validation Pipeline
+
 The `FluentValidation.AspNetCore` package provides auto-validation for ASP.NET Core MVC projects by plugging into ASP.NET's validation pipeline. 
+
+With automatic validation using the validation pipeline, FluentValidation plugs into ASP.NET's bult-in validation process that's part of ASP.NET Core MVC and allows models to be validated before a controller action is invoked (during model-binding). This approach to validation is more seamless but has several downsides:
+
+- **The ASP.NET validation pipeline is not asynchronous**: If your validator contains asynchronous rules then your validator will not be able to run. You will receive an exception at runtime if you attempt to use an asynchronous validator with auto-validation.
+- **It is MVC-only**: This approach for auto-validation only works with MVC Controllers and Razor Pages. It does not work with the more modern parts of ASP.NET such as Minimal APIs or Blazor.
+- **It is harder to debug**: The 'magic' nature of auto-validation makes it hard to debug/troubleshoot if something goes wrong as so much is done behind the scenes. 
 
 ```eval_rst
 .. warning::
-  We no longer recommend using auto-validation for new projects for the reasons mentioned at the start of this page. 
+  We no longer recommend using this approach for new projects but it is still available for legacy implementations.
 ```
 
-Instructions for installing and using automatic validation in the `FluentValidation.AspNetCore` package [can be found on its project page here](https://github.com/FluentValidation/FluentValidation.AspNetCore#aspnet-core-integration-for-fluentvalidation).
+Instructions for this appraoch can be found in the `FluentValidation.AspNetCore` package [can be found on its project page here](https://github.com/FluentValidation/FluentValidation.AspNetCore#aspnet-core-integration-for-fluentvalidation).
+
+### Using a Filter
+
+An alternative approach for perorming automatic validation is to use an Action Filter. This approach works asynchronously which mitigates the synchronous limitation of the Validation Pipeline approach (above). Support for this approach isn't provided out of the box, but you can use the 3rd party [SharpGrip.FluentValidation.AutoValidation](https://github.com/SharpGrip/FluentValidation.AutoValidation) package for this purpose. 
 
 ## Clientside Validation
 
 FluentValidation is a server-side library and does not provide any client-side validation directly. However, it can provide metadata which can be applied to the generated HTML elements for use with a client-side framework such as jQuery Validate in the same way that ASP.NET's default validation attributes work.
 
-To make use of this metadata you'll need to install the separate `FluentValidation.AspNetCore` package. Instructions for installing and using this package [can be found on its project page here](https://github.com/FluentValidation/FluentValidation.AspNetCore#aspnet-core-integration-for-fluentvalidation).
+To make use of this metadata you'll need to install the separate `FluentValidation.AspNetCore` package. Instructions for installing and using this package [can be found on its project page here](https://github.com/FluentValidation/FluentValidation.AspNetCore#aspnet-core-integration-for-fluentvalidation). Note that this package is no longer supported, but is still available to use. 
 
 Alternatively, instead of using client-side validation you could instead execute your full server-side rules via AJAX using a library such as [FormHelper](https://github.com/sinanbozkus/FormHelper). This allows you to use the full power of FluentValidation, while still having a responsive user experience.
 
@@ -236,4 +246,7 @@ public static class FluentValidationExtensions
 
 ```
 
-Alternatively, instead of manually invoking the validator you could use a filter to apply validation to an endpoint (or group of endpoints). This isn't supported out of the box, but you can use the third-party [ForEvolve.FluentValidation.AspNetCore.Http](https://github.com/Carl-Hugo/FluentValidation.AspNetCore.Http) package for this purpose. 
+Alternatively, instead of manually invoking the validator you could use a filter to apply validation to an endpoint (or group of endpoints). This isn't supported out of the box, but you can use one of the following the third-party package for this purpose:
+
+- [ForEvolve.FluentValidation.AspNetCore.Http](https://github.com/Carl-Hugo/FluentValidation.AspNetCore.Http)
+- [SharpGrip.FluentValidation.AutoValidation](https://github.com/SharpGrip/FluentValidation.AutoValidation)
