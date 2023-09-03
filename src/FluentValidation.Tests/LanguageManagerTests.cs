@@ -53,6 +53,11 @@ public class LanguageManagerTests {
 			var msg = _languages.GetString("NotNullValidator");
 			msg.ShouldEqual("'{PropertyName}' 不能为Null。");
 		}
+
+		using (new CultureScope("zh-SG")) {
+			var msg = _languages.GetString("NotNullValidator");
+			msg.ShouldEqual("'{PropertyName}' 不能为Null。");
+		}
 	}
 
 	[Fact]
