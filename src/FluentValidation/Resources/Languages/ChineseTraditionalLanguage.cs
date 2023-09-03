@@ -23,7 +23,7 @@
 namespace FluentValidation.Resources;
 
 internal class ChineseTraditionalLanguage {
-	public const string Culture = "zh-TW";
+	public const string Culture = "zh-Hant";
 
 	public static string GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' 不是有效的電子郵件地址。",
