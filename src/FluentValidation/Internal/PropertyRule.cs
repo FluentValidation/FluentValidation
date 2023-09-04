@@ -39,8 +39,7 @@ internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, I
 	/// </summary>
 	public static PropertyRule<T, TProperty> Create(Expression<Func<T, TProperty>> expression, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
 		var member = expression.GetMember();
-		var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
-		return new PropertyRule<T, TProperty>(member, x => compiled(x), expression, cascadeModeThunk, typeof(TProperty));
+		return new PropertyRule<T, TProperty>(member, x => AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache)(x), expression, cascadeModeThunk, typeof(TProperty));
 	}
 
 	/// <summary>
