@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Tests;
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -59,5 +61,21 @@ public class NullTester {
 		var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).Null());
 		var result = validator.Validate(new Person());
 		result.IsValid.ShouldBeTrue();
+	}
+
+	[Fact]
+	public void NullProperty_should_throw_NullReferenceException() {
+		var validator = new NullReferenceValidator();
+		Assert.Throws<NullReferenceException>(() => validator.Validate(new NullType()));
+	}
+}
+
+public class NullType {
+	public List<int> List { get; set; }
+}
+
+public class NullReferenceValidator : AbstractValidator<NullType> {
+	public NullReferenceValidator() {
+		RuleFor(x => x.List.Count).NotEmpty();
 	}
 }
