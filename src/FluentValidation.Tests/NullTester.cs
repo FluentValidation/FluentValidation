@@ -64,9 +64,9 @@ public class NullTester {
 	}
 
 	[Fact]
-	public void NullProperty_should_throw_ValidationException() {
+	public void NullProperty_should_throw_NullReferenceException() {
 		var validator = new NullReferenceValidator();
-		var ex = Assert.Throws<ValidationException>(() => validator.Validate(new NullType()));
+		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new NullType()));
 		ex.Message.ShouldEqual("Failed to execute validation rule for property List.Count");
 	}
 }
