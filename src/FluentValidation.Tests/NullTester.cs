@@ -69,14 +69,33 @@ public class NullTester {
 		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new NullType()));
 		ex.Message.ShouldEqual("Failed to execute validation rule for property List.Count");
 	}
+
+	[Fact]
+	public void ForEachNullProperty_should_throw_NullReferenceException() {
+		var validator = new NullReferenceForEachValidator();
+		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new ForEachNullType {
+			List = new List<NullType>{ null }
+		}));
+		ex.Message.ShouldEqual("Failed to execute validation rule for property List[0]");
+	}
 }
 
 public class NullType {
 	public List<int> List { get; set; }
 }
 
+public class ForEachNullType {
+	public List<NullType> List { get; set; }
+}
+
 public class NullReferenceValidator : AbstractValidator<NullType> {
 	public NullReferenceValidator() {
 		RuleFor(x => x.List.Count).NotEmpty();
+	}
+}
+
+public class NullReferenceForEachValidator : AbstractValidator<ForEachNullType> {
+	public NullReferenceForEachValidator() {
+		RuleForEach(x => x.List).Must(x => x.List.Count > 1);
 	}
 }

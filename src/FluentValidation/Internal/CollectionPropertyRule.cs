@@ -172,7 +172,13 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 					context.MessageFormatter.Reset();
 					context.MessageFormatter.AppendArgument("CollectionIndex", index);
 
-					bool valid = await component.ValidateAsync(context, valueToValidate, useAsync, cancellation);
+					bool valid;
+					try {
+						valid = await component.ValidateAsync(context, valueToValidate, useAsync, cancellation);
+					}
+					catch (NullReferenceException nre) {
+						throw new NullReferenceException($"Failed to execute validation rule for property {context.PropertyPath}", nre);
+					}
 
 					if (!valid) {
 						PrepareMessageFormatterForValidationError(context, valueToValidate);
