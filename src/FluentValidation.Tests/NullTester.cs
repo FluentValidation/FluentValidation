@@ -67,7 +67,9 @@ public class NullTester {
 	public void NullProperty_should_throw_NullReferenceException() {
 		var validator = new NullReferenceValidator();
 		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new NullType()));
-		ex.Message.ShouldEqual("Failed to execute validation rule for property List.Count");
+		ex.Message.ShouldEqual("NullReferenceException occurred when executing rule for List.Count. If this property can be null you should add a null check using a When condition");
+		ex.InnerException.ShouldNotBeNull();
+		ex.InnerException!.GetType().ShouldEqual(typeof(NullReferenceException));
 	}
 
 	[Fact]
@@ -76,7 +78,9 @@ public class NullTester {
 		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new ForEachNullType {
 			List = new List<NullType>{ null }
 		}));
-		ex.Message.ShouldEqual("Failed to execute validation rule for property List[0]");
+		ex.Message.ShouldEqual("NullReferenceException occurred when executing rule for List[0]. If this property can be null you should add a null check using a When condition");
+		ex.InnerException.ShouldNotBeNull();
+		ex.InnerException!.GetType().ShouldEqual(typeof(NullReferenceException));
 	}
 }
 

@@ -145,7 +145,7 @@ internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, I
 				valid = await component.ValidateAsync(context, accessor.Value, useAsync, cancellation);
 			}
 			catch (NullReferenceException nre) {
-				throw new NullReferenceException($"Failed to execute validation rule for property {context.PropertyPath}", nre);
+				throw new NullReferenceException($"NullReferenceException occurred when executing rule for {context.PropertyPath}. If this property can be null you should add a null check using a When condition", nre);
 			}
 
 			if (!valid) {
