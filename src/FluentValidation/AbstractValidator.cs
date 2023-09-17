@@ -236,9 +236,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		EnsureInstanceNotNull(context.InstanceToValidate);
 #pragma warning restore CS0618
 
-		foreach (var rule in Rules) {
+		int count = Rules.Count;
+
+		for (int i = 0; i < count; i++) {
 			cancellation.ThrowIfCancellationRequested();
-			await rule.ValidateAsync(context, useAsync, cancellation);
+			await Rules[i].ValidateAsync(context, useAsync, cancellation);
 
 			if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 				// Bail out if we're "failing-fast".
@@ -259,8 +261,12 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	}
 
 	private void SetExecutedRuleSets(ValidationResult result, ValidationContext<T> context) {
-		var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>{RulesetValidatorSelector.DefaultRuleSetName});
-		result.RuleSetsExecuted = executed.ToArray();
+				if ((context.RootContextData.TryGetValue("_FV_RuleSetsExecuted", out var obj)) && (obj is HashSet<string> set))
+				{
+						result.RuleSetsExecuted = set.ToArray();
+				}
+
+				result.RuleSetsExecuted = RulesetValidatorSelector.DefaultRuleSetNameInArray;
 	}
 
 	/// <summary>
