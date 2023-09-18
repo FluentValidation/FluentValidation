@@ -164,7 +164,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="instance">The object to validate</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
 	public ValidationResult Validate(T instance)
-		=> Validate(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()));
+		=> Validate(new ValidationContext<T>(instance, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()));
 
 	/// <summary>
 	/// Validates the specified instance asynchronously
@@ -173,7 +173,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
 	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new())
-		=> ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
+		=> ValidateAsync(new ValidationContext<T>(instance, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 
 	/// <summary>
 	/// Validates the specified instance.

@@ -26,8 +26,8 @@ using System.Reflection;
 /// <summary>
 /// Represents a chain of properties
 /// </summary>
-public class PropertyChain {
-	readonly List<string> _memberNames = new(2);
+public class PropertyChain : List<string> {
+	private List<string> _memberNames => this;
 
 	/// <summary>
 	/// Creates a new PropertyChain.
@@ -92,7 +92,7 @@ public class PropertyChain {
 	/// Adds a property name to the chain
 	/// </summary>
 	/// <param name="propertyName">Name of the property to add</param>
-	public void Add(string propertyName) {
+	public new void Add(string propertyName) {
 		if(!string.IsNullOrEmpty(propertyName))
 			_memberNames.Add(propertyName);
 	}
@@ -158,9 +158,4 @@ public class PropertyChain {
 		chain.Add(propertyName);
 		return chain.ToString();
 	}
-
-	/// <summary>
-	/// Number of member names in the chain
-	/// </summary>
-	public int Count => _memberNames.Count;
 }
