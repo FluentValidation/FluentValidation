@@ -262,12 +262,12 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	}
 
 	private void SetExecutedRuleSets(ValidationResult result, ValidationContext<T> context) {
-				if ((context.RootContextData.TryGetValue("_FV_RuleSetsExecuted", out var obj)) && (obj is HashSet<string> set))
-				{
-						result.RuleSetsExecuted = set.ToArray();
-				}
-
-				result.RuleSetsExecuted = RulesetValidatorSelector.DefaultRuleSetNameInArray;
+		if (context.RootContextData.TryGetValue("_FV_RuleSetsExecuted", out var obj) && obj is HashSet<string> set) {
+			result.RuleSetsExecuted = set.ToArray();
+		}
+		else {
+			result.RuleSetsExecuted = RulesetValidatorSelector.DefaultRuleSetNameInArray;
+		}
 	}
 
 	/// <summary>
