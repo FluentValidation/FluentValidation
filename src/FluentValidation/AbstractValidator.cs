@@ -238,6 +238,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 
 		int count = Rules.Count;
 
+		// Performance: Use for loop rather than foreach to reduce allocations.
 		for (int i = 0; i < count; i++) {
 			cancellation.ThrowIfCancellationRequested();
 			await Rules[i].ValidateAsync(context, useAsync, cancellation);
