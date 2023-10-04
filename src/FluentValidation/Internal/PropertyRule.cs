@@ -30,8 +30,6 @@ using System.Threading.Tasks;
 /// </summary>
 internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, IValidationRuleInternal<T, TProperty> {
 
-	private Func<ValidationContext<T>, string> _displayNameFunc;
-
 	public PropertyRule(MemberInfo member, Func<T, TProperty> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
 		: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
 	}
@@ -122,10 +120,6 @@ internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, I
 
 		var cascade = CascadeMode;
 		var totalFailures = context.Failures.Count;
-
-		if (_displayNameFunc == null) {
-			_displayNameFunc = GetDisplayName;
-		}
 
 		context.InitializeForPropertyValidator(propertyPath, _displayNameFunc, PropertyName);
 
