@@ -29,23 +29,23 @@ public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, I
 	public override string Name => "NotEmptyValidator";
 
 	public override bool IsValid(ValidationContext<T> context, TProperty value) {
-			if (value == null) {
-				return false;	
-			}
+		if (value == null) {
+			return false;
+		}
 
-			if (value is string s) {
-				return !string.IsNullOrWhiteSpace(s);
-			}
+		if (value is string s) {
+			return !string.IsNullOrWhiteSpace(s);
+		}
 
-			if (value is ICollection col) {
-				return col.Count > 0;
-			}
+		if (value is ICollection col) {
+			return col.Count > 0;
+		}
 
-			if (value is IEnumerable e) {
-				return e.GetEnumerator().MoveNext();
-			}
+		if (value is IEnumerable e) {
+			return e.GetEnumerator().MoveNext();
+		}
 
-			return !EqualityComparer<TProperty>.Default.Equals(value, default);
+		return !EqualityComparer<TProperty>.Default.Equals(value, default);
 	}
 
 	protected override string GetDefaultMessageTemplate(string errorCode) {
