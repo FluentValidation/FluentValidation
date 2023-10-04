@@ -166,7 +166,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 				var valueToValidate = element;
 				var propertyPath = context.PropertyChain.ToString();
 				var totalFailuresInner = context.Failures.Count;
-				context.InitializeForPropertyValidator(propertyPath, GetDisplayName, PropertyName);
+				context.InitializeForPropertyValidator(propertyPath, _displayNameFunc, PropertyName);
 
 				foreach (var component in filteredValidators) {
 					context.MessageFormatter.Reset();
