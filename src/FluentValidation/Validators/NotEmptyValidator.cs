@@ -42,7 +42,7 @@ public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, I
 			}
 
 			if (value is IEnumerable e) {
-				return !e.GetEnumerator().MoveNext();
+				return e.GetEnumerator().MoveNext();
 			}
 
 			return !EqualityComparer<TProperty>.Default.Equals(value, default);
