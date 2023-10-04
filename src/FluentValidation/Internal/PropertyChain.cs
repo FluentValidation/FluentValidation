@@ -26,7 +26,8 @@ using System.Reflection;
 /// <summary>
 /// Represents a chain of properties
 /// </summary>
-public class PropertyChain : List<string> {
+public class PropertyChain {
+	readonly List<string> _memberNames = new(2);
 
 	/// <summary>
 	/// Creates a new PropertyChain.
@@ -38,8 +39,9 @@ public class PropertyChain : List<string> {
 	/// Creates a new PropertyChain based on another.
 	/// </summary>
 	public PropertyChain(PropertyChain parent) {
-		if(parent != null && parent.Count > 0) {
-			AddRange(parent);
+		if(parent != null
+		   && parent._memberNames.Count > 0) {
+			_memberNames.AddRange(parent._memberNames);
 		}
 	}
 
@@ -48,7 +50,7 @@ public class PropertyChain : List<string> {
 	/// </summary>
 	/// <param name="memberNames"></param>
 	public PropertyChain(IEnumerable<string> memberNames) {
-		AddRange(memberNames);
+		this._memberNames.AddRange(memberNames);
 	}
 
 	/// <summary>
@@ -82,19 +84,17 @@ public class PropertyChain : List<string> {
 	/// </summary>
 	/// <param name="member">Member to add</param>
 	public void Add(MemberInfo member) {
-		if (member != null) {
-			Add(member.Name);
-		}
+		if(member != null)
+			_memberNames.Add(member.Name);
 	}
 
 	/// <summary>
 	/// Adds a property name to the chain
 	/// </summary>
 	/// <param name="propertyName">Name of the property to add</param>
-	public new void Add(string propertyName) {
-		if (!string.IsNullOrEmpty(propertyName)) {
-			base.Add(propertyName);
-		}
+	public void Add(string propertyName) {
+		if(!string.IsNullOrEmpty(propertyName))
+			_memberNames.Add(propertyName);
 	}
 
 	/// <summary>
@@ -106,14 +106,14 @@ public class PropertyChain : List<string> {
 	/// <param name="indexer"></param>
 	/// <param name="surroundWithBrackets">Whether square brackets should be applied before and after the indexer. Default true.</param>
 	public void AddIndexer(object indexer, bool surroundWithBrackets = true) {
-		if(Count == 0) {
+		if(_memberNames.Count == 0) {
 			throw new InvalidOperationException("Could not apply an Indexer because the property chain is empty.");
 		}
 
-		string last = this[Count - 1];
+		string last = _memberNames[_memberNames.Count - 1];
 		last += surroundWithBrackets ? "[" + indexer + "]" : indexer;
 
-		this[Count - 1] = last;
+		_memberNames[_memberNames.Count - 1] = last;
 	}
 
 	/// <summary>
@@ -121,13 +121,13 @@ public class PropertyChain : List<string> {
 	/// </summary>
 	public override string ToString() {
 		// Performance: Calling string.Join causes much overhead when it's not needed.
-		switch (Count) {
+		switch (_memberNames.Count) {
 			case 0:
 				return string.Empty;
 			case 1:
-				return this[0];
+				return _memberNames[0];
 			default:
-				return string.Join(ValidatorOptions.Global.PropertyChainSeparator, this);
+				return string.Join(ValidatorOptions.Global.PropertyChainSeparator, _memberNames);
 		}
 	}
 
@@ -150,7 +150,7 @@ public class PropertyChain : List<string> {
 	/// Builds a property path.
 	/// </summary>
 	public string BuildPropertyPath(string propertyName) {
-		if (Count == 0) {
+		if (_memberNames.Count == 0) {
 			return propertyName;
 		}
 
@@ -158,4 +158,9 @@ public class PropertyChain : List<string> {
 		chain.Add(propertyName);
 		return chain.ToString();
 	}
+
+	/// <summary>
+	/// Number of member names in the chain
+	/// </summary>
+	public int Count => _memberNames.Count;
 }
