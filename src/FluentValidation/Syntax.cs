@@ -113,6 +113,10 @@ public interface IConditionBuilder {
 	void Otherwise(Action action);
 }
 
-internal interface IRuleBuilderInternal<T, out TProperty> {
+internal interface IRuleBuilderInternal<T, out TProperty> : IRuleBuilderInternal<T> {
 	IValidationRule<T, TProperty> Rule { get; }
+}
+
+internal interface IRuleBuilderInternal<T> {
+	AbstractValidator<T> ParentValidator { get; }
 }
