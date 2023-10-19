@@ -1,4 +1,4 @@
-11.8.0 - 
+11.8.0 - 19 Oct 2023
 Added AbstractValidator.OnRuleAdded to allow customization of rule instances after creation (#2114)
 Fix Serbian translation of LengthValidator (#2147)
 Fix chinese culture codes (#2151)
