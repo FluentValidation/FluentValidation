@@ -19,6 +19,7 @@
 namespace FluentValidation.Internal;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
@@ -102,5 +103,13 @@ internal static class ExtensionsInternal {
 			}
 		}
 		return languageManager.GetString(fallbackKey);
+	}
+
+	internal static bool Any(this IEnumerable enumerable) {
+		var enumerator = enumerable.GetEnumerator();
+
+		using (enumerator as IDisposable) {
+			return enumerator.MoveNext();
+		}
 	}
 }

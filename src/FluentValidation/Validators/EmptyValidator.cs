@@ -20,10 +20,9 @@
 
 namespace FluentValidation.Validators;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using Resources;
+using Internal;
 
 public class EmptyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 
@@ -42,7 +41,7 @@ public class EmptyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 			return true;
 		}
 
-		if (value is IEnumerable e && !e.GetEnumerator().MoveNext()) {
+		if (value is IEnumerable e && !e.Any()) {
 			return true;
 		}
 
