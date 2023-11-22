@@ -33,16 +33,16 @@ public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, I
 			return false;
 		}
 
-		if (value is string s) {
-			return !string.IsNullOrWhiteSpace(s);
+		if (value is string s && string.IsNullOrWhiteSpace(s)) {
+			return false;
 		}
 
-		if (value is ICollection col) {
-			return col.Count > 0;
+		if (value is ICollection col && col.Count == 0) {
+			return false;
 		}
 
-		if (value is IEnumerable e) {
-			return e.GetEnumerator().MoveNext();
+		if (value is IEnumerable e && !e.GetEnumerator().MoveNext()) {
+			return false;
 		}
 
 		return !EqualityComparer<TProperty>.Default.Equals(value, default);
