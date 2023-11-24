@@ -6,6 +6,7 @@ on:
     - main
     - 9.x
     - 10.x
+    - 11.x
   pull_request:
     branches:
       - main
@@ -29,6 +30,7 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: |
+          8.0.100
           7.0.100
           6.0.x
 
