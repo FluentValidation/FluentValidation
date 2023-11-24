@@ -46,6 +46,8 @@ public class Person {
 	public Address Address { get; set; }
 	public IList<Order> Orders { get; set; }
 
+	public Order LatestOrder { get; set; }
+
 	public string Email { get; set; }
 	public decimal Discount { get; set; }
 

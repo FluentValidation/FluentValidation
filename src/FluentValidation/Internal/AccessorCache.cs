@@ -10,7 +10,8 @@ using System.Reflection;
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public static class AccessorCache<T> {
-	private static readonly ConcurrentDictionary<Key, Delegate> _cache = new ConcurrentDictionary<Key, Delegate>();
+	private static readonly ConcurrentDictionary<Key, Delegate> _cache = new();
+	private static readonly ConcurrentDictionary<Type, Delegate> _parameterAccessorCache = new();
 
 	/// <summary>
 	/// Gets an accessor func based on an expression
@@ -22,11 +23,27 @@ public static class AccessorCache<T> {
 	/// <param name="cachePrefix">Cache prefix</param>
 	/// <returns>Accessor func</returns>
 	public static Func<T, TProperty> GetCachedAccessor<TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression, bool bypassCache = false, string cachePrefix = null) {
-		if (member == null || bypassCache || ValidatorOptions.Global.DisableAccessorCache) {
+		if (bypassCache || ValidatorOptions.Global.DisableAccessorCache) {
 			return expression.Compile();
 		}
 
-		var key = new Key(member, expression, cachePrefix);
+		Key key;
+
+		if (member == null) {
+			// If the expression doesn't reference a property we don't support
+			// caching it, The only exception is parameter expressions referencing the same object (eg RuleFor(x => x))
+			if (expression.IsParameterExpression() && typeof(T) == typeof(TProperty)) {
+				key = new Key(null, expression, typeof(T).FullName + ":" + cachePrefix);
+			}
+			else {
+				// Unsupported expression type. Non cacheable.
+				return expression.Compile();
+			}
+		}
+		else {
+			key = new Key(member, expression, cachePrefix);
+		}
+
 		return (Func<T,TProperty>)_cache.GetOrAdd(key, k => expression.Compile());
 	}
 
