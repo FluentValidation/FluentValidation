@@ -51,6 +51,32 @@ public class AccessorCacheTests {
 	}
 
 	[Fact]
+	public void Gets_accessor_for_parameter_expression() {
+		Expression<Func<Person, Person>> expr1 = x => x;
+
+		var compiled1 = expr1.Compile();
+		var compiled2 = expr1.Compile();
+
+		Assert.NotEqual(compiled1, compiled2);
+
+		var compiled3 = AccessorCache<Person>.GetCachedAccessor(null, expr1);
+		var compiled4 = AccessorCache<Person>.GetCachedAccessor(null, expr1);
+
+		// Expression should have been cached.
+		Assert.Equal(compiled3, compiled4);
+
+		Expression<Func<Person, Person>> expr2 = x => x;
+		var compiled5 = AccessorCache<Person>.GetCachedAccessor(null, expr2);
+
+		// Technically a different expression, but for the same type, so should still be cached.
+		Assert.Equal(compiled3, compiled5);
+
+		// Different expression for a different type. Shouldn't try and cache and cast.
+		Expression<Func<Address, Address>> expr3 = x => x;
+		var compiled6 = AccessorCache<Address>.GetCachedAccessor(null, expr3);
+	}
+
+	[Fact]
 	public void Equality_comparison_check() {
 		Expression<Func<Person, string>> expr1 = x => x.Surname;
 		Expression<Func<Person, string>> expr2 = x => x.Surname;
