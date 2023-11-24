@@ -38,6 +38,8 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	private string _displayName;
 	private Func<ValidationContext<T>, string> _displayNameFactory;
 
+	protected readonly Func<ValidationContext<T>, string> _displayNameFunc;
+
 	public List<RuleComponent<T, TValue>> Components => _components;
 
 	/// <inheritdoc />
@@ -134,6 +136,9 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 		var containerType = typeof(T);
 		PropertyName = ValidatorOptions.Global.PropertyNameResolver(containerType, member, expression);
 		_displayNameFactory = context => ValidatorOptions.Global.DisplayNameResolver(containerType, member, expression);
+
+		// Performance: Cache the display name function to reduce allocations.
+		_displayNameFunc = GetDisplayName;
 	}
 
 	public void AddValidator(IPropertyValidator<T, TValue> validator) {

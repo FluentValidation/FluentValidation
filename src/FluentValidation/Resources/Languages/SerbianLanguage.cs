@@ -29,7 +29,7 @@ internal class SerbianLanguage {
 		"EmailValidator" => "'{PropertyName}' nije validna email adresa.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' mora biti veće ili jednako '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' mora biti veće od '{ComparisonValue}'.",
-		"LengthValidator" => "'{PropertyName}' mora imati između {MinLength} i {MaxLength} karatkera. Uneseno je {TotalLength} karaktera.",
+		"LengthValidator" => "'{PropertyName}' mora imati između {MinLength} i {MaxLength} karaktera. Uneseno je {TotalLength} karaktera.",
 		"MinimumLengthValidator" => "'{PropertyName}' mora imati najmanje {MinLength} karaktera. Uneseno je {TotalLength} karaktera.",
 		"MaximumLengthValidator" => "'{PropertyName}' ne sme imati više od {MaxLength} karaktera. Uneseno je {TotalLength} karaktera.",
 		"LessThanOrEqualValidator" => "'{PropertyName}' mora biti manje ili jednako '{ComparisonValue}'.",

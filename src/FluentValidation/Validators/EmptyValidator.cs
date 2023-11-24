@@ -30,13 +30,20 @@ public class EmptyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 	public override string Name => "EmptyValidator";
 
 	public override bool IsValid(ValidationContext<T> context, TProperty value) {
-		switch (value) {
-			case null:
-			case string s when string.IsNullOrWhiteSpace(s):
-			case ICollection {Count: 0}:
-			case Array {Length: 0}:
-			case IEnumerable e when !e.GetEnumerator().MoveNext():
-				return true;
+		if (value == null) {
+			return true;
+		}
+
+		if (value is string s && string.IsNullOrWhiteSpace(s)) {
+			return true;
+		}
+
+		if (value is ICollection col && col.Count == 0) {
+			return true;
+		}
+
+		if (value is IEnumerable e && !e.GetEnumerator().MoveNext()) {
+			return true;
 		}
 
 		return EqualityComparer<TProperty>.Default.Equals(value, default);

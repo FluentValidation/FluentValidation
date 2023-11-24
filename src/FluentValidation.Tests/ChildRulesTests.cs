@@ -20,6 +20,7 @@
 
 namespace FluentValidation.Tests;
 
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -121,6 +122,14 @@ public class ChildRulesTests {
 		result.IsValid.ShouldBeFalse();
 	}
 
+	[Fact]
+	public void Doesnt_throw_InvalidCastException() {
+		// See https://github.com/FluentValidation/FluentValidation/issues/2165
+		var validator = new RootValidator();
+		var result = validator.Validate(new Root { Data = new() { Value = -1 }});
+		result.Errors.Count.ShouldEqual(1);
+	}
+
 	private class RulesetChildRulesValidator : AbstractValidator<Person> {
 		public RulesetChildRulesValidator() {
 			RuleSet("testing", () => {
@@ -160,6 +169,36 @@ public class ChildRulesTests {
 
 		public class Baz {
 			public List<Bar> Bars { get; set; } = new();
+		}
+	}
+
+	public class Root {
+		public Bar Data {get; set;} = null;
+	}
+
+	public class Base {
+		public int Value {get; set;}
+	}
+
+	public class Bar : Base  {
+		public int BarValue {get; set;}
+	}
+
+	public class RootValidator : AbstractValidator<Root> {
+		public RootValidator() {
+			RuleFor(x => x).ChildRules(RootRules());
+		}
+
+		public static Action<InlineValidator<Base>> BaseRules() {
+			return rules => {
+				rules.RuleFor(x => x.Value).NotEqual(-1);
+			};
+		}
+
+		public static Action<InlineValidator<Root>> RootRules() {
+			return rules => {
+				rules.RuleFor(x => x.Data).ChildRules(BaseRules());
+			};
 		}
 	}
 

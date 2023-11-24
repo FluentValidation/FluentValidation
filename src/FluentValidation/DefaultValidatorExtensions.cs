@@ -1201,7 +1201,7 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> ChildRules<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<InlineValidator<TProperty>> action) {
 		if (action == null) throw new ArgumentNullException(nameof(action));
 		var validator = new ChildRulesContainer<TProperty>();
-		var parentValidator = ((RuleBuilder<T, TProperty>) ruleBuilder).ParentValidator;
+		var parentValidator = ((IRuleBuilderInternal<T>) ruleBuilder).ParentValidator;
 
 		string[] ruleSets;
 
