@@ -1,5 +1,6 @@
-11.8.2 -
+11.9.0 -
 Fix memory leak in NotEmptyValidator/EmptyValidator (#2174)
+Add more descriptive error messages if a rule throws a NullReferenceException (#2152)
 Add support for caching root parameter expressions (eg RuleFor(x => x)) (#2168)
 Add builds for .net 8
 

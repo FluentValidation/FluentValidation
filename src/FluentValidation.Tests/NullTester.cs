@@ -18,6 +18,8 @@
 
 namespace FluentValidation.Tests;
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -59,5 +61,32 @@ public class NullTester {
 		var validator = new TestValidator(v => v.RuleFor(x => x.NullableInt).Null());
 		var result = validator.Validate(new Person());
 		result.IsValid.ShouldBeTrue();
+	}
+
+	[Fact]
+	public void NullProperty_should_throw_NullReferenceException() {
+		var validator = new InlineValidator<Person>();
+		validator.RuleFor(x => x.Orders.Count).NotEmpty();
+
+		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new Person {
+			Orders = null
+		}));
+
+		ex.Message.ShouldEqual("NullReferenceException occurred when executing rule for x => x.Orders.Count. If this property can be null you should add a null check using a When condition");
+		ex.InnerException.ShouldNotBeNull();
+		ex.InnerException!.GetType().ShouldEqual(typeof(NullReferenceException));
+	}
+
+	[Fact]
+	public void ForEachNullProperty_should_throw_NullReferenceException_when_exception_occurs() {
+		var validator = new InlineValidator<Person>();
+		validator.RuleForEach(x => x.Orders[0].Payments).NotNull();
+
+		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new Person {
+			Orders = null
+		}));
+		ex.Message.ShouldEqual("NullReferenceException occurred when executing rule for x => x.Orders.get_Item(0).Payments. If this property can be null you should add a null check using a When condition");
+		ex.InnerException.ShouldNotBeNull();
+		ex.InnerException!.GetType().ShouldEqual(typeof(NullReferenceException));
 	}
 }
