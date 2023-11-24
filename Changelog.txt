@@ -3,7 +3,6 @@ Fix memory leak in NotEmptyValidator/EmptyValidator (#2174)
 Add more descriptive error messages if a rule throws a NullReferenceException (#2152)
 Add support for caching root parameter expressions (eg RuleFor(x => x)) (#2168)
 Add builds for .net 8
-Add support for dependent rules for custom rules (#2170)
 
 11.8.1 - 22 Nov 2023
 Fix unintentional behavioural changes in introduced in the previous release as part of #2158
