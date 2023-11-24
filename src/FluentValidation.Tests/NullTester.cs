@@ -65,41 +65,28 @@ public class NullTester {
 
 	[Fact]
 	public void NullProperty_should_throw_NullReferenceException() {
-		var validator = new NullReferenceValidator();
-		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new NullType()));
-		ex.Message.ShouldEqual("NullReferenceException occurred when executing rule for List.Count. If this property can be null you should add a null check using a When condition");
+		var validator = new InlineValidator<Person>();
+		validator.RuleFor(x => x.Orders.Count).NotEmpty();
+
+		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new Person {
+			Orders = null
+		}));
+
+		ex.Message.ShouldEqual("NullReferenceException occurred when executing rule for x => x.Orders.Count. If this property can be null you should add a null check using a When condition");
 		ex.InnerException.ShouldNotBeNull();
 		ex.InnerException!.GetType().ShouldEqual(typeof(NullReferenceException));
 	}
 
 	[Fact]
-	public void ForEachNullProperty_should_throw_NullReferenceException() {
-		var validator = new NullReferenceForEachValidator();
-		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new ForEachNullType {
-			List = new List<NullType>{ null }
+	public void ForEachNullProperty_should_throw_NullReferenceException_when_exception_occurs() {
+		var validator = new InlineValidator<Person>();
+		validator.RuleForEach(x => x.Orders[0].Payments).NotNull();
+
+		var ex = Assert.Throws<NullReferenceException>(() => validator.Validate(new Person {
+			Orders = null
 		}));
-		ex.Message.ShouldEqual("NullReferenceException occurred when executing rule for List[0]. If this property can be null you should add a null check using a When condition");
+		ex.Message.ShouldEqual("NullReferenceException occurred when executing rule for x => x.Orders.get_Item(0).Payments. If this property can be null you should add a null check using a When condition");
 		ex.InnerException.ShouldNotBeNull();
 		ex.InnerException!.GetType().ShouldEqual(typeof(NullReferenceException));
-	}
-}
-
-public class NullType {
-	public List<int> List { get; set; }
-}
-
-public class ForEachNullType {
-	public List<NullType> List { get; set; }
-}
-
-public class NullReferenceValidator : AbstractValidator<NullType> {
-	public NullReferenceValidator() {
-		RuleFor(x => x.List.Count).NotEmpty();
-	}
-}
-
-public class NullReferenceForEachValidator : AbstractValidator<ForEachNullType> {
-	public NullReferenceForEachValidator() {
-		RuleForEach(x => x.List).Must(x => x.List.Count > 1);
 	}
 }

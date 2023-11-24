@@ -145,16 +145,15 @@ internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, I
 
 			if (first) {
 				first = false;
-				propValue = PropertyFunc(context.InstanceToValidate);
+				try {
+					propValue = PropertyFunc(context.InstanceToValidate);
+				}
+				catch (NullReferenceException nre) {
+					throw new NullReferenceException($"NullReferenceException occurred when executing rule for {Expression}. If this property can be null you should add a null check using a When condition", nre);
+				}
 			}
 
-			bool valid;
-			try {
-				valid = await component.ValidateAsync(context, propValue, useAsync, cancellation);
-			}
-			catch (NullReferenceException nre) {
-				throw new NullReferenceException($"NullReferenceException occurred when executing rule for {context.PropertyPath}. If this property can be null you should add a null check using a When condition", nre);
-			}
+			bool valid = await component.ValidateAsync(context, propValue, useAsync, cancellation);
 
 			if (!valid) {
 				PrepareMessageFormatterForValidationError(context, propValue);

@@ -134,7 +134,14 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 		}
 
 		var cascade = CascadeMode;
-		var collection = PropertyFunc(context.InstanceToValidate) as IEnumerable<TElement>;
+		IEnumerable<TElement> collection;
+
+		try {
+			collection = PropertyFunc(context.InstanceToValidate);
+		}
+		catch (NullReferenceException nre) {
+			throw new NullReferenceException($"NullReferenceException occurred when executing rule for {Expression}. If this property can be null you should add a null check using a When condition", nre);
+		}
 
 		int count = 0;
 		int totalFailures = context.Failures.Count;
@@ -172,13 +179,7 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 					context.MessageFormatter.Reset();
 					context.MessageFormatter.AppendArgument("CollectionIndex", index);
 
-					bool valid;
-					try {
-						valid = await component.ValidateAsync(context, valueToValidate, useAsync, cancellation);
-					}
-					catch (NullReferenceException nre) {
-						throw new NullReferenceException($"NullReferenceException occurred when executing rule for {context.PropertyPath}. If this property can be null you should add a null check using a When condition", nre);
-					}
+					bool valid = await component.ValidateAsync(context, valueToValidate, useAsync, cancellation);
 
 					if (!valid) {
 						PrepareMessageFormatterForValidationError(context, valueToValidate);
