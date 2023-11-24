@@ -75,10 +75,16 @@ public class ValidationException : Exception {
 		return "Validation failed: " + string.Join(string.Empty, arr);
 	}
 
+#if NET8_0_OR_GREATER
+	[Obsolete(DiagnosticId = "SYSLIB0051")]
+#endif
 	public ValidationException(SerializationInfo info, StreamingContext context) : base(info, context) {
 		Errors = info.GetValue("errors", typeof(IEnumerable<ValidationFailure>)) as IEnumerable<ValidationFailure>;
 	}
 
+#if NET8_0_OR_GREATER
+	[Obsolete(DiagnosticId = "SYSLIB0051")]
+#endif
 	public override void GetObjectData(SerializationInfo info, StreamingContext context) {
 		if (info == null) throw new ArgumentNullException("info");
 
