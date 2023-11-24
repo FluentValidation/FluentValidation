@@ -1,5 +1,6 @@
-11.8.2 - 
+11.9.0 -
 Fix memory leak in NotEmptyValidator/EmptyValidator (#2174)
+Add more descriptive error messages if a rule throws a NullReferenceException (#2152)
 
 11.8.1 - 22 Nov 2023
 Fix unintentional behavioural changes in introduced in the previous release as part of #2158
@@ -34,7 +35,7 @@ Deprecated the ability to disable the root model null check via overriding Abstr
 Deprecated the Transform and TransformAsync methods (#2072)
 
 11.5.0 - 13 Feb 2023
-MemberNameValidatorSelector now supports wildcard indexes in property paths (#2056) 
+MemberNameValidatorSelector now supports wildcard indexes in property paths (#2056)
 Added overload of TestValidateAsync that accepts a context (#2052)
 Minor optimization to regex validator (#2035)
 Added Kazakh translations (#2036)
