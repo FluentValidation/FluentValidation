@@ -1,3 +1,6 @@
+11.8.2 - 
+Fix memory leak in NotEmptyValidator/EmptyValidator (#2174)
+
 11.8.1 - 22 Nov 2023
 Fix unintentional behavioural changes in introduced in the previous release as part of #2158
 
