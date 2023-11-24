@@ -41,7 +41,7 @@ internal class PortugueseBrazilLanguage {
 		"AsyncPredicateValidator" => "'{PropertyName}' não atende a condição definida.",
 		"RegularExpressionValidator" => "'{PropertyName}' não está no formato correto.",
 		"EqualValidator" => "'{PropertyName}' deve ser igual a '{ComparisonValue}'.",
-		"ExactLengthValidator" => "'{PropertyName}' deve ter no máximo {MaxLength} caracteres. Você digitou {TotalLength} caracteres.",
+		"ExactLengthValidator" => "'{PropertyName}' deve ter exatamente {MaxLength} caracteres. Você digitou {TotalLength} caracteres.",
 		"ExclusiveBetweenValidator" => "'{PropertyName}' deve, exclusivamente, estar entre {From} e {To}. Você digitou {PropertyValue}.",
 		"InclusiveBetweenValidator" => "'{PropertyName}' deve estar entre {From} e {To}. Você digitou {PropertyValue}.",
 		"CreditCardValidator" => "'{PropertyName}' não é um número válido de cartão de crédito.",

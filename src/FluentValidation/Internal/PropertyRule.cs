@@ -115,10 +115,13 @@ internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, I
 			}
 		}
 
+		bool first = true;
+		TProperty propValue = default(TProperty);
+
 		var cascade = CascadeMode;
-		var accessor = new Lazy<TProperty>(() => PropertyFunc(context.InstanceToValidate), LazyThreadSafetyMode.None);
 		var totalFailures = context.Failures.Count;
-		context.InitializeForPropertyValidator(propertyPath, GetDisplayName, PropertyName);
+
+		context.InitializeForPropertyValidator(propertyPath, _displayNameFunc, PropertyName);
 
 		// Invoke each validator and collect its results.
 		foreach (var component in Components) {
@@ -140,17 +143,22 @@ internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, I
 				}
 			}
 
+			if (first) {
+				first = false;
+				propValue = PropertyFunc(context.InstanceToValidate);
+			}
+
 			bool valid;
 			try {
-				valid = await component.ValidateAsync(context, accessor.Value, useAsync, cancellation);
+				valid = await component.ValidateAsync(context, propValue, useAsync, cancellation);
 			}
 			catch (NullReferenceException nre) {
 				throw new NullReferenceException($"NullReferenceException occurred when executing rule for {context.PropertyPath}. If this property can be null you should add a null check using a When condition", nre);
 			}
 
 			if (!valid) {
-				PrepareMessageFormatterForValidationError(context, accessor.Value);
-				var failure = CreateValidationError(context, accessor.Value, component);
+				PrepareMessageFormatterForValidationError(context, propValue);
+				var failure = CreateValidationError(context, propValue, component);
 				context.Failures.Add(failure);
 			}
 

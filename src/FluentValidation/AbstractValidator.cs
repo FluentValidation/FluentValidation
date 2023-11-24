@@ -164,7 +164,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="instance">The object to validate</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
 	public ValidationResult Validate(T instance)
-		=> Validate(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()));
+		=> Validate(new ValidationContext<T>(instance, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()));
 
 	/// <summary>
 	/// Validates the specified instance asynchronously
@@ -173,7 +173,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
 	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new())
-		=> ValidateAsync(new ValidationContext<T>(instance, new PropertyChain(), ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
+		=> ValidateAsync(new ValidationContext<T>(instance, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 
 	/// <summary>
 	/// Validates the specified instance.
@@ -236,9 +236,12 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		EnsureInstanceNotNull(context.InstanceToValidate);
 #pragma warning restore CS0618
 
-		foreach (var rule in Rules) {
+		int count = Rules.Count;
+
+		// Performance: Use for loop rather than foreach to reduce allocations.
+		for (int i = 0; i < count; i++) {
 			cancellation.ThrowIfCancellationRequested();
-			await rule.ValidateAsync(context, useAsync, cancellation);
+			await Rules[i].ValidateAsync(context, useAsync, cancellation);
 
 			if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
 				// Bail out if we're "failing-fast".
@@ -259,8 +262,12 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	}
 
 	private void SetExecutedRuleSets(ValidationResult result, ValidationContext<T> context) {
-		var executed = context.RootContextData.GetOrAdd("_FV_RuleSetsExecuted", () => new HashSet<string>{RulesetValidatorSelector.DefaultRuleSetName});
-		result.RuleSetsExecuted = executed.ToArray();
+		if (context.RootContextData.TryGetValue("_FV_RuleSetsExecuted", out var obj) && obj is HashSet<string> set) {
+			result.RuleSetsExecuted = set.ToArray();
+		}
+		else {
+			result.RuleSetsExecuted = RulesetValidatorSelector.DefaultRuleSetNameInArray;
+		}
 	}
 
 	/// <summary>

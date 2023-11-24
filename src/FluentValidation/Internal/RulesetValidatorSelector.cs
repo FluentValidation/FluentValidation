@@ -13,6 +13,7 @@ public class RulesetValidatorSelector : IValidatorSelector {
 	readonly IEnumerable<string> _rulesetsToExecute;
 	public const string DefaultRuleSetName = "default";
 	public const string WildcardRuleSetName = "*";
+	internal static readonly string[] DefaultRuleSetNameInArray = new string[] { DefaultRuleSetName };
 
 	/// <summary>
 	/// Rule sets

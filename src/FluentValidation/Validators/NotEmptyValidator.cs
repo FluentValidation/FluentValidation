@@ -29,13 +29,20 @@ public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, I
 	public override string Name => "NotEmptyValidator";
 
 	public override bool IsValid(ValidationContext<T> context, TProperty value) {
-		switch (value) {
-			case null:
-			case string s when string.IsNullOrWhiteSpace(s):
-			case ICollection {Count: 0}:
-			case Array {Length: 0}:
-			case IEnumerable e when !e.GetEnumerator().MoveNext():
-				return false;
+		if (value == null) {
+			return false;
+		}
+
+		if (value is string s && string.IsNullOrWhiteSpace(s)) {
+			return false;
+		}
+
+		if (value is ICollection col && col.Count == 0) {
+			return false;
+		}
+
+		if (value is IEnumerable e && IsEmpty(e)) {
+			return false;
 		}
 
 		return !EqualityComparer<TProperty>.Default.Equals(value, default);
@@ -43,6 +50,14 @@ public class NotEmptyValidator<T,TProperty> : PropertyValidator<T, TProperty>, I
 
 	protected override string GetDefaultMessageTemplate(string errorCode) {
 		return Localized(errorCode, Name);
+	}
+
+	private static bool IsEmpty(IEnumerable enumerable) {
+		var enumerator = enumerable.GetEnumerator();
+
+		using (enumerator as IDisposable) {
+			return !enumerator.MoveNext();
+		}
 	}
 }
 

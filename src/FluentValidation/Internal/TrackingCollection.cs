@@ -40,6 +40,8 @@ internal class TrackingCollection<T> : IEnumerable<T> {
 
 	public int Count => _innerCollection.Count;
 
+	public T this[int index] => _innerCollection[index];
+
 	public void Remove(T item) {
 		_innerCollection.Remove(item);
 	}
