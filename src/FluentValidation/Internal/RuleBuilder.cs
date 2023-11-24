@@ -94,6 +94,16 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.DependentRules(Action action) {
+		DependentRulesInternal(action);
+		return this;
+	}
+
+	IRuleBuilderOptionsConditions<T, TProperty> IRuleBuilderOptionsConditions<T, TProperty>.DependentRules(Action action) {
+		DependentRulesInternal(action);
+		return this;
+	}
+
+	private void DependentRulesInternal(Action action) {
 		var dependencyContainer = new List<IValidationRuleInternal<T>>();
 		// Capture any rules added to the parent validator inside this delegate.
 		using (ParentValidator.Rules.Capture(dependencyContainer.Add)) {
@@ -109,10 +119,10 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 		}
 
 		Rule.AddDependentRules(dependencyContainer);
-		return this;
 	}
 
 	public void AddComponent(RuleComponent<T,TProperty> component) {
 		Rule.Components.Add(component);
 	}
+
 }
