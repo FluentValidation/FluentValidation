@@ -52,7 +52,7 @@ If you were calling `.Cascade(CascadeMode.StopOnFirstFailure)` in a rule chain, 
 
 The `InjectValidator` method was deprecated in 11.x and removed in 12.0.
 
-This method method allowed you to implicitly inject a child validator from the ASP.NET Service Provider:
+This method allowed you to implicitly inject a child validator from the ASP.NET Service Provider:
 
 ```csharp
 public class PersonValidator : AbstractValidator<Person> 
