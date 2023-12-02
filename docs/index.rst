@@ -13,9 +13,6 @@ FluentValidation 12 supports the following platforms:
 * .NET 6
 * .NET 7
 * .NET 8
-* `.NET Standard 2.1 <https://docs.microsoft.com/en-us/dotnet/standard/net-standard>`_
-
-For automatic validation with ASP.NET, FluentValidation supports ASP.NET running on .NET Core 3.1, .NET 5 or .NET 6.
 
 If you're new to using FluentValidation, check out the :doc:`start` page.
 
