@@ -15,6 +15,10 @@ The main goal of this release was removal of deprecated code and removal of supp
 
 If you still need .NET Standard 2.0 compatibility then you will need to continue to use FluentValidation 11.x and only upgrade to FluentValidation 12 once you've moved to a more modern version of .NET.  
 
+### Removal of the Transform and TransformForEach methods
+
+The `Transform` and `TransformForEach` methods deprecated in 11.x have been removed. For details on how to migrate see [https://github.com/FluentValidation/FluentValidation/issues/2072](https://github.com/FluentValidation/FluentValidation/issues/2072)
+
 ### Removal of CascadeMode.StopOnFirstFailure
 
 The `StopOnFirstFailure` cascade option was deprecated in FluentValidation 11.0 and has now been removed, along with the `AbstractValidator.CascadeMode` and `ValidatorOptions.Global.CascadeMode` properties which were also deprecated in 11.0. 
