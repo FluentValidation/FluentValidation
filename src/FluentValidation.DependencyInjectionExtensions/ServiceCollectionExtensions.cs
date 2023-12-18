@@ -19,6 +19,7 @@
 namespace FluentValidation;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -92,14 +93,14 @@ public static class ServiceCollectionExtensions	{
 		bool shouldRegister = filter?.Invoke(scanResult) ?? true;
 		if (shouldRegister) {
 			//Register as interface
-			services.Add(
+			services.TryAddEnumerable(
 				new ServiceDescriptor(
 					serviceType: scanResult.InterfaceType,
 					implementationType: scanResult.ValidatorType,
 					lifetime: lifetime));
 
 			//Register as self
-			services.Add(
+			services.TryAdd(
 				new ServiceDescriptor(
 					serviceType: scanResult.ValidatorType,
 					implementationType: scanResult.ValidatorType,
