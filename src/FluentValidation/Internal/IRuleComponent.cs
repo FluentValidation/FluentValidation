@@ -29,10 +29,6 @@ using Validators;
 /// An individual component within a rule with a validator attached.
 /// </summary>
 public interface IRuleComponent<T, out TProperty> : IRuleComponent {
-	/// <summary>
-	/// The error code associated with this rule component.
-	/// </summary>
-	new string ErrorCode { get; set; }
 
 	/// <summary>
 	/// Function used to retrieve custom state for the validator
@@ -59,14 +55,26 @@ public interface IRuleComponent<T, out TProperty> : IRuleComponent {
 	/// <summary>
 	/// Sets the overridden error message template for this validator.
 	/// </summary>
-	/// <param name="errorFactory">A function for retrieving the error message template.</param>
-	void SetErrorMessage(Func<ValidationContext<T>, TProperty, string> errorFactory);
+	/// <param name="errorMessageFactory">A function for retrieving the error message template.</param>
+	void SetErrorMessage(Func<ValidationContext<T>, TProperty, string> errorMessageFactory);
 
 	/// <summary>
 	/// Sets the overridden error message template for this validator.
 	/// </summary>
 	/// <param name="errorMessage">The error message to set</param>
 	void SetErrorMessage(string errorMessage);
+
+	/// <summary>
+	/// Sets the overridden error code template for this validator.
+	/// </summary>
+	/// <param name="errorCodeFactory">A function for retrieving the error code template.</param>
+	void SetErrorCode(Func<ValidationContext<T>, TProperty, string> errorCodeFactory);
+
+	/// <summary>
+	/// Sets the overridden error code template for this validator.
+	/// </summary>
+	/// <param name="errorCode">The error code to set</param>
+	void SetErrorCode(string errorCode);
 }
 
 /// <summary>
@@ -93,9 +101,4 @@ public interface IRuleComponent {
 	/// </summary>
 	/// <returns></returns>
 	string GetUnformattedErrorMessage();
-
-	/// <summary>
-	/// The error code associated with this rule component.
-	/// </summary>
-	string ErrorCode { get; }
 }

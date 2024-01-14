@@ -164,7 +164,21 @@ public static class DefaultValidatorOptions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithErrorCode<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorCode) {
 		errorCode.Guard("A error code must be specified when calling WithErrorCode.", nameof(errorCode));
-		Configurable(rule).Current.ErrorCode = errorCode;
+		Configurable(rule).Current.SetErrorCode(errorCode);
+		return rule;
+	}
+
+	/// <summary>
+	/// Specifies a custom error code to use if validation fails.
+	/// </summary>
+	/// <param name="rule">The current rule</param>
+	/// <param name="codeProvider">Delegate that will be invoked to retrieve the localized code. </param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, TProperty> WithErrorCode<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> codeProvider) {
+		codeProvider.Guard("A codeProvider must be provided.", nameof(codeProvider));
+		Configurable(rule).Current.SetErrorCode((ctx, val) => {
+			return codeProvider(ctx == null ? default : ctx.InstanceToValidate);
+		});
 		return rule;
 	}
 
