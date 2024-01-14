@@ -207,14 +207,14 @@ public class RuleComponent<T, TProperty> : IRuleComponent<T, TProperty> {
 				_errorMessageFactory = null;
 		}
 
-	/// <summary>
-	/// Gets the error code. If a context is supplied, it will be used to format the code.
-	/// If no context is supplied, the raw unformatted code will be returned.
-	/// </summary>
-	/// <param name="context">The validation context.</param>
-	/// <param name="value">The current property value.</param>
-	/// <returns></returns>
-	public string GetErrorCode(ValidationContext<T> context, TProperty value) {
+		/// <summary>
+		/// Gets the error code. If a context is supplied, it will be used to format the code.
+		/// If no context is supplied, the raw unformatted code will be returned.
+		/// </summary>
+		/// <param name="context">The validation context.</param>
+		/// <param name="value">The current property value.</param>
+		/// <returns></returns>
+		public string GetErrorCode(ValidationContext<T> context, TProperty value) {
 				return _errorCodeFactory?.Invoke(context, value) ?? _errorCode;
 		}
 
