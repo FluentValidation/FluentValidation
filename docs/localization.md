@@ -4,6 +4,11 @@ Out of the box, FluentValidation provides translations for the default validatio
 
 You can also use the `WithMessage` and `WithLocalizedMessage` methods to specify a localized error message for a single validation rule.
 
+```eval_rst
+.. note::
+  You may need to add "<InvariantGlobalization>false</InvariantGlobalization>" to your project's .csproj file, inside the <PropertyGroup></PropertyGroup> section.
+```
+
 ### WithMessage
 If you are using Visual Studio's built in support for `.resx` files and their strongly-typed wrappers, then you can localize a message by calling the overload of `WithMessage` that accepts a lambda expression:
 
