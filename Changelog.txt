@@ -1,3 +1,10 @@
+12.0.0 -
+Drops support for netstandard2.0, netstandard2.1 and .net 5. Minimum supported platform is now .net 6.
+Add support for dependent rules for custom rules (#2170)
+Removes deprecated DI extensions
+Removes deprecated transform methods (#2027)
+Remove the ability to disable the root-model null check (#2069)
+
 11.9.0 - 21 Dec 2023
 Fix memory leak in NotEmptyValidator/EmptyValidator (#2174)
 Add more descriptive error messages if a rule throws a NullReferenceException (#2152)
