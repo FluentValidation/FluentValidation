@@ -11,7 +11,6 @@ using System.Reflection;
 /// <typeparam name="T"></typeparam>
 public static class AccessorCache<T> {
 	private static readonly ConcurrentDictionary<Key, Delegate> _cache = new();
-	private static readonly ConcurrentDictionary<Type, Delegate> _parameterAccessorCache = new();
 
 	/// <summary>
 	/// Gets an accessor func based on an expression
