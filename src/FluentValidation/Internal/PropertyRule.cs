@@ -48,7 +48,7 @@ internal partial class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProp
 	/// </summary>
 	/// <param name="context">Validation Context</param>
 	/// <param name="cancellation"></param>
-	[Zomp.SyncMethodGenerator.CreateSyncVersion]
+	[Zomp.SyncMethodGenerator.CreateSyncVersion(OmitNullableDirective = true)]
 	public virtual async ValueTask ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 		string displayName = GetDisplayName(context);
 

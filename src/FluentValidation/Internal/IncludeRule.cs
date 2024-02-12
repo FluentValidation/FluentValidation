@@ -52,7 +52,7 @@ internal partial class IncludeRule<T> : PropertyRule<T, T>, IIncludeRule {
 		return new IncludeRule<T>((ctx, _) => func(ctx.InstanceToValidate), cascadeModeThunk, typeof(T), typeof(TValidator));
 	}
 
-	[Zomp.SyncMethodGenerator.CreateSyncVersion]
+	[Zomp.SyncMethodGenerator.CreateSyncVersion(OmitNullableDirective = true)]
 	public override async ValueTask ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 		// Special handling for the MemberName selector.
 		// We need to disable the MemberName selector's cascade functionality whilst executing
