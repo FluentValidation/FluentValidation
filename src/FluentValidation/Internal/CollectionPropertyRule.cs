@@ -67,7 +67,7 @@ internal partial class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumer
 	}
 
 
-	[Zomp.SyncMethodGenerator.CreateSyncVersion]
+	[Zomp.SyncMethodGenerator.CreateSyncVersion(OmitNullableDirective = true)]
 	async ValueTask IValidationRuleInternal<T>.ValidateAsync(ValidationContext<T> context, CancellationToken cancellation) {
 		string displayName = GetDisplayName(context);
 
@@ -203,7 +203,7 @@ internal partial class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumer
 		DependentRules.AddRange(rules);
 	}
 
-	[Zomp.SyncMethodGenerator.CreateSyncVersion]
+	[Zomp.SyncMethodGenerator.CreateSyncVersion(OmitNullableDirective = true)]
 	private async ValueTask<List<RuleComponent<T, TElement>>> GetValidatorsToExecuteAsync(ValidationContext<T> context, CancellationToken cancellation) {
 		// Loop over each validator and check if its condition allows it to run.
 		// This needs to be done prior to the main loop as within a collection rule
