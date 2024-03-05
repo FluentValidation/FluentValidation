@@ -1,5 +1,5 @@
 mock==1.0.1 
-alabaster>=0.7,<0.8,!=0.7.5
+alabaster==0.7.13
 commonmark==0.9.1 
 recommonmark==0.5.0 
 readthedocs-sphinx-ext<2.3 
