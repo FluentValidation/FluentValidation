@@ -26,7 +26,7 @@ internal class NorwegianNynorskLanguage {
 	public const string Culture = "nn";
 
 	public static string GetTranslation(string key) => key switch {
-		"EmailValidator" => "'{PropertyName}' er ikkje en gyldig e-postadresse.",
+		"EmailValidator" => "'{PropertyName}' er ikkje ei gyldig e-postadresse.",
 		"GreaterThanOrEqualValidator" => "'{PropertyName}' skal vera større enn eller lik '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' skal vera større enn '{ComparisonValue}'.",
 		"LengthValidator" => "'{PropertyName}' skal vere mellom {MinLength} og {MaxLength} teikn. Du har tasta inn {TotalLength} teikn.",
