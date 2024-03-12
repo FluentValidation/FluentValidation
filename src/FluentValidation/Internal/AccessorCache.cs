@@ -52,15 +52,22 @@ public static class AccessorCache<T> {
 
 	private class Key {
 		private readonly MemberInfo _memberInfo;
+#if DEBUG
 		private readonly string _expressionDebugView;
-
+#endif
 		public Key(MemberInfo member, Expression expression, string cachePrefix) {
 			_memberInfo = member;
+#if DEBUG
 			_expressionDebugView = cachePrefix != null ? cachePrefix + expression.ToString() : expression.ToString();
+#endif
 		}
 
-		protected bool Equals(Key other) {
-			return Equals(_memberInfo, other._memberInfo) && string.Equals(_expressionDebugView, other._expressionDebugView);
+		private bool Equals(Key other) {
+			return Equals(_memberInfo, other._memberInfo)
+#if DEBUG
+			       && string.Equals(_expressionDebugView, other._expressionDebugView)
+#endif
+			       ;
 		}
 
 		public override bool Equals(object obj) {
@@ -72,7 +79,11 @@ public static class AccessorCache<T> {
 
 		public override int GetHashCode() {
 			unchecked {
-				return ((_memberInfo != null ? _memberInfo.GetHashCode() : 0)*397) ^ (_expressionDebugView != null ? _expressionDebugView.GetHashCode() : 0);
+				return ((_memberInfo != null ? _memberInfo.GetHashCode() : 0)*397)
+#if DEBUG
+				       ^ (_expressionDebugView != null ? _expressionDebugView.GetHashCode() : 0)
+#endif
+;
 			}
 		}
 	}
