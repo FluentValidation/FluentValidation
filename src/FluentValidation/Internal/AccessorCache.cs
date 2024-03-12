@@ -32,7 +32,7 @@ public static class AccessorCache<T> {
 			// If the expression doesn't reference a property we don't support
 			// caching it, The only exception is parameter expressions referencing the same object (eg RuleFor(x => x))
 			if (expression.IsParameterExpression() && typeof(T) == typeof(TProperty)) {
-				key = new Key(typeof(T), null, expression, typeof(T).FullName + ":" + cachePrefix);
+				key = new Key(null, expression, typeof(T).FullName + ":" + cachePrefix);
 			}
 			else {
 				// Unsupported expression type. Non cacheable.
@@ -40,7 +40,7 @@ public static class AccessorCache<T> {
 			}
 		}
 		else {
-			key = new Key(typeof(T), member, expression, cachePrefix);
+			key = new Key(member, expression, cachePrefix);
 		}
 #if NET5_0_OR_GREATER
 		return (Func<T,TProperty>)_cache.GetOrAdd(key, static (_, exp) => exp.Compile(), expression);
@@ -54,15 +54,13 @@ public static class AccessorCache<T> {
 	}
 
 	private class Key {
-		private readonly Type _type;
 		private readonly MemberInfo _memberInfo;
 		private readonly string _expressionString;
 #if DEBUG
 		private readonly string _expressionDebugView;
 #endif
 
-		public Key(Type type, MemberInfo member, Expression expression, string cachePrefix) {
-			_type = type;
+		public Key(MemberInfo member, Expression expression, string cachePrefix) {
 			_memberInfo = member;
 			_expressionString = expression.ToString();
 #if DEBUG
@@ -71,7 +69,7 @@ public static class AccessorCache<T> {
 		}
 
 		private bool Equals(Key other) {
-			return _type == other._type && Equals(_memberInfo, other._memberInfo) && string.Equals(_expressionString, other._expressionString);
+			return Equals(_memberInfo, other._memberInfo) && string.Equals(_expressionString, other._expressionString);
 		}
 
 		public override bool Equals(object obj) {
@@ -85,8 +83,7 @@ public static class AccessorCache<T> {
 			unchecked {
 				unchecked
 				{
-					var hashCode = (_type != null ? _type.GetHashCode() : 0);
-					hashCode = (hashCode * 397) ^ (_memberInfo != null ? _memberInfo.GetHashCode() : 0);
+					var hashCode = (_memberInfo != null ? _memberInfo.GetHashCode() : 0);
 					hashCode = (hashCode * 397) ^ (_expressionString != null ? _expressionString.GetHashCode() : 0);
 					return hashCode;
 				}
