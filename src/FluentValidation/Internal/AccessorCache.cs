@@ -43,11 +43,7 @@ public static class AccessorCache<T> {
 			key = new Key(member, expression, cachePrefix);
 		}
 
-#if NET5_0_OR_GREATER
 		return (Func<T,TProperty>)_cache.GetOrAdd(key, static (_, exp) => exp.Compile(), expression);
-#else
-		return (Func<T,TProperty>)_cache.GetOrAdd(key, _ => expression.Compile());
-#endif
 	}
 
 	public static void Clear() {
