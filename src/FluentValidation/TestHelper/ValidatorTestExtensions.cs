@@ -119,19 +119,6 @@ public static class ValidationTestExtension {
 		return new TestValidationResult<T>(validationResult);
 	}
 
-	// TODO: 12.0: Move this to an instance method on TestValidationResult
-		public static ITestValidationContinuation ShouldHaveAnyValidationError<T>(this TestValidationResult<T> testValidationResult) {
-		if (!testValidationResult.Errors.Any())
-			throw new ValidationTestException($"Expected at least one validation error, but none were found.");
-
-		return new TestValidationContinuation(testValidationResult.Errors);
-	}
-
-	// TODO: 12.0: Move this to an instance method on TestValidationResult
-	public static void ShouldNotHaveAnyValidationErrors<T>(this TestValidationResult<T> testValidationResult) {
-		testValidationResult.ShouldNotHaveValidationError(MatchAnyFailure, true);
-	}
-
 	private static string BuildErrorMessage(ValidationFailure failure, string exceptionMessage, string defaultMessage) {
 		if (exceptionMessage != null && failure != null) {
 			var formattedExceptionMessage = exceptionMessage.Replace("{Code}", failure.ErrorCode)
@@ -152,8 +139,7 @@ public static class ValidationTestExtension {
 
 
 	public static ITestValidationWith When(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-		//TODO 12.0 remove casts.
-		var result = new TestValidationContinuation(((TestValidationContinuation)failures).MatchedFailures, failures);
+		var result = new TestValidationContinuation(failures.MatchedFailures, failures);
 		result.ApplyPredicate(failurePredicate);
 
 		var anyMatched = result.Any();
@@ -167,8 +153,7 @@ public static class ValidationTestExtension {
 	}
 
 	public static ITestValidationContinuation WhenAll(this ITestValidationContinuation failures, Func<ValidationFailure, bool> failurePredicate, string exceptionMessage = null) {
-		//TODO 12.0 remove casts.
-		var result = new TestValidationContinuation(((TestValidationContinuation)failures).MatchedFailures, failures);
+		var result = new TestValidationContinuation(failures.MatchedFailures, failures);
 		result.ApplyPredicate(failurePredicate);
 
 		bool allMatched = !result.UnmatchedFailures.Any();
