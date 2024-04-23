@@ -21,6 +21,7 @@
 namespace FluentValidation.Tests;
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -445,6 +446,34 @@ public class CascadingFailuresTester : IDisposable {
 		_validator.RuleLevelCascadeMode = CascadeMode.Stop;
 		var results = await _validator.ValidateAsync(new Person());
 		results.Errors.Count.ShouldEqual(1);
+	}
+
+	[Fact]
+	public async void Cascade_set_to_stop_in_child_validator_with_RuleForEach_in_parent() {
+		// See https://github.com/FluentValidation/FluentValidation/issues/2207
+
+		var childValidator = new InlineValidator<Order>();
+		childValidator.ClassLevelCascadeMode = CascadeMode.Stop;
+		childValidator.RuleFor(x => x.ProductName).NotNull();
+		childValidator.RuleFor(x => x.Amount).GreaterThan(0);
+
+		var parentValidator = new InlineValidator<Person>();
+		parentValidator.RuleForEach(x => x.Orders).SetValidator(childValidator);
+
+		var testData = new List<Order> {
+			// Would cause both rules to fail, but only first rule will be executed because of CascadeMode.Stop
+			new Order { ProductName = null, Amount = 0 },
+
+			// First rule succeeds, second rule fails.
+			new Order { ProductName = "foo", Amount = 0 }
+		};
+
+		// Bug in #2207 meant that the rule for Orders[1].Amount would never execute
+		// as the cascade mode logic was stopping if totalFailures > 0 rather than totalFailures > (count of failures before rule executed)
+		var result = parentValidator.Validate(new Person {Orders = testData});
+		result.Errors.Count.ShouldEqual(2);
+		result.Errors[0].PropertyName.ShouldEqual("Orders[0].ProductName");
+		result.Errors[1].PropertyName.ShouldEqual("Orders[1].Amount");
 	}
 
 	[Fact]

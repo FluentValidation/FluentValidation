@@ -30,6 +30,7 @@ public class ValidatorTesterTester {
 	private TestValidator validator;
 
 	public ValidatorTesterTester() {
+		CultureScope.SetDefaultCulture();
 		validator = new TestValidator();
 		validator.RuleFor(x => x.Forename).NotNull();
 		validator.RuleForEach(person => person.NickNames).MinimumLength(5);
@@ -954,15 +955,15 @@ public class ValidatorTesterTester {
 	[Fact]
 	public void ShouldHaveValidationErrorFor_WithPropertyName_Only_throws() {
 		var validator = new InlineValidator<Person>();
-		validator.RuleFor(x => DateTime.Now)
+		validator.RuleFor(x => x.Age)
 			.Must((x, ct) => false)
-			.LessThan(new DateTime(1900, 1, 1));
+			.LessThan(50);
 		Assert.Throws<ValidationTestException>(() =>
-			validator.TestValidate(new Person())
-				.ShouldHaveValidationErrorFor("Now")
-				.WithErrorMessage("The specified condition was not met for 'Now'.")
+			validator.TestValidate(new Person { Age = 100 })
+				.ShouldHaveValidationErrorFor("Age")
+				.WithErrorMessage("The specified condition was not met for 'Age'.")
 				.Only()
-		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Now' must be less than '1/1/1900 12:00:00 AM'.\n");
+		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Age' must be less than '50'.\n");
 	}
 
 	[Fact]

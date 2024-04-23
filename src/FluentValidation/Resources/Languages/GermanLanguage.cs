@@ -43,7 +43,7 @@ internal class GermanLanguage {
 		"EqualValidator" => "'{PropertyName}' muss gleich '{ComparisonValue}' sein.",
 		"ExactLengthValidator" => "'{PropertyName}' muss genau {MaxLength} lang sein. Es wurden {TotalLength} eingegeben.",
 		"ExclusiveBetweenValidator" => "'{PropertyName}' muss zwischen {From} und {To} sein (exklusiv). Es wurde {PropertyValue} eingegeben.",
-		"InclusiveBetweenValidator" => "'{PropertyName}' muss zwischen {From} and {To} sein. Es wurde {PropertyValue} eingegeben.",
+		"InclusiveBetweenValidator" => "'{PropertyName}' muss zwischen {From} und {To} sein. Es wurde {PropertyValue} eingegeben.",
 		"CreditCardValidator" => "'{PropertyName}' ist keine gültige Kreditkartennummer.",
 		"ScalePrecisionValidator" => "'{PropertyName}' darf insgesamt nicht mehr als {ExpectedPrecision} Ziffern enthalten, mit Berücksichtigung von {ExpectedScale} Dezimalstellen. Es wurden {Digits} Ziffern und {ActualScale} Dezimalstellen gefunden.",
 		"EmptyValidator" => "'{PropertyName}' sollte leer sein.",
@@ -54,7 +54,7 @@ internal class GermanLanguage {
 		"MinimumLength_Simple" => "Die Länge von '{PropertyName}' muss größer oder gleich {MinLength} sein.",
 		"MaximumLength_Simple" => "Die Länge von '{PropertyName}' muss kleiner oder gleich {MaxLength} sein.",
 		"ExactLength_Simple" => "'{PropertyName}' muss genau {MaxLength} lang sein.",
-		"InclusiveBetween_Simple" => "'{PropertyName}' muss zwischen {From} and {To} sein.",
+		"InclusiveBetween_Simple" => "'{PropertyName}' muss zwischen {From} und {To} sein.",
 		_ => null,
 	};
 }
