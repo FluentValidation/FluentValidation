@@ -30,6 +30,7 @@ public class ValidatorTesterTester {
 	private TestValidator validator;
 
 	public ValidatorTesterTester() {
+		CultureScope.SetDefaultCulture();
 		validator = new TestValidator();
 		validator.RuleFor(x => x.Forename).NotNull();
 		validator.RuleForEach(person => person.NickNames).MinimumLength(5);
@@ -962,7 +963,7 @@ public class ValidatorTesterTester {
 				.ShouldHaveValidationErrorFor("Now")
 				.WithErrorMessage("The specified condition was not met for 'Now'.")
 				.Only()
-		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Now' must be less than '1/1/1900 12:00:00 AM'.\n");
+		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: 'Now' must be less than '1/1/1900 12:00:00AM'.\n");
 	}
 
 	[Fact]
