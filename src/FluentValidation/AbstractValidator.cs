@@ -241,13 +241,13 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 		// Performance: Use for loop rather than foreach to reduce allocations.
 		for (int i = 0; i < count; i++) {
 			cancellation.ThrowIfCancellationRequested();
+			var totalFailures = context.Failures.Count;
+
 			await Rules[i].ValidateAsync(context, useAsync, cancellation);
 
-			if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > 0) {
-				// Bail out if we're "failing-fast".
-				// Check for > 0 rather than == 1 because a rule chain may have overridden the Stop behaviour to Continue
-				// meaning that although the first rule failed, it actually generated 2 failures if there were 2 validators
-				// in the chain.
+			if (ClassLevelCascadeMode == CascadeMode.Stop && result.Errors.Count > totalFailures) {
+				// Bail out if we're "failing-fast". Check to see if the number of failures
+				// has been increased by this rule (which could've generated 1 or more failures).
 				break;
 			}
 		}
