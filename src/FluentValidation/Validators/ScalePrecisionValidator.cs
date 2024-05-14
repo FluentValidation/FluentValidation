@@ -57,11 +57,20 @@ public class ScalePrecisionValidator<T> : PropertyValidator<T, decimal> {
 		var actualIntegerDigits = precision - scale;
 		var expectedIntegerDigits = Precision - Scale;
 		if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
+			// Precision and scale alone may be not enough to describe why actually a value is invalid,
+			// for example for 123 and expected precision 3 and scale 2 the value is invalid, yet precision
+			// is 3 and scale is 0. So as a workaround we can provide actual precision and scale as if value
+			// was "right-padded" with zeros to the amount of expected decimals, so that it would look like
+			// complement zeros were added in the decimal part for calculation of precision. In the above
+			// example actual precision and scale would be printed as 5 and 2 as if value was 123.00.
+			var printedActualScale = Math.Max(scale, Scale);
+			var printedActualPrecision = Math.Max(actualIntegerDigits, 1) + printedActualScale;
+
 			context.MessageFormatter
 				.AppendArgument("ExpectedPrecision", Precision)
 				.AppendArgument("ExpectedScale", Scale)
-				.AppendArgument("Digits", actualIntegerDigits < 0 ? 0 : actualIntegerDigits)
-				.AppendArgument("ActualScale", scale);
+				.AppendArgument("Digits", printedActualPrecision)
+				.AppendArgument("ActualScale", printedActualScale);
 
 			return false;
 		}
