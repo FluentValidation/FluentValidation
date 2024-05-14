@@ -45,7 +45,7 @@ internal class RussianLanguage {
 		"InclusiveBetweenValidator" => "'{PropertyName}' должно быть в диапазоне от {From} до {To}. Введенное значение: {PropertyValue}.",
 		"ExclusiveBetweenValidator" => "'{PropertyName}' должно быть в диапазоне от {From} до {To} (не включая эти значения). Введенное значение: {PropertyValue}.",
 		"CreditCardValidator" => "'{PropertyName}' неверный номер карты.",
-		"ScalePrecisionValidator" => "'{PropertyName}' должно содержать не более {ExpectedPrecision} цифр всего, в том числе {ExpectedScale} десятичных знака(ов). Введенное значение содержит {Digits} цифр(ы) в целой части и {ActualScale} десятичных знака(ов).",
+		"ScalePrecisionValidator" => "'{PropertyName}' должно содержать не более {ExpectedPrecision} цифр всего, в том числе {ExpectedScale} десятичных знака(ов). Введенное значение содержит {Digits} цифр(ы) и {ActualScale} десятичных знака(ов).",
 		"EmptyValidator" => "'{PropertyName}' должно быть пустым.",
 		"NullValidator" => "'{PropertyName}' должно быть пустым.",
 		"EnumValidator" => "'{PropertyName}' содержит недопустимое значение '{PropertyValue}'.",
