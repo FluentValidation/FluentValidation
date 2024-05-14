@@ -454,6 +454,6 @@ Example:
 - When `ignoreTrailingZeros` is `false` then the decimal `123.4500` will be considered to have a precision of 7 and scale of 4
 - When `ignoreTrailingZeros` is `true` then the decimal `123.4500` will be considered to have a precision of 5 and scale of 2. 
 
-Please also note that this method impones certain range of values that will be accepted. For example in case of `.PrecisionScale(3, 1)`, the method will accept values between `-99.9` and `99.9`, inclusive. Which means that integer part is always controlled to contain at most `3 - 1` digits, independently from `ignoreTrailingZeros` parameter.
+Please also note that this method implies certain range of values that will be accepted. For example in case of `.PrecisionScale(3, 1)`, the method will accept values between `-99.9` and `99.9`, inclusive. Which means that integer part is always controlled to contain at most `3 - 1` digits, independently from `ignoreTrailingZeros` parameter.
 
 Note that prior to FluentValidation 11.4, this method was called `ScalePrecision` instead and had its parameters reversed. For more details [see this GitHub issue](https://github.com/FluentValidation/FluentValidation/issues/2030)

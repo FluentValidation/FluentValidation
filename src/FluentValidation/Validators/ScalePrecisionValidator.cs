@@ -30,6 +30,9 @@ using System;
 /// Scale would be the number of digits to the right of the decimal point.
 /// Precision would be the number of digits. This number includes both the left and the right sides of the decimal point.
 ///
+/// It implies certain range of values that will be accepted by the validator.
+/// It permits up to Precision - Scale digits to the left of the decimal point and up to Scale digits to the right.
+///
 /// It can be configured to use the effective scale and precision
 /// (i.e. ignore trailing zeros) if required.
 ///
