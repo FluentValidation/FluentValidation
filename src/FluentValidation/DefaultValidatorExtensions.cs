@@ -1097,7 +1097,7 @@ public static partial class DefaultValidatorExtensions {
 		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
 
 	/// <summary>
-	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale. It permits up to <b><see cref="precision"/> - <see cref="scale"/></b> digits to the left of the decimal point and up to <b><see cref="scale"/></b> digits to the right.
+	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale. It permits up to <b><paramref name="precision"/> - <paramref name="scale"/></b> digits to the left of the decimal point and up to <b><paramref name="scale"/></b> digits to the right.
 	/// </summary>
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
@@ -1109,7 +1109,7 @@ public static partial class DefaultValidatorExtensions {
 		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
 
 	/// <summary>
-	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale. It permits up to <b><see cref="precision"/> - <see cref="scale"/></b> digits to the left of the decimal point and up to <b><see cref="scale"/></b> digits to the right.
+	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale. It permits up to <b><paramref name="precision"/> - <paramref name="scale"/></b> digits to the left of the decimal point and up to <b><paramref name="scale"/></b> digits to the right.
 	/// </summary>
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
