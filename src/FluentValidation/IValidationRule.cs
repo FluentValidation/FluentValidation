@@ -34,12 +34,6 @@ public interface IValidationRule<T, out TProperty> : IValidationRule<T> {
 	public CascadeMode CascadeMode { get; set; }
 
 	/// <summary>
-	/// Sets the display name for the property.
-	/// </summary>
-	/// <param name="name">The property's display name</param>
-	void SetDisplayName(string name);
-
-	/// <summary>
 	/// Sets the display name for the property using a function.
 	/// </summary>
 	/// <param name="factory">The function for building the display name</param>
@@ -127,6 +121,12 @@ public interface IValidationRule {
 	/// <param name="context">Current context</param>
 	/// <returns>Display name</returns>
 	string GetDisplayName(IValidationContext context);
+
+	/// <summary>
+	/// Sets the display name for the property.
+	/// </summary>
+	/// <param name="name">The property's display name</param>
+	void SetDisplayName(string name);
 
 	/// <summary>
 	/// Returns the property name for the property being validated.
