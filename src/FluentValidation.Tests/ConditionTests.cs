@@ -211,6 +211,47 @@ public class ConditionTests {
 		result.IsValid.ShouldBeFalse();
 	}
 
+	[Fact]
+	public void Can_try_access_property_value_in_custom_condition() {
+		var validator = new TestValidator();
+		validator
+			.RuleFor(x => x.Surname)
+			.Must(_ => false)
+			.Configure(cfg => {
+				cfg.ApplyCondition(context => {
+					cfg.TryGetPropertyValue<string>(context.InstanceToValidate, out var value);
+					return value != null;
+				});
+			});
+
+		var result = validator.Validate(new Person());
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person {Surname = "foo"});
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void Can_try_access_property_value_in_custom_condition_foreach() {
+		var validator = new TestValidator();
+		validator
+			.RuleForEach(x => x.Children)
+			.Must(_ => false)
+			.Configure(cfg => {
+				cfg.ApplyCondition(context => {
+					cfg.TryGetPropertyValue<IList<Person>>(context.InstanceToValidate, out var value);
+
+					return value != null;
+				});
+			});
+
+		var result = validator.Validate(new Person());
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { Children = new List<Person> { new() }});
+		result.IsValid.ShouldBeFalse();
+	}
+
 	private class TestConditionValidator : AbstractValidator<Person> {
 		public TestConditionValidator() {
 			RuleFor(x => x.Forename).NotNull().When(x => x.Id == 0);
