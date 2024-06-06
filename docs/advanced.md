@@ -9,7 +9,7 @@ If you need to run specific code every time a validator is invoked, you can do t
 The method should return `true` if validation should continue, or `false` to immediately abort. Any modifications that you made to the `ValidationResult` will be returned to the user.
 
 Note that this method is called before FluentValidation performs its standard null-check against the model being validated, so you can use this to generate an error if the whole model is null, rather than relying on FluentValidation's standard behaviour in this case (which is to throw an exception):
-
+Here is new comment. This Comment and next section is realy important:
 ```csharp
 public class MyValidator : AbstractValidator<Person> 
 {
