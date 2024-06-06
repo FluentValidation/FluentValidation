@@ -417,7 +417,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="predicate">A lambda expression specifying the predicate</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, bool> predicate) {
-		predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
+		ArgumentNullException.ThrowIfNull(predicate);
 		return ruleBuilder.Must((x, val) => predicate(val));
 	}
 
@@ -433,7 +433,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="predicate">A lambda expression specifying the predicate</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, bool> predicate) {
-		predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
+		ArgumentNullException.ThrowIfNull(predicate);
 		return ruleBuilder.Must((x, val, _) => predicate(x, val));
 	}
 
@@ -449,8 +449,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="predicate">A lambda expression specifying the predicate</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, ValidationContext<T>, bool> predicate) {
-		predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
-		return ruleBuilder.SetValidator(new PredicateValidator<T,TProperty>((instance, property, propertyValidatorContext) => predicate(instance, property, propertyValidatorContext)));
+		ArgumentNullException.ThrowIfNull(predicate);
+		return ruleBuilder.SetValidator(new PredicateValidator<T,TProperty>(predicate));
 	}
 
 	/// <summary>
@@ -464,7 +464,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="predicate">A lambda expression specifying the predicate</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CancellationToken, Task<bool>> predicate) {
-		predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
+		ArgumentNullException.ThrowIfNull(predicate);
 
 		return ruleBuilder.MustAsync((x, val, ctx, cancel) => predicate(val, cancel));
 	}
@@ -481,7 +481,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="predicate">A lambda expression specifying the predicate</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, CancellationToken, Task<bool>> predicate) {
-		predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
+		ArgumentNullException.ThrowIfNull(predicate);
 		return ruleBuilder.MustAsync((x, val, _, cancel) => predicate(x, val, cancel));
 	}
 
@@ -497,7 +497,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="predicate">A lambda expression specifying the predicate</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<T, TProperty, ValidationContext<T>, CancellationToken, Task<bool>> predicate) {
-		predicate.Guard("Cannot pass a null predicate to Must.", nameof(predicate));
+		ArgumentNullException.ThrowIfNull(predicate);
 		return ruleBuilder.SetAsyncValidator(new AsyncPredicateValidator<T,TProperty>(predicate));
 	}
 
@@ -635,7 +635,7 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		Expression<Func<T, TProperty>> expression)
 		where TProperty : IComparable<TProperty>, IComparable {
-		expression.Guard("Cannot pass null to LessThan", nameof(expression));
+		ArgumentNullException.ThrowIfNull(expression);
 
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
@@ -656,7 +656,7 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
-		expression.Guard("Cannot pass null to LessThan", nameof(expression));
+		ArgumentNullException.ThrowIfNull(expression);
 
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
@@ -681,7 +681,7 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
 		Expression<Func<T, TProperty>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
-		expression.Guard("Cannot pass null to LessThan", nameof(expression));
+		ArgumentNullException.ThrowIfNull(expression);
 
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
@@ -703,7 +703,7 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
 		Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
-		expression.Guard("Cannot pass null to LessThan", nameof(expression));
+		ArgumentNullException.ThrowIfNull(expression);
 
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
@@ -728,6 +728,7 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> LessThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression)
 		where TProperty : IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -748,6 +749,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> LessThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
+
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -771,6 +774,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty?> LessThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
+
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -791,6 +796,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty?> LessThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
+
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -814,6 +821,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		Expression<Func<T, TProperty>> expression)
 		where TProperty : IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
+
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -834,6 +843,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
 		Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
+
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -857,6 +868,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
 		Expression<Func<T, TProperty>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
+
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -877,6 +890,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
 		Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
+
 		var member = expression.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
 		var name = GetDisplayName(member, expression);
@@ -900,6 +915,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> GreaterThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> valueToCompare)
 		where TProperty : IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(valueToCompare);
+
 		var member = valueToCompare.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
 		var name = GetDisplayName(member, valueToCompare);
@@ -920,6 +937,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> GreaterThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty?>> valueToCompare)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(valueToCompare);
+
 		var member = valueToCompare.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
 		var name = GetDisplayName(member, valueToCompare);
@@ -942,6 +961,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty?> GreaterThanOrEqualTo<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty?>> valueToCompare)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(valueToCompare);
+
 		var member = valueToCompare.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
 		var name = GetDisplayName(member, valueToCompare);
@@ -965,6 +986,8 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty?> GreaterThanOrEqualTo<T, TProperty>(
 		this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty>> valueToCompare)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(valueToCompare);
+
 		var member = valueToCompare.GetMember();
 		var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
 		var name = GetDisplayName(member, valueToCompare);
@@ -1071,32 +1094,6 @@ public static partial class DefaultValidatorExtensions {
 		=> ruleBuilder.SetValidator(new EnumValidator<T,TProperty>());
 
 	/// <summary>
-	/// Defines a scale precision validator on the current rule builder that ensures that the specific value has a certain scale and precision
-	/// </summary>
-	/// <typeparam name="T">Type of object being validated</typeparam>
-	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="scale">Allowed scale of the value</param>
-	/// <param name="precision">Allowed precision of the value</param>
-	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
-	/// <returns></returns>
-	[Obsolete("Please use the PrecisionScale method instead, which takes precision as the first parameter and scale as the second. See https://github.com/FluentValidation/FluentValidation/issues/2030 for further details")]
-	public static IRuleBuilderOptions<T, decimal> ScalePrecision<T>(this IRuleBuilder<T, decimal> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false)
-		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
-
-	/// <summary>
-	/// Defines a scale precision validator on the current rule builder that ensures that the specific value has a certain scale and precision
-	/// </summary>
-	/// <typeparam name="T">Type of object being validated</typeparam>
-	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="scale">Allowed scale of the value</param>
-	/// <param name="precision">Allowed precision of the value</param>
-	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros.</param>
-	/// <returns></returns>
-	[Obsolete("Please use the PrecisionScale method instead, which takes precision as the first parameter and scale as the second. See https://github.com/FluentValidation/FluentValidation/issues/2030 for further details")]
-	public static IRuleBuilderOptions<T, decimal?> ScalePrecision<T>(this IRuleBuilder<T, decimal?> ruleBuilder, int scale, int precision, bool ignoreTrailingZeros = false)
-		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
-
-	/// <summary>
 	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale.
 	/// </summary>
 	/// <typeparam name="T">Type of object being validated</typeparam>
@@ -1106,7 +1103,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros after the decimal point. For example, when set to true the decimal 123.4500 will be considered to have a precision of 5 and scale of 2. When set to false, it will be considered to have a precision of 7 and scale of 4.</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, decimal> PrecisionScale<T>(this IRuleBuilder<T, decimal> ruleBuilder, int precision, int scale, bool ignoreTrailingZeros)
-		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
+		=> ruleBuilder.SetValidator(new PrecisionScaleValidator<T>(precision, scale, ignoreTrailingZeros));
 
 	/// <summary>
 	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale.
@@ -1118,7 +1115,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ignoreTrailingZeros">Whether the validator will ignore trailing zeros after the decimal point. For example, when set to true the decimal 123.4500 will be considered to have a precision of 5 and scale of 2. When set to false, it will be considered to have a precision of 7 and scale of 4.</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, decimal?> PrecisionScale<T>(this IRuleBuilder<T, decimal?> ruleBuilder, int precision, int scale, bool ignoreTrailingZeros)
-		=> ruleBuilder.SetValidator(new ScalePrecisionValidator<T>(scale, precision) { IgnoreTrailingZeros = ignoreTrailingZeros });
+		=> ruleBuilder.SetValidator(new PrecisionScaleValidator<T>(precision, scale, ignoreTrailingZeros));
 
 	/// <summary>
 	/// Defines a custom validation rule

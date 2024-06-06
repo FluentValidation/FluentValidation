@@ -36,20 +36,30 @@ using System;
 /// 123.4500 has an scale of 4 and a precision of 7, but an effective scale
 /// and precision of 2 and 5 respectively.
 /// </summary>
-public class ScalePrecisionValidator<T> : PropertyValidator<T, decimal> {
+public class PrecisionScaleValidator<T> : PropertyValidator<T, decimal> {
 
-	// TODO: For 12.0 swap the parameter order to match the PrecisionScale extension methods and add parameter for IgnoreTrailingZeros.
-	public ScalePrecisionValidator(int scale, int precision) {
-		Init(scale, precision);
+	public PrecisionScaleValidator(int precision, int scale, bool ignoreTrailingZeros) {
+		Scale = scale;
+		Precision = precision;
+		IgnoreTrailingZeros = ignoreTrailingZeros;
+
+		if (Scale < 0)
+			throw new ArgumentOutOfRangeException(nameof(scale), $"Scale must be a positive integer. [value:{Scale}].");
+
+		if (Precision < 0)
+			throw new ArgumentOutOfRangeException(nameof(precision), $"Precision must be a positive integer. [value:{Precision}].");
+
+		if (Precision < Scale)
+			throw new ArgumentOutOfRangeException(nameof(scale), $"Scale must be less than precision. [scale:{Scale}, precision:{Precision}].");
 	}
 
 	public override string Name => "ScalePrecisionValidator";
 
-	public int Scale { get; set; }
+	public int Scale { get; }
 
-	public int Precision { get; set; }
+	public int Precision { get; }
 
-	public bool IgnoreTrailingZeros { get; set; }
+	public bool IgnoreTrailingZeros { get; }
 
 	public override bool IsValid(ValidationContext<T> context, decimal decimalValue) {
 		var scale = GetScale(decimalValue);
@@ -66,22 +76,6 @@ public class ScalePrecisionValidator<T> : PropertyValidator<T, decimal> {
 			return false;
 		}
 		return true;
-	}
-
-	private void Init(int scale, int precision) {
-		Scale = scale;
-		Precision = precision;
-
-		if (Scale < 0)
-			throw new ArgumentOutOfRangeException(
-				nameof(scale), $"Scale must be a positive integer. [value:{Scale}].");
-		if (Precision < 0)
-			throw new ArgumentOutOfRangeException(
-				nameof(precision), $"Precision must be a positive integer. [value:{Precision}].");
-		if (Precision < Scale)
-			throw new ArgumentOutOfRangeException(
-				nameof(scale),
-				$"Scale must be less than precision. [scale:{Scale}, precision:{Precision}].");
 	}
 
 	private static UInt32[] GetBits(decimal Decimal) {

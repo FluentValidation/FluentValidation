@@ -38,8 +38,7 @@ public class RuleDependencyTests {
 	}
 
 	[Fact]
-	public void Does_not_invoke_dependent_rule_if_parent_rule_does_not_pass()
-	{
+	public void Does_not_invoke_dependent_rule_if_parent_rule_does_not_pass() {
 		var validator = new TestValidator();
 		validator.RuleFor(x => x.Surname).NotNull()
 			.DependentRules(() =>
@@ -253,8 +252,7 @@ public class RuleDependencyTests {
 
 
 	[Fact]
-	public void Nested_dependent_rules_inside_ruleset_inside_method()
-	{
+	public void Nested_dependent_rules_inside_ruleset_inside_method() {
 		var validator = new TestValidator();
 		validator.RuleSet("MyRuleSet", () =>
 		{
@@ -277,8 +275,36 @@ public class RuleDependencyTests {
 		results.Errors.Single().PropertyName.ShouldEqual("Address");
 	}
 
-	private void BaseValidation(InlineValidator<Person> validator)
-	{
+	[Fact]
+	public void Invokes_dependent_rule_if_parent_custom_rule_passes() {
+		var validator = new TestValidator();
+		validator.RuleFor(x => x.Surname).Custom((name, context) => { })
+			.DependentRules(() => {
+				validator.RuleFor(x => x.Forename).NotNull();
+			});
+
+		var results = validator.Validate(new Person {Surname = "foo"});
+		results.Errors.Count.ShouldEqual(1);
+		results.Errors.Single().PropertyName.ShouldEqual("Forename");
+	}
+
+	[Fact]
+	public void Does_not_invoke_dependent_rule_if_parent_custom_rule_does_not_pass() {
+		var validator = new TestValidator();
+		validator.RuleFor(x => x.Surname).Custom((name, context) => {
+				context.AddFailure("Failed");
+			})
+			.DependentRules(() =>
+			{
+				validator.RuleFor(x => x.Forename).NotNull();
+			});
+
+		var results = validator.Validate(new Person { Surname = null });
+		results.Errors.Count.ShouldEqual(1);
+		results.Errors.Single().PropertyName.ShouldEqual("Surname");
+	}
+
+	private void BaseValidation(InlineValidator<Person> validator) {
 		validator.RuleFor(x => x.Address).NotNull();
 	}
 

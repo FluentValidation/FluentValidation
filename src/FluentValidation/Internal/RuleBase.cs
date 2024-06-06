@@ -115,13 +115,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// </summary>
 	public CascadeMode CascadeMode {
 		get => _cascadeModeThunk();
-		set {
-#pragma warning disable 618
-			_cascadeModeThunk = value == CascadeMode.StopOnFirstFailure
-				? () => CascadeMode.Stop
-				: () => value;
-#pragma warning restore 618
-		}
+		set => _cascadeModeThunk = () => value;
 	}
 
 	/// <summary>
@@ -282,6 +276,16 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	}
 
 	object IValidationRule<T>.GetPropertyValue(T instance) => PropertyFunc(instance);
+
+	bool IValidationRule<T>.TryGetPropertyValue<TProp>(T instance, out TProp value) {
+		value = default;
+
+		var result = PropertyFunc(instance);
+		if (result is not TProp propertyValue) return false;
+
+		value = propertyValue;
+		return true;
+	}
 
 	/// <summary>
 	/// Prepares the <see cref="MessageFormatter"/> of <paramref name="context"/> for an upcoming <see cref="ValidationFailure"/>.
