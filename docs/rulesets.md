@@ -44,7 +44,7 @@ var result = validator.Validate(person, options =>
 });
 ```
 
-You can also include all the rules not part of a ruleset by using calling `IncludeRulesNotInRuleSet`, or by using the special name "default" (case insensitive):
+You can also include all the rules not part of a ruleset by calling `IncludeRulesNotInRuleSet`, or by using the special name "default" (case insensitive):
 
 ```csharp
 validator.Validate(person, options => 
