@@ -46,7 +46,7 @@ public class ValidationResult {
 
 			// Ensure any nulls are removed and the list is copied
 			// to be consistent with the constructor below.
-			_errors = value.Where(failure => failure != null).ToList();;
+			_errors = value.Where(failure => failure != null).ToList();
 		}
 	}
 
