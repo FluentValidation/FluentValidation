@@ -36,7 +36,7 @@ public class StringEnumValidator<T> : PropertyValidator<T, string> {
 		CheckTypeIsEnum(enumType);
 
 		_caseSensitive = caseSensitive;
-		_enumNames = Enum.GetNames(_enumType);
+		_enumNames = Enum.GetNames(enumType);
 	}
 
 	public override bool IsValid(ValidationContext<T> context, string value) {
