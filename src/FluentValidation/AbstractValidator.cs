@@ -108,7 +108,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// </para>
 	/// <para>
 	/// This cannot be set to the deprecated <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>.
-	/// <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
+	/// <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>. Attempting to do so will actually
 	/// result in <see cref="FluentValidation.CascadeMode.Stop"/> being used.
 	/// </para>
 	/// </summary>
