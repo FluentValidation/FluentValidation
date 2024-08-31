@@ -75,7 +75,17 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> NotNull<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder) {
 		return ruleBuilder.SetValidator(new NotNullValidator<T,TProperty>());
 	}
-
+        /// <summary>
+	/// Defines a 'not null' and 'not empty' validator on the current rule builder.
+	/// Validation will fail if the property is null.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
+	/// <param name="ruleBuilder"></param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, TProperty> NotNullAndEmpty<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder){
+    	   return ruleBuilder.NotNull().NotEmpty();
+	}
 	/// <summary>
 	/// Defines a 'null' validator on the current rule builder.
 	/// Validation will fail if the property is not null.
