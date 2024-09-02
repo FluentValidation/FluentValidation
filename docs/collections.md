@@ -84,7 +84,7 @@ public class CustomerValidator : AbstractValidator<Customer>
 }
 ```
 
-You can optionally include or exclude certain items in the collection from being validated by using the `Where` method. Note this must come directly after the call to `RuleForEach`:
+You can optionally include or exclude certain items in the collection from being validated by using the `Where` or `WhereAsync` methods. Note this must come directly after the call to `RuleForEach`:
 
 ```csharp
 RuleForEach(x => x.Orders)

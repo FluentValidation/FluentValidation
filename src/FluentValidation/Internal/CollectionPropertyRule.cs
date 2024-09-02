@@ -47,6 +47,11 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 	public Func<TElement, bool> Filter { get; set; }
 
 	/// <summary>
+	/// Asynchronous filter that should be used to include/exclude items in the collection.
+	/// </summary>
+	public Func<TElement, Task<bool>> AsyncFilter { get; set; }
+
+	/// <summary>
 	/// Constructs the indexer in the property name associated with the error message.
 	/// By default this is "[" + index + "]"
 	/// </summary>
@@ -156,6 +161,17 @@ internal class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumerable<TEl
 
 				if (Filter != null && !Filter(element)) {
 					continue;
+				}
+
+				if (AsyncFilter != null) {
+					if (useAsync) {
+						if (!await AsyncFilter(element)) {
+							continue;
+						}
+					}
+					else {
+						throw new AsyncValidatorInvokedSynchronouslyException();
+					}
 				}
 
 				string indexer = index.ToString();
