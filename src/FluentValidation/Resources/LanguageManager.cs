@@ -78,6 +78,7 @@ public class LanguageManager : ILanguageManager {
 			PortugueseLanguage.Culture => PortugueseLanguage.GetTranslation(key),
 			PortugueseBrazilLanguage.Culture => PortugueseBrazilLanguage.GetTranslation(key),
 			RomanianLanguage.Culture => RomanianLanguage.GetTranslation(key),
+			RomanshLanguage.Culture => RomanshLanguage.GetTranslation(key),
 			RussianLanguage.Culture => RussianLanguage.GetTranslation(key),
 			SlovakLanguage.Culture => SlovakLanguage.GetTranslation(key),
 			SlovenianLanguage.Culture => SlovenianLanguage.GetTranslation(key),
