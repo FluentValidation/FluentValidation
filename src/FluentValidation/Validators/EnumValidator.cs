@@ -23,8 +23,10 @@ namespace FluentValidation.Validators;
 using System;
 using System.Reflection;
 
-public class EnumValidator<T, TProperty> : PropertyValidator<T,TProperty> {
+public class EnumValidator<T, TProperty> : PropertyValidator<T, TProperty>, IEnumValidator {
 	private readonly Type _enumType = typeof(TProperty);
+
+	public Type EnumType => _enumType;
 
 	public override string Name => "EnumValidator";
 
@@ -47,47 +49,47 @@ public class EnumValidator<T, TProperty> : PropertyValidator<T,TProperty> {
 
 		switch (typeName) {
 			case "Byte": {
-				var typedValue = (byte) value;
+				var typedValue = (byte)value;
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
 			case "Int16": {
-				var typedValue = (short) value;
+				var typedValue = (short)value;
 
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
 			case "Int32": {
-				var typedValue = (int) value;
+				var typedValue = (int)value;
 
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
 			case "Int64": {
-				var typedValue = (long) value;
+				var typedValue = (long)value;
 
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
 			case "SByte": {
-				var typedValue = (sbyte) value;
+				var typedValue = (sbyte)value;
 
 				return EvaluateFlagEnumValues(Convert.ToInt64(typedValue), enumType);
 			}
 
 			case "UInt16": {
-				var typedValue = (ushort) value;
+				var typedValue = (ushort)value;
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
 			case "UInt32": {
-				var typedValue = (uint) value;
+				var typedValue = (uint)value;
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
 			case "UInt64": {
-				var typedValue = (ulong) value;
-				return EvaluateFlagEnumValues((long) typedValue, enumType);
+				var typedValue = (ulong)value;
+				return EvaluateFlagEnumValues((long)typedValue, enumType);
 			}
 
 			default:
@@ -113,4 +115,13 @@ public class EnumValidator<T, TProperty> : PropertyValidator<T,TProperty> {
 	protected override string GetDefaultMessageTemplate(string errorCode) {
 		return Localized(errorCode, Name);
 	}
+}
+
+
+public interface IEnumValidator : IPropertyValidator {
+
+	/// <summary>
+	/// Enum type being validated.
+	/// </summary>
+	Type EnumType { get; }
 }
