@@ -398,6 +398,20 @@ public static class DefaultValidatorOptions {
 	}
 
 	/// <summary>
+	/// Applies an asynchronous filter to a collection property.
+	/// </summary>
+	/// <param name="rule">The current rule</param>
+	/// <param name="predicate">The condition</param>
+	/// <returns></returns>
+	public static IRuleBuilderInitialCollection<T, TCollectionElement> WhereAsync<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<TCollectionElement, Task<bool>> predicate) {
+		predicate.Guard("Cannot pass null to Where.", nameof(predicate));
+		// TODO: 12.x add AsyncFilter to ICollectionRule<T,TElement> to remove the cast.
+		var collectionRule = (CollectionPropertyRule<T, TCollectionElement>) Configurable(rule);
+		collectionRule.AsyncFilter = predicate;
+		return rule;
+	}
+
+	/// <summary>
 	/// Specifies a custom property name to use within the error message.
 	/// </summary>
 	/// <param name="rule">The current rule</param>

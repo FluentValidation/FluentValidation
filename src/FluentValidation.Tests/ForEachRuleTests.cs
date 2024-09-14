@@ -496,7 +496,29 @@ public class ForEachRuleTests {
 
 		var results = validator.Validate(_person);
 		results.Errors.Count.ShouldEqual(1);
+	}
 
+	[Fact]
+	public async Task Can_specify_condition_for_individual_collection_elements_async() {
+		var validator = new TestValidator {
+			v => v.RuleForEach(x => x.Orders)
+				.WhereAsync(x => Task.FromResult(x.ProductName != null))
+				.SetValidator(new OrderValidator())
+		};
+
+		var results = await validator.ValidateAsync(_person);
+		results.Errors.Count.ShouldEqual(1);
+	}
+
+	[Fact]
+	public void Throws_when_async_condition_for_individual_collection_elements_invoked_synchronously() {
+		var validator = new TestValidator {
+			v => v.RuleForEach(x => x.Orders)
+				.WhereAsync(x => Task.FromResult(x.ProductName != null))
+				.SetValidator(new OrderValidator())
+		};
+
+		Assert.Throws<AsyncValidatorInvokedSynchronouslyException>(() => validator.Validate(_person));
 	}
 
 	[Fact]
