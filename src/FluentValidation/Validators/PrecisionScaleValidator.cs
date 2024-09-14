@@ -30,6 +30,9 @@ using System;
 /// Scale would be the number of digits to the right of the decimal point.
 /// Precision would be the number of digits. This number includes both the left and the right sides of the decimal point.
 ///
+/// It implies certain range of values that will be accepted by the validator.
+/// It permits up to Precision - Scale digits to the left of the decimal point and up to Scale digits to the right.
+///
 /// It can be configured to use the effective scale and precision
 /// (i.e. ignore trailing zeros) if required.
 ///
@@ -67,11 +70,20 @@ public class PrecisionScaleValidator<T> : PropertyValidator<T, decimal> {
 		var actualIntegerDigits = precision - scale;
 		var expectedIntegerDigits = Precision - Scale;
 		if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
+			// Precision and scale alone may not be enough to describe why a value is invalid.
+			// For example, given an expected precision of 3 and scale of 2, the value "123" is invalid, even though precision
+			// is 3 and scale is 0. So as a workaround we can provide actual precision and scale as if value
+			// was "right-padded" with zeros to the amount of expected decimals, so that it would look like
+			// complement zeros were added in the decimal part for calculation of precision. In the above
+			// example actual precision and scale would be printed as 5 and 2 as if value was 123.00.
+			var printedActualScale = Math.Max(scale, Scale);
+			var printedActualPrecision = Math.Max(actualIntegerDigits, 1) + printedActualScale;
+
 			context.MessageFormatter
 				.AppendArgument("ExpectedPrecision", Precision)
 				.AppendArgument("ExpectedScale", Scale)
-				.AppendArgument("Digits", actualIntegerDigits < 0 ? 0 : actualIntegerDigits)
-				.AppendArgument("ActualScale", scale);
+				.AppendArgument("Digits", printedActualPrecision)
+				.AppendArgument("ActualScale", printedActualScale);
 
 			return false;
 		}

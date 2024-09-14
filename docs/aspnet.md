@@ -189,7 +189,7 @@ Instructions for this appraoch can be found in the `FluentValidation.AspNetCore`
 
 ### Using a Filter
 
-An alternative approach for perorming automatic validation is to use an Action Filter. This approach works asynchronously which mitigates the synchronous limitation of the Validation Pipeline approach (above). Support for this approach isn't provided out of the box, but you can use the 3rd party [SharpGrip.FluentValidation.AutoValidation](https://github.com/SharpGrip/FluentValidation.AutoValidation) package for this purpose. 
+An alternative approach for performing automatic validation is to use an Action Filter. This approach works asynchronously which mitigates the synchronous limitation of the Validation Pipeline approach (above). Support for this approach isn't provided out of the box, but you can use the 3rd party [SharpGrip.FluentValidation.AutoValidation](https://github.com/SharpGrip/FluentValidation.AutoValidation) package for this purpose. 
 
 ## Clientside Validation
 

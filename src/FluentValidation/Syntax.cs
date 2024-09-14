@@ -104,6 +104,7 @@ public interface IRuleBuilderOptionsConditions<T, out TProperty> : IRuleBuilder<
 /// <typeparam name="T"></typeparam>
 /// <typeparam name="TElement"></typeparam>
 public interface IRuleBuilderInitialCollection<T, TElement> : IRuleBuilder<T, TElement> {
+
 }
 
 /// <summary>

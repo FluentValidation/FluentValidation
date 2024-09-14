@@ -25,9 +25,9 @@ using FluentValidation.Internal;
 using Resources;
 
 public class StringEnumValidator<T> : PropertyValidator<T, string> {
-	private readonly Type _enumType;
 	private readonly bool _caseSensitive;
-
+	private readonly string[] _enumNames;
+ 
 	public override string Name => "StringEnumValidator";
 
 	public StringEnumValidator(Type enumType, bool caseSensitive) {
@@ -35,14 +35,14 @@ public class StringEnumValidator<T> : PropertyValidator<T, string> {
 
 		CheckTypeIsEnum(enumType);
 
-		_enumType = enumType;
 		_caseSensitive = caseSensitive;
+		_enumNames = Enum.GetNames(enumType);
 	}
 
 	public override bool IsValid(ValidationContext<T> context, string value) {
 		if (value == null) return true;
 		var comparison = _caseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
-		return Enum.GetNames(_enumType).Any(n => n.Equals(value, comparison));
+		return _enumNames.Any(n => n.Equals(value, comparison));
 	}
 
 	private void CheckTypeIsEnum(Type enumType) {

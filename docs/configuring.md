@@ -70,7 +70,11 @@ Now the error message would be *'Last name' must not be empty.*
 Note that this only replaces the name of the property in the error message. When you inspect the `Errors` collection on the `ValidationResult`, this error will still be associated with a property called `Surname`.
 If you want to completely rename the property, you can use the `OverridePropertyName` method instead.
 
-There is also an overload of `WithName` that accepts a lambda expression in a similar way to `WithMessage` in the previous section.
+There is also an overload of `WithName` that accepts a lambda expression in a similar way to `WithMessage` in the previous section:
+
+```csharp
+RuleFor(customer => customer.Surname).NotNull().WithName(customer => "Last name for customer " + customer.Id);
+```
 
 Property name resolution is also pluggable. By default, the name of the property extracted from the `MemberExpression` passed to `RuleFor`. If you want to change this logic, you can set the `DisplayNameResolver` property on the `ValidatorOptions` class:
 

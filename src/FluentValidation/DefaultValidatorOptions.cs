@@ -392,6 +392,18 @@ public static class DefaultValidatorOptions {
 	}
 
 	/// <summary>
+	/// Applies an asynchronous filter to a collection property.
+	/// </summary>
+	/// <param name="rule">The current rule</param>
+	/// <param name="predicate">The condition</param>
+	/// <returns></returns>
+	public static IRuleBuilderInitialCollection<T, TCollectionElement> WhereAsync<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<TCollectionElement, Task<bool>> predicate) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		Configurable(rule).AsyncFilter = predicate;
+		return rule;
+	}
+
+	/// <summary>
 	/// Specifies a custom property name to use within the error message.
 	/// </summary>
 	/// <param name="rule">The current rule</param>
