@@ -5,9 +5,10 @@ Removes deprecated DI extensions
 Removes deprecated transform methods (#2027)
 Remove the ability to disable the root-model null check (#2069)
 
-11.10.0 - 
+11.10.0 - 15 Sep 2024
 Add WhereAsync as conterpart to Where on collection rules (#2240)
 Create IEnumValidator to expose the targeted Enum type of EnumValidator (#2244)
+Add Romansh language translations (#2239)
 
 11.9.2 - 10 Jun 2024
 ScalePrecisionValidator error message clarification (#2211)
