@@ -8,10 +8,15 @@ The main goal of this release was removal of deprecated code and removal of supp
 
 ### Changes in supported platforms
 
-- .NET 5 is no longer supported (Microsoft's support for .NET 5 ended in November 2022)
-- .NET Core 3.1 is no longer supported (Microsoft's support for .NET Core 3.1 ended in December 2022)
-- .NET Standard is no longer support
-- .NET 6 is the minimum supported version 
+Support for the following platforms has been removed:
+
+- .NET Core 3.1 (Microsoft's support ended in December 2022)
+- .NET 5 (Microsoft's support ended in November 2022)
+- .NET 6 (Microsoft's support ended in November 2024)
+- .NET 7 (Microsoft's support ended in November 2024)
+- .NET Standard 2.0/2.1
+
+.NET 8 is now the minimum supported version.
 
 If you still need .NET Standard 2.0 compatibility then you will need to continue to use FluentValidation 11.x and only upgrade to FluentValidation 12 once you've moved to a more modern version of .NET.  
 
