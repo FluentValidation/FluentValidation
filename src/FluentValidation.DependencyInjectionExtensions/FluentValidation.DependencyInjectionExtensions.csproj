@@ -11,7 +11,8 @@
         </PackageReleaseNotes>
         <SignAssembly>True</SignAssembly>
         <DelaySign>False</DelaySign>
-        <DocumentationFile Condition="'$(Configuration)'=='Release'">bin\$(Configuration)\$(TargetFramework)\FluentValidation.DependencyInjectionExtensions.xml</DocumentationFile>
+
+        <GenerateDocumentationFile Condition="'$(Configuration)'=='Release'">true</GenerateDocumentationFile>
         <DebugType>embedded</DebugType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <EnablePackageValidation>true</EnablePackageValidation>
