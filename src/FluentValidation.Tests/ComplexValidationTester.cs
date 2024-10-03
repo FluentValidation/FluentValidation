@@ -296,7 +296,7 @@ public class ComplexValidationTester {
 			return base.Validate(context);
 		}
 
-		public override Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+		public override Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = default) {
 			WasCalledAsync = true;
 			return base.ValidateAsync(context, cancellation);
 		}

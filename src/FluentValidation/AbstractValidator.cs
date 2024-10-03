@@ -172,7 +172,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="instance">The object to validate</param>
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
-	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new())
+	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = default)
 		=> ValidateAsync(new ValidationContext<T>(instance, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 
 	/// <summary>
@@ -214,7 +214,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="context">Validation Context</param>
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures.</returns>
-	public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = new CancellationToken()) {
+	public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = default) {
 		if (context == null) throw new ArgumentNullException(nameof(context));
 		context.IsAsync = true;
 		return await ValidateInternalAsync(context, useAsync: true, cancellation);
