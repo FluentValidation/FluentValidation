@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FluentValidation.Resources;
+﻿namespace FluentValidation.Resources;
 
 internal class ThaiLanguage {
 	public const string Culture = "th";

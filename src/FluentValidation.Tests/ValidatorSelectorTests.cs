@@ -19,10 +19,8 @@
 namespace FluentValidation.Tests;
 
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Xunit;
 using System.Threading.Tasks;
-using Internal;
 
 public class ValidatorSelectorTests {
 
@@ -282,7 +280,7 @@ public class ValidatorSelectorTests {
 		result.Errors[1].PropertyName.ShouldEqual("Orders[1].Payments[1].Amount");
 		result.Errors[1].ErrorMessage.ShouldEqual("'Amount' must be greater than '0'.");
 	}
-	
+
 	private class TestObject {
 		public object SomeProperty { get; set; }
 		public object SomeOtherProperty { get; set; }

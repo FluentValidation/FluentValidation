@@ -20,14 +20,11 @@ namespace FluentValidation.Validators;
 
 using System;
 using System.Linq;
-using System.Reflection;
-using FluentValidation.Internal;
-using Resources;
 
 public class StringEnumValidator<T> : PropertyValidator<T, string> {
 	private readonly bool _caseSensitive;
 	private readonly string[] _enumNames;
- 
+
 	public override string Name => "StringEnumValidator";
 
 	public StringEnumValidator(Type enumType, bool caseSensitive) {

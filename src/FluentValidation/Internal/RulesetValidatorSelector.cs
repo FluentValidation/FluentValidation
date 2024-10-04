@@ -3,8 +3,6 @@ namespace FluentValidation.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using Validators;
 
 /// <summary>
 /// Selects validators that belong to the specified rulesets.
