@@ -7,8 +7,6 @@ FluentValidation 11 is a major release. Please read the upgrade guide at https:/
 
 Full release notes can be found at https://github.com/FluentValidation/FluentValidation/releases
     </PackageReleaseNotes>
-    <SignAssembly>True</SignAssembly>
-    <DelaySign>False</DelaySign>
     <GenerateDocumentationFile Condition="'$(Configuration)'=='Release'">true</GenerateDocumentationFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <EnablePackageValidation>true</EnablePackageValidation>
