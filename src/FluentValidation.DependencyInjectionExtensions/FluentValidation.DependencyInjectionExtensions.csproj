@@ -9,7 +9,6 @@
         <SignAssembly>True</SignAssembly>
         <DelaySign>False</DelaySign>
         <GenerateDocumentationFile Condition="'$(Configuration)'=='Release'">true</GenerateDocumentationFile>
-        <DebugType>embedded</DebugType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <EnablePackageValidation>true</EnablePackageValidation>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
