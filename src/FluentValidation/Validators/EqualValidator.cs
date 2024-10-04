@@ -68,8 +68,8 @@ public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqu
 
 	public Comparison Comparison => Comparison.Equal;
 
-	public MemberInfo MemberToCompare { get; private set; }
-	public TProperty ValueToCompare { get; private set; }
+	public MemberInfo MemberToCompare { get; }
+	public TProperty ValueToCompare { get; }
 
 	object IComparisonValidator.ValueToCompare => ValueToCompare;
 

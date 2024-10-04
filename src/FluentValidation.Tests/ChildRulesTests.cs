@@ -160,7 +160,7 @@ public class ChildRulesTests {
 		}
 
 		public class Foo {
-			public List<string> Names { get; set; } = new();
+			public List<string> Names { get; } = new();
 		}
 
 		public class Bar {
