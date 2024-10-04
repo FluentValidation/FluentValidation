@@ -19,7 +19,6 @@
 namespace FluentValidation.Validators;
 
 using System.Linq;
-using Resources;
 
 /// <summary>
 /// Ensures that the property value is a valid credit card number.
