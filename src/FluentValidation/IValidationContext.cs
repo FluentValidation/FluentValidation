@@ -131,7 +131,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <summary>
 	/// The object to validate
 	/// </summary>
-	public T InstanceToValidate { get; private set; }
+	public T InstanceToValidate { get; }
 
 	/// <summary>
 	/// Additional data associated with the validation request.
@@ -151,7 +151,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <summary>
 	/// Selector
 	/// </summary>
-	public IValidatorSelector Selector { get; private set; }
+	public IValidatorSelector Selector { get; }
 
 	/// <summary>
 	/// Whether this is a child context
