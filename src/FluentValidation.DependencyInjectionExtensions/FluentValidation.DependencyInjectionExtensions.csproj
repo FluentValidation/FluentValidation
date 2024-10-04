@@ -6,8 +6,6 @@
         <PackageReleaseNotes>
             Full release notes can be found at https://github.com/FluentValidation/FluentValidation/releases
         </PackageReleaseNotes>
-        <SignAssembly>True</SignAssembly>
-        <DelaySign>False</DelaySign>
         <GenerateDocumentationFile Condition="'$(Configuration)'=='Release'">true</GenerateDocumentationFile>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <EnablePackageValidation>true</EnablePackageValidation>

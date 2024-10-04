@@ -3,8 +3,6 @@
     <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <IsPackable>false</IsPackable>
     <OutputType>Library</OutputType>
-    <SignAssembly>True</SignAssembly>
-    <DelaySign>False</DelaySign>
   </PropertyGroup>
   <ItemGroup>
     <None Update="xunit.runner.json">
