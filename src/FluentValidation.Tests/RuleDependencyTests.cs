@@ -20,7 +20,6 @@ namespace FluentValidation.Tests;
 
 using System.Linq;
 using System.Threading.Tasks;
-using Internal;
 using Xunit;
 
 public class RuleDependencyTests {

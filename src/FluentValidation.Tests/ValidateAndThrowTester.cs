@@ -117,7 +117,7 @@ public class ValidateAndThrowTester {
 			v => v.RuleFor(x => x.Surname).NotNull()
 		};
 
-		var ex = (ValidationException) Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(new Person()));
+		var ex = Assert.Throws<ValidationException>(() => validator.ValidateAndThrow(new Person()));
 		ex.Errors.Count().ShouldEqual(1);
 	}
 

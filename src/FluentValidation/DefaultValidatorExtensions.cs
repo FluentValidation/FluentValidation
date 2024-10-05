@@ -1239,7 +1239,7 @@ public static partial class DefaultValidatorExtensions {
 		if (validatorConfiguration == null) throw new ArgumentNullException(nameof(validatorConfiguration));
 		var validator = new PolymorphicValidator<T, TProperty>();
 		validatorConfiguration(validator);
-		return ruleBuilder.SetAsyncValidator((IAsyncPropertyValidator<T, TProperty>) validator);
+		return ruleBuilder.SetAsyncValidator(validator);
 	}
 
 	private static string GetDisplayName<T, TProperty>(MemberInfo member, Expression<Func<T, TProperty>> expression)

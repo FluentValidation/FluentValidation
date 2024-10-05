@@ -111,7 +111,7 @@ public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValida
 	/// <summary>
 	/// Metadata- the member being compared
 	/// </summary>
-	public MemberInfo MemberToCompare { get; private set; }
+	public MemberInfo MemberToCompare { get; }
 
 	/// <summary>
 	/// The value being compared

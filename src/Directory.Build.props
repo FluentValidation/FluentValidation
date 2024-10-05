@@ -6,6 +6,7 @@
     <!--<VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)'!=''">ci-$(GITHUB_RUN_NUMBER)</VersionSuffix>-->
     <Authors>Jeremy Skinner</Authors>
     <LangVersion>10</LangVersion>
+    <DebugType>embedded</DebugType>
     <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
@@ -15,6 +16,7 @@
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <NeutralLanguage>en</NeutralLanguage>
+    <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)/../FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
     <PackageOutputPath>$(MSBuildProjectDirectory)/../../.build/packages</PackageOutputPath>
     <PackageValidationBaselineVersion>12.0.0</PackageValidationBaselineVersion>

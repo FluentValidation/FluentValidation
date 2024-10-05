@@ -199,7 +199,7 @@ public static class DefaultValidatorOptions {
 	public static IRuleBuilderOptions<T, TProperty> When<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 		ArgumentNullException.ThrowIfNull(predicate);
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-		Configurable(rule).ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx)), applyConditionTo);
+		Configurable(rule).ApplyCondition(ctx => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx)), applyConditionTo);
 		return rule;
 	}
 
@@ -214,7 +214,7 @@ public static class DefaultValidatorOptions {
 	public static IRuleBuilderOptionsConditions<T, TProperty> When<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 		ArgumentNullException.ThrowIfNull(predicate);
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-		Configurable(rule).ApplyCondition(ctx => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx)), applyConditionTo);
+		Configurable(rule).ApplyCondition(ctx => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx)), applyConditionTo);
 		return rule;
 	}
 
@@ -307,7 +307,7 @@ public static class DefaultValidatorOptions {
 	public static IRuleBuilderOptions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 		ArgumentNullException.ThrowIfNull(predicate);
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-		Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
+		Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
 		return rule;
 	}
 
@@ -322,7 +322,7 @@ public static class DefaultValidatorOptions {
 	public static IRuleBuilderOptionsConditions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
 		ArgumentNullException.ThrowIfNull(predicate);
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
-		Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate((T)ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
+		Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
 		return rule;
 	}
 

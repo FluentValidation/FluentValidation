@@ -22,7 +22,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation.Internal;
-using FluentValidation.Resources;
 
 /// <summary>
 /// Asynchronous custom validator
