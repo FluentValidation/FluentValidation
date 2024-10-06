@@ -363,7 +363,7 @@ public class ValidatorTesterTester {
 		}
 
 		var ex = Assert.Throws<ValidationTestException>(() =>
-			validator.TestValidate(new Person { }).ShouldHaveAnyValidationError().WithoutErrorMessage(withoutErrMsg));
+			validator.TestValidate(new Person { }).ShouldHaveValidationErrors().WithoutErrorMessage(withoutErrMsg));
 		ex.Message.ShouldEqual($"Found an unexpected error message of '{withoutErrMsg}'");
 	}
 
@@ -641,8 +641,8 @@ public class ValidatorTesterTester {
 		var person = new Person() { Surname = "c" };
 		var result = validator.TestValidate(person);
 
-		result.ShouldHaveAnyValidationError().WithErrorCode("nota");
-		result.ShouldHaveAnyValidationError().WithErrorCode("notb");
+		result.ShouldHaveValidationErrors().WithErrorCode("nota");
+		result.ShouldHaveValidationErrors().WithErrorCode("notb");
 	}
 
 	[Fact]
@@ -654,11 +654,11 @@ public class ValidatorTesterTester {
 		var resultWithFailure = validator.TestValidate(new Person { Surname = "foo"});
 		var resultWithoutFailure = validator.TestValidate(new Person { Surname = ""});
 
-		Assert.Throws<ValidationTestException>(() => resultWithoutFailure.ShouldHaveAnyValidationError());
+		Assert.Throws<ValidationTestException>(() => resultWithoutFailure.ShouldHaveValidationErrors());
 		Assert.Throws<ValidationTestException>(() => resultWithFailure.ShouldNotHaveAnyValidationErrors());
 
 		// Neither should throw.
-		resultWithFailure.ShouldHaveAnyValidationError();
+		resultWithFailure.ShouldHaveValidationErrors();
 		resultWithoutFailure.ShouldNotHaveAnyValidationErrors();
 	}
 

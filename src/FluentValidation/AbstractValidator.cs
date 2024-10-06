@@ -38,59 +38,6 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	private Func<CascadeMode> _classLevelCascadeMode = () => ValidatorOptions.Global.DefaultClassLevelCascadeMode;
 	private Func<CascadeMode> _ruleLevelCascadeMode = () => ValidatorOptions.Global.DefaultRuleLevelCascadeMode;
 
-#pragma warning disable 618
-	/// <summary>
-	/// <para>
-	/// Gets a single <see cref="CascadeMode"/> mode value representing the default values of
-	/// <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
-	/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>., based on the same logic as used when setting
-	/// this property as described below.
-	/// </para>
-	/// <para>
-	/// Sets the values of <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
-	/// and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
-	/// </para>
-	/// <para>
-	/// If set to <see cref="FluentValidation.CascadeMode.Continue"/> or <see cref="FluentValidation.CascadeMode.Stop"/>, then both properties are set
-	/// to that value.
-	/// </para>
-	/// <para>
-	/// If set to the deprecated <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>,
-	/// then <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>
-	/// is set to <see cref="FluentValidation.CascadeMode.Continue"/>, and <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>
-	/// is set to <see cref="FluentValidation.CascadeMode.Stop"/>.
-	/// This results in the same behaviour as before this property was deprecated.
-	/// </para>
-	/// </summary>
-	[Obsolete($"Use {nameof(ClassLevelCascadeMode)} and/or {nameof(RuleLevelCascadeMode)} instead. " +
-	          "CascadeMode will be removed in a future release. " +
-	          "For more details, see https://docs.fluentvalidation.net/en/latest/cascade.html")]
-	public CascadeMode CascadeMode {
-		get {
-			if (ClassLevelCascadeMode == RuleLevelCascadeMode) {
-				return ClassLevelCascadeMode;
-			}
-			else if (ClassLevelCascadeMode == CascadeMode.Continue && RuleLevelCascadeMode == CascadeMode.Stop) {
-				return CascadeMode.StopOnFirstFailure;
-			}
-			else {
-				throw new Exception(
-					$"There is no conversion to a single {nameof(CascadeMode)} value from the current combination of " +
-					$"{nameof(ClassLevelCascadeMode)} and {nameof(RuleLevelCascadeMode)}. " +
-					$"Please use these properties instead of the deprecated {nameof(CascadeMode)} going forward.");
-			}
-		}
-		set {
-			ClassLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
-				? CascadeMode.Continue
-				: value;
-
-			RuleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
-				? CascadeMode.Stop
-				: value;
-		}
-	}
-
 	/// <summary>
 	/// <para>
 	/// Sets the cascade behaviour <i>in between</i> rules in this validator.
@@ -106,17 +53,10 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// Note that cascade behaviour <i>within</i> individual rules is controlled by
 	/// <see cref="AbstractValidator{T}.RuleLevelCascadeMode"/>.
 	/// </para>
-	/// <para>
-	/// This cannot be set to the deprecated <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>.
-	/// <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>. Attempting to do so will actually
-	/// result in <see cref="FluentValidation.CascadeMode.Stop"/> being used.
-	/// </para>
 	/// </summary>
 	public CascadeMode ClassLevelCascadeMode {
 		get => _classLevelCascadeMode();
-		set => _classLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
-			? () => CascadeMode.Stop
-			: () => value;
+		set => _classLevelCascadeMode = () => value;
 	}
 
 	/// <summary>
@@ -134,27 +74,19 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <para>
 	/// Note that cascade behaviour <i>between</i> rules is controlled by <see cref="AbstractValidator{T}.ClassLevelCascadeMode"/>.
 	/// </para>
-	/// <para>
-	/// This cannot be set to the deprecated <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>.
-	/// <see cref="FluentValidation.CascadeMode.StopOnFirstFailure"/>. Attempting to do so it will actually
-	/// result in <see cref="FluentValidation.CascadeMode.Stop"/> being used.
-	/// </para>
 	/// </summary>
 	public CascadeMode RuleLevelCascadeMode {
 		get => _ruleLevelCascadeMode();
-		set => _ruleLevelCascadeMode = value == CascadeMode.StopOnFirstFailure
-			? () => CascadeMode.Stop
-			: () => value;
+		set => _ruleLevelCascadeMode = () => value;
 	}
 
-#pragma warning restore 618
 	ValidationResult IValidator.Validate(IValidationContext context) {
-		context.Guard("Cannot pass null to Validate", nameof(context));
+		ArgumentNullException.ThrowIfNull(context);
 		return Validate(ValidationContext<T>.GetFromNonGenericContext(context));
 	}
 
 	Task<ValidationResult> IValidator.ValidateAsync(IValidationContext context, CancellationToken cancellation) {
-		context.Guard("Cannot pass null to Validate", nameof(context));
+		ArgumentNullException.ThrowIfNull(context);
 		return ValidateAsync(ValidationContext<T>.GetFromNonGenericContext(context), cancellation);
 	}
 
@@ -172,7 +104,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="instance">The object to validate</param>
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures</returns>
-	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = default)
+	public Task<ValidationResult> ValidateAsync(T instance, CancellationToken cancellation = new())
 		=> ValidateAsync(new ValidationContext<T>(instance, null, ValidatorOptions.Global.ValidatorSelectors.DefaultValidatorSelectorFactory()), cancellation);
 
 	/// <summary>
@@ -181,7 +113,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="context">Validation Context</param>
 	/// <returns>A ValidationResult object containing any validation failures.</returns>
 	public virtual ValidationResult Validate(ValidationContext<T> context) {
-		if (context == null) throw new ArgumentNullException(nameof(context));
+		ArgumentNullException.ThrowIfNull(context);
 
 		// Note: Sync-over-async is OK in this scenario.
 		// The use of the `useAsync` parameter ensures that no async code is
@@ -215,7 +147,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures.</returns>
 	public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = default) {
-		if (context == null) throw new ArgumentNullException(nameof(context));
+		ArgumentNullException.ThrowIfNull(context);
 		context.IsAsync = true;
 		return await ValidateInternalAsync(context, useAsync: true, cancellation);
 	}
@@ -232,9 +164,9 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 			return result;
 		}
 
-#pragma warning disable CS0618
-		EnsureInstanceNotNull(context.InstanceToValidate);
-#pragma warning restore CS0618
+		if (context.InstanceToValidate == null) {
+			throw new InvalidOperationException("Cannot pass a null model to Validate/ValidateAsync. The root model must be non-null.");
+		}
 
 		int count = Rules.Count;
 
@@ -276,7 +208,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	public virtual IValidatorDescriptor CreateDescriptor() => new ValidatorDescriptor<T>(Rules);
 
 	bool IValidator.CanValidateInstancesOfType(Type type) {
-		if (type == null) throw new ArgumentNullException(nameof(type));
+		ArgumentNullException.ThrowIfNull(type);
 		return typeof(T).IsAssignableFrom(type);
 	}
 
@@ -290,53 +222,12 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="expression">The expression representing the property to validate</param>
 	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 	public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
-		expression.Guard("Cannot pass null to RuleFor", nameof(expression));
+		ArgumentNullException.ThrowIfNull(expression);
 		var rule = PropertyRule<T, TProperty>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
 		return new RuleBuilder<T, TProperty>(rule, this);
 	}
-
-	/// <summary>
-	/// Defines a validation rule for a specify property and transform it to a different type.
-	/// </summary>
-	/// <example>
-	/// Transform(x => x.OrderNumber, to: orderNumber => orderNumber.ToString())...
-	/// </example>
-	/// <typeparam name="TProperty">The type of property being validated</typeparam>
-	/// <typeparam name="TTransformed">The type after the transformer has been applied</typeparam>
-	/// <param name="from">The expression representing the property to transform</param>
-	/// <param name="to">Function to transform the property value into a different type</param>
-	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
-	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<TProperty, TTransformed> to) {
-		from.Guard("Cannot pass null to Transform", nameof(from));
-		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
-		Rules.Add(rule);
-		OnRuleAdded(rule);
-		return new RuleBuilder<T, TTransformed>(rule, this);
-	}
-
-	/// <summary>
-	/// Defines a validation rule for a specify property and transform it to a different type.
-	/// </summary>
-	/// <example>
-	/// Transform(x => x.OrderNumber, to: orderNumber => orderNumber.ToString())...
-	/// </example>
-	/// <typeparam name="TProperty">The type of property being validated</typeparam>
-	/// <typeparam name="TTransformed">The type after the transformer has been applied</typeparam>
-	/// <param name="from">The expression representing the property to transform</param>
-	/// <param name="to">Function to transform the property value into a different type</param>
-	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
-	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
-		from.Guard("Cannot pass null to Transform", nameof(from));
-		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
-		Rules.Add(rule);
-		OnRuleAdded(rule);
-		return new RuleBuilder<T, TTransformed>(rule, this);
-	}
-
 
 	/// <summary>
 	/// Invokes a rule for each item in the collection.
@@ -345,45 +236,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="expression">Expression representing the collection to validate</param>
 	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 	public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
-		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
+		ArgumentNullException.ThrowIfNull(expression);
 		var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
 		return new RuleBuilder<T, TElement>(rule, this);
-	}
-
-	/// <summary>
-	/// Invokes a rule for each item in the collection, transforming the element from one type to another.
-	/// </summary>
-	/// <typeparam name="TElement">Type of property</typeparam>
-	/// <typeparam name="TTransformed">The type after the transformer has been applied</typeparam>
-	/// <param name="expression">Expression representing the collection to validate</param>
-	/// <param name="to">Function to transform the collection element into a different type</param>
-	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
-	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
-	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
-		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
-		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
-		Rules.Add(rule);
-		OnRuleAdded(rule);
-		return new RuleBuilder<T, TTransformed>(rule, this);
-	}
-
-	/// <summary>
-	/// Invokes a rule for each item in the collection, transforming the element from one type to another.
-	/// </summary>
-	/// <typeparam name="TElement">Type of property</typeparam>
-	/// <typeparam name="TTransformed">The type after the transformer has been applied</typeparam>
-	/// <param name="expression">Expression representing the collection to validate</param>
-	/// <param name="to">Function to transform the collection element into a different type</param>
-	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
-	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
-	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
-		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
-		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
-		Rules.Add(rule);
-		OnRuleAdded(rule);
-		return new RuleBuilder<T, TTransformed>(rule, this);
 	}
 
 	/// <summary>
@@ -392,8 +249,8 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="ruleSetName">The name of the ruleset.</param>
 	/// <param name="action">Action that encapsulates the rules in the ruleset.</param>
 	public void RuleSet(string ruleSetName, Action action) {
-		ruleSetName.Guard("A name must be specified when calling RuleSet.", nameof(ruleSetName));
-		action.Guard("A ruleset definition must be specified when calling RuleSet.", nameof(action));
+		ExtensionsInternal.ThrowIfNullOrEmpty(ruleSetName);
+		ArgumentNullException.ThrowIfNull(action);
 
 		var ruleSetNames = ruleSetName.Split(',', ';')
 			.Select(x => x.Trim())
@@ -410,8 +267,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="predicate">The condition that should apply to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
-	public IConditionBuilder When(Func<T, bool> predicate, Action action)
-		=> When((x, _) => predicate(x), action);
+	public IConditionBuilder When(Func<T, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return When((x, _) => predicate(x), action);
+	}
 
 	/// <summary>
 	/// Defines a condition that applies to several rules
@@ -419,24 +279,33 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="predicate">The condition that should apply to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
-	public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action)
-		=> new ConditionBuilder<T>(Rules).When(predicate, action);
+	public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return new ConditionBuilder<T>(Rules).When(predicate, action);
+	}
 
 	/// <summary>
 	/// Defines an inverse condition that applies to several rules
 	/// </summary>
 	/// <param name="predicate">The condition that should be applied to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules</param>
-	public IConditionBuilder Unless(Func<T, bool> predicate, Action action)
-		=> Unless((x, _) => predicate(x), action);
+	public IConditionBuilder Unless(Func<T, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return Unless((x, _) => predicate(x), action);
+	}
 
 	/// <summary>
 	/// Defines an inverse condition that applies to several rules
 	/// </summary>
 	/// <param name="predicate">The condition that should be applied to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules</param>
-	public IConditionBuilder Unless(Func<T, ValidationContext<T>, bool> predicate, Action action)
-		=> new ConditionBuilder<T>(Rules).Unless(predicate, action);
+	public IConditionBuilder Unless(Func<T, ValidationContext<T>, bool> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return new ConditionBuilder<T>(Rules).Unless(predicate, action);
+	}
 
 	/// <summary>
 	/// Defines an asynchronous condition that applies to several rules
@@ -444,8 +313,11 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
-	public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action)
-		=> WhenAsync((x, _, cancel) => predicate(x, cancel), action);
+	public IConditionBuilder WhenAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return WhenAsync((x, _, cancel) => predicate(x, cancel), action);
+	}
 
 	/// <summary>
 	/// Defines an asynchronous condition that applies to several rules
@@ -453,30 +325,39 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="predicate">The asynchronous condition that should apply to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules.</param>
 	/// <returns></returns>
-	public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action)
-		=> new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
+	public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return new AsyncConditionBuilder<T>(Rules).WhenAsync(predicate, action);
+	}
 
 	/// <summary>
 	/// Defines an inverse asynchronous condition that applies to several rules
 	/// </summary>
 	/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules</param>
-	public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action)
-		=> UnlessAsync((x, _, cancel) => predicate(x, cancel), action);
+	public IConditionBuilder UnlessAsync(Func<T, CancellationToken, Task<bool>> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return UnlessAsync((x, _, cancel) => predicate(x, cancel), action);
+	}
 
 	/// <summary>
 	/// Defines an inverse asynchronous condition that applies to several rules
 	/// </summary>
 	/// <param name="predicate">The asynchronous condition that should be applied to multiple rules</param>
 	/// <param name="action">Action that encapsulates the rules</param>
-	public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action)
-		=> new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
+	public IConditionBuilder UnlessAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
+		ArgumentNullException.ThrowIfNull(predicate);
+		ArgumentNullException.ThrowIfNull(action);
+		return new AsyncConditionBuilder<T>(Rules).UnlessAsync(predicate, action);
+	}
 
 	/// <summary>
 	/// Includes the rules from the specified validator
 	/// </summary>
 	public void Include(IValidator<T> rulesToInclude) {
-		rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
+		ArgumentNullException.ThrowIfNull(rulesToInclude);
 		var rule = IncludeRule<T>.Create(rulesToInclude, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -486,7 +367,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// Includes the rules from the specified validator
 	/// </summary>
 	public void Include<TValidator>(Func<T, TValidator> rulesToInclude) where TValidator : IValidator<T> {
-		rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
+		ArgumentNullException.ThrowIfNull(rulesToInclude);
 		var rule = IncludeRule<T>.Create(rulesToInclude, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -504,15 +385,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 	/// <summary>
-	/// Throws an exception if the instance being validated is null.
-	/// </summary>
-	/// <param name="instanceToValidate"></param>
-	[Obsolete("Overriding the EnsureInstanceNotNull method to prevent FluentValidation for throwing an exception for null root models is no longer supported or recommended. The ability to override this method will be removed in FluentValidation 12. For details, see https://github.com/FluentValidation/FluentValidation/issues/2069")]
-	protected virtual void EnsureInstanceNotNull(object instanceToValidate)
-		=> instanceToValidate.Guard("Cannot pass null model to Validate.", nameof(instanceToValidate));
-
-	/// <summary>
-	/// Determines if validation should occur and provides a means to modify the context and ValidationResult prior to execution.
+	/// Determines if validation should occtur and provides a means to modify the context and ValidationResult prior to execution.
 	/// If this method returns false, then the ValidationResult is immediately returned from Validate/ValidateAsync.
 	/// </summary>
 	/// <param name="context"></param>

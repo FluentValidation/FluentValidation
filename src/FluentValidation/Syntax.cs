@@ -92,6 +92,10 @@ public interface IRuleBuilderOptions<T, out TProperty> : IRuleBuilder<T, TProper
 /// <typeparam name="T"></typeparam>
 /// <typeparam name="TProperty"></typeparam>
 public interface IRuleBuilderOptionsConditions<T, out TProperty> : IRuleBuilder<T, TProperty> {
+	/// <summary>
+	/// Creates a scope for declaring dependent rules.
+	/// </summary>
+	IRuleBuilderOptionsConditions<T, TProperty> DependentRules(Action action);
 }
 
 /// <summary>
@@ -100,6 +104,7 @@ public interface IRuleBuilderOptionsConditions<T, out TProperty> : IRuleBuilder<
 /// <typeparam name="T"></typeparam>
 /// <typeparam name="TElement"></typeparam>
 public interface IRuleBuilderInitialCollection<T, TElement> : IRuleBuilder<T, TElement> {
+
 }
 
 /// <summary>
