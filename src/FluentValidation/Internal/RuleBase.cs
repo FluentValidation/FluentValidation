@@ -16,6 +16,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
 namespace FluentValidation.Internal;
 
 using System;
@@ -31,14 +32,14 @@ using Validators;
 internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TValue> {
 	private readonly List<RuleComponent<T, TValue>> _components = new();
 	private Func<CascadeMode> _cascadeModeThunk;
-	private string _propertyDisplayName;
-	private string _propertyName;
-	private Func<ValidationContext<T>, bool> _condition;
-	private Func<ValidationContext<T>, CancellationToken, Task<bool>> _asyncCondition;
-	private string _displayName;
-	private Func<ValidationContext<T>, string> _displayNameFactory;
+	private string? _propertyDisplayName;
+	private string? _propertyName;
+	private Func<ValidationContext<T>, bool>? _condition;
+	private Func<ValidationContext<T>, CancellationToken, Task<bool>>? _asyncCondition;
+	private string? _displayName;
+	private Func<ValidationContext<T>?, string>? _displayNameFactory;
 
-	protected readonly Func<ValidationContext<T>, string> _displayNameFunc;
+	protected readonly Func<ValidationContext<T>, string?> _displayNameFunc;
 
 	public List<RuleComponent<T, TValue>> Components => _components;
 
@@ -48,12 +49,12 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// <summary>
 	/// Condition for all validators in this rule.
 	/// </summary>
-	internal Func<ValidationContext<T>, bool> Condition => _condition;
+	internal Func<ValidationContext<T>, bool>? Condition => _condition;
 
 	/// <summary>
 	/// Asynchronous condition for all validators in this rule.
 	/// </summary>
-	internal Func<ValidationContext<T>, CancellationToken, Task<bool>> AsyncCondition => _asyncCondition;
+	internal Func<ValidationContext<T>, CancellationToken, Task<bool>>? AsyncCondition => _asyncCondition;
 
 	/// <summary>
 	/// Property associated with this rule.
@@ -83,7 +84,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// Sets the display name for the property using a function.
 	/// </summary>
 	/// <param name="factory">The function for building the display name</param>
-	public void SetDisplayName(Func<ValidationContext<T>, string> factory) {
+	public void SetDisplayName(Func<ValidationContext<T>?, string> factory) {
 		if (factory == null) throw new ArgumentNullException(nameof(factory));
 		_displayNameFactory = factory;
 		_displayName = null;
@@ -92,12 +93,12 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// <summary>
 	/// Rule set that this rule belongs to (if specified)
 	/// </summary>
-	public string[] RuleSets { get; set; }
+	public string[]? RuleSets { get; set; }
 
 	/// <summary>
 	/// The current rule component.
 	/// </summary>
-	public IRuleComponent<T, TValue> Current => _components.LastOrDefault();
+	public IRuleComponent<T, TValue>? Current => _components.LastOrDefault();
 
 	/// <summary>
 	/// Type of the property being validated
@@ -152,7 +153,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 		_components.Add(component);
 	}
 
-	public void AddAsyncValidator(IAsyncPropertyValidator<T, TValue> asyncValidator, IPropertyValidator<T, TValue> fallback = null) {
+	public void AddAsyncValidator(IAsyncPropertyValidator<T, TValue> asyncValidator, IPropertyValidator<T, TValue>? fallback = null) {
 		var component = new RuleComponent<T, TValue>(asyncValidator, fallback);
 		_components.Add(component);
 	}
@@ -186,7 +187,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// Returns the property name for the property being validated.
 	/// Returns null if it is not a property being validated (eg a method call)
 	/// </summary>
-	public string PropertyName {
+	public string? PropertyName {
 		get { return _propertyName; }
 		set {
 			_propertyName = value;
@@ -197,22 +198,22 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// <summary>
 	/// Allows custom creation of an error message
 	/// </summary>
-	public Func<IMessageBuilderContext<T, TValue>, string> MessageBuilder { get; set; }
+	public Func<IMessageBuilderContext<T, TValue>, string>? MessageBuilder { get; set; }
 
 	/// <summary>
 	/// Dependent rules
 	/// </summary>
-	internal List<IValidationRuleInternal<T>> DependentRules { get; private protected set; }
+	internal List<IValidationRuleInternal<T>>? DependentRules { get; private protected set; }
 
-	IEnumerable<IValidationRule> IValidationRule.DependentRules => DependentRules;
+	IEnumerable<IValidationRule>? IValidationRule.DependentRules => DependentRules;
 
-	string IValidationRule.GetDisplayName(IValidationContext context) =>
+	string? IValidationRule.GetDisplayName(IValidationContext? context) =>
 		GetDisplayName(context != null ? ValidationContext<T>.GetFromNonGenericContext(context) : null);
 
 	/// <summary>
 	/// Display name for the property.
 	/// </summary>
-	public string GetDisplayName(ValidationContext<T> context)
+	public string? GetDisplayName(ValidationContext<T>? context)
 		=> _displayNameFactory?.Invoke(context) ?? _displayName ?? _propertyDisplayName;
 
 	/// <summary>
@@ -234,7 +235,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 			}
 		}
 		else {
-			Current.ApplyCondition(predicate);
+			Current?.ApplyCondition(predicate);
 		}
 	}
 
@@ -257,7 +258,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 			}
 		}
 		else {
-			Current.ApplyAsyncCondition(predicate);
+			Current?.ApplyAsyncCondition(predicate);
 		}
 	}
 
@@ -281,7 +282,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 		}
 	}
 
-	object IValidationRule<T>.GetPropertyValue(T instance) => PropertyFunc(instance);
+	object? IValidationRule<T>.GetPropertyValue(T instance) => PropertyFunc(instance);
 
 	/// <summary>
 	/// Prepares the <see cref="MessageFormatter"/> of <paramref name="context"/> for an upcoming <see cref="ValidationFailure"/>.

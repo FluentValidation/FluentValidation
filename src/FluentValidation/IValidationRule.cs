@@ -16,6 +16,7 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
 namespace FluentValidation;
 
 using System;
@@ -43,7 +44,7 @@ public interface IValidationRule<T, out TProperty> : IValidationRule<T> {
 	/// Sets the display name for the property using a function.
 	/// </summary>
 	/// <param name="factory">The function for building the display name</param>
-	void SetDisplayName(Func<ValidationContext<T>, string> factory);
+	void SetDisplayName(Func<ValidationContext<T>?, string> factory);
 
 	/// <summary>
 	/// Adds a validator to this rule.
@@ -55,17 +56,17 @@ public interface IValidationRule<T, out TProperty> : IValidationRule<T> {
 	/// </summary>
 	/// <param name="asyncValidator">The async property validator to invoke</param>
 	/// <param name="fallback">A synchronous property validator to use as a fallback if executed synchronously. This parameter is optional. If omitted, the async validator will be called synchronously if needed.</param>
-	void AddAsyncValidator(IAsyncPropertyValidator<T, TProperty> asyncValidator, IPropertyValidator<T, TProperty> fallback = null);
+	void AddAsyncValidator(IAsyncPropertyValidator<T, TProperty> asyncValidator, IPropertyValidator<T, TProperty>? fallback = null);
 
 	/// <summary>
 	/// The current rule component.
 	/// </summary>
-	IRuleComponent<T,TProperty> Current { get; }
+	IRuleComponent<T,TProperty>? Current { get; }
 
 	/// <summary>
 	/// Allows custom creation of an error message
 	/// </summary>
-	public Func<IMessageBuilderContext<T,TProperty>, string> MessageBuilder { set; }
+	public Func<IMessageBuilderContext<T,TProperty>, string>? MessageBuilder { set; }
 }
 
 public interface IValidationRule<T> : IValidationRule {
@@ -105,7 +106,7 @@ public interface IValidationRule<T> : IValidationRule {
 	/// </summary>
 	/// <param name="instance">The model from which the property value should be retrieved.</param>
 	/// <returns>The property value.</returns>
-	object GetPropertyValue(T instance);
+	object? GetPropertyValue(T instance);
 }
 
 /// <summary>
@@ -119,20 +120,20 @@ public interface IValidationRule {
 	/// <summary>
 	/// Name of the rule-set to which this rule belongs.
 	/// </summary>
-	string[] RuleSets { get; set; }
+	string[]? RuleSets { get; set; }
 
 	/// <summary>
 	/// Gets the display name for the property.
 	/// </summary>
 	/// <param name="context">Current context</param>
 	/// <returns>Display name</returns>
-	string GetDisplayName(IValidationContext context);
+	string? GetDisplayName(IValidationContext? context);
 
 	/// <summary>
 	/// Returns the property name for the property being validated.
 	/// Returns null if it is not a property being validated (eg a method call)
 	/// </summary>
-	public string PropertyName { get; set; }
+	public string? PropertyName { get; set; }
 
 	/// <summary>
 	/// Property associated with this rule.
@@ -162,6 +163,6 @@ public interface IValidationRule {
 	/// <summary>
 	/// Dependent rules.
 	/// </summary>
-	IEnumerable<IValidationRule> DependentRules { get; }
+	IEnumerable<IValidationRule>? DependentRules { get; }
 
 }
