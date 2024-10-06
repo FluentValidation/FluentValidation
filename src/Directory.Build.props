@@ -5,7 +5,7 @@
     <!-- Use CI build number as version suffix (if defined) -->
     <!--<VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)'!=''">ci-$(GITHUB_RUN_NUMBER)</VersionSuffix>-->
     <Authors>Jeremy Skinner</Authors>
-    <LangVersion>10</LangVersion>
+    <LangVersion>12</LangVersion>
     <DebugType>embedded</DebugType>
     <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -17,8 +17,8 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <NeutralLanguage>en</NeutralLanguage>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(MSBuildProjectDirectory)/../FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
-    <PackageOutputPath>$(MSBuildProjectDirectory)/../../.build/packages</PackageOutputPath>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)../.build/packages</PackageOutputPath>
     <PackageValidationBaselineVersion>12.0.0</PackageValidationBaselineVersion>
   </PropertyGroup>
   <ItemGroup>
