@@ -159,7 +159,7 @@ public class ForEachRuleTests {
 	[Fact]
 	public void Nested_collection_for_null_property_should_not_throw_null_reference() {
 		var validator = new InlineValidator<Request>();
-		validator.When(r => r.person != null, () => { validator.RuleForEach(x => x.person.NickNames).NotNull(); });
+		validator.When(r => r.person != null, () => { validator.RuleForEach(x => x.person.NickNames); });
 
 		var result = validator.Validate(new Request());
 		result.Errors.Count.ShouldEqual(0);

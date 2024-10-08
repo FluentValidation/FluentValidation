@@ -22,6 +22,7 @@ namespace FluentValidation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -289,6 +290,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <typeparam name="TProperty">The type of property being validated</typeparam>
 	/// <param name="expression">The expression representing the property to validate</param>
 	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
+	[Pure]
 	public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
 		expression.Guard("Cannot pass null to RuleFor", nameof(expression));
 		var rule = PropertyRule<T, TProperty>.Create(expression, () => RuleLevelCascadeMode);
@@ -344,6 +346,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <typeparam name="TElement">Type of property</typeparam>
 	/// <param name="expression">Expression representing the collection to validate</param>
 	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
+	[Pure]
 	public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
 		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
 		var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => RuleLevelCascadeMode);
