@@ -27,12 +27,12 @@ using System.Text.RegularExpressions;
 /// <summary>
 /// Selects validators that are associated with a particular property.
 /// </summary>
-public class MemberNameValidatorSelector : IValidatorSelector {
+public partial class MemberNameValidatorSelector : IValidatorSelector {
 	internal const string DisableCascadeKey = "_FV_DisableSelectorCascadeForChildRules";
 	readonly IEnumerable<string> _memberNames;
 
-	// Regex for normalizing collection indicies from Orders[0].Name to Orders[].Name
-	private static Regex _collectionIndexNormalizer = new Regex(@"\[.*?\]", RegexOptions.Compiled);
+	[GeneratedRegex(@"\[.*?\]")]
+	private static partial Regex CollectionIndexNormalizer();
 
 	/// <summary>
 	/// Creates a new instance of MemberNameValidatorSelector.
@@ -116,7 +116,7 @@ public class MemberNameValidatorSelector : IValidatorSelector {
 			if (memberName.Contains("[]")) {
 				if (normalizedPropertyPath == null) {
 					// Normalize the property path using a regex. Orders[0].Name -> Orders[].Name.
-					normalizedPropertyPath = _collectionIndexNormalizer.Replace(propertyPath, "[]");
+					normalizedPropertyPath = CollectionIndexNormalizer().Replace(propertyPath, "[]");
 				}
 
 				if (memberName == normalizedPropertyPath) {
