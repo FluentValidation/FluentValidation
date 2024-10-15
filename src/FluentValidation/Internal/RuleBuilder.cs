@@ -64,7 +64,7 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator, params string[] ruleSets) {
-		validator.Guard("Cannot pass a null validator to SetValidator", nameof(validator));
+		ArgumentNullException.ThrowIfNull(validator);
 		var adaptor = new ChildValidatorAdaptor<T,TProperty>(validator, validator.GetType()) {
 			RuleSets = ruleSets
 		};
@@ -74,7 +74,7 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TValidator> validatorProvider, params string[] ruleSets) where TValidator : IValidator<TProperty> {
-		validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
+		ArgumentNullException.ThrowIfNull(validatorProvider);
 		var adaptor = new ChildValidatorAdaptor<T,TProperty>((context, _) => validatorProvider(context.InstanceToValidate), typeof (TValidator)) {
 			RuleSets = ruleSets
 		};
@@ -84,7 +84,7 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TProperty, TValidator> validatorProvider, params string[] ruleSets) where TValidator : IValidator<TProperty> {
-		validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
+		ArgumentNullException.ThrowIfNull(validatorProvider);
 		var adaptor = new ChildValidatorAdaptor<T,TProperty>((context, val) => validatorProvider(context.InstanceToValidate, val), typeof (TValidator)) {
 			RuleSets = ruleSets
 		};
@@ -94,6 +94,16 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	IRuleBuilderOptions<T, TProperty> IRuleBuilderOptions<T, TProperty>.DependentRules(Action action) {
+		DependentRulesInternal(action);
+		return this;
+	}
+
+	IRuleBuilderOptionsConditions<T, TProperty> IRuleBuilderOptionsConditions<T, TProperty>.DependentRules(Action action) {
+		DependentRulesInternal(action);
+		return this;
+	}
+
+	private void DependentRulesInternal(Action action) {
 		var dependencyContainer = new List<IValidationRuleInternal<T>>();
 		// Capture any rules added to the parent validator inside this delegate.
 		using (ParentValidator.Rules.Capture(dependencyContainer.Add)) {
@@ -109,10 +119,10 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 		}
 
 		Rule.AddDependentRules(dependencyContainer);
-		return this;
 	}
 
 	public void AddComponent(RuleComponent<T,TProperty> component) {
 		Rule.Components.Add(component);
 	}
+
 }

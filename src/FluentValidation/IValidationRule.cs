@@ -34,12 +34,6 @@ public interface IValidationRule<T, out TProperty> : IValidationRule<T> {
 	public CascadeMode CascadeMode { get; set; }
 
 	/// <summary>
-	/// Sets the display name for the property.
-	/// </summary>
-	/// <param name="name">The property's display name</param>
-	void SetDisplayName(string name);
-
-	/// <summary>
 	/// Sets the display name for the property using a function.
 	/// </summary>
 	/// <param name="factory">The function for building the display name</param>
@@ -106,6 +100,17 @@ public interface IValidationRule<T> : IValidationRule {
 	/// <param name="instance">The model from which the property value should be retrieved.</param>
 	/// <returns>The property value.</returns>
 	object GetPropertyValue(T instance);
+
+	/// <summary>
+	/// Attempts to get the value of a property from the specified instance.
+	/// </summary>
+	/// <typeparam name="TProp">The type of the property to retrieve.</typeparam>
+	/// <param name="instance">The instance from which to retrieve the property value.</param>
+	/// <param name="value">When this method returns, contains the value of the property, if the retrieval was successful; otherwise, the default value for the type of the property.</param>
+	/// <returns>
+	/// true if the property value was successfully retrieved and is of type <typeparamref name="TProp"/>; otherwise, false.
+	/// </returns>
+	bool TryGetPropertyValue<TProp>(T instance, out TProp value);
 }
 
 /// <summary>
@@ -127,6 +132,12 @@ public interface IValidationRule {
 	/// <param name="context">Current context</param>
 	/// <returns>Display name</returns>
 	string GetDisplayName(IValidationContext context);
+
+	/// <summary>
+	/// Sets the display name for the property.
+	/// </summary>
+	/// <param name="name">The property's display name</param>
+	void SetDisplayName(string name);
 
 	/// <summary>
 	/// Returns the property name for the property being validated.

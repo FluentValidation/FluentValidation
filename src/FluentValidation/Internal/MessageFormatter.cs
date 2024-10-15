@@ -23,10 +23,11 @@ using System.Text.RegularExpressions;
 /// <summary>
 /// Assists in the construction of validation messages.
 /// </summary>
-public class MessageFormatter {
+public partial class MessageFormatter {
 	readonly Dictionary<string, object> _placeholderValues = new(2);
 
-	private static readonly Regex _keyRegex = new Regex("{([^{}:]+)(?::([^{}]+))?}", RegexOptions.Compiled);
+	[GeneratedRegex("{([^{}:]+)(?::([^{}]+))?}")]
+	private static partial Regex KeyRegex();
 
 	/// <summary>
 	/// Default Property Name placeholder.
@@ -73,7 +74,7 @@ public class MessageFormatter {
 	/// <param name="messageTemplate">Message template</param>
 	/// <returns>The message with placeholders replaced with their appropriate values</returns>
 	public virtual string BuildMessage(string messageTemplate) {
-		return _keyRegex.Replace(messageTemplate, m =>	{
+		return KeyRegex().Replace(messageTemplate, m =>	{
 			var key = m.Groups[1].Value;
 
 			if (!_placeholderValues.TryGetValue(key, out var value))

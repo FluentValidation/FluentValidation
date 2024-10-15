@@ -220,12 +220,10 @@ public class ForEachRuleTests {
 	[Fact]
 	public void Can_use_cascade_with_RuleForEach() {
 		var validator = new InlineValidator<Person>();
-#pragma warning disable 618
 		validator.RuleForEach(x => x.NickNames)
-			.Cascade(CascadeMode.StopOnFirstFailure)
+			.Cascade(CascadeMode.Stop)
 			.NotNull()
 			.NotEqual("foo");
-#pragma warning restore 618
 
 		var result = validator.Validate(new Person {NickNames = new string[] {null}});
 		result.Errors.Count.ShouldEqual(1);

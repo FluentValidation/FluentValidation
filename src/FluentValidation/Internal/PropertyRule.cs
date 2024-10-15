@@ -44,32 +44,6 @@ internal class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, I
 	}
 
 	/// <summary>
-	/// Creates a new property rule from a lambda expression.
-	/// </summary>
-	internal static PropertyRule<T, TProperty> Create<TOld>(Expression<Func<T, TOld>> expression, Func<TOld, TProperty> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
-		var member = expression.GetMember();
-		var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
-
-		TProperty PropertyFunc(T instance)
-			=> transformer(compiled(instance));
-
-		return new PropertyRule<T, TProperty>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOld));
-	}
-
-	/// <summary>
-	/// Creates a new property rule from a lambda expression.
-	/// </summary>
-	internal static PropertyRule<T, TProperty> Create<TOld>(Expression<Func<T, TOld>> expression, Func<T, TOld, TProperty> transformer, Func<CascadeMode> cascadeModeThunk, bool bypassCache = false) {
-		var member = expression.GetMember();
-		var compiled = AccessorCache<T>.GetCachedAccessor(member, expression, bypassCache);
-
-		TProperty PropertyFunc(T instance)
-			=> transformer(instance, compiled(instance));
-
-		return new PropertyRule<T, TProperty>(member, PropertyFunc, expression, cascadeModeThunk, typeof(TOld));
-	}
-
-	/// <summary>
 	/// Performs validation using a validation context and adds collected validation failures to the Context.
 	/// </summary>
 	/// <param name="context">Validation Context</param>

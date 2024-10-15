@@ -34,7 +34,7 @@ public abstract class AbstractComparisonValidator<T, TProperty> : PropertyValida
 	/// </summary>
 	/// <param name="value"></param>
 	protected AbstractComparisonValidator(TProperty value) {
-		value.Guard("value must not be null.", nameof(value));
+		ArgumentNullException.ThrowIfNull(value);
 		ValueToCompare = value;
 	}
 
