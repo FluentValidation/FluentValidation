@@ -1,9 +1,7 @@
 <Project>
   <PropertyGroup>
     <VersionPrefix>11.10.0</VersionPrefix>
-    <VersionSuffix></VersionSuffix>
-    <!-- Use CI build number as version suffix (if defined) -->
-    <!--<VersionSuffix Condition="'$(GITHUB_RUN_NUMBER)'!=''">ci-$(GITHUB_RUN_NUMBER)</VersionSuffix>-->
+    <VersionSuffix Condition="'$(VERSION_REVISION)' != ''">assurecare.$(VERSION_REVISION)</VersionSuffix>
     <Authors>Jeremy Skinner</Authors>
     <LangVersion>12</LangVersion>
     <DebugType>embedded</DebugType>

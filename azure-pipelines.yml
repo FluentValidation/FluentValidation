@@ -1,19 +1,56 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
-trigger:
-- main
-
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+trigger:
+  batch: true
+  branches:
+    include:
+    - main
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+resources:
+  repositories:
+    - repository: build-resources
+      type: git
+      name: MedCompass/build-resources
+
+pr:
+  branches:
+    include:
+    - main
+
+variables:
+  version.major: 11
+  version.minor: 10
+  version.patch: 0
+  version.revision: $[ counter(format('{0}-{1}.{2}.{3}', variables['system.definitionId'], variables['version.major'], variables['version.minor'], variables['version.patch']), 0) ]
+
+name: $(version.major).$(version.minor).$(version.patch)-assurecare.$(version.revision)
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: dotnet build
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet test
+  inputs:
+    command: test
+    nobuild: true
+    arguments: >
+      --no-restore
+      /p:CollectCoverage=true 
+      /p:CoverletOutput="$(Agent.TempDirectory)/coverage" 
+      /p:CoverletOutputFormat="\"json,opencover\""
+      /p:Exclude="[NUnit3.TestAdapter]*" 
+      /p:MergeWith="$(Agent.TempDirectory)/coverage.json" 
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet pack
+  inputs:
+    command: pack
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet push
+  inputs:
+    command: push
+    publishVstsFeed: MedCompass_Web
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
