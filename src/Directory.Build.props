@@ -2,21 +2,20 @@
   <PropertyGroup>
     <VersionPrefix>11.10.0</VersionPrefix>
     <VersionSuffix Condition="'$(VERSION_REVISION)' != ''">assurecare.$(VERSION_REVISION)</VersionSuffix>
-    <Authors>Jeremy Skinner</Authors>
+    <Authors>Jeremy Skinner and AssureCare LLC</Authors>
     <LangVersion>12</LangVersion>
     <DebugType>embedded</DebugType>
     <NoWarn>$(NoWarn);1701;1702;1591</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageProjectUrl>https://fluentvalidation.net</PackageProjectUrl>
     <Copyright>Copyright (c) Jeremy Skinner, .NET Foundation, and contributors 2008-2023</Copyright>
-    <RepositoryUrl>https://github.com/JeremySkinner/fluentvalidation</RepositoryUrl>
+    <RepositoryUrl>https://github.com/AssureCare/fluentvalidation</RepositoryUrl>
     <PackageIcon>fluent-validation-icon.png</PackageIcon>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <NeutralLanguage>en</NeutralLanguage>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)../.build/packages</PackageOutputPath>
     <PackageValidationBaselineVersion>11.0.0</PackageValidationBaselineVersion>
   </PropertyGroup>
   <ItemGroup>
