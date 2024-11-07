@@ -16,6 +16,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)FluentValidation-Release.snk</AssemblyOriginatorKeyFile>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)../.build/packages</PackageOutputPath>
     <PackageValidationBaselineVersion>11.0.0</PackageValidationBaselineVersion>
   </PropertyGroup>
   <ItemGroup>
