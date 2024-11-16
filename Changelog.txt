@@ -1,3 +1,6 @@
+11.11.0 - 16 Nov 2024
+Add additional overload of WithState that takes a context (#2276)
+
 11.10.0 - 15 Sep 2024
 Add WhereAsync as conterpart to Where on collection rules (#2240)
 Create IEnumValidator to expose the targeted Enum type of EnumValidator (#2244)
