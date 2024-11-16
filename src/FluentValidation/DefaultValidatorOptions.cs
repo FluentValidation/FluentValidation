@@ -495,6 +495,25 @@ public static class DefaultValidatorOptions {
 		return rule;
 	}
 
+	/// <summary>
+	/// Specifies custom state that should be stored alongside the validation message when validation fails for this rule.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	/// <typeparam name="TProperty"></typeparam>
+	/// <param name="rule"></param>
+	/// <param name="stateProvider"></param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, ValidationContext<T>, object> stateProvider) {
+		ArgumentNullException.ThrowIfNull(stateProvider);
+
+		var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, val) => {
+			return stateProvider(ctx.InstanceToValidate, val, ctx);
+		});
+
+		Configurable(rule).Current.CustomStateProvider = wrapper;
+		return rule;
+	}
+
 	///<summary>
 	/// Specifies custom severity that should be stored alongside the validation message when validation fails for this rule.
 	/// </summary>

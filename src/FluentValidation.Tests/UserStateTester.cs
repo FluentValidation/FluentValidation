@@ -60,9 +60,24 @@ public class UserStateTester {
 	}
 
 	[Fact]
-	public void Can_Provide_state_for_item_in_collection() {
+	public void Can_provide_state_for_item_in_collection() {
 		validator.RuleForEach(x => x.Children).NotNull().WithState((person, child) => "test");
 		var result = validator.Validate(new Person {Children = new List<Person> {null}});
 		result.Errors[0].CustomState.ToString().ShouldEqual("test");
+	}
+
+	[Fact]
+	public void Can_provide_state_from_validation_context() {
+		var person = new Person();
+		validator.RuleFor(e => e.Surname).NotNull().WithState((p, surname, ctx)
+			=> new ValueTuple<Person, string, string>(p, surname, ctx.RootContextData["test"] as string));
+		var context = new ValidationContext<Person>(person);
+		context.RootContextData["test"] = "foo";
+		var result = validator.Validate(context);
+
+		var customState = (ValueTuple<Person, string, string>)result.Errors[0].CustomState;
+		customState.Item1.ShouldBeTheSameAs(person);
+		customState.Item2.ShouldBeNull();
+		customState.Item3.ShouldEqual("foo");
 	}
 }
