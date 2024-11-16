@@ -119,14 +119,6 @@ public class CascadingFailuresTester : IDisposable {
 	}
 
 	[Fact]
-	public void Validation_stops_on_first_failure_when_globaldefault_both_Continue_and_ruleleveloverride_Stop_legacy() {
-		SetBothGlobalCascadeModes(CascadeMode.Continue);
-		_validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
-		var results = _validator.Validate(new Person());
-		results.Errors.Count.ShouldEqual(1);
-	}
-
-	[Fact]
 	public void Validation_continues_to_second_validator_when_first_validator_succeeds_and_globaldefault_both_Stop() {
 		SetBothGlobalCascadeModes(CascadeMode.Stop);
 		_validator.RuleFor(x => x.Surname).NotNull().Length(2, 10);
@@ -213,15 +205,6 @@ public class CascadingFailuresTester : IDisposable {
 		SetBothValidatorCascadeModes(CascadeMode.Continue);
 
 		_validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Stop).NotNull().Equal("Foo");
-		var results = _validator.Validate(new Person());
-		results.Errors.Count.ShouldEqual(1);
-	}
-
-	[Fact]
-	public void Validation_stops_on_failure_when_classlevel_Continue_and_ruleleveldefault_Continue_and_ruleleveloverride_Stop_legacy() {
-		SetBothValidatorCascadeModes(CascadeMode.Continue);
-
-		_validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 		var results = _validator.Validate(new Person());
 		results.Errors.Count.ShouldEqual(1);
 	}
@@ -323,26 +306,9 @@ public class CascadingFailuresTester : IDisposable {
 	}
 
 	[Fact]
-	public async Task Validation_stops_on_first_Failure_when_globaldefault_both_Continue_and_ruleleveloverride_Stop_async_legacy() {
-		SetBothGlobalCascadeModes(CascadeMode.Continue);
-		_validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
-		var results = await _validator.ValidateAsync(new Person());
-		results.Errors.Count.ShouldEqual(1);
-	}
-
-
-	[Fact]
 	public async Task Validation_stops_on_first_Failure_when_globaldefault_both_Continue_and_ruleleveloverride_Stop_async_and_async_validator_is_invoked_synchronously() {
 		SetBothGlobalCascadeModes(CascadeMode.Continue);
 		_validator.RuleFor(x => x.Surname).Cascade(CascadeMode.Stop).NotNull().Equal("Foo");
-		var results = await _validator.ValidateAsync(new Person());
-		results.Errors.Count.ShouldEqual(1);
-	}
-
-	[Fact]
-	public async Task Validation_stops_on_first_Failure_when_globaldefault_both_Continue_and_ruleleveloverride_Stop_async_and_async_validator_is_invoked_synchronously_legacy() {
-		SetBothGlobalCascadeModes(CascadeMode.Continue);
-		_validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).NotNull().Equal("Foo");
 		var results = await _validator.ValidateAsync(new Person());
 		results.Errors.Count.ShouldEqual(1);
 	}
@@ -467,15 +433,6 @@ public class CascadingFailuresTester : IDisposable {
 	}
 
 	[Fact]
-	public async Task Validation_stops_on_failure_when_classlevel_Continue_and_ruleleveldefault_Continue_and_ruleleveloverride_Stop_async_legacy() {
-		SetBothValidatorCascadeModes(CascadeMode.Continue);
-
-		_validator.RuleFor(x => x.Surname).Cascade(CascadeMode.StopOnFirstFailure).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
-		var results = await _validator.ValidateAsync(new Person());
-		results.Errors.Count.ShouldEqual(1);
-	}
-
-	[Fact]
 	public async Task Cascade_mode_can_be_set_after_validator_instantiated_async() {
 		_validator.RuleFor(x => x.Surname).MustAsync(async (x, c) => x != null).MustAsync(async (x, c) => x == "foo");
 		SetBothValidatorCascadeModes(CascadeMode.Stop);
@@ -517,6 +474,14 @@ public class CascadingFailuresTester : IDisposable {
 		result.Errors.Count.ShouldEqual(2);
 		result.Errors[0].PropertyName.ShouldEqual("Orders[0].ProductName");
 		result.Errors[1].PropertyName.ShouldEqual("Orders[1].Amount");
+	}
+
+	[Fact]
+	public void CascadeMode_values_should_correspond_to_correct_integers() {
+		// 12.0 removed the "StopOnFirstFailure" option which was value 1.
+		// For compatibility, "Stop" should still equate to 2, rather than being renumbered to 1.
+		Assert.Equal(0, (int)CascadeMode.Continue);
+		Assert.Equal(2, (int)CascadeMode.Stop);
 	}
 
 	private void SetBothValidatorCascadeModes(CascadeMode cascadeMode) {

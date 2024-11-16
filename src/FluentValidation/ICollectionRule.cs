@@ -20,6 +20,7 @@ namespace FluentValidation;
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 /// <summary>
 /// Represents a rule defined against a collection with RuleForEach.
@@ -31,6 +32,11 @@ public interface ICollectionRule<T, TElement> : IValidationRule<T, TElement> {
 	/// Filter that should include/exclude items in the collection.
 	/// </summary>
 	public Func<TElement, bool> Filter { get; set; }
+
+	/// <summary>
+	/// Asynchronous filter that should include/exclude items in the collection.
+	/// </summary>
+	public Func<TElement, Task<bool>> AsyncFilter { get; set; }
 
 	/// <summary>
 	/// Constructs the indexer in the property name associated with the error message.
