@@ -22,29 +22,29 @@
 
 namespace FluentValidation.Resources;
 
-internal class SerbianLanguage {
-	public const string Culture = "sr";
+internal class SerbianLatinLanguage {
+	public const string Culture = "sr-Latn";
 
 	public static string GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' nije validna email adresa.",
-		"GreaterThanOrEqualValidator" => "'{PropertyName}' mora biti veće ili jednako '{ComparisonValue}'.",
+		"GreaterThanOrEqualValidator" => "'{PropertyName}' mora biti veće ili jednako od '{ComparisonValue}'.",
 		"GreaterThanValidator" => "'{PropertyName}' mora biti veće od '{ComparisonValue}'.",
 		"LengthValidator" => "'{PropertyName}' mora imati između {MinLength} i {MaxLength} karaktera. Uneseno je {TotalLength} karaktera.",
 		"MinimumLengthValidator" => "'{PropertyName}' mora imati najmanje {MinLength} karaktera. Uneseno je {TotalLength} karaktera.",
 		"MaximumLengthValidator" => "'{PropertyName}' ne sme imati više od {MaxLength} karaktera. Uneseno je {TotalLength} karaktera.",
-		"LessThanOrEqualValidator" => "'{PropertyName}' mora biti manje ili jednako '{ComparisonValue}'.",
+		"LessThanOrEqualValidator" => "'{PropertyName}' mora biti manje ili jednako od '{ComparisonValue}'.",
 		"LessThanValidator" => "'{PropertyName}' mora biti manje od '{ComparisonValue}'.",
-		"NotEmptyValidator" => "'{PropertyName}' ne sme biti prazan.",
-		"NotEqualValidator" => "'{PropertyName}' ne sme biti jednak '{ComparisonValue}'.",
-		"NotNullValidator" => "'{PropertyName}' ne sme biti prazan.",
-		"PredicateValidator" => "Zadat uslov nije ispunjen za '{PropertyName}'.",
-		"AsyncPredicateValidator" => "Zadat uslov nije ispunjen za '{PropertyName}'.",
+		"NotEmptyValidator" => "'{PropertyName}' ne sme biti prazno.",
+		"NotEqualValidator" => "'{PropertyName}' ne sme biti jednako '{ComparisonValue}'.",
+		"NotNullValidator" => "'{PropertyName}' ne sme biti prazno.",
+		"PredicateValidator" => "Zadati uslov nije ispunjen za '{PropertyName}'.",
+		"AsyncPredicateValidator" => "Zadati uslov nije ispunjen za '{PropertyName}'.",
 		"RegularExpressionValidator" => "'{PropertyName}' nije u odgovarajućem formatu.",
-		"EqualValidator" => "'{PropertyName}' mora biti jednak '{ComparisonValue}'.",
+		"EqualValidator" => "'{PropertyName}' mora biti jednako '{ComparisonValue}'.",
 		"ExactLengthValidator" => "'{PropertyName}' mora imati tačno {MaxLength} karaktera. Uneseno je {TotalLength} karaktera.",
 		"InclusiveBetweenValidator" => "'{PropertyName}' mora biti između {From} i {To}. Uneseno je {PropertyValue}.",
 		"ExclusiveBetweenValidator" => "'{PropertyName}' mora biti između {From} i {To} (ekskluzivno). Uneseno je {PropertyValue}.",
-		"CreditCardValidator" => "'{PropertyName}' nije validna kreditna kartica.",
+		"CreditCardValidator" => "'{PropertyName}' nije validan broj kreditne kartice.",
 		"ScalePrecisionValidator" => "'{PropertyName}' ne sme imati više od {ExpectedPrecision} cifara, sa dozvoljenih {ExpectedScale} decimalnih mesta. Uneseno je {Digits} cifara i {ActualScale} decimalnih mesta.",
 		"EmptyValidator" => "'{PropertyName}' mora biti prazno.",
 		"NullValidator" => "'{PropertyName}' mora biti prazno.",

@@ -28,12 +28,22 @@ public class LanguageManagerTests {
 
 	[Theory]
 	[InlineData("sr")]
-	[InlineData("sr-Latn")]
-	[InlineData("sr-Latn-RS")]
-	public void Gets_translation_for_serbian_culture(string cultureName) {
+	[InlineData("sr-Cyrl")]
+	[InlineData("sr-Cyrl-RS")]
+	public void Gets_translation_for_serbian_cyrillic_culture(string cultureName) {
 		using (new CultureScope(cultureName)) {
 			var msg = _languages.GetString("NotNullValidator");
-			msg.ShouldEqual("'{PropertyName}' ne sme biti prazan.");
+			msg.ShouldEqual("'{PropertyName}' не сме бити празно.");
+		}
+	}
+
+	[Theory]
+	[InlineData("sr-Latn")]
+	[InlineData("sr-Latn-RS")]
+	public void Gets_translation_for_serbian_latin_culture(string cultureName) {
+		using (new CultureScope(cultureName)) {
+			var msg = _languages.GetString("NotNullValidator");
+			msg.ShouldEqual("'{PropertyName}' ne sme biti prazno.");
 		}
 	}
 
