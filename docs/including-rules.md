@@ -41,5 +41,5 @@ public class PersonValidator : AbstractValidator<Person>
 
 ```eval_rst
 .. note::
-    You can only include validators that target the same type as the root validator.
+    You can only include validators that target the same type as the root validator. Also, make sure that the included validators are alphabetically/hierarchically placed above the root validator.
 ```
