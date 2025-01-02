@@ -30,7 +30,7 @@ using Validators;
 /// In a rule definition such as RuleFor(x => x.Name).NotNull().NotEqual("Foo")
 /// the NotNull and the NotEqual are both rule components.
 /// </summary>
-public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
+public partial class RuleComponent<T, TProperty> : IRuleComponent<T, TProperty> {
 	private string _errorMessage;
 	private Func<ValidationContext<T>, TProperty, string> _errorMessageFactory;
 	private Func<ValidationContext<T>, bool> _condition;
@@ -63,20 +63,20 @@ public class RuleComponent<T,TProperty> : IRuleComponent<T,TProperty> {
 	private protected virtual bool SupportsSynchronousValidation
 		=> _propertyValidator != null;
 
-	internal async ValueTask<bool> ValidateAsync(ValidationContext<T> context, TProperty value, bool useAsync, CancellationToken cancellation) {
-		if (useAsync) {
-			// If ValidateAsync has been called on the root validator, then always prefer
-			// the asynchronous property validator (if available).
-			if (SupportsAsynchronousValidation) {
-				return await InvokePropertyValidatorAsync(context, value, cancellation);
-			}
-
-			// If it doesn't support Async validation, then this means
-			// the property validator is a Synchronous.
-			// We don't need to explicitly check SupportsSynchronousValidation.
-			return InvokePropertyValidator(context, value);
+	internal async ValueTask<bool> ValidateAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {
+		// If ValidateAsync has been called on the root validator, then always prefer
+		// the asynchronous property validator (if available).
+		if (SupportsAsynchronousValidation) {
+			return await InvokePropertyValidatorAsync(context, value, cancellation);
 		}
 
+		// If it doesn't support Async validation, then this means
+		// the property validator is a Synchronous.
+		// We don't need to explicitly check SupportsSynchronousValidation.
+		return InvokePropertyValidator(context, value);
+	}
+
+	internal bool Validate(ValidationContext<T> context, TProperty value) {
 		// If Validate has been called on the root validator, then always prefer
 		// the synchronous property validator.
 		if (SupportsSynchronousValidation) {

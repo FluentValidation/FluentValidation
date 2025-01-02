@@ -4,6 +4,7 @@ Add support for dependent rules for custom rules (#2170)
 Removes deprecated DI extensions
 Removes deprecated transform methods (#2027)
 Remove the ability to disable the root-model null check (#2069)
+Use Zomp.SyncMethodGenerator to clean up internal sync/async code paths (#2136)
 
 11.11.0 - 16 Nov 2024
 Add additional overload of WithState that takes a context (#2276)
