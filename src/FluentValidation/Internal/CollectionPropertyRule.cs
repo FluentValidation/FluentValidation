@@ -137,14 +137,12 @@ internal partial class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumer
 				}
 
 				if (AsyncFilter != null) {
-					if (useAsync) {
-						if (!await AsyncFilter(element)) {
-							continue;
-						}
+					if (!await AsyncFilter(element)) {
+						continue;
 					}
-					else {
-						throw new AsyncValidatorInvokedSynchronouslyException();
-					}
+#if SYNC_ONLY
+					throw new AsyncValidatorInvokedSynchronouslyException();
+#endif
 				}
 
 				string indexer = index.ToString();
