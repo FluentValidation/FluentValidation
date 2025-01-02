@@ -92,6 +92,11 @@ public class PersonValidator : AbstractValidator<Person>
 In previous versions of FluentValidation it was possible to override the `AbstractValidator.EnsureInstanceNotNull` method to disable FluentValidation's root-model null check. The ability to do this was deprecated in 11.5.x and has now been removed. For further details please see [https://github.com/FluentValidation/FluentValidation/issues/2069](https://github.com/FluentValidation/FluentValidation/issues/2069)
 
 
+### Changes to the Serbian language translations
+
+The existing Serbian translations have been renamed to Serbian (Latin) and are now available under the `sr-Latn` language code. A new Serbian (Cyrillic) language has been added, which is now the default for the `sr` language code. 
+
+
 ### Other breaking API changes 
 
 - The `ITestValidationContinuation` interface now exposes a `MatchedFailures` property (as well as the existing `UnmatchedFailures`)

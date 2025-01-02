@@ -5,6 +5,7 @@ Removes deprecated DI extensions
 Removes deprecated transform methods (#2027)
 Remove the ability to disable the root-model null check (#2069)
 Use Zomp.SyncMethodGenerator to clean up internal sync/async code paths (#2136)
+Add Serbian (Cyrillic) language; rename existing Serbian to Serbian (Latin) (#2283)
 
 11.11.0 - 16 Nov 2024
 Add additional overload of WithState that takes a context (#2276)
@@ -17,7 +18,7 @@ Add Romansh language translations (#2239)
 11.9.2 - 10 Jun 2024
 ScalePrecisionValidator error message clarification (#2211)
 
-11.9.1 - 23 Apr 2024 
+11.9.1 - 23 Apr 2024
 Fix issue with CascadeMode on child validators (#2207)
 
 11.9.0 - 21 Dec 2023
