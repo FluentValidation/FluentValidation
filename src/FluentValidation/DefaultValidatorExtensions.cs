@@ -65,6 +65,21 @@ public static partial class DefaultValidatorExtensions {
 	}
 
 	/// <summary>
+	/// Defines an email validator on the current rule builder for string properties.
+	/// Validation will fail if the value returned by the lambda is not a valid email address.
+	/// </summary>
+	/// <typeparam name="T">Type of object being validated</typeparam>
+	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+	/// <param name="mode">The mode to use for email validation. If set to <see cref="EmailValidationMode.Net4xRegex"/>, then a regular expression will be used. This is the same regex used by the EmailAddressAttribute in .NET 4.x. If set to <see cref="EmailValidationMode.AspNetCoreCompatible"/> then this uses the simplified ASP.NET Core logic for checking an email address, which just checks for the presence of an @ sign.</param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, string> EmailAddress<T>(this IRuleBuilder<T, string> ruleBuilder, EmailValidationMode mode = EmailValidationMode.AspNetCoreCompatible) {
+#pragma warning disable 618
+		var validator = mode == EmailValidationMode.AspNetCoreCompatible ? new AspNetCoreCompatibleEmailValidator<T>() : (PropertyValidator<T,string>)new EmailValidator<T>();
+#pragma warning restore 618
+		return ruleBuilder.SetValidator(validator);
+	}
+
+	/// <summary>
 	/// Defines a 'not null' validator on the current rule builder.
 	/// Validation will fail if the property is null.
 	/// </summary>
@@ -171,28 +186,6 @@ public static partial class DefaultValidatorExtensions {
 		=> ruleBuilder.SetValidator(new RegularExpressionValidator<T>(expression));
 
 	/// <summary>
-	/// Defines a length validator on the current rule builder, but only for string properties.
-	/// Validation will fail if the length of the string is larger than the length specified.
-	/// </summary>
-	/// <typeparam name="T">Type of object being validated</typeparam>
-	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="maximumLength"></param>
-	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> MaximumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int maximumLength)
-		=> ruleBuilder.SetValidator(new MaximumLengthValidator<T>(maximumLength));
-
-	/// <summary>
-	/// Defines a length validator on the current rule builder, but only for string properties.
-	/// Validation will fail if the length of the string is less than the length specified.
-	/// </summary>
-	/// <typeparam name="T">Type of object being validated</typeparam>
-	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="minimumLength"></param>
-	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> MinimumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int minimumLength)
-		=> ruleBuilder.SetValidator(new MinimumLengthValidator<T>(minimumLength));
-
-	/// <summary>
 	/// Defines a regular expression validator on the current rule builder, but only for string properties.
 	/// Validation will fail if the value returned by the lambda does not match the regular expression.
 	/// </summary>
@@ -226,7 +219,6 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, Regex> regex)
 		=> ruleBuilder.SetValidator(new RegularExpressionValidator<T>(regex));
 
-
 	/// <summary>
 	/// Defines a regular expression validator on the current rule builder, but only for string properties.
 	/// Validation will fail if the value returned by the lambda does not match the regular expression.
@@ -254,21 +246,28 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, string> expression, RegexOptions options)
 		=> ruleBuilder.SetValidator(new RegularExpressionValidator<T>(expression, options));
-
+	
 	/// <summary>
-	/// Defines an email validator on the current rule builder for string properties.
-	/// Validation will fail if the value returned by the lambda is not a valid email address.
+	/// Defines a length validator on the current rule builder, but only for string properties.
+	/// Validation will fail if the length of the string is larger than the length specified.
 	/// </summary>
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="mode">The mode to use for email validation. If set to <see cref="EmailValidationMode.Net4xRegex"/>, then a regular expression will be used. This is the same regex used by the EmailAddressAttribute in .NET 4.x. If set to <see cref="EmailValidationMode.AspNetCoreCompatible"/> then this uses the simplified ASP.NET Core logic for checking an email address, which just checks for the presence of an @ sign.</param>
+	/// <param name="maximumLength"></param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, string> EmailAddress<T>(this IRuleBuilder<T, string> ruleBuilder, EmailValidationMode mode = EmailValidationMode.AspNetCoreCompatible) {
-#pragma warning disable 618
-		var validator = mode == EmailValidationMode.AspNetCoreCompatible ? new AspNetCoreCompatibleEmailValidator<T>() : (PropertyValidator<T,string>)new EmailValidator<T>();
-#pragma warning restore 618
-		return ruleBuilder.SetValidator(validator);
-	}
+	public static IRuleBuilderOptions<T, string> MaximumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int maximumLength)
+		=> ruleBuilder.SetValidator(new MaximumLengthValidator<T>(maximumLength));
+
+	/// <summary>
+	/// Defines a length validator on the current rule builder, but only for string properties.
+	/// Validation will fail if the length of the string is less than the length specified.
+	/// </summary>
+	/// <typeparam name="T">Type of object being validated</typeparam>
+	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+	/// <param name="minimumLength"></param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, string> MinimumLength<T>(this IRuleBuilder<T, string> ruleBuilder, int minimumLength)
+		=> ruleBuilder.SetValidator(new MinimumLengthValidator<T>(minimumLength));
 
 	/// <summary>
 	/// Defines a 'not equal' validator on the current rule builder.
