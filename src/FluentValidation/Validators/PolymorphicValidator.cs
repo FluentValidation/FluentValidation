@@ -44,7 +44,7 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 	/// <typeparam name="TDerived"></typeparam>
 	/// <returns></returns>
 	public PolymorphicValidator<T, TProperty> Add<TDerived>(IValidator<TDerived> derivedValidator, params string[] ruleSets) where TDerived : TProperty {
-		if (derivedValidator == null) throw new ArgumentNullException(nameof(derivedValidator));
+		derivedValidator.GuardNotNull();
 		_derivedValidators[typeof(TDerived)] = new DerivedValidatorFactory(derivedValidator, ruleSets);
 		return this;
 	}
@@ -57,7 +57,7 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 	/// <param name="ruleSets">Optionally specify rulesets to execute. If set, rules not in these rulesets will not be run</param>
 	/// <returns></returns>
 	public PolymorphicValidator<T, TProperty> Add<TDerived>(Func<T, IValidator<TDerived>> validatorFactory, params string[] ruleSets) where TDerived : TProperty {
-		if (validatorFactory == null) throw new ArgumentNullException(nameof(validatorFactory));
+		validatorFactory.GuardNotNull();
 		_derivedValidators[typeof(TDerived)] = new DerivedValidatorFactory((context, _) => validatorFactory(context.InstanceToValidate), ruleSets);
 		return this;
 	}
@@ -70,7 +70,7 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 	/// <param name="ruleSets">Optionally specify rulesets to execute. If set, rules not in these rulesets will not be run</param>
 	/// <returns></returns>
 	public PolymorphicValidator<T, TProperty> Add<TDerived>(Func<T, TDerived, IValidator<TDerived>> validatorFactory, params string[] ruleSets) where TDerived : TProperty {
-		if (validatorFactory == null) throw new ArgumentNullException(nameof(validatorFactory));
+		validatorFactory.GuardNotNull();
 		_derivedValidators[typeof(TDerived)] = new DerivedValidatorFactory((context, value) => validatorFactory(context.InstanceToValidate, (TDerived)value), ruleSets);
 		return this;
 	}
@@ -86,8 +86,8 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 	/// <param name="ruleSets">Optionally specify rulesets to execute. If set, rules not in these rulesets will not be run</param>
 	/// <returns></returns>
 	protected PolymorphicValidator<T, TProperty> Add(Type subclassType, IValidator validator, params string[] ruleSets) {
-		if (subclassType == null) throw new ArgumentNullException(nameof(subclassType));
-		if (validator == null) throw new ArgumentNullException(nameof(validator));
+		subclassType.GuardNotNull();
+		validator.GuardNotNull();
 		if (!validator.CanValidateInstancesOfType(subclassType)) {
 			throw new InvalidOperationException($"Validator {validator.GetType().Name} can't validate instances of type {subclassType.Name}");
 		}

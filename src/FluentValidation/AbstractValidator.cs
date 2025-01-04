@@ -149,12 +149,12 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 
 #pragma warning restore 618
 	ValidationResult IValidator.Validate(IValidationContext context) {
-		context.Guard("Cannot pass null to Validate", nameof(context));
+		context.Guard("Cannot pass null to Validate");
 		return Validate(ValidationContext<T>.GetFromNonGenericContext(context));
 	}
 
 	Task<ValidationResult> IValidator.ValidateAsync(IValidationContext context, CancellationToken cancellation) {
-		context.Guard("Cannot pass null to Validate", nameof(context));
+		context.Guard("Cannot pass null to Validate");
 		return ValidateAsync(ValidationContext<T>.GetFromNonGenericContext(context), cancellation);
 	}
 
@@ -181,8 +181,8 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="context">Validation Context</param>
 	/// <returns>A ValidationResult object containing any validation failures.</returns>
 	public virtual ValidationResult Validate(ValidationContext<T> context) {
-		if (context == null) throw new ArgumentNullException(nameof(context));
-
+		context.GuardNotNull();
+		
 		// Note: Sync-over-async is OK in this scenario.
 		// The use of the `useAsync` parameter ensures that no async code is
 		// actually run, and we're using ValueTask
@@ -215,8 +215,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="cancellation">Cancellation token</param>
 	/// <returns>A ValidationResult object containing any validation failures.</returns>
 	public virtual async Task<ValidationResult> ValidateAsync(ValidationContext<T> context, CancellationToken cancellation = default) {
-		if (context == null) throw new ArgumentNullException(nameof(context));
-		context.IsAsync = true;
+		context.GuardNotNull().IsAsync = true;
 		return await ValidateInternalAsync(context, useAsync: true, cancellation);
 	}
 
@@ -275,22 +274,20 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// </summary>
 	public virtual IValidatorDescriptor CreateDescriptor() => new ValidatorDescriptor<T>(Rules);
 
-	bool IValidator.CanValidateInstancesOfType(Type type) {
-		if (type == null) throw new ArgumentNullException(nameof(type));
-		return typeof(T).IsAssignableFrom(type);
-	}
+		bool IValidator.CanValidateInstancesOfType(Type type)
+			=> typeof(T).IsAssignableFrom(type.GuardNotNull());
 
-	/// <summary>
-	/// Defines a validation rule for a specific property.
-	/// </summary>
-	/// <example>
-	/// RuleFor(x => x.Surname)...
-	/// </example>
-	/// <typeparam name="TProperty">The type of property being validated</typeparam>
-	/// <param name="expression">The expression representing the property to validate</param>
-	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
-	public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
-		expression.Guard("Cannot pass null to RuleFor", nameof(expression));
+		/// <summary>
+		/// Defines a validation rule for a specific property.
+		/// </summary>
+		/// <example>
+		/// RuleFor(x => x.Surname)...
+		/// </example>
+		/// <typeparam name="TProperty">The type of property being validated</typeparam>
+		/// <param name="expression">The expression representing the property to validate</param>
+		/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
+		public IRuleBuilderInitial<T, TProperty> RuleFor<TProperty>(Expression<Func<T, TProperty>> expression) {
+		expression.Guard("Cannot pass null to RuleFor");
 		var rule = PropertyRule<T, TProperty>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -310,7 +307,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<TProperty, TTransformed> to) {
-		from.Guard("Cannot pass null to Transform", nameof(from));
+		from.Guard("Cannot pass null to Transform");
 		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -330,7 +327,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <returns>an IRuleBuilder instance on which validators can be defined</returns>
 	[Obsolete("The Transform method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitial<T, TTransformed> Transform<TProperty, TTransformed>(Expression<Func<T, TProperty>> from, Func<T, TProperty, TTransformed> to) {
-		from.Guard("Cannot pass null to Transform", nameof(from));
+		from.Guard("Cannot pass null to Transform");
 		var rule = PropertyRule<T, TTransformed>.Create(from, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -345,7 +342,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="expression">Expression representing the collection to validate</param>
 	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 	public IRuleBuilderInitialCollection<T, TElement> RuleForEach<TElement>(Expression<Func<T, IEnumerable<TElement>>> expression) {
-		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
+		expression.Guard("Cannot pass null to RuleForEach");
 		var rule = CollectionPropertyRule<T, TElement>.Create(expression, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -362,7 +359,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<TElement, TTransformed> to) {
-		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
+		expression.Guard("Cannot pass null to RuleForEach");
 		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -379,7 +376,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <returns>An IRuleBuilder instance on which validators can be defined</returns>
 	[Obsolete("The TransformForEach method is deprecated and will be removed in FluentValidation 12. We recommend using a computed property on your model instead. For details see https://github.com/FluentValidation/FluentValidation/issues/2072")]
 	public IRuleBuilderInitialCollection<T, TTransformed> TransformForEach<TElement, TTransformed>(Expression<Func<T, IEnumerable<TElement>>> expression, Func<T, TElement, TTransformed> to) {
-		expression.Guard("Cannot pass null to RuleForEach", nameof(expression));
+		expression.Guard("Cannot pass null to RuleForEach");
 		var rule = CollectionPropertyRule<T, TTransformed>.CreateTransformed(expression, to, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -392,8 +389,8 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="ruleSetName">The name of the ruleset.</param>
 	/// <param name="action">Action that encapsulates the rules in the ruleset.</param>
 	public void RuleSet(string ruleSetName, Action action) {
-		ruleSetName.Guard("A name must be specified when calling RuleSet.", nameof(ruleSetName));
-		action.Guard("A ruleset definition must be specified when calling RuleSet.", nameof(action));
+		ruleSetName.Guard("A name must be specified when calling RuleSet.");
+		action.Guard("A ruleset definition must be specified when calling RuleSet.");
 
 		var ruleSetNames = ruleSetName.Split(',', ';')
 			.Select(x => x.Trim())
@@ -476,7 +473,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// Includes the rules from the specified validator
 	/// </summary>
 	public void Include(IValidator<T> rulesToInclude) {
-		rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
+		rulesToInclude.Guard("Cannot pass null to Include");
 		var rule = IncludeRule<T>.Create(rulesToInclude, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -486,7 +483,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// Includes the rules from the specified validator
 	/// </summary>
 	public void Include<TValidator>(Func<T, TValidator> rulesToInclude) where TValidator : IValidator<T> {
-		rulesToInclude.Guard("Cannot pass null to Include", nameof(rulesToInclude));
+		rulesToInclude.Guard("Cannot pass null to Include");
 		var rule = IncludeRule<T>.Create(rulesToInclude, () => RuleLevelCascadeMode);
 		Rules.Add(rule);
 		OnRuleAdded(rule);
@@ -509,7 +506,7 @@ public abstract class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidat
 	/// <param name="instanceToValidate"></param>
 	[Obsolete("Overriding the EnsureInstanceNotNull method to prevent FluentValidation for throwing an exception for null root models is no longer supported or recommended. The ability to override this method will be removed in FluentValidation 12. For details, see https://github.com/FluentValidation/FluentValidation/issues/2069")]
 	protected virtual void EnsureInstanceNotNull(object instanceToValidate)
-		=> instanceToValidate.Guard("Cannot pass null model to Validate.", nameof(instanceToValidate));
+		=> instanceToValidate.Guard("Cannot pass null model to Validate.");
 
 	/// <summary>
 	/// Determines if validation should occur and provides a means to modify the context and ValidationResult prior to execution.

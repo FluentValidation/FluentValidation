@@ -86,7 +86,7 @@ public class ChildValidatorAdaptor<T,TProperty> : NoopPropertyValidator<T,TPrope
 	}
 
 	public virtual IValidator GetValidator(ValidationContext<T> context, TProperty value) {
-		context.Guard("Cannot pass a null context to GetValidator", nameof(context));
+		context.Guard("Cannot pass a null context to GetValidator");
 
 		return _validatorProvider != null ? _validatorProvider(context, value) : _validator;
 	}

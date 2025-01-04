@@ -36,7 +36,7 @@ public class AsyncPredicateValidator<T,TProperty> : AsyncPropertyValidator<T,TPr
 	/// </summary>
 	/// <param name="predicate"></param>
 	public AsyncPredicateValidator(Func<T, TProperty, ValidationContext<T>, CancellationToken, Task<bool>> predicate) {
-		predicate.Guard("A predicate must be specified.", nameof(predicate));
+		predicate.Guard("A predicate must be specified.");
 		this._predicate = predicate;
 	}
 

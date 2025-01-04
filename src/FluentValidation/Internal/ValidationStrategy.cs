@@ -109,8 +109,7 @@ public class ValidationStrategy<T> {
 	/// <param name="selector">The custom selector to use</param>
 	/// <returns></returns>
 	public ValidationStrategy<T> UseCustomSelector(IValidatorSelector selector) {
-		if (selector == null) throw new ArgumentNullException(nameof(selector));
-		_customSelector = selector;
+		_customSelector = selector.GuardNotNull();
 		return this;
 	}
 

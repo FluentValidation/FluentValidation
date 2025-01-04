@@ -16,23 +16,29 @@
 // The latest version of this file can be found at https://github.com/FluentValidation/FluentValidation
 #endregion
 
+#nullable enable
+
 namespace FluentValidation.Internal;
 
+using Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Text;
-using Resources;
-
 internal static class ExtensionsInternal {
-	internal static void Guard(this object obj, string message, string paramName) {
-		if (obj == null) {
+
+	internal static T GuardNotNull<T>(this T? obj, [CallerArgumentExpression(nameof(obj))] string? paramName = null)
+		=> obj ?? throw new ArgumentNullException(paramName);
+
+	internal static void Guard(this object? obj, string message, [CallerArgumentExpression(nameof(obj))] string? paramName = null) {
+		if (obj is null) {
 			throw new ArgumentNullException(paramName, message);
 		}
 	}
 
-	internal static void Guard(this string str, string message, string paramName) {
-		if (str == null) {
+	internal static void Guard(this string? str, string message, [CallerArgumentExpression(nameof(str))] string? paramName = null) {
+		if (str is null) {
 			throw new ArgumentNullException(paramName, message);
 		}
 
@@ -57,8 +63,8 @@ internal static class ExtensionsInternal {
 	/// Pascal case strings with periods delimiting the upper case letters,
 	/// such as "Address.Line1", will have the periods removed.
 	/// </remarks>
-	internal static string SplitPascalCase(this string input) {
-		if (string.IsNullOrEmpty(input))
+	internal static string? SplitPascalCase(this string? input) {
+		if (input is not { Length: > 0 })
 			return input;
 
 		var retVal = new StringBuilder(input.Length + 5);
@@ -81,11 +87,9 @@ internal static class ExtensionsInternal {
 		return retVal.ToString().Trim();
 	}
 
-	internal static T GetOrAdd<T>(this IDictionary<string, object> dict, string key, Func<T> value) {
-		if (dict.TryGetValue(key, out var tmp)) {
-			if (tmp is T result) {
+	internal static T GetOrAdd<T>(this IDictionary<string, object> dict, string key, Func<T> value) where T : notnull {
+		if (dict.TryGetValue(key, out var tmp) && tmp is T result) {
 				return result;
-			}
 		}
 
 		var val = value();

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using Results;
 using System.Linq;
 using System.Runtime.Serialization;
+using FluentValidation.Internal;
 
 /// <summary>
 /// An exception that represents failed validation
@@ -86,9 +87,7 @@ public class ValidationException : Exception {
 	[Obsolete(DiagnosticId = "SYSLIB0051")]
 #endif
 	public override void GetObjectData(SerializationInfo info, StreamingContext context) {
-		if (info == null) throw new ArgumentNullException("info");
-
-		info.AddValue("errors", Errors);
+		info.GuardNotNull().AddValue("errors", Errors);
 		base.GetObjectData(info, context);
 	}
 }

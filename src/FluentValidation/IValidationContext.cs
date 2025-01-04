@@ -122,7 +122,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <param name="instanceToValidate">The instance to validate</param>
 	/// <param name="options">Callback that allows extra options to be configured.</param>
 	public static ValidationContext<T> CreateWithOptions(T instanceToValidate, Action<ValidationStrategy<T>> options) {
-		if (options == null) throw new ArgumentNullException(nameof(options));
+		options.GuardNotNull();
 		var strategy = new ValidationStrategy<T>();
 		options(strategy);
 		return strategy.BuildContext(instanceToValidate);
@@ -202,7 +202,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="NotSupportedException"></exception>
 	public static ValidationContext<T> GetFromNonGenericContext(IValidationContext context) {
-		if (context == null) throw new ArgumentNullException(nameof(context));
+		context.GuardNotNull();
 
 		// Already of the correct type.
 		if (context is ValidationContext<T> c) {
@@ -279,7 +279,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <param name="failure">The failure to add.</param>
 	/// <exception cref="ArgumentNullException"></exception>
 	public void AddFailure(ValidationFailure failure) {
-		if (failure == null) throw new ArgumentNullException(nameof(failure), "A failure must be specified when calling AddFailure");
+		if (failure is null) throw new ArgumentNullException(nameof(failure), "A failure must be specified when calling AddFailure");
 		Failures.Add(failure);
 	}
 
@@ -289,7 +289,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <param name="propertyName">The property name</param>
 	/// <param name="errorMessage">The error message</param>
 	public void AddFailure(string propertyName, string errorMessage) {
-		errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+		errorMessage.Guard("An error message must be specified when calling AddFailure.");
 		errorMessage = MessageFormatter.BuildMessage(errorMessage);
 		AddFailure(new ValidationFailure(PropertyChain.BuildPropertyPath(propertyName ?? string.Empty), errorMessage));
 	}
@@ -300,7 +300,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// </summary>
 	/// <param name="errorMessage">The error message</param>
 	public void AddFailure(string errorMessage) {
-		errorMessage.Guard("An error message must be specified when calling AddFailure.", nameof(errorMessage));
+		errorMessage.Guard("An error message must be specified when calling AddFailure.");
 		errorMessage = MessageFormatter.BuildMessage(errorMessage);
 		AddFailure(new ValidationFailure(PropertyPath, errorMessage));
 	}

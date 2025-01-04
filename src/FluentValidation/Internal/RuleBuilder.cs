@@ -50,13 +50,12 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator<T, TProperty> validator) {
-		if (validator == null) throw new ArgumentNullException(nameof(validator));
-		Rule.AddValidator(validator);
+		Rule.AddValidator(validator.GuardNotNull());
 		return this;
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetAsyncValidator(IAsyncPropertyValidator<T, TProperty> validator) {
-		if (validator == null) throw new ArgumentNullException(nameof(validator));
+		validator.GuardNotNull();
 		// See if the async validator supports synchronous execution too.
 		IPropertyValidator<T, TProperty> fallback = validator as IPropertyValidator<T, TProperty>;
 		Rule.AddAsyncValidator(validator, fallback);
@@ -64,7 +63,7 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetValidator(IValidator<TProperty> validator, params string[] ruleSets) {
-		validator.Guard("Cannot pass a null validator to SetValidator", nameof(validator));
+		validator.Guard("Cannot pass a null validator to SetValidator");
 		var adaptor = new ChildValidatorAdaptor<T,TProperty>(validator, validator.GetType()) {
 			RuleSets = ruleSets
 		};
@@ -74,7 +73,7 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TValidator> validatorProvider, params string[] ruleSets) where TValidator : IValidator<TProperty> {
-		validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
+		validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator");
 		var adaptor = new ChildValidatorAdaptor<T,TProperty>((context, _) => validatorProvider(context.InstanceToValidate), typeof (TValidator)) {
 			RuleSets = ruleSets
 		};
@@ -84,7 +83,7 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetValidator<TValidator>(Func<T, TProperty, TValidator> validatorProvider, params string[] ruleSets) where TValidator : IValidator<TProperty> {
-		validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator", nameof(validatorProvider));
+		validatorProvider.Guard("Cannot pass a null validatorProvider to SetValidator");
 		var adaptor = new ChildValidatorAdaptor<T,TProperty>((context, val) => validatorProvider(context.InstanceToValidate, val), typeof (TValidator)) {
 			RuleSets = ruleSets
 		};

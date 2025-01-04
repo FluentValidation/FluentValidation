@@ -123,7 +123,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="errorMessage">The error message to use</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorMessage) {
-		errorMessage.Guard("A message must be specified when calling WithMessage.", nameof(errorMessage));
+		errorMessage.Guard("A message must be specified when calling WithMessage.");
 		Configurable(rule).Current.SetErrorMessage(errorMessage);
 		return rule;
 	}
@@ -135,7 +135,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="messageProvider">Delegate that will be invoked to retrieve the localized message. </param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> messageProvider) {
-		messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
+		messageProvider.Guard("A messageProvider must be provided.");
 		Configurable(rule).Current.SetErrorMessage((ctx, val) => {
 			return messageProvider(ctx == null ? default : ctx.InstanceToValidate);
 		});
@@ -149,7 +149,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="messageProvider">Delegate that will be invoked.Uses_localized_name to retrieve the localized message. </param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithMessage<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, string> messageProvider) {
-		messageProvider.Guard("A messageProvider must be provided.", nameof(messageProvider));
+		messageProvider.Guard("A messageProvider must be provided.");
 		Configurable(rule).Current.SetErrorMessage((context, value) => {
 			return messageProvider(context == null ? default : context.InstanceToValidate, value);
 		});
@@ -163,7 +163,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="errorCode">The error code to use</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithErrorCode<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string errorCode) {
-		errorCode.Guard("A error code must be specified when calling WithErrorCode.", nameof(errorCode));
+		errorCode.Guard("A error code must be specified when calling WithErrorCode.");
 		Configurable(rule).Current.ErrorCode = errorCode;
 		return rule;
 	}
@@ -177,7 +177,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> When<T,TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling When.");
 		return rule.When((x, ctx) => predicate(x), applyConditionTo);
 	}
 
@@ -190,7 +190,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> When<T,TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling When.");
 		return rule.When((x, ctx) => predicate(x), applyConditionTo);
 	}
 
@@ -203,7 +203,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> When<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling When.");
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 		Configurable(rule).ApplyCondition(ctx => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx)), applyConditionTo);
 		return rule;
@@ -218,7 +218,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> When<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling When.", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling When.");
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 		Configurable(rule).ApplyCondition(ctx => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx)), applyConditionTo);
 		return rule;
@@ -233,7 +233,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> Unless<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling Unless", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling Unless");
 		return rule.Unless((x, ctx) => predicate(x), applyConditionTo);
 	}
 
@@ -246,7 +246,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> Unless<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling Unless", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling Unless");
 		return rule.Unless((x, ctx) => predicate(x), applyConditionTo);
 	}
 
@@ -259,7 +259,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> Unless<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling Unless", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling Unless");
 		return rule.When((x, ctx) => !predicate(x, ctx), applyConditionTo);
 	}
 
@@ -272,7 +272,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> Unless<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, ValidationContext<T>, bool> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling Unless", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling Unless");
 		return rule.When((x, ctx) => !predicate(x, ctx), applyConditionTo);
 	}
 
@@ -285,7 +285,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling WhenAsync.", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling WhenAsync.");
 		return rule.WhenAsync((x, ctx, ct) => predicate(x, ct), applyConditionTo);
 	}
 
@@ -298,7 +298,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling WhenAsync.", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling WhenAsync.");
 		return rule.WhenAsync((x, ctx, ct) => predicate(x, ct), applyConditionTo);
 	}
 
@@ -311,7 +311,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling WhenAsync.", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling WhenAsync.");
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 		Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
 		return rule;
@@ -326,7 +326,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> WhenAsync<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling WhenAsync.", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling WhenAsync.");
 		// Default behaviour for When/Unless as of v1.3 is to apply the condition to all previous validators in the chain.
 		Configurable(rule).ApplyAsyncCondition((ctx, ct) => predicate(ctx.InstanceToValidate, ValidationContext<T>.GetFromNonGenericContext(ctx), ct), applyConditionTo);
 		return rule;
@@ -341,7 +341,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> UnlessAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling UnlessAsync", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling UnlessAsync");
 		return rule.UnlessAsync((x, ctx, ct) => predicate(x, ct), applyConditionTo);
 	}
 
@@ -354,7 +354,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> UnlessAsync<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling UnlessAsync", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling UnlessAsync");
 		return rule.UnlessAsync((x, ctx, ct) => predicate(x, ct), applyConditionTo);
 	}
 
@@ -367,7 +367,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> UnlessAsync<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling UnlessAsync", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling UnlessAsync");
 		return rule.WhenAsync(async (x, ctx, ct) => !await predicate(x, ctx, ct), applyConditionTo);
 	}
 
@@ -380,7 +380,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="applyConditionTo">Whether the condition should be applied to the current rule or all rules in the chain</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> UnlessAsync<T, TProperty>(this IRuleBuilderOptionsConditions<T, TProperty> rule, Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, ApplyConditionTo applyConditionTo = ApplyConditionTo.AllValidators) {
-		predicate.Guard("A predicate must be specified when calling UnlessAsync", nameof(predicate));
+		predicate.Guard("A predicate must be specified when calling UnlessAsync");
 		return rule.WhenAsync(async (x, ctx, ct) => !await predicate(x, ctx, ct), applyConditionTo);
 	}
 
@@ -392,7 +392,7 @@ public static class DefaultValidatorOptions {
 	/// <returns></returns>
 	public static IRuleBuilderInitialCollection<T, TCollectionElement> Where<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<TCollectionElement, bool> predicate) {
 		// This overload supports RuleFor().SetCollectionValidator() (which returns IRuleBuilderOptions<T, IEnumerable<TElement>>)
-		predicate.Guard("Cannot pass null to Where.", nameof(predicate));
+		predicate.Guard("Cannot pass null to Where.");
 		Configurable(rule).Filter = predicate;
 		return rule;
 	}
@@ -404,7 +404,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="predicate">The condition</param>
 	/// <returns></returns>
 	public static IRuleBuilderInitialCollection<T, TCollectionElement> WhereAsync<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<TCollectionElement, Task<bool>> predicate) {
-		predicate.Guard("Cannot pass null to Where.", nameof(predicate));
+		predicate.Guard("Cannot pass null to Where.");
 		// TODO: 12.x add AsyncFilter to ICollectionRule<T,TElement> to remove the cast.
 		var collectionRule = (CollectionPropertyRule<T, TCollectionElement>) Configurable(rule);
 		collectionRule.AsyncFilter = predicate;
@@ -418,7 +418,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="overridePropertyName">The property name to use</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string overridePropertyName) {
-		overridePropertyName.Guard("A property name must be specified when calling WithName.", nameof(overridePropertyName));
+		overridePropertyName.Guard("A property name must be specified when calling WithName.");
 		Configurable(rule).SetDisplayName(overridePropertyName);
 		return rule;
 	}
@@ -430,7 +430,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="nameProvider">Func used to retrieve the property's display name</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, string> nameProvider) {
-		nameProvider.Guard("A nameProvider WithName.", nameof(nameProvider));
+		nameProvider.Guard("A nameProvider WithName.");
 		// Must use null propagation here.
 		// The MVC clientside validation will try and retrieve the name, but won't
 		// be able to to so if we've used this overload of WithName.
@@ -450,7 +450,7 @@ public static class DefaultValidatorOptions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, string propertyName) {
 		// Allow string.Empty as this could be a model-level rule.
-		if (propertyName == null) throw new ArgumentNullException(nameof(propertyName), "A property name must be specified when calling OverridePropertyName.");
+		if (propertyName is null) throw new ArgumentNullException(nameof(propertyName), "A property name must be specified when calling OverridePropertyName.");
 		Configurable(rule).PropertyName = propertyName;
 		return rule;
 	}
@@ -463,9 +463,8 @@ public static class DefaultValidatorOptions {
 	/// <param name="expr">An expression referencing another property</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<T, object>> expr) {
-		if (expr == null) throw new ArgumentNullException(nameof(expr));
-		var member = expr.GetMember();
-		if (member == null) throw new NotSupportedException("Must supply a MemberExpression when calling OverridePropertyName");
+		var member = expr.GuardNotNull().GetMember();
+		if (member is null) throw new NotSupportedException("Must supply a MemberExpression when calling OverridePropertyName");
 		return rule.OverridePropertyName(member.Name);
 	}
 
@@ -478,7 +477,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="stateProvider"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, object> stateProvider) {
-		stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
+		stateProvider.Guard("A lambda expression must be passed to WithState");
 		var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, _) => stateProvider(ctx.InstanceToValidate));
 		Configurable(rule).Current.CustomStateProvider = wrapper;
 		return rule;
@@ -493,7 +492,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="stateProvider"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, object> stateProvider) {
-		stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
+		stateProvider.Guard("A lambda expression must be passed to WithState");
 
 		var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, val) => {
 			return stateProvider(ctx.InstanceToValidate, val);
@@ -512,7 +511,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="stateProvider"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithState<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, ValidationContext<T>, object> stateProvider) {
-		stateProvider.Guard("A lambda expression must be passed to WithState", nameof(stateProvider));
+		stateProvider.Guard("A lambda expression must be passed to WithState");
 
 		var wrapper = new Func<ValidationContext<T>, TProperty, object>((ctx, val) => {
 			return stateProvider(ctx.InstanceToValidate, val, ctx);
@@ -544,7 +543,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="severityProvider"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, Severity> severityProvider) {
-		severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
+		severityProvider.Guard("A lambda expression must be passed to WithSeverity");
 
 		Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
 			return severityProvider(ctx.InstanceToValidate);
@@ -563,7 +562,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="severityProvider"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, Severity> severityProvider) {
-		severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
+		severityProvider.Guard("A lambda expression must be passed to WithSeverity");
 
 		Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
 			return severityProvider(ctx.InstanceToValidate, value);
@@ -582,7 +581,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="severityProvider"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> WithSeverity<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Func<T, TProperty, ValidationContext<T>, Severity> severityProvider) {
-		severityProvider.Guard("A lambda expression must be passed to WithSeverity", nameof(severityProvider));
+		severityProvider.Guard("A lambda expression must be passed to WithSeverity");
 
 		Severity SeverityProvider(ValidationContext<T> ctx, TProperty value) {
 			return severityProvider(ctx.InstanceToValidate, value, ctx);
@@ -600,7 +599,7 @@ public static class DefaultValidatorOptions {
 	/// <returns></returns>
 	public static IRuleBuilderInitialCollection<T, TCollectionElement> OverrideIndexer<T, TCollectionElement>(this IRuleBuilderInitialCollection<T, TCollectionElement> rule, Func<T, IEnumerable<TCollectionElement>, TCollectionElement, int, string> callback) {
 		// This overload supports RuleFor().SetCollectionValidator() (which returns IRuleBuilderOptions<T, IEnumerable<TElement>>)
-		callback.Guard("Cannot pass null to OverrideIndexer.", nameof(callback));
+		callback.Guard("Cannot pass null to OverrideIndexer.");
 		Configurable(rule).IndexBuilder = callback;
 		return rule;
 	}
