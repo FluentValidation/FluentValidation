@@ -30,7 +30,7 @@ using Internal;
 /// <typeparam name="T">Root model type</typeparam>
 /// <typeparam name="TProperty">Base type of property being validated.</typeparam>
 public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProperty> {
-	readonly Dictionary<Type, DerivedValidatorFactory> _derivedValidators = new();
+	readonly Dictionary<Type, DerivedValidatorFactory> _derivedValidators = [];
 
 	// Need the base constructor call, even though we're just passing null.
 	public PolymorphicValidator() : base((IValidator<TProperty>) null, typeof(IValidator<TProperty>)) {

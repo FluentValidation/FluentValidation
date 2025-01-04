@@ -351,6 +351,6 @@ public class InheritanceValidatorTest {
 	public class Root {
 		public IFoo Foo { get; set; }
 
-		public List<IFoo> Foos { get; set; } = new List<IFoo>();
+		public List<IFoo> Foos { get; set; } = [];
 	}
 }

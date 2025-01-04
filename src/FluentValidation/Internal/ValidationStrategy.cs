@@ -69,7 +69,7 @@ public class ValidationStrategy<T> {
 	/// </summary>
 	/// <returns></returns>
 	public ValidationStrategy<T> IncludeRulesNotInRuleSet() {
-		_ruleSets ??= new List<string>();
+		_ruleSets ??= [];
 		_ruleSets.Add(RulesetValidatorSelector.DefaultRuleSetName);
 		return this;
 	}
@@ -80,7 +80,7 @@ public class ValidationStrategy<T> {
 	/// </summary>
 	/// <returns></returns>
 	public ValidationStrategy<T> IncludeAllRuleSets() {
-		_ruleSets ??= new List<string>();
+		_ruleSets ??= [];
 		_ruleSets.Add(RulesetValidatorSelector.WildcardRuleSetName);
 		return this;
 	}

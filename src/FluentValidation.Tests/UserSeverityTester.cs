@@ -28,7 +28,7 @@ public class UserSeverityTester : IDisposable {
 
 	public UserSeverityTester() {
 		ValidatorOptions.Global.Severity = Severity.Error;
-		validator = new TestValidator();
+		validator = [];
 	}
 
 	public void Dispose() {
@@ -84,7 +84,7 @@ public class UserSeverityTester : IDisposable {
 	[Fact]
 	public void Can_Provide_severity_for_item_in_collection() {
 		validator.RuleForEach(x => x.Children).NotNull().WithSeverity((person, child) => Severity.Warning);
-		var result = validator.Validate(new Person { Children = new List<Person> { null } });
+		var result = validator.Validate(new Person { Children = [null] });
 		result.Errors[0].Severity.ShouldEqual(Severity.Warning);
 	}
 

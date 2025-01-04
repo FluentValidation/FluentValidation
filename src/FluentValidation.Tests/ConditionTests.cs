@@ -207,7 +207,7 @@ public class ConditionTests {
 		var result = validator.Validate(new Person());
 		result.IsValid.ShouldBeTrue();
 
-		result = validator.Validate(new Person { Orders = new List<Order> { new Order() }});
+		result = validator.Validate(new Person { Orders = [new Order()]});
 		result.IsValid.ShouldBeFalse();
 	}
 
@@ -248,7 +248,7 @@ public class ConditionTests {
 		var result = validator.Validate(new Person());
 		result.IsValid.ShouldBeTrue();
 
-		result = validator.Validate(new Person { Children = new List<Person> { new() }});
+		result = validator.Validate(new Person { Children = [new()]});
 		result.IsValid.ShouldBeFalse();
 	}
 

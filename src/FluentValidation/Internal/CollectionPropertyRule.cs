@@ -199,7 +199,7 @@ internal partial class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumer
 	}
 
 	void IValidationRuleInternal<T>.AddDependentRules(IEnumerable<IValidationRuleInternal<T>> rules) {
-		if (DependentRules == null) DependentRules = new();
+		if (DependentRules == null) DependentRules = [];
 		DependentRules.AddRange(rules);
 	}
 

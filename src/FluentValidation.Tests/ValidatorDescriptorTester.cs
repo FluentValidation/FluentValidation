@@ -28,7 +28,7 @@ public class ValidatorDescriptorTester {
 
 	public ValidatorDescriptorTester() {
 		CultureScope.SetDefaultCulture();
-		validator = new TestValidator();
+		validator = [];
 	}
 
 	[Fact]

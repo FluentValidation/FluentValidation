@@ -59,7 +59,7 @@ public class ValidationResult {
 	/// Creates a new ValidationResult
 	/// </summary>
 	public ValidationResult() {
-		_errors = new List<ValidationFailure>();
+		_errors = [];
 	}
 
 	/// <summary>

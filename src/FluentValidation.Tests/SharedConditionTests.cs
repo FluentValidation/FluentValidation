@@ -713,10 +713,10 @@ public class SharedConditionTests {
 	[Fact]
 	public void When_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
 		var person = new Person {
-			Children = new List<Person> {
+			Children = [
 				new Person { Id = 1},
 				new Person { Id = 0}
-			}
+			]
 		};
 
 		var childValidator = new InlineValidator<Person>();
@@ -739,10 +739,10 @@ public class SharedConditionTests {
 	[Fact]
 	public async Task When_async_condition_executed_for_each_instance_of_RuleForEach_condition_should_not_be_cached() {
 		var person = new Person {
-			Children = new List<Person> {
+			Children = [
 				new Person { Id = 1},
 				new Person { Id = 0}
-			}
+			]
 		};
 
 		var childValidator = new InlineValidator<Person>();
@@ -779,9 +779,9 @@ public class SharedConditionTests {
 		// shouldn't throw an InvalidCastException.
 		var containerValidator = new InlineValidator<List<CollisionBase>>();
 		containerValidator.RuleForEach(x => x).SetValidator(v);
-		containerValidator.Validate(new List<CollisionBase> {
+		containerValidator.Validate([
 			new Collision1(), new Collision2()
-		});
+		]);
 	}
 
 	[Fact]
@@ -801,9 +801,9 @@ public class SharedConditionTests {
 		containerValidator.RuleForEach(x => x).SetValidator(v);
 
 		// shouldn't throw an InvalidCastException.
-		await containerValidator.ValidateAsync(new List<CollisionBase> {
+		await containerValidator.ValidateAsync([
 			new Collision1(), new Collision2()
-		});
+		]);
 	}
 
 

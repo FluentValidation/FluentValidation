@@ -35,8 +35,8 @@ public class Person {
 	public int? NullableInt { get; set; }
 
 	public Person() {
-		Children = new List<Person>();
-		Orders = new List<Order>();
+		Children = [];
+		Orders = [];
 	}
 
 	public int CalculateSalary() {

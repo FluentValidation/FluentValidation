@@ -32,8 +32,8 @@ public class AbstractValidatorTester {
 
 	public AbstractValidatorTester() {
 		CultureScope.SetDefaultCulture();
-		validator = new TestValidator();
-		testValidatorWithPreValidate = new TestValidatorWithPreValidate();
+		validator = [];
+		testValidatorWithPreValidate = [];
 	}
 
 	[Fact]

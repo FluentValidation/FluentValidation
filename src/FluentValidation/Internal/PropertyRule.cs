@@ -143,7 +143,7 @@ internal partial class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProp
 	}
 
 	void IValidationRuleInternal<T>.AddDependentRules(IEnumerable<IValidationRuleInternal<T>> rules) {
-		if (DependentRules == null) DependentRules = new();
+		if (DependentRules == null) DependentRules = [];
 		DependentRules.AddRange(rules);
 	}
 }

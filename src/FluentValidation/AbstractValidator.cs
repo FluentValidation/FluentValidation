@@ -34,7 +34,7 @@ using Results;
 /// </summary>
 /// <typeparam name="T">The type of the object being validated</typeparam>
 public abstract partial class AbstractValidator<T> : IValidator<T>, IEnumerable<IValidationRule> {
-	internal TrackingCollection<IValidationRuleInternal<T>> Rules { get; } = new();
+	internal TrackingCollection<IValidationRuleInternal<T>> Rules { get; } = [];
 	private Func<CascadeMode> _classLevelCascadeMode = () => ValidatorOptions.Global.DefaultClassLevelCascadeMode;
 	private Func<CascadeMode> _ruleLevelCascadeMode = () => ValidatorOptions.Global.DefaultRuleLevelCascadeMode;
 

@@ -28,7 +28,7 @@ public class CustomMessageFormatTester {
 	private TestValidator validator;
 
 	public CustomMessageFormatTester() {
-		validator = new TestValidator();
+		validator = [];
 		CultureScope.SetDefaultCulture();
 	}
 
@@ -92,7 +92,7 @@ public class CustomMessageFormatTester {
 		validator.RuleForEach(x => x.Orders).NotNull().WithMessage("{PropertyPath}");
 
 		var result = validator.Validate(new Person {
-			Orders = new List<Order> {null}
+			Orders = [null]
 		});
 
 		result.Errors[0].ErrorMessage.ShouldEqual("Surname");

@@ -25,7 +25,7 @@ public class ChainingValidatorsTester {
 	TestValidator validator;
 
 	public ChainingValidatorsTester() {
-		validator = new TestValidator();
+		validator = [];
 	}
 
 	[Fact]

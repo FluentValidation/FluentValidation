@@ -23,7 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 internal class TrackingCollection<T> : IEnumerable<T> {
-	readonly List<T> _innerCollection = new();
+	readonly List<T> _innerCollection = [];
 	public event Action<T> ItemAdded;
 	private Action<T> _capture = null;
 

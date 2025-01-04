@@ -27,8 +27,9 @@ using System.Linq;
 public class TrackingCollectionTests {
 	[Fact]
 	public void Add_AddsItem() {
-		var items = new TrackingCollection<string>();
-		items.Add("foo");
+		var items = new TrackingCollection<string> {
+				"foo"
+		};
 		items.Single().ShouldEqual("foo");
 	}
 

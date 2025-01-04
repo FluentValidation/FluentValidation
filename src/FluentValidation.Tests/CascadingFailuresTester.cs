@@ -30,7 +30,7 @@ public class CascadingFailuresTester : IDisposable {
 
 	public CascadingFailuresTester() {
 		SetBothGlobalCascadeModes(CascadeMode.Continue);
-		_validator = new TestValidator();
+		_validator = [];
 	}
 
 	public void Dispose() {

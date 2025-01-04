@@ -35,14 +35,14 @@ public class CollectionValidatorWithParentTests {
 	public CollectionValidatorWithParentTests() {
 		person = new Person() {
 			AnotherInt = 99,
-			Children = new List<Person>() {
+			Children = [
 				new Person() {Email = "person@email.com"}
-			},
-			Orders = new List<Order>() {
+			],
+			Orders = [
 				new Order {ProductName = "email_that_does_not_belong_to_a_person", Amount = 99},
 				new Order {ProductName = "person@email.com", Amount = 1},
 				new Order {ProductName = "another_email_that_does_not_belong_to_a_person", Amount = 1},
-			}
+			]
 		};
 	}
 
@@ -218,7 +218,7 @@ public class CollectionValidatorWithParentTests {
 		validator.RuleForEach(x => x).SetValidator(personValidator);
 
 
-		var results = validator.Validate(new List<Person> {new Person(), new Person(), new Person {Surname = "Bishop"}});
+		var results = validator.Validate([new Person(), new Person(), new Person {Surname = "Bishop"}]);
 		results.Errors.Count.ShouldEqual(2);
 		results.Errors[0].PropertyName.ShouldEqual("x[0].Surname");
 	}
@@ -232,7 +232,7 @@ public class CollectionValidatorWithParentTests {
 		validator.RuleForEach(x => x).SetValidator(personValidator).OverridePropertyName("test");
 
 
-		var results = validator.Validate(new List<Person> {new Person(), new Person(), new Person {Surname = "Bishop"}});
+		var results = validator.Validate([new Person(), new Person(), new Person {Surname = "Bishop"}]);
 		results.Errors.Count.ShouldEqual(2);
 		results.Errors[0].PropertyName.ShouldEqual("test[0].Surname");
 	}
@@ -250,10 +250,10 @@ public class CollectionValidatorWithParentTests {
 		personValidator.RuleForEach(x => x.Orders)
 			.SetValidator((p, order) => order.ProductName == "FreeProduct" ? freeOrderValidator : normalOrderValidator);
 
-		var result1 = personValidator.Validate(new Person() {Orders = new List<Order> {new Order {ProductName = "FreeProduct"}}});
+		var result1 = personValidator.Validate(new Person() {Orders = [new Order {ProductName = "FreeProduct"}]});
 		result1.IsValid.ShouldBeTrue();
 
-		var result2 = personValidator.Validate(new Person() {Orders = new List<Order> {new Order()}});
+		var result2 = personValidator.Validate(new Person() {Orders = [new Order()]});
 		result2.IsValid.ShouldBeFalse();
 		result2.Errors[0].ErrorCode.ShouldEqual("GreaterThanValidator");
 	}

@@ -25,7 +25,7 @@ using Xunit;
 public class CustomValidatorTester {
 	private TestValidator validator;
 	public CustomValidatorTester() {
-		validator = new TestValidator();
+		validator = [];
 	}
 
 	[Fact]

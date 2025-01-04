@@ -36,11 +36,11 @@ public class ChildRulesTests {
 		});
 
 		var result = validator.Validate(new Person {
-			Orders = new List<Order> {
+			Orders = [
 				new Order { ProductName = null, Amount = 10 },
 				new Order { ProductName = "foo", Amount = 0},
 				new Order { ProductName = "foo", Amount = 10 }
-			}
+			]
 		});
 
 		result.Errors.Count.ShouldEqual(2);
@@ -56,9 +56,9 @@ public class ChildRulesTests {
 		// not inside the "testing" ruleset (going by the usual way rulesets cascade).
 		// However, child rules should still be executed.
 		var result = validator.Validate(new Person {
-			Orders = new List<Order> {
+			Orders = [
 				new Order()
-			}
+			]
 		}, options => options.IncludeRuleSets("testing"));
 
 		result.Errors.Count.ShouldEqual(2);
@@ -67,9 +67,9 @@ public class ChildRulesTests {
 
 		// They shouldn't be executed if a different ruleset is chosen.
 		result = validator.Validate(new Person {
-			Orders = new List<Order> {
+			Orders = [
 				new Order()
-			}
+			]
 		}, options => options.IncludeRuleSets("other"));
 
 		result.Errors.Count.ShouldEqual(0);
@@ -83,9 +83,9 @@ public class ChildRulesTests {
 		// the rules inside the rule set "b" should not be used for the validation
 		// if the validation context specified the ruleset "a"
 		var result = validator.Validate(new Person {
-			Orders = new List<Order> {
+			Orders = [
 				new Order()
-			}
+			]
 		}, options => options.IncludeRuleSets("a"));
 
 		result.Errors.Count.ShouldEqual(1);
@@ -160,15 +160,15 @@ public class ChildRulesTests {
 		}
 
 		public class Foo {
-			public List<string> Names { get; } = new();
+			public List<string> Names { get; } = [];
 		}
 
 		public class Bar {
-			public List<Foo> Foos { get; set; } = new();
+			public List<Foo> Foos { get; set; } = [];
 		}
 
 		public class Baz {
-			public List<Bar> Bars { get; set; } = new();
+			public List<Bar> Bars { get; set; } = [];
 		}
 	}
 

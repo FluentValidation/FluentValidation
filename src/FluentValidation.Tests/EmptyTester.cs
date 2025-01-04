@@ -96,7 +96,7 @@ public class EmptyTester {
 			v => v.RuleFor(x => x.Children).Empty()
 		};
 
-		var result = validator.Validate(new Person { Children = new List<Person>() });
+		var result = validator.Validate(new Person { Children = [] });
 		result.IsValid.ShouldBeTrue();
 	}
 

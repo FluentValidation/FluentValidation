@@ -38,10 +38,10 @@ public class ForEachRuleTests {
 		_counter = 0;
 
 		_person = new Person() {
-			Orders = new List<Order>() {
+			Orders = [
 				new Order { Amount = 5},
 				new Order { ProductName = "Foo"}
-			}
+			]
 		};
 	}
 
@@ -210,7 +210,7 @@ public class ForEachRuleTests {
 		);
 
 		await validator.ValidateAsync(new Person() {
-			Children = new List<Person> {new Person(), new Person() }
+			Children = [new Person(), new Person()]
 		});
 
 		Assert.NotEmpty(result);
@@ -268,7 +268,7 @@ public class ForEachRuleTests {
 				forEachElement.NotNull().WithMessage("Bar");
 			});
 
-		var result = validator.Validate(new Person {Children = new List<Person> {null, null}});
+		var result = validator.Validate(new Person {Children = [null, null]});
 		result.Errors.Count.ShouldEqual(3);
 		result.Errors[0].ErrorMessage.ShouldEqual("Foo");
 		result.Errors[0].PropertyName.ShouldEqual("Children");
@@ -331,18 +331,18 @@ public class ForEachRuleTests {
 		// by using WithMessage or any other standard option.
 
 		var result = validator.Validate(new Person() {
-			Orders = new List<Order>() { new Order()}
+			Orders = [new Order()]
 		});
 
 		result.IsValid.ShouldBeTrue();
 	}
 
 	public class ApplicationViewModel {
-		public List<ApplicationGroup> TradingExperience { get; set; } = new List<ApplicationGroup> {new ApplicationGroup()};
+		public List<ApplicationGroup> TradingExperience { get; set; } = [new ApplicationGroup()];
 	}
 
 	public class ApplicationGroup {
-		public List<Question> Questions = new List<Question> {new Question()};
+		public List<Question> Questions = [new Question()];
 	}
 
 	public class Question {
@@ -551,7 +551,7 @@ public class ForEachRuleTests {
 		childValidator.RuleFor(x => x.Forename).NotNull();
 		validator.RuleForEach(x => x.Children).SetValidator(childValidator);
 
-		validator.Validate(new Person() { Children = new List<Person> { new Person() }});
+		validator.Validate(new Person() { Children = [new Person()]});
 		childValidator.WasCalledAsync.ShouldEqual(false);
 	}
 
@@ -562,7 +562,7 @@ public class ForEachRuleTests {
 		childValidator.RuleFor(x => x.Forename).NotNull();
 		validator.RuleForEach(x => x.Children).SetValidator(childValidator);
 
-		await validator.ValidateAsync(new Person() {Children = new List<Person> {new Person()}});
+		await validator.ValidateAsync(new Person() {Children = [new Person()]});
 		childValidator.WasCalledAsync.ShouldEqual(true);
 	}
 
@@ -570,7 +570,7 @@ public class ForEachRuleTests {
 	public void Can_access_colletion_index() {
 		var validator = new InlineValidator<Person>();
 		validator.RuleForEach(x => x.Orders).NotNull().WithMessage("{CollectionIndex}");
-		var result = validator.Validate(new Person {Orders = new List<Order>() {new Order(), null}});
+		var result = validator.Validate(new Person {Orders = [new Order(), null]});
 		result.IsValid.ShouldBeFalse();
 		result.Errors[0].ErrorMessage.ShouldEqual("1");
 	}
@@ -579,7 +579,7 @@ public class ForEachRuleTests {
 	public async Task Can_access_colletion_index_async() {
 		var validator = new InlineValidator<Person>();
 		validator.RuleForEach(x => x.Orders).MustAsync((x, ct) => Task.FromResult(x != null)).WithMessage("{CollectionIndex}");
-		var result = await validator.ValidateAsync(new Person {Orders = new List<Order>() {new Order(), null}});
+		var result = await validator.ValidateAsync(new Person {Orders = [new Order(), null]});
 		result.IsValid.ShouldBeFalse();
 		result.Errors[0].ErrorMessage.ShouldEqual("1");
 	}
@@ -594,7 +594,7 @@ public class ForEachRuleTests {
 		var result = validator.Validate(Tuple.Create((Person) null));
 		result.IsValid.ShouldBeTrue();
 
-		result = validator.Validate(Tuple.Create(new Person() { Orders = new List<Order> { new Order() }}));
+		result = validator.Validate(Tuple.Create(new Person() { Orders = [new Order()]}));
 		result.IsValid.ShouldBeFalse();
 	}
 
@@ -609,7 +609,7 @@ public class ForEachRuleTests {
 		var result =	await validator.ValidateAsync(Tuple.Create((Person) null));
 		result.IsValid.ShouldBeTrue();
 
-		result = await validator.ValidateAsync(Tuple.Create(new Person() { Orders = new List<Order> { new Order() }}));
+		result = await validator.ValidateAsync(Tuple.Create(new Person() { Orders = [new Order()]}));
 		result.IsValid.ShouldBeFalse();
 	}
 
@@ -633,11 +633,11 @@ public class ForEachRuleTests {
 		personValidator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
 
 		var result = personValidator.Validate(new Person() {
-			Orders = new List<Order> {
+			Orders = [
 				new Order() { ProductName =  "foo"},
 				new Order(),
 				new Order() { ProductName = "bar" }
-			}
+			]
 		});
 
 		result.IsValid.ShouldBeFalse();
@@ -665,11 +665,11 @@ public class ForEachRuleTests {
 		personValidator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
 
 		var result = await personValidator.ValidateAsync(new Person() {
-			Orders = new List<Order> {
+			Orders = [
 				new Order() { ProductName =  "foo"},
 				new Order(),
 				new Order() { ProductName = "bar" }
-			}
+			]
 		});
 
 		result.IsValid.ShouldBeFalse();

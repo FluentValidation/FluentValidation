@@ -170,10 +170,10 @@ public class ValidatorSelectorTests {
 			Address = new Address {
 				Country = new Country()
 			},
-			Orders = new List<Order> {
+			Orders = [
 				new() {Amount = 5},
 				new() {ProductName = "Foo"}
-			}
+			]
 		};
 
 		var validator = new InlineValidator<Person>();
@@ -198,10 +198,10 @@ public class ValidatorSelectorTests {
 			Address = new Address {
 				Country = new Country()
 			},
-			Orders = new List<Order> {
+			Orders = [
 				new() {Amount = 5},
 				new() {ProductName = "Foo"}
-			}
+			]
 		};
 
 		var validator = new InlineValidator<Person>();
@@ -223,11 +223,11 @@ public class ValidatorSelectorTests {
 			Address = new Address {
 				Country = new Country()
 			},
-			Orders = new List<Order> {
+			Orders = [
 				new() {Amount = 5},
 				new() {ProductName = "Foo"},
 				new() {Amount = 10}
-			}
+			]
 		};
 
 		var validator = new InlineValidator<Person>();
@@ -248,21 +248,21 @@ public class ValidatorSelectorTests {
 	[Fact]
 	public void Only_validates_single_child_property_of_all_elements_in_nested_collection() {
 		var person = new Person {
-			Orders = new List<Order> {
+			Orders = [
 				new() {
 					Amount = 5,
-					Payments = new List<Payment> {
+					Payments = [
 						new Payment() { Amount = 0 },
-					}
+					]
 				},
 				new() {
 					ProductName = "Foo",
-					Payments = new List<Payment> {
+					Payments = [
 						new Payment() { Amount = 1 },
 						new Payment() { Amount = 0 }
-					}
+					]
 				},
-			}
+			]
 		};
 
 		var validator = new InlineValidator<Person>();

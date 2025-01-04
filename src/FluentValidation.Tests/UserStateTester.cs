@@ -29,7 +29,7 @@ public class UserStateTester {
 
 
 	public  UserStateTester() {
-		validator = new TestValidator();
+		validator = [];
 	}
 
 	[Fact]
@@ -62,7 +62,7 @@ public class UserStateTester {
 	[Fact]
 	public void Can_provide_state_for_item_in_collection() {
 		validator.RuleForEach(x => x.Children).NotNull().WithState((person, child) => "test");
-		var result = validator.Validate(new Person {Children = new List<Person> {null}});
+		var result = validator.Validate(new Person {Children = [null]});
 		result.Errors[0].CustomState.ToString().ShouldEqual("test");
 	}
 

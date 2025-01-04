@@ -105,7 +105,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <param name="propertyChain"></param>
 	/// <param name="validatorSelector"></param>
 	public ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector)
-		: this(instanceToValidate, propertyChain, validatorSelector, new List<ValidationFailure>(), ValidatorOptions.Global.MessageFormatterFactory()) {
+		: this(instanceToValidate, propertyChain, validatorSelector, [], ValidatorOptions.Global.MessageFormatterFactory()) {
 	}
 
 	internal ValidationContext(T instanceToValidate, PropertyChain propertyChain, IValidatorSelector validatorSelector, List<ValidationFailure> failures, MessageFormatter messageFormatter) {
@@ -189,7 +189,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// </summary>
 	internal Dictionary<string, Dictionary<T, bool>> SharedConditionCache {
 		get {
-			_sharedConditionCache ??= new();
+			_sharedConditionCache ??= [];
 			return _sharedConditionCache;
 		}
 	}
@@ -211,7 +211,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 
 		// Parameters match
 		if (context.InstanceToValidate is T instanceToValidate) {
-			var failures = (context is IHasFailures f) ? f.Failures : new List<ValidationFailure>();
+			var failures = (context is IHasFailures f) ? f.Failures : [];
 
 			return new ValidationContext<T>(instanceToValidate, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 				IsChildContext = context.IsChildContext,
@@ -223,7 +223,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 		}
 
 		if (context.InstanceToValidate == null) {
-			var failures = (context is IHasFailures f) ? f.Failures : new List<ValidationFailure>();
+			var failures = (context is IHasFailures f) ? f.Failures : [];
 
 			return new ValidationContext<T>(default, context.PropertyChain, context.Selector, failures, ValidatorOptions.Global.MessageFormatterFactory()) {
 				IsChildContext = context.IsChildContext,

@@ -22,7 +22,7 @@ internal class TestValidationContinuation : ITestValidationContinuation, ITestVa
 
 	public TestValidationContinuation(IEnumerable<ValidationFailure> failures, ITestValidationContinuation parent = null) {
 		_allFailures = failures;
-		_predicates = new List<Func<ValidationFailure, bool>>();
+		_predicates = [];
 		Parent = parent;
 	}
 

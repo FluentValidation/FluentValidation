@@ -33,7 +33,7 @@ public class RuleBuilderTests {
 
 
 	public  RuleBuilderTests() {
-		_validator = new InlineValidator<Person>();
+		_validator = [];
 		builder = _validator.RuleFor(x => x.Surname);
 		builder.Configure(rule => _rule = rule);
 	}

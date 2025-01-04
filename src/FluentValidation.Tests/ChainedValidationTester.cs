@@ -28,15 +28,15 @@ public class ChainedValidationTester {
 	Person person;
 
 	public ChainedValidationTester() {
-		validator = new PersonValidator();
+		validator = [];
 		person = new Person {
 			Address = new Address {
 				Country = new Country()
 			},
-			Orders = new List<Order> {
+			Orders = [
 				new Order() { Amount = 5 },
 				new Order() { ProductName = "Foo" }
-			}
+			]
 		};
 	}
 

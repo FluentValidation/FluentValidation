@@ -29,7 +29,7 @@ using Results;
 using Validators;
 
 internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TValue> {
-	private readonly List<RuleComponent<T, TValue>> _components = new();
+	private readonly List<RuleComponent<T, TValue>> _components = [];
 	private Func<CascadeMode> _cascadeModeThunk;
 	private string _propertyDisplayName;
 	private string _propertyName;

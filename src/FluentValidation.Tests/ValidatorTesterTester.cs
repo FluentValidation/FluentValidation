@@ -31,7 +31,7 @@ public class ValidatorTesterTester {
 
 	public ValidatorTesterTester() {
 		CultureScope.SetDefaultCulture();
-		validator = new TestValidator();
+		validator = [];
 		validator.RuleFor(x => x.Forename).NotNull();
 		validator.RuleForEach(person => person.NickNames).MinimumLength(5);
 		CultureScope.SetDefaultCulture();
@@ -695,7 +695,7 @@ public class ValidatorTesterTester {
 		orderValidator.RuleFor(x => x.ProductName).NotNull();
 		validator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
 
-		var model = new Person { Orders = new List<Order> { new Order() }};
+		var model = new Person { Orders = [new Order()]};
 		var result = validator.TestValidate(model);
 		result.ShouldHaveValidationErrorFor("Orders[0].ProductName");
 	}
@@ -707,7 +707,7 @@ public class ValidatorTesterTester {
 		orderValidator.RuleFor(x => x.ProductName).Null();
 		validator.RuleForEach(x => x.Orders).SetValidator(orderValidator);
 
-		var model = new Person { Orders = new List<Order> { new Order() }};
+		var model = new Person { Orders = [new Order()]};
 		var result = validator.TestValidate(model);
 		result.ShouldNotHaveValidationErrorFor("Orders[0].ProductName");
 	}
