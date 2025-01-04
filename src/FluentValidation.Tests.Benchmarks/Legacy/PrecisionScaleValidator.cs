@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 
 // Copyright (c) .NET Foundation and contributors.
 //
@@ -18,8 +18,9 @@
 
 #endregion
 
-namespace FluentValidation.Validators;
+namespace FluentValidation.Tests.Benchmarks.Legacy;
 
+using global::FluentValidation.Validators;
 using System;
 
 // Attribution: This class was contributed to FluentValidation using code posted on StackOverflow by Jon Skeet
@@ -90,42 +91,54 @@ public class PrecisionScaleValidator<T> : PropertyValidator<T, decimal> {
 		return true;
 	}
 
-	/// <summary>Returns the positive value with the scale reset to zero.</summary>
-	private static decimal GetMantissa(decimal Decimal) {
-		var bits = decimal.GetBits(Decimal);
-		return new decimal(bits[0], bits[1], bits[2], false, 0);
+	private static UInt32[] GetBits(decimal Decimal) {
+		// We want the integer parts as uint
+		// C# doesn't permit int[] to uint[] conversion, but .NET does. This is somewhat evil...
+		return (uint[])(object)decimal.GetBits(Decimal);
 	}
 
-	private int GetScale(decimal Decimal)
-		=> IgnoreTrailingZeros
-		? Decimal.Scale - NumTrailingZeros(Decimal)
-		: Decimal.Scale;
+	private static decimal GetMantissa(decimal Decimal) {
+		var bits = GetBits(Decimal);
+		return (bits[2] * 4294967296m * 4294967296m) + (bits[1] * 4294967296m) + bits[0];
+	}
 
-	private static int NumTrailingZeros(decimal Decimal) {
-		var trailingZeros = 0;
-		var scale = Decimal.Scale;
-		var tmp = GetMantissa(Decimal);
+	private static uint GetUnsignedScale(decimal Decimal) {
+		var bits = GetBits(Decimal);
+		uint scale = (bits[3] >> 16) & 31;
+		return scale;
+	}
 
-		while (trailingZeros < scale && tmp % 10 == 0) {
-			trailingZeros++;
-			tmp /= 10;
+	private int GetScale(decimal Decimal) {
+		uint scale = GetUnsignedScale(Decimal);
+		if (IgnoreTrailingZeros) {
+			return (int)(scale - NumTrailingZeros(Decimal));
 		}
+
+		return (int)scale;
+	}
+
+	private static uint NumTrailingZeros(decimal Decimal) {
+		uint trailingZeros = 0;
+		uint scale = GetUnsignedScale(Decimal);
+		for (decimal tmp = GetMantissa(Decimal); tmp % 10m == 0 && trailingZeros < scale; tmp /= 10) {
+			trailingZeros++;
+		}
+
 		return trailingZeros;
 	}
 
 	private int GetPrecision(decimal Decimal) {
 		// Precision: number of times we can divide by 10 before we get to 0
-		var precision = 0;
-		var tmp = GetMantissa(Decimal);
-
-		while (tmp >= 1) {
+		uint precision = 0;
+		for (decimal tmp = GetMantissa(Decimal); tmp >= 1; tmp /= 10) {
 			precision++;
-			tmp /= 10;
 		}
 
-		return IgnoreTrailingZeros
-			? precision - NumTrailingZeros(Decimal)
-			: precision;
+		if (IgnoreTrailingZeros) {
+			return (int)(precision - NumTrailingZeros(Decimal));
+		}
+
+		return (int)precision;
 	}
 
 	protected override string GetDefaultMessageTemplate(string errorCode) {
