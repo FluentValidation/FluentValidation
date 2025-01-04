@@ -510,8 +510,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="valueToCompare">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		TProperty valueToCompare)
+	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare)
 		where TProperty : IComparable<TProperty>, IComparable {
 		return ruleBuilder.SetValidator(new LessThanValidator<T, TProperty>(valueToCompare));
 	}
@@ -526,8 +526,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="valueToCompare">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
-		TProperty valueToCompare)
+	public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty valueToCompare)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
 		return ruleBuilder.SetValidator(new LessThanValidator<T, TProperty>(valueToCompare));
 	}
@@ -572,7 +572,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="valueToCompare">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare)
+	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty> ruleBuilder, TProperty valueToCompare)
 		where TProperty : IComparable<TProperty>, IComparable {
 		return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(valueToCompare));
 	}
@@ -587,7 +588,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="valueToCompare">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty valueToCompare)
+	public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty?> ruleBuilder, TProperty valueToCompare)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
 		return ruleBuilder.SetValidator(new GreaterThanValidator<T,TProperty>(valueToCompare));
 	}
@@ -631,8 +633,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">A lambda that should return the value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		Expression<Func<T, TProperty>> expression)
+	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression)
 		where TProperty : IComparable<TProperty>, IComparable {
 		ArgumentNullException.ThrowIfNull(expression);
 
@@ -652,8 +654,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">A lambda that should return the value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		Expression<Func<T, TProperty?>> expression)
+	public static IRuleBuilderOptions<T, TProperty> LessThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
 		ArgumentNullException.ThrowIfNull(expression);
 
@@ -677,8 +679,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">A lambda that should return the value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
-		Expression<Func<T, TProperty>> expression)
+	public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty?> ruleBuilder,	Expression<Func<T, TProperty>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
 		ArgumentNullException.ThrowIfNull(expression);
 
@@ -699,8 +701,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">A lambda that should return the value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
-		Expression<Func<T, TProperty?>> expression)
+	public static IRuleBuilderOptions<T, TProperty?> LessThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
 		ArgumentNullException.ThrowIfNull(expression);
 
@@ -817,8 +819,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		Expression<Func<T, TProperty>> expression)
+	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression)
 		where TProperty : IComparable<TProperty>, IComparable {
 		ArgumentNullException.ThrowIfNull(expression);
 
@@ -839,8 +841,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder,
-		Expression<Func<T, TProperty?>> expression)
+	public static IRuleBuilderOptions<T, TProperty> GreaterThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
 		ArgumentNullException.ThrowIfNull(expression);
 
@@ -864,8 +866,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
-		Expression<Func<T, TProperty>> expression)
+	public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty?> ruleBuilder,	Expression<Func<T, TProperty>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
 		ArgumentNullException.ThrowIfNull(expression);
 
@@ -886,8 +888,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <param name="expression">The value being compared</param>
 	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder,
-		Expression<Func<T, TProperty?>> expression)
+	public static IRuleBuilderOptions<T, TProperty?> GreaterThan<T, TProperty>(
+		this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
 		ArgumentNullException.ThrowIfNull(expression);
 
@@ -909,16 +911,16 @@ public static partial class DefaultValidatorExtensions {
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="valueToCompare">The value being compared</param>
+	/// <param name="expression">The value being compared</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> GreaterThanOrEqualTo<T, TProperty>(
-		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> valueToCompare)
+		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty>> expression)
 		where TProperty : IComparable<TProperty>, IComparable {
-		ArgumentNullException.ThrowIfNull(valueToCompare);
+		ArgumentNullException.ThrowIfNull(expression);
 
-		var member = valueToCompare.GetMember();
-		var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
-		var name = GetDisplayName(member, valueToCompare);
+		var member = expression.GetMember();
+		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
+		var name = GetDisplayName(member, expression);
 
 		return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(func, member, name));
 	}
@@ -931,16 +933,16 @@ public static partial class DefaultValidatorExtensions {
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="valueToCompare">The value being compared</param>
+	/// <param name="expression">The value being compared</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> GreaterThanOrEqualTo<T, TProperty>(
-		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty?>> valueToCompare)
+		this IRuleBuilder<T, TProperty> ruleBuilder, Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
-		ArgumentNullException.ThrowIfNull(valueToCompare);
+		ArgumentNullException.ThrowIfNull(expression);
 
-		var member = valueToCompare.GetMember();
-		var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
-		var name = GetDisplayName(member, valueToCompare);
+		var member = expression.GetMember();
+		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
+		var name = GetDisplayName(member, expression);
 
 		return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(instance => {
 			var nullable = func(instance);
@@ -956,40 +958,41 @@ public static partial class DefaultValidatorExtensions {
 	/// <typeparam name="T">Type of object being validated</typeparam>
 	/// <typeparam name="TProperty">Type of property being validated</typeparam>
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="valueToCompare">The value being compared</param>
-	/// <returns></returns>
-	public static IRuleBuilderOptions<T, TProperty?> GreaterThanOrEqualTo<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty?>> valueToCompare)
-		where TProperty : struct, IComparable<TProperty>, IComparable {
-		ArgumentNullException.ThrowIfNull(valueToCompare);
-
-		var member = valueToCompare.GetMember();
-		var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
-		var name = GetDisplayName(member, valueToCompare);
-
-		return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(instance => {
-			var nullable = func(instance);
-			return (nullable.HasValue, nullable ?? default);
-		}, member, name));
-	}
-
-	/// <summary>
-	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression.
-	/// The validation will succeed if the property value is greater than or equal the specified value.
-	/// The validation will fail if the property value is less than the specified value.
-	/// </summary>
-	/// <typeparam name="T">Type of object being validated</typeparam>
-	/// <typeparam name="TProperty">Type of property being validated</typeparam>
-	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
-	/// <param name="valueToCompare">The value being compared</param>
+	/// <param name="expression">The value being compared</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty?> GreaterThanOrEqualTo<T, TProperty>(
-		this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty>> valueToCompare)
+		this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty?>> expression)
 		where TProperty : struct, IComparable<TProperty>, IComparable {
-		ArgumentNullException.ThrowIfNull(valueToCompare);
+		ArgumentNullException.ThrowIfNull(expression);
 
-		var member = valueToCompare.GetMember();
-		var func = AccessorCache<T>.GetCachedAccessor(member, valueToCompare);
-		var name = GetDisplayName(member, valueToCompare);
+		var member = expression.GetMember();
+		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
+		var name = GetDisplayName(member, expression);
+
+		return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(instance => {
+			var nullable = func(instance);
+			return (nullable.HasValue, nullable ?? default);
+		}, member, name));
+	}
+
+	/// <summary>
+	/// Defines a 'greater than or equal to' validator on the current rule builder using a lambda expression.
+	/// The validation will succeed if the property value is greater than or equal the specified value.
+	/// The validation will fail if the property value is less than the specified value.
+	/// </summary>
+	/// <typeparam name="T">Type of object being validated</typeparam>
+	/// <typeparam name="TProperty">Type of property being validated</typeparam>
+	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+	/// <param name="expression">The value being compared</param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, TProperty?> GreaterThanOrEqualTo<T, TProperty>(
+		this IRuleBuilder<T, TProperty?> ruleBuilder, Expression<Func<T, TProperty>> expression)
+		where TProperty : struct, IComparable<TProperty>, IComparable {
+		ArgumentNullException.ThrowIfNull(expression);
+
+		var member = expression.GetMember();
+		var func = AccessorCache<T>.GetCachedAccessor(member, expression);
+		var name = GetDisplayName(member, expression);
 
 		return ruleBuilder.SetValidator(new GreaterThanOrEqualValidator<T,TProperty>(func, member, name));
 	}
