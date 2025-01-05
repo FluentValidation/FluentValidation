@@ -20,8 +20,8 @@ namespace FluentValidation.Tests;
 
 using Xunit;
 
-public class ScalePrecisionValidatorTests {
-	public ScalePrecisionValidatorTests() {
+public class PrecisionScaleValidatorTests {
+	public PrecisionScaleValidatorTests() {
 		CultureScope.SetDefaultCulture();
 	}
 
