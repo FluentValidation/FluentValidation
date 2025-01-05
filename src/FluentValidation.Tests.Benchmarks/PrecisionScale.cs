@@ -6,8 +6,6 @@ namespace FluentValidation.Tests.Benchmarks;
 public class PrecisionScale {
 
 	private readonly PrecisionScaleValidator<Model> Validator = new(10, 3, true);
-	private readonly Legacy.PrecisionScaleValidator<Model> LegacyValidator = new(10, 3, true);
-
 	private readonly decimal[] Values = new decimal[1000];
 	private readonly ValidationContext<Model> Context = new(new());
 
@@ -27,19 +25,8 @@ public class PrecisionScale {
 		}
 	}
 
-	[Benchmark(Baseline = true)]
-	public bool Legacy() {
-		var result = false;
-
-		foreach (var value in Values) {
-			result |= LegacyValidator.IsValid(Context, value);
-		}
-
-		return result;
-	}
-
 	[Benchmark]
-	public bool Current() {
+	public bool IsValid() {
 		var result = false;
 
 		foreach (var value in Values) {
