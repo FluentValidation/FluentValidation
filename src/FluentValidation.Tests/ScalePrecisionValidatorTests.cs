@@ -25,29 +25,43 @@ public class ScalePrecisionValidatorTests {
 		CultureScope.SetDefaultCulture();
 	}
 
-	[Theory]
-	[InlineData(12.34)]
-	[InlineData(2.34)]
-	[InlineData(-2.34)]
-	[InlineData(0.34)]
-	[InlineData(0.04)]
-	public void Scale_precision_should_be_valid(decimal discount) {
+	[Fact]
+	public void Scale_precision_should_be_valid() {
 		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).PrecisionScale(4, 2, false));
 
-		var result = validator.Validate(new Person { Discount = discount });
+		var result = validator.Validate(new Person { Discount = 12.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { Discount = 2.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { Discount = -2.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { Discount = 0.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { Discount = 0.04M });
 		result.IsValid.ShouldBeTrue();
 	}
 
-	[InlineData(12.34)]
-	[InlineData(2.34)]
-	[InlineData(-2.34)]
-	[InlineData(0.34)]
-	[InlineData(0.04)]
-	[InlineData(null)]
-	public void Scale_precision_should_be_valid_nullable(decimal? discount) {
+	[Fact]
+	public void Scale_precision_should_be_valid_nullable() {
 		var validator = new TestValidator(v => v.RuleFor(x => x.NullableDiscount).PrecisionScale(4, 2, false));
 
-		var result = validator.Validate(new Person { NullableDiscount = discount });
+		var result = validator.Validate(new Person { NullableDiscount = 12.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { NullableDiscount = 2.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { NullableDiscount = -2.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { NullableDiscount = 0.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { NullableDiscount = null });
 		result.IsValid.ShouldBeTrue();
 	}
 
@@ -109,14 +123,20 @@ public class ScalePrecisionValidatorTests {
 		result.Errors[0].ErrorMessage.ShouldEqual("'Discount' must not be more than 4 digits in total, with allowance for 2 decimals. 5 digits and 3 decimals were found.");
 	}
 
-	[InlineData(+0.34)]
-	[InlineData(+0.30)]
-	[InlineData(+0.00)]
-	[InlineData(-0.34)]
-	public void Scale_precision_should_be_valid_when_they_are_equal(decimal discount) {
+	[Fact]
+	public void Scale_precision_should_be_valid_when_they_are_equal() {
 		var validator = new TestValidator(v => v.RuleFor(x => x.Discount).PrecisionScale(2, 2, false));
 
-		var result = validator.Validate(new Person { Discount = discount });
+		var result = validator.Validate(new Person { Discount = 0.34M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { Discount = 0.3M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { Discount = 0M });
+		result.IsValid.ShouldBeTrue();
+
+		result = validator.Validate(new Person { Discount = -0.34M });
 		result.IsValid.ShouldBeTrue();
 	}
 
