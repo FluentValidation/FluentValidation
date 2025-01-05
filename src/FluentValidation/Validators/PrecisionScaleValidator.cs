@@ -65,19 +65,17 @@ public class PrecisionScaleValidator<T> : PropertyValidator<T, decimal> {
 	public bool IgnoreTrailingZeros { get; }
 
 	public override bool IsValid(ValidationContext<T> context, decimal decimalValue) {
-		var scale = GetScale(decimalValue);
-		var precision = GetPrecision(decimalValue);
-		var actualIntegerDigits = precision - scale;
+		var info = Info.Get(decimalValue, IgnoreTrailingZeros);
 		var expectedIntegerDigits = Precision - Scale;
-		if (scale > Scale || actualIntegerDigits > expectedIntegerDigits) {
+		if (info.Scale > Scale || info.IntegerDigits > expectedIntegerDigits) {
 			// Precision and scale alone may not be enough to describe why a value is invalid.
 			// For example, given an expected precision of 3 and scale of 2, the value "123" is invalid, even though precision
 			// is 3 and scale is 0. So as a workaround we can provide actual precision and scale as if value
 			// was "right-padded" with zeros to the amount of expected decimals, so that it would look like
 			// complement zeros were added in the decimal part for calculation of precision. In the above
 			// example actual precision and scale would be printed as 5 and 2 as if value was 123.00.
-			var printedActualScale = Math.Max(scale, Scale);
-			var printedActualPrecision = Math.Max(actualIntegerDigits, 1) + printedActualScale;
+			var printedActualScale = Math.Max(info.Scale, Scale);
+			var printedActualPrecision = Math.Max(info.IntegerDigits, 1) + printedActualScale;
 
 			context.MessageFormatter
 				.AppendArgument("ExpectedPrecision", Precision)
@@ -90,57 +88,42 @@ public class PrecisionScaleValidator<T> : PropertyValidator<T, decimal> {
 		return true;
 	}
 
-	private static UInt32[] GetBits(decimal Decimal) {
-		// We want the integer parts as uint
-		// C# doesn't permit int[] to uint[] conversion, but .NET does. This is somewhat evil...
-		return (uint[])(object)decimal.GetBits(Decimal);
-	}
-
-	private static decimal GetMantissa(decimal Decimal) {
-		var bits = GetBits(Decimal);
-		return (bits[2] * 4294967296m * 4294967296m) + (bits[1] * 4294967296m) + bits[0];
-	}
-
-	private static uint GetUnsignedScale(decimal Decimal) {
-		var bits = GetBits(Decimal);
-		uint scale = (bits[3] >> 16) & 31;
-		return scale;
-	}
-
-	private int GetScale(decimal Decimal) {
-		uint scale = GetUnsignedScale(Decimal);
-		if (IgnoreTrailingZeros) {
-			return (int)(scale - NumTrailingZeros(Decimal));
-		}
-
-		return (int)scale;
-	}
-
-	private static uint NumTrailingZeros(decimal Decimal) {
-		uint trailingZeros = 0;
-		uint scale = GetUnsignedScale(Decimal);
-		for (decimal tmp = GetMantissa(Decimal); tmp % 10m == 0 && trailingZeros < scale; tmp /= 10) {
-			trailingZeros++;
-		}
-
-		return trailingZeros;
-	}
-
-	private int GetPrecision(decimal Decimal) {
-		// Precision: number of times we can divide by 10 before we get to 0
-		uint precision = 0;
-		for (decimal tmp = GetMantissa(Decimal); tmp >= 1; tmp /= 10) {
-			precision++;
-		}
-
-		if (IgnoreTrailingZeros) {
-			return (int)(precision - NumTrailingZeros(Decimal));
-		}
-
-		return (int)precision;
-	}
-
 	protected override string GetDefaultMessageTemplate(string errorCode) {
 		return Localized(errorCode, Name);
+	}
+
+	private record struct Info (int Scale, int Precision) { 
+		public int IntegerDigits => Precision - Scale;
+
+		public static Info Get(decimal value, bool ignoreTrailingZeros) {
+			var scale = value.Scale;
+			var precision = 0;
+			var tmp = GetMantissa(value);
+
+			// Trim trailing zero's.
+			if (ignoreTrailingZeros) {
+				while (scale > 0 && tmp % 10 == 0) {
+					tmp /= 10;
+					scale--;
+				}
+			}
+
+			// determine the precision.
+			while (tmp >= 1) {
+				precision++;
+				tmp /= 10;
+			}
+
+			return new() {
+				Scale = scale,
+				Precision = precision,
+			};
+		}
+
+		/// <summary>Returns the positive value with the scale reset to zero.</summary>
+		private static decimal GetMantissa(decimal Decimal) {
+			var bits = decimal.GetBits(Decimal);
+			return new decimal(bits[0], bits[1], bits[2], false, 0);
+		}
 	}
 }
