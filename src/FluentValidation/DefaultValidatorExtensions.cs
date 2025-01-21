@@ -417,7 +417,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> Must<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, bool> predicate) {
 		ArgumentNullException.ThrowIfNull(predicate);
-		return ruleBuilder.Must((x, val) => predicate(val));
+		return ruleBuilder.Must((_, val) => predicate(val));
 	}
 
 	/// <summary>
@@ -465,7 +465,7 @@ public static partial class DefaultValidatorExtensions {
 	public static IRuleBuilderOptions<T, TProperty> MustAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, CancellationToken, Task<bool>> predicate) {
 		ArgumentNullException.ThrowIfNull(predicate);
 
-		return ruleBuilder.MustAsync((x, val, ctx, cancel) => predicate(val, cancel));
+		return ruleBuilder.MustAsync((_, val, _, cancel) => predicate(val, cancel));
 	}
 
 	/// <summary>
