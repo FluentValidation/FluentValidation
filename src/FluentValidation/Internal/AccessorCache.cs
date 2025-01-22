@@ -54,18 +54,13 @@ public static class AccessorCache<T> {
 	/// <summary>
 	/// Represents a unique cache key.
 	/// </summary>
-	private class Key {
-		private readonly MemberInfo _memberInfo;
+	private class Key(MemberInfo member, Expression expression, string cachePrefix) {
+		private readonly MemberInfo _memberInfo = member;
 		/// <remarks>
 		/// The expression key ensures that the accessor is not shared between collection and non-collection access.
 		/// Collection and non-collection access must use different accessors or a runtime exception will occur.
 		/// </remarks>
-		private readonly string _expressionKey;
-
-		public Key(MemberInfo member, Expression expression, string cachePrefix) {
-			_memberInfo = member;
-			_expressionKey = cachePrefix != null ? cachePrefix + expression.ToString() : expression.ToString();
-		}
+		private readonly string _expressionKey = cachePrefix != null ? cachePrefix + expression.ToString() : expression.ToString();
 
 		public bool Equals(Key other) {
 			return Equals(_memberInfo, other._memberInfo) && string.Equals(_expressionKey, other._expressionKey);

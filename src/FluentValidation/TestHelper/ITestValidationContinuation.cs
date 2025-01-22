@@ -14,17 +14,11 @@ public interface ITestValidationContinuation : IEnumerable<ValidationFailure> {
 	IEnumerable<ValidationFailure> MatchedFailures { get; }
 }
 
-internal class TestValidationContinuation : ITestValidationContinuation, ITestValidationWith {
-	private readonly IEnumerable<ValidationFailure> _allFailures;
-	private readonly List<Func<ValidationFailure,bool>> _predicates;
+internal class TestValidationContinuation(IEnumerable<ValidationFailure> failures, ITestValidationContinuation parent = null)
+	: ITestValidationContinuation, ITestValidationWith {
+	private readonly List<Func<ValidationFailure,bool>> _predicates = new();
 
-	public ITestValidationContinuation Parent { get; }
-
-	public TestValidationContinuation(IEnumerable<ValidationFailure> failures, ITestValidationContinuation parent = null) {
-		_allFailures = failures;
-		_predicates = new List<Func<ValidationFailure, bool>>();
-		Parent = parent;
-	}
+	public ITestValidationContinuation Parent { get; } = parent;
 
 	public void ApplyPredicate(Func<ValidationFailure, bool> failurePredicate) {
 		_predicates.Add(failurePredicate);
@@ -40,7 +34,7 @@ internal class TestValidationContinuation : ITestValidationContinuation, ITestVa
 
 	public IEnumerable<ValidationFailure> MatchedFailures {
 		get {
-			var matchedFailures = _allFailures;
+			var matchedFailures = failures;
 			foreach (var predicate in _predicates) {
 				matchedFailures = matchedFailures.Where(predicate);
 			}
@@ -51,7 +45,7 @@ internal class TestValidationContinuation : ITestValidationContinuation, ITestVa
 
 	public IEnumerable<ValidationFailure> UnmatchedFailures {
 		get {
-			foreach (var failure in _allFailures) {
+			foreach (var failure in failures) {
 				foreach (var predicate in _predicates) {
 					if (!predicate(failure)) {
 						yield return failure;

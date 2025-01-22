@@ -24,24 +24,13 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqualValidator {
-	readonly Func<T, TProperty> _func;
-	private readonly string _memberDisplayName;
-	readonly IEqualityComparer<TProperty> _comparer;
-
+public class EqualValidator<T, TProperty>(Func<T, TProperty> comparisonProperty, MemberInfo member, string memberDisplayName, IEqualityComparer<TProperty> comparer = null)
+	: PropertyValidator<T, TProperty>, IEqualValidator {
 	public override string Name => "EqualValidator";
 
 
-	public EqualValidator(TProperty valueToCompare, IEqualityComparer<TProperty> comparer = null) {
+	public EqualValidator(TProperty valueToCompare, IEqualityComparer<TProperty> comparer = null) : this(null, null, null, comparer) {
 		ValueToCompare = valueToCompare;
-		_comparer = comparer;
-	}
-
-	public EqualValidator(Func<T, TProperty> comparisonProperty, MemberInfo member, string memberDisplayName, IEqualityComparer<TProperty> comparer = null) {
-		_func = comparisonProperty;
-		_memberDisplayName = memberDisplayName;
-		MemberToCompare = member;
-		_comparer = comparer;
 	}
 
 	public override bool IsValid(ValidationContext<T> context, TProperty value) {
@@ -50,7 +39,7 @@ public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqu
 
 		if (!success) {
 			context.MessageFormatter.AppendArgument("ComparisonValue", comparisonValue);
-			context.MessageFormatter.AppendArgument("ComparisonProperty", _memberDisplayName ?? "");
+			context.MessageFormatter.AppendArgument("ComparisonProperty", memberDisplayName ?? "");
 
 			return false;
 		}
@@ -59,8 +48,8 @@ public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqu
 	}
 
 	private TProperty GetComparisonValue(ValidationContext<T> context) {
-		if (_func != null) {
-			return _func(context.InstanceToValidate);
+		if (comparisonProperty != null) {
+			return comparisonProperty(context.InstanceToValidate);
 		}
 
 		return ValueToCompare;
@@ -68,14 +57,14 @@ public class EqualValidator<T,TProperty> : PropertyValidator<T, TProperty>, IEqu
 
 	public Comparison Comparison => Comparison.Equal;
 
-	public MemberInfo MemberToCompare { get; }
+	public MemberInfo MemberToCompare { get; } = member;
 	public TProperty ValueToCompare { get; }
 
 	object IComparisonValidator.ValueToCompare => ValueToCompare;
 
 	protected bool Compare(TProperty comparisonValue, TProperty propertyValue) {
-		if (_comparer != null) {
-			return _comparer.Equals(comparisonValue, propertyValue);
+		if (comparer != null) {
+			return comparer.Equals(comparisonValue, propertyValue);
 		}
 
 		return Equals(comparisonValue, propertyValue);

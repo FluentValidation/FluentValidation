@@ -14,37 +14,29 @@ public interface IMessageBuilderContext<T, out TProperty> {
 	string GetDefaultMessage();
 }
 
-public class MessageBuilderContext<T,TProperty> : IMessageBuilderContext<T,TProperty> {
-	private ValidationContext<T> _innerContext;
-	private TProperty _value;
-
-	public MessageBuilderContext(ValidationContext<T> innerContext, TProperty value, RuleComponent<T,TProperty> component) {
-		_innerContext = innerContext;
-		_value = value;
-		Component = component;
-	}
-
-	public RuleComponent<T,TProperty> Component { get; }
+public class MessageBuilderContext<T, TProperty>(ValidationContext<T> innerContext, TProperty value, RuleComponent<T, TProperty> component)
+	: IMessageBuilderContext<T, TProperty> {
+	public RuleComponent<T,TProperty> Component { get; } = component;
 
 	IRuleComponent<T, TProperty> IMessageBuilderContext<T, TProperty>.Component => Component;
 
 	public IPropertyValidator PropertyValidator
 		=> Component.Validator;
 
-	public ValidationContext<T> ParentContext => _innerContext;
+	public ValidationContext<T> ParentContext => innerContext;
 
 	// public IValidationRule<T> Rule => _innerContext.Rule;
 
-	public string PropertyName => _innerContext.PropertyPath;
+	public string PropertyName => innerContext.PropertyPath;
 
-	public string DisplayName => _innerContext.DisplayName;
+	public string DisplayName => innerContext.DisplayName;
 
-	public MessageFormatter MessageFormatter => _innerContext.MessageFormatter;
+	public MessageFormatter MessageFormatter => innerContext.MessageFormatter;
 
-	public T InstanceToValidate => _innerContext.InstanceToValidate;
-	public TProperty PropertyValue => _value;
+	public T InstanceToValidate => innerContext.InstanceToValidate;
+	public TProperty PropertyValue => value;
 
 	public string GetDefaultMessage() {
-		return Component.GetErrorMessage(_innerContext, _value);
+		return Component.GetErrorMessage(innerContext, value);
 	}
 }

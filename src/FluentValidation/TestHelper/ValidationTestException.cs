@@ -23,11 +23,8 @@ using System;
 using System.Collections.Generic;
 using FluentValidation.Results;
 
-public class ValidationTestException : Exception {
+public class ValidationTestException(string message) : Exception(message) {
 	public List<ValidationFailure> Errors { get; }
-
-	public ValidationTestException(string message) : base(message) {
-	}
 
 	public ValidationTestException(string message, List<ValidationFailure> errors) : this(message) {
 		Errors = errors;

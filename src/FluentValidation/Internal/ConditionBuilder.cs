@@ -23,13 +23,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-internal class ConditionBuilder<T> {
-	private TrackingCollection<IValidationRuleInternal<T>> _rules;
-
-	public ConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
-		_rules = rules;
-	}
-
+internal class ConditionBuilder<T>(TrackingCollection<IValidationRuleInternal<T>> rules) {
 	/// <summary>
 	/// Defines a condition that applies to several rules
 	/// </summary>
@@ -39,7 +33,7 @@ internal class ConditionBuilder<T> {
 	public IConditionBuilder When(Func<T, ValidationContext<T>, bool> predicate, Action action) {
 		var propertyRules = new List<IValidationRuleInternal<T>>();
 
-		using (_rules.OnItemAdded(propertyRules.Add)) {
+		using (rules.OnItemAdded(propertyRules.Add)) {
 			action();
 		}
 
@@ -76,7 +70,7 @@ internal class ConditionBuilder<T> {
 			rule.ApplySharedCondition(Condition);
 		}
 
-		return new ConditionOtherwiseBuilder<T>(_rules, Condition);
+		return new ConditionOtherwiseBuilder<T>(rules, Condition);
 	}
 
 	/// <summary>
@@ -89,13 +83,7 @@ internal class ConditionBuilder<T> {
 	}
 }
 
-internal class AsyncConditionBuilder<T> {
-	private TrackingCollection<IValidationRuleInternal<T>> _rules;
-
-	public AsyncConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
-		_rules = rules;
-	}
-
+internal class AsyncConditionBuilder<T>(TrackingCollection<IValidationRuleInternal<T>> rules) {
 	/// <summary>
 	/// Defines an asynchronous condition that applies to several rules
 	/// </summary>
@@ -105,7 +93,7 @@ internal class AsyncConditionBuilder<T> {
 	public IConditionBuilder WhenAsync(Func<T, ValidationContext<T>, CancellationToken, Task<bool>> predicate, Action action) {
 		var propertyRules = new List<IValidationRuleInternal<T>>();
 
-		using (_rules.OnItemAdded(propertyRules.Add)) {
+		using (rules.OnItemAdded(propertyRules.Add)) {
 			action();
 		}
 
@@ -141,7 +129,7 @@ internal class AsyncConditionBuilder<T> {
 			rule.ApplySharedAsyncCondition(Condition);
 		}
 
-		return new AsyncConditionOtherwiseBuilder<T>(_rules, Condition);
+		return new AsyncConditionOtherwiseBuilder<T>(rules, Condition);
 	}
 
 	/// <summary>
@@ -154,26 +142,19 @@ internal class AsyncConditionBuilder<T> {
 	}
 }
 
-internal class ConditionOtherwiseBuilder<T> : IConditionBuilder {
-	private TrackingCollection<IValidationRuleInternal<T>> _rules;
-	private readonly Func<IValidationContext, bool> _condition;
-
-	public ConditionOtherwiseBuilder(TrackingCollection<IValidationRuleInternal<T>> rules, Func<IValidationContext, bool> condition) {
-		_rules = rules;
-		_condition = condition;
-	}
-
+internal class ConditionOtherwiseBuilder<T>(TrackingCollection<IValidationRuleInternal<T>> rules, Func<IValidationContext, bool> condition)
+	: IConditionBuilder {
 	public virtual void Otherwise(Action action) {
 		var propertyRules = new List<IValidationRuleInternal<T>>();
 
 		Action<IValidationRuleInternal<T>> onRuleAdded = propertyRules.Add;
 
-		using (_rules.OnItemAdded(onRuleAdded)) {
+		using (rules.OnItemAdded(onRuleAdded)) {
 			action();
 		}
 
 		foreach (var rule in propertyRules) {
-			rule.ApplySharedCondition(ctx => !_condition(ctx));
+			rule.ApplySharedCondition(ctx => !condition(ctx));
 		}
 	}
 }

@@ -29,12 +29,10 @@ using Internal;
 /// </summary>
 /// <typeparam name="T">Root model type</typeparam>
 /// <typeparam name="TProperty">Base type of property being validated.</typeparam>
-public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProperty> {
+public class PolymorphicValidator<T, TProperty>() : ChildValidatorAdaptor<T, TProperty>((IValidator<TProperty>)null, typeof(IValidator<TProperty>)) {
 	readonly Dictionary<Type, DerivedValidatorFactory> _derivedValidators = new();
 
 	// Need the base constructor call, even though we're just passing null.
-	public PolymorphicValidator() : base((IValidator<TProperty>) null, typeof(IValidator<TProperty>)) {
-	}
 
 	/// <summary>
 	/// Adds a validator to handle a specific subclass.
@@ -114,23 +112,16 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 		return null;
 	}
 
-	private class DerivedValidatorFactory {
-		private IValidator _innerValidator;
+	private class DerivedValidatorFactory(IValidator innerValidator, string[] ruleSets) {
 		private readonly Func<ValidationContext<T>, TProperty, IValidator> _factory;
-		public string[] RuleSets { get; }
+		public string[] RuleSets { get; } = ruleSets;
 
-		public DerivedValidatorFactory(IValidator innerValidator, string[] ruleSets) {
-			_innerValidator = innerValidator;
-			RuleSets = ruleSets;
-		}
-
-		public DerivedValidatorFactory(Func<ValidationContext<T>, TProperty, IValidator> factory, string[] ruleSets) {
-			RuleSets = ruleSets;
+		public DerivedValidatorFactory(Func<ValidationContext<T>, TProperty, IValidator> factory, string[] ruleSets) : this(default(IValidator), ruleSets) {
 			_factory = factory;
 		}
 
 		public IValidator GetValidator(ValidationContext<T> context, TProperty value) {
-			return _factory?.Invoke(context, value) ?? _innerValidator;
+			return _factory?.Invoke(context, value) ?? innerValidator;
 		}
 	}
 }

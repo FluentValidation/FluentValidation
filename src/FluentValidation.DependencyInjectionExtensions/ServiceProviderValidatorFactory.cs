@@ -23,12 +23,7 @@ using System;
 /// Validator factory implementation that uses the asp.net service provider to construct validators.
 /// </summary>
 [Obsolete("IValidatorFactory and its implementors are deprecated and will be removed in a future release. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
-public class ServiceProviderValidatorFactory : ValidatorFactoryBase {
-	private readonly IServiceProvider _serviceProvider;
-
-	public ServiceProviderValidatorFactory(IServiceProvider serviceProvider)
-		=> _serviceProvider = serviceProvider;
-
+public class ServiceProviderValidatorFactory(IServiceProvider serviceProvider) : ValidatorFactoryBase {
 	public override IValidator CreateInstance(Type validatorType)
-		=> _serviceProvider.GetService(validatorType) as IValidator;
+		=> serviceProvider.GetService(validatorType) as IValidator;
 }

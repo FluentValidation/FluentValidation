@@ -28,12 +28,8 @@ using System.Threading.Tasks;
 /// <summary>
 /// Defines a rule associated with a property.
 /// </summary>
-internal partial class PropertyRule<T, TProperty> : RuleBase<T, TProperty, TProperty>, IValidationRuleInternal<T, TProperty> {
-
-	public PropertyRule(MemberInfo member, Func<T, TProperty> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
-		: base(member, propertyFunc, expression, cascadeModeThunk, typeToValidate) {
-	}
-
+internal partial class PropertyRule<T, TProperty>(MemberInfo member, Func<T, TProperty> propertyFunc, LambdaExpression expression, Func<CascadeMode> cascadeModeThunk, Type typeToValidate)
+	: RuleBase<T, TProperty, TProperty>(member, propertyFunc, expression, cascadeModeThunk, typeToValidate), IValidationRuleInternal<T, TProperty> {
 	/// <summary>
 	/// Creates a new property rule from a lambda expression.
 	/// </summary>
