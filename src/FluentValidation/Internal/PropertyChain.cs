@@ -70,10 +70,31 @@ public class PropertyChain {
 		});
 
 		var memberExp = getMemberExp(expression.Body);
+		string indexer = null;
 
 		while(memberExp != null) {
-			memberNames.Push(memberExp.Member.Name);
-			memberExp = getMemberExp(memberExp.Expression);
+			string propertyName = memberExp.Member.Name;
+
+			if (indexer != null) {
+				propertyName += "[" + indexer + "]";
+				indexer = null;
+			}
+
+			memberNames.Push(propertyName);
+
+			// Handle indexers.
+			if (memberExp.Expression is MethodCallExpression mce) {
+				if (mce.Method is {IsSpecialName: true, Name: "get_Item"} && mce.Arguments.Count == 1 && mce.Arguments[0] is ConstantExpression ce) {
+					memberExp = getMemberExp(mce.Object);
+					if (memberExp != null) {
+						indexer = ce.Value?.ToString();
+					}
+				}
+			}
+			else {
+				memberExp = getMemberExp(memberExp.Expression);
+			}
+
 		}
 
 		return new PropertyChain(memberNames);
