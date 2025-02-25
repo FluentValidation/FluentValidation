@@ -103,6 +103,11 @@ services.AddValidatorsFromAssemblyContaining(typeof(UserValidator));
 services.AddValidatorsFromAssembly(Assembly.Load("SomeAssembly"));
 ```
 
+```eval_rst
+.. note::
+   The auto-registration methods used above use reflection to scan one or more assemblies for validators. An alternative approach would be to use a source generator such as `AutoRegisterInject <https://github.com/patrickklaeren/AutoRegisterInject>`_ to set up registrations automatically. 
+```
+
 ### Filtering results
 
 You can provide an optional filter function that can be used to exclude some validators from automatic registration. For example, to register all validators *except* the `CustomerValidator` you could write the following:

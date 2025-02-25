@@ -74,6 +74,11 @@ Here we use the `AddValidatorsFromAssemblyContaining` method from the `FluentVal
 
 Now that the validators are registered with the service provider you can start working with either manual validation or automatic validation.
 
+```eval_rst
+.. note::
+   The auto-registration method used above uses reflection to scan one or more assemblies for validators. An alternative approach would be to use a source generator such as `AutoRegisterInject <https://github.com/patrickklaeren/AutoRegisterInject>`_ to set up registrations. 
+```
+
 ## Manual Validation
 
 With the manual validation approach, you'll inject the validator into your controller (or Razor page) and invoke it against the model.
