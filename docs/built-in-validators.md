@@ -57,17 +57,7 @@ Optionally, a comparer can be provided to ensure a specific type of comparison i
 RuleFor(customer => customer.Surname).NotEqual("Foo", StringComparer.OrdinalIgnoreCase);
 ```
 
-```eval_rst
-.. warning::
-  FluentValidation versions prior to 9 perform a *culture specific* comparison when using `Equal` or `NotEqual` with string properties. Starting with version 9, this is changed to an ordinal comparison.
-```
-
-If you are using FluentValidation 8.x (or older), you can force an ordinal comparison by using
-
-```csharp
-RuleFor(customer => customer.Surname).NotEqual("Foo", StringComparer.Ordinal);
-```
-If you are using FluentValidation 9 (or newer), ordinal will be the default behaviour. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.
+An ordinal comparison will be used by default. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.
 
 ## Equal Validator
 Ensures that the value of the specified property is equal to a particular value (or equal to the value of another property).
@@ -92,18 +82,7 @@ String format args:
 RuleFor(customer => customer.Surname).Equal("Foo", StringComparer.OrdinalIgnoreCase);
 ```
 
-```eval_rst
-.. warning::
-  FluentValidation versions prior to 9 perform a *culture specific* comparison when using `Equal` or `NotEqual` with string properties. Starting with version 9, this is changed to an ordinal comparison.
-```
-
-If you are using FluentValidation 8.x (or older), you can force an ordinal comparison by using
-
-```csharp
-RuleFor(customer => customer.Surname).Equal("Foo", StringComparer.Ordinal);
-```
-
-If you are using FluentValidation 9 (or newer), ordinal will be the default behaviour. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.
+An ordinal comparison will be used by default. If you wish to do a culture-specific comparison instead, you should pass `StringComparer.CurrentCulture` as the second parameter.
 
 ## Length Validator
 Ensures that the length of a particular string property is within the specified range. However, it doesn't ensure that the string property isn't null.
