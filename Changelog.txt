@@ -1,5 +1,5 @@
 12.0.0 - 5 May 2025
-Drops support for netstandard2.0, netstandard2.1 and .net 5. Minimum supported platform is now .net 6.
+Drops support for netstandard2.0, netstandard2.1, .net 5, .net 6 and .net 7. Minimum supported platform is now .net 6.
 Add support for dependent rules for custom rules (#2170)
 Removes deprecated DI extensions
 Removes deprecated transform methods (#2027)
