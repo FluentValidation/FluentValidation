@@ -12,7 +12,7 @@
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <ContinuousIntegrationBuild Condition="'$(Configuration)'=='Release'">true</ContinuousIntegrationBuild>
-        <EnablePackageValidation>false</EnablePackageValidation>
+        <EnablePackageValidation>true</EnablePackageValidation>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\CommonAssemblyInfo.cs" Link="CommonAssemblyInfo.cs" />
