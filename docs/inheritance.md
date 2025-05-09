@@ -111,3 +111,33 @@ public class ContactRequestValidator : AbstractValidator<ContactRequest>
   }
 }
 ```
+
+## Limitations
+
+It's important to note that every subclass that you want to be validated *must be explicitly mapped*. For example, the following would not work:
+
+```csharp
+public class ContactBaseValidator : AbstractValidator<IContact> 
+{
+  public ContactBaseValidatoR() 
+  {
+    RuleFor(x => x.Name).NotNull();
+  }
+}
+
+public class ContactRequestValidator : AbstractValidator<ContactRequest>
+{
+  public ContactRequestValidator()
+  {
+
+    RuleFor(x => x.Contact).SetInheritanceValidator(v => 
+    {
+      // THIS WILL NOT WORK.
+      // This will not validate instances of Person or Organisation.
+      v.Add<IContact>(new ContactBaseValidator());
+    });
+  }
+}
+```
+
+In the above example, this would not correctly validate instances of `Person` or `Organisation` as they have not been explicitly mapped. You must explicitly indicate every subclass that you want to have mapped, as per the first example at the top of the page. 
