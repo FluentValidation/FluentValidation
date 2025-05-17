@@ -19,11 +19,14 @@
 namespace FluentValidation;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 /// <summary>
 /// Factory for creating validators
 /// </summary>
 [Obsolete("IValidatorFactory and its implementors are deprecated and will be removed in a future release. Please use the Service Provider directly (or a DI container). For details see https://github.com/FluentValidation/FluentValidation/issues/1961")]
+[RequiresDynamicCode("The native code for this instantiation might not be available at runtime.")]
+[RequiresUnreferencedCode("If some of the generic arguments are annotated (either with DynamicallyAccessedMembersAttribute, or generic constraints), trimming can't validate that the requirements of those annotations are met.")]
 public abstract class ValidatorFactoryBase : IValidatorFactory {
 	/// <summary>
 	/// Gets a validator for a type
