@@ -14,6 +14,7 @@ Full release notes can be found at https://github.com/FluentValidation/FluentVal
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <ContinuousIntegrationBuild Condition="'$(Configuration)'=='Release'">true</ContinuousIntegrationBuild>
     <EnablePackageValidation>true</EnablePackageValidation>
+    <IsAotCompatible>true</IsAotCompatible>
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1591</NoWarn>

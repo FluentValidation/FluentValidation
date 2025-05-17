@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 
 // Copyright (c) .NET Foundation and contributors.
 //
@@ -21,95 +21,71 @@
 namespace FluentValidation.Validators;
 
 using System;
+using System.Globalization;
+using System.Numerics;
 using System.Reflection;
 
-public class EnumValidator<T, TProperty> : PropertyValidator<T, TProperty>, IEnumValidator {
-	private readonly Type _enumType = typeof(TProperty);
 
-	public Type EnumType => _enumType;
+public class EnumValidator<T, TProperty> : PropertyValidator<T, TProperty>, IEnumValidator
+	where TProperty : struct, Enum {
+	private static readonly Func<TProperty, bool> InvalidTypePredicate = static _ => false;
+	private readonly Func<TProperty, bool> _validator = CreateValidator();
+
+	public Type EnumType => typeof(TProperty);
 
 	public override string Name => "EnumValidator";
 
 	public override bool IsValid(ValidationContext<T> context, TProperty value) {
-		if (value == null) return true;
-
-		var underlyingEnumType = Nullable.GetUnderlyingType(_enumType) ?? _enumType;
-
-		if (!underlyingEnumType.IsEnum) return false;
-
-		if (underlyingEnumType.GetCustomAttribute<FlagsAttribute>() != null) {
-			return IsFlagsEnumDefined(underlyingEnumType, value);
-		}
-
-		return Enum.IsDefined(underlyingEnumType, value);
+		return _validator(value);
 	}
 
-	private static bool IsFlagsEnumDefined(Type enumType, object value) {
-		var typeName = Enum.GetUnderlyingType(enumType).Name;
+	private static bool EvaluateFlagEnumValues<TValue>(TValue propertyValue, TValue[] values)
+	where TValue : IBinaryNumber<TValue> {
+		var mask = default(TValue);
+		foreach (var value in values) {
+			if ((value & propertyValue) != value)
+				continue;
 
-		switch (typeName) {
-			case "Byte": {
-				var typedValue = (byte)value;
-				return EvaluateFlagEnumValues(typedValue, enumType);
-			}
-
-			case "Int16": {
-				var typedValue = (short)value;
-
-				return EvaluateFlagEnumValues(typedValue, enumType);
-			}
-
-			case "Int32": {
-				var typedValue = (int)value;
-
-				return EvaluateFlagEnumValues(typedValue, enumType);
-			}
-
-			case "Int64": {
-				var typedValue = (long)value;
-
-				return EvaluateFlagEnumValues(typedValue, enumType);
-			}
-
-			case "SByte": {
-				var typedValue = (sbyte)value;
-
-				return EvaluateFlagEnumValues(Convert.ToInt64(typedValue), enumType);
-			}
-
-			case "UInt16": {
-				var typedValue = (ushort)value;
-				return EvaluateFlagEnumValues(typedValue, enumType);
-			}
-
-			case "UInt32": {
-				var typedValue = (uint)value;
-				return EvaluateFlagEnumValues(typedValue, enumType);
-			}
-
-			case "UInt64": {
-				var typedValue = (ulong)value;
-				return EvaluateFlagEnumValues((long)typedValue, enumType);
-			}
-
-			default:
-				var message = $"Unexpected typeName of '{typeName}' during flags enum evaluation.";
-				throw new ArgumentOutOfRangeException(nameof(enumType), message);
-		}
-	}
-
-	private static bool EvaluateFlagEnumValues(long value, Type enumType) {
-		long mask = 0;
-		foreach (var enumValue in Enum.GetValues(enumType)) {
-			var enumValueAsInt64 = Convert.ToInt64(enumValue);
-			if ((enumValueAsInt64 & value) == enumValueAsInt64) {
-				mask |= enumValueAsInt64;
-				if (mask == value)
-					return true;
-			}
+			mask |= value;
+			if (mask == propertyValue)
+				return true;
 		}
 
 		return false;
+	}
+
+	internal static Func<TProperty, bool> CreateValidator() {
+		var enumType = typeof(TProperty);
+
+		if (!enumType.IsEnum)
+			return InvalidTypePredicate;
+
+		if (enumType.GetCustomAttribute<FlagsAttribute>() is null)
+			return value => Enum.IsDefined(enumType, value);
+
+		var values = Enum.GetValuesAsUnderlyingType(enumType);
+
+		if (values.Length == 0)
+			return InvalidTypePredicate;
+
+		var value0 = values.GetValue(0);
+		if (value0 is null)
+			return InvalidTypePredicate;
+
+		var valueTypeCode = Type.GetTypeCode(value0.GetType());
+
+		return valueTypeCode switch {
+			TypeCode.Char => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToChar(CultureInfo.InvariantCulture), (char[])values),
+			TypeCode.SByte => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToSByte(CultureInfo.InvariantCulture), (sbyte[])values),
+			TypeCode.Byte => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToByte(CultureInfo.InvariantCulture), (byte[])values),
+			TypeCode.Int16 => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToInt16(CultureInfo.InvariantCulture), (short[])values),
+			TypeCode.UInt16 => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToUInt16(CultureInfo.InvariantCulture), (ushort[])values),
+			TypeCode.Int32 => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToInt32(CultureInfo.InvariantCulture), (int[])values),
+			TypeCode.UInt32 => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToUInt32(CultureInfo.InvariantCulture), (uint[])values),
+			TypeCode.Int64 => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToInt64(CultureInfo.InvariantCulture), (long[])values),
+			TypeCode.UInt64 => propertyValue => EvaluateFlagEnumValues(((IConvertible)propertyValue).ToUInt64(CultureInfo.InvariantCulture), (ulong[])values),
+			_ => InvalidTypePredicate
+		};
 	}
 
 	protected override string GetDefaultMessageTemplate(string errorCode) {
@@ -117,6 +93,22 @@ public class EnumValidator<T, TProperty> : PropertyValidator<T, TProperty>, IEnu
 	}
 }
 
+public class NullableEnumValidator<T, TProperty> : PropertyValidator<T, TProperty?>, IEnumValidator
+	where TProperty : struct, Enum {
+	private readonly Func<TProperty, bool> _validator = EnumValidator<T, TProperty>.CreateValidator();
+
+	public Type EnumType => typeof(TProperty);
+
+	public override string Name => "NullableEnumValidator";
+
+	public override bool IsValid(ValidationContext<T> context, TProperty? value) {
+		if (!value.HasValue) {
+			return true;
+		}
+
+		return _validator(value.Value);
+	}
+}
 
 public interface IEnumValidator : IPropertyValidator {
 
