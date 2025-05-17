@@ -23,12 +23,14 @@ namespace FluentValidation;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 
 /// <summary>
 /// Class that can be used to find all the validators from a collection of types.
 /// </summary>
+[RequiresUnreferencedCode("Types might be removed")]
 public class AssemblyScanner : IEnumerable<AssemblyScanner.AssemblyScanResult> {
 	readonly IEnumerable<Type> _types;
 
@@ -87,7 +89,7 @@ public class AssemblyScanner : IEnumerable<AssemblyScanner.AssemblyScanResult> {
 	}
 
 	/// <summary>
-	/// Performs the specified action to all of the assembly scan results.
+	/// Performs the specified action on all the assembly scan results.
 	/// </summary>
 	public void ForEach(Action<AssemblyScanResult> action) {
 		foreach (var result in this) {

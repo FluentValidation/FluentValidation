@@ -1093,7 +1093,19 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> IsInEnum<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder)
-		=> ruleBuilder.SetValidator(new EnumValidator<T,TProperty>());
+		where TProperty : struct, Enum
+		=> ruleBuilder.SetValidator(new EnumValidator<T, TProperty>());
+
+	/// <summary>
+	/// Defines a enum value validator on the current rule builder that ensures that the specific value is a valid enum value.
+	/// </summary>
+	/// <typeparam name="T">Type of Enum being validated</typeparam>
+	/// <typeparam name="TProperty">Type of property being validated</typeparam>
+	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, TProperty?> IsInEnum<T, TProperty>(this IRuleBuilder<T, TProperty?> ruleBuilder)
+		where TProperty : struct, Enum
+		=> ruleBuilder.SetValidator(new NullableEnumValidator<T, TProperty>());
 
 	/// <summary>
 	/// Defines a scale precision validator on the current rule builder that ensures a decimal the specified precision and scale.
