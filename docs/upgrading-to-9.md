@@ -125,7 +125,7 @@ This syntax has been superceded by the callback syntax. To access the localized 
 RuleFor(x => x.Surname).NotNull().WithMessage(x => MyLocalizedMessages.SurnameRequired);
 ```
 
-Note that support for localization with `IStringLocalzier` is unchanged.
+Note that support for localization with `IStringLocalizer` is unchanged.
 
 [Full documentation on localization.](localization)
 
