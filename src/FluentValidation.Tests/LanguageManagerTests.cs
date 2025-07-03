@@ -27,6 +27,15 @@ public class LanguageManagerTests {
 	}
 
 	[Theory]
+	[InlineData("ta")]
+	public void Gets_translation_for_tamil_culture(string cultureName) {
+		using (new CultureScope(cultureName)) {
+			var msg = _languages.GetString("NotNullValidator");
+			msg.ShouldEqual("'{PropertyName}' காலியாக இருக்கக்கூடாது.");
+		}
+	}
+
+	[Theory]
 	[InlineData("sr")]
 	[InlineData("sr-Cyrl")]
 	[InlineData("sr-Cyrl-RS")]
