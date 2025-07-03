@@ -77,6 +77,22 @@ public class LanguageManagerTests {
 	}
 
 	[Fact]
+	public void Gets_translation_for_telugu_culture() {
+		using (new CultureScope("te")) {
+			var msg = _languages.GetString("NotNullValidator");
+			msg.ShouldEqual("'{PropertyName}' ఖాళీగా ఉండకూడదు.");
+		}
+	}
+
+	[Fact]
+	public void Gets_email_validation_message_for_telugu_culture() {
+		using (new CultureScope("te")) {
+			var msg = _languages.GetString("EmailValidator");
+			msg.ShouldEqual("'{PropertyName}' చెల్లుబాటు అయ్యే ఈమెయిల్ చిరునామా కాదు.");
+		}
+	}
+
+	[Fact]
 	public void Falls_back_to_parent_culture() {
 		using (new CultureScope("fr-FR")) {
 			var msg = _languages.GetString("NotNullValidator");
