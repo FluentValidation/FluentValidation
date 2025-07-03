@@ -95,6 +95,7 @@ public class LanguageManager : ILanguageManager {
 			UzbekCyrillicLanguage.Culture => UzbekCyrillicLanguage.GetTranslation(key),
 			CatalanLanguage.Culture => CatalanLanguage.GetTranslation(key),
 			TajikLanguage.Culture => TajikLanguage.GetTranslation(key),
+			TeluguLanguage.Culture => TeluguLanguage.GetTranslation(key),
 			_ => null,
 		};
 	}
