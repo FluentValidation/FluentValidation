@@ -371,7 +371,7 @@ public abstract partial class AbstractValidator<T> : IValidator<T>, IEnumerable<
 	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
 	/// <summary>
-	/// Determines if validation should occtur and provides a means to modify the context and ValidationResult prior to execution.
+	/// Determines if validation should occur and provides a means to modify the context and ValidationResult prior to execution.
 	/// If this method returns false, then the ValidationResult is immediately returned from Validate/ValidateAsync.
 	/// </summary>
 	/// <param name="context"></param>
@@ -396,3 +396,4 @@ public abstract partial class AbstractValidator<T> : IValidator<T>, IEnumerable<
 	/// <param name="rule"></param>
 	protected virtual void OnRuleAdded(IValidationRule<T> rule) { }
 }
+
