@@ -66,3 +66,8 @@ validator.Validate(person, options =>
   options.IncludeAllRuleSets();
 });
 ```
+
+```eval_rst
+.. note::
+ If you include a child validator using "SetValidator" it inherits the configuration, which ruleset to use. This means the rulesets also need to apply to all child validators in validation.
+```
