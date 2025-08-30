@@ -69,5 +69,5 @@ validator.Validate(person, options =>
 
 ```eval_rst
 .. note::
- If you include a child validator using "SetValidator" it inherits the configuration, which ruleset to use. This means the rulesets also need to apply to all child validators in validation.
+ If you include a child validator using "SetValidator" it will, by default, inherit the ruleset configuration from the parent validator and cascade through to its own child rules. This means the rulesets will also need to be applied to rules within the child validator. This behaviour can be overridden by passing an explicit override ruleset to the SetValidator call. 
 ```
