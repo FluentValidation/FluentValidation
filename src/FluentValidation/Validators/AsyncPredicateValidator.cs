@@ -21,7 +21,6 @@ namespace FluentValidation.Validators;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation.Internal;
 
 /// <summary>
 /// Asynchronous custom validator

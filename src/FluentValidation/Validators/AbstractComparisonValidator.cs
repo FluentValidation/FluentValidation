@@ -20,7 +20,6 @@ namespace FluentValidation.Validators;
 
 using System;
 using System.Reflection;
-using Internal;
 
 /// <summary>
 /// Base class for all comparison validators

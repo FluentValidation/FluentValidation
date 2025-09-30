@@ -17,9 +17,6 @@
 #endregion
 
 namespace FluentValidation;
-
-using System;
-
 /// <summary>
 /// Specifies how rules should cascade when one fails.
 /// </summary>
