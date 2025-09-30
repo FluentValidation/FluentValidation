@@ -50,7 +50,7 @@ public class Person {
 
 	public string Email { get; set; }
 	public decimal Discount { get; set; }
-
+	public string ExternalId { get; set; }
 	public decimal? NullableDiscount { get; set; }
 
 	public double Age { get; set; }
