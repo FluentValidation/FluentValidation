@@ -34,7 +34,7 @@ public class GuidValidatorTests {
 	public void When_validation_fails_the_default_error_should_be_set() {
 		string invalidGuid = "not-a-guid";
 		var result = validator.Validate(new Person { ExternalId = invalidGuid });
-		result.Errors.Single().ErrorMessage.ShouldEqual("'Surname' is not a valid GUID.");
+		result.Errors.Single().ErrorMessage.ShouldEqual("'External Id' is not a valid GUID.");
 	}
 
 	[Fact]
