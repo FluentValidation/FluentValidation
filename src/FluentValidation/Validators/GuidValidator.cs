@@ -29,7 +29,7 @@ public class GuidValidator<T> : PropertyValidator<T, string> {
 			return true;
 		}
 
-		return Guid.TryParse(value, out _);
+		return value is string s && Guid.TryParse(s, out _);
 	}
 
 	protected override string GetDefaultMessageTemplate(string errorCode) {
