@@ -1,0 +1,23 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="BenchmarkDotNet" Version="0.12.1" />
+    <PackageVersion Include="Bogus" Version="30.0.2" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Dependencyinjection.Abstractions" Version="2.1.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageVersion Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" />
+    <PackageVersion Include="Microsoft.TestPlatform.TestHost" Version="16.0.1" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageVersion Include="System.ComponentModel.Annotations" Version="4.4.1" />
+    <PackageVersion Include="xunit" Version="2.2.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageVersion Include="Zomp.SyncMethodGenerator" Version="1.3.8-beta" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageVersion Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+  </ItemGroup>
+</Project>
