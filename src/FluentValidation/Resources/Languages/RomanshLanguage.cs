@@ -49,6 +49,7 @@ internal class RomanshLanguage {
 		"EmptyValidator" => "'{PropertyName}' n'ha betg da vegnir mussà.",
 		"NullValidator" => "'{PropertyName}' n'ha betg da vegnir mussà.",
 		"EnumValidator" => "'{PropertyName}' ha ina gama da valurs che n'incloa betg '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' n'è betg in GUID valaiv.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' duai esser lunga tranter {MinLength} e {MaxLength} caracters.",
 		"MinimumLength_Simple" => "La lunghezza da '{PropertyName}' duai esser almain {MinLength} caracters.",

@@ -49,6 +49,7 @@ internal class GermanLanguage {
 		"EmptyValidator" => "'{PropertyName}' sollte leer sein.",
 		"NullValidator" => "'{PropertyName}' sollte leer sein.",
 		"EnumValidator" => "'{PropertyName}' hat einen Wertebereich, der '{PropertyValue}' nicht enthält.",
+		"GuidValidator" => "'{PropertyName}' ist keine gültige GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "Die Länge von '{PropertyName}' muss zwischen {MinLength} und {MaxLength} Zeichen liegen.",
 		"MinimumLength_Simple" => "Die Länge von '{PropertyName}' muss größer oder gleich {MinLength} sein.",

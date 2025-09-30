@@ -49,6 +49,7 @@ internal class MacedonianLanguage {
 		"EmptyValidator" => "'{PropertyName}' треба да биде празна.",
 		"NullValidator" => "'{PropertyName}' треба да биде празна.",
 		"EnumValidator" => "'{PropertyName}' има низа вредности кои не вклучуваат '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' не е валиден GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "Должината на '{PropertyName}' мора да биде помеѓу {MinLength} и {MaxLength} карактери.",
 		"MinimumLength_Simple" => "Должината на '{PropertyName}' мора да биде поголема или еднаква на {MinLength} знаци.",

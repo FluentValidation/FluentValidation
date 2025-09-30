@@ -48,7 +48,8 @@ internal class IndonesianLanguage {
 		"ScalePrecisionValidator" => "Jumlah digit '{PropertyName}' tidak boleh lebih dari {ExpectedPrecision}, dengan toleransi {ExpectedScale} desimal. {Digits} digit dan {ActualScale} desimal ditemukan.",
 		"EmptyValidator" => "'{PropertyName}' harus kosong.",
 		"NullValidator" => "'{PropertyName}' harus kosong.",
-		"EnumValidator" => "'{PropertyName}' memiliki rentang nilai yang tidak mengikutsertakan '{PropertyValue}'.",
+		"EnumValidator" => "'{PropertyName}' memiliki rentang nilai yang tidak termasuk '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' bukan GUID yang valid.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' harus di antara {MinLength} dan {MaxLength} karakter.",
 		"MinimumLength_Simple" => "Panjang dari '{PropertyName}' harus paling tidak {MinLength} karakter.",

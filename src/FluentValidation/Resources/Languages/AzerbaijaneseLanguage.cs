@@ -49,6 +49,7 @@ internal class AzerbaijaneseLanguage {
 		"EmptyValidator" => "'{PropertyName}' boş olmalıdır.",
 		"NullValidator" => "'{PropertyName}' boş olmalıdır.",
 		"EnumValidator" => "'{PropertyName}' -in mümkün qiymətlər çoxluğuna '{PropertyValue}' daxil deyil.",
+		"GuidValidator" => "'{PropertyName}' düzgün GUID deyil.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}', {MinLength} və {MaxLength} aralığında simvol uzunluğunda olmalıdır.",
 		"MinimumLength_Simple" => "'{PropertyName}', {MinLength} simvoldan böyük və ya bərabər olmalıdır.",

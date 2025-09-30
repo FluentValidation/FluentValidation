@@ -49,6 +49,7 @@ internal class KazakhLanguage {
 		"EmptyValidator" => "'{PropertyName}' бос болуы керек.",
 		"NullValidator" => "'{PropertyName}' бос болуы керек.",
 		"EnumValidator" => "'{PropertyName}' жарамсыз мәнді қамтиды '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' жарамды GUID емес.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' таңбаларының саны {MinLength} және {MaxLength} арасында болуы керек.",
 		"MinimumLength_Simple" => "'{PropertyName}' таңбаларының саны мынадан - {MinLength} кем емес болуы керек.",

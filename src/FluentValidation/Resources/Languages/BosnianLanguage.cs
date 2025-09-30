@@ -49,6 +49,7 @@ internal class BosnianLanguage {
 		"EmptyValidator" => "'{PropertyName}' mora biti prazno.",
 		"NullValidator" => "'{PropertyName}' mora biti prazno.",
 		"EnumValidator" => "'{PropertyName}' ima raspon vrijednosti koji ne uključuje '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' nije valjan GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' mora imati između {MinLength} i {MaxLength} karaktera.",
 		"MinimumLength_Simple" => "'{PropertyName}' mora imati najmanje {MinLength} karaktera.",

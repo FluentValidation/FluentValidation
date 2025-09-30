@@ -49,6 +49,7 @@ internal class RomanianLanguage {
 		"EmptyValidator" => "'{PropertyName}' ar trebui să fie goală.",
 		"NullValidator" => "'{PropertyName}' trebuie să fie goală.",
 		"EnumValidator" => "'{PropertyName}' are o serie de valori care nu sunt incluse în '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' nu este un GUID valid.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' trebuie să fie între {MinLength} şi {MaxLength} caractere.",
 		"MinimumLength_Simple" => "'{PropertyName}' trebuie să fie mai mare sau egală cu caracterele {MinLength}.",

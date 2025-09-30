@@ -49,6 +49,7 @@ internal class DutchLanguage {
 		"InclusiveBetweenValidator" => "'{PropertyName}' moet tussen {From} en {To} liggen. U heeft '{PropertyValue}' ingevuld.",
 		"ScalePrecisionValidator" => "'{PropertyName}' mag in totaal niet meer dan {ExpectedPrecision} decimalen nauwkeurig zijn, met een grootte van {ExpectedScale} gehele getallen. Er zijn {Digits} decimalen en een grootte van {ActualScale} gehele getallen gevonden.",
 		"NullValidator" => "'{PropertyName}' moet leeg zijn.",
+		"GuidValidator" => "'{PropertyName}' is geen geldige GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "De lengte van '{PropertyName}' moet tussen {MinLength} en {MaxLength} karakters zijn.",
 		"MinimumLength_Simple" => "De lengte van '{PropertyName}' moet groter zijn dan of gelijk zijn aan {MinLength} karakters.",

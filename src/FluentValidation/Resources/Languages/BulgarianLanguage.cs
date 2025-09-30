@@ -49,6 +49,7 @@ internal class BulgarianLanguage {
 		"EmptyValidator" => "'{PropertyName}' трябва да бъде празно.",
 		"NullValidator" => "'{PropertyName}' трябва да бъде празно.",
 		"EnumValidator" => "'{PropertyName}' има диапазон, които не обхващат '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' не е валиден GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' трябва да бъде межди {MinLength} и {MaxLength} брой символи.",
 		"MinimumLength_Simple" => "Дължината на '{PropertyName}' трябва да бъде поне {MinLength} символи.",

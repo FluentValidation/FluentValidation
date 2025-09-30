@@ -49,6 +49,7 @@ internal class TamilLanguage {
 		"EmptyValidator" => "'{PropertyName}' காலியாக இருக்க வேண்டும்.",
 		"NullValidator" => "'{PropertyName}' காலியாக இருக்க வேண்டும்.",
 		"EnumValidator" => "'{PropertyName}' இன் மதிப்பானது '{PropertyValue}'-ஐ உள்ளடக்கவில்லை.",
+		"GuidValidator" => "'{PropertyName}' சாதுவான GUID ஆக இல்லை.",
 		// Additional fallback messages
 		"Length_Simple" => "'{PropertyName}' {MinLength} மற்றும் {MaxLength} எழுத்துகளுக்கு இடையில் இருக்க வேண்டும்.",
 		"MinimumLength_Simple" => "'{PropertyName}' குறைந்தது {MinLength} எழுத்துகள் இருக்க வேண்டும்.",

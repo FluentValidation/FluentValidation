@@ -49,6 +49,7 @@ internal class SwedishLanguage {
 		"EmptyValidator" => "\"{PropertyName}\" ska vara tomt.",
 		"NullValidator" => "\"{PropertyName}\" ska vara tomt.",
 		"EnumValidator" => "\"{PropertyName}\" har ett antal värden som inte inkluderar \"{PropertyValue}\".",
+		"GuidValidator" => "\"{PropertyName}\" är inte en giltig GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "\"{PropertyName}\" måste vara mellan {MinLength} och {MaxLength} tecken långt.",
 		"MinimumLength_Simple" => "\"{PropertyName}\" måste vara större än eller lika med {MinLength} tecken.",

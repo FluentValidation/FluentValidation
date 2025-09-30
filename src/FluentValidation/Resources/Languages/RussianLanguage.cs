@@ -49,6 +49,7 @@ internal class RussianLanguage {
 		"EmptyValidator" => "'{PropertyName}' должно быть пустым.",
 		"NullValidator" => "'{PropertyName}' должно быть пустым.",
 		"EnumValidator" => "'{PropertyName}' содержит недопустимое значение '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' не является действительным GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' должно быть длиной от {MinLength} до {MaxLength} символов.",
 		"MinimumLength_Simple" => "'{PropertyName}' должно быть длиной не менее {MinLength} символов.",

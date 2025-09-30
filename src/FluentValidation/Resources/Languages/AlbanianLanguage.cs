@@ -49,6 +49,7 @@ internal class AlbanianLanguage {
 		"EmptyValidator" => "'{PropertyName}' nuk duhet të jetë bosh.",
 		"NullValidator" => "'{PropertyName}' duhet të jetë bosh.",
 		"EnumValidator" => "'{PropertyName}' ka një varg vlerash të cilat nuk përfshijnë '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' nuk është një GUID i vlefshëm.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' duhet të jetë midis {MinLength} dhe {MaxLength} karakteresh.",
 		"MinimumLength_Simple" => "Gjatësia e '{PropertyName}' duhet të jetë të paktën {MinLength} karaktere.",

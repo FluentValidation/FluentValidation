@@ -49,6 +49,7 @@ internal class NorwegianNynorskLanguage {
 		"EmptyValidator" => "'{PropertyName}' skal vera tomt.",
 		"NullValidator" => "'{PropertyName}' skal vera tomt.",
 		"EnumValidator" => "'{PropertyName}' har ei rekkje verdiar men inneheld ikkje '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' er ikkje ein gyldig GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' skal vera mellom {MinLength} og {MaxLength} teikn.",
 		"MinimumLength_Simple" => "'{PropertyName}' skal vera større enn eller lik {MinLength} teikn.",

@@ -49,6 +49,7 @@ internal class TurkishLanguage {
 		"EmptyValidator" => "'{PropertyName}' boş olmalıdır.",
 		"NullValidator" => "'{PropertyName}' boş olmalıdır.",
 		"EnumValidator" => "'{PropertyName}', '{PropertyValue}' içermeyen bir değer aralığı içeriyor.",
+		"GuidValidator" => "'{PropertyName}' geçerli bir GUID değil.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}', {MinLength} ve {MaxLength} arasında karakter uzunluğunda olmalı.",
 		"MinimumLength_Simple" => "'{PropertyName}', {MinLength} karakterden büyük veya eşit olmalıdır.",

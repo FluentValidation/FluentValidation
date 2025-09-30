@@ -49,6 +49,7 @@ internal class CzechLanguage {
 		"EmptyValidator" => "Pole '{PropertyName}' musí být prázdné.",
 		"NullValidator" => "Pole '{PropertyName}' musí být prázdné.",
 		"EnumValidator" => "Pole '{PropertyName}' má rozsah hodnot, které neobsahují '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' není platný GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "Délka pole '{PropertyName}' musí být v rozsahu {MinLength} až {MaxLength} znaků.",
 		"MinimumLength_Simple" => "Délka pole '{PropertyName}' musí být větší nebo rovna {MinLength} znakům.",

@@ -49,6 +49,7 @@ internal class VietnameseLanguage {
 		"EmptyValidator" => "'{PropertyName}' phải là rỗng.",
 		"NullValidator" => "'{PropertyName}' không được chứa giá trị.",
 		"EnumValidator" => "'{PropertyName}' nằm trong một tập giá trị không bao gồm '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' không phải là GUID hợp lệ.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' phải nằm trong khoảng từ {MinLength} đến {MaxLength} kí tự.",
 		"MinimumLength_Simple" => "Độ dài tối thiểu của '{PropertyName}' phải là {MinLength} kí tự.",

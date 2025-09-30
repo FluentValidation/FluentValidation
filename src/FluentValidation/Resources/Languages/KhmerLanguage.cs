@@ -49,6 +49,7 @@ internal class KhmerLanguage {
 		"EmptyValidator" => "លក្ខខណ្ឌដែលបានបញ្ជាក់មិនត្រូវបានបំពេញសម្រាប់'{PropertyName}'ទេ។",
 		"NullValidator" => "លក្ខខណ្ឌដែលបានបញ្ជាក់មិនត្រូវបានបំពេញសម្រាប់'{PropertyName}'ទេ។",
 		"EnumValidator" => "'{PropertyName}'មានជួរតម្លៃដែលមិនរួមបញ្ចូល'{PropertyValue}'។",
+		"GuidValidator" => "'{PropertyName}' is not a valid GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}'ត្រូវតែស្ថិតនៅចន្លោះតួអក្សរ{MinLength}ទៅ {MaxLength}តួអក្សរ។",
 		"MinimumLength_Simple" => "ប្រវែង'{PropertyName}'ត្រូវតែមានយ៉ាងហោចណាស់{MinLength}តួអក្សរ។",

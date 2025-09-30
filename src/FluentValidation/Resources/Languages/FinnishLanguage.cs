@@ -49,6 +49,7 @@ internal class FinnishLanguage {
 		"EmptyValidator" => "'{PropertyName}' pitäisi olla tyhjä.",
 		"NullValidator" => "'{PropertyName}' pitäisi olla tyhjä.",
 		"EnumValidator" => "'{PropertyName}' arvoista ei löydy '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' ei ole kelvollinen GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' pitää olla {MinLength}-{MaxLength} merkkiä.",
 		"MinimumLength_Simple" => "'{PropertyName}' saa olla vähintään {MinLength} merkkiä.",

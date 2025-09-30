@@ -49,6 +49,7 @@ internal class LatvianLanguage {
 		"EmptyValidator" => "'{PropertyName}' jābūt tukšai.",
 		"NullValidator" => "'{PropertyName}' jābūt tukšai.",
 		"EnumValidator" => "'{PropertyName}' satur noteiktas vērtības, kuras neietver ievadīto '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' nav derīgs GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' vērtībai ir jābūt no {MinLength} līdz {MaxLength} simbolu garai.",
 		"MinimumLength_Simple" => "'{PropertyName}' vērtībai ir jābūt vismaz {MinLength} simbolu garai.",

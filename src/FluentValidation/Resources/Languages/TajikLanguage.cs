@@ -49,6 +49,7 @@ internal class TajikLanguage {
 		"EmptyValidator" => "'{PropertyName}' бояд холӣ бошад.",
 		"NullValidator" => "'{PropertyName}' бояд холӣ бошад.",
 		"EnumValidator" => "'{PropertyName}' як қатор арзишҳо дорад, ки '{PropertyValue}'-ро дар бар намегирад.",
+		"GuidValidator" => "'{PropertyName}' GUID-и дуруст нест.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' бояд дар байни {MinLength} ва {MaxLength} аломат бошад.",
 		"MinimumLength_Simple" => "Дарозии '{PropertyName}' бояд ҳадди аққал {MinLength} аломат бошад.",

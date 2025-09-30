@@ -49,6 +49,7 @@ internal class SlovakLanguage {
 		"EmptyValidator" => "Pole '{PropertyName}' musí byť prázdne.",
 		"NullValidator" => "Pole '{PropertyName}' musí byť prázdne.",
 		"EnumValidator" => "Pole '{PropertyName}' má rozsah hodnôt, ktoré neobsahujú '{PropertyValue}'.",
+		"GuidValidator" => "Pole '{PropertyName}' nie je platný GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "Dĺžka poľa '{PropertyName}' musí byť medzi {MinLength} a {MaxLength} znakmi.",
 		"MinimumLength_Simple" => "Dĺžka poľa '{PropertyName}' musí byť väčšia alebo rovná {MinLength} znakom.",

@@ -49,6 +49,7 @@ internal class DanishLanguage {
 		"EmptyValidator" => "'{PropertyName}' skal være tomt.",
 		"NullValidator" => "'{PropertyName}' skal være tomt.",
 		"EnumValidator" => "'{PropertyName}' har en række værdier, der ikke indeholder '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' er ikke en gyldig GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' skal være mellem {MinLength} og {MaxLength} tegn.",
 		"MinimumLength_Simple" => "'{PropertyName}' skal være større end eller lig med {MinLength} tegn.",

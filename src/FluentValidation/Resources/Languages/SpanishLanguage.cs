@@ -49,6 +49,7 @@ internal class SpanishLanguage {
 		"EmptyValidator" => "'{PropertyName}' debe estar vacío.",
 		"NullValidator" => "'{PropertyName}' debe estar vacío.",
 		"EnumValidator" => "'{PropertyName}' tiene un rango de valores que no incluye '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' no es un GUID válido.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' debe tener entre {MinLength} y {MaxLength} caracteres.",
 		"MinimumLength_Simple" => "'{PropertyName}' debe ser mayor o igual que {MinLength} caracteres.",

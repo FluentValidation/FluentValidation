@@ -49,6 +49,7 @@ internal class SerbianCyrillicLanguage {
 		"EmptyValidator" => "'{PropertyName}' мора бити празно.",
 		"NullValidator" => "'{PropertyName}' мора бити празно.",
 		"EnumValidator" => "'{PropertyName}' има распон вредности који не укључује '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' није важећи GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' мора имати између {MinLength} и {MaxLength} карактера.",
 		"MinimumLength_Simple" => "'{PropertyName}' мора имати најмање {MinLength} карактера.",

@@ -49,6 +49,7 @@ internal class EstonianLanguage {
 		"EmptyValidator" => "'{PropertyName}' peab olema tühi.",
 		"NullValidator" => "'{PropertyName}' peab olema tühi.",
 		"EnumValidator" => "'{PropertyName}' lubatud väärtuste hulgas ei ole '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' ei ole kehtiv GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' peab olema {MinLength}-{MaxLength} märki.",
 		"MinimumLength_Simple" => "'{PropertyName}' pikkus peab olema vähemalt {MinLength} märki.",

@@ -49,6 +49,7 @@ internal class UkrainianLanguage {
 		"EmptyValidator" => "'{PropertyName}' має бути порожнім.",
 		"NullValidator" => "'{PropertyName}' має бути порожнім.",
 		"EnumValidator" => "'{PropertyName}' має діапазон значень, який не включає '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' не є дійсним GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' має бути довжиною від {MinLength} до {MaxLength} символів.",
 		"MinimumLength_Simple" => "Довжина '{PropertyName}' має бути не меншою ніж {MinLength} символів.",

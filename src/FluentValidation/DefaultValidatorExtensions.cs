@@ -246,7 +246,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, string> Matches<T>(this IRuleBuilder<T, string> ruleBuilder, Func<T, string> expression, RegexOptions options)
 		=> ruleBuilder.SetValidator(new RegularExpressionValidator<T>(expression, options));
-	
+
 	/// <summary>
 	/// Defines a length validator on the current rule builder, but only for string properties.
 	/// Validation will fail if the length of the string is larger than the length specified.
@@ -1084,6 +1084,15 @@ public static partial class DefaultValidatorExtensions {
 	/// </summary>
 	public static IRuleBuilderOptions<T, string> CreditCard<T>(this IRuleBuilder<T, string> ruleBuilder)
 		=> ruleBuilder.SetValidator(new CreditCardValidator<T>());
+
+	/// <summary>
+	/// Defines a GUID validator for the current rule builder that ensures that the specified string is a valid GUID.
+	/// </summary>
+	/// <typeparam name="T">Type of object being validated</typeparam>
+	/// <param name="ruleBuilder">The rule builder on which the validator should be defined</param>
+	/// <returns></returns>
+	public static IRuleBuilderOptions<T, string> IsValidGuid<T>(this IRuleBuilder<T, string> ruleBuilder)
+		=> ruleBuilder.SetValidator(new GuidValidator<T>());
 
 	/// <summary>
 	/// Defines a enum value validator on the current rule builder that ensures that the specific value is a valid enum value.

@@ -49,6 +49,7 @@ internal class BengaliLanguage {
 		"EmptyValidator" => "'{PropertyName}' অবশ্যই খালি হবে।",
 		"NullValidator" => "'{PropertyName}' অবশ্যই খালি হবে।",
 		"EnumValidator" => "'{PropertyValue}' '{PropertyName}' এর সীমা লঙ্ঘন করে।",
+		"GuidValidator" => "'{PropertyName}' একটি বৈধ GUID নয়.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' এর অক্ষর সংখ্যা অবশ্যই {MinLength} থেকে {MaxLength} এর মধ্যে হবে।",
 		"MinimumLength_Simple" => "'{PropertyName}' এর অক্ষর সংখ্যা কমপক্ষে {MinLength} অথবা এর চেয়ে বেশি হবে।",

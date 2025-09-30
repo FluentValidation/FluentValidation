@@ -49,6 +49,7 @@ internal class ChineseSimplifiedLanguage {
 		"EmptyValidator" => "'{PropertyName}' 必须为空。",
 		"NullValidator" => "'{PropertyName}' 必须为Null。",
 		"EnumValidator" => "'{PropertyName}' 的值范围不包含 '{PropertyValue}'。",
+		"GuidValidator" => "'{PropertyName}' 不是有效的 GUID。",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' 的长度必须在 {MinLength} 到 {MaxLength} 字符。",
 		"MinimumLength_Simple" => "'{PropertyName}' 必须大于或等于{MinLength}个字符。",

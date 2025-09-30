@@ -49,6 +49,7 @@ internal class SlovenianLanguage {
 		"EmptyValidator" => "'{PropertyName}' mora biti prazen.",
 		"NullValidator" => "'{PropertyName}' mora biti prazen.",
 		"EnumValidator" => "'{PropertyName}' ima obseg vrednosti, ki ne vključuje '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' ni veljaven GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' imeti dolžino med {MinLength} in {MaxLength} znakov. ",
 		"MinimumLength_Simple" => "'{PropertyName}' mora imeti dolžino večjo ali enako {MinLength}.",

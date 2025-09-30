@@ -49,6 +49,7 @@ internal class NorwegianBokmalLanguage {
 		"EmptyValidator" => "'{PropertyName}' skal være tomt.",
 		"NullValidator" => "'{PropertyName}' skal være tomt.",
 		"EnumValidator" => "'{PropertyName}' har en rekke verdier men inneholder ikke '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' er ikke en gyldig GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' skal være mellom {MinLength} og {MaxLength} tegn.",
 		"MinimumLength_Simple" => "'{PropertyName}' skal være større enn eller lik {MinLength} tegn.",

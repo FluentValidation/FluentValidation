@@ -49,6 +49,7 @@ internal class CatalanLanguage {
 		"EmptyValidator" => "'{PropertyName}' ha d'estar buit.",
 		"NullValidator" => "'{PropertyName}' ha d'estar buit.",
 		"EnumValidator" => "'{PropertyName}' té un rang de valors que no inclou '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' no és un GUID vàlid.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' ha de tenir entre {MinLength} i {MaxLength} caràcters.",
 		"MinimumLength_Simple" => "'{PropertyName}' ha de ser més gran o igual que {MinLength} caràcters.",

@@ -49,6 +49,7 @@ internal class IcelandicLanguage {
 		"EmptyValidator" => "'{PropertyName}' verður að vera tómt.",
 		"NullValidator" => "'{PropertyName}' verður að vera tómt.",
 		"EnumValidator" => "'{PropertyName}' hefur svið gilda sem innihalda ekki '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' er ekki gild GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' verður að vera á milli {MinLength} og {MaxLength} stafir.",
 		"MinimumLength_Simple" => "Lengdin '{PropertyName}' verður að vera að minnsta kosti {MinLength} stafir.",

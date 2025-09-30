@@ -49,6 +49,7 @@ internal class ItalianLanguage {
 		"EmptyValidator" => "'{PropertyName}' dovrebbe essere vuoto.",
 		"NullValidator" => "'{PropertyName}' dovrebbe essere vuoto.",
 		"EnumValidator" => "'{PropertyName}' ha un intervallo di valori che non include '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' non è un GUID valido.",
 		// Additional fallback messages used by clientside validation integration.
 		"ExactLength_Simple" => "'{PropertyName}' deve essere lungo {MaxLength} caratteri.",
 		"InclusiveBetween_Simple" => "'{PropertyName}' deve essere compreso tra {From} e {To}.",

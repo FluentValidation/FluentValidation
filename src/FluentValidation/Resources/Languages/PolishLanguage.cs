@@ -49,6 +49,7 @@ internal class PolishLanguage {
 		"EmptyValidator" => "Pole '{PropertyName}' musi być puste.",
 		"NullValidator" => "Pole '{PropertyName}' musi być puste.",
 		"EnumValidator" => "Pole '{PropertyName}' ma zakres wartości, który nie obejmuje {PropertyValue}.",
+		"GuidValidator" => "'{PropertyName}' nie jest prawidłowym GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "Długość pola '{PropertyName}' musi zawierać się pomiędzy {MinLength} i {MaxLength} znaki(ów).",
 		"MinimumLength_Simple" => "Długość pola '{PropertyName}' musi być większa lub równa {MinLength} znaki(ów).",

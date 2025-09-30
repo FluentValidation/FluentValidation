@@ -27,6 +27,7 @@ internal class ThaiLanguage {
 		"EmptyValidator" => "'{PropertyName}'ต้องมีค่าว่างเปล่า",
 		"NullValidator" => "'{PropertyName}'ต้องไม่มีค่า",
 		"EnumValidator" => "ค่าของ'{PropertyValue}'ไม่ได้อยู่ในค่าของ'{PropertyName}'",
+		"GuidValidator" => "'{PropertyName}' ไม่ใช่ GUID ที่ถูกต้อง",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}'ต้องมีจำนวนตัวอักษรระหว่าง{MinLength}แหละ{MaxLength}ตัวอักษร",
 		"MinimumLength_Simple" => "จำนวนตัวอักษรของ'{PropertyName}'ต้องมีอย่างน้อย{MinLength}ตัวอักษร",

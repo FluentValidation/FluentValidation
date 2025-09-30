@@ -49,6 +49,7 @@ internal class ArabicLanguage {
 		"EmptyValidator" => "'{PropertyName}' يجب أن يكون فارغاً.",
 		"NullValidator" => "'{PropertyName}' يجب أن يكون فارغاً.",
 		"EnumValidator" => "'{PropertyName}' يحتوي على مجموعة من القيم التي لا تتضمن '{PropertyValue}'.",
+		"GuidValidator" => "'{PropertyName}' ليس GUID صالحًا.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' عدد الحروف يجب أن يكون بين {MinLength} و {MaxLength}.",
 		"MinimumLength_Simple" => "الحد الأدنى لعدد الحروف في '{PropertyName}' هو {MinLength}.",

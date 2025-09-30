@@ -49,6 +49,7 @@ internal class TeluguLanguage {
 		"EmptyValidator" => "'{PropertyName}' ఖాళీగా ఉండాలి.",
 		"NullValidator" => "'{PropertyName}' ఖాళీగా ఉండాలి.",
 		"EnumValidator" => "'{PropertyName}' లో '{PropertyValue}' చేర్చబడని విలువల పరిధి ఉంది.",
+		"GuidValidator" => "'{PropertyName}' చెల్లుబాటు అయ్యే GUID కాదు.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' {MinLength} మరియు {MaxLength} అక్షరాల మధ్య ఉండాలి.",
 		"MinimumLength_Simple" => "'{PropertyName}' యొక్క పొడవు కనీసం {MinLength} అక్షరాలు ఉండాలి.",

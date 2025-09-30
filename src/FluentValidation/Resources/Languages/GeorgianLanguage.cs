@@ -49,6 +49,7 @@ internal class GeorgianLanguage {
 		"EmptyValidator" => "'{PropertyName}' უნდა იყოს ცარიელი.",
 		"NullValidator" => "'{PropertyName}' უნდა იყოს ცარიელი.",
 		"EnumValidator" => "'{PropertyValue}' არ შედის '{PropertyName}'-ის დასაშვებ მნიშვნელობებში.",
+		"GuidValidator" => "'{PropertyName}' არ არის სწორი GUID.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' უნდა იყოს {MinLength}-დან {MaxLength} სიმბოლომდე.",
 		"MinimumLength_Simple" => "'{PropertyName}'-ის სიგრძე უნდა აღემატებოდეს {MinLength} სიმბოლოს.",

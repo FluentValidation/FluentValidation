@@ -49,6 +49,7 @@ internal class UzbekCyrillicLanguage {
 		"EmptyValidator" => "'{PropertyName}' бўш бўлиши шарт.",
 		"NullValidator" => "'{PropertyName}' бўш бўлиши шарт.",
 		"EnumValidator" => "'{PropertyName}' қийматлари орасида '{PropertyValue}' йўқ.",
+		"GuidValidator" => "'{PropertyName}' тўғри GUID эмас.",
 		// Additional fallback messages used by clientside validation integration.
 		"Length_Simple" => "'{PropertyName}' {MinLength}тадан {MaxLength}тагача белгидан иборат бўлиши шарт.",
 		"MinimumLength_Simple" => "'{PropertyName}' камида {MinLength}та белгидан иборат бўлиши шарт.",
