@@ -27,7 +27,7 @@ internal class JapaneseLanguage {
 
 	public static string GetTranslation(string key) => key switch {
 		"EmailValidator" => "'{PropertyName}' は有効なメールアドレスではありません。",
-		"GreaterThanOrEqualValidator" => "'{PropertyName}' は '{ComparisonValue} 以上でなければなりません'.",
+		"GreaterThanOrEqualValidator" => "'{PropertyName}' は '{ComparisonValue}' 以上でなければなりません。",
 		"GreaterThanValidator" => "'{PropertyName}' は '{ComparisonValue}' よりも大きくなければなりません。",
 		"LengthValidator" => "'{PropertyName}' は {MinLength} から {MaxLength} 文字の間で入力する必要があります。 {TotalLength} 文字入力されています。",
 		"MinimumLengthValidator" => "'{PropertyName}' は少なくとも {MinLength} 文字を入力しなければなりません。 {TotalLength} 文字入力されています。",
