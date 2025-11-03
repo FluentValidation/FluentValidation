@@ -1,3 +1,6 @@
+11.12.0 - 3 Nov 2025
+Fixes to Japanese translations (#2341)
+
 11.11.0 - 16 Nov 2024
 Add additional overload of WithState that takes a context (#2276)
 
