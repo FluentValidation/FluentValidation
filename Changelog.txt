@@ -1,3 +1,8 @@
+12.1.0 - 3 Nov 2025
+Add Tamil language (#2334)
+Add Telugu language (#2333)
+Fixes to Japanese tranlations (#2340)
+
 11.12.0 - 3 Nov 2025
 Fixes to Japanese translations (#2341)
 
