@@ -25,15 +25,17 @@ using System;
 /// </summary>
 /// <example>
 /// <code>
+/// <![CDATA[
 /// public class Customer {
 ///   public int Id { get; set; }
 ///   public string Name { get; set; }
 ///
-///   public static readonly InlineValidator&lt;Customer&gt; Validator = new InlineValidator&lt;Customer&gt; {
-///     v =&gt; v.RuleFor(x =&gt; x.Name).NotNull(),
-///     v =&gt; v.RuleFor(x =&gt; x.Id).NotEqual(0),
+///   public static readonly InlineValidator<Customer> Validator = new InlineValidator<Customer> {
+///     v => v.RuleFor(x => x.Name).NotNull(),
+///     v => v.RuleFor(x => x.Id).NotEqual(0),
 ///   }
 /// }
+/// ]]>
 /// </code>
 /// </example>
 /// <typeparam name="T"></typeparam>
