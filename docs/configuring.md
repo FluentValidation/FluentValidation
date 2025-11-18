@@ -90,3 +90,13 @@ ValidatorOptions.Global.DisplayNameResolver = (type, member, expression) =>
 ```
 
 This is not a realistic example as it changes all properties to have the suffix `Foo`, but hopefully illustrates the point.
+
+# Overriding the indexer for collections
+
+The default property name of validation failures contains square brackets with the index of the item the failure is for. For example `Foo.BarList[5].Baz`. To override this behaviour you can use the `.OverrideIndexer` function like so:
+
+```csharp
+RuleForEach(x => x.BarList)
+  .OverrideIndexer((foo, barList, bar, i) => bar.Name)
+```
+
