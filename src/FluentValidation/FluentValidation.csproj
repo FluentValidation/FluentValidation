@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Description>A validation library for .NET that uses a fluent interface to construct strongly-typed validation rules.</Description>
     <PackageReleaseNotes>
 FluentValidation 12 is a major release. Please read the upgrade guide at https://docs.fluentvalidation.net/en/latest/upgrading-to-12.html
