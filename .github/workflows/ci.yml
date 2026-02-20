@@ -30,6 +30,7 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: |
+          10.0.x
           9.0.x
           8.0.x
 
