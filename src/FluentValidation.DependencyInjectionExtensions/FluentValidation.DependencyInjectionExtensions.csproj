@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
         <RootNamespace>FluentValidation</RootNamespace>
         <Description>Dependency injection extensions for FluentValidation</Description>
         <PackageReleaseNotes>
