@@ -122,7 +122,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <param name="instanceToValidate">The instance to validate</param>
 	/// <param name="options">Callback that allows extra options to be configured.</param>
 	public static ValidationContext<T> CreateWithOptions(T instanceToValidate, Action<ValidationStrategy<T>> options) {
-		if (options == null) throw new ArgumentNullException(nameof(options));
+		ArgumentNullException.ThrowIfNull(options);
 		var strategy = new ValidationStrategy<T>();
 		options(strategy);
 		return strategy.BuildContext(instanceToValidate);
@@ -202,7 +202,7 @@ public class ValidationContext<T> : IValidationContext, IHasFailures {
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="NotSupportedException"></exception>
 	public static ValidationContext<T> GetFromNonGenericContext(IValidationContext context) {
-		if (context == null) throw new ArgumentNullException(nameof(context));
+		ArgumentNullException.ThrowIfNull(context);
 
 		// Already of the correct type.
 		if (context is ValidationContext<T> c) {

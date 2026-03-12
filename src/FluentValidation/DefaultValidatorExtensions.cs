@@ -1128,7 +1128,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="action"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> Custom<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<TProperty, ValidationContext<T>> action) {
-		if (action == null) throw new ArgumentNullException(nameof(action));
+		ArgumentNullException.ThrowIfNull(action);
+
 		return (IRuleBuilderOptionsConditions<T, TProperty>)ruleBuilder.Must((parent, value, context) => {
 			action(value, context);
 			return true;
@@ -1144,7 +1145,8 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="action"></param>
 	/// <returns></returns>
 	public static IRuleBuilderOptionsConditions<T, TProperty> CustomAsync<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Func<TProperty, ValidationContext<T>, CancellationToken, Task> action) {
-		if (action == null) throw new ArgumentNullException(nameof(action));
+		ArgumentNullException.ThrowIfNull(action);
+
 		return (IRuleBuilderOptionsConditions<T, TProperty>)ruleBuilder.MustAsync(async (parent, value, context, cancel) => {
 			await action(value, context, cancel);
 			return true;
@@ -1201,7 +1203,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <returns></returns>
 	/// <exception cref="ArgumentNullException"></exception>
 	public static IRuleBuilderOptions<T, TProperty> ChildRules<T, TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<InlineValidator<TProperty>> action) {
-		if (action == null) throw new ArgumentNullException(nameof(action));
+		ArgumentNullException.ThrowIfNull(action);
 		var validator = new ChildRulesContainer<TProperty>();
 		var parentValidator = ((IRuleBuilderInternal<T>) ruleBuilder).ParentValidator;
 
@@ -1238,7 +1240,7 @@ public static partial class DefaultValidatorExtensions {
 	/// <param name="validatorConfiguration">Callback for setting up the inheritance validators.</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> SetInheritanceValidator<T,TProperty>(this IRuleBuilder<T, TProperty> ruleBuilder, Action<PolymorphicValidator<T, TProperty>> validatorConfiguration) {
-		if (validatorConfiguration == null) throw new ArgumentNullException(nameof(validatorConfiguration));
+		ArgumentNullException.ThrowIfNull(validatorConfiguration);
 		var validator = new PolymorphicValidator<T, TProperty>();
 		validatorConfiguration(validator);
 		return ruleBuilder.SetAsyncValidator(validator);
