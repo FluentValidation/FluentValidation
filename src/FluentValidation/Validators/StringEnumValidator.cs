@@ -28,7 +28,7 @@ public class StringEnumValidator<T> : PropertyValidator<T, string> {
 	public override string Name => "StringEnumValidator";
 
 	public StringEnumValidator(Type enumType, bool caseSensitive) {
-		if (enumType == null) throw new ArgumentNullException(nameof(enumType));
+		ArgumentNullException.ThrowIfNull(enumType);
 
 		CheckTypeIsEnum(enumType);
 

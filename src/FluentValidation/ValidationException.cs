@@ -86,7 +86,7 @@ public class ValidationException : Exception {
 	[Obsolete(DiagnosticId = "SYSLIB0051")]
 #endif
 	public override void GetObjectData(SerializationInfo info, StreamingContext context) {
-		if (info == null) throw new ArgumentNullException("info");
+		ArgumentNullException.ThrowIfNull(info);
 
 		info.AddValue("errors", Errors);
 		base.GetObjectData(info, context);

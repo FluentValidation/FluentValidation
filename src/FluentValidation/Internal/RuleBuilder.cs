@@ -50,13 +50,13 @@ internal class RuleBuilder<T, TProperty> : IRuleBuilderOptions<T, TProperty>, IR
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetValidator(IPropertyValidator<T, TProperty> validator) {
-		if (validator == null) throw new ArgumentNullException(nameof(validator));
+		ArgumentNullException.ThrowIfNull(validator);
 		Rule.AddValidator(validator);
 		return this;
 	}
 
 	public IRuleBuilderOptions<T, TProperty> SetAsyncValidator(IAsyncPropertyValidator<T, TProperty> validator) {
-		if (validator == null) throw new ArgumentNullException(nameof(validator));
+		ArgumentNullException.ThrowIfNull(validator);
 		// See if the async validator supports synchronous execution too.
 		IPropertyValidator<T, TProperty> fallback = validator as IPropertyValidator<T, TProperty>;
 		Rule.AddAsyncValidator(validator, fallback);

@@ -455,7 +455,7 @@ public static class DefaultValidatorOptions {
 	/// <param name="expr">An expression referencing another property</param>
 	/// <returns></returns>
 	public static IRuleBuilderOptions<T, TProperty> OverridePropertyName<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, Expression<Func<T, object>> expr) {
-		if (expr == null) throw new ArgumentNullException(nameof(expr));
+		ArgumentNullException.ThrowIfNull(expr);
 		var member = expr.GetMember();
 		if (member == null) throw new NotSupportedException("Must supply a MemberExpression when calling OverridePropertyName");
 		return rule.OverridePropertyName(member.Name);

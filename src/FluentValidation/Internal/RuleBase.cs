@@ -84,7 +84,7 @@ internal abstract class RuleBase<T, TProperty, TValue> : IValidationRule<T, TVal
 	/// </summary>
 	/// <param name="factory">The function for building the display name</param>
 	public void SetDisplayName(Func<ValidationContext<T>, string> factory) {
-		if (factory == null) throw new ArgumentNullException(nameof(factory));
+		ArgumentNullException.ThrowIfNull(factory);
 		_displayNameFactory = factory;
 		_displayName = null;
 	}
