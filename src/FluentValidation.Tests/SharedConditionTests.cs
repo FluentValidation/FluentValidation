@@ -27,7 +27,7 @@ using Xunit;
 using Results;
 
 public class SharedConditionTests {
-	class SharedConditionValidator : AbstractValidator<Person> {
+	sealed class SharedConditionValidator : AbstractValidator<Person> {
 		public SharedConditionValidator() {
 			// Start with a predicate to group rules together.
 			//
@@ -46,7 +46,7 @@ public class SharedConditionTests {
 		}
 	}
 
-	class SharedAsyncConditionValidator : AbstractValidator<Person> {
+	sealed class SharedAsyncConditionValidator : AbstractValidator<Person> {
 		public SharedAsyncConditionValidator() {
 			// Start with a predicate to group rules together.
 			//
@@ -67,7 +67,7 @@ public class SharedConditionTests {
 		}
 	}
 
-	class SharedCollectionConditionValidator : AbstractValidator<Person> {
+	sealed class SharedCollectionConditionValidator : AbstractValidator<Person> {
 		public SharedCollectionConditionValidator() {
 			// Start with a predicate to group rules together.
 			//
@@ -87,7 +87,7 @@ public class SharedConditionTests {
 		}
 	}
 
-	class SharedAsyncCollectionConditionValidator : AbstractValidator<Person> {
+	sealed class SharedAsyncCollectionConditionValidator : AbstractValidator<Person> {
 		public SharedAsyncCollectionConditionValidator() {
 			// Start with a predicate to group rules together.
 			//
@@ -108,7 +108,7 @@ public class SharedConditionTests {
 	}
 
 
-	class SharedConditionWithScopedUnlessValidator : AbstractValidator<Person> {
+	sealed class SharedConditionWithScopedUnlessValidator : AbstractValidator<Person> {
 		public SharedConditionWithScopedUnlessValidator() {
 			// inner RuleFor() calls can contain their own,
 			// locally scoped When and Unless calls that
@@ -121,7 +121,7 @@ public class SharedConditionTests {
 		}
 	}
 
-	class SharedAsyncConditionWithScopedUnlessValidator : AbstractValidator<Person> {
+	sealed class SharedAsyncConditionWithScopedUnlessValidator : AbstractValidator<Person> {
 		public SharedAsyncConditionWithScopedUnlessValidator() {
 			// inner RuleFor() calls can contain their own,
 			// locally scoped When and Unless calls that
@@ -137,13 +137,13 @@ public class SharedConditionTests {
 		}
 	}
 
-	class SharedConditionInverseValidator : AbstractValidator<Person> {
+	sealed class SharedConditionInverseValidator : AbstractValidator<Person> {
 		public SharedConditionInverseValidator() {
 			Unless(x => x.Id == 0, () => { RuleFor(x => x.Forename).NotNull(); });
 		}
 	}
 
-	class SharedAsyncConditionInverseValidator : AbstractValidator<Person>
+	sealed class SharedAsyncConditionInverseValidator : AbstractValidator<Person>
 	{
 		public SharedAsyncConditionInverseValidator()
 		{
@@ -809,13 +809,13 @@ public class SharedConditionTests {
 
 	class CollisionBase { }
 
-	class Collision1 : CollisionBase {
+	sealed class Collision1 : CollisionBase {
 
 		public string Name { get; set; }
 		public override int GetHashCode() => 1;
 	}
 
-	class Collision2 : CollisionBase {
+	sealed class Collision2 : CollisionBase {
 		public string Name { get; set; }
 		public override int GetHashCode() => 1;
 	}

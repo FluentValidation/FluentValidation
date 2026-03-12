@@ -185,12 +185,12 @@ public class EnumValidatorTests {
 		return inlineValidator;
 	}
 
-	private class Foo {
+	private sealed class Foo {
 		public EnumGender? Gender { get; set; }
 	}
 
 	#region Flag enum helpers
-	private class FlagsEnumPoco {
+	private sealed class FlagsEnumPoco {
 		public SByteEnum SByteValue { get; set; }
 		public ByteEnum ByteValue { get; set; }
 		public Int16Enum Int16Value { get; set; }

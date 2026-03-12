@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-class StreetNumberComparer : IComparer<Address> {
+sealed class StreetNumberComparer : IComparer<Address> {
 
 	bool TryParseStreetNumber(string s, out int streetNumber) {
 		var streetNumberStr = s.Substring(0, s.IndexOf(" "));

@@ -21,7 +21,7 @@ namespace FluentValidation.Internal;
 using System.Collections.Generic;
 using System.Linq;
 
-internal class CompositeValidatorSelector : IValidatorSelector {
+internal sealed class CompositeValidatorSelector : IValidatorSelector {
 	private IEnumerable<IValidatorSelector> _selectors;
 
 	public CompositeValidatorSelector(IEnumerable<IValidatorSelector> selectors) {

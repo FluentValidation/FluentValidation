@@ -22,7 +22,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-internal class TrackingCollection<T> : IEnumerable<T> {
+internal sealed class TrackingCollection<T> : IEnumerable<T> {
 	readonly List<T> _innerCollection = new();
 	public event Action<T> ItemAdded;
 	private Action<T> _capture = null;
@@ -67,7 +67,7 @@ internal class TrackingCollection<T> : IEnumerable<T> {
 		return GetEnumerator();
 	}
 
-	class EventDisposable : IDisposable {
+	sealed class EventDisposable : IDisposable {
 		readonly TrackingCollection<T> parent;
 		readonly Action<T> handler;
 
@@ -81,7 +81,7 @@ internal class TrackingCollection<T> : IEnumerable<T> {
 		}
 	}
 
-	private class CaptureDisposable : IDisposable {
+	private sealed class CaptureDisposable : IDisposable {
 		readonly TrackingCollection<T> _parent;
 		readonly Action<T> _old;
 

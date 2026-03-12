@@ -79,7 +79,7 @@ public class AssemblyScannerTester {
 
 	}
 
-	internal class Model1InternalValidator : AbstractValidator<Model1> {
+	internal sealed class Model1InternalValidator : AbstractValidator<Model1> {
 
 	}
 }

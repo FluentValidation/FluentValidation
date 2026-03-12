@@ -54,7 +54,7 @@ public static class AccessorCache<T> {
 	/// <summary>
 	/// Represents a unique cache key.
 	/// </summary>
-	private class Key {
+	private sealed class Key {
 		private readonly MemberInfo _memberInfo;
 		/// <remarks>
 		/// The expression key ensures that the accessor is not shared between collection and non-collection access.

@@ -24,7 +24,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Validators;
 
-internal class RuleComponentForNullableStruct<T, TProperty> : RuleComponent<T, TProperty?> where TProperty : struct {
+internal sealed class RuleComponentForNullableStruct<T, TProperty> : RuleComponent<T, TProperty?> where TProperty : struct {
 	private IPropertyValidator<T, TProperty> _propertyValidator;
 	private IAsyncPropertyValidator<T, TProperty> _asyncPropertyValidator;
 

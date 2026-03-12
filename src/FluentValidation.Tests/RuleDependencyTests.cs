@@ -307,7 +307,7 @@ public class RuleDependencyTests {
 		validator.RuleFor(x => x.Address).NotNull();
 	}
 
-	class AsyncValidator : AbstractValidator<int> {
+	sealed class AsyncValidator : AbstractValidator<int> {
 		public AsyncValidator() {
 			RuleFor(model => model)
 				.MustAsync(async (ie, ct) => {
@@ -324,7 +324,7 @@ public class RuleDependencyTests {
 		}
 	}
 
-	class AsyncValidator2 : AbstractValidator<int> {
+	sealed class AsyncValidator2 : AbstractValidator<int> {
 		public AsyncValidator2() {
 			RuleFor(model => model)
 				.Must((ie) => true)

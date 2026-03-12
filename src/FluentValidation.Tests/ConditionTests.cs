@@ -252,25 +252,25 @@ public class ConditionTests {
 		result.IsValid.ShouldBeFalse();
 	}
 
-	private class TestConditionValidator : AbstractValidator<Person> {
+	private sealed class TestConditionValidator : AbstractValidator<Person> {
 		public TestConditionValidator() {
 			RuleFor(x => x.Forename).NotNull().When(x => x.Id == 0);
 		}
 	}
 
-	class TestConditionAsyncValidator : AbstractValidator<Person> {
+	sealed class TestConditionAsyncValidator : AbstractValidator<Person> {
 		public TestConditionAsyncValidator() {
 			RuleFor(x => x.Forename).NotNull().WhenAsync(async (x,c) => x.Id == 0);
 		}
 	}
 
-	private class InverseConditionValidator : AbstractValidator<Person> {
+	private sealed class InverseConditionValidator : AbstractValidator<Person> {
 		public InverseConditionValidator() {
 			RuleFor(x => x.Forename).NotNull().Unless(x => x.Id == 0);
 		}
 	}
 
-	class InverseConditionAsyncValidator : AbstractValidator<Person> {
+	sealed class InverseConditionAsyncValidator : AbstractValidator<Person> {
 		public InverseConditionAsyncValidator() {
 			RuleFor(x => x.Forename).NotNull().UnlessAsync(async (x,c) => x.Id == 0);
 		}

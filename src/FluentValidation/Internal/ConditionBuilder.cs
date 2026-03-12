@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-internal class ConditionBuilder<T> {
+internal sealed class ConditionBuilder<T> {
 	private TrackingCollection<IValidationRuleInternal<T>> _rules;
 
 	public ConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
@@ -89,7 +89,7 @@ internal class ConditionBuilder<T> {
 	}
 }
 
-internal class AsyncConditionBuilder<T> {
+internal sealed class AsyncConditionBuilder<T> {
 	private TrackingCollection<IValidationRuleInternal<T>> _rules;
 
 	public AsyncConditionBuilder(TrackingCollection<IValidationRuleInternal<T>> rules) {
@@ -154,7 +154,7 @@ internal class AsyncConditionBuilder<T> {
 	}
 }
 
-internal class ConditionOtherwiseBuilder<T> : IConditionBuilder {
+internal sealed class ConditionOtherwiseBuilder<T> : IConditionBuilder {
 	private TrackingCollection<IValidationRuleInternal<T>> _rules;
 	private readonly Func<IValidationContext, bool> _condition;
 
@@ -163,7 +163,7 @@ internal class ConditionOtherwiseBuilder<T> : IConditionBuilder {
 		_condition = condition;
 	}
 
-	public virtual void Otherwise(Action action) {
+	public void Otherwise(Action action) {
 		var propertyRules = new List<IValidationRuleInternal<T>>();
 
 		Action<IValidationRuleInternal<T>> onRuleAdded = propertyRules.Add;
@@ -178,7 +178,7 @@ internal class ConditionOtherwiseBuilder<T> : IConditionBuilder {
 	}
 }
 
-internal class AsyncConditionOtherwiseBuilder<T> : IConditionBuilder {
+internal sealed class AsyncConditionOtherwiseBuilder<T> : IConditionBuilder {
 	private TrackingCollection<IValidationRuleInternal<T>> _rules;
 	private readonly Func<IValidationContext, CancellationToken, Task<bool>> _condition;
 
@@ -187,7 +187,7 @@ internal class AsyncConditionOtherwiseBuilder<T> : IConditionBuilder {
 		_condition = condition;
 	}
 
-	public virtual void Otherwise(Action action) {
+	public void Otherwise(Action action) {
 		var propertyRules = new List<IValidationRuleInternal<T>>();
 
 		Action<IValidationRuleInternal<T>> onRuleAdded = propertyRules.Add;

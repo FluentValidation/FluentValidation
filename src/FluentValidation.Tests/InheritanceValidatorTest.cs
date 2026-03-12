@@ -327,7 +327,7 @@ public class InheritanceValidatorTest {
 		result.IsValid.ShouldBeFalse();
 	}
 
-	private class TypeUnsafePolymorphicValidator<T, TProperty> : PolymorphicValidator<T, TProperty> {
+	private sealed class TypeUnsafePolymorphicValidator<T, TProperty> : PolymorphicValidator<T, TProperty> {
 		public TypeUnsafePolymorphicValidator() {
 			var impl1Validator = new InlineValidator<FooImpl1>();
 			impl1Validator.RuleFor(x => x.Name).NotNull();

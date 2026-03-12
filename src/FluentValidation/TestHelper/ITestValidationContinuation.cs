@@ -14,7 +14,7 @@ public interface ITestValidationContinuation : IEnumerable<ValidationFailure> {
 	IEnumerable<ValidationFailure> MatchedFailures { get; }
 }
 
-internal class TestValidationContinuation : ITestValidationContinuation, ITestValidationWith {
+internal sealed class TestValidationContinuation : ITestValidationContinuation, ITestValidationWith {
 	private readonly IEnumerable<ValidationFailure> _allFailures;
 	private readonly List<Func<ValidationFailure,bool>> _predicates;
 

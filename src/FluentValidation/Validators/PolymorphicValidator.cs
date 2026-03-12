@@ -114,7 +114,7 @@ public class PolymorphicValidator<T, TProperty> : ChildValidatorAdaptor<T, TProp
 		return null;
 	}
 
-	private class DerivedValidatorFactory {
+	private sealed class DerivedValidatorFactory {
 		private IValidator _innerValidator;
 		private readonly Func<ValidationContext<T>, TProperty, IValidator> _factory;
 		public string[] RuleSets { get; }

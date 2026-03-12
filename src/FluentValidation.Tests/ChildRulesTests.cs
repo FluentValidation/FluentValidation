@@ -130,7 +130,7 @@ public class ChildRulesTests {
 		result.Errors.Count.ShouldEqual(1);
 	}
 
-	private class RulesetChildRulesValidator : AbstractValidator<Person> {
+	private sealed class RulesetChildRulesValidator : AbstractValidator<Person> {
 		public RulesetChildRulesValidator() {
 			RuleSet("testing", () => {
 				RuleFor(a => a.Surname).NotEmpty();
@@ -141,7 +141,7 @@ public class ChildRulesTests {
 		}
 	}
 
-	private class RulesetChildValidatorRulesValidator : AbstractValidator<Person> {
+	private sealed class RulesetChildValidatorRulesValidator : AbstractValidator<Person> {
 		public RulesetChildValidatorRulesValidator() {
 			RuleSet("a, b", () => {
 				RuleFor(x => x.Surname).NotEmpty();
@@ -151,7 +151,7 @@ public class ChildRulesTests {
 			});
 		}
 
-		private class RulesetOrderValidator : AbstractValidator<Order> {
+		private sealed class RulesetOrderValidator : AbstractValidator<Order> {
 			public RulesetOrderValidator() {
 				RuleSet("b", () => {
 					RuleFor(o => o.ProductName).NotEmpty();
@@ -159,15 +159,15 @@ public class ChildRulesTests {
 			}
 		}
 
-		public class Foo {
+		public sealed class Foo {
 			public List<string> Names { get; } = new();
 		}
 
-		public class Bar {
+		public sealed class Bar {
 			public List<Foo> Foos { get; set; } = new();
 		}
 
-		public class Baz {
+		public sealed class Baz {
 			public List<Bar> Bars { get; set; } = new();
 		}
 	}
