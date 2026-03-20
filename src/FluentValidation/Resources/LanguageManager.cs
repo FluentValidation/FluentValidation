@@ -70,7 +70,6 @@ public class LanguageManager : ILanguageManager {
 			KhmerLanguage.Culture => KhmerLanguage.GetTranslation(key),
 			KoreanLanguage.Culture => KoreanLanguage.GetTranslation(key),
 			LatvianLanguage.Culture => LatvianLanguage.GetTranslation(key),
-			LithuanianLanguage.Culture => LithuanianLanguage.GetTranslation(key),
 			MacedonianLanguage.Culture => MacedonianLanguage.GetTranslation(key),
 			NorwegianBokmalLanguage.Culture => NorwegianBokmalLanguage.GetTranslation(key),
 			NorwegianNynorskLanguage.Culture => NorwegianNynorskLanguage.GetTranslation(key),
