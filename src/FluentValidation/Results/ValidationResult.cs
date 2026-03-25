@@ -40,9 +40,7 @@ public class ValidationResult {
 	public List<ValidationFailure> Errors {
 		get => _errors;
 		set {
-			if (value == null) {
-				throw new ArgumentNullException(nameof(value));
-			}
+			ArgumentNullException.ThrowIfNull(value);
 
 			// Ensure any nulls are removed and the list is copied
 			// to be consistent with the constructor below.
