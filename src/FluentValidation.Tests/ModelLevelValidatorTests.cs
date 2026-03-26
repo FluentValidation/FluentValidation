@@ -47,7 +47,7 @@ public class ModelLevelValidatorTests {
 
 	}
 
-	private class ChildValidator : AbstractValidator<Person> {
+	private sealed class ChildValidator : AbstractValidator<Person> {
 		public ChildValidator() {
 			RuleFor(x => x.Forename).NotNull();
 		}

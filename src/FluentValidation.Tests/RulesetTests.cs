@@ -353,7 +353,7 @@ public class RulesetTests {
 		result.RuleSetsExecuted.Intersect(names).Count().ShouldEqual(names.Length);
 	}
 
-	private class TestValidator : InlineValidator<Person> {
+	private sealed class TestValidator : InlineValidator<Person> {
 		public TestValidator() {
 			RuleSet("Names", () => {
 				RuleFor(x => x.Surname).NotNull();
@@ -364,7 +364,7 @@ public class RulesetTests {
 		}
 	}
 
-	private class TestValidator2 : AbstractValidator<Person>
+	private sealed class TestValidator2 : AbstractValidator<Person>
 	{
 		public TestValidator2()
 		{

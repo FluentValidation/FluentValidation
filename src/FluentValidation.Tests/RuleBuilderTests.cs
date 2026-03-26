@@ -195,10 +195,10 @@ public class RuleBuilderTests {
 			.OfType<IChildValidatorAdaptor>().Single().ValidatorType.ShouldEqual(typeof(NoopAddressValidator));
 	}
 
-	class NoopAddressValidator : AbstractValidator<Address> {
+	sealed class NoopAddressValidator : AbstractValidator<Address> {
 	}
 
-	class TestPropertyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
+	sealed class TestPropertyValidator<T,TProperty> : PropertyValidator<T,TProperty> {
 		public override string Name => "TestPropertyValidator";
 
 		public override bool IsValid(ValidationContext<T> context, TProperty value) {

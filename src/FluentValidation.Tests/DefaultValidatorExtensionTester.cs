@@ -240,11 +240,11 @@ public class DefaultValidatorExtensionTester {
 		Assert.IsType<TValidator>(rule.Components.LastOrDefault()?.Validator);
 	}
 
-	class Model {
+	sealed class Model {
 		public IEnumerable<Guid> Ids { get; set; }
 	}
 
-	class AsyncModelTestValidator : AbstractValidator<Model> {
+	sealed class AsyncModelTestValidator : AbstractValidator<Model> {
 		public AsyncModelTestValidator() {
 			RuleForEach(m => m.Ids)
 				.MustAsync((g, cancel) => Task.FromResult(true));

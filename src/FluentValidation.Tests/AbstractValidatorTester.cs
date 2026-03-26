@@ -248,7 +248,7 @@ public class AbstractValidatorTester {
 		result.IsValid.ShouldBeFalse();
 	}
 
-	private class DerivedPerson : Person { }
+	private sealed class DerivedPerson : Person { }
 
 
 	[Theory]

@@ -281,7 +281,7 @@ public class ValidatorSelectorTests {
 		result.Errors[1].ErrorMessage.ShouldEqual("'Amount' must be greater than '0'.");
 	}
 
-	private class TestObject {
+	private sealed class TestObject {
 		public object SomeProperty { get; set; }
 		public object SomeOtherProperty { get; set; }
 		public decimal? SomeNullableProperty { get; set; }

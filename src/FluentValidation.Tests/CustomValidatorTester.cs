@@ -198,7 +198,7 @@ public class CustomValidatorTester {
 		result.IsValid.ShouldBeTrue();
 	}
 
-	private class NestedOrderValidator : AbstractValidator<Order> {
+	private sealed class NestedOrderValidator : AbstractValidator<Order> {
 		public NestedOrderValidator() {
 			RuleFor(x=>x).Custom((x, ctx) => {
 				ctx.AddFailure("Amount", "bar");

@@ -132,7 +132,7 @@ public class AccessorCacheTests {
 		output.WriteLine(s.Elapsed.ToString());
 	}
 
-	private class BenchmarkValidator : AbstractValidator<Person> {
+	private sealed class BenchmarkValidator : AbstractValidator<Person> {
 		public BenchmarkValidator() {
 			RuleFor(x => x.Surname).NotNull();
 			RuleFor(x => x).Must(x => true);

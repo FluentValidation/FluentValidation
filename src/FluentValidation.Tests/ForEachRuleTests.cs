@@ -141,11 +141,11 @@ public class ForEachRuleTests {
 		result.Errors[1].PropertyName.ShouldEqual("NickNames[2]");
 	}
 
-	class Request {
+	sealed class Request {
 		public Person person = null;
 	}
 
-	private class MyAsyncNotNullValidator<T,TProperty> : IAsyncPropertyValidator<T,TProperty> {
+	private sealed class MyAsyncNotNullValidator<T,TProperty> : IAsyncPropertyValidator<T,TProperty> {
 		private IPropertyValidator<T, TProperty> _inner = new NotNullValidator<T, TProperty>();
 
 		public Task<bool> IsValidAsync(ValidationContext<T> context, TProperty value, CancellationToken cancellation) {

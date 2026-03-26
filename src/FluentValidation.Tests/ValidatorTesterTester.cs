@@ -1011,10 +1011,10 @@ public class ValidatorTesterTester {
 		).Message.ShouldEqual("Expected to have errors only matching specified conditions\n----\nUnexpected Errors:\n[0]: The specified condition was not met for 'Surname'.\n[1]: 'Forename' must not be empty.\n");
 	}
 
-	private class AddressValidator : AbstractValidator<Address> {
+	private sealed class AddressValidator : AbstractValidator<Address> {
 	}
 
-	private class OrderValidator : AbstractValidator<Order> {
+	private sealed class OrderValidator : AbstractValidator<Order> {
 	}
 
 	public class UnitOfMeasure {
