@@ -44,6 +44,7 @@ public class LanguageManager : ILanguageManager {
 			AlbanianLanguage.Culture => AlbanianLanguage.GetTranslation(key),
 			ArabicLanguage.Culture => ArabicLanguage.GetTranslation(key),
 			AzerbaijaneseLanguage.Culture => AzerbaijaneseLanguage.GetTranslation(key),
+			BelarusianLanguage.Culture => BelarusianLanguage.GetTranslation(key),
 			BengaliLanguage.Culture => BengaliLanguage.GetTranslation(key),
 			BosnianLanguage.Culture => BosnianLanguage.GetTranslation(key),
 			BulgarianLanguage.Culture => BulgarianLanguage.GetTranslation(key),
