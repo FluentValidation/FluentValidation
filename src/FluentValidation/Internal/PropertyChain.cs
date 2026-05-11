@@ -20,6 +20,7 @@ namespace FluentValidation.Internal;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -157,6 +158,18 @@ public class PropertyChain {
 		var chain = new PropertyChain(this);
 		chain.Add(propertyName);
 		return chain.ToString();
+	}
+
+	/// <summary>
+	/// Returns a new <see cref="PropertyChain"/> that contains all members except the last one.
+	/// Returns an empty chain if the current chain has zero or one member.
+	/// </summary>
+	public PropertyChain GetParentChain() {
+		if (_memberNames.Count <= 1) {
+			return new PropertyChain();
+		}
+
+		return new PropertyChain(_memberNames.Take(_memberNames.Count - 1));
 	}
 
 	/// <summary>

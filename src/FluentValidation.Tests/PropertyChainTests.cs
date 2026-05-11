@@ -91,6 +91,34 @@ public class PropertyChainTests {
 		chain.ToString().ShouldEqual("Foo");
 	}
 
+	[Fact]
+	public void GetParentChain_returns_chain_without_last_member() {
+		chain.Add("Parent");
+		chain.AddIndexer(0);
+		chain.Add("Child");
+		chain.Add("Grandchild");
+
+		var trimmed = chain.GetParentChain();
+
+		trimmed.ToString().ShouldEqual("Parent[0].Child");
+	}
+
+	[Fact]
+	public void GetParentChain_returns_empty_chain_when_only_one_member() {
+		chain.Add("Foo");
+
+		var trimmed = chain.GetParentChain();
+
+		trimmed.ToString().ShouldEqual(string.Empty);
+	}
+
+	[Fact]
+	public void GetParentChain_returns_empty_chain_when_chain_is_empty() {
+		var trimmed = chain.GetParentChain();
+
+		trimmed.ToString().ShouldEqual(string.Empty);
+	}
+
 	public class Parent {
 		public Child Child { get; set; }
 	}
