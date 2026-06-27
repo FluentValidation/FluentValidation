@@ -64,7 +64,7 @@ public class TestValidationResult<T> : ValidationResult {
 
 	private ITestValidationWith ShouldHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
 		var result = new TestValidationContinuation(Errors);
-		result.ApplyPredicate(x => (shouldNormalizePropertyName ?  NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+		result.ApplyPredicate(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == NormalizePropertyName(propertyName) : x.PropertyName == propertyName)
 		                           || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
 		                           || propertyName == ValidationTestExtension.MatchAnyFailure);
 
@@ -92,7 +92,7 @@ public class TestValidationResult<T> : ValidationResult {
 	}
 
 	private void ShouldNotHaveValidationError(string propertyName, bool shouldNormalizePropertyName) {
-		var failures = Errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == propertyName : x.PropertyName == propertyName)
+		var failures = Errors.Where(x => (shouldNormalizePropertyName ? NormalizePropertyName(x.PropertyName) == NormalizePropertyName(propertyName) : x.PropertyName == propertyName)
 		                                 || (string.IsNullOrEmpty(x.PropertyName) && string.IsNullOrEmpty(propertyName))
 		                                 || propertyName == ValidationTestExtension.MatchAnyFailure
 		).ToList();
@@ -112,6 +112,7 @@ public class TestValidationResult<T> : ValidationResult {
 	}
 
 	private static string NormalizePropertyName(string propertyName) {
+		if (propertyName == null) return null;
 		return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 	}
 }
