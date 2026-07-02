@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Xunit;
 using TestHelper;
 using System.Threading.Tasks;
+using Results;
 
 public class ValidatorTesterTester {
 	private TestValidator validator;
@@ -686,6 +687,20 @@ public class ValidatorTesterTester {
 		var result = validator.TestValidate(new Person());
 		result.ShouldHaveValidationErrorFor(x => x);
 		result.ShouldHaveValidationErrorFor("");
+	}
+
+	[Fact]
+	public void Does_not_throw_when_a_failure_has_a_null_property_name() {
+		var validator = new InlineValidator<Person>();
+		validator.RuleFor(x => x).Custom((x, ctx) => ctx.AddFailure(new ValidationFailure(null, "Model-level failure")));
+		validator.RuleFor(x => x.Surname).NotEmpty();
+
+		var result = validator.TestValidate(new Person());
+
+		// Asserting on an unrelated property should not throw just because
+		// another failure in the result has a null PropertyName.
+		result.ShouldHaveValidationErrorFor(x => x.Surname);
+		result.ShouldNotHaveValidationErrorFor(x => x.Forename);
 	}
 
 	[Fact]
