@@ -112,6 +112,6 @@ public class TestValidationResult<T> : ValidationResult {
 	}
 
 	private static string NormalizePropertyName(string propertyName) {
-		return Regex.Replace(propertyName, @"\[.*\]", string.Empty);
+		return propertyName is null ? null : Regex.Replace(propertyName, @"\[.*\]", string.Empty);
 	}
 }
