@@ -278,7 +278,7 @@ public class ConditionTests {
 			})
 		};
 
-		validator.Validate(new Person { Address = new Address { Country = new Country { Name = "foo" } } });
+		validator.Validate(new Person { Address = new Address { Country = new Country() } });
 
 		propertyPath.ShouldEqual("Address.Country.Name");
 	}
@@ -293,30 +293,42 @@ public class ConditionTests {
 				.When((_, c) => {
 					propertyPath = c.PropertyPath;
 					return true;
-			})
+				})
 		};
 
-		validator.Validate(new Person { Children = new List<Person> { new Person { Forename = "foo" } } });
+		validator.Validate(new Person { Children = new List<Person> { new Person() } });
 		propertyPath.ShouldEqual("Children");
 	}
 
 	[Fact]
 	public void Can_access_property_path_in_child_rules_condition() {
-		string propertyPath = null;
+		var propertyPaths = new List<string>();
 
 		var validator = new TestValidator {
 			v => v.RuleForEach(x => x.Children)
 				.ChildRules(children => {
-					children.RuleFor(c => c.Forename).NotEmpty()
+					children.RuleFor(c => c.Forename)
+						.NotEmpty()
 						.When((_, c) => {
-							propertyPath = c.PropertyPath;
+							propertyPaths.Add(c.PropertyPath);
+							return true;
+						});
+					children.RuleFor(c => c.Surname)
+						.NotEmpty()
+						.When((_, c) => {
+							propertyPaths.Add(c.PropertyPath);
 							return true;
 						});
 				})
 		};
 
-		validator.Validate(new Person { Children = new List<Person> { new Person { Forename = "foo" } } });
-		propertyPath.ShouldEqual("Children[0].Forename");
+		validator.Validate(new Person { Children = new List<Person> { new Person(), new Person() } });
+		propertyPaths.ShouldEqual(new[] {
+			"Children[0].Forename",
+			"Children[0].Surname",
+			"Children[1].Forename",
+			"Children[1].Surname"
+		});
 	}
 
 	private class TestConditionValidator : AbstractValidator<Person> {
