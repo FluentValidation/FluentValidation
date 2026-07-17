@@ -144,7 +144,7 @@ public class ValidateAndThrowTester {
 
 	[Fact]
 	public void ValidationException_provides_correct_message_when_appendDefaultMessage_true() {
-		var userMessage = "exception occured during testing";
+		var userMessage = "exception occurred during testing";
 		var validationFailures = new List<ValidationFailure> {new ValidationFailure("test", "test")};
 		var exception = new ValidationException(validationFailures);
 		var exceptionWithUserMessage = new ValidationException(userMessage, validationFailures, true);
@@ -154,7 +154,7 @@ public class ValidateAndThrowTester {
 
 	[Fact]
 	public void ValidationException_provides_correct_message_when_appendDefaultMessage_false() {
-		var userMessage = "exception occured during testing";
+		var userMessage = "exception occurred during testing";
 		var validationFailures = new List<ValidationFailure> {new ValidationFailure("test", "test")};
 		var exceptionWithUserMessage = new ValidationException(userMessage, validationFailures, false);
 
