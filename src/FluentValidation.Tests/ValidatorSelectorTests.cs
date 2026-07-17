@@ -23,6 +23,9 @@ using Xunit;
 using System.Threading.Tasks;
 
 public class ValidatorSelectorTests {
+	public ValidatorSelectorTests() {
+		CultureScope.SetDefaultCulture();
+	}
 
 	[Fact]
 	public void MemberNameValidatorSelector_returns_true_when_property_name_matches() {
