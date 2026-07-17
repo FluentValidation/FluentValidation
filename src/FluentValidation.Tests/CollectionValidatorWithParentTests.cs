@@ -224,7 +224,7 @@ public class CollectionValidatorWithParentTests {
 	}
 
 	[Fact]
-	public void Should_work_with_top_level_collection_validator_and_overriden_name() {
+	public void Should_work_with_top_level_collection_validator_and_overridden_name() {
 		var personValidator = new InlineValidator<Person>();
 		personValidator.RuleFor(x => x.Surname).NotNull();
 

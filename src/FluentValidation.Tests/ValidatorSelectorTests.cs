@@ -65,7 +65,7 @@ public class ValidatorSelectorTests {
 	}
 
 	[Fact]
-	public void Validates_nullable_property_with_overriden_name_when_selected() {
+	public void Validates_nullable_property_with_overridden_name_when_selected() {
 
 		var validator = new InlineValidator<TestObject> {
 			v => v.RuleFor(x => x.SomeNullableProperty.Value)

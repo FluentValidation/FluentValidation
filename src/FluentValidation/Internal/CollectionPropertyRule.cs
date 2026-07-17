@@ -76,7 +76,7 @@ internal partial class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumer
 			displayName = string.Empty;
 		}
 
-		// Construct the full name of the property, taking into account overriden property names and the chain (if we're in a nested validator)
+		// Construct the full name of the property, taking into account overridden property names and the chain (if we're in a nested validator)
 		string propertyName = context.PropertyChain.BuildPropertyPath(PropertyName ?? displayName);
 
 		if (string.IsNullOrEmpty(propertyName)) {
@@ -84,7 +84,7 @@ internal partial class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumer
 		}
 
 		// Ensure that this rule is allowed to run.
-		// The validatselector has the opportunity to veto this before any of the validators execute.
+		// The validator selector has the opportunity to veto this before any of the validators execute.
 		if (!context.Selector.CanExecute(this, propertyName, context)) {
 			return;
 		}
