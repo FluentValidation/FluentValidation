@@ -83,6 +83,8 @@ internal partial class CollectionPropertyRule<T, TElement> : RuleBase<T, IEnumer
 			propertyName = InferPropertyName(Expression);
 		}
 
+		context.InitializeForPropertyValidator(propertyName, _displayNameFunc, PropertyName);
+
 		// Ensure that this rule is allowed to run.
 		// The validator selector has the opportunity to veto this before any of the validators execute.
 		if (!context.Selector.CanExecute(this, propertyName, context)) {

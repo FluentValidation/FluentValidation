@@ -196,6 +196,33 @@ public class ValidatorSelectorTests {
 	}
 
 	[Fact]
+	public void Only_validates_child_property_for_collection() {
+		var person = new Person {
+			Address = new Address {
+				Country = new Country()
+			},
+			Orders = new List<Order> {
+				new() {Amount = 5},
+				new() {Amount = 4}
+			}
+		};
+
+		var validator = new InlineValidator<Person>();
+		validator.RuleFor(x => x.Address.Country.Name).NotEmpty();
+		validator.RuleForEach(x => x.Orders).ChildRules(x => {
+			x.RuleFor(y => y.Amount).GreaterThan(6);
+			x.RuleFor(y => y.ProductName).MinimumLength(5);
+		});
+
+		var result = validator.Validate(person, opt => opt.IncludeProperties("Orders[]"));
+		result.Errors.Count.ShouldEqual(2);
+		result.Errors[0].PropertyName.ShouldEqual("Orders[0].Amount");
+		result.Errors[0].ErrorMessage.ShouldEqual("'Amount' must be greater than '6'.");
+		result.Errors[1].PropertyName.ShouldEqual("Orders[1].Amount");
+		result.Errors[1].ErrorMessage.ShouldEqual("'Amount' must be greater than '6'.");
+	}
+
+	[Fact]
 	public void Only_validates_child_property_for_single_item_in_collection() {
 		var person = new Person {
 			Address = new Address {

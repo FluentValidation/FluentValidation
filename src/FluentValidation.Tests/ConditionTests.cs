@@ -252,6 +252,85 @@ public class ConditionTests {
 		result.IsValid.ShouldBeFalse();
 	}
 
+	[Fact]
+	public void Can_access_property_path_in_condition() {
+		string propertyPath = null;
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Forename).NotEmpty().When((_, c) => {
+				propertyPath = c.PropertyPath;
+				return true;
+			})
+		};
+
+		validator.Validate(new Person());
+
+		propertyPath.ShouldEqual("Forename");
+	}
+
+	[Fact]
+	public void Can_access_nested_property_path_in_condition() {
+		string propertyPath = null;
+
+		var validator = new TestValidator {
+			v => v.RuleFor(x => x.Address.Country.Name).NotEmpty().When((_, c) => {
+				propertyPath = c.PropertyPath;
+				return true;
+			})
+		};
+
+		validator.Validate(new Person { Address = new Address { Country = new Country() } });
+
+		propertyPath.ShouldEqual("Address.Country.Name");
+	}
+
+	[Fact]
+	public void Can_access_collection_item_property_path_in_condition() {
+		string propertyPath = null;
+
+		var validator = new TestValidator {
+			v => v.RuleForEach(x => x.Children)
+				.NotEmpty()
+				.When((_, c) => {
+					propertyPath = c.PropertyPath;
+					return true;
+				})
+		};
+
+		validator.Validate(new Person { Children = new List<Person> { new Person() } });
+		propertyPath.ShouldEqual("Children");
+	}
+
+	[Fact]
+	public void Can_access_property_path_in_child_rules_condition() {
+		var propertyPaths = new List<string>();
+
+		var validator = new TestValidator {
+			v => v.RuleForEach(x => x.Children)
+				.ChildRules(children => {
+					children.RuleFor(c => c.Forename)
+						.NotEmpty()
+						.When((_, c) => {
+							propertyPaths.Add(c.PropertyPath);
+							return true;
+						});
+					children.RuleFor(c => c.Surname)
+						.NotEmpty()
+						.When((_, c) => {
+							propertyPaths.Add(c.PropertyPath);
+							return true;
+						});
+				})
+		};
+
+		validator.Validate(new Person { Children = new List<Person> { new Person(), new Person() } });
+		propertyPaths.ShouldEqual(new[] {
+			"Children[0].Forename",
+			"Children[0].Surname",
+			"Children[1].Forename",
+			"Children[1].Surname"
+		});
+	}
+
 	private class TestConditionValidator : AbstractValidator<Person> {
 		public TestConditionValidator() {
 			RuleFor(x => x.Forename).NotNull().When(x => x.Id == 0);
