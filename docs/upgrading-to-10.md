@@ -92,7 +92,7 @@ foreach (IPropertyValidator propertyValidator in rule.Validators)
 IValidationRule rule = ...;
 foreach (IRuleComponent component in rule.Componetnts) 
 {
-  IPropertyValiator propertyValidator = component.Validator;
+  IPropertyValidator propertyValidator = component.Validator;
 }
 ```
 
