@@ -30,7 +30,8 @@ public class RegularExpressionValidatorTests {
 	public  RegularExpressionValidatorTests() {
 		CultureScope.SetDefaultCulture();
 		validator = new TestValidator {
-			v => v.RuleFor(x => x.Surname).Matches(@"^\w\d$")
+			// \z (not $) avoids the trailing-newline pitfall — see built-in-validators.md
+			v => v.RuleFor(x => x.Surname).Matches(@"^\w\d\z")
 		};
 
 		validator2 = new TestValidator {
@@ -56,6 +57,20 @@ public class RegularExpressionValidatorTests {
 
 		result = validator.Validate(new Person{Surname = " 5"});
 		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void When_the_text_has_a_trailing_newline_the_strict_anchor_correctly_fails() {
+		var result = validator.Validate(new Person{Surname = "S3\n"});
+		result.IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void When_using_dollar_anchor_a_trailing_newline_is_still_considered_a_match() {
+		// By design: unlike \z, $ (and \Z) also match just before a trailing newline.
+		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Matches(@"^\w\d$"));
+		var result = validator.Validate(new Person{Surname = "S3\n"});
+		result.IsValid.ShouldBeTrue();
 	}
 
 	[Fact]
