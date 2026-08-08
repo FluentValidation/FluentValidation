@@ -263,6 +263,14 @@ String format args:
 * `{RegularExpression}` – Regular expression that was not matched
 * `{PropertyPath}` - The full path of the property
 
+Note: If you're used to ASP.NET's `[RegularExpression]` DataAnnotations attribute, be careful not to
+be caught out: FluentValidation does not enforce a whole-string match implicitly, so you need to
+anchor the pattern strictly yourself, e.g. `Matches(@"\A\d{5}\z")`. For example, using
+`Matches(@"^\d{5}$")` will accept `"12345\n"`, which is typically undesired behaviour for single-line
+fields such as API validation. If using [Clientside Validation](aspnet.html#clientside-validation), take into
+consideration that JavaScript doesn't support some .NET regex anchors, so you might need to use a "no character
+follows" negative lookahead or other alternative expression where anchors like `\z` aren't supported.
+
 ## Email Validator
 Ensures that the value of the specified property is a valid email address format.
 
