@@ -84,6 +84,13 @@ public class PropertyChainTests {
 	}
 
 	[Fact]
+	public void Creates_from_expression_with_indexer() {
+		Expression<Func<Person, string>> expr = x => x.Orders[0].ProductName;
+		var chain = PropertyChain.FromExpression(expr);
+		chain.ToString().ShouldEqual("Orders[0].ProductName");
+	}
+
+	[Fact]
 	public void Should_ignore_blanks() {
 		chain.Add("");
 		chain.Add("Foo");
