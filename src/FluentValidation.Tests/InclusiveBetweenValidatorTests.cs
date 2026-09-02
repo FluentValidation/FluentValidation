@@ -123,6 +123,12 @@ public class InclusiveBetweenValidatorTests {
 	}
 
 	[Fact]
+	public void When_the_to_is_smaller_than_the_from_then_the_validator_should_throw_for_chars() {
+		// char.CompareTo returns the difference ('a' vs 'c' is -2), not just -1.
+		Assert.Throws<ArgumentOutOfRangeException>(() => RangeValidatorFactory.CreateInclusiveBetween<Person, char>('c', 'a'));
+	}
+
+	[Fact]
 	public void When_the_validator_fails_the_error_message_should_be_set_for_strings() {
 		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).InclusiveBetween("bbb", "zzz"));
 		var result = validator.Validate(new Person { Surname = "aaa" });

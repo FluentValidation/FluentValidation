@@ -34,7 +34,8 @@ public abstract class RangeValidator<T, TProperty> : PropertyValidator<T, TPrope
 
 		_explicitComparer = comparer;
 
-		if (comparer.Compare(to, from) == -1) {
+		// IComparer<T> only guarantees the sign, not the magnitude.
+		if (comparer.Compare(to, from) < 0) {
 			throw new ArgumentOutOfRangeException(nameof(to), "To should be larger than from.");
 		}
 	}
