@@ -100,7 +100,7 @@ public class EnumValidator<T, TProperty> : PropertyValidator<T, TProperty>, IEnu
 
 	private static bool EvaluateFlagEnumValues(long value, Type enumType) {
 		long mask = 0;
-		foreach (var enumValue in Enum.GetValues(enumType)) {
+		foreach (var enumValue in Enum.GetValuesAsUnderlyingType(enumType)) {
 			var enumValueAsInt64 = Convert.ToInt64(enumValue);
 			if ((enumValueAsInt64 & value) == enumValueAsInt64) {
 				mask |= enumValueAsInt64;
