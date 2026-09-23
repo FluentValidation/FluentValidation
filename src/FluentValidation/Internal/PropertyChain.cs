@@ -140,7 +140,17 @@ public class PropertyChain {
 	/// <param name="parentChain">The parent chain to compare</param>
 	/// <returns>True if the current chain is the child of the other chain, otherwise false</returns>
 	public bool IsChildChainOf(PropertyChain parentChain) {
-		return ToString().StartsWith(parentChain.ToString());
+		if (parentChain._memberNames.Count > _memberNames.Count) {
+			return false;
+		}
+
+		for (int i = 0; i < parentChain._memberNames.Count; i++) {
+			if (!string.Equals(_memberNames[i], parentChain._memberNames[i], StringComparison.Ordinal)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	[Obsolete("BuildPropertyName is deprecated due to its misleading name. Use BuildPropertyPath instead which does the same thing.")]

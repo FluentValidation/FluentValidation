@@ -77,6 +77,38 @@ public class PropertyChainTests {
 	}
 
 	[Fact]
+	public void Is_not_subchain_when_sibling_shares_name_prefix() {
+		chain.Add("Parent");
+		chain.Add("Child");
+
+		var sibling = new PropertyChain();
+		sibling.Add("Parent");
+		sibling.Add("ChildThing"); // sibling of "Child", not a descendant
+
+		sibling.IsChildChainOf(chain).ShouldBeFalse();
+	}
+
+	[Fact]
+	public void Is_not_subchain_when_single_segment_shares_prefix() {
+		chain.Add("Foo");
+
+		var other = new PropertyChain();
+		other.Add("Foobar");
+
+		other.IsChildChainOf(chain).ShouldBeFalse();
+	}
+
+	[Fact]
+	public void Is_subchain_of_equal_chain() {
+		chain.Add("Parent");
+		chain.Add("Child");
+
+		var same = new PropertyChain(chain);
+
+		same.IsChildChainOf(chain).ShouldBeTrue();
+	}
+
+	[Fact]
 	public void Creates_from_expression() {
 		Expression<Func<Person, int>> expr = x => x.Address.Id;
 		var chain = PropertyChain.FromExpression(expr);
