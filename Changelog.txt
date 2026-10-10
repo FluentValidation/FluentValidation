@@ -1,3 +1,13 @@
+12.2.0 - 10 Oct 2026 
+Add Lithuanian language (#2350)
+Add Belarusian language (#2356)
+Add GetParentChain() to PropertyChain (#2358)
+Fix ArgumentNullException in TestValidationResult when a failure has a null PropertyName (#2362)
+Reject an inverted range when the comparer returns a negative other than -1 in RangeValidator (#2370)
+Change EnumValidator to work under native AOT (#2371)
+Fix PropertyChain.IsChildChainOf for sibling chains that share a name prefix (#2372)
+Fix PropertyPath is incorrect in .When() on RuleForEach (#2363)
+
 12.1.1 - 3 Dec 2025
 Fix casing of Microsoft.Extensions.DependencyInjection.Abstractions dependency (#2344)
 
