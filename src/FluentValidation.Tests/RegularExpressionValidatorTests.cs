@@ -177,6 +177,20 @@ public class RegularExpressionValidatorTests {
 
 
 	[Fact]
+	public void Uses_case_insensitive_regex_options() {
+		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Matches("^abc$", RegexOptions.IgnoreCase));
+		validator.Validate(new Person { Surname = "ABC" }).IsValid.ShouldBeTrue();
+		validator.Validate(new Person { Surname = "ABD" }).IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
+	public void Uses_case_insensitive_options_for_lazily_loaded_expression() {
+		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Matches(x => x.Regex, RegexOptions.IgnoreCase));
+		validator.Validate(new Person { Surname = "ABC", Regex = "^abc$" }).IsValid.ShouldBeTrue();
+		validator.Validate(new Person { Surname = "ABD", Regex = "^abc$" }).IsValid.ShouldBeFalse();
+	}
+
+	[Fact]
 	public void Uses_lazily_loaded_expression_with_options()
 	{
 		var validator = new TestValidator(v => v.RuleFor(x => x.Surname).Matches(@"^\w\d$", RegexOptions.Compiled));
