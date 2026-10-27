@@ -43,7 +43,7 @@ public class CreditCardValidator<T> : PropertyValidator<T,string>, ICreditCardVa
 		bool evenDigit = false;
 		// http://www.beachnet.com/~hstiles/cardtype.html
 		foreach (char digit in value.ToCharArray().Reverse()) {
-			if (!char.IsDigit(digit)) {
+			if (!char.IsAsciiDigit(digit)) {
 				return false;
 			}
 

@@ -24,6 +24,15 @@ public class CreditCardValidatorTests {
 		validator.Validate(new Person { CreditCard = "0000000000000001" }).IsValid.ShouldBeFalse(); // Bad checksum
 	}
 
+	[Theory]
+	// Each of these values passes the Luhn checksum when the code points are treated as digits.
+	[InlineData("\u06602")] // Arabic-Indic zero followed by 2
+	[InlineData("\u0664\u0661\u0661\u0661\u0661\u0661\u0661\u0661\u0661\u0661\u0661\u0661\u0661\u0661\u0661\u0665")] // Arabic-Indic digits
+	[InlineData("\uFF14\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF11\uFF14")] // Full-width digits
+	public void Non_ascii_digits_are_invalid(string creditCard) {
+		validator.Validate(new Person { CreditCard = creditCard }).IsValid.ShouldBeFalse();
+	}
+
 	[Fact]
 	public void When_validation_fails_the_default_error_should_be_set() {
 		string creditcard = "foo";
