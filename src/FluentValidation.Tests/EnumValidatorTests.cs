@@ -169,6 +169,25 @@ public class EnumValidatorTests {
 		result.Errors.SingleOrDefault(x => x.PropertyName == "Int64Value").ShouldNotBeNull();
 	}
 
+	[Fact]
+	public void Flags_enum_with_high_bit_set_in_ulong_is_valid() {
+		var validator = new InlineValidator<UInt64HighBitPoco>();
+		validator.RuleFor(x => x.Value).IsInEnum();
+
+		validator.Validate(new UInt64HighBitPoco { Value = UInt64HighBitEnum.B }).IsValid.ShouldBeTrue();
+		validator.Validate(new UInt64HighBitPoco { Value = UInt64HighBitEnum.HighBit }).IsValid.ShouldBeTrue();
+		validator.Validate(new UInt64HighBitPoco { Value = UInt64HighBitEnum.B | UInt64HighBitEnum.HighBit }).IsValid.ShouldBeTrue();
+	}
+
+	[Fact]
+	public void Flags_enum_with_high_bit_set_in_ulong_is_invalid_when_using_undefined_value() {
+		var validator = new InlineValidator<UInt64HighBitPoco>();
+		validator.RuleFor(x => x.Value).IsInEnum();
+
+		validator.Validate(new UInt64HighBitPoco { Value = (UInt64HighBitEnum)4 }).IsValid.ShouldBeFalse();
+		validator.Validate(new UInt64HighBitPoco { Value = UInt64HighBitEnum.HighBit | (UInt64HighBitEnum)4 }).IsValid.ShouldBeFalse();
+	}
+
 	private InlineValidator<FlagsEnumPoco> Create_validator() {
 		var inlineValidator = new InlineValidator<FlagsEnumPoco>();
 		inlineValidator.RuleFor(x => x.SByteValue).IsInEnum();
@@ -300,6 +319,18 @@ public class EnumValidatorTests {
 		All = ~0,
 		Bar = 1,
 		Foo = 2
+	}
+
+	private class UInt64HighBitPoco {
+		public UInt64HighBitEnum Value { get; set; }
+	}
+
+	[Flags]
+	private enum UInt64HighBitEnum : ulong {
+		A = 0,
+		B = 1,
+		C = 2,
+		HighBit = 0x8000000000000000
 	}
 
 	// NB this enum actually confuses the built-in Enum.ToString() functionality - it shows 7 for A|B.

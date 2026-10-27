@@ -101,7 +101,9 @@ public class EnumValidator<T, TProperty> : PropertyValidator<T, TProperty>, IEnu
 	private static bool EvaluateFlagEnumValues(long value, Type enumType) {
 		long mask = 0;
 		foreach (var enumValue in Enum.GetValuesAsUnderlyingType(enumType)) {
-			var enumValueAsInt64 = Convert.ToInt64(enumValue);
+			// Convert.ToInt64 throws for ulong values above long.MaxValue, so reinterpret the bits instead.
+			// This matches the (long) cast applied to UInt64 property values in IsFlagsEnumDefined.
+			var enumValueAsInt64 = enumValue is ulong ulongValue ? unchecked((long)ulongValue) : Convert.ToInt64(enumValue);
 			if ((enumValueAsInt64 & value) == enumValueAsInt64) {
 				mask |= enumValueAsInt64;
 				if (mask == value)
