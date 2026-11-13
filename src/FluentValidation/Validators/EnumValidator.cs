@@ -45,55 +45,55 @@ public class EnumValidator<T, TProperty> : PropertyValidator<T, TProperty>, IEnu
 	}
 
 	private static bool IsFlagsEnumDefined(Type enumType, object value) {
-		var typeName = Enum.GetUnderlyingType(enumType).Name;
+		var underlyingType = Enum.GetUnderlyingType(enumType);
 
-		switch (typeName) {
-			case "Byte": {
+		switch (Type.GetTypeCode(underlyingType)) {
+			case TypeCode.Byte: {
 				var typedValue = (byte)value;
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
-			case "Int16": {
+			case TypeCode.Int16: {
 				var typedValue = (short)value;
 
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
-			case "Int32": {
+			case TypeCode.Int32: {
 				var typedValue = (int)value;
 
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
-			case "Int64": {
+			case TypeCode.Int64: {
 				var typedValue = (long)value;
 
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
-			case "SByte": {
+			case TypeCode.SByte: {
 				var typedValue = (sbyte)value;
 
 				return EvaluateFlagEnumValues(Convert.ToInt64(typedValue), enumType);
 			}
 
-			case "UInt16": {
+			case TypeCode.UInt16: {
 				var typedValue = (ushort)value;
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
-			case "UInt32": {
+			case TypeCode.UInt32: {
 				var typedValue = (uint)value;
 				return EvaluateFlagEnumValues(typedValue, enumType);
 			}
 
-			case "UInt64": {
+			case TypeCode.UInt64: {
 				var typedValue = (ulong)value;
 				return EvaluateFlagEnumValues((long)typedValue, enumType);
 			}
 
 			default:
-				var message = $"Unexpected typeName of '{typeName}' during flags enum evaluation.";
+				var message = $"Unexpected typeName of '{underlyingType.Name}' during flags enum evaluation.";
 				throw new ArgumentOutOfRangeException(nameof(enumType), message);
 		}
 	}
