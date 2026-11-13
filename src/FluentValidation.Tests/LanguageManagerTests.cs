@@ -117,12 +117,34 @@ public class LanguageManagerTests {
 		}
 	}
 
+	[Theory]
+	[InlineData("gu")]
+	[InlineData("sw")]
+	[InlineData("zh")]
+	public void Falls_back_to_english_when_neutral_culture_not_registered(string cultureName) {
+		using (new CultureScope(cultureName)) {
+			var msg = _languages.GetString("NotNullValidator");
+			msg.ShouldEqual("'{PropertyName}' must not be empty.");
+		}
+	}
+
 	[Fact]
 	public void Falls_back_to_english_when_translation_missing() {
 		var l = new LanguageManager();
 		l.AddTranslation("en", "TestValidator", "foo");
 
 		using (new CultureScope("zh-CN")) {
+			var msg = l.GetString("TestValidator");
+			msg.ShouldEqual("foo");
+		}
+	}
+
+	[Fact]
+	public void Falls_back_to_english_when_translation_missing_for_neutral_culture() {
+		var l = new LanguageManager();
+		l.AddTranslation("en", "TestValidator", "foo");
+
+		using (new CultureScope("fr")) {
 			var msg = l.GetString("TestValidator");
 			msg.ShouldEqual("foo");
 		}

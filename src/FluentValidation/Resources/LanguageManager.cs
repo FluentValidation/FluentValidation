@@ -146,7 +146,7 @@ public class LanguageManager : ILanguageManager {
 
 			if (value == null && culture.Name != EnglishLanguage.Culture) {
 				// If it couldn't be found, try the fallback English (if we haven't tried it already).
-				if (!culture.IsNeutralCulture && culture.Parent.Name != EnglishLanguage.Culture) {
+				if (culture.Parent.Name != EnglishLanguage.Culture) {
 					value = _languages.GetOrAdd(EnglishLanguage.Culture + ":" + key, k => EnglishLanguage.GetTranslation(key));
 				}
 			}
